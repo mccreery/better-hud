@@ -1,0 +1,16 @@
+[
+{
+  "modid": "alchemy",
+  "name": "NukeDuck's Alchemy Mod",
+  "description": "Adds alchemy",
+  "version": "${version}",
+  "mcversion": "${mcversion}",
+  "url": "",
+  "updateUrl": "",
+  "authors": ["NukeDuck"],
+  "credits": "",
+  "logoFile": "",
+  "screenshots": [],
+  "dependencies": []
+}
+]
