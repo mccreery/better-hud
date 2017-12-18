@@ -10,10 +10,9 @@ import static org.lwjgl.opengl.GL11.glTranslatef;
 
 import org.lwjgl.opengl.GL11;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityAnimal;
 import net.minecraft.entity.player.EntityPlayer;
@@ -24,8 +23,8 @@ import tk.nukeduck.hud.element.settings.ElementSettingPosition;
 import tk.nukeduck.hud.element.settings.ElementSettingPosition.Position;
 import tk.nukeduck.hud.element.settings.ElementSettingPositionHorizontal;
 import tk.nukeduck.hud.element.settings.ElementSettingSlider;
-import tk.nukeduck.hud.util.FormatUtil;
 import tk.nukeduck.hud.util.RenderUtil;
+import tk.nukeduck.hud.util.constants.Colors;
 import tk.nukeduck.hud.util.constants.Textures;
 
 public class ExtraGuiElementBreedIndicator extends ExtraGuiElementEntityInfo {
@@ -48,7 +47,7 @@ public class ExtraGuiElementBreedIndicator extends ExtraGuiElementEntityInfo {
 		this.settings.add(distance = new ElementSettingSlider("distance", 5, 200) {
 			@Override
 			public String getSliderText() {
-				return FormatUtil.translatePre("menu.settingButton", this.getLocalizedName(), FormatUtil.translatePre("strings.distanceShort", String.valueOf((int) this.value)));
+				return I18n.format("betterHud.menu.settingButton", this.getLocalizedName(), I18n.format("betterHud.strings.distanceShort", this.value));
 			}
 		});
 	}
@@ -63,7 +62,7 @@ public class ExtraGuiElementBreedIndicator extends ExtraGuiElementEntityInfo {
 	
 	public void renderInfo(EntityLivingBase entity, Minecraft mc, float partialTicks) {
 		if(entity instanceof EntityAnimal) {
-			EntityPlayer player = mc.thePlayer;
+			EntityPlayer player = mc.player;
 			Tessellator t = Tessellator.getInstance();
 			
 			int breedItemIndex = getBreedingItemIndex((EntityAnimal) entity);
@@ -77,14 +76,14 @@ public class ExtraGuiElementBreedIndicator extends ExtraGuiElementEntityInfo {
 					//if(love == null) love = 0;
 					
 					// TODO find a better way
-					boolean love = ((EntityAnimal) entity).isInLove();
+					//boolean love = ((EntityAnimal) entity).isInLove();
 					//String text = love ? ChatFormatting.RED + "\u2718"/* + ChatFormatting.RESET + FormatUtil.formatTime(love / 60, love % 60, true)*/ : ChatFormatting.GREEN + "\u2714";
 					//text = String.valueOf(love);
 					//String text = new ItemStack(new Item[] {Items.carrot, Items.wheat_seeds, Items.wheat}[breedItemIndex - 1]).getDisplayName();
 					
 					//String text = FormatUtil.formatTime((int) s / 60, s % 60, true);
 					
-					float perLine = 10;
+					//float perLine = 10;
 					
 					int width = 20;//25 + mc.fontRendererObj.getStringWidth(text);
 					int height = 20;
@@ -101,7 +100,7 @@ public class ExtraGuiElementBreedIndicator extends ExtraGuiElementEntityInfo {
 					GL11.glEnable(GL11.GL_BLEND);
 					GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 					
-					RenderUtil.renderQuad(t, 0, 0, width, height, 0, 0, 0, 0.5F);
+					RenderUtil.renderQuad(t, 0, 0, width, height, Colors.TRANSLUCENT);
 					RenderUtil.zIncrease();
 					
 					glPushAttrib(GL_ALL_ATTRIB_BITS);

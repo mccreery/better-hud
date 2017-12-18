@@ -1,7 +1,6 @@
 package tk.nukeduck.hud.events;
 
 import java.util.HashMap;
-import java.util.UUID;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.passive.EntityAnimal;
@@ -13,8 +12,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.network.MessageBreeding;
-import tk.nukeduck.hud.network.MessagePickup;
 
+// WIP
 public class BreedInfoNotifier {
 	private static final double MAX_DIST_SQ = 32.0D * 32.0D;
 	
@@ -22,10 +21,10 @@ public class BreedInfoNotifier {
 	
 	@SubscribeEvent
 	public void onClientTick(ClientTickEvent e) {
-		if(Minecraft.getMinecraft().theWorld == null) return;
+		if(Minecraft.getMinecraft().world == null) return;
 		
 		for(int entityId : loveMap.keySet()) {
-			EntityAnimal entity = (EntityAnimal) Minecraft.getMinecraft().theWorld.getEntityByID(entityId);
+			EntityAnimal entity = (EntityAnimal) Minecraft.getMinecraft().world.getEntityByID(entityId);
 			if(entity != null) {
 				tickEntity(entity);
 			} else {
@@ -56,9 +55,9 @@ public class BreedInfoNotifier {
 				int love = compound.getInteger("InLove");
 				loveMap.put(entity.getEntityId(), love);
 				
-				for(EntityPlayer player : e.getEntity().worldObj.playerEntities) {
+				for(EntityPlayer player : e.getEntity().world.playerEntities) {
 					// TODO find a less naive way of sending this info to players
-					if(player.getDistanceSqToEntity(entity) <= MAX_DIST_SQ) {
+					if(player.getDistanceSq(entity) <= MAX_DIST_SQ) {
 						MessageBreeding msg = new MessageBreeding(entity.getEntityId(), love);
 						BetterHud.netWrapper.sendTo(msg, (EntityPlayerMP) player);
 					}

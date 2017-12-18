@@ -7,10 +7,8 @@ import static org.lwjgl.opengl.GL11.glRotatef;
 import static org.lwjgl.opengl.GL11.glScalef;
 import static org.lwjgl.opengl.GL11.glTranslatef;
 
-import java.util.ArrayList;
-
-import tk.nukeduck.hud.BetterHud;
 import net.minecraft.client.Minecraft;
+import tk.nukeduck.hud.BetterHud;
 
 public class GuiParticleBlood extends GuiParticle {
 	float opacity;

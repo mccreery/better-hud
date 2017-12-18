@@ -3,16 +3,16 @@ package tk.nukeduck.hud.element;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.passive.EntityHorse;
 import tk.nukeduck.hud.element.settings.ElementSettingBoolean;
 import tk.nukeduck.hud.element.settings.ElementSettingDivider;
 import tk.nukeduck.hud.element.settings.ElementSettingText;
 import tk.nukeduck.hud.element.text.ExtraGuiElementText;
 import tk.nukeduck.hud.util.Bounds;
-import tk.nukeduck.hud.util.FormatUtil;
 import tk.nukeduck.hud.util.LayoutManager;
-import tk.nukeduck.hud.util.RenderUtil;
 import tk.nukeduck.hud.util.StringManager;
+import tk.nukeduck.hud.util.constants.Colors;
 
 public class ExtraGuiElementExperienceInfo extends ExtraGuiElementText {
 	private ElementSettingBoolean total;
@@ -44,11 +44,11 @@ public class ExtraGuiElementExperienceInfo extends ExtraGuiElementText {
 	
 	@Override
 	public void render(Minecraft mc, ScaledResolution resolution, StringManager stringManager, LayoutManager layoutManager) {
-		if(!mc.thePlayer.capabilities.isCreativeMode && !(mc.thePlayer.getRidingEntity() != null && mc.thePlayer.getRidingEntity() instanceof EntityHorse)) {
-			int has = Math.round(mc.thePlayer.experience * getExperienceWithinLevel(mc.thePlayer.experienceLevel));
-			int needed = getExperienceWithinLevel(mc.thePlayer.experienceLevel) - has;
-			drawBorderedString(mc.fontRendererObj, String.valueOf(has), resolution.getScaledWidth() / 2 - 90, resolution.getScaledHeight() - 30, RenderUtil.colorRGB(255, 255, 255)); // 30
-			drawBorderedString(mc.fontRendererObj, String.valueOf(needed), resolution.getScaledWidth() / 2 + 90 - mc.fontRendererObj.getStringWidth(String.valueOf(needed)), resolution.getScaledHeight() - 30, RenderUtil.colorRGB(255, 255, 255));
+		if(!mc.player.capabilities.isCreativeMode && !(mc.player.getRidingEntity() != null && mc.player.getRidingEntity() instanceof EntityHorse)) {
+			int has = Math.round(mc.player.experience * getExperienceWithinLevel(mc.player.experienceLevel));
+			int needed = getExperienceWithinLevel(mc.player.experienceLevel) - has;
+			drawBorderedString(mc.fontRenderer, String.valueOf(has), resolution.getScaledWidth() / 2 - 90, resolution.getScaledHeight() - 30, Colors.WHITE); // 30
+			drawBorderedString(mc.fontRenderer, String.valueOf(needed), resolution.getScaledWidth() / 2 + 90 - mc.fontRenderer.getStringWidth(String.valueOf(needed)), resolution.getScaledHeight() - 30, Colors.WHITE);
 		}
 		
 		if(total.value) {
@@ -83,10 +83,10 @@ public class ExtraGuiElementExperienceInfo extends ExtraGuiElementText {
 	protected String[] getText(Minecraft mc) {
 		if(!total.value) return new String[] {};
 		
-		int totalExp = Math.round(mc.thePlayer.experience * getExperienceWithinLevel(mc.thePlayer.experienceLevel));
-		for(int i = 0; i < mc.thePlayer.experienceLevel; ++i) {
+		int totalExp = Math.round(mc.player.experience * getExperienceWithinLevel(mc.player.experienceLevel));
+		for(int i = 0; i < mc.player.experienceLevel; ++i) {
 			totalExp += getExperienceWithinLevel(i);
 		}
-		return new String[] {FormatUtil.translatePre("strings.total", String.valueOf(totalExp))};
+		return new String[] {I18n.format("betterHud.strings.total", String.valueOf(totalExp))};
 	}
 }

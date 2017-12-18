@@ -1,9 +1,6 @@
 package tk.nukeduck.hud.gui;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.GlStateManager;
 
 public class GuiToggleButton extends GuiButton {
 	public GuiToggleButton(int buttonId, int x, int y, String buttonText) {

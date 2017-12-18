@@ -6,7 +6,6 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import tk.nukeduck.hud.element.settings.ElementSettingAbsolutePosition;
 import tk.nukeduck.hud.element.settings.ElementSettingAbsolutePositionAnchored;
 import tk.nukeduck.hud.element.settings.ElementSettingAnchor;
 import tk.nukeduck.hud.element.settings.ElementSettingMode;
@@ -55,9 +54,9 @@ public class ExtraGuiElementEnchantIndicator extends ExtraGuiElement {
 	
 	@Override
 	public void render(Minecraft mc, ScaledResolution resolution, StringManager stringManager, LayoutManager layoutManager) {
-		if(mc.thePlayer.capabilities.isCreativeMode
-			|| mc.thePlayer.getRidingEntity() != null && mc.thePlayer.getRidingEntity() instanceof EntityHorse
-			|| mc.thePlayer.experienceLevel < 30) return;
+		if(mc.player.capabilities.isCreativeMode
+			|| mc.player.getRidingEntity() != null && mc.player.getRidingEntity() instanceof EntityHorse
+			|| mc.player.experienceLevel < 30) return;
 		
 		this.pos.update(resolution, this.getBounds(resolution));
 		int x = pos.getEnabled() ? pos.x : resolution.getScaledWidth() / 2 - 8;

@@ -2,17 +2,16 @@ package tk.nukeduck.hud.element;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
-import tk.nukeduck.hud.element.settings.ElementSettingAbsolutePosition;
+import net.minecraft.client.resources.I18n;
 import tk.nukeduck.hud.element.settings.ElementSettingAbsolutePositionAnchored;
 import tk.nukeduck.hud.element.settings.ElementSettingAnchor;
 import tk.nukeduck.hud.element.settings.ElementSettingDivider;
 import tk.nukeduck.hud.element.settings.ElementSettingMode;
 import tk.nukeduck.hud.util.Bounds;
-import tk.nukeduck.hud.util.FormatUtil;
 import tk.nukeduck.hud.util.LayoutManager;
 import tk.nukeduck.hud.util.Point;
-import tk.nukeduck.hud.util.RenderUtil;
 import tk.nukeduck.hud.util.StringManager;
+import tk.nukeduck.hud.util.constants.Colors;
 import tk.nukeduck.hud.util.constants.Textures;
 
 public class ExtraGuiElementHealIndicator extends ExtraGuiElement {
@@ -59,17 +58,17 @@ public class ExtraGuiElementHealIndicator extends ExtraGuiElement {
 	}
 	
 	public void render(Minecraft mc, ScaledResolution resolution, StringManager stringManager, LayoutManager layoutManager) {
-		if(mc.thePlayer.getFoodStats().getFoodLevel() >= 18 && mc.thePlayer.getHealth() < mc.thePlayer.getMaxHealth()) {
-			String healIndicator = FormatUtil.translatePre("strings.healIndicator");
+		if(mc.player.getFoodStats().getFoodLevel() >= 18 && mc.player.getHealth() < mc.player.getMaxHealth()) {
+			String healIndicator = I18n.format("betterHud.strings.healIndicator");
 			
 			int x = posMode.index == 0 ? resolution.getScaledWidth() / 2 - 90 : pos.x;
-			int y = posMode.index == 0 ? resolution.getScaledHeight() - 50 - (mc.thePlayer.getTotalArmorValue() > 0 ? 10 : 0) : pos.y;
+			int y = posMode.index == 0 ? resolution.getScaledHeight() - 50 - (mc.player.getTotalArmorValue() > 0 ? 10 : 0) : pos.y;
 			this.bounds = new Bounds(x, y, 0, 0);
 			
 			if(mode.index == 0) {
-				mc.ingameGUI.drawString(mc.fontRendererObj, healIndicator, x, y, RenderUtil.colorRGB(0, 255, 0));
-				this.bounds.setWidth(mc.fontRendererObj.getStringWidth(healIndicator));
-				this.bounds.setHeight(mc.fontRendererObj.FONT_HEIGHT);
+				mc.ingameGUI.drawString(mc.fontRenderer, healIndicator, x, y, Colors.GREEN);
+				this.bounds.setWidth(mc.fontRenderer.getStringWidth(healIndicator));
+				this.bounds.setHeight(mc.fontRenderer.FONT_HEIGHT);
 			} else {
 				mc.getTextureManager().bindTexture(Textures.iconsHud);
 				mc.ingameGUI.drawTexturedModalRect(x, y, 0, 80, 9, 9);

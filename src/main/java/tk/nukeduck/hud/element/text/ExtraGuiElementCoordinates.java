@@ -2,12 +2,12 @@ package tk.nukeduck.hud.element.text;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.resources.I18n;
 import tk.nukeduck.hud.element.settings.ElementSettingBoolean;
 import tk.nukeduck.hud.element.settings.ElementSettingDivider;
 import tk.nukeduck.hud.element.settings.ElementSettingPosition.Position;
 import tk.nukeduck.hud.element.settings.ElementSettingSlider;
 import tk.nukeduck.hud.util.Bounds;
-import tk.nukeduck.hud.util.FormatUtil;
 import tk.nukeduck.hud.util.LayoutManager;
 import tk.nukeduck.hud.util.StringManager;
 
@@ -43,7 +43,7 @@ public class ExtraGuiElementCoordinates extends ExtraGuiElementText {
 		this.settings.add(decimalPlaces = new ElementSettingSlider("decimals", 0, 5) {
 			@Override
 			public String getSliderText() {
-				return FormatUtil.translatePre("menu.settingButton", this.getLocalizedName(), String.valueOf((int) this.value));
+				return I18n.format("betterHud.menu.settingButton", this.getLocalizedName(), String.valueOf((int) this.value));
 			}
 		});
 		decimalPlaces.accuracy = 1.0;
@@ -67,18 +67,18 @@ public class ExtraGuiElementCoordinates extends ExtraGuiElementText {
 			int color = this.getColor();
 			if(spaced.value) {
 				String[] letters = this.getText(mc);
-				int spacer = Math.max(Math.max(mc.fontRendererObj.getStringWidth(letters[0]), mc.fontRendererObj.getStringWidth(letters[1])), mc.fontRendererObj.getStringWidth(letters[2])) + 24;
+				int spacer = Math.max(Math.max(mc.fontRenderer.getStringWidth(letters[0]), mc.fontRenderer.getStringWidth(letters[1])), mc.fontRenderer.getStringWidth(letters[2])) + 24;
 				for(int i = 0; i < 3; i++) {
-					mc.ingameGUI.drawCenteredString(mc.fontRendererObj, letters[i], resolution.getScaledWidth() / 2 + (i - 1) * spacer, 5, color);
+					mc.ingameGUI.drawCenteredString(mc.fontRenderer, letters[i], resolution.getScaledWidth() / 2 + (i - 1) * spacer, 5, color);
 				}
-				int strX = resolution.getScaledWidth() / 2 - spacer - mc.fontRendererObj.getStringWidth(letters[0]) / 2;
-				int width = spacer * 2 + (mc.fontRendererObj.getStringWidth(letters[0]) + mc.fontRendererObj.getStringWidth(letters[2])) / 2;
-				this.topBounds = new Bounds(strX, 5, width, mc.fontRendererObj.FONT_HEIGHT);
+				int strX = resolution.getScaledWidth() / 2 - spacer - mc.fontRenderer.getStringWidth(letters[0]) / 2;
+				int width = spacer * 2 + (mc.fontRenderer.getStringWidth(letters[0]) + mc.fontRenderer.getStringWidth(letters[2])) / 2;
+				this.topBounds = new Bounds(strX, 5, width, mc.fontRenderer.FONT_HEIGHT);
 			} else {
 				String xyz = this.getText(mc)[0];
-				int strWidth = mc.fontRendererObj.getStringWidth(xyz);
-				mc.ingameGUI.drawCenteredString(mc.fontRendererObj, xyz, resolution.getScaledWidth() / 2, 5, color);
-				this.topBounds = new Bounds((resolution.getScaledWidth() - strWidth) / 2, 5, strWidth, mc.fontRendererObj.FONT_HEIGHT);
+				int strWidth = mc.fontRenderer.getStringWidth(xyz);
+				mc.ingameGUI.drawCenteredString(mc.fontRenderer, xyz, resolution.getScaledWidth() / 2, 5, color);
+				this.topBounds = new Bounds((resolution.getScaledWidth() - strWidth) / 2, 5, strWidth, mc.fontRenderer.FONT_HEIGHT);
 			}
 		} else {
 			this.topBounds = Bounds.EMPTY;
@@ -94,16 +94,16 @@ public class ExtraGuiElementCoordinates extends ExtraGuiElementText {
 	@Override
 	protected String[] getText(Minecraft mc) {
 		this.updateDecimalFormat();
-		String x = String.format(this.decimalFormat, mc.thePlayer.posX);
-		String y = String.format(this.decimalFormat, mc.thePlayer.posY);
-		String z = String.format(this.decimalFormat, mc.thePlayer.posZ);
+		String x = String.format(this.decimalFormat, mc.player.posX);
+		String y = String.format(this.decimalFormat, mc.player.posY);
+		String z = String.format(this.decimalFormat, mc.player.posZ);
 		if(this.spaced.value) {
-			x = FormatUtil.translatePre("strings.x", x);
-			y = FormatUtil.translatePre("strings.y", y);
-			z = FormatUtil.translatePre("strings.z", z);
+			x = I18n.format("betterHud.strings.x", x);
+			y = I18n.format("betterHud.strings.y", y);
+			z = I18n.format("betterHud.strings.z", z);
 			return new String[] {x, y, z};
 		} else {
-			return new String[] {FormatUtil.translatePre("strings.xyz", x, y, z)};
+			return new String[] {I18n.format("betterHud.strings.xyz", x, y, z)};
 		}
 	}
 }

@@ -9,11 +9,11 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.RayTraceResult;
 import tk.nukeduck.hud.BetterHud;
-import tk.nukeduck.hud.element.settings.ElementSettingAbsolutePosition;
 import tk.nukeduck.hud.element.settings.ElementSettingAbsolutePositionAnchored;
 import tk.nukeduck.hud.element.settings.ElementSettingAnchor;
 import tk.nukeduck.hud.element.settings.ElementSettingBoolean;
@@ -23,10 +23,10 @@ import tk.nukeduck.hud.element.settings.ElementSettingPosition;
 import tk.nukeduck.hud.element.settings.ElementSettingPosition.Position;
 import tk.nukeduck.hud.element.settings.ElementSettingSlider;
 import tk.nukeduck.hud.util.Bounds;
-import tk.nukeduck.hud.util.FormatUtil;
 import tk.nukeduck.hud.util.LayoutManager;
 import tk.nukeduck.hud.util.RenderUtil;
 import tk.nukeduck.hud.util.StringManager;
+import tk.nukeduck.hud.util.constants.Colors;
 
 public class ExtraGuiElementBlockViewer extends ExtraGuiElement {
 	private ElementSettingMode posMode;
@@ -95,11 +95,11 @@ public class ExtraGuiElementBlockViewer extends ExtraGuiElement {
 			public String getSliderText() {
 				if(this.value % 16 == 0) {
 					int chunks = (int) (this.value / 16);
-					String chunkString = FormatUtil.translatePre(chunks == 1 ? "strings.chunk" : "strings.chunks", String.valueOf(chunks));
-					return FormatUtil.translatePre("menu.settingButton", this.getLocalizedName(), chunkString);
+					String chunkString = I18n.format(chunks == 1 ? "betterHud.strings.chunk" : "betterHud.strings.chunks", String.valueOf(chunks));
+					return I18n.format("betterHud.menu.settingButton", this.getLocalizedName(), chunkString);
 				} else {
-					String distanceString = FormatUtil.translatePre("strings.distanceShort", String.valueOf((int) this.value));
-					return FormatUtil.translatePre("menu.settingButton", this.getLocalizedName(), distanceString);
+					String distanceString = I18n.format("betterHud.strings.distanceShort", String.valueOf((int) this.value));
+					return I18n.format("betterHud.menu.settingButton", this.getLocalizedName(), distanceString);
 				}
 			}
 		});
@@ -126,11 +126,11 @@ public class ExtraGuiElementBlockViewer extends ExtraGuiElement {
 		}*/
 		
 		if(mop != null && mop.typeOfHit == RayTraceResult.Type.BLOCK) {
-			if(mc.theWorld.isAirBlock(mop.getBlockPos())) return;
+			if(mc.world.isAirBlock(mop.getBlockPos())) return;
 			
-			IBlockState te = mc.theWorld.getBlockState(mop.getBlockPos());
+			IBlockState te = mc.world.getBlockState(mop.getBlockPos());
 			
-			ItemStack stack = te.getBlock().getPickBlock(te, mop, mc.theWorld, mop.getBlockPos(), mc.thePlayer);
+			ItemStack stack = te.getBlock().getPickBlock(te, mop, mc.world, mop.getBlockPos(), mc.player);
 			for(Block block : this.replaceStacks.keySet()) {
 				if(te.getBlock().equals(block)) {
 					stack = this.replaceStacks.get(block);
@@ -146,7 +146,7 @@ public class ExtraGuiElementBlockViewer extends ExtraGuiElement {
 					l = te.getBlock().getLocalizedName();
 					stack = new ItemStack(Blocks.STONE);
 				} catch(Exception ex) {
-					l = FormatUtil.translatePre("strings.unknownBlock");
+					l = I18n.format("betterHud.strings.unknownBlock");
 					stack = new ItemStack(Blocks.STONE);
 				}
 			}
@@ -155,7 +155,7 @@ public class ExtraGuiElementBlockViewer extends ExtraGuiElement {
 				String name = Block.REGISTRY.getNameForObject(te.getBlock()).toString();
 				String id = String.format("%04d", Block.getIdFromBlock(te.getBlock()));
 				String meta = String.valueOf(te.getBlock().getMetaFromState(te));
-				l += " " + ChatFormatting.YELLOW + FormatUtil.translatePre("strings.brackets", name + "/#" + id + ":" + meta);
+				l += " " + ChatFormatting.YELLOW + I18n.format("betterHud.strings.brackets", name + "/#" + id + ":" + meta);
 			}
 			
 			/*if(invNames.value) {
@@ -171,53 +171,68 @@ public class ExtraGuiElementBlockViewer extends ExtraGuiElement {
     			}
 			}*/
 			
-			int w = mc.fontRendererObj.getStringWidth(l) + 10;
+			int w = mc.fontRenderer.getStringWidth(l) + 10;
 			if(showBlock.value) w += 21;
 			
 			int x = resolution.getScaledWidth() / 2 - w - 5;
-			int y = resolution.getScaledHeight() / 2 - mc.fontRendererObj.FONT_HEIGHT - 15;
+			int y = resolution.getScaledHeight() / 2 - mc.fontRenderer.FONT_HEIGHT - 15;
 			
 			if(posMode.index == 1) {
-				this.bounds = new Bounds(x, y, w, 11 + mc.fontRendererObj.FONT_HEIGHT);
+				this.bounds = new Bounds(x, y, w, 11 + mc.fontRenderer.FONT_HEIGHT);
 				pos2.update(resolution, this.bounds);
 				x = pos2.x;
 				y = pos2.y;
 			} else if(pos.value == Position.TOP_LEFT) {
 				x = 5;
 				y = layoutManager.get(pos.value);
-				layoutManager.add(10 + mc.fontRendererObj.FONT_HEIGHT, pos.value);
+				layoutManager.add(10 + mc.fontRenderer.FONT_HEIGHT, pos.value);
 			} else if(pos.value == Position.TOP_CENTER) {
 				x = (resolution.getScaledWidth() - w) / 2;
 				y = BetterHud.proxy.elements.biome.enabled ? 60 : 50;
 			} else if(pos.value == Position.TOP_RIGHT) {
 				x = resolution.getScaledWidth() - 5 - w;
 				y = layoutManager.get(pos.value);
-				layoutManager.add(10 + mc.fontRendererObj.FONT_HEIGHT, pos.value);
+				layoutManager.add(10 + mc.fontRenderer.FONT_HEIGHT, pos.value);
 			} else if(pos.value == Position.BOTTOM_LEFT) {
 				x = 5;
-				y = resolution.getScaledHeight() - layoutManager.get(pos.value) - 10 - mc.fontRendererObj.FONT_HEIGHT;
-				layoutManager.add(10 + mc.fontRendererObj.FONT_HEIGHT, pos.value);
+				y = resolution.getScaledHeight() - layoutManager.get(pos.value) - 10 - mc.fontRenderer.FONT_HEIGHT;
+				layoutManager.add(10 + mc.fontRenderer.FONT_HEIGHT, pos.value);
 			} else if(pos.value == Position.BOTTOM_RIGHT) {
 				x = resolution.getScaledWidth() - 5 - w;
-				y = resolution.getScaledHeight() - layoutManager.get(pos.value) - 10 - mc.fontRendererObj.FONT_HEIGHT;
-				layoutManager.add(10 + mc.fontRendererObj.FONT_HEIGHT, pos.value);
+				y = resolution.getScaledHeight() - layoutManager.get(pos.value) - 10 - mc.fontRenderer.FONT_HEIGHT;
+				layoutManager.add(10 + mc.fontRenderer.FONT_HEIGHT, pos.value);
 			}
-			if(posMode.index != 1) this.bounds = new Bounds(x, y, w, 11 + mc.fontRendererObj.FONT_HEIGHT);
+			if(posMode.index != 1) this.bounds = new Bounds(x, y, w, 11 + mc.fontRenderer.FONT_HEIGHT);
 			
-			renderBox(x, y, w, 11 + mc.fontRendererObj.FONT_HEIGHT, RenderUtil.colorARGB(58, 0, 0, 0));
+			RenderUtil.drawTooltipBox(x, y, w, 11 + mc.fontRenderer.FONT_HEIGHT);
+			//renderBox(x, y, w, 11 + mc.fontRendererObj.FONT_HEIGHT, Colors.fromARGB(58, 0, 0, 0));
 			
 			if(showBlock.value) {
-				mc.ingameGUI.drawString(mc.fontRendererObj, l, x + 26, y + 6, RenderUtil.colorRGB(255, 255, 255));
+				mc.ingameGUI.drawString(mc.fontRenderer, l, x + 26, y + 6, Colors.WHITE);
 				RenderHelper.enableGUIStandardItemLighting();
 				mc.getRenderItem().renderItemAndEffectIntoGUI(stack, x + 5, y + 2);
 				RenderHelper.disableStandardItemLighting();
 			} else {
-				mc.ingameGUI.drawString(mc.fontRendererObj, l, x + 5, y + 6, RenderUtil.colorRGB(255, 255, 255));
+				mc.ingameGUI.drawString(mc.fontRenderer, l, x + 5, y + 6, Colors.WHITE);
 			}
 		}
 	}
 	
-	public void renderBox(int x, int y, int width, int height, int color) {
+	/*public void renderBox(int x, int y, int width, int height, int color) {
+		Tessellator tes = Tessellator.getInstance();
+
+		RenderUtil.renderQuad(tes, x + 1,         y,     width - 2, height,         color);
+		RenderUtil.renderQuad(tes, x,             y + 1, 1,         height - 2, color);
+		RenderUtil.renderQuad(tes, x + width - 1, y + 1, x + width, y + height - 1, color);
+		
+		RenderUtil.drawRect(x + 1, y + 1, x + (width - 1), y + 2, color);
+		RenderUtil.drawRect(x + 1, y + height - 2, x + (width - 1), y + height - 1, color);
+		
+		RenderUtil.drawRect(x + 1, y + 2, x + 2, y + height - 2, color);
+		RenderUtil.drawRect(x + (width - 2), y + 2, x + (width - 1), y + height - 2, color);
+		
+		/////////////////////////////////////////
+
 		RenderUtil.drawRect(x + 1, y, x + width - 1, y + height, color);
 		RenderUtil.drawRect(x, y + 1, x + 1, y + height - 1, color);
 		RenderUtil.drawRect(x + width - 1, y + 1, x + width, y + height - 1, color);
@@ -227,7 +242,7 @@ public class ExtraGuiElementBlockViewer extends ExtraGuiElement {
 		
 		RenderUtil.drawRect(x + 1, y + 2, x + 2, y + height - 2, color);
 		RenderUtil.drawRect(x + (width - 2), y + 2, x + (width - 1), y + height - 2, color);
-	}
+	}*/
 
 	@Override
 	public boolean shouldProfile() {

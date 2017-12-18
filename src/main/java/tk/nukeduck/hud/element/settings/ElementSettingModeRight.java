@@ -1,18 +1,7 @@
 package tk.nukeduck.hud.element.settings;
 
-import java.io.IOException;
-import java.util.Collection;
-
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-
-import org.apache.commons.lang3.ArrayUtils;
-
-import tk.nukeduck.hud.BetterHud;
-import tk.nukeduck.hud.gui.GuiElementSettings;
-import tk.nukeduck.hud.util.FormatUtil;
-import tk.nukeduck.hud.util.RenderUtil;
 
 public class ElementSettingModeRight extends ElementSettingMode {
 	public ElementSettingModeRight(String name, String[] modes) {

@@ -4,11 +4,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import tk.nukeduck.hud.gui.GuiElementSettings;
-import tk.nukeduck.hud.util.FormatUtil;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
+import tk.nukeduck.hud.gui.GuiElementSettings;
 
 public abstract class ElementSetting {
 	/** Returns the Gui objects which should be added to the settings screen for this setting.
@@ -47,7 +47,7 @@ public abstract class ElementSetting {
 	}
 	
 	public String getLocalizedName() {
-		return FormatUtil.translatePre("setting." + this.getName());
+		return I18n.format("betterHud.setting." + this.getName());
 	}
 	
 	public boolean getEnabled() {

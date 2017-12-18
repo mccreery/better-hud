@@ -5,15 +5,14 @@ import static org.lwjgl.opengl.GL11.glDisable;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.util.math.MathHelper;
+import net.minecraft.client.resources.I18n;
 import tk.nukeduck.hud.element.settings.ElementSettingBoolean;
 import tk.nukeduck.hud.element.settings.ElementSettingDivider;
 import tk.nukeduck.hud.element.settings.ElementSettingPosition.Position;
 import tk.nukeduck.hud.element.settings.ElementSettingText;
-import tk.nukeduck.hud.util.FormatUtil;
 import tk.nukeduck.hud.util.LayoutManager;
-import tk.nukeduck.hud.util.RenderUtil;
 import tk.nukeduck.hud.util.StringManager;
+import tk.nukeduck.hud.util.constants.Colors;
 
 public class ExtraGuiElementFoodHealthStats extends ExtraGuiElementText {
 	private ElementSettingBoolean saturation;
@@ -44,17 +43,15 @@ public class ExtraGuiElementFoodHealthStats extends ExtraGuiElementText {
 	public void render(Minecraft mc, ScaledResolution resolution, StringManager stringManager, LayoutManager layoutManager) {
 		glDisable(GL_LIGHTING);
 		
-		int h = MathHelper.ceiling_float_int(mc.thePlayer.getHealth());
-		String health = (h / 2) + "." + "05".charAt(h % 2);
-		int f = mc.thePlayer.getFoodStats().getFoodLevel();
-		String food = (f / 2) + "." + "05".charAt(f % 2);
+		String health = String.valueOf(((int)mc.player.getHealth()) / 2.0f);
+		String food = String.valueOf(mc.player.getFoodStats().getFoodLevel() / 2.0F);
 		
 		int center = resolution.getScaledWidth() / 2;
 		int textY = resolution.getScaledHeight() - 35;
-		int healthWidth = mc.fontRendererObj.getStringWidth(health);
+		int healthWidth = mc.fontRenderer.getStringWidth(health);
 		
-		mc.ingameGUI.drawString(mc.fontRendererObj, food, center + 95, textY, RenderUtil.colorRGB(255, 255, 255));
-		mc.ingameGUI.drawString(mc.fontRendererObj, health, center - 95 - healthWidth, textY, RenderUtil.colorRGB(255, 255, 255));
+		mc.ingameGUI.drawString(mc.fontRenderer, food, center + 95, textY, Colors.WHITE);
+		mc.ingameGUI.drawString(mc.fontRenderer, health, center - 95 - healthWidth, textY, Colors.WHITE);
 		super.render(mc, resolution, stringManager, layoutManager);
 	}
 
@@ -66,6 +63,7 @@ public class ExtraGuiElementFoodHealthStats extends ExtraGuiElementText {
 	@Override
 	protected String[] getText(Minecraft mc) {
 		if(!this.saturation.value) return new String[] {};
-		return new String[] {FormatUtil.translatePre("strings.saturation", String.valueOf(Math.round(mc.thePlayer.getFoodStats().getSaturationLevel() * 10.0) / 10.0))};
+		return new String[] {I18n.format("betterHud.strings.saturation",
+			Math.round(mc.player.getFoodStats().getSaturationLevel() * 10) / 10.0f)};
 	}
 }

@@ -6,9 +6,9 @@ import java.util.Collection;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 import tk.nukeduck.hud.gui.GuiElementSettings;
 import tk.nukeduck.hud.gui.GuiOptionSliderA;
-import tk.nukeduck.hud.util.FormatUtil;
 import tk.nukeduck.hud.util.FuncsUtil;
 
 public class ElementSettingSlider extends ElementSetting {
@@ -35,7 +35,7 @@ public class ElementSettingSlider extends ElementSetting {
 	}
 	
 	public String getSliderText() {
-		return FormatUtil.translatePre("menu.settingButton", this.getLocalizedName(), String.valueOf(this.value));
+		return I18n.format("betterHud.menu.settingButton", this.getLocalizedName(), this.value);
 	}
 	
 	@Override

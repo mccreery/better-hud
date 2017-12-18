@@ -35,7 +35,6 @@ class PingHandler implements Runnable {
 		try {
 			pinger.ping(data);
 		} catch (UnknownHostException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}

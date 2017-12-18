@@ -7,14 +7,13 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.resources.I18n;
 import tk.nukeduck.hud.element.settings.ElementSettingPosition.Position;
 import tk.nukeduck.hud.gui.GuiElementSettings;
 import tk.nukeduck.hud.gui.GuiToggleButton;
 import tk.nukeduck.hud.util.Bounds;
-import tk.nukeduck.hud.util.FormatUtil;
 import tk.nukeduck.hud.util.Point;
-import tk.nukeduck.hud.util.RenderUtil;
+import tk.nukeduck.hud.util.constants.Colors;
 
 public class ElementSettingAnchor extends ElementSetting {
 	public GuiToggleButton topLeft, topRight, bottomLeft, bottomRight;
@@ -144,6 +143,10 @@ public class ElementSettingAnchor extends ElementSetting {
 	@Override
 	public void render(GuiScreen gui, int yScroll) {
 		if(this.posValue == null) this.updatePosValue();
-		gui.drawString(Minecraft.getMinecraft().fontRendererObj, FormatUtil.translatePre("menu.settingButton", this.getLocalizedName(), FormatUtil.translatePre("setting." + this.posValue.name)), topRight.xPosition + topRight.width + 5, topRight.yPosition + topRight.height - Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT / 2, RenderUtil.colorRGB(255, 255, 255));
+		final int x = topRight.x + topRight.width + 5;
+		final int y = topRight.y + topRight.height - Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT / 2;
+		final String text = I18n.format("betterHud.menu.settingButton", this.getLocalizedName(), I18n.format("betterHud.setting." + this.posValue.name));
+
+		gui.drawString(Minecraft.getMinecraft().fontRenderer, text, x, y, Colors.WHITE);
 	}
 }

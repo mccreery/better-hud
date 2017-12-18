@@ -6,6 +6,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
+import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.util.FuncsUtil;
 
 public class PickupHandler {
@@ -15,8 +16,8 @@ public class PickupHandler {
 		ItemStack i = it.copy();
 		ItemStack existing = existingItem(i);
 		if(existing != null) {
-			float rem = pickedUp.remove(existing);
-			existing.stackSize += i.stackSize;
+			pickedUp.remove(existing);
+			existing.setCount(existing.getCount() + i.getCount());
 			pickedUp.put(existing, 1.0F);
 		} else {
 			pickedUp.put(i, 1.0F);
@@ -35,10 +36,12 @@ public class PickupHandler {
 	public void update(Minecraft mc) {
 		if(!mc.isGamePaused()) {
 			Iterator<Entry<ItemStack, Float>> it2 = pickedUp.entrySet().iterator();
+			float delta = 0.0025F + (float)BetterHud.proxy.elements.pickup.fadeSpeed.value * 0.0225F;
+
 			while(it2.hasNext()) {
 				Entry<ItemStack, Float> entry = it2.next();
 
-				if(entry.setValue(entry.getValue() - 0.01F) <= 0) {
+				if(entry.setValue(entry.getValue() - delta) <= 0) {
 					it2.remove();
 				}
 			}

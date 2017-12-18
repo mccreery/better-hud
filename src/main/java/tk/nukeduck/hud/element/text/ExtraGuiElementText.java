@@ -3,7 +3,6 @@ package tk.nukeduck.hud.element.text;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import tk.nukeduck.hud.element.ExtraGuiElement;
-import tk.nukeduck.hud.element.settings.ElementSettingAbsolutePosition;
 import tk.nukeduck.hud.element.settings.ElementSettingAbsolutePositionAnchored;
 import tk.nukeduck.hud.element.settings.ElementSettingAnchor;
 import tk.nukeduck.hud.element.settings.ElementSettingMode;
@@ -15,6 +14,7 @@ import tk.nukeduck.hud.util.FuncsUtil;
 import tk.nukeduck.hud.util.LayoutManager;
 import tk.nukeduck.hud.util.RenderUtil;
 import tk.nukeduck.hud.util.StringManager;
+import tk.nukeduck.hud.util.constants.Colors;
 
 public abstract class ExtraGuiElementText extends ExtraGuiElement {
 	protected ElementSettingMode posMode;
@@ -48,7 +48,7 @@ public abstract class ExtraGuiElementText extends ExtraGuiElement {
 	}
 	
 	public int getColor() {
-		return RenderUtil.colorRGB((int) this.red.value, (int) this.green.value, (int) this.blue.value);
+		return Colors.fromRGB((int) this.red.value, (int) this.green.value, (int) this.blue.value);
 	}
 	
 	@Override
@@ -73,11 +73,11 @@ public abstract class ExtraGuiElementText extends ExtraGuiElement {
 	public void render(Minecraft mc, ScaledResolution resolution, StringManager stringManager, LayoutManager layoutManager) {
 		String[] text = this.getText(mc);
 		if(posMode.index == 0) {
-			stringManager.add(pos.value, RenderUtil.colorRGB((int) red.value, (int) green.value, (int) blue.value), pos.value == Position.BOTTOM_LEFT || pos.value == Position.BOTTOM_RIGHT ? FuncsUtil.flip(text) : text);
+			stringManager.add(pos.value, this.getColor(), pos.value == Position.BOTTOM_LEFT || pos.value == Position.BOTTOM_RIGHT ? FuncsUtil.flip(text) : text);
 			this.bounds = Bounds.EMPTY;
 		} else {
 			// TODO this is ugly because one frame will always be incorrect
-			this.bounds = RenderUtil.renderStrings(mc.fontRendererObj, text, pos2.x, pos2.y, RenderUtil.colorRGB((int) red.value, (int) green.value, (int) blue.value), Position.TOP_LEFT);
+			this.bounds = RenderUtil.renderStrings(mc.fontRenderer, text, pos2.x, pos2.y, Colors.fromRGB((int) red.value, (int) green.value, (int) blue.value), Position.TOP_LEFT);
 			this.pos2.update(resolution, this.bounds);
 		}
 	}

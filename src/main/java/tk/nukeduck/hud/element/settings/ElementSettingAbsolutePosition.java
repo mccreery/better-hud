@@ -8,11 +8,9 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
-import tk.nukeduck.hud.BetterHud;
+import net.minecraft.client.resources.I18n;
 import tk.nukeduck.hud.gui.GuiElementSettings;
 import tk.nukeduck.hud.gui.GuiUpDownButton;
-import tk.nukeduck.hud.util.FormatUtil;
-import tk.nukeduck.hud.util.Point;
 import tk.nukeduck.hud.util.constants.Constants;
 
 public class ElementSettingAbsolutePosition extends ElementSetting {
@@ -34,16 +32,16 @@ public class ElementSettingAbsolutePosition extends ElementSetting {
 	
 	@Override
 	public Gui[] getGuiParts(int width, int y) {
-		this.xBox = new GuiTextField(0, Minecraft.getMinecraft().fontRendererObj, width / 2 - 106, y + 1, 80, 18);
+		this.xBox = new GuiTextField(0, Minecraft.getMinecraft().fontRenderer, width / 2 - 106, y + 1, 80, 18);
 		xBox.setText(String.valueOf(this.x));
-		this.yBox = new GuiTextField(0, Minecraft.getMinecraft().fontRendererObj, width / 2 + 2, y + 1, 80, 18);
+		this.yBox = new GuiTextField(0, Minecraft.getMinecraft().fontRenderer, width / 2 + 2, y + 1, 80, 18);
 		yBox.setText(String.valueOf(this.y));
 		xUp = new GuiUpDownButton(0, width / 2 - 22, y, 0);
 		xDown = new GuiUpDownButton(1, width / 2 - 22, y + 10, 1);
 		yUp = new GuiUpDownButton(2, width / 2 + 86, y, 0);
 		yDown = new GuiUpDownButton(3, width / 2 + 86, y + 10, 1);
 		
-		pick = new GuiButton(4, width / 2 - 75, y + 22, 150, 20, FormatUtil.translatePre("menu.pick"));
+		pick = new GuiButton(4, width / 2 - 75, y + 22, 150, 20, I18n.format("betterHud.menu.pick"));
 		
 		return new Gui[] {xBox, xUp, xDown, yUp, yDown, yBox, pick};
 	}
@@ -83,7 +81,7 @@ public class ElementSettingAbsolutePosition extends ElementSetting {
 				}
 				
 				gui.currentPicking = isPicking ? this : null;
-				button.displayString = FormatUtil.translatePre("menu.pick" + (isPicking ? "ing" : ""));
+				button.displayString = I18n.format(isPicking ? "betterHud.menu.picking" : "betterHud.menu.pick");
 				updateText();
 				break;
 		}

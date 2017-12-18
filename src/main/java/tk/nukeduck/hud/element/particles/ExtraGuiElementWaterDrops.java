@@ -40,10 +40,10 @@ public class ExtraGuiElementWaterDrops extends ExtraGuiElement {
 	private boolean isUnderwater = false;
 	
 	public void update(Minecraft mc) {
-		if(mc.theWorld == null || mc.thePlayer == null) return;
+		if(mc.world == null || mc.player == null) return;
 		particleManager.update(mc);
 		
-		EntityPlayer entityplayer = mc.thePlayer;
+		EntityPlayer entityplayer = mc.player;
 		
 		ScaledResolution scaledresolution = new ScaledResolution(mc);
 		int width = scaledresolution.getScaledWidth();
@@ -66,7 +66,7 @@ public class ExtraGuiElementWaterDrops extends ExtraGuiElement {
 		}
 		
 		BlockPos pos = new BlockPos(entityplayer.posX, entityplayer.posY + entityplayer.getEyeHeight(), entityplayer.posZ);
-		if(mc.theWorld.isRainingAt(pos) && BetterHud.random.nextInt((4 - this.density.index) * 3) == 0) {
+		if(mc.world.isRainingAt(pos) && BetterHud.random.nextInt((4 - this.density.index) * 3) == 0) {
 			particleManager.particles.add(GuiParticleWater.random(width, height));
 		}
 	}

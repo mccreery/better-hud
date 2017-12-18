@@ -8,9 +8,9 @@ import tk.nukeduck.hud.BetterHud;
 
 public class PlayerHider {
 	@SubscribeEvent
-	public void entityRender(RenderLivingEvent.Pre e) {
+	public void entityRender(RenderLivingEvent.Pre<EntityPlayer> e) {
 		if(BetterHud.proxy.elements.hidePlayers.shouldRender() && e.getEntity() instanceof EntityPlayer &&
-				(BetterHud.proxy.elements.hidePlayers.includeMe.value || !e.getEntity().equals(Minecraft.getMinecraft().thePlayer))) {
+				(BetterHud.proxy.elements.hidePlayers.includeMe.value || !e.getEntity().equals(Minecraft.getMinecraft().player))) {
 			e.setCanceled(true);
 		}
 	}

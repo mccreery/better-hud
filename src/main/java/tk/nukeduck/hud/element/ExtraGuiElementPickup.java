@@ -14,23 +14,25 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import tk.nukeduck.hud.element.settings.ElementSettingAbsolutePosition;
-import tk.nukeduck.hud.element.settings.ElementSettingAbsolutePositionAnchored;
-import tk.nukeduck.hud.element.settings.ElementSettingAnchor;
 import tk.nukeduck.hud.element.settings.ElementSettingMode;
 import tk.nukeduck.hud.element.settings.ElementSettingPosition;
 import tk.nukeduck.hud.element.settings.ElementSettingPosition.Position;
+import tk.nukeduck.hud.element.settings.ElementSettingSlider;
 import tk.nukeduck.hud.network.PickupHandler;
 import tk.nukeduck.hud.util.Bounds;
+import tk.nukeduck.hud.util.FormatUtil;
 import tk.nukeduck.hud.util.LayoutManager;
-import tk.nukeduck.hud.util.RenderUtil;
 import tk.nukeduck.hud.util.StringManager;
+import tk.nukeduck.hud.util.constants.Colors;
 
 public class ExtraGuiElementPickup extends ExtraGuiElement {
 	private ElementSettingMode posMode;
 	private ElementSettingPosition pos;
 	private ElementSettingAbsolutePosition pos2;
+	public ElementSettingSlider fadeSpeed;
 	
 	public final PickupHandler handler = new PickupHandler();
 	
@@ -41,6 +43,7 @@ public class ExtraGuiElementPickup extends ExtraGuiElement {
 		pos.value = Position.MIDDLE_CENTER;
 		pos2.x = 5;
 		pos2.y = 5;
+		fadeSpeed.value = .5;
 	}
 	
 	@Override
@@ -60,6 +63,20 @@ public class ExtraGuiElementPickup extends ExtraGuiElement {
 			@Override
 			public boolean getEnabled() {
 				return posMode.index == 1;
+			}
+		});
+		this.settings.add(fadeSpeed = new ElementSettingSlider("fadeSpeed", 0.0, 1.0) {
+			@Override
+			public String getSliderText() {
+				String display;
+
+				if(this.value == 0.0) display = I18n.format("betterHud.setting.slowest");
+				else if(this.value == 1.0) display = I18n.format("betterHud.setting.fastest");
+				else {
+					display = I18n.format("betterHud.strings.percent", FormatUtil.ONE_PLACE.format(this.value * 100));
+				}
+
+				return I18n.format("betterHud.menu.settingButton", this.getLocalizedName(), display);
 			}
 		});
 		this.registerUpdates(UpdateSpeed.FASTER);
@@ -87,8 +104,8 @@ public class ExtraGuiElementPickup extends ExtraGuiElement {
 			n++;
 			
 			ItemStack i = entry.getKey();
-			String text = i.stackSize + "x " + i.getDisplayName();
-			int textWidth = mc.fontRendererObj.getStringWidth(text);
+			String text = i.getCount() + "x " + i.getDisplayName();
+			int textWidth = mc.fontRenderer.getStringWidth(text);
 			
 			int x, y;
 			if(posMode.index == 1) {
@@ -96,20 +113,20 @@ public class ExtraGuiElementPickup extends ExtraGuiElement {
 				y = pos2.y + 4;
 			} else if(pos.value == Position.MIDDLE_CENTER) {
 				x = resolution.getScaledWidth() / 2 - (textWidth / 2) + 10;
-				y = resolution.getScaledHeight() / 2 - 40 - (mc.fontRendererObj.FONT_HEIGHT + 5) * (n - 1);
+				y = resolution.getScaledHeight() / 2 - 40 - (mc.fontRenderer.FONT_HEIGHT + 5) * (n - 1);
 			} else {
 				x = left ? 26 : resolution.getScaledWidth() - textWidth - 5;
-				y = top ? (mc.fontRendererObj.FONT_HEIGHT + 5) * (n - 1) + layoutManager.get(pos.value) : resolution.getScaledHeight() - (mc.fontRendererObj.FONT_HEIGHT + 5) * (n - 1) - mc.fontRendererObj.FONT_HEIGHT - layoutManager.get(pos.value);
+				y = top ? (mc.fontRenderer.FONT_HEIGHT + 5) * (n - 1) + layoutManager.get(pos.value) : resolution.getScaledHeight() - (mc.fontRenderer.FONT_HEIGHT + 5) * (n - 1) - mc.fontRenderer.FONT_HEIGHT - layoutManager.get(pos.value);
 			}
 			
 			int a = (int) (entry.getValue() * 255);
-			if(a >= 5) mc.ingameGUI.drawString(mc.fontRendererObj, text, x, y, RenderUtil.colorARGB(a, 255, 255, 255));
+			if(a >= 5) mc.ingameGUI.drawString(mc.fontRenderer, text, x, y, Colors.fromARGB(a, 255, 255, 255));
 			
 			RenderHelper.enableGUIStandardItemLighting();
 			int x2 = x - 21;
-			int y2 = y - (16 - mc.fontRendererObj.FONT_HEIGHT) / 2;
+			int y2 = y - (16 - mc.fontRenderer.FONT_HEIGHT) / 2;
 			
-			this.bounds = new Bounds(x2, y2, 21 + mc.fontRendererObj.getStringWidth(text), 16);
+			this.bounds = new Bounds(x2, y2, 21 + mc.fontRenderer.getStringWidth(text), 16);
 			
 			GL11.glPushMatrix(); {
 				GL11.glTranslatef(x2 + 8, y2 + 8, 0f);
@@ -121,7 +138,7 @@ public class ExtraGuiElementPickup extends ExtraGuiElement {
 			}
 	        GL11.glPopMatrix();
 		}
-		if(n > 0) layoutManager.add((mc.fontRendererObj.FONT_HEIGHT + 5) * n, pos.value);
+		if(n > 0) layoutManager.add((mc.fontRenderer.FONT_HEIGHT + 5) * n, pos.value);
 	}
 	
 	private static Map<ItemStack, Float> sortByComparator(Map<ItemStack, Float> unsortMap) {

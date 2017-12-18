@@ -1,11 +1,9 @@
 package tk.nukeduck.hud.network;
 
-import tk.nukeduck.hud.BetterHud;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import tk.nukeduck.hud.BetterHud;
 
 public class MessageNotifyClientHandler implements IMessageHandler<MessageNotifyClient, IMessage> {
 	@Override

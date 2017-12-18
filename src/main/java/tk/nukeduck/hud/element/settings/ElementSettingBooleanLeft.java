@@ -1,15 +1,8 @@
 package tk.nukeduck.hud.element.settings;
 
-import java.io.IOException;
-import java.util.Collection;
-
-import tk.nukeduck.hud.BetterHud;
-import tk.nukeduck.hud.gui.GuiElementSettings;
-import tk.nukeduck.hud.util.FormatUtil;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.resources.I18n;
 
 public class ElementSettingBooleanLeft extends ElementSettingBoolean {
 	public ElementSettingBooleanLeft(String name) {
@@ -22,7 +15,8 @@ public class ElementSettingBooleanLeft extends ElementSettingBoolean {
 	
 	@Override
 	public Gui[] getGuiParts(int width, int y) {
-		toggler = new GuiButton(0, width / 2 - 155, y, 150, 20, FormatUtil.translatePre("menu.settingButton", this.getLocalizedName(), FormatUtil.translate(value ? "options.on" : "options.off")));
+		final String text = I18n.format("betterHud.menu.settingButton", this.getLocalizedName(), I18n.format(this.value ? "options.on" : "options.off"));
+		toggler = new GuiButton(0, width / 2 - 155, y, 150, 20, text);
 		return new Gui[] {toggler};
 	}
 }

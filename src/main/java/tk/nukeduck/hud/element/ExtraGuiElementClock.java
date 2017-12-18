@@ -2,10 +2,11 @@ package tk.nukeduck.hud.element;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import tk.nukeduck.hud.element.settings.ElementSettingAbsolutePosition;
 import tk.nukeduck.hud.element.settings.ElementSettingAbsolutePositionAnchored;
 import tk.nukeduck.hud.element.settings.ElementSettingAnchor;
 import tk.nukeduck.hud.element.settings.ElementSettingBoolean;
@@ -18,6 +19,7 @@ import tk.nukeduck.hud.util.FormatUtil;
 import tk.nukeduck.hud.util.LayoutManager;
 import tk.nukeduck.hud.util.RenderUtil;
 import tk.nukeduck.hud.util.StringManager;
+import tk.nukeduck.hud.util.constants.Colors;
 
 public class ExtraGuiElementClock extends ExtraGuiElement {
 	private ElementSettingMode posMode;
@@ -49,7 +51,7 @@ public class ExtraGuiElementClock extends ExtraGuiElement {
 	}
 	
 	public ExtraGuiElementClock() {
-		staticHeight = Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT * 2 + 12;
+		staticHeight = Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT * 2 + 12;
 		
 		this.settings.add(new ElementSettingDivider("position"));
 		this.settings.add(posMode = new ElementSettingMode("posMode", new String[] {"setPos", "absolute"}));
@@ -84,28 +86,29 @@ public class ExtraGuiElementClock extends ExtraGuiElement {
 	public void render(Minecraft mc, ScaledResolution resolution, StringManager stringManager, LayoutManager layoutManager) {
 		boolean twentyFourHour = twentyFour.value;
 		
-		boolean canSleep = !mc.theWorld.isDaytime();
+		boolean canSleep = !mc.world.isDaytime();
 		
-		long t = (mc.theWorld.getWorldTime() + 6000) % 24000;
-		String day = "Day " + ((mc.theWorld.getWorldTime() + 6000) / 24000 + 1);
+		long t = (mc.world.getWorldTime() + 6000) % 24000;
+		String day = I18n.format("betterHud.strings.day", (mc.world.getWorldTime() + 6000) / 24000 + 1);
 		String time;
 		int h = (int) (t / 1000);
 		
 		time = FormatUtil.formatTime(h, (int) ((t % 1000) / 1000.0 * 60.0), twentyFourHour);
 		
-		int staticWidth = Math.max(mc.fontRendererObj.getStringWidth(time), mc.fontRendererObj.getStringWidth(day)) + 10;
+		int staticWidth = Math.max(mc.fontRenderer.getStringWidth(time), mc.fontRenderer.getStringWidth(day)) + 10;
 		
 		if(posMode.index == 1) {
 			int x = pos2.x;
 			int y = pos2.y;
 			
-			RenderUtil.drawRect(x, y, x + staticWidth, y + staticHeight, RenderUtil.colorARGB(85, 0, 0, 0));
-			mc.ingameGUI.drawString(mc.fontRendererObj, time, x + 5, y + 5, RenderUtil.colorRGB(255, 255, 255));
-			mc.ingameGUI.drawString(mc.fontRendererObj, day, x + 5, y + 7 + mc.fontRendererObj.FONT_HEIGHT, RenderUtil.colorRGB(255, 255, 255));
+			RenderUtil.renderQuad(Tessellator.getInstance(), x, y, staticWidth, staticHeight, Colors.TRANSLUCENT);
+			//RenderUtil.drawRect(x, y, x + staticWidth, y + staticHeight, Colors.TRANSLUCENT);
+			mc.ingameGUI.drawString(mc.fontRenderer, time, x + 5, y + 5, Colors.WHITE);
+			mc.ingameGUI.drawString(mc.fontRenderer, day, x + 5, y + 7 + mc.fontRenderer.FONT_HEIGHT, Colors.WHITE);
 			
 			if(canSleep) { // Night: 6:32 PM - 5:28 AM... Of course
 				mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-				RenderUtil.renderItem(mc.getRenderItem(), mc.fontRendererObj, mc.getTextureManager(), bed, x + Math.max(mc.fontRendererObj.getStringWidth(time), mc.fontRendererObj.getStringWidth(day)) + 15, y + 8);
+				RenderUtil.renderItem(mc.getRenderItem(), mc.fontRenderer, mc.getTextureManager(), bed, x + Math.max(mc.fontRenderer.getStringWidth(time), mc.fontRenderer.getStringWidth(day)) + 15, y + 8);
 			}
 			
 			bounds.setX(x);
@@ -115,49 +118,54 @@ public class ExtraGuiElementClock extends ExtraGuiElement {
 			this.pos2.update(resolution, this.bounds);
 		} else {
 			int currentHeight = layoutManager.get(pos.value);
+			// TODO cool repetitive code dude
 			switch(pos.value) {
 				case TOP_LEFT:
 					this.bounds = new Bounds(0, currentHeight, staticWidth, staticHeight);
-					RenderUtil.drawRect(0, currentHeight, staticWidth, currentHeight + staticHeight, RenderUtil.colorARGB(85, 0, 0, 0));
-					mc.ingameGUI.drawString(mc.fontRendererObj, time, 5, currentHeight + 5, RenderUtil.colorRGB(255, 255, 255));
-					mc.ingameGUI.drawString(mc.fontRendererObj, day, 5, currentHeight + 7 + mc.fontRendererObj.FONT_HEIGHT, RenderUtil.colorRGB(255, 255, 255));
+					RenderUtil.renderQuad(Tessellator.getInstance(), 0, currentHeight, staticWidth, staticHeight, Colors.TRANSLUCENT);
+					//RenderUtil.drawRect(0, currentHeight, staticWidth, currentHeight + staticHeight, Colors.TRANSLUCENT);
+					mc.ingameGUI.drawString(mc.fontRenderer, time, 5, currentHeight + 5, Colors.WHITE);
+					mc.ingameGUI.drawString(mc.fontRenderer, day, 5, currentHeight + 7 + mc.fontRenderer.FONT_HEIGHT, Colors.WHITE);
 					
 					if(canSleep) { // Night: 6:32 PM - 5:28 AM... Of course
 						mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-						RenderUtil.renderItem(mc.getRenderItem(), mc.fontRendererObj, mc.getTextureManager(), bed, Math.max(mc.fontRendererObj.getStringWidth(time), mc.fontRendererObj.getStringWidth(day)) + 15, currentHeight + 8);
+						RenderUtil.renderItem(mc.getRenderItem(), mc.fontRenderer, mc.getTextureManager(), bed, Math.max(mc.fontRenderer.getStringWidth(time), mc.fontRenderer.getStringWidth(day)) + 15, currentHeight + 8);
 					}
 					break;
 				case TOP_RIGHT:
 					this.bounds = new Bounds(resolution.getScaledWidth() - staticWidth, currentHeight, staticWidth, staticHeight);
-					RenderUtil.drawRect(resolution.getScaledWidth() - staticWidth, currentHeight, resolution.getScaledWidth(), currentHeight + staticHeight, RenderUtil.colorARGB(85, 0, 0, 0));
-					mc.ingameGUI.drawString(mc.fontRendererObj, time, resolution.getScaledWidth() - mc.fontRendererObj.getStringWidth(time) - 5, currentHeight + 5, RenderUtil.colorRGB(255, 255, 255));
-					mc.ingameGUI.drawString(mc.fontRendererObj, day, resolution.getScaledWidth() - mc.fontRendererObj.getStringWidth(day) - 5, currentHeight + 7 + mc.fontRendererObj.FONT_HEIGHT, RenderUtil.colorRGB(255, 255, 255));
+					RenderUtil.renderQuad(Tessellator.getInstance(), resolution.getScaledWidth() - staticWidth, currentHeight, staticWidth, staticHeight, Colors.TRANSLUCENT);
+					//RenderUtil.drawRect(resolution.getScaledWidth() - staticWidth, currentHeight, resolution.getScaledWidth(), currentHeight + staticHeight, Colors.TRANSLUCENT);
+					mc.ingameGUI.drawString(mc.fontRenderer, time, resolution.getScaledWidth() - mc.fontRenderer.getStringWidth(time) - 5, currentHeight + 5, Colors.WHITE);
+					mc.ingameGUI.drawString(mc.fontRenderer, day, resolution.getScaledWidth() - mc.fontRenderer.getStringWidth(day) - 5, currentHeight + 7 + mc.fontRenderer.FONT_HEIGHT, Colors.WHITE);
 					
 					if(canSleep) { // Night: 6:32 PM - 5:28 AM... Of course
 						mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-						RenderUtil.renderItem(mc.getRenderItem(), mc.fontRendererObj, mc.getTextureManager(), bed, resolution.getScaledWidth() - Math.max(mc.fontRendererObj.getStringWidth(time), mc.fontRendererObj.getStringWidth(day)) - 31, currentHeight + 8);
+						RenderUtil.renderItem(mc.getRenderItem(), mc.fontRenderer, mc.getTextureManager(), bed, resolution.getScaledWidth() - Math.max(mc.fontRenderer.getStringWidth(time), mc.fontRenderer.getStringWidth(day)) - 31, currentHeight + 8);
 					}
 					break;
 				case BOTTOM_LEFT:
 					this.bounds = new Bounds(0, resolution.getScaledHeight() - currentHeight - staticHeight, staticWidth, staticHeight);
-					RenderUtil.drawRect(0, resolution.getScaledHeight() - currentHeight - staticHeight, staticWidth, resolution.getScaledHeight() - currentHeight, RenderUtil.colorARGB(85, 0, 0, 0));
-					mc.ingameGUI.drawString(mc.fontRendererObj, time, 5, resolution.getScaledHeight() - currentHeight - staticHeight + 5, RenderUtil.colorRGB(255, 255, 255));
-					mc.ingameGUI.drawString(mc.fontRendererObj, day, 5, resolution.getScaledHeight() - currentHeight - staticHeight + 7 + mc.fontRendererObj.FONT_HEIGHT, RenderUtil.colorRGB(255, 255, 255));
+					RenderUtil.renderQuad(Tessellator.getInstance(), 0, resolution.getScaledHeight() - currentHeight - staticHeight, staticWidth, staticHeight, Colors.TRANSLUCENT);
+					//RenderUtil.drawRect(0, resolution.getScaledHeight() - currentHeight - staticHeight, staticWidth, resolution.getScaledHeight() - currentHeight, Colors.TRANSLUCENT);
+					mc.ingameGUI.drawString(mc.fontRenderer, time, 5, resolution.getScaledHeight() - currentHeight - staticHeight + 5, Colors.WHITE);
+					mc.ingameGUI.drawString(mc.fontRenderer, day, 5, resolution.getScaledHeight() - currentHeight - staticHeight + 7 + mc.fontRenderer.FONT_HEIGHT, Colors.WHITE);
 					
 					if(canSleep) { // Night: 6:32 PM - 5:28 AM... Of course
 						mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-						RenderUtil.renderItem(mc.getRenderItem(), mc.fontRendererObj, mc.getTextureManager(), bed, Math.max(mc.fontRendererObj.getStringWidth(time), mc.fontRendererObj.getStringWidth(day)) + 15, resolution.getScaledHeight() - currentHeight - staticHeight + 8);
+						RenderUtil.renderItem(mc.getRenderItem(), mc.fontRenderer, mc.getTextureManager(), bed, Math.max(mc.fontRenderer.getStringWidth(time), mc.fontRenderer.getStringWidth(day)) + 15, resolution.getScaledHeight() - currentHeight - staticHeight + 8);
 					}
 					break;
 				case BOTTOM_RIGHT:
 					this.bounds = new Bounds(resolution.getScaledWidth() - staticWidth, resolution.getScaledHeight() - currentHeight - staticHeight, staticWidth, staticHeight);
-					RenderUtil.drawRect(resolution.getScaledWidth() - staticWidth, resolution.getScaledHeight() - currentHeight - staticHeight, resolution.getScaledWidth(), resolution.getScaledHeight() - currentHeight, RenderUtil.colorARGB(85, 0, 0, 0));
-					mc.ingameGUI.drawString(mc.fontRendererObj, time, resolution.getScaledWidth() - mc.fontRendererObj.getStringWidth(time) - 5, resolution.getScaledHeight() - currentHeight - staticHeight + 5, RenderUtil.colorRGB(255, 255, 255));
-					mc.ingameGUI.drawString(mc.fontRendererObj, day, resolution.getScaledWidth() - mc.fontRendererObj.getStringWidth(day) - 5, resolution.getScaledHeight() - currentHeight - staticHeight + 7 + mc.fontRendererObj.FONT_HEIGHT, RenderUtil.colorRGB(255, 255, 255));
+					RenderUtil.renderQuad(Tessellator.getInstance(), resolution.getScaledWidth() - staticWidth, resolution.getScaledHeight() - currentHeight - staticHeight, staticWidth, staticHeight, Colors.TRANSLUCENT);
+					//RenderUtil.drawRect(resolution.getScaledWidth() - staticWidth, resolution.getScaledHeight() - currentHeight - staticHeight, resolution.getScaledWidth(), resolution.getScaledHeight() - currentHeight, Colors.TRANSLUCENT);
+					mc.ingameGUI.drawString(mc.fontRenderer, time, resolution.getScaledWidth() - mc.fontRenderer.getStringWidth(time) - 5, resolution.getScaledHeight() - currentHeight - staticHeight + 5, Colors.WHITE);
+					mc.ingameGUI.drawString(mc.fontRenderer, day, resolution.getScaledWidth() - mc.fontRenderer.getStringWidth(day) - 5, resolution.getScaledHeight() - currentHeight - staticHeight + 7 + mc.fontRenderer.FONT_HEIGHT, Colors.WHITE);
 					
 					if(canSleep) { // Night: 6:32 PM - 5:28 AM... Of course
 						mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-						RenderUtil.renderItem(mc.getRenderItem(), mc.fontRendererObj, mc.getTextureManager(), bed, resolution.getScaledWidth() - Math.max(mc.fontRendererObj.getStringWidth(time), mc.fontRendererObj.getStringWidth(day)) - 31, resolution.getScaledHeight() - currentHeight - staticHeight + 8);
+						RenderUtil.renderItem(mc.getRenderItem(), mc.fontRenderer, mc.getTextureManager(), bed, resolution.getScaledWidth() - Math.max(mc.fontRenderer.getStringWidth(time), mc.fontRenderer.getStringWidth(day)) - 31, resolution.getScaledHeight() - currentHeight - staticHeight + 8);
 					}
 					break;
 				default:
@@ -169,8 +177,8 @@ public class ExtraGuiElementClock extends ExtraGuiElement {
 			int rightHeight = layoutManager.get(Position.TOP_RIGHT);
 			
 			RenderUtil.drawRect(width - staticWidth, rightHeight, width, rightHeight + staticHeight, RenderUtil.colorARGB(85, 0, 0, 0));
-			mc.ingameGUI.drawString(fr, time, width - fr.getStringWidth(time) - 5, rightHeight + 5, RenderUtil.colorRGB(255, 255, 255));
-			mc.ingameGUI.drawString(fr, day, width - fr.getStringWidth(day) - 5, rightHeight + 7 + fr.FONT_HEIGHT, RenderUtil.colorRGB(255, 255, 255));
+			mc.ingameGUI.drawString(fr, time, width - fr.getStringWidth(time) - 5, rightHeight + 5, Colors.WHITE);
+			mc.ingameGUI.drawString(fr, day, width - fr.getStringWidth(day) - 5, rightHeight + 7 + fr.FONT_HEIGHT, Colors.WHITE);
 			
 			if(t >= night || t <= morning) { // Night: 6:32 PM - 5:28 AM... Of course
 				BetterHud.mc.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
@@ -184,8 +192,8 @@ public class ExtraGuiElementClock extends ExtraGuiElement {
 			int leftHeight = layoutManager.get(Position.TOP_LEFT);
 			
 			RenderUtil.drawRect(0, leftHeight, staticWidth, leftHeight + staticHeight, RenderUtil.colorARGB(85, 0, 0, 0));
-			mc.ingameGUI.drawString(fr, time, 5, leftHeight + 5, RenderUtil.colorRGB(255, 255, 255));
-			mc.ingameGUI.drawString(fr, day, 5, leftHeight + 7 + fr.FONT_HEIGHT, RenderUtil.colorRGB(255, 255, 255));
+			mc.ingameGUI.drawString(fr, time, 5, leftHeight + 5, Colors.WHITE);
+			mc.ingameGUI.drawString(fr, day, 5, leftHeight + 7 + fr.FONT_HEIGHT, Colors.WHITE);
 			
 			if(t >= night || t <= morning) { // Night: 6:32 PM - 5:28 AM... Of course
 				BetterHud.mc.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);

@@ -2,8 +2,6 @@ package tk.nukeduck.hud.network.proxy;
 
 import org.lwjgl.input.Keyboard;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -19,11 +17,14 @@ public class ClientProxy extends CommonProxy {
 		MinecraftForge.EVENT_BUS.register(BetterHud.entityInfoRenderer = new EntityInfoRenderer());
 	}
 
-	public static KeyBinding openMenu;
+	public KeyBinding openMenu, disable;
+
 	@Override
 	public void initKeys() {
-		openMenu = new KeyBinding("key.betterHud.open", Keyboard.KEY_U, "key.categories.misc");
+		this.openMenu = new KeyBinding("key.betterHud.open", Keyboard.KEY_U, "key.categories.misc");
+		this.disable = new KeyBinding("key.betterHud.disable", Keyboard.KEY_F3, "key.categories.misc");
 		ClientRegistry.registerKeyBinding(openMenu);
+		ClientRegistry.registerKeyBinding(disable);
 	}
 
 	@Override

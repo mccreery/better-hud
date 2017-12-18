@@ -7,11 +7,10 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import tk.nukeduck.hud.BetterHud;
+import net.minecraft.client.resources.I18n;
 import tk.nukeduck.hud.gui.GuiElementSettings;
 import tk.nukeduck.hud.gui.GuiToggleButton;
-import tk.nukeduck.hud.util.FormatUtil;
-import tk.nukeduck.hud.util.RenderUtil;
+import tk.nukeduck.hud.util.constants.Colors;
 
 public class ElementSettingPosition extends ElementSetting {
 	public GuiToggleButton topLeft, topCenter, topRight,
@@ -118,7 +117,11 @@ public class ElementSettingPosition extends ElementSetting {
 	
 	@Override
 	public void render(GuiScreen gui, int yScroll) {
-		gui.drawString(Minecraft.getMinecraft().fontRendererObj, FormatUtil.translatePre("menu.settingButton", this.getLocalizedName(), FormatUtil.translatePre("setting." + this.value.name)), middleRight.xPosition + middleRight.width + 5, middleRight.yPosition + (middleRight.height - Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT) / 2, RenderUtil.colorRGB(255, 255, 255));
+		final String text = I18n.format("betterHud.menu.settingButton", this.getLocalizedName(), I18n.format("betterHud.setting." + this.value.name));
+		final int x = middleRight.x + middleRight.width + 5;
+		final int y = middleRight.y + (middleRight.height - Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT) / 2;
+
+		gui.drawString(Minecraft.getMinecraft().fontRenderer, text, x, y, Colors.WHITE);
 	}
 
 	@Override

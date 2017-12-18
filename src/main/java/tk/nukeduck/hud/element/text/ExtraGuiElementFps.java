@@ -1,22 +1,9 @@
 package tk.nukeduck.hud.element.text;
 
-import java.util.ArrayList;
-
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScaledResolution;
-import scala.actors.threadpool.Arrays;
-import tk.nukeduck.hud.BetterHud;
-import tk.nukeduck.hud.element.settings.ElementSettingAbsolutePosition;
+import net.minecraft.client.resources.I18n;
 import tk.nukeduck.hud.element.settings.ElementSettingBoolean;
 import tk.nukeduck.hud.element.settings.ElementSettingDivider;
-import tk.nukeduck.hud.element.settings.ElementSettingMode;
-import tk.nukeduck.hud.element.settings.ElementSettingPosition;
-import tk.nukeduck.hud.element.settings.ElementSettingPosition.Position;
-import tk.nukeduck.hud.util.Bounds;
-import tk.nukeduck.hud.util.FormatUtil;
-import tk.nukeduck.hud.util.LayoutManager;
-import tk.nukeduck.hud.util.RenderUtil;
-import tk.nukeduck.hud.util.StringManager;
 
 public class ExtraGuiElementFps extends ExtraGuiElementText {
 	private ElementSettingBoolean numberOnly;
@@ -43,7 +30,7 @@ public class ExtraGuiElementFps extends ExtraGuiElementText {
 	String currentFps = "";
 	public void update(Minecraft mc) {
 		currentFps = mc.debug.split(" ")[0];
-		if(!numberOnly.value) currentFps = FormatUtil.translatePre("strings.fps", currentFps);
+		if(!numberOnly.value) currentFps = I18n.format("betterHud.strings.fps", currentFps);
 	}
 	
 	@Override

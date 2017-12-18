@@ -1,23 +1,31 @@
 package tk.nukeduck.hud.util;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.regex.Pattern;
-
-import com.google.common.base.Strings;
 
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.util.text.translation.I18n;
+import net.minecraft.client.resources.I18n;
 
 public class FormatUtil {
+	public static final DecimalFormat ONE_PLACE = new DecimalFormat("#.#");
+
 	public static String formatTime(int hours, int minutes, boolean twentyFourHour) {
+		String unlocalized, hourS, minuteS;
+
 		if(twentyFourHour) {
-			return translatePre("strings.time", String.valueOf(hours), Strings.padStart(String.valueOf(minutes), 2, '0'));
+			unlocalized = "betterHud.strings.time";
+			hourS = String.format("%02d", hours);
 		} else {
-			int h = hours % 12;
-			if(h == 0) h = 12;
-			return translatePre("strings.time." + (hours >= 12 ? "pm" : "am"), String.valueOf(h), Strings.padStart(String.valueOf(minutes), 2, '0'));
+			final boolean pm = hours >= 12;
+			if(pm) hours -= 12;
+			if(hours == 0) hours = 12;
+
+			unlocalized = pm ? "betterHud.strings.time.pm" : "betterHud.strings.time.am";
+			hourS = String.valueOf(hours);
 		}
+
+		minuteS = String.format("%02d", minutes);
+		return I18n.format(unlocalized, hourS, minuteS);
 	}
 	
 	public static int getLongestWidth(FontRenderer fr, ArrayList<String> strings) {
@@ -29,29 +37,20 @@ public class FormatUtil {
 		return longest;
 	}
 	
-	public static final String PARAM_CHAR = "*";
-	public static final String HUD_PREFIX = "betterHud.";
-	
-	public static String translatePre(String path, String...params) {
-		return translate(HUD_PREFIX + path, params);
-	}
-	
-	public static String translate(String path, String... params) {
-		String translation = I18n.translateToLocal(path);
-		translation = translation == path ? I18n.translateToFallback(path) : translation;
-		if(params.length > 0) {
-			int i = 0;
-			while(i < params.length && translation.contains(PARAM_CHAR)) {
-				translation = translation.replaceFirst(Pattern.quote(PARAM_CHAR), params[i]);
-				i++;
+	public static String separate(final String delimiter, String... parts) {
+		if(parts.length == 0) {
+			return "";
+		} else if(parts.length == 1) {
+			return parts[0];
+		} else {
+			StringBuilder builder = new StringBuilder(parts[0].length() * parts.length);
+			builder.append(parts[0]);
+
+			for(int i = 1; i < parts.length; i++) {
+				builder.append(delimiter);
+				builder.append(parts[i]);
 			}
+			return builder.toString();
 		}
-		return translation;
-	}
-	
-	public static String separate(String... parts) {
-		if(parts.length == 0) return "";
-		if(parts.length == 1) return parts[0];
-		return translatePre("strings.separated", parts[0], separate((String[]) Arrays.copyOfRange(parts, 1, parts.length)));
 	}
 }

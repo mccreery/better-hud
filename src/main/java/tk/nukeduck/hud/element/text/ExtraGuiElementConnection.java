@@ -4,12 +4,12 @@ import java.util.ArrayList;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraftforge.fml.common.FMLCommonHandler;
+import net.minecraft.client.resources.I18n;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 import tk.nukeduck.hud.element.settings.ElementSettingBoolean;
 import tk.nukeduck.hud.element.settings.ElementSettingDivider;
-import tk.nukeduck.hud.util.FormatUtil;
 import tk.nukeduck.hud.util.LayoutManager;
 import tk.nukeduck.hud.util.PingService;
 import tk.nukeduck.hud.util.StringManager;
@@ -29,7 +29,7 @@ public class ExtraGuiElementConnection extends ExtraGuiElementText {
 	
 	@Override
 	public void init() {
-		FMLCommonHandler.instance().bus().register(this);
+		MinecraftForge.EVENT_BUS.register(this);
 	}
 	
 	@Override
@@ -101,11 +101,11 @@ public class ExtraGuiElementConnection extends ExtraGuiElementText {
 		
 		if(playerCount.value) {
 			int players = mc.getConnection().getPlayerInfoMap().size();
-			String conn = players != 1 ? FormatUtil.translatePre("strings.players", String.valueOf(players)) : FormatUtil.translatePre("strings.player");
+			String conn = I18n.format(players != 1 ? "betterHud.strings.players" : "betterHud.strings.player", players);
 			toRender.add(conn);
 		}
-		if(showIp.value) toRender.add(ip.equals("localServer") ? FormatUtil.translatePre("strings.localServer") : FormatUtil.translatePre("strings.ip", ip));
-		if(latency.value) toRender.add(lastPing + "ms");
+		if(showIp.value) toRender.add(I18n.format(ip.equals("localServer") ? "betterHud.strings.localServer" : "betterHud.strings.ip", ip));
+		if(latency.value) toRender.add(I18n.format("betterHud.strings.ping", lastPing));
 		return toRender.toArray(new String[toRender.size()]);
 	}
 }

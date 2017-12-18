@@ -1,6 +1,5 @@
 package tk.nukeduck.hud.element;
 
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 
@@ -8,10 +7,14 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import tk.nukeduck.hud.element.settings.ElementSetting;
-import tk.nukeduck.hud.element.settings.ElementSettingAbsolutePosition;
 import tk.nukeduck.hud.element.settings.ElementSettingAbsolutePositionAnchored;
 import tk.nukeduck.hud.element.settings.ElementSettingAnchor;
 import tk.nukeduck.hud.element.settings.ElementSettingBoolean;
@@ -42,9 +45,8 @@ public class ExtraGuiElementArmorBars extends ExtraGuiElement {
 	private ElementSettingAbsolutePositionAnchored pos2;
 	private ElementSettingAnchor anchor;
 	private ElementSettingPosition alignment;
+	private ElementSettingBoolean enableWarnings;
 	private ElementSettingSlider[] damageWarnings;
-	
-	public static final DecimalFormat ONE_PLACE = new DecimalFormat("#.#");
 	
 	@Override
 	public void loadDefaults() {
@@ -59,6 +61,7 @@ public class ExtraGuiElementArmorBars extends ExtraGuiElement {
 		pos2.x = 5;
 		pos2.y = 5;
 		anchor.value = Position.TOP_LEFT.getFlag();
+		enableWarnings.value = true;
 		damageWarnings[0].value = 45.0;
 		damageWarnings[1].value = 25.0;
 		damageWarnings[2].value = 10.0;
@@ -124,13 +127,14 @@ public class ExtraGuiElementArmorBars extends ExtraGuiElement {
 		bars.comments.add("hidden, smallBars, largeBars");
 		
 		this.settings.add(new ElementSettingDivider("damageWarning"));
+		this.settings.add(this.enableWarnings = new ElementSettingBoolean("damageWarning"));
 		damageWarnings = new ElementSettingSlider[3];
 		Position[] positions = new Position[] {Position.MIDDLE_LEFT, Position.MIDDLE_CENTER, Position.MIDDLE_RIGHT};
 		for(int i = 0; i < 3; i++) {
 			this.settings.add(damageWarnings[i] = new ElementSettingSliderPositioned("damaged." + String.valueOf(i), 1, 100, positions[i]) {
 				@Override
 				public String getSliderText() {
-					return FormatUtil.translatePre("menu.settingButton", this.getLocalizedName(), FormatUtil.translatePre("strings.percent", String.valueOf((int) this.value)));
+					return I18n.format("betterHud.menu.settingButton", this.getLocalizedName(), I18n.format("betterHud.strings.percent", String.valueOf((int) this.value)));
 				}
 			});
 			damageWarnings[i].accuracy = 1;
@@ -146,20 +150,24 @@ public class ExtraGuiElementArmorBars extends ExtraGuiElement {
 		float value = (float) (maxDamage - item.getItemDamage()) / (float) maxDamage;
 		if(this.showDurability.value) {
 			if(durabilityMode.getValue().equals("percent")) {
-				parts.add(FormatUtil.translatePre("strings.percent", ONE_PLACE.format(value * 100.0)));
+				parts.add(I18n.format("betterHud.strings.percent", FormatUtil.ONE_PLACE.format(value * 100.0)));
 			} else {
-				parts.add(FormatUtil.translatePre("strings.outOf", String.valueOf(maxDamage - item.getItemDamage()), String.valueOf(maxDamage)));
+				parts.add(I18n.format("betterHud.strings.outOf", String.valueOf(maxDamage - item.getItemDamage()), String.valueOf(maxDamage)));
 			}
 		}
 
-		int count = -1;
-		for(int a = 0; a < this.damageWarnings.length; a++) {
-			if(value * 100.0f <= damageWarnings[a].value) {
-				count = a;
+		if(enableWarnings.value) {
+			int count = -1;
+			for(int a = 0; a < this.damageWarnings.length; a++) {
+				if(value * 100.0f <= damageWarnings[a].value) {
+					count = a;
+				}
 			}
+			String exclamation = count == -1 ? "" : I18n.format("betterHud.strings.damaged." + count);
+			return FormatUtil.separate(I18n.format("betterHud.strings.splitter"), parts.toArray(new String[parts.size()])) + " " + exclamation;
+		} else {
+			return FormatUtil.separate(I18n.format("betterHud.strings.splitter"), parts.toArray(new String[parts.size()]));
 		}
-		String exclamation = count == -1 ? "" : FormatUtil.translatePre("strings.damaged." + count);
-		return FormatUtil.separate(parts.toArray(new String[parts.size()])) + " " + exclamation;
 	}
 	
 	String[] textCache = new String[4];
@@ -182,13 +190,12 @@ public class ExtraGuiElementArmorBars extends ExtraGuiElement {
 		
 		boolean anyArmor = false;
 		for(int i = 0; i < 4; i++) {
-			ItemStack item = armor[i];
-			if(item != null) {
+			if(isStackValid(armor[i])) {
 				anyArmor = true;
 				
 				if(this.showName.value || this.showDurability.value) {
-					this.textCache[i] = generateText(item);
-					widthCache[i] = 21 + mc.fontRendererObj.getStringWidth(textCache[i]);
+					this.textCache[i] = generateText(armor[i]);
+					widthCache[i] = 21 + mc.fontRenderer.getStringWidth(textCache[i]);
 					if(widthCache[i] > b.getWidth()) b.setWidth(widthCache[i]);
 				}
 			}
@@ -206,12 +213,19 @@ public class ExtraGuiElementArmorBars extends ExtraGuiElement {
 		return b;
 	}
 	
+	private boolean isStackValid(ItemStack stack) {
+		return stack != null && !stack.isEmpty();
+	}
+	
 	@Override
 	public void render(Minecraft mc, ScaledResolution resolution, StringManager stringManager, LayoutManager layoutManager) {
+		TextureMap emptySlots = Minecraft.getMinecraft().getTextureMapBlocks();
+
 		boolean left = alignment.value == Position.MIDDLE_LEFT;
-		int cHeight = layoutManager.get(left ? Position.TOP_LEFT : Position.TOP_RIGHT);
+		//int cHeight = layoutManager.get(left ? Position.TOP_LEFT : Position.TOP_RIGHT);
 		
-		ItemStack[] armor = mc.thePlayer.inventory.armorInventory.clone();
+		// TODO why do this?????
+		ItemStack[] armor = mc.player.inventory.armorInventory.toArray(new ItemStack[mc.player.inventory.armorInventory.size()]);
 		ArrayUtils.reverse(armor);
 		
 		this.bounds = generateBounds(mc, resolution, layoutManager, armor);
@@ -226,46 +240,56 @@ public class ExtraGuiElementArmorBars extends ExtraGuiElement {
 		mc.mcProfiler.startSection("items");
 		RenderHelper.enableGUIStandardItemLighting();
 		for(int i = 0; i < 4; i++) {
-			ItemStack stack = armor[i];
-			if(stack != null) {
-				mc.getRenderItem().renderItemAndEffectIntoGUI(stack, left ? this.bounds.getX() : this.bounds.getX2() - 16, this.bounds.getY() + i * 18);
+			int x = left ? this.bounds.getX() : this.bounds.getX2() - 16;
+			int y = this.bounds.getY() + i * 18;
+
+			if(isStackValid(armor[i])) {
+				mc.getRenderItem().renderItemAndEffectIntoGUI(armor[i], x, y);
+			} else {
+				TextureAtlasSprite empty = emptySlots.getAtlasSprite(ItemArmor.EMPTY_SLOT_NAMES[3-i]);
+
+				if(empty != null) {
+					GlStateManager.disableLighting();
+					mc.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+					mc.ingameGUI.drawTexturedModalRect(x, y, empty, 16, 16);
+					GlStateManager.enableLighting();
+				}
 			}
 		}
 		RenderHelper.disableStandardItemLighting();
 		mc.mcProfiler.endSection();
 		
 		if(this.showName.value || this.showDurability.value) {
-    		mc.mcProfiler.startSection("text");
-    		int textOffset = this.bars.index == 2 ? 2 : 4; 
-    		for(int i = 0; i < 4; i++) {
-    			ItemStack stack = armor[i];
-    			if(stack != null) {
-    				int x = left ? this.bounds.getX() + 21 : this.bounds.getX2() - widthCache[i];
-    				mc.ingameGUI.drawString(mc.fontRendererObj, this.textCache[i], x, this.bounds.getY() + i * 18 + textOffset, 0xffffff);
-    			}
-    		}
-    		mc.mcProfiler.endSection();
+			mc.mcProfiler.startSection("text");
+			int textOffset = this.bars.index == 2 ? 2 : 4; 
+			for(int i = 0; i < 4; i++) {
+				//ItemStack stack = armor[i];
+				if(isStackValid(armor[i])) {
+					int x = left ? this.bounds.getX() + 21 : this.bounds.getX2() - widthCache[i];
+					mc.ingameGUI.drawString(mc.fontRenderer, this.textCache[i], x, this.bounds.getY() + i * 18 + textOffset, 0xffffff);
+				}
+			}
+			mc.mcProfiler.endSection();
 		}
-		
+
 		if(this.bars.index != 0) {
-    		mc.mcProfiler.startSection("bars");
-    		for(int i = 0; i < 4; i++) {
-    			if(armor[i] == null) continue;
-    			
-    			float value = (float) (armor[i].getMaxDamage() - armor[i].getItemDamage()) / (float) armor[i].getMaxDamage();
-    			if(this.bars.index == 2) {
-    				int x = this.alignment.value == Position.MIDDLE_LEFT ? this.bounds.getX() + 21 : this.bounds.getX2() - 85;
-    				int y = this.bounds.getY() + i * 18 + 12 + (this.showName.value || this.showDurability.value ? 0 : -4);
-    				RenderUtil.drawProgressBar(x, y, x + 64, y + 2, value);
-    			} else {
-    				int x = this.alignment.value == Position.MIDDLE_LEFT ? this.bounds.getX() + 16 : this.bounds.getX2() - 18;
-    				int y = this.bounds.getY() + i * 18;
-    				RenderUtil.drawProgressBarV(x, y, x + 2, y + 16, value);
-    			}
-    		}
-    		mc.mcProfiler.endSection();
+			mc.mcProfiler.startSection("bars");
+			for(int i = 0; i < 4; i++) {
+				if(!isStackValid(armor[i])) continue;
+
+				if(this.bars.index == 2) {
+					int x = this.alignment.value == Position.MIDDLE_LEFT ? this.bounds.getX() + 21 : this.bounds.getX2() - 85;
+					int y = this.bounds.getY() + i * 18 + 12 + (this.showName.value || this.showDurability.value ? 0 : -4);
+					RenderUtil.drawDamageBar(x, y, 64, 2, armor[i], false);
+				} else {
+					int x = this.alignment.value == Position.MIDDLE_LEFT ? this.bounds.getX() + 16 : this.bounds.getX2() - 18;
+					int y = this.bounds.getY() + i * 18;
+					RenderUtil.drawDamageBar(x, y, 2, 16, armor[i], true);
+				}
+			}
+			mc.mcProfiler.endSection();
 		}
-		
+
 		/*if(shouldRender) {
 			String barType = bars.getValue();
 			boolean showBars = !barType.equals("hidden");
@@ -304,14 +328,14 @@ public class ExtraGuiElementArmorBars extends ExtraGuiElement {
 						
 						String dur;
 						if(durabilityMode.getValue().equals("percent")) {
-							dur = FormatUtil.translatePre("strings.percent", ONE_PLACE.format(value * 100.0));
+							dur = I18n.format("betterHud.strings.percent", FormatUtil.ONE_PLACE.format(value * 100.0));
 						} else {
-							dur = FormatUtil.translatePre("strings.outOf", String.valueOf(maxDamage - armor[i].getItemDamage()), String.valueOf(maxDamage));
+							dur = I18n.format("betterHud.strings.outOf", String.valueOf(maxDamage - armor[i].getItemDamage()), String.valueOf(maxDamage));
 						}
 						
 						if(armor[i].getMaxDamage() != 0) {
     						if(name && durability) {
-    							text = FormatUtil.translatePre("strings.separated", armor[i].getDisplayName(), dur);
+    							text = FormatUtil.separate(I18n.format("betterHud.strings.splitter"), armor[i].getDisplayName(), dur);
     						} else if(name) {
     							text = armor[i].getDisplayName();
     						} else if(durability) {
@@ -332,8 +356,8 @@ public class ExtraGuiElementArmorBars extends ExtraGuiElement {
 					if(armor[i] != null) {
 
 						
-						//text = FormatUtil.translatePre("strings.outOf", String.valueOf(maxDamage - armor[i].getItemDamage()), String.valueOf(maxDamage));
-						//if(shouldDoName) text = FormatUtil.translatePre("strings.separated", armor[i].getDisplayName(), text + ChatFormatting.RESET);
+						//text = I18n.format("betterHud.strings.outOf", String.valueOf(maxDamage - armor[i].getItemDamage()), String.valueOf(maxDamage));
+						//if(shouldDoName) text = FormatUtil.separate(I18n.format("betterHud.strings.splitter"), armor[i].getDisplayName(), text + ChatFormatting.RESET);
 						
 						int textY = (x == -1 ? cHeight : y) + yOffset;
 						int textWidth = mc.fontRendererObj.getStringWidth(text);
@@ -361,7 +385,7 @@ public class ExtraGuiElementArmorBars extends ExtraGuiElement {
 								count = a;
 							}
 						}
-						String exclamation = count == -1 ? "" : FormatUtil.translatePre("strings.damaged." + count);
+						String exclamation = count == -1 ? "" : I18n.format("betterHud.strings.damaged." + count);
 						
 						if(!exclamation.equals("")) {
     						if(x == -1) {

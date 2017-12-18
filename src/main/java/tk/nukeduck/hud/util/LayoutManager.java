@@ -1,7 +1,5 @@
 package tk.nukeduck.hud.util;
 
-import java.util.ArrayList;
-
 import tk.nukeduck.hud.element.settings.ElementSettingPosition.Position;
 
 public class LayoutManager {

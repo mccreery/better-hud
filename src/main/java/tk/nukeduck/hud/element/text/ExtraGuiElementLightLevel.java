@@ -1,11 +1,11 @@
 package tk.nukeduck.hud.element.text;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.EnumSkyBlock;
 import tk.nukeduck.hud.element.settings.ElementSettingPosition.Position;
-import tk.nukeduck.hud.util.FormatUtil;
 
 public class ExtraGuiElementLightLevel extends ExtraGuiElementText {
 	@Override
@@ -28,19 +28,19 @@ public class ExtraGuiElementLightLevel extends ExtraGuiElementText {
 	
 	public void update(Minecraft mc) {
 		int light = 0;
-		if(mc.thePlayer == null || mc.theWorld == null) return;
+		if(mc.player == null || mc.world == null) return;
 		
-	    int j3 = MathHelper.floor_double(mc.thePlayer.posX);
-	    int k3 = MathHelper.floor_double(mc.thePlayer.posY);
-	    int l3 = MathHelper.floor_double(mc.thePlayer.posZ);
+	    int j3 = MathHelper.floor(mc.player.posX);
+	    int k3 = MathHelper.floor(mc.player.posY);
+	    int l3 = MathHelper.floor(mc.player.posZ);
 		
 	    BlockPos blockpos = new BlockPos(j3, k3, l3);
 	    
-	    if(mc.theWorld != null && mc.theWorld.isBlockLoaded(blockpos)) {
-	    	light = mc.theWorld.getLightFor(EnumSkyBlock.SKY, blockpos) - mc.theWorld.calculateSkylightSubtracted(1.0F);
-	    	light = Math.max(light, mc.theWorld.getLightFor(EnumSkyBlock.BLOCK, blockpos));
+	    if(mc.world != null && mc.world.isBlockLoaded(blockpos)) {
+	    	light = mc.world.getLightFor(EnumSkyBlock.SKY, blockpos) - mc.world.calculateSkylightSubtracted(1.0F);
+	    	light = Math.max(light, mc.world.getLightFor(EnumSkyBlock.BLOCK, blockpos));
 	    }
-	    lightLevel = FormatUtil.translatePre("strings.lightLevel", String.valueOf(light > 15 ? 15 : light));
+	    lightLevel = I18n.format("betterHud.strings.lightLevel", String.valueOf(light > 15 ? 15 : light));
 	}
 
 	@Override

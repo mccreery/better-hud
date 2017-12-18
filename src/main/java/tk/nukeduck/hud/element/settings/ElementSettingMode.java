@@ -3,17 +3,15 @@ package tk.nukeduck.hud.element.settings;
 import java.io.IOException;
 import java.util.Collection;
 
+import org.apache.commons.lang3.ArrayUtils;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-
-import org.apache.commons.lang3.ArrayUtils;
-
-import tk.nukeduck.hud.BetterHud;
+import net.minecraft.client.resources.I18n;
 import tk.nukeduck.hud.gui.GuiElementSettings;
-import tk.nukeduck.hud.util.FormatUtil;
-import tk.nukeduck.hud.util.RenderUtil;
+import tk.nukeduck.hud.util.constants.Colors;
 
 public class ElementSettingMode extends ElementSetting {
 	protected GuiButton last, next, backing;
@@ -64,8 +62,8 @@ public class ElementSettingMode extends ElementSetting {
 	
 	@Override
 	public void render(GuiScreen gui, int yScroll) {
-		int color = modes.length > 1 ? RenderUtil.colorRGB(255, 255, 255) : RenderUtil.colorRGB(85, 85, 85);
-		gui.drawCenteredString(Minecraft.getMinecraft().fontRendererObj, FormatUtil.translatePre("setting." + getValue()), last.xPosition + backing.width / 2, last.yPosition + 6, color);
+		int color = modes.length > 1 ? Colors.WHITE : Colors.GRAY;
+		gui.drawCenteredString(Minecraft.getMinecraft().fontRenderer, I18n.format("betterHud.setting." + getValue()), last.x + backing.width / 2, last.y + 6, color);
 	}
 	
 	@Override

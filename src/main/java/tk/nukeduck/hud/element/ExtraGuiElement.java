@@ -5,12 +5,10 @@ import java.util.HashMap;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraft.client.resources.I18n;
 import tk.nukeduck.hud.element.settings.ElementSetting;
 import tk.nukeduck.hud.element.settings.ElementSettingDivider;
 import tk.nukeduck.hud.util.Bounds;
-import tk.nukeduck.hud.util.FormatUtil;
 import tk.nukeduck.hud.util.LayoutManager;
 import tk.nukeduck.hud.util.StringManager;
 
@@ -28,7 +26,7 @@ public abstract class ExtraGuiElement {
 	
 	/** @return The localized name of this element. */
 	public final String getLocalizedName() {
-		return FormatUtil.translatePre("element." + this.getName());
+		return I18n.format("betterHud.element." + this.getName());
 	}
 	
 	public Bounds getBounds(ScaledResolution resolution) {
@@ -66,20 +64,20 @@ public abstract class ExtraGuiElement {
 		if(keyVals.containsKey("enabled")) this.enabled = Boolean.parseBoolean(keyVals.get("enabled"));
 		
 		for(ElementSetting setting : this.settings) {
-			if(setting instanceof ElementSettingDivider) continue;
+			if(setting instanceof ElementSettingDivider || setting.getName() == "enabled") continue;
 			if(keyVals.containsKey(setting.getName())) setting.fromString(keyVals.get(setting.getName()));
 		}
 	}
 	
 	/** Saves this element's settings into a key-value combination map.
 	 * @return Key-value combinations containing this element's setting names and values. */
-	public final HashMap<String, String> saveSettings() {
+	/*public final HashMap<String, String> saveSettings() {
 		HashMap<String, String> keyVals = new HashMap<String, String>();
 		for(ElementSetting setting : this.settings) {
 			keyVals.put(setting.getName(), setting.toString());
 		}
 		return keyVals;
-	}
+	}*/
 	
 	/** Register updates for this element at the specified speed.
 	 * @param speed The speed to update this element at. */

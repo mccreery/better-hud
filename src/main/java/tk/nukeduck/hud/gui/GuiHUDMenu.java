@@ -4,19 +4,18 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.element.ExtraGuiElement;
-import tk.nukeduck.hud.element.HudElements;
 import tk.nukeduck.hud.network.proxy.ClientProxy;
-import tk.nukeduck.hud.util.FormatUtil;
-import tk.nukeduck.hud.util.RenderUtil;
 import tk.nukeduck.hud.util.SettingsIO;
+import tk.nukeduck.hud.util.constants.Colors;
 import tk.nukeduck.hud.util.constants.Constants;
-
-import com.mojang.realmsclient.gui.ChatFormatting;
 
 public class GuiHUDMenu extends GuiScreen {
 	public int buttonOffset = 0;
@@ -28,19 +27,22 @@ public class GuiHUDMenu extends GuiScreen {
 		this.mc = Minecraft.getMinecraft();
 
 		this.buttonList.clear();
-		boolean flag = true;
+		//boolean flag = true;
 
 		int hW = this.width / 2;
 		int yBase = this.height / 16 + 42;
 
-		this.buttonList.add(new GuiButton(0, hW - 100, yBase - 22, FormatUtil.translate("menu.returnToGame")));
-		this.buttonList.add(new GuiButton(1, hW - 149, yBase, 98, 20, FormatUtil.translatePre("menu.enableAll")));
-		this.buttonList.add(new GuiButton(2, hW - 49, yBase, 98, 20, FormatUtil.translatePre("menu.disableAll")));
-		this.buttonList.add(new GuiButton(3, hW + 51, yBase, 98, 20, FormatUtil.translatePre("menu.resetDefaults")));
+		this.buttonList.add(new GuiButton(0, hW - 152, yBase - 22, 150, 20, I18n.format("menu.returnToGame")));
+		this.buttonList.add(new GuiButton(1, hW - 152, yBase, 98, 20, I18n.format("betterHud.menu.enableAll")));
+		this.buttonList.add(new GuiButton(2, hW - 49, yBase, 98, 20, I18n.format("betterHud.menu.disableAll")));
+		this.buttonList.add(new GuiButton(3, hW + 54, yBase, 98, 20, I18n.format("betterHud.menu.resetDefaults")));
 
-		this.buttonList.add(new GuiButton(4, hW - 129, height - 20 - height / 16, 98, 20, FormatUtil.translatePre("menu.lastPage")));
+		this.buttonList.add(new GuiButton(4, hW - 129, height - 20 - height / 16, 98, 20, I18n.format("betterHud.menu.lastPage")));
 		((GuiButton) buttonList.get(4)).enabled = false;
-		this.buttonList.add(new GuiButton(5, hW + 31, height - 20 - height / 16, 98, 20, FormatUtil.translatePre("menu.nextPage")));
+		this.buttonList.add(new GuiButton(5, hW + 31, height - 20 - height / 16, 98, 20, I18n.format("betterHud.menu.nextPage")));
+
+		// Global settings button
+		this.buttonList.add(new GuiButton(6, hW + 2, yBase - 22, 150, 20, I18n.format("betterHud.menu.settings", BetterHud.proxy.elements.globalSettings.getLocalizedName())));
 
 		buttonOffset = this.buttonList.size(); // Set the button offset for actual element buttons
 
@@ -49,13 +51,13 @@ public class GuiHUDMenu extends GuiScreen {
 		for(int i = 0; i < BetterHud.proxy.elements.elements.length; i++) {
 			ExtraGuiElement el = BetterHud.proxy.elements.elements[i];
 
-			GuiToggleButton b = new GuiToggleButton(i * 2 + buttonOffset, hW - 126, height / 16 + 78 + ((i % perPage) * 24), 150, 20, FormatUtil.translatePre("menu.settingButton", el.getLocalizedName(), (el.enabled ? ChatFormatting.GREEN : ChatFormatting.RED) + FormatUtil.translate(el.enabled ? "options.on" : "options.off")));
+			GuiToggleButton b = new GuiToggleButton(i * 2 + buttonOffset, hW - 126, height / 16 + 78 + ((i % perPage) * 24), 150, 20, I18n.format("betterHud.menu.settingButton", el.getLocalizedName(), (el.enabled ? ChatFormatting.GREEN : ChatFormatting.RED) + I18n.format(el.enabled ? "options.on" : "options.off")));
 			b.pressed = el.enabled;
 			b.enabled = !el.unsupported;
 			
 			this.buttonList.add(b);
 
-			GuiButton options = new GuiButton(i * 2 + buttonOffset + 1, hW + 26, height / 16 + 78 + ((i % perPage) * 24), 100, 20, FormatUtil.translatePre("menu.options"));
+			GuiButton options = new GuiButton(i * 2 + buttonOffset + 1, hW + 26, height / 16 + 78 + ((i % perPage) * 24), 100, 20, I18n.format("betterHud.menu.options"));
 			options.enabled = el.settings.size() > 0;
 			this.buttonList.add(options);
 		}
@@ -68,8 +70,9 @@ public class GuiHUDMenu extends GuiScreen {
 			mc.setIngameFocus();
 		}
 
-		if(!(BetterHud.proxy instanceof ClientProxy)) return;
-		SettingsIO.saveSettings(Constants.LOGGER, (ClientProxy) BetterHud.proxy);
+		if(BetterHud.proxy instanceof ClientProxy) {
+			SettingsIO.saveSettings(Constants.LOGGER, (ClientProxy)BetterHud.proxy);
+		}
 	}
 
 	@Override
@@ -100,30 +103,10 @@ public class GuiHUDMenu extends GuiScreen {
 				closeMe();
 				break;
 			case 1:
-				for(int i = 0; i < buttonList.size(); i++) {
-					if(buttonList.get(i) instanceof GuiButton) {
-						GuiButton b = (GuiButton) buttonList.get(i);
-						if(b.id >= buttonOffset && (b.id - buttonOffset) % 2 == 0) {
-							ExtraGuiElement element = BetterHud.proxy.elements.elements[(b.id - buttonOffset) / 2];
-							element.enabled = true;
-							b.displayString = FormatUtil.translatePre("menu.settingButton", element.getLocalizedName(), (element.enabled ? ChatFormatting.GREEN : ChatFormatting.RED) + FormatUtil.translate(element.enabled ? "options.on" : "options.off"));
-							((GuiToggleButton) b).pressed = element.enabled;
-						}
-					}
-				}
+				setAll(true);
 				break;
 			case 2:
-				for(int i = 0; i < buttonList.size(); i++) {
-					if(buttonList.get(i) instanceof GuiButton) {
-						GuiButton b = (GuiButton) buttonList.get(i);
-						if(b.id >= buttonOffset && (b.id - buttonOffset) % 2 == 0) {
-							ExtraGuiElement element = BetterHud.proxy.elements.elements[(b.id - buttonOffset) / 2];
-							element.enabled = false;
-							b.displayString = FormatUtil.translatePre("menu.settingButton", element.getLocalizedName(), (element.enabled ? ChatFormatting.GREEN : ChatFormatting.RED) + FormatUtil.translate(element.enabled ? "options.on" : "options.off"));
-							((GuiToggleButton) b).pressed = element.enabled;
-						}
-					}
-				}
+				setAll(false);
 				break;
 			case 3:
 				BetterHud.proxy.loadDefaults();
@@ -137,6 +120,10 @@ public class GuiHUDMenu extends GuiScreen {
 				currentPage++;
 				updatePage();
 				break;
+			case 6:
+				GuiElementSettings gui = new GuiElementSettings(BetterHud.proxy.elements.globalSettings, this);
+				mc.displayGuiScreen(gui);
+				break;
 			}
 		} else {
 			for(int i = 0; i < BetterHud.proxy.elements.elements.length; i++) {
@@ -144,11 +131,25 @@ public class GuiHUDMenu extends GuiScreen {
 				int offset = i * 2 + buttonOffset;
 				if(id == offset) {
 					el.enabled = !el.enabled;
-					p_146284_1_.displayString = FormatUtil.translatePre("menu.settingButton", el.getLocalizedName(), (el.enabled ? ChatFormatting.GREEN : ChatFormatting.RED) + FormatUtil.translate(el.enabled ? "options.on" : "options.off"));
+					p_146284_1_.displayString = I18n.format("betterHud.menu.settingButton", el.getLocalizedName(), (el.enabled ? ChatFormatting.GREEN : ChatFormatting.RED) + I18n.format(el.enabled ? "options.on" : "options.off"));
 					((GuiToggleButton) p_146284_1_).pressed = el.enabled;
 				} else if(id == offset + 1) { // <
 					GuiElementSettings gui = new GuiElementSettings(el, this);
 					mc.displayGuiScreen(gui);
+				}
+			}
+		}
+	}
+
+	private void setAll(boolean enabled) {
+		for(int i = 0; i < buttonList.size(); i++) {
+			if(buttonList.get(i) instanceof GuiButton) {
+				GuiButton b = (GuiButton) buttonList.get(i);
+				if(b.id >= buttonOffset && (b.id - buttonOffset) % 2 == 0) {
+					ExtraGuiElement element = BetterHud.proxy.elements.elements[(b.id - buttonOffset) / 2];
+					element.enabled = enabled;
+					b.displayString = I18n.format("betterHud.menu.settingButton", element.getLocalizedName(), (element.enabled ? ChatFormatting.GREEN : ChatFormatting.RED) + I18n.format(element.enabled ? "options.on" : "options.off"));
+					((GuiToggleButton) b).pressed = element.enabled;
 				}
 			}
 		}
@@ -181,14 +182,14 @@ public class GuiHUDMenu extends GuiScreen {
 			
 			if(button.isMouseOver() && !button.enabled) {
 				List<String> tooltip = new ArrayList<String>();
-				tooltip.add(FormatUtil.translatePre("unsupported"));
+				tooltip.add(I18n.format("betterHud.unsupported"));
 				this.drawHoveringText(tooltip, mouseX, mouseY);
 			}
 		}
 		
-		this.drawCenteredString(this.fontRendererObj, FormatUtil.translatePre("menu.hudSettings"), this.width / 2, height / 16 + 5, 16777215);
+		this.drawCenteredString(this.fontRenderer, I18n.format("betterHud.menu.hudSettings"), this.width / 2, height / 16 + 5, 16777215);
 
-		this.drawString(this.fontRendererObj, countEnabled(BetterHud.proxy.elements.elements) + "/" + BetterHud.proxy.elements.elements.length + " enabled", 5, 5, RenderUtil.colorRGB(255, 255, 255));
+		this.drawString(this.fontRenderer, countEnabled(BetterHud.proxy.elements.elements) + "/" + BetterHud.proxy.elements.elements.length + " enabled", 5, 5, Colors.WHITE);
 
 		/*for(Object button : buttonList) {
         	if(button instanceof GuiButton) {
@@ -196,12 +197,12 @@ public class GuiHUDMenu extends GuiScreen {
         		if(b.displayString == "<" && b.visible) {
 	        		ExtraGuiElement e = HudElements.elements[((b.id - buttonOffset) + 1) / 3];
 	        		int color = e.countModes() > 1 ? RenderUtil.colorRGB(255, 255, 255) : RenderUtil.colorARGB(85, 85, 85, 85);
-	        		this.drawCenteredString(BetterHud.fr, FormatUtil.translatePre("mode." + e.modeAt(e.mode)), b.xPosition + 53, b.yPosition + 6, color);
+	        		this.drawCenteredString(BetterHud.fr, I18n.format("betterHud.mode." + e.modeAt(e.mode)), b.xPosition + 53, b.yPosition + 6, color);
         		}
         	}
         }*/
 
-		this.drawCenteredString(this.fontRendererObj, FormatUtil.translatePre("menu.page", (currentPage + 1) + "/" + (int) Math.ceil((float) BetterHud.proxy.elements.elements.length / perPage)), width / 2, height - height / 16 - 13, RenderUtil.colorRGB(255, 255, 255));
+		this.drawCenteredString(this.fontRenderer, I18n.format("betterHud.menu.page", (currentPage + 1) + "/" + (int) Math.ceil((float) BetterHud.proxy.elements.elements.length / perPage)), width / 2, height - height / 16 - 13, Colors.WHITE);
 	}
 
 	public int countEnabled(ExtraGuiElement[] elements) {

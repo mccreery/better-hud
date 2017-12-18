@@ -13,7 +13,6 @@ import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 
 import tk.nukeduck.hud.element.ExtraGuiElement;
-import tk.nukeduck.hud.element.HudElements;
 import tk.nukeduck.hud.element.settings.ElementSetting;
 import tk.nukeduck.hud.element.settings.ElementSettingDivider;
 import tk.nukeduck.hud.network.proxy.ClientProxy;
@@ -33,7 +32,7 @@ public class SettingsIO {
 	public static ArrayList<String> generateSrc(ArrayList<ElementSetting> settings) {
 		ArrayList<String> lines = new ArrayList<String>();
 		for(ElementSetting setting : settings) {
-			if(setting instanceof ElementSettingDivider) continue;
+			if(setting instanceof ElementSettingDivider || setting.getName() == "enabled") continue;
 			for(String comment : setting.comments) {
 				lines.add("\t# " + comment);
 			}
@@ -53,6 +52,15 @@ public class SettingsIO {
 			for(String comment : comments) {
 				src.append("# ").append(comment).append(Constants.LINE_SEPARATOR);
 			}
+			src.append(Constants.LINE_SEPARATOR);
+
+			// Special case for global settings
+			src.append(proxy.elements.globalSettings.getName()).append(Constants.PROPERTY_SEPARATOR).append(Constants.LINE_SEPARATOR);
+			src.append("\tenabled").append(Constants.PROPERTY_SEPARATOR).append(String.valueOf(proxy.elements.globalSettings.enabled)).append(Constants.LINE_SEPARATOR);
+			ArrayList<String> global = generateSrc(proxy.elements.globalSettings.settings);
+			for(String line : global) {
+				src.append(line).append(Constants.LINE_SEPARATOR);
+			}
 
 			for(ExtraGuiElement element : proxy.elements.elements) {
 				src.append(element.getName()).append(Constants.PROPERTY_SEPARATOR).append(Constants.LINE_SEPARATOR);
@@ -62,7 +70,7 @@ public class SettingsIO {
 					src.append(line).append(Constants.LINE_SEPARATOR);
 				}
 			}
-			src.setLength(src.length() - Constants.LINE_SEPARATOR.length());
+
 			writer.write(src.toString());
 			writer.close();
 
@@ -104,6 +112,12 @@ public class SettingsIO {
 				if(!namedSections.containsKey(element.getName())) continue;
 				try {
 					element.loadSettings(generateKeyVal(namedSections.get(element.getName())));
+				} catch(Exception e) {}
+			}
+			// Special case for global settings
+			if(namedSections.containsKey(proxy.elements.globalSettings.getName())) {
+				try {
+					proxy.elements.globalSettings.loadSettings(generateKeyVal(namedSections.get(proxy.elements.globalSettings.getName())));
 				} catch(Exception e) {}
 			}
 

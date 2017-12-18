@@ -1,16 +1,9 @@
 package tk.nukeduck.hud.element.settings;
 
-import java.io.IOException;
-import java.util.Collection;
-
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import tk.nukeduck.hud.BetterHud;
-import tk.nukeduck.hud.gui.GuiElementSettings;
-import tk.nukeduck.hud.util.FormatUtil;
-import tk.nukeduck.hud.util.RenderUtil;
+import net.minecraft.client.resources.I18n;
+import tk.nukeduck.hud.util.constants.Colors;
 
 public class ElementSettingText extends ElementSettingDivider {
 	public ElementSettingText(String name) {
@@ -19,10 +12,10 @@ public class ElementSettingText extends ElementSettingDivider {
 
 	@Override
 	public void render(GuiScreen gui, int yScroll) {
-		gui.drawCenteredString(gui.mc.fontRendererObj, FormatUtil.translatePre("text." + this.getName()), gui.width / 2, y + 1 - yScroll, RenderUtil.colorRGB(255, 255, 255));
+		gui.drawCenteredString(gui.mc.fontRenderer, I18n.format("betterHud.text." + this.getName()), gui.width / 2, y + 1 - yScroll, Colors.WHITE);
 	}
 	
 	public int getHeight() {
-		return Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT;
+		return Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT;
 	}
 }

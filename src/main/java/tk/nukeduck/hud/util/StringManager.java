@@ -2,11 +2,8 @@ package tk.nukeduck.hud.util;
 
 import java.util.ArrayList;
 
-import net.minecraft.client.gui.ScaledResolution;
-import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.element.settings.ElementSettingPosition.Position;
 import tk.nukeduck.hud.util.constants.Colors;
-import tk.nukeduck.hud.util.constants.Constants;
 
 public class StringManager {
 	/*private ScaledResolution resolution;

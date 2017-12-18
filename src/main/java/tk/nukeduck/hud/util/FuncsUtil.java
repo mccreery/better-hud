@@ -1,6 +1,5 @@
 package tk.nukeduck.hud.util;
 
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 
 public class FuncsUtil {

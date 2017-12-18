@@ -3,13 +3,11 @@ package tk.nukeduck.hud.element.settings;
 import java.io.IOException;
 import java.util.Collection;
 
-import tk.nukeduck.hud.BetterHud;
-import tk.nukeduck.hud.gui.GuiElementSettings;
-import tk.nukeduck.hud.util.FormatUtil;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.resources.I18n;
+import tk.nukeduck.hud.gui.GuiElementSettings;
 
 public class ElementSettingBoolean extends ElementSetting {
 	protected GuiButton toggler;
@@ -21,23 +19,22 @@ public class ElementSettingBoolean extends ElementSetting {
 	public boolean value;
 	
 	public boolean toggle() {
-		set(!value);
-		return value;
+		set(!get());
+		return get();
 	}
-	public void set(boolean bool) {
-		value = bool;
-	}
+	public void set(boolean bool) {value = bool;}
+	public boolean get() {return value;}
 	
 	@Override
 	public Gui[] getGuiParts(int width, int y) {
-		toggler = new GuiButton(0, width / 2 - 100, y, FormatUtil.translatePre("menu.settingButton", this.getLocalizedName(), FormatUtil.translate(value ? "options.on" : "options.off")));
+		toggler = new GuiButton(0, width / 2 - 100, y, I18n.format("betterHud.menu.settingButton", this.getLocalizedName(), I18n.format(this.get() ? "options.on" : "options.off")));
 		return new Gui[] {toggler};
 	}
 	
 	@Override
 	public void actionPerformed(GuiElementSettings gui, GuiButton button) {
 		toggle();
-		button.displayString = FormatUtil.translatePre("menu.settingButton", this.getLocalizedName(), FormatUtil.translate(value ? "options.on" : "options.off"));
+		button.displayString = I18n.format("betterHud.menu.settingButton", this.getLocalizedName(), I18n.format(this.get() ? "options.on" : "options.off"));
 	}
 	
 	@Override
@@ -48,12 +45,12 @@ public class ElementSettingBoolean extends ElementSetting {
 	
 	@Override
 	public String toString() {
-		return String.valueOf(value);
+		return String.valueOf(get());
 	}
 	@Override
 	public void fromString(String val) {
 		if(val.equalsIgnoreCase("true") || val.equalsIgnoreCase("false")) {
-			this.value = Boolean.parseBoolean(val);
+			this.set(Boolean.parseBoolean(val));
 		}
 	}
 	@Override

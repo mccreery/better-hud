@@ -1,11 +1,8 @@
 package tk.nukeduck.hud.element;
 
-import java.util.ArrayList;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.FMLCommonHandler;
 import tk.nukeduck.hud.element.settings.ElementSettingBoolean;
 import tk.nukeduck.hud.events.PlayerHider;
 import tk.nukeduck.hud.util.LayoutManager;

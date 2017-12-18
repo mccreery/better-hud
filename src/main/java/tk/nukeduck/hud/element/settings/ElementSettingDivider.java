@@ -6,9 +6,9 @@ import java.util.Collection;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 import tk.nukeduck.hud.gui.GuiElementSettings;
-import tk.nukeduck.hud.util.FormatUtil;
-import tk.nukeduck.hud.util.RenderUtil;
+import tk.nukeduck.hud.util.constants.Colors;
 
 public class ElementSettingDivider extends ElementSetting {
 	public ElementSettingDivider(String name) {
@@ -31,11 +31,11 @@ public class ElementSettingDivider extends ElementSetting {
 
 	@Override
 	public void render(GuiScreen gui, int yScroll) {
-		String text = FormatUtil.translatePre("group." + this.getName());
-		int textWidth = gui.mc.fontRendererObj.getStringWidth(text);
-		gui.drawRect(gui.width / 2 - 150, y + 5 - yScroll, (gui.width - textWidth) / 2 - 5, y + 6 - yScroll, RenderUtil.colorRGB(255, 255, 255));
-		gui.drawRect((gui.width + textWidth) / 2 + 5, y + 5 - yScroll, gui.width / 2 + 150, y + 6 - yScroll, RenderUtil.colorRGB(255, 255, 255));
-		gui.drawCenteredString(gui.mc.fontRendererObj, text, gui.width / 2, y + 1 - yScroll, RenderUtil.colorRGB(255, 255, 255));
+		String text = I18n.format("betterHud.group." + this.getName());
+		int textWidth = gui.mc.fontRenderer.getStringWidth(text);
+		Gui.drawRect(gui.width / 2 - 150, y + 5 - yScroll, (gui.width - textWidth) / 2 - 5, y + 6 - yScroll, Colors.WHITE);
+		Gui.drawRect((gui.width + textWidth) / 2 + 5, y + 5 - yScroll, gui.width / 2 + 150, y + 6 - yScroll, Colors.WHITE);
+		gui.drawCenteredString(gui.mc.fontRenderer, text, gui.width / 2, y + 1 - yScroll, Colors.WHITE);
 	}
 	
 	@Override

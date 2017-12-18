@@ -1,5 +1,6 @@
 package tk.nukeduck.hud.util;
 
+import static org.lwjgl.opengl.GL11.GL_ALPHA_TEST;
 import static org.lwjgl.opengl.GL11.GL_BLEND;
 import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
 import static org.lwjgl.opengl.GL11.GL_ENABLE_BIT;
@@ -20,105 +21,140 @@ import java.util.ArrayList;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.RenderItem;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.VertexBuffer;
 import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.client.config.GuiUtils;
 import tk.nukeduck.hud.element.settings.ElementSettingPosition.Position;
+import tk.nukeduck.hud.util.constants.Colors;
 
 public class RenderUtil {
-	public static int colorRGB(int r, int g, int b) {
-		return colorARGB(255, r, g, b);
+	public static void drawDamageBar(int x, int y, int width, int height, ItemStack stack, boolean vertical) {
+		//drawRect(x, y, right, bottom, Colors.BLACK);
+		Tessellator tes = Tessellator.getInstance();
+		renderQuad(tes, x, y, width, height, Colors.BLACK);
+
+		float value = Math.max(0.0F, (float)(stack.getMaxDamage() - stack.getItemDamage()) / stack.getMaxDamage());
+		int   color = MathHelper.hsvToRGB(value / 3.0F, 1.0F, 1.0F) | 0xFF000000;
+
+		if(vertical) {
+			final int barHeight = (int)Math.round((height - 1) * value);
+			renderQuad(tes, x, y + (height - barHeight - 1), width - 1, barHeight, color);
+		} else {
+			renderQuad(tes, x, y, Math.round((width - 1) * value), height - 1, color);
+		}
 	}
-	
-	public static int colorARGB(int a, int r, int g, int b) {
-		return (a & 0xff) << 24 | (r & 0xff) << 16 | (g & 0xff) << 8 | (b & 0xff);
+
+	public static void drawTooltipBox(int x, int y, int w, int h) {
+		GlStateManager.enableBlend();
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GlStateManager.disableRescaleNormal();
+		RenderHelper.disableStandardItemLighting();
+		GlStateManager.disableLighting();
+		GlStateManager.disableDepth();
+
+		final int zLevel      = 300;
+		final int bgColor     = 0xD7100010 /*0xF0100010*/;
+		final int borderStart = 0x505000FF;
+		final int borderEnd   = (borderStart & 0xFEFEFE) >> 1 | borderStart & 0xFF000000;
+
+		// Box
+		GuiUtils.drawGradientRect(zLevel, x+1, y,     x+w-1, y+1,   bgColor, bgColor); // Top
+		GuiUtils.drawGradientRect(zLevel, x,   y+1,   x+w,   y+h-1, bgColor, bgColor); // Middle
+		GuiUtils.drawGradientRect(zLevel, x+1, y+h-1, x+w-1, y+h,   bgColor, bgColor); // Bottom
+
+		// Borders
+		GuiUtils.drawGradientRect(zLevel, x+1,   y+1,   x+w-1, y+2,   borderStart, borderStart); // Top
+		GuiUtils.drawGradientRect(zLevel, x+1,   y+2,   x+2,   y+h-2, borderStart, borderEnd);   // Left
+		GuiUtils.drawGradientRect(zLevel, x+w-2, y+2,   x+w-1, y+h-2, borderStart, borderEnd);   // Right
+		GuiUtils.drawGradientRect(zLevel, x+1,   y+h-2, x+w-1, y+h-1, borderEnd,   borderEnd);   // Bottom
+		
+		GlStateManager.enableDepth();
 	}
-	
-	public static void renderQuad(Tessellator t, int x, int y, int width, int height, float red, float green, float blue, float alpha) {
+
+	public static void renderQuad(int x, int y, int width, int height, int color) {
+		renderQuad(Tessellator.getInstance(), x, y, width, height, color);
+	}
+	public static void renderQuad(Tessellator tes, int x, int y, int width, int height, int color) {
 		glPushAttrib(GL_ENABLE_BIT);
 		glEnable(GL_BLEND);
+		glEnable(GL_ALPHA_TEST);
 		glDisable(GL_TEXTURE_2D);
-		glColor4f(red, green, blue, alpha);
+		glDisable(GL_LIGHTING);
+		glDisable(GL_DEPTH_TEST);
 
-		VertexBuffer wr = t.getBuffer();
-		wr.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-		wr.pos(x, y, 0).endVertex();
-		wr.pos(x, y + height, 0).endVertex();
-		wr.pos(x + width, y + height, 0).endVertex();
-		wr.pos(x + width, y, 0).endVertex();
-		t.draw();
+		int r = (color >> 16) & 0xFF;
+		int g = (color >> 8)  & 0xFF;
+		int b = (color)       & 0xFF;
+		int a = (color >> 24);
+
+		BufferBuilder buf = tes.getBuffer();
+		buf.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+		buf.pos(x,         y,          0).color(r, g, b, a).endVertex();
+		buf.pos(x,         y + height, 0).color(r, g, b, a).endVertex();
+		buf.pos(x + width, y + height, 0).color(r, g, b, a).endVertex();
+		buf.pos(x + width, y,          0).color(r, g, b, a).endVertex();
+		tes.draw();
 		glPopAttrib();
 	}
-	
+
 	// Tell me, Mojang, why do your blending functions mess everything ever up?
-    /**
-     * Draws a solid color rectangle with the specified coordinates and color (ARGB format). Args: x1, y1, x2, y2, color
-     */
-    public static void drawRect(int left, int top, int right, int bottom, int color) {
-        int j1;
-        
-        if (left < right) {
-            j1 = left;
-            left = right;
-            right = j1;
-        }
-        if (top < bottom) {
-            j1 = top;
-            top = bottom;
-            bottom = j1;
-        }
-        
-        float f3 = (float)(color >> 24 & 0xff) / 255.0F;
-        float f = (float)(color >> 16 & 0xff) / 255.0F;
-        float f1 = (float)(color >> 8 & 0xff) / 255.0F;
-        float f2 = (float)(color & 0xff) / 255.0F;
-        Tessellator tessellator = Tessellator.getInstance();
-        VertexBuffer worldrenderer = tessellator.getBuffer();
-        //GlStateManager.enableBlend();
-        GL11.glEnable(GL11.GL_BLEND);
-        //GlStateManager.disableTexture2D();
-        GL11.glDisable(GL11.GL_TEXTURE_2D);
-        //GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-        GL11.glColor4f(f, f1, f2, f3);
-        worldrenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION);
-        worldrenderer.pos((double)left, (double)bottom, 0.0D).endVertex();
-        worldrenderer.pos((double)right, (double)bottom, 0.0D).endVertex();
-        worldrenderer.pos((double)right, (double)top, 0.0D).endVertex();
-        worldrenderer.pos((double)left, (double)top, 0.0D).endVertex();
-        tessellator.draw();
-        GL11.glEnable(GL11.GL_TEXTURE_2D);
-        //GlStateManager.enableTexture2D();
-        //GL11.glDisable(GL11.GL_BLEND);
-        //GlStateManager.disableBlend();
-    }
-    
-    public static void drawProgressBar(int x, int y, int right, int bottom, float value) {
-    	int width = right - x - 1;
-    	int color = colorRGB(Math.round((1.0f - value) * 255), Math.round(value * 255), 0);
-    	drawRect(x, y, right, bottom, RenderUtil.colorRGB(0, 0, 0));
-    	drawRect(x, y, x + Math.round(value * width), bottom - 1, color);
-    }
-    
-    public static void drawProgressBarV(int x, int y, int right, int bottom, float value) {
-    	int height = bottom - y - 1;
-    	int color = colorRGB(Math.round((1.0f - value) * 255), Math.round(value * 255), 0);
-    	drawRect(x, y, right, bottom, RenderUtil.colorRGB(0, 0, 0));
-    	drawRect(x, bottom - 1 - Math.round(value * height), right - 1, bottom - 1, color);
-    }
-	
-    public static void renderQuadWithUV(Tessellator t, int x, int y, float u, float v, int width, int height) {
-    	renderQuadWithUV(t, x, y, u, v, u + width / 256F, v + height / 256F, width, height);
-    }
-    
+	/**
+	 * Draws a solid color rectangle with the specified coordinates and color (ARGB format). Args: x1, y1, x2, y2, color
+	 */
+	/*public static void drawRect(int left, int top, int right, int bottom, int color) {
+		GlStateManager.disableLighting();
+		GlStateManager.disableDepth();
+		GlStateManager.disableTexture2D();
+		GlStateManager.disableAlpha();
+		GlStateManager.disableBlend();
+
+		float f3 = (float)(color >> 24 & 0xff) / 255.0F;
+		float f = (float)(color >> 16 & 0xff) / 255.0F;
+		float f1 = (float)(color >> 8 & 0xff) / 255.0F;
+		float f2 = (float)(color & 0xff) / 255.0F;
+		Tessellator tessellator = Tessellator.getInstance();
+		VertexBuffer worldrenderer = tessellator.getBuffer();
+		//GlStateManager.enableBlend();
+		GL11.glEnable(GL11.GL_BLEND);
+		//GlStateManager.disableTexture2D();
+		GL11.glDisable(GL11.GL_TEXTURE_2D);
+		//GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+		GL11.glColor4f(f, f1, f2, f3);
+		worldrenderer.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_COLOR);
+		worldrenderer.pos((double)left, (double)bottom, 0.0D).endVertex();
+		worldrenderer.pos((double)right, (double)bottom, 0.0D).endVertex();
+		worldrenderer.pos((double)right, (double)top, 0.0D).endVertex();
+		worldrenderer.pos((double)left, (double)top, 0.0D).endVertex();
+		tessellator.draw();
+		GL11.glEnable(GL11.GL_TEXTURE_2D);
+		//GlStateManager.enableTexture2D();
+		//GL11.glDisable(GL11.GL_BLEND);
+		//GlStateManager.disableBlend();
+
+		GlStateManager.enableLighting();
+		GlStateManager.enableDepth();
+		GlStateManager.enableTexture2D();
+		GlStateManager.enableAlpha();
+		GlStateManager.enableBlend();
+	}*/
+
+	public static void renderQuadWithUV(Tessellator t, int x, int y, float u, float v, int width, int height) {
+		renderQuadWithUV(t, x, y, u, v, u + width / 256F, v + height / 256F, width, height);
+	}
+
 	public static void renderQuadWithUV(Tessellator t, int x, int y, float u, float v, float u2, float v2, int width, int height) {
 		glEnable(GL_BLEND);
 		
-		VertexBuffer wr = t.getBuffer();
+		BufferBuilder wr = t.getBuffer();
 		
 		wr.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
 		
@@ -152,7 +188,7 @@ public class RenderUtil {
 		
 		glEnable(GL_BLEND);
 	}
-	
+
 	public static void renderItem(RenderItem ri, FontRenderer fr, TextureManager tm, ItemStack item, int x, int y) {
 		glColor4d(1.0, 1.0, 1.0, 1.0);
 		glDisable(GL_LIGHTING);
@@ -160,11 +196,11 @@ public class RenderUtil {
 			ri.renderItemAndEffectIntoGUI(item, x, y);
 		} else ri.renderItemIntoGUI(item, x, y);
 	}
-	
+
 	/*public static void renderItemAlpha(RenderItem ri, FontRenderer fr, TextureManager tm, ItemStack item, int x, int y, double alpha) {
 		glEnable(GL_BLEND);
 		glColor4d(1.0, 1.0, 1.0, alpha);
-		
+
 		IBakedModel iBakedModel = ri.getItemModelMesher().getItemModel(item);
 		TextureAtlasSprite textureAtlasSprite = BetterHud.mc.getTextureMapBlocks().getAtlasSprite(iBakedModel.getTexture().getIconName());
 		BetterHud.mc.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
@@ -177,16 +213,16 @@ public class RenderUtil {
 		worldrenderer.addVertexWithUV((double)(x),          (double)(y),           0.0, (double)textureAtlasSprite.getMinU(), (double)textureAtlasSprite.getMinV());
 		tessellator.draw();
 	}*/
-	
+
 	/*public static void renderStrings(FontRenderer fr, ArrayList<String> text, int x, int y, int color) {
 		renderStrings(fr, text, x, y, color, Position.TOP_LEFT);
 	}*/
-	
+
 	/*public static void renderStrings(FontRenderer fr, int x, int y, int color, Posit, String... text) {
 		ArrayList<String> a = new ArrayList<String> (Arrays.asList(text));
 		renderStrings(fr, a, x, y, color, right);
 	}*/
-	
+
 	public static Bounds renderStrings(FontRenderer fr, ArrayList<String> text, int x, int y, int color, Position pos) {
 		return renderStrings(fr, text.toArray(new String[text.size()]), x, y, color, pos);
 	}
@@ -207,7 +243,7 @@ public class RenderUtil {
 		
 		return new Bounds(bx, by, maxWidth, height);
 	}
-	
+
 	public static Bounds renderStrings(FontRenderer fr, ArrayList<ColoredText> text, int x, int y, Position pos) {
 		return renderStrings(fr, text.toArray(new ColoredText[text.size()]), x, y, pos);
 	}
@@ -221,18 +257,18 @@ public class RenderUtil {
 			fr.drawStringWithShadow(text[i].text, right ? x - width : x, bottom ? y - ((i + 1) * (fr.FONT_HEIGHT + 2) - 2) : y + (i * (fr.FONT_HEIGHT + 2)), text[i].color);
 			if(width > maxWidth) maxWidth = width;
 		}
-		
+
 		int height = text.length * (fr.FONT_HEIGHT + 2) - 2;
 		int bx = right ? x - maxWidth : x;
 		int by = bottom ? y - height : y;
 		
 		return new Bounds(bx, by, maxWidth, height);
 	}
-	
+
 	public static void zIncrease() {
 		glTranslatef(0.0F, 0.0F, -0.001F);
 	}
-	
+
     /*public static void drawHoveringText(List textLines, int x, int y, ScaledResolution size) {
     	FontRenderer font = BetterHud.mc.fontRendererObj;
         if (!textLines.isEmpty())

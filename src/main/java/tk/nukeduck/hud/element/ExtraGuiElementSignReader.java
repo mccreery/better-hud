@@ -20,7 +20,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.fml.client.FMLClientHandler;
-import tk.nukeduck.hud.element.settings.ElementSettingAbsolutePosition;
 import tk.nukeduck.hud.element.settings.ElementSettingAbsolutePositionAnchored;
 import tk.nukeduck.hud.element.settings.ElementSettingAnchor;
 import tk.nukeduck.hud.element.settings.ElementSettingDivider;
@@ -32,6 +31,7 @@ import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.LayoutManager;
 import tk.nukeduck.hud.util.RenderUtil;
 import tk.nukeduck.hud.util.StringManager;
+import tk.nukeduck.hud.util.constants.Colors;
 
 public class ExtraGuiElementSignReader extends ExtraGuiElement {
 	private ElementSettingMode type;
@@ -90,7 +90,7 @@ public class ExtraGuiElementSignReader extends ExtraGuiElement {
 	
 	public void render(Minecraft mc, ScaledResolution resolution, StringManager stringManager, LayoutManager layoutManager) {
 		RayTraceResult mop = mc.getRenderViewEntity().rayTrace(200, 1.0F);
-		TileEntity te = mc.theWorld.getTileEntity(mop.getBlockPos());
+		TileEntity te = mc.world.getTileEntity(mop.getBlockPos());
 		if(te != null && te instanceof TileEntitySign) {
 			if(type.getValue() == "sign.text") {
 				this.bounds = Bounds.EMPTY;
@@ -115,7 +115,7 @@ public class ExtraGuiElementSignReader extends ExtraGuiElement {
 					}
 					items.add(ChatFormatting.RED + "--------------");
 					
-					RenderUtil.renderStrings(mc.fontRendererObj, items, pos2.x, pos2.y, RenderUtil.colorRGB(255, 255, 255), Position.TOP_LEFT);
+					RenderUtil.renderStrings(mc.fontRenderer, items, pos2.x, pos2.y, Colors.WHITE, Position.TOP_LEFT);
 				}
 			} else {
 				if(posMode.index == 1) {
@@ -135,7 +135,7 @@ public class ExtraGuiElementSignReader extends ExtraGuiElement {
 					for(ITextComponent ic : ((TileEntitySign) te).signText) {
 						if(ic == null) ic = new TextComponentString("");
 						String s = ic.getFormattedText();
-						mc.fontRendererObj.drawString(s, pos2.x + 44 - mc.fontRendererObj.getStringWidth(s) / 2, pos2.y + 2 + i * (mc.fontRendererObj.FONT_HEIGHT + 2), RenderUtil.colorRGB(0, 0, 0));
+						mc.fontRenderer.drawString(s, pos2.x + 44 - mc.fontRenderer.getStringWidth(s) / 2, pos2.y + 2 + i * (mc.fontRenderer.FONT_HEIGHT + 2), Colors.BLACK);
 						i++;
 					}
 				} else if(pos.value == Position.MIDDLE_LEFT) {
@@ -153,11 +153,11 @@ public class ExtraGuiElementSignReader extends ExtraGuiElement {
 					for(ITextComponent ic : ((TileEntitySign) te).signText) {
 						if(ic == null) ic = new TextComponentString("");
 						String s = ic.getFormattedText();
-						mc.fontRendererObj.drawString(s, 49 - (mc.fontRendererObj.getStringWidth(s) / 2), layoutManager.get(Position.TOP_LEFT) + 2 + i * (mc.fontRendererObj.FONT_HEIGHT + 2), RenderUtil.colorRGB(0, 0, 0));
+						mc.fontRenderer.drawString(s, 49 - (mc.fontRenderer.getStringWidth(s) / 2), layoutManager.get(Position.TOP_LEFT) + 2 + i * (mc.fontRenderer.FONT_HEIGHT + 2), Colors.BLACK);
 						i++;
 					}
 					
-					layoutManager.add(mc.fontRendererObj.FONT_HEIGHT * 4 + 13, Position.TOP_LEFT);
+					layoutManager.add(mc.fontRenderer.FONT_HEIGHT * 4 + 13, Position.TOP_LEFT);
 				} else {
 					FMLClientHandler.instance().getClient().renderEngine.bindTexture(signTex);
 					glPushMatrix();
@@ -168,17 +168,19 @@ public class ExtraGuiElementSignReader extends ExtraGuiElement {
 					
 					this.bounds = new Bounds(resolution.getScaledWidth() - 93, layoutManager.get(Position.TOP_RIGHT), 88, 48);
 					
-					int i = 0;
+					//int i = 0;
+					int y = layoutManager.get(Position.TOP_RIGHT) + 2;
 					if(te instanceof TileEntitySign) {
 						for(ITextComponent ic : ((TileEntitySign) te).signText) {
 							if(ic == null) ic = new TextComponentString("");
 							String s = ic.getFormattedText();
-							mc.fontRendererObj.drawString(s, resolution.getScaledWidth() - 49 - (mc.fontRendererObj.getStringWidth(s) / 2), layoutManager.get(Position.TOP_RIGHT) + 2 + i * (mc.fontRendererObj.FONT_HEIGHT + 2), RenderUtil.colorRGB(0, 0, 0));
-							i++;
+							mc.fontRenderer.drawString(s, resolution.getScaledWidth() - 49 - (mc.fontRenderer.getStringWidth(s) / 2), y, Colors.BLACK);
+							//i++;
+							y += mc.fontRenderer.FONT_HEIGHT + 2;
 						}
 					}
 					
-					layoutManager.add(mc.fontRendererObj.FONT_HEIGHT * 4 + 13, Position.TOP_RIGHT);
+					layoutManager.add(mc.fontRenderer.FONT_HEIGHT * 4 + 13, Position.TOP_RIGHT);
 				}
 			}
 			

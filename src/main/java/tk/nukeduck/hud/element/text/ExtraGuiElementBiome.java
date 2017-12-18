@@ -2,11 +2,11 @@ package tk.nukeduck.hud.element.text;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.BlockPos;
 import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.element.settings.ElementSettingPosition.Position;
 import tk.nukeduck.hud.util.Bounds;
-import tk.nukeduck.hud.util.FormatUtil;
 import tk.nukeduck.hud.util.LayoutManager;
 import tk.nukeduck.hud.util.StringManager;
 
@@ -20,8 +20,8 @@ public class ExtraGuiElementBiome extends ExtraGuiElementText {
 	@Override
 	public Bounds getBounds(ScaledResolution resolution) {
 		if(posMode.index == 0 && pos.value == Position.TOP_CENTER) {
-			int stringWidth = Minecraft.getMinecraft().fontRendererObj.getStringWidth(biome);
-			return new Bounds((resolution.getScaledWidth() - stringWidth) / 2, BetterHud.proxy.elements.compass.enabled ? 40 : 17, stringWidth, Minecraft.getMinecraft().fontRendererObj.FONT_HEIGHT);
+			int stringWidth = Minecraft.getMinecraft().fontRenderer.getStringWidth(biome);
+			return new Bounds((resolution.getScaledWidth() - stringWidth) / 2, BetterHud.proxy.elements.compass.enabled ? 40 : 17, stringWidth, Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT);
 		}
 		return super.getBounds(resolution);
 	}
@@ -40,17 +40,17 @@ public class ExtraGuiElementBiome extends ExtraGuiElementText {
 	private String biome = "";
 	
 	public void update(Minecraft mc) {
-		if(mc.theWorld == null || mc.thePlayer == null) return;
+		if(mc.world == null || mc.player == null) return;
 		
-		BlockPos pos = new BlockPos((int) mc.thePlayer.posX, 0, (int) mc.thePlayer.posZ);
-		biome = FormatUtil.translatePre("strings.biome", mc.theWorld.getBiomeGenForCoords(pos).getBiomeName());
+		BlockPos pos = new BlockPos((int) mc.player.posX, 0, (int) mc.player.posZ);
+		biome = I18n.format("betterHud.strings.biome", mc.world.getBiomeForCoordsBody(pos).getBiomeName());
 	}
 	
 	@Override
 	public void render(Minecraft mc, ScaledResolution resolution, StringManager stringManager, LayoutManager layoutManager) {
 		if(posMode.index == 0 && pos.value == Position.TOP_CENTER) {
 			int y = BetterHud.proxy.elements.compass.enabled ? 40 : 17;
-			mc.ingameGUI.drawCenteredString(mc.fontRendererObj, biome, resolution.getScaledWidth() / 2, y, this.getColor());
+			mc.ingameGUI.drawCenteredString(mc.fontRenderer, biome, resolution.getScaledWidth() / 2, y, this.getColor());
 		} else {
 			super.render(mc, resolution, stringManager, layoutManager);
 		}

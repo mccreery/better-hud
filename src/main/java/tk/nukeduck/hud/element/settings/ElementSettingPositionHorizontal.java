@@ -1,7 +1,6 @@
 package tk.nukeduck.hud.element.settings;
 
 import net.minecraft.client.gui.Gui;
-import tk.nukeduck.hud.element.settings.ElementSettingPosition.Position;
 import tk.nukeduck.hud.gui.GuiToggleButton;
 
 public class ElementSettingPositionHorizontal extends ElementSettingPosition {

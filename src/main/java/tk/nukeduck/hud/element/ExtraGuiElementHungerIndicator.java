@@ -4,9 +4,6 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import tk.nukeduck.hud.element.settings.ElementSettingAbsolutePosition;
 import tk.nukeduck.hud.element.settings.ElementSettingAbsolutePositionAnchored;
 import tk.nukeduck.hud.element.settings.ElementSettingAnchor;
 import tk.nukeduck.hud.element.settings.ElementSettingDivider;
@@ -85,7 +82,7 @@ public class ExtraGuiElementHungerIndicator extends ExtraGuiElement {
 	public void update(Minecraft mc) {}
 	
 	public void render(Minecraft mc, ScaledResolution resolution, StringManager stringManager, LayoutManager layoutManager) {
-		double foodLevel = mc.thePlayer.getFoodStats().getFoodLevel();
+		double foodLevel = mc.player.getFoodStats().getFoodLevel();
 		double foodMax = this.maxLimit.value * 2.0;
 		if(foodLevel <= foodMax) {
 			double speed = (foodMax - foodLevel) / foodMax * 50.0 + 2.0;
@@ -114,7 +111,7 @@ public class ExtraGuiElementHungerIndicator extends ExtraGuiElement {
 		}
 	}
 	
-	private static final ItemStack beef = new ItemStack(Items.COOKED_BEEF);
+	//private static final ItemStack beef = new ItemStack(Items.COOKED_BEEF);
 
 	@Override
 	public boolean shouldProfile() {

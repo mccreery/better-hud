@@ -1,7 +1,6 @@
 package tk.nukeduck.hud.gui;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
@@ -21,18 +20,18 @@ public class GuiUpDownButton extends GuiButton {
 	}
 	
 	@Override
-    public void drawButton(Minecraft mc, int mouseX, int mouseY) {
-        if(this.visible) {
-            mc.getTextureManager().bindTexture(settings);
-            GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-            this.hovered = mouseX >= this.xPosition && mouseY >= this.yPosition && mouseX < this.xPosition + this.width && mouseY < this.yPosition + this.height;
-            int k = this.getHoverState(this.hovered);
-            GlStateManager.enableBlend();
-            GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-            GlStateManager.blendFunc(770, 771);
-            
-            this.drawTexturedModalRect(this.xPosition, this.yPosition, index * 20, k * 10, this.width, this.height);
-            this.mouseDragged(mc, mouseX, mouseY);
-        }
-    }
+	public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
+		if(this.visible) {
+			mc.getTextureManager().bindTexture(settings);
+			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+			this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
+			int k = this.getHoverState(this.hovered);
+			GlStateManager.enableBlend();
+			GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+			GlStateManager.blendFunc(770, 771);
+
+			this.drawTexturedModalRect(this.x, this.y, index * 20, k * 10, this.width, this.height);
+			this.mouseDragged(mc, mouseX, mouseY);
+		}
+	}
 }

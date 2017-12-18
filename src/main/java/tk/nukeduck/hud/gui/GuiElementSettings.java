@@ -4,25 +4,26 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.input.Mouse;
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.ScaledResolution;
-
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
-import org.lwjgl.opengl.GL11;
-
+import net.minecraft.client.resources.I18n;
 import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.element.ExtraGuiElement;
-import tk.nukeduck.hud.element.HudElements;
 import tk.nukeduck.hud.element.settings.ElementSetting;
 import tk.nukeduck.hud.element.settings.ElementSettingAbsolutePosition;
+import tk.nukeduck.hud.network.proxy.ClientProxy;
 import tk.nukeduck.hud.util.Bounds;
-import tk.nukeduck.hud.util.FormatUtil;
 import tk.nukeduck.hud.util.FuncsUtil;
-import tk.nukeduck.hud.util.RenderUtil;
+import tk.nukeduck.hud.util.SettingsIO;
+import tk.nukeduck.hud.util.constants.Colors;
+import tk.nukeduck.hud.util.constants.Constants;
 
 public class GuiElementSettings extends GuiScreen {
 	public ExtraGuiElement element;
@@ -47,7 +48,7 @@ public class GuiElementSettings extends GuiScreen {
 		this.textboxList.clear();
 		
 		Keyboard.enableRepeatEvents(true);
-		this.buttonList.add(new GuiButton(-1, this.width / 2 - 100, height / 16 + 20, FormatUtil.translate("gui.done")));
+		this.buttonList.add(new GuiButton(-1, this.width / 2 - 100, height / 16 + 20, I18n.format("gui.done")));
 		
 		this.totalHeight = 0;
 		for(ElementSetting setting : element.settings) {
@@ -137,7 +138,11 @@ public class GuiElementSettings extends GuiScreen {
 				ArrayList<Bounds> bounds = new ArrayList<Bounds>();
 				for(ExtraGuiElement element : BetterHud.proxy.elements.elements) {
 					if(element == this.element || !element.enabled) continue;
-					bounds.add(element.getBounds(res));
+
+					Bounds elementBounds = element.getBounds(res);
+					if(elementBounds != null && elementBounds != Bounds.EMPTY) {
+						bounds.add(elementBounds);
+					}
 				}
 				b.snapTest(10, bounds.toArray(new Bounds[bounds.size()]));
 				b.snapTest(10, new Bounds(this.width, 0, -this.width, this.height));
@@ -151,9 +156,14 @@ public class GuiElementSettings extends GuiScreen {
 		}
 	}
 	
-	@Override
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
+		if(keyCode == 1) {
+			if(BetterHud.proxy instanceof ClientProxy) {
+				SettingsIO.saveSettings(Constants.LOGGER, (ClientProxy)BetterHud.proxy);
+			}
+		}
 		super.keyTyped(typedChar, keyCode);
+
 		for(GuiTextField field : this.textboxList) {
 			field.textboxKeyTyped(typedChar, keyCode);
 			settingLinks.get(field).keyTyped(typedChar, keyCode);
@@ -187,7 +197,7 @@ public class GuiElementSettings extends GuiScreen {
 		}
 		
 		if(currentPicking != null && !currentPicking.pick.isMouseOver()) {
-			currentPicking.pick.displayString = FormatUtil.translatePre("menu.pick");
+			currentPicking.pick.displayString = I18n.format("betterHud.menu.pick");
 			currentPicking.isPicking = false;
 			
 			currentPicking = null;
@@ -214,16 +224,16 @@ public class GuiElementSettings extends GuiScreen {
 		// Bring buttons back to 0
 		this.scrollHeight = this.totalHeight - barHeight;
 		this.scrollHeight *= this.scrollFactor;
-		for(Object button : this.buttonList) ((GuiButton) button).yPosition += this.scrollHeight;
-		for(GuiTextField box : this.textboxList) box.yPosition += this.scrollHeight;
+		for(Object button : this.buttonList) ((GuiButton) button).y += this.scrollHeight;
+		for(GuiTextField box : this.textboxList) box.y += this.scrollHeight;
 		
 		this.scrollFactor = FuncsUtil.clamp(scroll, 0.0F, 1.0F);
 		
 		// Move buttons to new Y
 		this.scrollHeight = this.totalHeight - barHeight;
 		this.scrollHeight *= this.scrollFactor;
-		for(Object button : this.buttonList) ((GuiButton) button).yPosition -= this.scrollHeight;
-		for(GuiTextField box : this.textboxList) box.yPosition -= this.scrollHeight;
+		for(Object button : this.buttonList) ((GuiButton) button).y -= this.scrollHeight;
+		for(GuiTextField box : this.textboxList) box.y -= this.scrollHeight;
 	}
 	
 	@Override
@@ -232,13 +242,13 @@ public class GuiElementSettings extends GuiScreen {
 		ScaledResolution res = new ScaledResolution(mc);
 		//super.drawScreen(mouseX, mouseY, p_73863_3_);
 		
-		this.drawCenteredString(this.fontRendererObj, FormatUtil.translatePre("menu.settings", this.element.getLocalizedName()), this.width / 2, height / 16 + 5, 16777215);
+		this.drawCenteredString(this.fontRenderer, I18n.format("betterHud.menu.settings", this.element.getLocalizedName()), this.width / 2, height / 16 + 5, 16777215);
 		
 		if(this.totalHeight > barHeight) {
 			int noduleY = top + Math.round(this.scrollFactor * (barHeight - 30));
 			
-			this.drawRect(this.width / 2 + 160, top, this.width / 2 + 164, top + barHeight, 0xAA555555);
-			this.drawRect(this.width / 2 + 160, noduleY, this.width / 2 + 164, noduleY + 30, 0x66FFFFFF);
+			Gui.drawRect(this.width / 2 + 160, top, this.width / 2 + 164, top + barHeight, 0xAA555555);
+			Gui.drawRect(this.width / 2 + 160, noduleY, this.width / 2 + 164, noduleY + 30, 0x66FFFFFF);
 		} else this.setScroll(0);
 		
 		GL11.glPushMatrix();
@@ -267,26 +277,26 @@ public class GuiElementSettings extends GuiScreen {
 		
 		String wStr = String.valueOf(width);
 		String hStr = String.valueOf(height);
-		int wStrW = fontRendererObj.getStringWidth(wStr) + 10;
-		int hStrH = fontRendererObj.FONT_HEIGHT + 10;
+		int wStrW = fontRenderer.getStringWidth(wStr) + 10;
+		int hStrH = fontRenderer.FONT_HEIGHT + 10;
 		
-		this.drawRect(20, 10, 20 + (w - wStrW) / 2, 11, RenderUtil.colorRGB(255, 255, 255));
-		this.drawRect(20 + (w + wStrW) / 2, 10, 20 + w, 11, RenderUtil.colorRGB(255, 255, 255));
-		this.drawCenteredString(fontRendererObj, wStr, 20 + w / 2, 10, RenderUtil.colorRGB(255, 255, 255));
+		Gui.drawRect(20, 10, 20 + (w - wStrW) / 2, 11, Colors.fromRGB(255, 255, 255));
+		Gui.drawRect(20 + (w + wStrW) / 2, 10, 20 + w, 11, Colors.fromRGB(255, 255, 255));
+		this.drawCenteredString(fontRenderer, wStr, 20 + w / 2, 10, Colors.fromRGB(255, 255, 255));
 		
-		this.drawRect(10, 20, 11, 20 + (h - hStrH) / 2, RenderUtil.colorRGB(255, 255, 255));
-		this.drawRect(10, 20 + (h + hStrH) / 2, 11, 20 + h, RenderUtil.colorRGB(255, 255, 255));
-		this.drawString(fontRendererObj, hStr, 10, 20 + (h - hStrH + 10) / 2, RenderUtil.colorRGB(255, 255, 255));
+		Gui.drawRect(10, 20, 11, 20 + (h - hStrH) / 2, Colors.fromRGB(255, 255, 255));
+		Gui.drawRect(10, 20 + (h + hStrH) / 2, 11, 20 + h, Colors.fromRGB(255, 255, 255));
+		this.drawString(fontRenderer, hStr, 10, 20 + (h - hStrH + 10) / 2, Colors.fromRGB(255, 255, 255));
 		
 		if(this.currentPicking != null) {
-			String disableSnap = FormatUtil.translatePre("text.unsnap", Keyboard.getKeyName(Keyboard.KEY_LCONTROL));
-			this.drawString(fontRendererObj, disableSnap, 5, this.height - fontRendererObj.FONT_HEIGHT - 5, 0xffffff);
+			String disableSnap = I18n.format("betterHud.text.unsnap", Keyboard.getKeyName(Keyboard.KEY_LCONTROL));
+			this.drawString(fontRenderer, disableSnap, 5, this.height - fontRenderer.FONT_HEIGHT - 5, 0xffffff);
 			
 			GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
 			for(ExtraGuiElement element : BetterHud.proxy.elements.elements) {
 				Bounds b = element.getBounds(res);
-				if(element.enabled) {
-					this.drawRect(b.getX(), b.getY(), b.getX2(), b.getY2(), RenderUtil.colorARGB(element == this.element ? 255 : 50, 255, 0, 0));
+				if(element.enabled && b != null && b != Bounds.EMPTY) {
+					Gui.drawRect(b.getX(), b.getY(), b.getX2(), b.getY2(), Colors.fromARGB(element == this.element ? 255 : 50, 255, 0, 0));
 				}
 			}
 			GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);

@@ -11,6 +11,8 @@ import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.Tessellator;
+import net.minecraft.client.resources.I18n;
 import tk.nukeduck.hud.element.settings.ElementSettingAbsolutePositionAnchored;
 import tk.nukeduck.hud.element.settings.ElementSettingAnchor;
 import tk.nukeduck.hud.element.settings.ElementSettingBoolean;
@@ -19,10 +21,10 @@ import tk.nukeduck.hud.element.settings.ElementSettingMode;
 import tk.nukeduck.hud.element.settings.ElementSettingPosition.Position;
 import tk.nukeduck.hud.element.settings.ElementSettingSlider;
 import tk.nukeduck.hud.util.Bounds;
-import tk.nukeduck.hud.util.FormatUtil;
 import tk.nukeduck.hud.util.LayoutManager;
 import tk.nukeduck.hud.util.RenderUtil;
 import tk.nukeduck.hud.util.StringManager;
+import tk.nukeduck.hud.util.constants.Colors;
 
 public class ExtraGuiElementCompass extends ExtraGuiElement {
 	private ElementSettingMode posMode;
@@ -51,9 +53,9 @@ public class ExtraGuiElementCompass extends ExtraGuiElement {
 	
 	public static final double degreesPerRadian = 180.0 / Math.PI;
 	
-	public static int nColor = RenderUtil.colorRGB(255, 0, 0);
-	public static int ewColor = RenderUtil.colorRGB(255, 255, 255);
-	public static int sColor = RenderUtil.colorRGB(0, 0, 255);
+	public static final int nColor  = Colors.fromRGB(255, 0, 0);
+	public static final int ewColor = Colors.fromRGB(255, 255, 255);
+	public static final int sColor  = Colors.fromRGB(0, 0, 255);
 	
 	private int[] notchX = new int[9];
 	
@@ -82,14 +84,14 @@ public class ExtraGuiElementCompass extends ExtraGuiElement {
 		this.settings.add(directionScaling = new ElementSettingSlider("scaledDirections", 0, 100) {
 			@Override
 			public String getSliderText() {
-				return FormatUtil.translatePre("menu.settingButton", this.getLocalizedName(), FormatUtil.translatePre("strings.percent", String.valueOf((int) this.value)));
+				return I18n.format("betterHud.menu.settingButton", this.getLocalizedName(), I18n.format("betterHud.strings.percent", String.valueOf((int) this.value)));
 			}
 		});
 		directionScaling.accuracy = 1;
 		this.settings.add(scale = new ElementSettingSlider("scale", 25, 200) {
 			@Override
 			public String getSliderText() {
-				return FormatUtil.translatePre("menu.settingButton", this.getLocalizedName(), FormatUtil.translatePre("strings.percent", String.valueOf((int) this.value)));
+				return I18n.format("betterHud.menu.settingButton", this.getLocalizedName(), I18n.format("betterHud.strings.percent", String.valueOf((int) this.value)));
 			}
 		});
 		directionScaling.accuracy = 1;
@@ -113,7 +115,7 @@ public class ExtraGuiElementCompass extends ExtraGuiElement {
 		//int fanciness = this.fanciness.index;
 		
 		double offsetQuarter = Math.toRadians(90);
-		double transform = Math.toRadians(mc.thePlayer.rotationYaw);
+		double transform = Math.toRadians(mc.player.rotationYaw);
 		
 		short nOpacity = (short) Math.abs(Math.sin(transform / 2) * 255);
 		short wOpacity = (short) Math.abs(Math.sin((transform + offsetQuarter) / 2) * 255);
@@ -138,8 +140,8 @@ public class ExtraGuiElementCompass extends ExtraGuiElement {
 		GL11.glScaled(scale.value / 100, scale.value / 100, 1);
 		GL11.glTranslatef(-x - 90, -y, 0);
 		
-		RenderUtil.drawRect(x, y, x + 180, y + 12, RenderUtil.colorARGB(170, 0, 0, 0));
-		RenderUtil.drawRect(x + 50, y, x + 130, y + 12, RenderUtil.colorARGB(85, 85, 85, 85));
+		RenderUtil.renderQuad(Tessellator.getInstance(), x,      y, 180, 12, Colors.fromARGB(170, 0, 0, 0));
+		RenderUtil.renderQuad(Tessellator.getInstance(), x + 50, y, 80,  12, Colors.fromARGB(85, 85, 85, 85));
 		
 		glEnable(GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -157,7 +159,7 @@ public class ExtraGuiElementCompass extends ExtraGuiElement {
 				float finalSize = Math.max(0, (float) (directionScaling.value / factor) * (size - 1) + 1);
 				glScalef(finalSize, finalSize, 1.0F);
 				
-				mc.ingameGUI.drawCenteredString(mc.fontRendererObj, "N", 0, 0, RenderUtil.colorARGB(nOpacity, 255, 0, 0));
+				mc.ingameGUI.drawCenteredString(mc.fontRenderer, "N", 0, 0, Colors.fromARGB(nOpacity, 255, 0, 0));
 			}
 			glPopMatrix();
 		}
@@ -169,7 +171,7 @@ public class ExtraGuiElementCompass extends ExtraGuiElement {
 				float finalSize = Math.max(0, (float) (directionScaling.value / factor) * (size - 1) + 1);
 				glScalef(finalSize, finalSize, 1.0F);
 				
-				mc.ingameGUI.drawCenteredString(mc.fontRendererObj, "E", 0, 0, RenderUtil.colorARGB(eOpacity, 255, 255, 255));
+				mc.ingameGUI.drawCenteredString(mc.fontRenderer, "E", 0, 0, Colors.fromARGB(eOpacity, 255, 255, 255));
 			}
 			glPopMatrix();
 		}
@@ -181,7 +183,7 @@ public class ExtraGuiElementCompass extends ExtraGuiElement {
 				float finalSize = Math.max(0, (float) (directionScaling.value / factor) * (size - 1) + 1);
 				glScalef(finalSize, finalSize, 1.0F);
 				
-				mc.ingameGUI.drawCenteredString(mc.fontRendererObj, "S", 0, 0, RenderUtil.colorARGB(sOpacity, 0, 0, 255));
+				mc.ingameGUI.drawCenteredString(mc.fontRenderer, "S", 0, 0, Colors.fromARGB(sOpacity, 0, 0, 255));
 			}
 			glPopMatrix();
 		}
@@ -193,7 +195,7 @@ public class ExtraGuiElementCompass extends ExtraGuiElement {
 				float finalSize = Math.max(0, (float) (directionScaling.value / factor) * (size - 1) + 1);
 				glScalef(finalSize, finalSize, 1.0F);
 				
-				mc.ingameGUI.drawCenteredString(mc.fontRendererObj, "W", 0, 0, RenderUtil.colorARGB(wOpacity, 255, 255, 255)); // 16777216 = 256^3
+				mc.ingameGUI.drawCenteredString(mc.fontRenderer, "W", 0, 0, Colors.fromARGB(wOpacity, 255, 255, 255)); // 16777216 = 256^3
 			}
 			glPopMatrix();
 		}
@@ -201,20 +203,19 @@ public class ExtraGuiElementCompass extends ExtraGuiElement {
 		
 		mc.mcProfiler.startSection("notches");
 		
-		int largeNotch = RenderUtil.colorRGB(255, 255, 255);
-		
+		int largeNotch = Colors.WHITE;
 		if(showNotches.value) {
-			largeNotch = RenderUtil.colorRGB(255, 0, 0);
+			largeNotch = Colors.RED;
 			
 			for(int loc : notchX) {
-				RenderUtil.drawRect(x + loc - 1, y - 2, x + loc, y + 4, RenderUtil.colorRGB(255, 255, 255));
-				RenderUtil.drawRect(x - loc + 180, y - 2, x - loc + 181, y + 4, RenderUtil.colorRGB(255, 255, 255));
+				RenderUtil.renderQuad(x + loc - 1, y - 2, 1, 6, Colors.WHITE);
+				RenderUtil.renderQuad(x - loc + 180, y - 2, 1, 6, Colors.WHITE);
 			}
 		}
 		
-		RenderUtil.drawRect(x + 89, y - 3, x + 90, y + 4, largeNotch);
-		RenderUtil.drawRect(x, y - 3, x + 1, y + 4, largeNotch);
-		RenderUtil.drawRect(x + 180, y - 3, x + 179, y + 4, largeNotch);
+		RenderUtil.renderQuad(x+89,  y-3, 1, 7, largeNotch);
+		RenderUtil.renderQuad(x,     y-3, 1, 7, largeNotch);
+		RenderUtil.renderQuad(x+179, y-3, 1, 7, largeNotch);
 		
 		mc.mcProfiler.endSection();
 		

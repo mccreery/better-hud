@@ -20,6 +20,7 @@ public class HudElements {
 			enchantIndicator, experienceInfo, foodHealthStats, fps, fullInvIndicator,
 			handBar, healIndicator, hungerIndicator, lightLevel,
 			signReader, systemClock, waterDrops;
+	public final ExtraGuiElementGlobalSettings globalSettings;
 
 	public final ExtraGuiElementBreedIndicator breedIndicator;
 	public final ExtraGuiElementHidePlayers hidePlayers;
@@ -67,6 +68,7 @@ public class HudElements {
 			this.horseInfo,
 			this.mobInfo
 		};
+		this.globalSettings = new ExtraGuiElementGlobalSettings();
 
 		for(ExtraGuiElement element : this.elements) {
 			element.init();
@@ -74,6 +76,7 @@ public class HudElements {
 	}
 
 	public void loadDefaults() {
+		this.globalSettings.loadDefaults();
 		for (ExtraGuiElement element : this.elements) {
 			element.loadDefaults();
 		}
