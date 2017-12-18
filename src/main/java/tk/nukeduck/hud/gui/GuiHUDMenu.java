@@ -2,22 +2,13 @@ package tk.nukeduck.hud.gui;
 
 import java.util.Arrays;
 
-import tk.nukeduck.hud.BetterHud;
-import tk.nukeduck.hud.element.ExtraGuiElement;
-import tk.nukeduck.hud.util.RenderUtil;
-import cpw.mods.fml.client.FMLClientHandler;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiListExtended;
-import net.minecraft.client.gui.GuiMainMenu;
-import net.minecraft.client.gui.GuiOptions;
 import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiShareToLan;
-import net.minecraft.client.gui.achievement.GuiAchievements;
-import net.minecraft.client.gui.achievement.GuiStats;
-import net.minecraft.client.multiplayer.WorldClient;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.EnumChatFormatting;
+import tk.nukeduck.hud.BetterHud;
+import tk.nukeduck.hud.element.ExtraGuiElement;
+import tk.nukeduck.hud.util.FormatUtil;
 
 public class GuiHUDMenu extends GuiScreen {
 	public int buttonOffset = 0;
@@ -34,14 +25,14 @@ public class GuiHUDMenu extends GuiScreen {
         this.buttonList.clear();
         boolean flag = true;
 
-        this.buttonList.add(new GuiButton(0, this.width / 2 - 100, height / 16 + 20, I18n.format("menu.returnToGame", new Object[0])));
-        this.buttonList.add(new GuiButton(1, this.width / 2 - 149, height / 16 + 42, 98, 20, I18n.format("betterHud.menu.enableAll", new Object[0])));
-        this.buttonList.add(new GuiButton(2, this.width / 2 - 49, height / 16 + 42, 98, 20, I18n.format("betterHud.menu.disableAll", new Object[0])));
-        this.buttonList.add(new GuiButton(3, this.width / 2 + 51, height / 16 + 42, 98, 20, I18n.format("betterHud.menu.resetDefaults", new Object[0])));
+        this.buttonList.add(new GuiButton(0, this.width / 2 - 100, height / 16 + 20, FormatUtil.translate("menu.returnToGame")));
+        this.buttonList.add(new GuiButton(1, this.width / 2 - 149, height / 16 + 42, 98, 20, FormatUtil.translatePre("menu.enableAll")));
+        this.buttonList.add(new GuiButton(2, this.width / 2 - 49, height / 16 + 42, 98, 20, FormatUtil.translatePre("menu.disableAll")));
+        this.buttonList.add(new GuiButton(3, this.width / 2 + 51, height / 16 + 42, 98, 20, FormatUtil.translatePre("menu.resetDefaults")));
         
-        this.buttonList.add(new GuiButton(4, this.width / 2 - 129, height - 20 - height / 16, 98, 20, I18n.format("betterHud.menu.lastPage", new Object[0])));
+        this.buttonList.add(new GuiButton(4, this.width / 2 - 129, height - 20 - height / 16, 98, 20, FormatUtil.translatePre("menu.lastPage")));
         ((GuiButton) buttonList.get(4)).enabled = false;
-        this.buttonList.add(new GuiButton(5, this.width / 2 + 31, height - 20 - height / 16, 98, 20, I18n.format("betterHud.menu.nextPage", new Object[0])));
+        this.buttonList.add(new GuiButton(5, this.width / 2 + 31, height - 20 - height / 16, 98, 20, FormatUtil.translatePre("menu.nextPage")));
         
         buttonOffset = this.buttonList.size(); // Set the button offset for actual element buttons
         
@@ -49,12 +40,11 @@ public class GuiHUDMenu extends GuiScreen {
         //int columns = (int) Math.ceil(BetterHud.elements.length / (float) perColumn);
         
         this.perPage = height / 48 + 1;
-        System.out.println(perPage);
         
         for(int i = 0; i < BetterHud.elements.length; i++) {
         	ExtraGuiElement el = BetterHud.elements[i];
         	this.buttonList.add(new GuiButton(
-        		i * 3 + buttonOffset, (int) (this.width / 2) - 120, height / 16 + 75 + ((i % perPage) * 24), 128, 20, (el.enabled ? EnumChatFormatting.GREEN : EnumChatFormatting.RED) + I18n.format("betterHud.element." + el.getName(), new Object[] {})
+        		i * 3 + buttonOffset, (int) (this.width / 2) - 120, height / 16 + 75 + ((i % perPage) * 24), 128, 20, (el.enabled ? EnumChatFormatting.GREEN : EnumChatFormatting.RED) + FormatUtil.translatePre("element." + el.getName())
         	));
         	this.buttonList.add(new GuiButton(
             	i * 3 + buttonOffset + 1, (int) (this.width / 2) - 120 + 130, height / 16 + 75 + ((i % perPage) * 24), 20, 20, "<"
@@ -111,7 +101,7 @@ public class GuiHUDMenu extends GuiScreen {
         					GuiButton b = (GuiButton) buttonList.get(i);
         					if(b.id >= buttonOffset && (b.id - buttonOffset) % 3 == 0) {
 		        				BetterHud.elements[(b.id - buttonOffset) / 3].enabled = true;
-		        				b.displayString = (BetterHud.elements[(b.id - buttonOffset) / 3].enabled ? EnumChatFormatting.GREEN : EnumChatFormatting.RED) + I18n.format("betterHud.element." + BetterHud.elements[(b.id - buttonOffset) / 3].getName(), new Object[] {});
+		        				b.displayString = (BetterHud.elements[(b.id - buttonOffset) / 3].enabled ? EnumChatFormatting.GREEN : EnumChatFormatting.RED) + FormatUtil.translatePre("element." + BetterHud.elements[(b.id - buttonOffset) / 3].getName());
         					}
         				}
         			}
@@ -122,7 +112,7 @@ public class GuiHUDMenu extends GuiScreen {
         					GuiButton b = (GuiButton) buttonList.get(i);
         					if(b.id >= buttonOffset && (b.id - buttonOffset) % 3 == 0) {
 		        				BetterHud.elements[(b.id - buttonOffset) / 3].enabled = false;
-		        				b.displayString = (BetterHud.elements[(b.id - buttonOffset) / 3].enabled ? EnumChatFormatting.GREEN : EnumChatFormatting.RED) + I18n.format("betterHud.element." + BetterHud.elements[(b.id - buttonOffset) / 3].getName(), new Object[] {});
+		        				b.displayString = (BetterHud.elements[(b.id - buttonOffset) / 3].enabled ? EnumChatFormatting.GREEN : EnumChatFormatting.RED) + FormatUtil.translatePre("element." + BetterHud.elements[(b.id - buttonOffset) / 3].getName());
         					}
         				}
         			}
@@ -145,7 +135,7 @@ public class GuiHUDMenu extends GuiScreen {
         		int offset = i * 3 + buttonOffset;
         		if(id == offset) {
         			el.enabled = !el.enabled;
-        			p_146284_1_.displayString = (el.enabled ? EnumChatFormatting.GREEN : EnumChatFormatting.RED) + I18n.format("betterHud.element." + el.getName(), new Object[] {});
+        			p_146284_1_.displayString = (el.enabled ? EnumChatFormatting.GREEN : EnumChatFormatting.RED) + FormatUtil.translatePre("element." + el.getName());
         		} else if(id == offset + 1) { // <
         			int size = el.getModesSize();
         			el.mode = el.mode == 0 ? size - 1 : el.mode - 1;
@@ -181,9 +171,9 @@ public class GuiHUDMenu extends GuiScreen {
         this.drawDefaultBackground();
         //this.drawRect(0, 60, width, height - 20, 0x55000000);
         super.drawScreen(mouseX, mouseY, p_73863_3_);
-        this.drawCenteredString(mc.fontRenderer, I18n.format("betterHud.menu.hudSettings", new Object[0]), this.width / 2, height / 16 + 5, 16777215);
+        this.drawCenteredString(BetterHud.fr, FormatUtil.translatePre("menu.hudSettings"), this.width / 2, height / 16 + 5, 16777215);
         
-        this.drawString(mc.fontRenderer, countEnabled(BetterHud.elements) + "/" + BetterHud.elements.length + " enabled", 5, 5, 0xffffff);
+        this.drawString(BetterHud.fr, countEnabled(BetterHud.elements) + "/" + BetterHud.elements.length + " enabled", 5, 5, 0xffffff);
         
         for(Object button : buttonList) {
         	if(button instanceof GuiButton) {
@@ -191,12 +181,12 @@ public class GuiHUDMenu extends GuiScreen {
         		if(b.displayString == "<" && b.visible) {
 	        		ExtraGuiElement e = BetterHud.elements[((b.id - buttonOffset) + 1) / 3];
 	        		int color = e.getModesSize() > 1 ? 0xffffff : 0x555555;
-	        		this.drawCenteredString(mc.fontRenderer, I18n.format("betterHud.mode." + e.modeAt(e.mode), new Object[0]), b.xPosition + 53, b.yPosition + 6, color);
+	        		this.drawCenteredString(BetterHud.fr, FormatUtil.translatePre("mode." + e.modeAt(e.mode)), b.xPosition + 53, b.yPosition + 6, color);
         		}
         	}
         }
         
-        this.drawCenteredString(mc.fontRenderer, I18n.format("betterHud.menu.page", new Object[0]).replace("*", (currentPage + 1) + "/" + (int) Math.ceil((float) BetterHud.elements.length / perPage)), width / 2, height - height / 16 - 13, 0xffffff);
+        this.drawCenteredString(BetterHud.fr, FormatUtil.translatePre("menu.page", (currentPage + 1) + "/" + (int) Math.ceil((float) BetterHud.elements.length / perPage)), width / 2, height - height / 16 - 13, 0xffffff);
     }
     
     public int countEnabled(ExtraGuiElement[] elements) {

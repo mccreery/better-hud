@@ -20,11 +20,10 @@ public class ExtraGuiElementEnchantIndicator extends ExtraGuiElement {
 	
 	@Override
 	public void render(Minecraft mc, FontRenderer fr, RenderItem ri, int width, int halfWidth, int height, ArrayList<String> leftStrings, ArrayList<String> rightStrings) {
-		if(!mc.thePlayer.capabilities.isCreativeMode && !(mc.thePlayer.ridingEntity != null && mc.thePlayer.ridingEntity instanceof EntityHorse) && mc.thePlayer.experienceLevel >= 30) {
-			glPushAttrib(GL_ALL_ATTRIB_BITS);
-			ri.renderItemAndEffectIntoGUI(fr, mc.getTextureManager(), enchbook, halfWidth - 8, height - 50);
-			glPopAttrib();
-		}
+		if(mc.thePlayer.capabilities.isCreativeMode
+			|| mc.thePlayer.ridingEntity != null && mc.thePlayer.ridingEntity instanceof EntityHorse
+			|| mc.thePlayer.experienceLevel < 30) return;
+		ri.renderItemAndEffectIntoGUI(enchbook, halfWidth - 8, height - 50);
 	}
 	
 	private static ItemStack enchbook = new ItemStack(Items.enchanted_book);

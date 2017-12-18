@@ -4,10 +4,12 @@ import static org.lwjgl.opengl.GL11.*;
 
 import java.util.ArrayList;
 
+import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 
@@ -29,13 +31,19 @@ public class ExtraGuiElementArrowCount extends ExtraGuiElement {
 				}
 			}
 			
+			mc.getTextureManager().bindTexture(TextureMap.locationBlocksTexture);
+			//mc.getTextureManager().bindTexture(ExtraGuiElementBlood.blood);
 			if(currentMode() == "left") {
-				RenderUtil.renderItem(ri, fr, mc.getTextureManager(), new ItemStack(Items.arrow, 1), halfWidth - 111, height - 18);
+				//BetterHud.itemRendererGui.drawTexturedModalRect(halfWidth - 111, height - 18, 80, 64, 16, 16);
+				RenderUtil.renderItem(ri, fr, mc.getTextureManager(), arrow, halfWidth - 111, height - 18);
 				mc.ingameGUI.drawString(fr, arrows + "", halfWidth - 111, height - 10 - fr.FONT_HEIGHT, 0xffffff);
 			} else {
-				RenderUtil.renderItem(ri, fr, mc.getTextureManager(), new ItemStack(Items.arrow, 1), halfWidth + 95, height - 18);
+				//BetterHud.itemRendererGui.drawTexturedModalRect(halfWidth + 95, height - 18, 80, 64, 16, 16);
+				RenderUtil.renderItem(ri, fr, mc.getTextureManager(), arrow, halfWidth + 95, height - 18);
 				mc.ingameGUI.drawString(fr, arrows + "", halfWidth + 95, height - 10 - fr.FONT_HEIGHT, 0xffffff);
 			}
 		}
 	}
+	
+	private static final ItemStack arrow = new ItemStack(Items.arrow, 1);
 }

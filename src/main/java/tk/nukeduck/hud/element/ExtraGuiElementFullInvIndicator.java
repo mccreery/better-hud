@@ -7,19 +7,21 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.entity.RenderItem;
 
-public class ExtraGuiElementFps extends ExtraGuiElement {
-	public ExtraGuiElementFps() {
-		name = "fpsCount";
+public class ExtraGuiElementFullInvIndicator extends ExtraGuiElement {
+	public ExtraGuiElementFullInvIndicator() {
+		name = "fullInvIndicator";
 		modes = new String[] {"left", "right"};
-		defaultMode = 1;
 	}
 	
 	@Override
 	public void render(Minecraft mc, FontRenderer fr, RenderItem ri, int width, int halfWidth, int height, ArrayList<String> leftStrings, ArrayList<String> rightStrings) {
-		if(currentMode().equals("right")) {
-			rightStrings.add(FormatUtil.translatePre("strings.fps", mc.debug.split(" ")[0]));
+		for(int i = 0; i < mc.thePlayer.inventory.mainInventory.length; i++) {
+			if(mc.thePlayer.inventory.mainInventory[i] == null) return;
+		}
+		if(currentMode().equals("left")) {
+			leftStrings.add(FormatUtil.translatePre("strings.fullInv"));
 		} else {
-			leftStrings.add(FormatUtil.translatePre("strings.fps", mc.debug.split(" ")[0]));
+			rightStrings.add(FormatUtil.translatePre("strings.fullInv"));
 		}
 	}
 }

@@ -1,11 +1,14 @@
 package tk.nukeduck.hud.element;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.glColor4f;
+import static org.lwjgl.opengl.GL11.glEnable;
 
 import java.util.ArrayList;
 import java.util.Iterator;
 
-import tk.nukeduck.hud.BetterHud;
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.entity.RenderItem;
@@ -13,7 +16,9 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.StatCollector;
-import cpw.mods.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import tk.nukeduck.hud.BetterHud;
+import tk.nukeduck.hud.util.FormatUtil;
 
 public class ExtraGuiElementPotionBar extends ExtraGuiElement {
 	public static ResourceLocation inventory;
@@ -44,6 +49,7 @@ public class ExtraGuiElementPotionBar extends ExtraGuiElement {
 		}
 		
 		glEnable(GL_BLEND);
+		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		// Render potion icons
 		FMLClientHandler.instance().getClient().renderEngine.bindTexture(inventory);
 		int it = 0;
@@ -63,7 +69,7 @@ public class ExtraGuiElementPotionBar extends ExtraGuiElement {
 		// Render potion potencies
 		it = 0;
 		for(Iterator i = mc.thePlayer.getActivePotionEffects().iterator(); i.hasNext(); it++) {
-			mc.ingameGUI.drawString(fr, StatCollector.translateToLocal("potion.potency." + ((PotionEffect) i.next()).getAmplifier()).replace("potion.potency.", ""), x + (it * 16) + 4, y - fr.FONT_HEIGHT - 2, 0xffffffff);
+			mc.ingameGUI.drawString(fr, FormatUtil.translate("potion.potency." + ((PotionEffect) i.next()).getAmplifier()).replace("potion.potency.", ""), x + (it * 16) + 4, y - fr.FONT_HEIGHT - 2, 0xffffffff);
 		}
 	}
 }

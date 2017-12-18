@@ -1,15 +1,22 @@
 package tk.nukeduck.hud.element;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.glColor4f;
+import static org.lwjgl.opengl.GL11.glPopMatrix;
+import static org.lwjgl.opengl.GL11.glPushMatrix;
+import static org.lwjgl.opengl.GL11.glRotatef;
+import static org.lwjgl.opengl.GL11.glScalef;
+import static org.lwjgl.opengl.GL11.glTranslatef;
 
 import java.util.ArrayList;
 
-import tk.nukeduck.hud.BetterHud;
-import cpw.mods.fml.client.FMLClientHandler;
+import org.lwjgl.opengl.GL11;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.entity.RenderItem;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import tk.nukeduck.hud.BetterHud;
 
 public class ExtraGuiElementBlood extends ExtraGuiElement {
 	public static ResourceLocation blood;
@@ -23,6 +30,7 @@ public class ExtraGuiElementBlood extends ExtraGuiElement {
 	
 	@Override
 	public void render(Minecraft mc, FontRenderer fr, RenderItem ri, int width, int halfWidth, int height, ArrayList<String> leftStrings, ArrayList<String> rightStrings) {
+		GL11.glEnable(GL11.GL_BLEND);
 		FMLClientHandler.instance().getClient().renderEngine.bindTexture(blood);
 		for(int[] coords : BetterHud.bloodSplatters.toArray(new int[BetterHud.bloodSplatters.size()][])) {
 			glPushMatrix(); {

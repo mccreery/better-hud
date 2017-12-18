@@ -1,12 +1,19 @@
 package tk.nukeduck.hud.element;
 
 import static org.lwjgl.opengl.GL11.*;
+
+import java.lang.reflect.Field;
+
+import org.lwjgl.opengl.GL11;
+
+import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.util.FormatUtil;
 import tk.nukeduck.hud.util.RenderUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraft.entity.EntityAgeable;
 import net.minecraft.entity.EntityLiving;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityAnimal;
@@ -14,6 +21,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.NBTTagCompound;
 import net.minecraft.util.ResourceLocation;
 
 public class ExtraGuiElementBreedIndicator extends ExtraGuiElement {
@@ -22,31 +30,36 @@ public class ExtraGuiElementBreedIndicator extends ExtraGuiElement {
 		modes = new String[] {"left", "right"};
 	}
 	
-	public Item getBreedingItem(EntityAnimal entity) {
-		for(Item i : new Item[] {Items.wheat_seeds, Items.wheat, Items.carrot}) {
-			if(entity.isBreedingItem(new ItemStack(i))) return i;
+	public int getBreedingItemIndex(EntityAnimal entity) {
+		Item[] items = new Item[] {Items.carrot, Items.wheat_seeds, Items.wheat};
+		for(int i = 0; i < items.length; i++) {
+			if(entity.isBreedingItem(new ItemStack(items[i]))) return i + 1;
 		}
-		return null;
+		return -1;
 	}
-	
-	RenderItem ri = new RenderItem();
 	
 	public void renderInfo(EntityLivingBase entity, Minecraft mc, float partialTicks) {
 		if(enabled && entity instanceof EntityAnimal) {
 			EntityPlayer player = mc.thePlayer;
-			Tessellator t = Tessellator.instance;
+			Tessellator t = Tessellator.getInstance();
 			
-			Item breedItem = getBreedingItem((EntityAnimal) entity);
-			int s = ((EntityAnimal) entity).getGrowingAge() / 20;
-			if(breedItem != null && s >= 0) {
+			int breedItemIndex = getBreedingItemIndex((EntityAnimal) entity);
+			//int s = BetterHud.bredEntities.containsKey(entity.getUniqueID()) ? BetterHud.bredEntities.get(entity.getUniqueID()) : 0;
+			
+			int s = 0;
+			s /= 20;
+			
+			//s = ((EntityAnimal) entity).getEntityData().getInteger("InLove");
+			
+			if(breedItemIndex != -1 && s >= 0) {
 				glPushMatrix(); {
 					RenderUtil.billBoard(entity, player, partialTicks);
 					
-					String text = s == 0 ? "0:00" : FormatUtil.formatTime((int) s / 60, s % 60);
+					String text = FormatUtil.formatTime((int) s / 60, s % 60, true);
 					
 					float perLine = 10;
 					
-					int width = 25 + mc.fontRenderer.getStringWidth(text);
+					int width = 25 + BetterHud.fr.getStringWidth(text);
 					int height = 20;
 					
 					float scale = 0.5F / width;
@@ -59,14 +72,19 @@ public class ExtraGuiElementBreedIndicator extends ExtraGuiElement {
 					
 					// Rendering starts
 					
+					GL11.glEnable(GL11.GL_BLEND);
+					GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+					
 					RenderUtil.renderQuad(t, 0, 0, width, height, 0, 0, 0, 0.5F);
 					RenderUtil.zIncrease();
 					
 					glPushAttrib(GL_ALL_ATTRIB_BITS);
-					ri.renderItemIntoGUI(mc.fontRenderer, mc.getTextureManager(), new ItemStack(breedItem, 1), 2, 2);
+					GL11.glColor3f(1, 1, 1);
+					mc.getTextureManager().bindTexture(ExtraGuiElementBlood.blood);
+					BetterHud.itemRendererGui.drawTexturedModalRect(2, 2, breedItemIndex * 16, 64, 16, 16);
 					glPopAttrib();
 					
-					mc.ingameGUI.drawString(mc.fontRenderer, text, 22, 6, 0xffffff);
+					mc.ingameGUI.drawString(BetterHud.fr, text, 22, 6, 0xffffff);
 				}
 				glPopMatrix();
 			}

@@ -15,8 +15,8 @@ public class ExtraGuiElementExperienceInfo extends ExtraGuiElement {
 	@Override
 	public void render(Minecraft mc, FontRenderer fr, RenderItem ri, int width, int halfWidth, int height, ArrayList<String> leftStrings, ArrayList<String> rightStrings) {
 		if(!mc.thePlayer.capabilities.isCreativeMode && !(mc.thePlayer.ridingEntity != null && mc.thePlayer.ridingEntity instanceof EntityHorse)) {
-			int has = Math.round(mc.thePlayer.experience * getExperienceLevel(mc.thePlayer.experienceLevel));
-			int needed = getExperienceLevel(mc.thePlayer.experienceLevel) - has;
+			int has = Math.round(mc.thePlayer.experience * getExperienceWithinLevel(mc.thePlayer.experienceLevel));
+			int needed = getExperienceWithinLevel(mc.thePlayer.experienceLevel) - has;
 			drawBorderedString(fr, String.valueOf(has), width / 2 - 90, height - 30, 0xffffff); // 30
 			drawBorderedString(fr, String.valueOf(needed), width / 2 + 90 - fr.getStringWidth(String.valueOf(needed)), height - 30, 0xffffff);
 		}
@@ -30,13 +30,13 @@ public class ExtraGuiElementExperienceInfo extends ExtraGuiElement {
 		fontrenderer.drawString(s, x, y, color, false);
 	}
 	
-	public int getExperienceLevel(int level) {
-	    if (level >= 30) {
-	        return 62 + (level - 30) * 7;
-	    } else if (level >= 15) {
-	        return 17 + (level - 15) * 3;
+	public int getExperienceWithinLevel(int level) {
+	    if (level >= 31) {
+	        return 9 * level - 158;
+	    } else if (level >= 16) {
+	        return 5 * level - 38;
 	    } else {
-	        return 17;
+	        return 2 * level + 7;
 	    }
 	}
 }

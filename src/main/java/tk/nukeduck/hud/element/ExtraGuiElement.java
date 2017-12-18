@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.renderer.entity.RenderItem;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public class ExtraGuiElement {
 	protected String name;
