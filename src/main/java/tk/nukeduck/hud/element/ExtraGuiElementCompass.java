@@ -7,114 +7,224 @@ import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glScalef;
 import static org.lwjgl.opengl.GL11.glTranslatef;
 
-import java.util.ArrayList;
-
 import org.lwjgl.opengl.GL11;
 
-import tk.nukeduck.hud.util.RenderUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.client.gui.ScaledResolution;
+import tk.nukeduck.hud.element.settings.ElementSettingAbsolutePositionAnchored;
+import tk.nukeduck.hud.element.settings.ElementSettingAnchor;
+import tk.nukeduck.hud.element.settings.ElementSettingBoolean;
+import tk.nukeduck.hud.element.settings.ElementSettingDivider;
+import tk.nukeduck.hud.element.settings.ElementSettingMode;
+import tk.nukeduck.hud.element.settings.ElementSettingPosition.Position;
+import tk.nukeduck.hud.element.settings.ElementSettingSlider;
+import tk.nukeduck.hud.util.Bounds;
+import tk.nukeduck.hud.util.FormatUtil;
+import tk.nukeduck.hud.util.LayoutManager;
+import tk.nukeduck.hud.util.RenderUtil;
+import tk.nukeduck.hud.util.StringManager;
 
 public class ExtraGuiElementCompass extends ExtraGuiElement {
-	public static final double degreesPerRadian = 180.0 / Math.PI;
+	private ElementSettingMode posMode;
+	private ElementSettingAbsolutePositionAnchored pos;
+	private ElementSettingAnchor anchor;
+	private ElementSettingSlider directionScaling;
+	private ElementSettingBoolean showNotches;
+	private ElementSettingSlider scale;
 	
-	public static int nColor = 0xff0000;
-	public static int ewColor = 0xffffff;
-	public static int sColor = 0x0000ff;
-	
-	public ExtraGuiElementCompass() {
-		name = "compass";
-		modes = new String[] {"simple", "fancy", "fancier"};
-		defaultMode = 2;
+	@Override
+	public void loadDefaults() {
+		this.enabled = true;
+		posMode.index = 0;
+		anchor.value = Position.TOP_LEFT.getFlag();
+		pos.x = 5;
+		pos.y = 5;
+		directionScaling.value = 50.0;
+		showNotches.value = true;
+		scale.value = 100.0;
 	}
 	
 	@Override
-	public void render(Minecraft mc, FontRenderer fr, RenderItem ri, int width, int halfWidth, int height, ArrayList<String> leftStrings, ArrayList<String> rightStrings) {
-		int fanciness = mode;
+	public String getName() {
+		return "compass";
+	}
+	
+	public static final double degreesPerRadian = 180.0 / Math.PI;
+	
+	public static int nColor = RenderUtil.colorRGB(255, 0, 0);
+	public static int ewColor = RenderUtil.colorRGB(255, 255, 255);
+	public static int sColor = RenderUtil.colorRGB(0, 0, 255);
+	
+	private int[] notchX = new int[9];
+	
+	public ExtraGuiElementCompass() {
+		//modes = new String[] {"simple", "fancy", "fancier"};
+		//defaultMode = 2;
 		
-		double offsetQuarter = 90 / (degreesPerRadian * 2);
-		double transform = mc.thePlayer.rotationYaw / (degreesPerRadian * 2);
-		
-		// Come on Java, gimme unsigned bytes already
-		short nTransparency = (short) Math.abs(Math.sin(transform) * 255);
-		short wTransparency = (short) Math.abs(Math.sin(transform + offsetQuarter) * 255);
-		short sTransparency = (short) Math.abs(Math.sin(transform + offsetQuarter * 2) * 255);
-		short eTransparency = (short) Math.abs(Math.sin(transform - offsetQuarter) * 255);
-		
-		RenderUtil.drawRect(halfWidth - 90, 18, halfWidth + 90, 30, 0xaa000000);
-		if(fanciness > 0) {
-			RenderUtil.drawRect(halfWidth - 40, 18, halfWidth + 40, 30, 0x55555555);
+		int x = 0;
+		for(double i = 0.1; i < 0.9; i += 0.1) {
+			notchX[x] = (int) (Math.asin(i) / Math.PI * 180);
+			x++;
 		}
+		
+		//this.settings.add(fanciness = new ElementSettingMode("fanciness", new String[] {"simple", "fancy", "fancier"}));
+		this.settings.add(new ElementSettingDivider("position"));
+		this.settings.add(posMode = new ElementSettingMode("posMode", new String[] {"setPos", "absolute"}));
+		this.anchor = new ElementSettingAnchor("anchor");
+		this.settings.add(pos = new ElementSettingAbsolutePositionAnchored("position", anchor) {
+			@Override
+			public boolean getEnabled() {
+				return posMode.index == 1;
+			}
+		});
+		this.settings.add(anchor);
+		this.settings.add(new ElementSettingDivider("misc"));
+		this.settings.add(directionScaling = new ElementSettingSlider("scaledDirections", 0, 100) {
+			@Override
+			public String getSliderText() {
+				return FormatUtil.translatePre("menu.settingButton", this.getLocalizedName(), FormatUtil.translatePre("strings.percent", String.valueOf((int) this.value)));
+			}
+		});
+		directionScaling.accuracy = 1;
+		this.settings.add(scale = new ElementSettingSlider("scale", 25, 200) {
+			@Override
+			public String getSliderText() {
+				return FormatUtil.translatePre("menu.settingButton", this.getLocalizedName(), FormatUtil.translatePre("strings.percent", String.valueOf((int) this.value)));
+			}
+		});
+		directionScaling.accuracy = 1;
+		this.settings.add(showNotches = new ElementSettingBoolean("showNotches"));
+	}
+	
+	//short nOpacity = 0, wOpacity = 0, sOpacity = 0, eOpacity = 0;
+	//int nX = 0, wX = 0, sX = 0, eX = 0;
+	
+	public void update(Minecraft mc) {}
+	
+	@Override
+	public Bounds getBounds(ScaledResolution resolution) {
+		int x = posMode.index == 0 ? resolution.getScaledWidth() / 2 - 90 : pos.x;
+		int y = posMode.index == 0 ? 18 : pos.y;
+		return new Bounds((int) Math.round(x - (90 * (scale.value - 100.0) / 100.0)), y, (int) Math.round(180 * scale.value / 100.0), (int) Math.round(12 * scale.value / 100.0));
+	}
+	
+	@Override
+	public void render(Minecraft mc, ScaledResolution resolution, StringManager stringManager, LayoutManager layoutManager) {
+		//int fanciness = this.fanciness.index;
+		
+		double offsetQuarter = Math.toRadians(90);
+		double transform = Math.toRadians(mc.thePlayer.rotationYaw);
+		
+		short nOpacity = (short) Math.abs(Math.sin(transform / 2) * 255);
+		short wOpacity = (short) Math.abs(Math.sin((transform + offsetQuarter) / 2) * 255);
+		short sOpacity = (short) Math.abs(Math.sin((transform + offsetQuarter * 2) / 2) * 255);
+		short eOpacity = (short) Math.abs(Math.sin((transform - offsetQuarter) / 2) * 255);
+		
+		int nX = (int) (Math.sin(transform + offsetQuarter * 2) * 100);
+		int eX = (int) (Math.sin(transform + offsetQuarter) * 100);
+		int sX = (int) (Math.sin(transform) * 100);
+		int wX = (int) (Math.sin(transform - offsetQuarter) * 100);
+		
+		if(posMode.index == 1) {
+			this.pos.update(resolution, this.getBounds(resolution));
+		}
+		int x = posMode.index == 0 ? resolution.getScaledWidth() / 2 - 90 : pos.x;
+		int y = posMode.index == 0 ? 18 : pos.y;
+		
+		///
+		GL11.glPushMatrix();
+		///
+		GL11.glTranslatef(x + 90, y, 0);
+		GL11.glScaled(scale.value / 100, scale.value / 100, 1);
+		GL11.glTranslatef(-x - 90, -y, 0);
+		
+		RenderUtil.drawRect(x, y, x + 180, y + 12, RenderUtil.colorARGB(170, 0, 0, 0));
+		RenderUtil.drawRect(x + 50, y, x + 130, y + 12, RenderUtil.colorARGB(85, 85, 85, 85));
 		
 		glEnable(GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 		
-		if(nTransparency > 10) {
+		mc.mcProfiler.startSection("text");
+		
+		int maxScale = 4;
+		float factor = 100 / maxScale;
+		
+		if(nOpacity > 10) {
 			glPushMatrix(); {
-				glTranslatef(halfWidth - (int) (Math.sin((mc.thePlayer.rotationYaw + 180) / degreesPerRadian) * 100), 20, 0.0F);
-				if(fanciness > 0) {
-					float size = (float) nTransparency / 128F;
-					glScalef(size, size, 1.0F);
-				}
-				mc.ingameGUI.drawCenteredString(fr, "N", 0, 0, nTransparency << 24 | nColor);
+				glTranslatef(x + 90 - nX, y + 2, 0.0F);
+				
+				float size = (float) nOpacity / 128F;
+				float finalSize = Math.max(0, (float) (directionScaling.value / factor) * (size - 1) + 1);
+				glScalef(finalSize, finalSize, 1.0F);
+				
+				mc.ingameGUI.drawCenteredString(mc.fontRendererObj, "N", 0, 0, RenderUtil.colorARGB(nOpacity, 255, 0, 0));
 			}
 			glPopMatrix();
 		}
-		if(eTransparency > 10) {
+		if(eOpacity > 10) {
 			glPushMatrix(); {
-				glTranslatef(halfWidth - (int) (Math.sin((mc.thePlayer.rotationYaw + 90) / degreesPerRadian) * 100), 20, 0.0F);
-				if(fanciness > 0) {
-					float size = (float) eTransparency / 128F;
-					glScalef(size, size, 1.0F);
-				}
-				mc.ingameGUI.drawCenteredString(fr, "E", 0, 0, eTransparency << 24 | ewColor);
+				glTranslatef(x + 90 - eX, y + 2, 0.0F);
+
+				float size = (float) eOpacity / 128F;
+				float finalSize = Math.max(0, (float) (directionScaling.value / factor) * (size - 1) + 1);
+				glScalef(finalSize, finalSize, 1.0F);
+				
+				mc.ingameGUI.drawCenteredString(mc.fontRendererObj, "E", 0, 0, RenderUtil.colorARGB(eOpacity, 255, 255, 255));
 			}
 			glPopMatrix();
 		}
-		if(sTransparency > 10) {
+		if(sOpacity > 10) {
 			glPushMatrix(); {
-				glTranslatef(halfWidth - (int) (Math.sin((mc.thePlayer.rotationYaw) / degreesPerRadian) * 100), 20, 0.0F);
-				if(fanciness > 0) {
-					float size = (float) sTransparency / 128F;
-					glScalef(size, size, 1.0F);
-				}
-				mc.ingameGUI.drawCenteredString(fr, "S", 0, 0, sTransparency << 24 | sColor);
+				glTranslatef(x + 90 - sX, y + 2, 0.0F);
+				
+				float size = (float) sOpacity / 128F;
+				float finalSize = Math.max(0, (float) (directionScaling.value / factor) * (size - 1) + 1);
+				glScalef(finalSize, finalSize, 1.0F);
+				
+				mc.ingameGUI.drawCenteredString(mc.fontRendererObj, "S", 0, 0, RenderUtil.colorARGB(sOpacity, 0, 0, 255));
 			}
 			glPopMatrix();
 		}
-		if(wTransparency > 10) {
+		if(wOpacity > 10) {
 			glPushMatrix(); {
-				glTranslatef(halfWidth - (int) (Math.sin((mc.thePlayer.rotationYaw - 90) / degreesPerRadian) * 100), 20, 0.0F);
-				if(fanciness > 0) {
-					float size = (float) wTransparency / 128F;
-					glScalef(size, size, 1.0F);
-				}
-				mc.ingameGUI.drawCenteredString(fr, "W", 0, 0, wTransparency << 24 | ewColor); // 16777216 = 256^3
+				glTranslatef(x + 90 - wX, y + 2, 0.0F);
+				
+				float size = (float) wOpacity / 128F;
+				float finalSize = Math.max(0, (float) (directionScaling.value / factor) * (size - 1) + 1);
+				glScalef(finalSize, finalSize, 1.0F);
+				
+				mc.ingameGUI.drawCenteredString(mc.fontRendererObj, "W", 0, 0, RenderUtil.colorARGB(wOpacity, 255, 255, 255)); // 16777216 = 256^3
 			}
 			glPopMatrix();
+		}
+		mc.mcProfiler.endSection();
+		
+		mc.mcProfiler.startSection("notches");
+		
+		int largeNotch = RenderUtil.colorRGB(255, 255, 255);
+		
+		if(showNotches.value) {
+			largeNotch = RenderUtil.colorRGB(255, 0, 0);
+			
+			for(int loc : notchX) {
+				RenderUtil.drawRect(x + loc - 1, y - 2, x + loc, y + 4, RenderUtil.colorRGB(255, 255, 255));
+				RenderUtil.drawRect(x - loc + 180, y - 2, x - loc + 181, y + 4, RenderUtil.colorRGB(255, 255, 255));
+			}
 		}
 		
-		// TODO Add NW, NE, SW, SE to "Fancier" and NNW, NWW, NNE, NEE, SSW, SWW, SSE, SEE to new "Fanciest"
+		RenderUtil.drawRect(x + 89, y - 3, x + 90, y + 4, largeNotch);
+		RenderUtil.drawRect(x, y - 3, x + 1, y + 4, largeNotch);
+		RenderUtil.drawRect(x + 180, y - 3, x + 179, y + 4, largeNotch);
 		
-		if(fanciness > 0) {
-			RenderUtil.drawRect(halfWidth - 1, 15, halfWidth + 1, 22, 0xffff0000);
-			RenderUtil.drawRect(halfWidth - 90, 15, halfWidth - 89, 22, 0xffff0000);
-			RenderUtil.drawRect(halfWidth + 90, 15, halfWidth + 89, 22, 0xffff0000);
-		} else {
-			RenderUtil.drawRect(halfWidth - 1, 15, halfWidth + 1, 22, 0xffffffff);
-			RenderUtil.drawRect(halfWidth - 90, 15, halfWidth - 89, 22, 0xffffffff);
-			RenderUtil.drawRect(halfWidth + 90, 15, halfWidth + 89, 22, 0xffffffff);
-		}
+		mc.mcProfiler.endSection();
 		
-		// TODO Optimise this
-		if(fanciness > 1) {
-			for(double i = 0.1; i < 0.9; i += 0.1) {
-				int loc = (int) (Math.asin(i) / Math.PI * 180);
-				RenderUtil.drawRect(halfWidth + loc - 91, 16, halfWidth + loc - 90, 22, 0xffffffff);
-				RenderUtil.drawRect(halfWidth - loc + 91, 16, halfWidth - loc + 90, 22, 0xffffffff);
-			}
-		}
+		///
+		GL11.glPopMatrix();
+		///
+	}
+
+	@Override
+	public boolean shouldProfile() {
+		return true;
 	}
 }

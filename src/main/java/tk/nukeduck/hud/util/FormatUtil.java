@@ -1,14 +1,13 @@
 package tk.nukeduck.hud.util;
 
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.regex.Pattern;
 
 import com.google.common.base.Strings;
 
-import scala.util.matching.Regex;
-import tk.nukeduck.hud.BetterHud;
 import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.util.StatCollector;
-import net.minecraftforge.fml.common.registry.LanguageRegistry;
+import net.minecraft.util.text.translation.I18n;
 
 public class FormatUtil {
 	public static String formatTime(int hours, int minutes, boolean twentyFourHour) {
@@ -38,15 +37,21 @@ public class FormatUtil {
 	}
 	
 	public static String translate(String path, String... params) {
-		String translation = StatCollector.translateToLocal(path);
-		translation = translation == path ? StatCollector.translateToFallback(path) : translation;
+		String translation = I18n.translateToLocal(path);
+		translation = translation == path ? I18n.translateToFallback(path) : translation;
 		if(params.length > 0) {
 			int i = 0;
 			while(i < params.length && translation.contains(PARAM_CHAR)) {
-				translation = translation.replaceFirst(Regex.quote(PARAM_CHAR), params[i]);
+				translation = translation.replaceFirst(Pattern.quote(PARAM_CHAR), params[i]);
 				i++;
 			}
 		}
 		return translation;
+	}
+	
+	public static String separate(String... parts) {
+		if(parts.length == 0) return "";
+		if(parts.length == 1) return parts[0];
+		return translatePre("strings.separated", parts[0], separate((String[]) Arrays.copyOfRange(parts, 1, parts.length)));
 	}
 }

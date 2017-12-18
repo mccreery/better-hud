@@ -1,10 +1,17 @@
 betterHud.menu.hudSettings=HUD Settings
+betterHud.menu.settings=* Settings
 betterHud.menu.enableAll=Enable All
 betterHud.menu.disableAll=Disable All
 betterHud.menu.resetDefaults=Reset Defaults
 betterHud.menu.lastPage=Last Page
 betterHud.menu.nextPage=Next Page
 betterHud.menu.page=Page *
+betterHud.menu.settingButton=*: *
+betterHud.menu.picking=Picking (Cancel)
+betterHud.menu.pick=Pick
+betterHud.menu.options=Options
+
+betterHud.unsupported=This element is unsupported by the server
 
 betterHud.element.bloodSplatters=Blood Splatters
 betterHud.element.arrowCount=Arrow Count
@@ -21,7 +28,7 @@ betterHud.element.foodHealthStats=Food and Health Stats
 betterHud.element.foodIndicator=Hunger Indicator
 betterHud.element.fpsCount=FPS
 betterHud.element.healIndicator=Heal Indicator
-betterHud.element.lightLevel=Light Level (broken!)
+betterHud.element.lightLevel=Light Level
 betterHud.element.potionBar=Potion Display
 betterHud.element.signReader=Sign Reader
 betterHud.element.mobInfo=Mob Info
@@ -31,81 +38,97 @@ betterHud.element.hidePlayers=Hide Players
 betterHud.element.biome=Biome
 betterHud.element.breedIndicator=Breed Indicator
 betterHud.element.fullInvIndicator=Full Inv. Indicator
+betterHud.element.waterDrops=Water Drops
+betterHud.element.itemPickup=Item Pickup
+betterHud.element.systemClock=System Clock
 
 key.betterHud.open=Open Better HUD Menu
 
-betterHud.mode.default=Default
+betterHud.setting.topLeft=Top Left
+betterHud.setting.topCenter=Top
+betterHud.setting.topRight=Top Right
+betterHud.setting.middleLeft=Left
+betterHud.setting.middleCenter=Center
+betterHud.setting.middleRight=Right
+betterHud.setting.bottomLeft=Bottom Left
+betterHud.setting.bottomCenter=Bottom
+betterHud.setting.bottomRight=Bottom Right
+betterHud.setting.setPos=Set Positions
+betterHud.setting.absolute=Absolute Position
 
-betterHud.mode.left=Left
-betterHud.mode.right=Right
-betterHud.mode.middle=Middle
-betterHud.mode.center=Center
+betterHud.setting.numberOnly=Number Only
+betterHud.setting.mode=Mode
+betterHud.setting.24hr=24 Hour
+betterHud.setting.position=Position
+betterHud.setting.alignment=Alignment
+betterHud.setting.showName=Show Name
+betterHud.setting.showDurability=Show Durability
+betterHud.setting.visible=Visible
+betterHud.setting.hidden=Hidden
+betterHud.setting.smallBars=Small Bars
+betterHud.setting.largeBars=Large Bars
+betterHud.setting.durabilityMode=Durability Mode
+betterHud.setting.values=Values
+betterHud.setting.percent=Percentage
+betterHud.setting.side=Side
+betterHud.setting.overlay=Overlay
+betterHud.setting.blood.sparse=Sparse
+betterHud.setting.blood.normal=Normal
+betterHud.setting.blood.dense=Dense
+betterHud.setting.blood.denser=Denser
+betterHud.setting.scaledDirections=Scaled Directions
+betterHud.setting.showNotches=Show Notches
+betterHud.setting.dmy=D/M/Y (UK)
+betterHud.setting.mdy=M/D/Y (US)
+betterHud.setting.ymd=Y/M/D
+betterHud.setting.showSeconds=Show Seconds
+betterHud.setting.fullYear=Full Year
+betterHud.setting.includeMe=Include Me
+betterHud.setting.playerCount=Player Count
+betterHud.setting.showIp=IP Address
+betterHud.setting.latency=Latency (Ping)
+betterHud.setting.spaced=Spaced
+betterHud.setting.1=Type 1
+betterHud.setting.2=Type 2
+betterHud.setting.saturation=Saturation
+betterHud.setting.showItem=Show Item
+betterHud.setting.jump=Jump Height
+betterHud.setting.speed=Speed
+betterHud.setting.players=Players
+betterHud.setting.mobs=Mobs
+betterHud.setting.sign.text=Text
+betterHud.setting.sign.visual=Visual
+betterHud.setting.total=Total
+betterHud.setting.showBlock=Show Block
+betterHud.setting.invNames=Inventory Names
+betterHud.setting.distance=Distance
+betterHud.setting.damaged.0=§c!§r
+betterHud.setting.damaged.1=§c! !§r
+betterHud.setting.damaged.2=§c! ! !§r
+betterHud.setting.showIds=Show IDs
+betterHud.setting.scale=Scale
+betterHud.setting.red=§cRed
+betterHud.setting.green=§aGreen
+betterHud.setting.blue=§1Blue
+betterHud.setting.maxLimit=Start Flashing At
+betterHud.setting.decimals=Decimal Places
+betterHud.setting.offHand=Show Off-Hand
+betterHud.setting.disableDefault=Disable Default
+betterHud.setting.anchor=Anchor
 
-betterHud.mode.rounded=Rounded
+betterHud.group.position=Position
+betterHud.group.misc=Misc.
+betterHud.group.damageWarning=Damage Warnings
+betterHud.text.arrowCountNotice=Position will only have effect if the mode is set to Side.
+betterHud.text.fhNotice=Food and health values will always be beside the hotbar. These settings are for saturation.
+betterHud.text.expInfoNotice=These settings are only for total experience count.
+betterHud.text.invNames=For inventories, such as chests, which have been named via anvil.
+betterHud.text.unsnap=Hold * to disable snapping
+betterHud.text.potionsUseless=This is basically useless in 1.9, but I'm leaving it in. You can disable the default one, if you like.
 
-betterHud.mode.topLeft=Top Left
-betterHud.mode.topMiddle=Top Middle
-betterHud.mode.topRight=Top Right
-betterHud.mode.bottomLeft=Bottom Left
-betterHud.mode.bottomRight=Bottom Right
-
-betterHud.mode.aboveBar=Above Bar
-
-betterHud.mode.blood.sparse=Sparse
-betterHud.mode.blood.normal=Normal
-betterHud.mode.blood.dense=Dense
-betterHud.mode.blood.denser=Denser
-
-betterHud.mode.clock.12hrleft=12hr Left
-betterHud.mode.clock.12hrright=12hr Right
-betterHud.mode.clock.24hrleft=24hr Left
-betterHud.mode.clock.24hrright=24hr Right
-
-betterHud.mode.simple=Simple
-betterHud.mode.fancy=Fancy
-betterHud.mode.fancier=Fancier
-
-betterHud.mode.grouped=Grouped
-betterHud.mode.spaced=Spaced
-
-betterHud.mode.1=Type 1
-betterHud.mode.2=Type 2
-betterHud.mode.3=Type 3
-betterHud.mode.4=Type 4
-betterHud.mode.5=Type 5
-betterHud.mode.6=Type 6
-betterHud.mode.7=Type 7
-betterHud.mode.8=Type 8
-betterHud.mode.9=Type 9
-betterHud.mode.10=Type 10
-
-betterHud.mode.both=Both
-
-betterHud.mode.food.sat=Saturation
-betterHud.mode.food.noSat=No Saturatn.
-
-betterHud.mode.hidePlayers.onlyOthers=Only others
-betterHud.mode.hidePlayers.includeMe=Include me
-
-betterHud.mode.horse.jump=Jump
-betterHud.mode.horse.speed=Speed
-
-betterHud.mode.sign.textLeft=Text Left
-betterHud.mode.sign.visualLeft=Visual Left
-betterHud.mode.sign.textRight=Text Right
-betterHud.mode.sign.visualRight=Visual Right
-
-betterHud.mode.armorBars.smallBars=Small Bars
-betterHud.mode.armorBars.smallBarsOnly=Sml Bars 2
-betterHud.mode.armorBars.numbersOnly=Numbers
-betterHud.mode.armorBars.barsNumbers=Bar+Number
-betterHud.mode.armorBars.barsOnly=Bars Only
-
-betterHud.mode.handBar.barOnly=Bar Only
-
-betterHud.mode.mobInfo.players=Players
-betterHud.mode.mobInfo.mobs=Mobs
-
+betterHud.strings.damaged.0=§c!§r
+betterHud.strings.damaged.1=§c! !§r
+betterHud.strings.damaged.2=§c! ! !§r
 betterHud.strings.saturation=Saturation: *
 betterHud.strings.fps=* FPS
 betterHud.strings.jump=Jump: ~*m
@@ -120,6 +143,7 @@ betterHud.strings.x=X: *
 betterHud.strings.y=Y: *
 betterHud.strings.z=Z: *
 betterHud.strings.xyz=X: *, Y: *, Z: *
+betterHud.strings.xyzSpaced=X: *     Y: *     Z: *
 betterHud.strings.separator=, 
 betterHud.strings.fullInv=Inventory Full
 betterHud.strings.biome=Biome: *
@@ -128,3 +152,12 @@ betterHud.strings.separated=* - *
 betterHud.strings.time=*:*
 betterHud.strings.time.am=*:* AM
 betterHud.strings.time.pm=*:* PM
+betterHud.strings.distance.1=§a[§r*§a]
+betterHud.strings.distance.2=*m away
+betterHud.strings.distanceShort=*m
+betterHud.strings.chunk=* chunk
+betterHud.strings.chunks=* chunks
+betterHud.strings.percent=*%
+betterHud.strings.total=EXP: *
+betterHud.strings.unknownBlock=Unknown Block
+betterHud.strings.brackets=(*)

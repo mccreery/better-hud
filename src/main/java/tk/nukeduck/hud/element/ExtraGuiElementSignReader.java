@@ -9,95 +9,184 @@ import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.renderer.entity.RenderItem;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntitySign;
-import net.minecraft.util.ChatComponentText;
-import net.minecraft.util.IChatComponent;
-import net.minecraft.util.MovingObjectPosition;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.fml.client.FMLClientHandler;
-import tk.nukeduck.hud.BetterHud;
-
 import com.mojang.realmsclient.gui.ChatFormatting;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.tileentity.TileEntitySign;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
+import net.minecraftforge.fml.client.FMLClientHandler;
+import tk.nukeduck.hud.element.settings.ElementSettingAbsolutePosition;
+import tk.nukeduck.hud.element.settings.ElementSettingAbsolutePositionAnchored;
+import tk.nukeduck.hud.element.settings.ElementSettingAnchor;
+import tk.nukeduck.hud.element.settings.ElementSettingDivider;
+import tk.nukeduck.hud.element.settings.ElementSettingMode;
+import tk.nukeduck.hud.element.settings.ElementSettingPosition;
+import tk.nukeduck.hud.element.settings.ElementSettingPosition.Position;
+import tk.nukeduck.hud.element.settings.ElementSettingPositionHorizontal;
+import tk.nukeduck.hud.util.Bounds;
+import tk.nukeduck.hud.util.LayoutManager;
+import tk.nukeduck.hud.util.RenderUtil;
+import tk.nukeduck.hud.util.StringManager;
+
 public class ExtraGuiElementSignReader extends ExtraGuiElement {
-	public ResourceLocation signTex;
-	public ExtraGuiElementSignReader() {
-		name = "signReader";
-		modes = new String[] {"sign.textLeft", "sign.visualLeft", "sign.textRight", "sign.visualRight"};
-		defaultMode = 1;
-		signTex = new ResourceLocation("textures/entity/sign.png");
+	private ElementSettingMode type;
+	private ElementSettingMode posMode;
+	private ElementSettingPosition pos;
+	private ElementSettingAbsolutePositionAnchored pos2;
+	private ElementSettingAnchor anchor;
+	
+	@Override
+	public void loadDefaults() {
+		this.enabled = true;
+		type.index = 1;
+		posMode.index = 0;
+		pos.value = Position.MIDDLE_LEFT;
+		anchor.value = Position.TOP_LEFT.getFlag();
+		pos2.x = 5;
+		pos2.y = 5;
 	}
 	
 	@Override
-	public void render(Minecraft mc, FontRenderer fr, RenderItem ri, int width, int halfWidth, int height, ArrayList<String> leftStrings, ArrayList<String> rightStrings) {
-		MovingObjectPosition mop = mc.getRenderViewEntity().rayTrace(200, 1.0F);
+	public String getName() {
+		return "signReader";
+	}
+	
+	public ResourceLocation signTex;
+	
+	public ExtraGuiElementSignReader() {
+		signTex = new ResourceLocation("textures/entity/sign.png");
+		this.settings.add(new ElementSettingDivider("position"));
+		this.settings.add(posMode = new ElementSettingMode("posMode", new String[] {"setPos", "absolute"}));
+		this.settings.add(pos = new ElementSettingPositionHorizontal("position", Position.combine(Position.MIDDLE_LEFT, Position.MIDDLE_RIGHT)) {
+			@Override
+			public boolean getEnabled() {
+				return posMode.index == 0;
+			}
+		});
+		this.anchor = new ElementSettingAnchor("anchor");
+		this.settings.add(pos2 = new ElementSettingAbsolutePositionAnchored("position2", anchor) {
+			@Override
+			public boolean getEnabled() {
+				return posMode.index == 1;
+			}
+		});
+		this.settings.add(anchor);
+		this.settings.add(new ElementSettingDivider("misc"));
+		this.settings.add(type = new ElementSettingMode("mode", new String[] {"sign.text", "sign.visual"}));
+	}
+	
+	public void update(Minecraft mc) {}
+	
+	private Bounds bounds = Bounds.EMPTY;
+	@Override
+	public Bounds getBounds(ScaledResolution resolution) {
+		return this.bounds;
+	}
+	
+	public void render(Minecraft mc, ScaledResolution resolution, StringManager stringManager, LayoutManager layoutManager) {
+		RayTraceResult mop = mc.getRenderViewEntity().rayTrace(200, 1.0F);
 		TileEntity te = mc.theWorld.getTileEntity(mop.getBlockPos());
 		if(te != null && te instanceof TileEntitySign) {
-			if(currentMode().startsWith("sign.text")) {
-				ArrayList<String> sideStrings = currentMode().endsWith("Left") ? leftStrings : rightStrings;
+			if(type.getValue() == "sign.text") {
+				this.bounds = Bounds.EMPTY;
+				//ArrayList<String> sideStrings = pos.location == Position.MIDDLE_LEFT ? leftStrings : rightStrings;
+				Position strPos = pos.value == Position.MIDDLE_LEFT ? Position.TOP_LEFT : Position.TOP_RIGHT;
 				
-				leftHeight = -5;
-				rightHeight = -5;
-				
-				IChatComponent[] text = ((TileEntitySign) te).signText;
-				sideStrings.add(ChatFormatting.RED + "-----SIGN-----");
-				for(IChatComponent ic : text) {
-					if(ic == null) ic = new ChatComponentText("");
-					sideStrings.add(ic.getFormattedText());
-				}
-				sideStrings.add(ChatFormatting.RED + "--------------");
-			} else {
-				if(currentMode().endsWith("Left")) {
-					leftHeight = fr.FONT_HEIGHT * 4 + 13;
-					rightHeight = -5;
+				if(posMode.index == 0) {
+					ITextComponent[] text = ((TileEntitySign) te).signText;
+					stringManager.add(ChatFormatting.RED + "-----SIGN-----", strPos);
+					for(ITextComponent ic : text) {
+						if(ic == null) ic = new TextComponentString("");
+						stringManager.add(ic.getFormattedText(), strPos);
+					}
+					stringManager.add(ChatFormatting.RED + "--------------", strPos);
+				} else {
+					ITextComponent[] text = ((TileEntitySign) te).signText;
+					ArrayList<String> items = new ArrayList<String>();
+					items.add(ChatFormatting.RED + "-----SIGN-----");
+					for(ITextComponent ic : text) {
+						if(ic == null) ic = new TextComponentString("");
+						items.add(ic.getFormattedText());
+					}
+					items.add(ChatFormatting.RED + "--------------");
 					
+					RenderUtil.renderStrings(mc.fontRendererObj, items, pos2.x, pos2.y, RenderUtil.colorRGB(255, 255, 255), Position.TOP_LEFT);
+				}
+			} else {
+				if(posMode.index == 1) {
 					GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 					
 					FMLClientHandler.instance().getClient().renderEngine.bindTexture(signTex);
 					glPushMatrix();
-					glTranslatef(5F, (float) BetterHud.currentLeftHeight, 0F);
+					glTranslatef(pos2.x, pos2.y, 0F);
 					glScalef(1, 0.5F, 1); // Texture is treated as square rather than a rectangle
 					mc.ingameGUI.drawTexturedModalRect(0, 0, 16, 16, 88, 96); // UVs multiplied by 8 for some reason
 					glPopMatrix();
 					
+					pos2.update(resolution, new Bounds(0, 0, 88, 48));
+					this.bounds = new Bounds(pos2.x, pos2.y, 88, 48);
+					
 					int i = 0;
-					for(IChatComponent ic : ((TileEntitySign) te).signText) {
-						if(ic == null) ic = new ChatComponentText("");
+					for(ITextComponent ic : ((TileEntitySign) te).signText) {
+						if(ic == null) ic = new TextComponentString("");
 						String s = ic.getFormattedText();
-						fr.drawString(s, 49 - (fr.getStringWidth(s) / 2), BetterHud.currentLeftHeight + 2 + i * (fr.FONT_HEIGHT + 2), 0x000000);
+						mc.fontRendererObj.drawString(s, pos2.x + 44 - mc.fontRendererObj.getStringWidth(s) / 2, pos2.y + 2 + i * (mc.fontRendererObj.FONT_HEIGHT + 2), RenderUtil.colorRGB(0, 0, 0));
 						i++;
 					}
-				} else {
-					rightHeight = fr.FONT_HEIGHT * 4 + 13;
-					leftHeight = -5;
+				} else if(pos.value == Position.MIDDLE_LEFT) {
+					GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 					
 					FMLClientHandler.instance().getClient().renderEngine.bindTexture(signTex);
 					glPushMatrix();
-					glTranslatef(width - 93, (float) BetterHud.currentRightHeight, 0F);
+					glTranslatef(5F, (float) layoutManager.get(Position.TOP_LEFT), 0F);
+					glScalef(1, 0.5F, 1); // Texture is treated as square rather than a rectangle
+					mc.ingameGUI.drawTexturedModalRect(0, 0, 16, 16, 88, 96); // UVs multiplied by 8 for some reason
+					glPopMatrix();
+					this.bounds = new Bounds(5, layoutManager.get(Position.TOP_LEFT), 88, 48);
+					
+					int i = 0;
+					for(ITextComponent ic : ((TileEntitySign) te).signText) {
+						if(ic == null) ic = new TextComponentString("");
+						String s = ic.getFormattedText();
+						mc.fontRendererObj.drawString(s, 49 - (mc.fontRendererObj.getStringWidth(s) / 2), layoutManager.get(Position.TOP_LEFT) + 2 + i * (mc.fontRendererObj.FONT_HEIGHT + 2), RenderUtil.colorRGB(0, 0, 0));
+						i++;
+					}
+					
+					layoutManager.add(mc.fontRendererObj.FONT_HEIGHT * 4 + 13, Position.TOP_LEFT);
+				} else {
+					FMLClientHandler.instance().getClient().renderEngine.bindTexture(signTex);
+					glPushMatrix();
+					glTranslatef(resolution.getScaledWidth() - 93, (float) layoutManager.get(Position.TOP_RIGHT), 0F);
 					glScalef(1, 0.5F, 1); // Texture is treated as square rather than a rectangle
 					mc.ingameGUI.drawTexturedModalRect(0, 0, 16, 16, 88, 96); // UVs multiplied by 8 for some reason
 					glPopMatrix();
 					
+					this.bounds = new Bounds(resolution.getScaledWidth() - 93, layoutManager.get(Position.TOP_RIGHT), 88, 48);
+					
 					int i = 0;
 					if(te instanceof TileEntitySign) {
-						for(IChatComponent ic : ((TileEntitySign) te).signText) {
-							if(ic == null) ic = new ChatComponentText("");
+						for(ITextComponent ic : ((TileEntitySign) te).signText) {
+							if(ic == null) ic = new TextComponentString("");
 							String s = ic.getFormattedText();
-							fr.drawString(s, width - 49 - (fr.getStringWidth(s) / 2), BetterHud.currentRightHeight + 2 + i * (fr.FONT_HEIGHT + 2), 0x000000);
+							mc.fontRendererObj.drawString(s, resolution.getScaledWidth() - 49 - (mc.fontRendererObj.getStringWidth(s) / 2), layoutManager.get(Position.TOP_RIGHT) + 2 + i * (mc.fontRendererObj.FONT_HEIGHT + 2), RenderUtil.colorRGB(0, 0, 0));
 							i++;
 						}
 					}
+					
+					layoutManager.add(mc.fontRendererObj.FONT_HEIGHT * 4 + 13, Position.TOP_RIGHT);
 				}
 			}
 			
-		} else {
-			leftHeight = -5;
 		}
-		
-		// TODO Add better rendering for this, it doesn't look very good. Add an actually-rendered sign option
+	}
+	
+	@Override
+	public boolean shouldProfile() {
+		return true;
 	}
 }

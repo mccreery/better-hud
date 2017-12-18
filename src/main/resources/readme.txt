@@ -36,8 +36,8 @@ Once installed, the mod will immediately take effect when in-game. By default, a
 To open the menu, press "U" on your keyboard.
     - This key can be configured just like any other control from the vanilla "Controls" menu.
     - Within the menu, you can toggle whether an element is enabled by clicking on its named button.
-    - To change the mode of an element, click on the arrows next to the element's name to scroll through all available modes.
+    - To change the options of an element, click the "Options" button to its side.
     - The three buttons at the top, "Enable All", "Disable All" and "Reset Defaults", respectively:
         - Enable all elements.
         - Disable all elements (turn the mod off).
-        - Reset the mode of all elements to their defaults.
+        - Reset the options and enabled/disabled state of all elements to their defaults.
