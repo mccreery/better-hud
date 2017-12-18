@@ -1,10 +1,10 @@
 [
 {
-  "modid": "alchemy",
-  "name": "NukeDuck's Alchemy Mod",
-  "description": "Adds alchemy",
-  "version": "${version}",
-  "mcversion": "${mcversion}",
+  "modid": "hud",
+  "name": "Better HUD",
+  "description": "Adds many different elements to the in-game HUD.",
+  "version": "1.1b",
+  "mcversion": "1.7.10",
   "url": "",
   "updateUrl": "",
   "authors": ["NukeDuck"],
