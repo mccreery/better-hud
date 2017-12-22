@@ -20,7 +20,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import tk.nukeduck.hud.BetterHud;
-import tk.nukeduck.hud.element.entityinfo.ExtraGuiElementEntityInfo;
+import tk.nukeduck.hud.element.entityinfo.EntityInfo;
 
 public class EntityInfoRenderer {
 	private static ResourceLocation font = new ResourceLocation("textures/font/ascii.png");
@@ -30,7 +30,7 @@ public class EntityInfoRenderer {
 		if(!BetterHud.proxy.elements.globalSettings.enabled) return;
 
 		double maxDist = 0;
-		for(ExtraGuiElementEntityInfo element : BetterHud.proxy.elements.info) {
+		for(EntityInfo element : BetterHud.proxy.elements.info) {
 			if(element.enabled && element.distance.value > maxDist) maxDist = element.distance.value;
 		}
 		if(maxDist == 0) return;
@@ -41,7 +41,7 @@ public class EntityInfoRenderer {
 		if(entity != null && entity instanceof EntityLivingBase) {
 			EntityLivingBase entity2 = (EntityLivingBase) entity;
 			GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
-			for(ExtraGuiElementEntityInfo element : BetterHud.proxy.elements.info) {
+			for(EntityInfo element : BetterHud.proxy.elements.info) {
 				if(element.enabled && this.lastDistance <= element.distance.value) {
 					element.renderInfo(entity2, Minecraft.getMinecraft(), e.getPartialTicks());
 				}

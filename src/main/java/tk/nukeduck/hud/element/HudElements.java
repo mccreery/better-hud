@@ -1,83 +1,84 @@
 package tk.nukeduck.hud.element;
 
-import tk.nukeduck.hud.element.entityinfo.ExtraGuiElementBreedIndicator;
-import tk.nukeduck.hud.element.entityinfo.ExtraGuiElementEntityInfo;
-import tk.nukeduck.hud.element.entityinfo.ExtraGuiElementHorseInfo;
-import tk.nukeduck.hud.element.entityinfo.ExtraGuiElementMobInfo;
-import tk.nukeduck.hud.element.particles.ExtraGuiElementBlood;
-import tk.nukeduck.hud.element.particles.ExtraGuiElementWaterDrops;
-import tk.nukeduck.hud.element.text.ExtraGuiElementBiome;
-import tk.nukeduck.hud.element.text.ExtraGuiElementConnection;
-import tk.nukeduck.hud.element.text.ExtraGuiElementCoordinates;
-import tk.nukeduck.hud.element.text.ExtraGuiElementDistance;
-import tk.nukeduck.hud.element.text.ExtraGuiElementFoodHealthStats;
-import tk.nukeduck.hud.element.text.ExtraGuiElementFps;
-import tk.nukeduck.hud.element.text.ExtraGuiElementLightLevel;
+import tk.nukeduck.hud.element.entityinfo.BreedIndicator;
+import tk.nukeduck.hud.element.entityinfo.EntityInfo;
+import tk.nukeduck.hud.element.entityinfo.HorseInfo;
+import tk.nukeduck.hud.element.entityinfo.MobInfo;
+import tk.nukeduck.hud.element.particles.BloodSplatters;
+import tk.nukeduck.hud.element.particles.WaterDrops;
+import tk.nukeduck.hud.element.text.BiomeName;
+import tk.nukeduck.hud.element.text.Connection;
+import tk.nukeduck.hud.element.text.Coordinates;
+import tk.nukeduck.hud.element.text.Distance;
+import tk.nukeduck.hud.element.text.FoodHealthStats;
+import tk.nukeduck.hud.element.text.FpsCount;
+import tk.nukeduck.hud.element.text.LightLevel;
 
+// TODO move directly to HudElement?
 public class HudElements {
-	public final ExtraGuiElement armorBars, arrowCount, biome, blockViewer, blood,
+	public final HudElement armorBars, arrowCount, biome, blockViewer, blood,
 			clock, compass, connection, coordinates, distance,
 			enchantIndicator, experienceInfo, foodHealthStats, fps, fullInvIndicator,
 			handBar, healIndicator, hungerIndicator, lightLevel,
 			signReader, systemClock, waterDrops;
-	public final ExtraGuiElementGlobalSettings globalSettings;
+	public final GlobalSettings globalSettings;
 
-	public final ExtraGuiElementBreedIndicator breedIndicator;
-	public final ExtraGuiElementHidePlayers hidePlayers;
-	public final ExtraGuiElementHorseInfo horseInfo;
-	public final ExtraGuiElementMobInfo mobInfo;
-	public final ExtraGuiElementPickup pickup;
-	public final ExtraGuiElementPotionBar potionBar;
+	public final BreedIndicator breedIndicator;
+	public final HidePlayers hidePlayers;
+	public final HorseInfo horseInfo;
+	public final MobInfo mobInfo;
+	public final PickupCount pickup;
+	public final PotionBar potionBar;
 
-	public final ExtraGuiElement[] elements;
-	public final ExtraGuiElementEntityInfo[] info;
+	public final HudElement[] elements;
+	public final EntityInfo[] info;
 
 	public HudElements() {
-		this.elements = new ExtraGuiElement[] {
-			this.armorBars = new ExtraGuiElementArmorBars(),
-			this.arrowCount = new ExtraGuiElementArrowCount(),
-			this.biome = new ExtraGuiElementBiome(),
-			this.blockViewer = new ExtraGuiElementBlockViewer(),
-			this.blood = new ExtraGuiElementBlood(),
-			this.breedIndicator = new ExtraGuiElementBreedIndicator(),
-			this.clock = new ExtraGuiElementClock(),
-			this.compass = new ExtraGuiElementCompass(),
-			this.connection = new ExtraGuiElementConnection(),
-			this.coordinates = new ExtraGuiElementCoordinates(),
-			this.distance = new ExtraGuiElementDistance(),
-			this.enchantIndicator = new ExtraGuiElementEnchantIndicator(),
-			this.experienceInfo = new ExtraGuiElementExperienceInfo(),
-			this.foodHealthStats = new ExtraGuiElementFoodHealthStats(),
-			this.fps = new ExtraGuiElementFps(),
-			this.fullInvIndicator = new ExtraGuiElementFullInvIndicator(),
-			this.handBar = new ExtraGuiElementHandBar(),
-			this.healIndicator = new ExtraGuiElementHealIndicator(),
-			this.hidePlayers = new ExtraGuiElementHidePlayers(),
-			this.horseInfo = new ExtraGuiElementHorseInfo(),
-			this.hungerIndicator = new ExtraGuiElementHungerIndicator(),
-			this.lightLevel = new ExtraGuiElementLightLevel(),
-			this.mobInfo = new ExtraGuiElementMobInfo(),
-			this.pickup = new ExtraGuiElementPickup(),
-			this.potionBar = new ExtraGuiElementPotionBar(),
-			this.signReader = new ExtraGuiElementSignReader(),
-			this.systemClock = new ExtraGuiElementSystemClock(),
-			this.waterDrops = new ExtraGuiElementWaterDrops()
+		this.elements = new HudElement[] {
+			this.armorBars = new ArmorBars(),
+			this.arrowCount = new ArrowCount(),
+			this.biome = new BiomeName(),
+			this.blockViewer = new BlockViewer(),
+			this.blood = new BloodSplatters(),
+			this.breedIndicator = new BreedIndicator(),
+			this.clock = new Clock(),
+			this.compass = new Compass(),
+			this.connection = new Connection(),
+			this.coordinates = new Coordinates(),
+			this.distance = new Distance(),
+			this.enchantIndicator = new MaxLevelIndicator(),
+			this.experienceInfo = new ExperienceInfo(),
+			this.foodHealthStats = new FoodHealthStats(),
+			this.fps = new FpsCount(),
+			this.fullInvIndicator = new FullInvIndicator(),
+			this.handBar = new HandBar(),
+			this.healIndicator = new HealIndicator(),
+			this.hidePlayers = new HidePlayers(),
+			this.horseInfo = new HorseInfo(),
+			this.hungerIndicator = new HungerIndicator(),
+			this.lightLevel = new LightLevel(),
+			this.mobInfo = new MobInfo(),
+			this.pickup = new PickupCount(),
+			this.potionBar = new PotionBar(),
+			this.signReader = new SignReader(),
+			this.systemClock = new SystemClock(),
+			this.waterDrops = new WaterDrops()
 		};
-		this.info = new ExtraGuiElementEntityInfo[] {
+		this.info = new EntityInfo[] {
 			this.breedIndicator,
 			this.horseInfo,
 			this.mobInfo
 		};
-		this.globalSettings = new ExtraGuiElementGlobalSettings();
+		this.globalSettings = new GlobalSettings();
 
-		for(ExtraGuiElement element : this.elements) {
+		for(HudElement element : this.elements) {
 			element.init();
 		}
 	}
 
 	public void loadDefaults() {
 		this.globalSettings.loadDefaults();
-		for (ExtraGuiElement element : this.elements) {
+		for (HudElement element : elements) {
 			element.loadDefaults();
 		}
 	}

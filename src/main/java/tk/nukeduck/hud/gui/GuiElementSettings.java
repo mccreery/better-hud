@@ -15,20 +15,19 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.I18n;
 import tk.nukeduck.hud.BetterHud;
-import tk.nukeduck.hud.element.ExtraGuiElement;
-import tk.nukeduck.hud.element.settings.ElementSetting;
-import tk.nukeduck.hud.element.settings.ElementSettingAbsolutePosition;
+import tk.nukeduck.hud.element.HudElement;
+import tk.nukeduck.hud.element.settings.Setting;
+import tk.nukeduck.hud.element.settings.SettingAbsolutePosition;
 import tk.nukeduck.hud.network.proxy.ClientProxy;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.FuncsUtil;
 import tk.nukeduck.hud.util.SettingsIO;
 import tk.nukeduck.hud.util.constants.Colors;
-import tk.nukeduck.hud.util.constants.Constants;
 
 public class GuiElementSettings extends GuiScreen {
-	public ExtraGuiElement element;
+	public HudElement element;
 	ArrayList<GuiTextField> textboxList = new ArrayList<GuiTextField>();
-	public HashMap<Gui, ElementSetting> settingLinks = new HashMap<Gui, ElementSetting>();
+	public HashMap<Gui, Setting> settingLinks = new HashMap<Gui, Setting>();
 	
 	private float scrollFactor = 0.0F;
 	private int scrollHeight = 0;
@@ -36,7 +35,7 @@ public class GuiElementSettings extends GuiScreen {
 	private int totalHeight;
 	private int top, barHeight, bottom;
 	
-	public GuiElementSettings(ExtraGuiElement element, GuiScreen prev) {
+	public GuiElementSettings(HudElement element, GuiScreen prev) {
 		this.element = element;
 		this.prev = prev;
 	}
@@ -51,7 +50,7 @@ public class GuiElementSettings extends GuiScreen {
 		this.buttonList.add(new GuiButton(-1, this.width / 2 - 100, height / 16 + 20, I18n.format("gui.done")));
 		
 		this.totalHeight = 0;
-		for(ElementSetting setting : element.settings) {
+		for(Setting setting : element.settings) {
 			Gui[] guis = setting.getGuiParts(this.width, height / 16 + 45 + this.totalHeight);
 			for(Gui gui : guis) {
 				if(gui instanceof GuiButton) this.buttonList.add((GuiButton) gui);
@@ -82,13 +81,13 @@ public class GuiElementSettings extends GuiScreen {
 		} else {
 			settingLinks.get(button).actionPerformed(this, button);
 			// Notify the rest of the elements that a button has been pressed
-			for(ElementSetting setting : settingLinks.values()) {
+			for(Setting setting : settingLinks.values()) {
 				setting.otherAction(settingLinks.values());
 			}
 		}
 	}
 	
-	public ElementSettingAbsolutePosition currentPicking = null;
+	public SettingAbsolutePosition currentPicking = null;
 	private int clickTimer = 0;
 	
 	private GuiButton clickedUpDown = null;
@@ -136,7 +135,7 @@ public class GuiElementSettings extends GuiScreen {
 			
 			if(!Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
 				ArrayList<Bounds> bounds = new ArrayList<Bounds>();
-				for(ExtraGuiElement element : BetterHud.proxy.elements.elements) {
+				for(HudElement element : BetterHud.proxy.elements.elements) {
 					if(element == this.element || !element.enabled) continue;
 
 					Bounds elementBounds = element.getBounds(res);
@@ -159,7 +158,7 @@ public class GuiElementSettings extends GuiScreen {
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
 		if(keyCode == 1) {
 			if(BetterHud.proxy instanceof ClientProxy) {
-				SettingsIO.saveSettings(Constants.LOGGER, (ClientProxy)BetterHud.proxy);
+				SettingsIO.saveSettings(BetterHud.LOGGER, (ClientProxy)BetterHud.proxy);
 			}
 		}
 		super.keyTyped(typedChar, keyCode);
@@ -266,7 +265,7 @@ public class GuiElementSettings extends GuiScreen {
 		int scrollAmt = this.totalHeight - heightShown;
 		scrollAmt *= this.scrollFactor;*/
 		//GL11.glTranslatef(0, -scrollAmt, 0);
-		for(ElementSetting setting : element.settings) {
+		for(Setting setting : element.settings) {
 			setting.render(this, this.scrollHeight);
 		}
 		GL11.glPopAttrib();
@@ -293,7 +292,7 @@ public class GuiElementSettings extends GuiScreen {
 			this.drawString(fontRenderer, disableSnap, 5, this.height - fontRenderer.FONT_HEIGHT - 5, 0xffffff);
 			
 			GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
-			for(ExtraGuiElement element : BetterHud.proxy.elements.elements) {
+			for(HudElement element : BetterHud.proxy.elements.elements) {
 				Bounds b = element.getBounds(res);
 				if(element.enabled && b != null && b != Bounds.EMPTY) {
 					Gui.drawRect(b.getX(), b.getY(), b.getX2(), b.getY2(), Colors.fromARGB(element == this.element ? 255 : 50, 255, 0, 0));

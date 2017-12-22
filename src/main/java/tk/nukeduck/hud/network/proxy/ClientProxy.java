@@ -9,7 +9,6 @@ import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.element.HudElements;
 import tk.nukeduck.hud.events.EntityInfoRenderer;
 import tk.nukeduck.hud.util.SettingsIO;
-import tk.nukeduck.hud.util.constants.Constants;
 
 public class ClientProxy extends CommonProxy {
 	@Override
@@ -17,12 +16,10 @@ public class ClientProxy extends CommonProxy {
 		MinecraftForge.EVENT_BUS.register(BetterHud.entityInfoRenderer = new EntityInfoRenderer());
 	}
 
-	public KeyBinding openMenu, disable;
-
 	@Override
 	public void initKeys() {
-		this.openMenu = new KeyBinding("key.betterHud.open", Keyboard.KEY_U, "key.categories.misc");
-		this.disable = new KeyBinding("key.betterHud.disable", Keyboard.KEY_F3, "key.categories.misc");
+		openMenu = new KeyBinding("key.betterHud.open", Keyboard.KEY_U, "key.categories.misc");
+		disable = new KeyBinding("key.betterHud.disable", Keyboard.KEY_F3, "key.categories.misc");
 		ClientRegistry.registerKeyBinding(openMenu);
 		ClientRegistry.registerKeyBinding(disable);
 	}
@@ -39,7 +36,7 @@ public class ClientProxy extends CommonProxy {
 
 	@Override
 	public void loadSettings() {
-		SettingsIO.loadSettings(Constants.LOGGER, this);
+		SettingsIO.loadSettings(BetterHud.LOGGER, this);
 	}
 
 	@Override

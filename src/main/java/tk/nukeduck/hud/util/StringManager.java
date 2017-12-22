@@ -2,7 +2,7 @@ package tk.nukeduck.hud.util;
 
 import java.util.ArrayList;
 
-import tk.nukeduck.hud.element.settings.ElementSettingPosition.Position;
+import tk.nukeduck.hud.element.settings.SettingPosition.Position;
 import tk.nukeduck.hud.util.constants.Colors;
 
 public class StringManager {

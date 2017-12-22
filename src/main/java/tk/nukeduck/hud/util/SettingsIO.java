@@ -12,9 +12,10 @@ import java.util.HashMap;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 
-import tk.nukeduck.hud.element.ExtraGuiElement;
-import tk.nukeduck.hud.element.settings.ElementSetting;
-import tk.nukeduck.hud.element.settings.ElementSettingDivider;
+import tk.nukeduck.hud.BetterHud;
+import tk.nukeduck.hud.element.HudElement;
+import tk.nukeduck.hud.element.settings.Setting;
+import tk.nukeduck.hud.element.settings.Divider;
 import tk.nukeduck.hud.network.proxy.ClientProxy;
 import tk.nukeduck.hud.util.constants.Constants;
 
@@ -29,10 +30,10 @@ public class SettingsIO {
 		return keyVal;
 	}
 
-	public static ArrayList<String> generateSrc(ArrayList<ElementSetting> settings) {
+	public static ArrayList<String> generateSrc(ArrayList<Setting> settings) {
 		ArrayList<String> lines = new ArrayList<String>();
-		for(ElementSetting setting : settings) {
-			if(setting instanceof ElementSettingDivider || setting.getName() == "enabled") continue;
+		for(Setting setting : settings) {
+			if(setting instanceof Divider || setting.getName() == "enabled") continue;
 			for(String comment : setting.comments) {
 				lines.add("\t# " + comment);
 			}
@@ -48,22 +49,22 @@ public class SettingsIO {
 			FileWriter writer = new FileWriter(Constants.CONFIG_PATH);
 			StringBuilder src = new StringBuilder();
 
-			String[] comments = {Constants.MOD_NAME + " configuration file", "Any removed or corrupted properties will be reverted to default.", new Timestamp(new Date().getTime()).toString()};
+			String[] comments = {BetterHud.MODID, new Timestamp(new Date().getTime()).toString()};
 			for(String comment : comments) {
 				src.append("# ").append(comment).append(Constants.LINE_SEPARATOR);
 			}
 			src.append(Constants.LINE_SEPARATOR);
 
 			// Special case for global settings
-			src.append(proxy.elements.globalSettings.getName()).append(Constants.PROPERTY_SEPARATOR).append(Constants.LINE_SEPARATOR);
+			src.append(proxy.elements.globalSettings.name).append(Constants.PROPERTY_SEPARATOR).append(Constants.LINE_SEPARATOR);
 			src.append("\tenabled").append(Constants.PROPERTY_SEPARATOR).append(String.valueOf(proxy.elements.globalSettings.enabled)).append(Constants.LINE_SEPARATOR);
 			ArrayList<String> global = generateSrc(proxy.elements.globalSettings.settings);
 			for(String line : global) {
 				src.append(line).append(Constants.LINE_SEPARATOR);
 			}
 
-			for(ExtraGuiElement element : proxy.elements.elements) {
-				src.append(element.getName()).append(Constants.PROPERTY_SEPARATOR).append(Constants.LINE_SEPARATOR);
+			for(HudElement element : proxy.elements.elements) {
+				src.append(element.name).append(Constants.PROPERTY_SEPARATOR).append(Constants.LINE_SEPARATOR);
 				src.append("\tenabled").append(Constants.PROPERTY_SEPARATOR).append(String.valueOf(element.enabled)).append(Constants.LINE_SEPARATOR);
 				ArrayList<String> s = generateSrc(element.settings);
 				for(String line : s) {
@@ -108,16 +109,16 @@ public class SettingsIO {
 			}
 			namedSections.put(currentName, valueLines);
 
-			for(ExtraGuiElement element : proxy.elements.elements) {
-				if(!namedSections.containsKey(element.getName())) continue;
+			for(HudElement element : proxy.elements.elements) {
+				if(!namedSections.containsKey(element.name)) continue;
 				try {
-					element.loadSettings(generateKeyVal(namedSections.get(element.getName())));
+					element.loadSettings(generateKeyVal(namedSections.get(element.name)));
 				} catch(Exception e) {}
 			}
 			// Special case for global settings
-			if(namedSections.containsKey(proxy.elements.globalSettings.getName())) {
+			if(namedSections.containsKey(proxy.elements.globalSettings.name)) {
 				try {
-					proxy.elements.globalSettings.loadSettings(generateKeyVal(namedSections.get(proxy.elements.globalSettings.getName())));
+					proxy.elements.globalSettings.loadSettings(generateKeyVal(namedSections.get(proxy.elements.globalSettings.name)));
 				} catch(Exception e) {}
 			}
 

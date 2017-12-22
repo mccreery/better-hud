@@ -33,7 +33,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.client.config.GuiUtils;
-import tk.nukeduck.hud.element.settings.ElementSettingPosition.Position;
+import tk.nukeduck.hud.element.settings.SettingPosition.Position;
 import tk.nukeduck.hud.util.constants.Colors;
 
 public class RenderUtil {

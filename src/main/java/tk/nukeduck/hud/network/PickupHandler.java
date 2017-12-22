@@ -1,10 +1,11 @@
 package tk.nukeduck.hud.network;
 
+import static tk.nukeduck.hud.BetterHud.MC;
+
 import java.util.Iterator;
 import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.util.FuncsUtil;
@@ -33,8 +34,8 @@ public class PickupHandler {
 		return null;
 	}
 
-	public void update(Minecraft mc) {
-		if(!mc.isGamePaused()) {
+	public void update() {
+		if(!MC.isGamePaused()) {
 			Iterator<Entry<ItemStack, Float>> it2 = pickedUp.entrySet().iterator();
 			float delta = 0.0025F + (float)BetterHud.proxy.elements.pickup.fadeSpeed.value * 0.0225F;
 

@@ -1,6 +1,6 @@
 package tk.nukeduck.hud.util;
 
-import tk.nukeduck.hud.element.settings.ElementSettingPosition.Position;
+import tk.nukeduck.hud.element.settings.SettingPosition.Position;
 
 public class LayoutManager {
 	private int topLeft;

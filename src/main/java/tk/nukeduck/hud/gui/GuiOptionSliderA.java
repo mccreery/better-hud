@@ -5,7 +5,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import tk.nukeduck.hud.element.settings.ElementSettingSlider;
+import tk.nukeduck.hud.element.settings.SettingSlider;
 import tk.nukeduck.hud.util.FuncsUtil;
 
 @SideOnly(Side.CLIENT)
@@ -14,13 +14,13 @@ public class GuiOptionSliderA extends GuiButton
 	private double sliderValue = 0.0;
 	public boolean dragging;
 	//private static final String __OBFID = "CL_00000680";
-	private ElementSettingSlider setting;
+	private SettingSlider setting;
 	
-	public GuiOptionSliderA(int p_i45016_1_, int p_i45016_2_, int p_i45016_3_, ElementSettingSlider setting) {
+	public GuiOptionSliderA(int p_i45016_1_, int p_i45016_2_, int p_i45016_3_, SettingSlider setting) {
 		this(p_i45016_1_, p_i45016_2_, p_i45016_3_, 150, 20, setting);
 	}
 	
-	public GuiOptionSliderA(int p_i45017_1_, int p_i45017_2_, int p_i45017_3_, int width, int height, ElementSettingSlider setting) {
+	public GuiOptionSliderA(int p_i45017_1_, int p_i45017_2_, int p_i45017_3_, int width, int height, SettingSlider setting) {
 		super(p_i45017_1_, p_i45017_2_, p_i45017_3_, width, height, "");
 		//Minecraft minecraft = Minecraft.getMinecraft();
 		this.setting = setting;

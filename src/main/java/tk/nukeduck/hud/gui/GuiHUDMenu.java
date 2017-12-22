@@ -11,11 +11,10 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import tk.nukeduck.hud.BetterHud;
-import tk.nukeduck.hud.element.ExtraGuiElement;
+import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.network.proxy.ClientProxy;
 import tk.nukeduck.hud.util.SettingsIO;
 import tk.nukeduck.hud.util.constants.Colors;
-import tk.nukeduck.hud.util.constants.Constants;
 
 public class GuiHUDMenu extends GuiScreen {
 	public int buttonOffset = 0;
@@ -49,7 +48,7 @@ public class GuiHUDMenu extends GuiScreen {
 		this.perPage = Math.max(1, (int) Math.floor((height / 8 * 7 - 110) / 24));
 
 		for(int i = 0; i < BetterHud.proxy.elements.elements.length; i++) {
-			ExtraGuiElement el = BetterHud.proxy.elements.elements[i];
+			HudElement el = BetterHud.proxy.elements.elements[i];
 
 			GuiToggleButton b = new GuiToggleButton(i * 2 + buttonOffset, hW - 126, height / 16 + 78 + ((i % perPage) * 24), 150, 20, I18n.format("betterHud.menu.settingButton", el.getLocalizedName(), (el.enabled ? ChatFormatting.GREEN : ChatFormatting.RED) + I18n.format(el.enabled ? "options.on" : "options.off")));
 			b.pressed = el.enabled;
@@ -71,7 +70,7 @@ public class GuiHUDMenu extends GuiScreen {
 		}
 
 		if(BetterHud.proxy instanceof ClientProxy) {
-			SettingsIO.saveSettings(Constants.LOGGER, (ClientProxy)BetterHud.proxy);
+			SettingsIO.saveSettings(BetterHud.LOGGER, (ClientProxy)BetterHud.proxy);
 		}
 	}
 
@@ -127,7 +126,7 @@ public class GuiHUDMenu extends GuiScreen {
 			}
 		} else {
 			for(int i = 0; i < BetterHud.proxy.elements.elements.length; i++) {
-				ExtraGuiElement el = BetterHud.proxy.elements.elements[i];
+				HudElement el = BetterHud.proxy.elements.elements[i];
 				int offset = i * 2 + buttonOffset;
 				if(id == offset) {
 					el.enabled = !el.enabled;
@@ -146,7 +145,7 @@ public class GuiHUDMenu extends GuiScreen {
 			if(buttonList.get(i) instanceof GuiButton) {
 				GuiButton b = (GuiButton) buttonList.get(i);
 				if(b.id >= buttonOffset && (b.id - buttonOffset) % 2 == 0) {
-					ExtraGuiElement element = BetterHud.proxy.elements.elements[(b.id - buttonOffset) / 2];
+					HudElement element = BetterHud.proxy.elements.elements[(b.id - buttonOffset) / 2];
 					element.enabled = enabled;
 					b.displayString = I18n.format("betterHud.menu.settingButton", element.getLocalizedName(), (element.enabled ? ChatFormatting.GREEN : ChatFormatting.RED) + I18n.format(element.enabled ? "options.on" : "options.off"));
 					((GuiToggleButton) b).pressed = element.enabled;
@@ -205,9 +204,9 @@ public class GuiHUDMenu extends GuiScreen {
 		this.drawCenteredString(this.fontRenderer, I18n.format("betterHud.menu.page", (currentPage + 1) + "/" + (int) Math.ceil((float) BetterHud.proxy.elements.elements.length / perPage)), width / 2, height - height / 16 - 13, Colors.WHITE);
 	}
 
-	public int countEnabled(ExtraGuiElement[] elements) {
+	public int countEnabled(HudElement[] elements) {
 		int i = 0;
-		for(ExtraGuiElement element : elements) {
+		for(HudElement element : elements) {
 			if(element.enabled) i++;
 		}
 		return i;
