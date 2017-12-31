@@ -1,171 +1,158 @@
 package tk.nukeduck.hud.util;
 
+import static tk.nukeduck.hud.BetterHud.SPACER;
+
 import java.util.ArrayList;
 
-import tk.nukeduck.hud.util.constants.Constants;
-
 public class Bounds {
-	public static final Bounds EMPTY = new Bounds(0, 0, 0, 0);
+	public static final Bounds EMPTY = new Bounds();
 
-	private Point position;
-	private Point size;
+	public Point position, size;
+
+	public Bounds() {
+		this(0, 0, 0, 0);
+	}
+
+	public Bounds(int width, int height) {
+		this(0, 0, width, height);
+	}
 
 	public Bounds(int x, int y, int width, int height) {
-		this.position = new Point(x, y);
-		this.size = new Point(width, height);
+		position = new Point(x, y);
+		size = new Point(width, height);
 	}
 
-	public Bounds clone() {
-		return new Bounds(this.getX(), this.getY(), this.getWidth(), this.getHeight());
+	public Bounds(Point size) {
+		this(Point.ZERO, size);
 	}
 
-	public int getX() {
-		return this.position.getX();
-	}
-	public void setX(int x) {
-		this.position.setX(x);
+	public Bounds(Point position, Point size) {
+		this.position = new Point(position);
+		this.size = new Point(size);
 	}
 
-	public int getY() {
-		return this.position.getY();
-	}
-	public void setY(int y) {
-		this.position.setY(y);
+	public Bounds(Bounds bounds) {
+		this(bounds.position, bounds.size);
 	}
 
-	public int getWidth() {
-		return this.size.getX();
+	public int x() {return position.x;}
+	public void x(int x) {position.x = x;}
+	public int y() {return position.y;}
+	public void y(int y) {position.y = y;}
+	public int width() {return size.x;}
+	public void width(int width) {size.x = width;}
+	public int height() {return size.y;}
+	public void height(int height) {size.y = height;}
+
+	public int left() {return x();}
+	public void left(int left) {
+		width(width() + left() - left);
+		x(left);
 	}
-	public void setWidth(int width) {
-		this.size.setX(width);
+	public int top() {return y();}
+	public void top(int top) {
+		height(height() + top() - top);
+		y(top);
+	}
+	public int right() {return x() + width();}
+	public void right(int right) {width(right - x());}
+	public int bottom() {return y() + height();}
+	public void bottom(int bottom) {height(bottom - y());}
+
+	/** @return An inverted bounds {@code bounds} such that least coordinates
+	 * are replaced by most coordinates, e.g. {@code bounds.left() == this.right()} */
+	public Bounds invert() {
+		return new Bounds(right(), bottom(), -width(), -height());
 	}
 
-	public int getHeight() {
-		return this.size.getY();
-	}
-	public void setHeight(int height) {
-		this.size.setY(height);
-	}
-
-	public int getX2() {
-		return this.getX() + this.getWidth();
-	}
-	public void setX2(int x2) {
-		this.setWidth(x2 - this.getX());
+	/** @return A bounds such that the distance from the origin on each side
+	 * represents padding on that side, for use with {@link #pad(Bounds)} and {@link #inset(Bounds)} */
+	public static Bounds getPadding(int left, int top, int right, int bottom) {
+		return new Bounds(-left, -top, left + right, top + bottom);
 	}
 
-	public int getY2() {
-		return this.getY() + this.getHeight();
-	}
-	public void setY2(int y2) {
-		this.setHeight(y2 - this.getY());
-	}
-
-	public void setPosition(Point position) {
-		this.position = position;
-	}
-	public Point getPosition() {
-		return this.position;
-	}
-
-	public void setSize(Point size) {
-		this.size = size;
-	}
-	public Point getSize() {
-		return this.size;
-	}
-
-	public static Bounds join(Bounds... bounds) {
-		int minX = Integer.MAX_VALUE;
-		int minY = Integer.MAX_VALUE;
-		int maxX = Integer.MIN_VALUE;
-		int maxY = Integer.MIN_VALUE;
-
-		for(Bounds b : bounds) {
-			if(b.getX() < minX) minX = b.getX();
-			if(b.getY() < minY) minY = b.getY();
-			if(b.getX2() > maxX) maxX = b.getX2();
-			if(b.getY2() > maxY) maxY = b.getY2();
-		}
-
-		return new Bounds(minX, minY, maxX - minX, maxY - minY);
-	}
-
+	/** All sides default to {@code padding}
+	 * @see #pad(int, int, int, int) */
 	public Bounds pad(int padding) {
-		return new Bounds(this.getX() - padding, this.getY() - padding, this.getWidth() + padding * 2, this.getHeight() + padding * 2);
+		return pad(padding, padding, padding, padding);
 	}
 
-	public Point getPoint(Corner corner) {
-		switch(corner) {
-			case TOP_LEFT:
-				return this.position;
-			case TOP_RIGHT:
-				return Point.add(this.position, new Point(this.getWidth(), 0));
-			case BOTTOM_LEFT:
-				return Point.add(this.position, new Point(this.getHeight(), 0));
-			case BOTTOM_RIGHT:
-				return Point.add(this.position, this.size);
-			default:
-				return getPoint(Corner.TOP_LEFT);
-		}
+	/** Applies padding from {@link #getPadding(int, int, int, int)}
+	 * @see #pad(int, int, int, int)
+	 * @see #getPadding(int, int, int, int) */
+	public Bounds pad(Bounds padding) {
+		return pad(-padding.left(), -padding.top(), padding.right(), padding.bottom());
 	}
 
-	public void snapTest(Bounds... b) {snapTest(Constants.SPACER, b);}
+	/** @return A bounds padded by the given amount on each side */
+	public Bounds pad(int left, int top, int right, int bottom) {
+		return new Bounds(left() - left, top() - top, width() + left + right, height() + top + bottom);
+	}
+
+	/** All sides default to {@code inset}
+	 * @see #inset(int, int, int, int) */
+	public Bounds inset(int inset) {
+		return pad(-inset);
+	}
+
+	/** Applies inset from {@link #getPadding(int, int, int, int)}
+	 * @see #inset(int, int, int, int)
+	 * @see #getPadding(int, int, int, int) */
+	public Bounds inset(Bounds inset) {
+		return pad(inset.invert());
+	}
+
+	/** @return A bounds inset by the given amount on each side
+	 * @see #pad(int, int, int, int) */
+	public Bounds inset(int left, int top, int right, int bottom) {
+		return pad(-left, -top, -right, -bottom);
+	}
+
+	public void snapTest(Bounds... b) {snapTest(SPACER, b);}
 	public void snapTest(int hitRadius, Bounds... bounds) {
 		ArrayList<Integer> xClips = new ArrayList<Integer>();
 		ArrayList<Integer> yClips = new ArrayList<Integer>();
 
 		for(Bounds b : bounds) {
-			b = b.pad(Constants.SPACER);
+			b = b.pad(SPACER);
 
-			int clipX = this.getX();
-			int clipY = this.getY();
+			int clipX = this.x();
+			int clipY = this.y();
 
-			if(intersects(this.getX(), this.getX2(), b.getX(), b.getX2())) {
-				int toClip = b.getY2();
-				if(Math.abs(toClip - this.getY()) < hitRadius) {
+			if(lineOverlaps(this.x(), this.right(), b.x(), b.right())) {
+				int toClip = b.bottom();
+				if(Math.abs(toClip - this.y()) < hitRadius) {
 					clipY = toClip;
 				} else {
-					toClip = b.getY();
-					if(Math.abs(toClip - this.getY2()) < hitRadius) {
-						clipY = toClip - this.getHeight();
+					toClip = b.y();
+					if(Math.abs(toClip - this.bottom()) < hitRadius) {
+						clipY = toClip - this.height();
 					}
 				}
 			}
-			if(intersects(this.getY(), this.getY2(), b.getY(), b.getY2())) {
-				int toClip = b.getX2();
-				if(Math.abs(toClip - this.getX()) < hitRadius) {
+			if(lineOverlaps(this.y(), this.bottom(), b.y(), b.bottom())) {
+				int toClip = b.right();
+				if(Math.abs(toClip - this.x()) < hitRadius) {
 					clipX = toClip;
 				} else {
-					toClip = b.getX();
-					if(Math.abs(toClip - this.getX2()) < hitRadius) {
-						clipX = toClip - this.getWidth();
+					toClip = b.x();
+					if(Math.abs(toClip - this.right()) < hitRadius) {
+						clipX = toClip - this.width();
 					}
 				}
 			}
 
-			if(clipX != this.getX()) xClips.add(clipX);
-			if(clipY != this.getY()) yClips.add(clipY);
+			if(clipX != this.x()) xClips.add(clipX);
+			if(clipY != this.y()) yClips.add(clipY);
 		}
 
-		this.position = new Point(FuncsUtil.getSmallestDistance(this.getX(), xClips), FuncsUtil.getSmallestDistance(this.getY(), yClips));
+		this.position = new Point(FuncsUtil.getSmallestDistance(this.x(), xClips), FuncsUtil.getSmallestDistance(this.y(), yClips));
 	}
 
-	public static boolean isWithin(float val, float min, float max) {
-		return val > min && val < max;
-	}
-
-	public static boolean intersects(float min, float max, float min2, float max2) {
-		return isWithin(min, min2, max2)
-			|| isWithin(max, min2, max2)
-			|| isWithin(min2, min, max)
-			|| isWithin(max2, min, max);
-	}
-
-	public enum Corner {
-		TOP_LEFT,
-		TOP_RIGHT,
-		BOTTOM_LEFT,
-		BOTTOM_RIGHT;
+	private static boolean lineOverlaps(int min, int max, int min2, int max2) {
+		return min  >= min2 && min  < max2
+			|| max  >= min2 && max  < max2
+			|| min2 >= min  && min2 < max
+			|| max2 >= min  && max2 < max;
 	}
 }

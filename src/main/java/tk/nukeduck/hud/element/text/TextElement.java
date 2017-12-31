@@ -1,89 +1,70 @@
 package tk.nukeduck.hud.element.text;
 
-import static tk.nukeduck.hud.BetterHud.MC;
+import static tk.nukeduck.hud.BetterHud.SPACER;
 
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import tk.nukeduck.hud.element.HudElement;
-import tk.nukeduck.hud.element.settings.SettingAnchoredPosition;
-import tk.nukeduck.hud.element.settings.SettingAnchor;
-import tk.nukeduck.hud.element.settings.SettingMode;
+import tk.nukeduck.hud.element.settings.SettingColor;
 import tk.nukeduck.hud.element.settings.SettingPosition;
-import tk.nukeduck.hud.element.settings.SettingPosition.Position;
-import tk.nukeduck.hud.element.settings.SettingSlider;
 import tk.nukeduck.hud.util.Bounds;
-import tk.nukeduck.hud.util.FuncsUtil;
+import tk.nukeduck.hud.util.Colors;
+import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.LayoutManager;
-import tk.nukeduck.hud.util.RenderUtil;
-import tk.nukeduck.hud.util.StringManager;
-import tk.nukeduck.hud.util.constants.Colors;
+import tk.nukeduck.hud.util.PaddedBounds;
+import tk.nukeduck.hud.util.Point;
 
 public abstract class TextElement extends HudElement {
-	protected SettingMode posMode;
-	protected SettingPosition pos;
-	protected SettingAnchoredPosition pos2;
-	protected SettingAnchor anchor;
-	protected SettingSlider red, green, blue;
-	
+	protected final SettingPosition position;
+	protected final SettingColor color = new SettingColor("color");
+
+	protected boolean border = false;
+
 	public TextElement(String name) {
+		this(name, Direction.CORNERS);
+	}
+
+	public TextElement(String name, Direction... directions) {
+		this(name, Direction.flags(directions));
+	}
+
+	public TextElement(String name, int directions) {
 		super(name);
-		this.settings.add(posMode = new SettingMode("posMode", new String[] {"setPos", "absolute"}));
-		this.settings.add(pos = new SettingPosition("position", Position.CORNERS) {
-			@Override
-			public boolean getEnabled() {
-				return posMode.index == 0;
-			}
-		});
-		this.anchor = new SettingAnchor("anchor");
-		this.settings.add(pos2 = new SettingAnchoredPosition("position2", anchor) {
-			@Override
-			public boolean getEnabled() {
-				return posMode.index == 1;
-			}
-		});
-		this.settings.add(anchor);
-		this.settings.add(red = new SettingSlider("red", 0, 255));
-		red.accuracy = 1;
-		this.settings.add(green = new SettingSlider("green", 0, 255));
-		green.accuracy = 1;
-		this.settings.add(blue = new SettingSlider("blue", 0, 255));
-		blue.accuracy = 1;
+		settings.add(position = new SettingPosition("position", directions));
+		settings.add(color);
 	}
-	
+
 	public int getColor() {
-		return Colors.fromRGB((int) this.red.value, (int) this.green.value, (int) this.blue.value);
+		return color.get();
 	}
-	
+
 	@Override
 	public void loadDefaults() {
-		this.enabled = true;
-		this.posMode.index = 0;
-		this.pos.value = Position.TOP_LEFT;
-		this.pos2.x = 5;
-		this.pos2.y = 5;
-		this.red.value = 255;
-		this.green.value = 255;
-		this.blue.value = 255;
+		setEnabled(true);
+		position.load(Direction.NORTH_WEST);
+		color.set(Colors.WHITE);
 	}
-	
-	private Bounds bounds = Bounds.EMPTY;
+
+	protected Bounds getPadding() {
+		return border ? new Bounds(-SPACER, -SPACER, 2*SPACER, 2*SPACER) : Bounds.EMPTY;
+	}
+
+	protected Bounds getMargin() {
+		return Bounds.EMPTY;
+	}
+
 	@Override
-	public Bounds getBounds(ScaledResolution resolution) {
+	public Bounds render(RenderGameOverlayEvent event, LayoutManager manager) {
+		String[] text = getText();
+		if(text.length == 0) return null;
+
+		Point size = getLinesSize(text);
+		PaddedBounds bounds = position.applyTo(new PaddedBounds(new Bounds(size), getPadding(), getMargin()), manager);
+
+		if(border) drawRect(bounds.paddingBounds(), Colors.TRANSLUCENT);
+		drawLines(text, bounds.contentBounds(), position.getAnchor(), color.get());
+
 		return bounds;
 	}
-	
-	@Override
-	public void render(RenderGameOverlayEvent event, StringManager stringManager, LayoutManager layoutManager) {
-		String[] text = getText();
-		if(posMode.index == 0) {
-			stringManager.add(pos.value, this.getColor(), pos.value == Position.BOTTOM_LEFT || pos.value == Position.BOTTOM_RIGHT ? FuncsUtil.flip(text) : text);
-			this.bounds = Bounds.EMPTY;
-		} else {
-			// TODO this is ugly because one frame will always be incorrect
-			this.bounds = RenderUtil.renderStrings(MC.fontRenderer, text, pos2.x, pos2.y, Colors.fromRGB((int) red.value, (int) green.value, (int) blue.value), Position.TOP_LEFT);
-			this.pos2.update(event.getResolution(), this.bounds);
-		}
-	}
-	
+
 	protected abstract String[] getText();
 }

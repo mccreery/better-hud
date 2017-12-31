@@ -20,6 +20,7 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import tk.nukeduck.hud.BetterHud;
+import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.element.entityinfo.EntityInfo;
 
 public class EntityInfoRenderer {
@@ -27,90 +28,36 @@ public class EntityInfoRenderer {
 
 	@SubscribeEvent
 	public void worldRender(RenderWorldLastEvent e) {
-		if(!BetterHud.proxy.elements.globalSettings.enabled) return;
+		if(!BetterHud.isEnabled()) return;
 
 		double maxDist = 0;
-		for(EntityInfo element : BetterHud.proxy.elements.info) {
-			if(element.enabled && element.distance.value > maxDist) maxDist = element.distance.value;
+		for(EntityInfo element : HudElement.ENTITY_INFO) {
+			if(element.isEnabled() && element.getDistance() > maxDist) maxDist = element.getDistance();
 		}
 		if(maxDist == 0) return;
-		
-		Entity entity = this.getMouseOver(Minecraft.getMinecraft(), e.getPartialTicks(), maxDist);
+
+		Entity entity = getMouseOver(Minecraft.getMinecraft(), e.getPartialTicks(), maxDist);
 		//Entity entity = Minecraft.getMinecraft().pointedEntity;
-		
+
 		if(entity != null && entity instanceof EntityLivingBase) {
-			EntityLivingBase entity2 = (EntityLivingBase) entity;
 			GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
-			for(EntityInfo element : BetterHud.proxy.elements.info) {
-				if(element.enabled && this.lastDistance <= element.distance.value) {
-					element.renderInfo(entity2, Minecraft.getMinecraft(), e.getPartialTicks());
+			for(EntityInfo element : HudElement.ENTITY_INFO) {
+				if(element.isEnabled() && this.lastDistance <= element.getDistance()) {
+					element.renderInfo((EntityLivingBase)entity, e.getPartialTicks());
 				}
 			}
-			/*if(BetterHud.proxy.elements.mobInfo.enabled && this.lastDistance <= BetterHud.proxy.elements.mobInfo.distance.value)
-				BetterHud.proxy.elements.mobInfo.renderInfo(entity2, BetterHud.mc, e.partialTicks);
-			if(BetterHud.proxy.elements.horseInfo.enabled && this.lastDistance <= BetterHud.proxy.elements.horseInfo.distance.value)
-				BetterHud.proxy.elements.horseInfo.renderInfo(entity2, BetterHud.mc, e.partialTicks);
-			if(BetterHud.proxy.elements.breedIndicator.enabled && this.lastDistance <= BetterHud.proxy.elements.breedIndicator.distance.value)
-				BetterHud.proxy.elements.breedIndicator.renderInfo(entity2, BetterHud.mc, e.partialTicks);*/
 			GL11.glPopAttrib();
 
 			GL11.glEnable(GL11.GL_BLEND);
 			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-			Minecraft.getMinecraft().getTextureManager().bindTexture(font); // Just in case
+			Minecraft.getMinecraft().getTextureManager().bindTexture(font); // Just in case TODO
 		}
-		
-		/*Vec3 vec3 = BetterHud.mc.getRenderViewEntity().getPositionEyes(1.0F);
-		Vec3 vec31 = BetterHud.mc.getRenderViewEntity().getLook(1.0F);
-		Vec3 vec32 = vec3.addVector(vec31.xCoord * 200, vec31.yCoord * 200, vec31.zCoord * 200);
-		BetterHud.mc.getRenderViewEntity().worldObj.rayTraceBlocks(vec3, vec32, false, false, true);*/
-		
-		/*MovingObjectPosition mop = BetterHud.mc.getRenderViewEntity().rayTrace(200, 1.0F);
-		if(mop.typeOfHit == MovingObjectType.ENTITY) {
-			if(mop.entityHit instanceof EntityLivingBase) {
-				EntityLivingBase entity = (EntityLivingBase) BetterHud.mc.objectMouseOver.entityHit;
-				
-				GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
-				{
-					if(HudElements.mobInfo.enabled)
-						HudElements.mobInfo.renderInfo(entity, BetterHud.mc, e.partialTicks);
-					if(HudElements.horseInfo.enabled)
-						HudElements.horseInfo.renderInfo(entity, BetterHud.mc, e.partialTicks);
-					if(HudElements.breedIndicator.enabled)
-						HudElements.breedIndicator.renderInfo(entity, BetterHud.mc, e.partialTicks);
-				}
-				GL11.glPopAttrib();
-			}
-		}
-		
-		if(BetterHud.mc != null && BetterHud.mc.objectMouseOver != null
-			&& BetterHud.mc.objectMouseOver.entityHit != null
-			&& BetterHud.mc.objectMouseOver.entityHit instanceof EntityLivingBase) {
-			EntityLivingBase entity = (EntityLivingBase) BetterHud.mc.objectMouseOver.entityHit;
-			
-			EntityPlayer player = null;
-			Vec3 start = Vec3.createVectorHelper(BetterHud.mc.thePlayer.posX, BetterHud.mc.thePlayer.getEyeHeight(), BetterHud.mc.thePlayer.posZ);
-			Vec3 end = Vec3.createVectorHelper(BetterHud.mc.thePlayer.posX, BetterHud.mc.thePlayer.getEyeHeight(), BetterHud.mc.thePlayer.posZ);
-			Vec3 v = BetterHud.mc.thePlayer.getLookVec();
-			while(start.distanceTo(end) < 200) {
-				start.addVector(v.xCoord, v.yCoord, v.zCoord);
-			}
-			
-			GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
-			{
-				if(HudElements.mobInfo.enabled)
-					HudElements.mobInfo.renderInfo(entity, BetterHud.mc, e.partialTicks);
-				if(HudElements.horseInfo.enabled)
-					HudElements.horseInfo.renderInfo(entity, BetterHud.mc, e.partialTicks);
-				if(HudElements.breedIndicator.enabled)
-					HudElements.breedIndicator.renderInfo(entity, BetterHud.mc, e.partialTicks);
-			}
-			GL11.glPopAttrib();
-		}*/
 	}
-	
+
 	public double lastDistance = 0;
-	
+
+	// TODO source and clean up (maybe find in vanilla)
 	public Entity getMouseOver(Minecraft mc, float partialTick, double length) {
 		Entity entity = mc.getRenderViewEntity();
 		

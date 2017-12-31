@@ -1,10 +1,11 @@
 package tk.nukeduck.hud.element.entityinfo;
 
+import static tk.nukeduck.hud.BetterHud.MC;
+
 import org.lwjgl.opengl.GL11;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.enchantment.Enchantment;
@@ -16,55 +17,50 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingSlider;
+import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.RenderUtil;
-import tk.nukeduck.hud.util.constants.Colors;
 
 public class MobInfo extends EntityInfo {
-	SettingBoolean players;
-	SettingBoolean mobs;
-	SettingSlider compress;
-	
+	private final SettingBoolean players = new SettingBoolean("players");
+	private final SettingBoolean mobs = new SettingBoolean("mobs");
+	private final SettingSlider compress = new SettingSlider("compress", 0, 200, 20) {
+		@Override
+		public String getSliderText() {
+			if(value == 0) {
+				return I18n.format("betterHud.menu.settingButton", getLocalizedName(), I18n.format("betterHud.setting.never"));
+			} else {
+				return I18n.format("betterHud.menu.settingButton", getLocalizedName(), (int)value);
+			}
+		}
+	};
+
 	@Override
 	public void loadDefaults() {
-		this.enabled = true;
-		players.value = true;
-		mobs.value = true;
+		super.loadDefaults();
+		this.setEnabled(true);
+		players.set(true);
+		mobs.set(true);
 		distance.value = 100;
 		compress.value = 40;
 	}
-	
+
 	public MobInfo() {
 		super("mobInfo");
-		this.settings.add(players = new SettingBoolean("players"));
-		this.settings.add(mobs = new SettingBoolean("mobs"));
-		this.settings.add(distance = new SettingSlider("distance", 5, 200) {
-			@Override
-			public String getSliderText() {
-				return I18n.format("betterHud.menu.settingButton", this.getLocalizedName(), I18n.format("betterHud.strings.distanceShort", this.value));
-			}
-		});
-		this.settings.add(compress = new SettingSlider("compress", 0, 200) {
-			@Override
-			public String getSliderText() {
-				if((int)this.value == 0) {
-					return I18n.format("betterHud.menu.settingButton", this.getLocalizedName(), I18n.format("betterHud.setting.never"));
-				} else {
-					return I18n.format("betterHud.menu.settingButton", this.getLocalizedName(), (int)this.value);
-				}
-			}
-		});
-		compress.accuracy = 20;
+
+		settings.add(players);
+		settings.add(mobs);
+		settings.add(compress);
 	}
-	
+
 	private static ResourceLocation icons = new ResourceLocation("textures/gui/icons.png");
 	
-	public void renderInfo(EntityLivingBase entity, Minecraft mc, float partialTicks) {
-		if(enabled) {
-			EntityPlayer player = mc.player;
-			if(player == null) return; // jic
+	public void renderInfo(EntityLivingBase entity, float partialTicks) {
+		if(isEnabled()) {
+			EntityPlayer player = MC.player;
+			if(player == null) return; // TODO is this necessary
 			
 			boolean isPlayer = entity instanceof EntityPlayer;
-			if((isPlayer && !players.value) || (!isPlayer && !mobs.value)) {
+			if((isPlayer && !players.get()) || (!isPlayer && !mobs.get())) {
 				return;
 			}
 			
@@ -80,12 +76,12 @@ public class MobInfo extends EntityInfo {
 				String text = entity.getName() + " (" + (int) entity.getHealth() + "/" + (int) entity.getMaxHealth() + ")";
 				float perLine = 10;
 				
-				int width = Math.max(8 * Math.min(10, (int) entity.getMaxHealth() / 2) + 1 + (isPlayer ? 5 + 8 * 10 : 0), mc.fontRenderer.getStringWidth(text)) + 10;
+				int width = Math.max(8 * Math.min(10, (int) entity.getMaxHealth() / 2) + 1 + (isPlayer ? 5 + 8 * 10 : 0), MC.fontRenderer.getStringWidth(text)) + 10;
 				int height;
 				if(compress.value != 0 && entity.getHealth() >= compress.value) {
-					height = 2 * mc.fontRenderer.FONT_HEIGHT + 12 + ((int)entity.getHealth() % 20 != 0 ? 9 : 0);
+					height = 2 * MC.fontRenderer.FONT_HEIGHT + 12 + ((int)entity.getHealth() % 20 != 0 ? 9 : 0);
 				} else {
-					height = mc.fontRenderer.FONT_HEIGHT + 12;
+					height = MC.fontRenderer.FONT_HEIGHT + 12;
 					height += 9 * (compress.value != 0 && entity.getMaxHealth() > compress.value ? compress.value / 20 : (int) Math.ceil(Math.ceil(entity.getMaxHealth() / 2) / perLine));
 				}
 				
@@ -95,18 +91,18 @@ public class MobInfo extends EntityInfo {
 				// Rendering starts
 				GL11.glEnable(GL11.GL_BLEND);
 				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-				
-				RenderUtil.renderQuad(t, 0, 0, width, height, Colors.TRANSLUCENT);
-				RenderUtil.zIncrease();
-				mc.ingameGUI.drawString(mc.fontRenderer, text, 5, 5, Colors.WHITE);
+
+				drawRect(0, 0, width, height, Colors.TRANSLUCENT);
+				zIncrease();
+				MC.ingameGUI.drawString(MC.fontRenderer, text, 5, 5, Colors.WHITE);
 				
 				if(isPlayer) {
 					String text2 = "(" + entity.getTotalArmorValue() + "/20)";
-					mc.ingameGUI.drawString(mc.fontRenderer, text2, width - 5 - mc.fontRenderer.getStringWidth(text2), 5, Colors.WHITE);
+					MC.ingameGUI.drawString(MC.fontRenderer, text2, width - 5 - MC.fontRenderer.getStringWidth(text2), 5, Colors.WHITE);
 				}
 				
 				// Render health bar
-				renderHealth(mc, t, (int)entity.getHealth(), (int)entity.getMaxHealth());
+				renderHealth(t, (int)entity.getHealth(), (int)entity.getMaxHealth());
 				
 				if(isPlayer) {
 					// Armor bar
@@ -114,20 +110,20 @@ public class MobInfo extends EntityInfo {
 					
 					int i;
 					for(i = 0; i < 10; i++) {
-						RenderUtil.renderQuadWithUV(t, 8 * Math.min(10, (int) entity.getMaxHealth() / 2) + 10 + (i * 8), mc.fontRenderer.FONT_HEIGHT + 7 + (int) (i / 10) * 9, 16 / 256F, 9 / 256F, 25 / 256F, 18 / 256F, 9, 9);
+						RenderUtil.renderQuadWithUV(t, 8 * Math.min(10, (int) entity.getMaxHealth() / 2) + 10 + (i * 8), MC.fontRenderer.FONT_HEIGHT + 7 + (int) (i / 10) * 9, 16 / 256F, 9 / 256F, 25 / 256F, 18 / 256F, 9, 9);
 					}
 					for(i = 0; i < armor / 2; i++) {
-						RenderUtil.renderQuadWithUV(t, 8 * Math.min(10, (int) entity.getMaxHealth() / 2) + 10 + (i * 8), mc.fontRenderer.FONT_HEIGHT + 7 + (int) (i / 10) * 9, 34 / 256F, 9 / 256F, 43 / 256F, 18 / 256F, 9, 9);
+						RenderUtil.renderQuadWithUV(t, 8 * Math.min(10, (int) entity.getMaxHealth() / 2) + 10 + (i * 8), MC.fontRenderer.FONT_HEIGHT + 7 + (int) (i / 10) * 9, 34 / 256F, 9 / 256F, 43 / 256F, 18 / 256F, 9, 9);
 					}
 					if(armor % 2 == 1) {
-						RenderUtil.renderQuadWithUV(t, 8 * Math.min(10, (int) entity.getMaxHealth() / 2) + 10 + (i * 8), mc.fontRenderer.FONT_HEIGHT + 7 + (int) (i / 10) * 9, 25 / 256F, 9 / 256F, 34 / 256F, 18 / 256F, 9, 9);
+						RenderUtil.renderQuadWithUV(t, 8 * Math.min(10, (int) entity.getMaxHealth() / 2) + 10 + (i * 8), MC.fontRenderer.FONT_HEIGHT + 7 + (int) (i / 10) * 9, 25 / 256F, 9 / 256F, 34 / 256F, 18 / 256F, 9, 9);
 					}
 					
 					EntityPlayer playerObj = (EntityPlayer) entity;
 					
 					ItemStack mainHand = playerObj.getHeldItemMainhand();
 					if(mainHand != null && !mainHand.isEmpty()) {
-						renderHolding(mc, playerObj.getHeldItemMainhand(), height);
+						renderHolding(playerObj.getHeldItemMainhand(), height);
 					}
 				}
 			}
@@ -135,10 +131,10 @@ public class MobInfo extends EntityInfo {
 		}
 	}
 
-	private void renderHealth(Minecraft mc, Tessellator t, int health, int max) {
-		int y = mc.fontRenderer.FONT_HEIGHT + 7;
+	private void renderHealth(Tessellator t, int health, int max) {
+		int y = MC.fontRenderer.FONT_HEIGHT + 7;
 
-		mc.renderEngine.bindTexture(icons);
+		MC.renderEngine.bindTexture(icons);
 		if(compress.value != 0) {
 			if(health >= compress.value) {
 				int rows = health / 20;
@@ -146,8 +142,8 @@ public class MobInfo extends EntityInfo {
 					RenderUtil.renderQuadWithUV(t, 5 + i*4, y, 16 / 256F, 0, 25 / 256F, 9 / 256F, 9, 9);
 					RenderUtil.renderQuadWithUV(t, 5 + i*4, y, 52 / 256F, 0, 61 / 256F, 9 / 256F, 9, 9);
 				}
-				mc.ingameGUI.drawString(mc.fontRenderer, I18n.format("betterHud.strings.times", rows), 55, y, Colors.WHITE);
-				y += mc.fontRenderer.FONT_HEIGHT;
+				MC.ingameGUI.drawString(MC.fontRenderer, I18n.format("betterHud.strings.times", rows), 55, y, Colors.WHITE);
+				y += MC.fontRenderer.FONT_HEIGHT;
 	
 				health -= rows * 20;
 				max -= rows * 20;
@@ -159,7 +155,7 @@ public class MobInfo extends EntityInfo {
 
 		// changes made here to fix glitch where background doesn't show up on half a heart
 		if(health != 0) {
-			mc.renderEngine.bindTexture(icons);
+			MC.renderEngine.bindTexture(icons);
 			int i; // changes here
 			for(i = 0; i < (max + 1) / 2; i++) { // Background
 				RenderUtil.renderQuadWithUV(t, 5 + ((i % 10) * 8), y + (int) (i / 10) * 9, 16 / 256F, 0, 25 / 256F, 9 / 256F, 9, 9);
@@ -173,9 +169,9 @@ public class MobInfo extends EntityInfo {
 		}
 	}
 
-	private void renderHolding(Minecraft mc, ItemStack stack, int y) {
+	private void renderHolding(ItemStack stack, int y) {
 		final String holding = I18n.format("betterHud.strings.holding");
-		mc.ingameGUI.drawString(mc.fontRenderer, holding, 5, y + 5, Colors.WHITE);
+		MC.ingameGUI.drawString(MC.fontRenderer, holding, 5, y + 5, Colors.WHITE);
 
 		//GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
 		//BetterHud.ri.renderItemAndEffectIntoGUI(is, 7 + BetterHud.fr.getStringWidth("Holding:"), height);
@@ -190,12 +186,12 @@ public class MobInfo extends EntityInfo {
 				Enchantment enchantment = Enchantment.getEnchantmentByID(tag.getShort("id"));
 				if (enchantment != null) {
 					String display = ChatFormatting.LIGHT_PURPLE + enchantment.getTranslatedName(tag.getShort("lvl"));
-					mc.ingameGUI.drawString(mc.fontRenderer, display, 5 + 100 * (b / 4), y + 10 + mc.fontRenderer.FONT_HEIGHT + ((mc.fontRenderer.FONT_HEIGHT + 2) * (b % 4)), Colors.WHITE);
+					MC.ingameGUI.drawString(MC.fontRenderer, display, 5 + 100 * (b / 4), y + 10 + MC.fontRenderer.FONT_HEIGHT + ((MC.fontRenderer.FONT_HEIGHT + 2) * (b % 4)), Colors.WHITE);
 				}
 			}
 		}
 
 		String stackName = (stack.hasDisplayName() ? ChatFormatting.ITALIC : "") + "" + (stack.isItemEnchanted() ? ChatFormatting.AQUA : "") + stack.getDisplayName();
-		mc.ingameGUI.drawString(mc.fontRenderer, stackName, 10 + 16 + mc.fontRenderer.getStringWidth(holding), y + 5, Colors.WHITE);
+		MC.ingameGUI.drawString(MC.fontRenderer, stackName, 10 + 16 + MC.fontRenderer.getStringWidth(holding), y + 5, Colors.WHITE);
 	}
 }

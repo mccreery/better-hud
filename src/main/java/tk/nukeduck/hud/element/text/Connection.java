@@ -3,106 +3,90 @@ package tk.nukeduck.hud.element.text;
 import static tk.nukeduck.hud.BetterHud.MC;
 
 import java.util.ArrayList;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
 
 import net.minecraft.client.resources.I18n;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
+import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
-import tk.nukeduck.hud.element.settings.Divider;
-import tk.nukeduck.hud.util.LayoutManager;
-import tk.nukeduck.hud.util.PingService;
-import tk.nukeduck.hud.util.StringManager;
+import tk.nukeduck.hud.util.Pinger;
 import tk.nukeduck.hud.util.Ticker;
+import tk.nukeduck.hud.util.Ticker.Tickable;
 
-public class Connection extends TextElement {
-	private SettingBoolean playerCount;
-	private SettingBoolean showIp;
-	private SettingBoolean latency;
-	
+public class Connection extends TextElement implements Tickable {
+	private final SettingBoolean playerCount = new SettingBoolean("playerCount");
+	private final SettingBoolean showIp = new SettingBoolean("showIp");
+	private final SettingBoolean latency = new SettingBoolean("latency");
+
+	private static ExecutorService executor;
+
+	private String ip = "localServer";
+
 	@Override
 	public void loadDefaults() {
 		super.loadDefaults();
-		playerCount.value = true;
-		showIp.value = true;
-		latency.value = true;
+		playerCount.set(true);
+		showIp.set(true);
+		latency.set(true);
 	}
-	
+
 	@Override
 	public void init() {
 		MinecraftForge.EVENT_BUS.register(this);
-	}
-	
-	private String ip = "localServer";
-	long lastPing = 0;
-	
-	public Connection() {
-		//modes = new String[] {"left", "right"};
-		//defaultMode = 1;
-		super("connection");
-		this.settings.add(0, new Divider("position"));
-		this.settings.add(new Divider("misc"));
-		this.settings.add(playerCount = new SettingBoolean("playerCount"));
-		this.settings.add(showIp = new SettingBoolean("showIp"));
-		this.settings.add(latency = new SettingBoolean("latency"));
 		Ticker.SLOW.register(this);
 	}
-	
-	public void update() {
-		if(MC.getCurrentServerData() != null) {
-			//mc.mcProfiler.startSection("Ping");
-			new PingService(MC.getCurrentServerData()).run();
-			//mc.mcProfiler.endSection();
-		}
+
+	public Connection() {
+		super("connection");
+
+		settings.add(new Legend("misc"));
+		settings.add(playerCount);
+		settings.add(showIp);
+		settings.add(latency);
 	}
-	
+
 	@Override
-	public void render(RenderGameOverlayEvent event, StringManager stringManager, LayoutManager layoutManager) {
-		if(MC.getCurrentServerData() != null) {
-			lastPing = MC.getCurrentServerData().pingToServer;
+	public void tick() {
+		if(executor != null) {
+			executor.submit(new Pinger(MC.getCurrentServerData()));
 		}
-		super.render(event, stringManager, layoutManager);
-		
-		/*if(posMode.index == 0) {
-			if(playerCount.value) stringManager.add(conn, pos.value);
-			if(showIp.value) stringManager.add(ip.equals("localServer") ? FormatUtil.translatePre("strings.localServer") : FormatUtil.translatePre("strings.ip", ip), pos.value);
-			if(latency.value) stringManager.add(lastPing + "ms", pos.value);
-		} else {
-			ArrayList<String> toRender = new ArrayList<String>();
-			if(playerCount.value) toRender.add(conn);
-			if(showIp.value) toRender.add(ip.equals("localServer") ? FormatUtil.translatePre("strings.localServer") : FormatUtil.translatePre("strings.ip", ip));
-			if(latency.value) toRender.add(lastPing + "ms");
-			
-			this.bounds = RenderUtil.renderStrings(mc.fontRendererObj, toRender, pos2.x, pos2.y, RenderUtil.colorRGB(255, 255, 255), Position.TOP_LEFT);
-		}*/
 	}
-	
+
 	@SubscribeEvent
-	public void networkAction(ClientConnectedToServerEvent e) {
-		if(!e.isLocal()) {
-			ip = e.getManager().getRemoteAddress().toString();
+	public void onConnect(ClientConnectedToServerEvent event) {
+		if(!event.isLocal()) {
+			executor = Executors.newSingleThreadExecutor();
+			ip = event.getManager().getRemoteAddress().toString();
 		} else {
 			ip = "localServer";
 		}
 	}
 
-	@Override
-	public boolean shouldProfile() {
-		return posMode.index == 1 && (playerCount.value || showIp.value || latency.value);
+	@SubscribeEvent
+	public void onDisconnect(ClientDisconnectionFromServerEvent event) {
+		if(executor != null) {
+			executor.shutdown();
+			executor = null;
+		}
 	}
 
 	@Override
 	protected String[] getText() {
 		ArrayList<String> toRender = new ArrayList<String>();
-		
-		if(playerCount.value) {
+
+		if(playerCount.get()) {
 			int players = MC.getConnection().getPlayerInfoMap().size();
 			String conn = I18n.format(players != 1 ? "betterHud.strings.players" : "betterHud.strings.player", players);
 			toRender.add(conn);
 		}
-		if(showIp.value) toRender.add(I18n.format(ip.equals("localServer") ? "betterHud.strings.localServer" : "betterHud.strings.ip", ip));
-		if(latency.value) toRender.add(I18n.format("betterHud.strings.ping", lastPing));
+		if(showIp.get()) toRender.add(I18n.format(ip.equals("localServer") ? "betterHud.strings.localServer" : "betterHud.strings.ip", ip));
+		if(latency.get() && MC.getCurrentServerData() != null) {
+			toRender.add(I18n.format("betterHud.strings.ping", MC.getCurrentServerData().pingToServer));
+		}
 		return toRender.toArray(new String[toRender.size()]);
 	}
 }

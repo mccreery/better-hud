@@ -59,7 +59,7 @@ public class BreedInfoNotifier {
 					// TODO find a less naive way of sending this info to players
 					if(player.getDistanceSq(entity) <= MAX_DIST_SQ) {
 						MessageBreeding msg = new MessageBreeding(entity.getEntityId(), love);
-						BetterHud.netWrapper.sendTo(msg, (EntityPlayerMP) player);
+						BetterHud.NET_WRAPPER.sendTo(msg, (EntityPlayerMP) player);
 					}
 				}
 			}

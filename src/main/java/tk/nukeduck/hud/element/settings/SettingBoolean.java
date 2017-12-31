@@ -2,59 +2,67 @@ package tk.nukeduck.hud.element.settings;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
 import tk.nukeduck.hud.gui.GuiElementSettings;
+import tk.nukeduck.hud.gui.GuiToggleButton;
+import tk.nukeduck.hud.util.Bounds;
+import tk.nukeduck.hud.util.Direction;
 
-public class SettingBoolean extends Setting {
-	protected GuiButton toggler;
-	
+public class SettingBoolean extends SettingAlignable {
+	protected GuiToggleButton toggler;
+	protected boolean value;
+
 	public SettingBoolean(String name) {
-		super(name);
+		this(name, Direction.CENTER);
 	}
-	
-	public boolean value;
-	
-	public boolean toggle() {
-		set(!get());
-		return get();
+
+	public SettingBoolean(String name, Direction alignment) {
+		super(name, alignment);
 	}
-	public void set(boolean bool) {value = bool;}
+
 	public boolean get() {return value;}
-	
+	public void set(boolean value) {this.value = value;}
+
 	@Override
-	public Gui[] getGuiParts(int width, int y) {
-		toggler = new GuiButton(0, width / 2 - 100, y, I18n.format("betterHud.menu.settingButton", this.getLocalizedName(), I18n.format(this.get() ? "options.on" : "options.off")));
-		return new Gui[] {toggler};
+	public void getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Bounds bounds) {
+		toggler = new GuiToggleButton(0, bounds.x(), bounds.y(), bounds.width(), bounds.height(), getUnlocalizedName(), true) {
+			@Override
+			public boolean get() {
+				return SettingBoolean.this.get();
+			}
+
+			@Override
+			public void set(boolean value) {
+				SettingBoolean.this.set(value);
+			}
+		};
+		parts.add(toggler);
 	}
-	
+
 	@Override
 	public void actionPerformed(GuiElementSettings gui, GuiButton button) {
-		toggle();
-		button.displayString = I18n.format("betterHud.menu.settingButton", this.getLocalizedName(), I18n.format(this.get() ? "options.on" : "options.off"));
+		toggler.toggle();
 	}
-	
+
 	@Override
 	public void keyTyped(char typedChar, int keyCode) throws IOException {}
-	
+
 	@Override
-	public void render(GuiScreen gui, int yScroll) {}
-	
-	@Override
-	public String toString() {
-		return String.valueOf(get());
+	public String save() {
+		return String.valueOf(value);
 	}
+
 	@Override
-	public void fromString(String val) {
-		if(val.equalsIgnoreCase("true") || val.equalsIgnoreCase("false")) {
-			this.set(Boolean.parseBoolean(val));
-		}
+	public void load(String save) {
+		value = Boolean.parseBoolean(save);
 	}
+
 	@Override
 	public void otherAction(Collection<Setting> settings) {
-		toggler.enabled = this.getEnabled();
+		toggler.enabled = enabled();
 	}
 }

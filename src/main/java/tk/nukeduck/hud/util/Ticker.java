@@ -7,7 +7,14 @@ import tk.nukeduck.hud.element.HudElement;
 /** Ticks using rollover counters
  * @see HudElement#update() */
 public enum Ticker {
-	FASTER(1), FAST(20), MEDIUM(5), SLOW(2);
+	/** Called every game tick */
+	FASTER(1),
+	/** Called every second */
+	FAST(20),
+	/** Called every 5 seconds */
+	MEDIUM(5),
+	/** Called every 10 seconds */
+	SLOW(2);
 
 	private Ticker next;
 	static {
@@ -17,7 +24,7 @@ public enum Ticker {
 	}
 
 	/** A list of elements which are registered to update at this speed. */
-	private ArrayList<HudElement> elements = new ArrayList<HudElement>();
+	private ArrayList<Tickable> elements = new ArrayList<Tickable>();
 
 	/** The number of ticks from the previous ticker until this one ticks */
 	public final int ticks;
@@ -27,18 +34,22 @@ public enum Ticker {
 		this.ticks = ticks;
 	}
 
-	public void register(HudElement element) {
+	public void register(Tickable element) {
 		elements.add(element);
 	}
 
 	public void tick() {
 		if(++counter >= ticks) {
-			for(HudElement element : elements) {
-				element.update();
+			for(Tickable element : elements) {
+				element.tick();
 			}
 
 			counter = 0;
 			if(next != null) next.tick();
 		}
+	}
+
+	public static interface Tickable {
+		public void tick();
 	}
 }

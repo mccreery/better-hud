@@ -8,7 +8,7 @@ import tk.nukeduck.hud.BetterHud;
 public class MessageNotifyClientHandler implements IMessageHandler<MessageNotifyClient, IMessage> {
 	@Override
 	public IMessage onMessage(MessageNotifyClient message, MessageContext ctx) {
-		BetterHud.serverStatus.notifyPresence();
+		BetterHud.proxy.notifyServer(true);
 		return null;
 	}
 }

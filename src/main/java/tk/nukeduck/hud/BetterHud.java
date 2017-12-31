@@ -1,5 +1,7 @@
 package tk.nukeduck.hud;
 
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 
 import org.apache.logging.log4j.LogManager;
@@ -24,7 +26,6 @@ import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import tk.nukeduck.hud.element.HudElement;
-import tk.nukeduck.hud.element.settings.SettingPosition.Position;
 import tk.nukeduck.hud.events.EntityInfoRenderer;
 import tk.nukeduck.hud.events.PickupNotifier;
 import tk.nukeduck.hud.gui.GuiHUDMenu;
@@ -34,15 +35,12 @@ import tk.nukeduck.hud.network.MessagePickup;
 import tk.nukeduck.hud.network.MessagePickupHandler;
 import tk.nukeduck.hud.network.ServerStatusHandler;
 import tk.nukeduck.hud.network.proxy.CommonProxy;
+import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.LayoutManager;
-import tk.nukeduck.hud.util.RenderUtil;
-import tk.nukeduck.hud.util.StringManager;
 import tk.nukeduck.hud.util.Ticker;
-import tk.nukeduck.hud.util.constants.Constants;
-import tk.nukeduck.hud.util.constants.Textures;
 
 @Mod(modid = BetterHud.MODID, name = "Better HUD", version = "1.3.9")
-public class BetterHud { // TODO thoroughly test GL
+public class BetterHud { // TODO thoroughly test GL, replace drawRect coords
 	public static final String MODID = "hud";
 	public static final Logger LOGGER = LogManager.getLogger(MODID);
 
@@ -50,14 +48,24 @@ public class BetterHud { // TODO thoroughly test GL
 	public static final GuiScreen MENU = new GuiHUDMenu();
 	public static final Random RANDOM = new Random();
 
+	public static final int SPACER = 5;
+
+	public static boolean isEnabled() {
+		return HudElement.GLOBAL.isEnabled();
+	}
+
+	public static final Map<HudElement, Bounds> boundsCache = new HashMap<HudElement, Bounds>();
+
+	// TODO allow reordering of elements to render some closer to top
+
 	@SidedProxy(clientSide="tk.nukeduck.hud.network.proxy.ClientProxy", serverSide="tk.nukeduck.hud.network.proxy.CommonProxy")
 	public static CommonProxy proxy;
 
-	public static final SimpleNetworkWrapper netWrapper = NetworkRegistry.INSTANCE.newSimpleChannel(BetterHud.MODID);
+	public static final SimpleNetworkWrapper NET_WRAPPER = NetworkRegistry.INSTANCE.newSimpleChannel(BetterHud.MODID);
 
 	private static int packetId = 0;
 	public static final <REQ extends IMessage, REPLY extends IMessage> void registerMessage(Class<? extends IMessageHandler<REQ, REPLY>> handler, Class<REQ> message, Side side) {
-		netWrapper.registerMessage(handler, message, packetId++, side);
+		NET_WRAPPER.registerMessage(handler, message, packetId++, side);
 	}
 
 	public static EntityInfoRenderer entityInfoRenderer;
@@ -72,7 +80,6 @@ public class BetterHud { // TODO thoroughly test GL
 		//registerMessage(MessageBreedingHandler.class, MessageBreeding.class, Side.CLIENT);
 
 		BetterHud.proxy.init();
-		Textures.init();
 		BetterHud.proxy.initElements();
 
 		MinecraftForge.EVENT_BUS.register(serverStatus = new ServerStatusHandler());
@@ -83,17 +90,17 @@ public class BetterHud { // TODO thoroughly test GL
 
 		BetterHud.proxy.initKeys();
 		BetterHud.proxy.loadDefaults();
-		BetterHud.proxy.loadSettings();
+		//BetterHud.proxy.loadSettings();
 	}
 
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void onRenderTick(RenderGameOverlayEvent event) {
-		if(!proxy.elements.globalSettings.enabled) return;
-		
+		if(!isEnabled()) return;
+
 		// Special case
 		if(event.isCancelable()) {
-			if(proxy.elements.potionBar.disableDefault.value && event.getType() == ElementType.POTION_ICONS) {
+			if(HudElement.POTION_BAR.disableDefault() && event.getType() == ElementType.POTION_ICONS) {
 				event.setCanceled(true);
 			}
 			return;
@@ -115,21 +122,18 @@ public class BetterHud { // TODO thoroughly test GL
 			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 			// TODO static?
-			LayoutManager layoutManager = new LayoutManager();
-			StringManager stringManager = new StringManager();
+			LayoutManager layoutManager = new LayoutManager(event.getResolution());
+			//StringManager stringManager = new StringManager();
 
-			for(HudElement element : proxy.elements.elements) {
-				if(element.shouldRender()) {
-					boolean profile = element.shouldProfile();
-					if(profile) MC.mcProfiler.startSection(element.name);
-
-					element.render(event, stringManager, layoutManager);
-
-					if(profile) MC.mcProfiler.endSection();
+			for(HudElement element : HudElement.ELEMENTS) {
+				if(element.isEnabled() && element.shouldRender()) {
+					MC.mcProfiler.startSection(element.name);
+					boundsCache.put(element, element.render(event, layoutManager));
+					MC.mcProfiler.endSection();
 				}
 			}
 
-			MC.mcProfiler.startSection("drawStrings");
+			//MC.mcProfiler.startSection("drawStrings");
 			/*for(Position p : new Position[] {Position.TOP_LEFT, Position.TOP_RIGHT, Position.BOTTOM_LEFT, Position.BOTTOM_RIGHT}) {
 				int x = p == Position.TOP_LEFT || p == Position.BOTTOM_LEFT ? Constants.SPACER : resolution.getScaledWidth() - Constants.SPACER;
 				int y = layoutManager.get(p);
@@ -138,13 +142,13 @@ public class BetterHud { // TODO thoroughly test GL
 				RenderUtil.renderStrings(mc.fontRendererObj, stringManager.get(p), x, y, p);
 			}*/
 
-			int right = event.getResolution().getScaledWidth() - Constants.SPACER;
-			RenderUtil.renderStrings(MC.fontRenderer, stringManager.get(Position.TOP_LEFT), Constants.SPACER, layoutManager.get(Position.TOP_LEFT), Position.TOP_LEFT);
-			RenderUtil.renderStrings(MC.fontRenderer, stringManager.get(Position.TOP_RIGHT), right, layoutManager.get(Position.TOP_RIGHT), Position.TOP_RIGHT);
-			RenderUtil.renderStrings(MC.fontRenderer, stringManager.get(Position.BOTTOM_LEFT), Constants.SPACER, event.getResolution().getScaledHeight() - layoutManager.get(Position.BOTTOM_LEFT), Position.BOTTOM_LEFT);
-			RenderUtil.renderStrings(MC.fontRenderer, stringManager.get(Position.BOTTOM_RIGHT), right, event.getResolution().getScaledHeight() - layoutManager.get(Position.BOTTOM_RIGHT), Position.BOTTOM_RIGHT);
+			/*int right = event.getResolution().getScaledWidth() - Constants.SPACER;
+			RenderUtil.renderStrings(MC.fontRenderer, stringManager.get(Direction.NORTH_WEST), Constants.SPACER, layoutManager.get(Direction.NORTH_WEST), Direction.NORTH_WEST);
+			RenderUtil.renderStrings(MC.fontRenderer, stringManager.get(Direction.NORTH_EAST), right, layoutManager.get(Direction.NORTH_EAST), Direction.NORTH_EAST);
+			RenderUtil.renderStrings(MC.fontRenderer, stringManager.get(Direction.SOUTH_WEST), Constants.SPACER, event.getResolution().getScaledHeight() - layoutManager.get(Direction.SOUTH_WEST), Direction.SOUTH_WEST);
+			RenderUtil.renderStrings(MC.fontRenderer, stringManager.get(Direction.SOUTH_EAST), right, event.getResolution().getScaledHeight() - layoutManager.get(Direction.SOUTH_EAST), Direction.SOUTH_EAST);*/
 
-			MC.mcProfiler.endSection();
+			//MC.mcProfiler.endSection();
 			GL11.glPopMatrix();
 			// glPopAttrib();
 			MC.mcProfiler.endSection();
@@ -159,15 +163,16 @@ public class BetterHud { // TODO thoroughly test GL
 	@SubscribeEvent
 	@SideOnly(Side.CLIENT) // GuiScreen doesn't exist on server side
 	public void clientTick(ClientTickEvent e) {
-		if(proxy.elements.globalSettings.enabled) {
+		if(isEnabled()) {
 			Ticker.FASTER.tick();
 		}
 
+		// TODO move to key event
 		if(MC != null && MC.player != null && MC.inGameHasFocus && MC.currentScreen == null) {
 			if(proxy.openMenu.isPressed()) {
 				MC.displayGuiScreen(MENU);
 			} else if(proxy.disable.isPressed()) {
-				proxy.elements.globalSettings.enabled = !proxy.elements.globalSettings.enabled;
+				HudElement.GLOBAL.toggleEnabled();
 			}
 		}
 	}

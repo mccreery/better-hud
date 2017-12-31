@@ -12,19 +12,24 @@ import java.util.HashMap;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
 
+import net.minecraftforge.fml.common.Loader;
 import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.element.HudElement;
+import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.Setting;
-import tk.nukeduck.hud.element.settings.Divider;
 import tk.nukeduck.hud.network.proxy.ClientProxy;
-import tk.nukeduck.hud.util.constants.Constants;
 
 public class SettingsIO {
+	public static final String FILE_SEPARATOR = System.getProperty("file.separator");
+	public static final String LINE_SEPARATOR = System.getProperty("line.separator");
+
+	public static final String CONFIG_PATH = Loader.instance().getConfigDir() + FILE_SEPARATOR + "hud.txt";
+
 	public static HashMap<String, String> generateKeyVal(ArrayList<String> lines) {
 		HashMap<String, String> keyVal = new HashMap<String, String>();
 		for(String line : lines) {
-			if(!line.contains(Constants.PROPERTY_SEPARATOR)) continue;
-			String[] parts = line.split(Constants.PROPERTY_SEPARATOR);
+			if(!line.contains(":")) continue;
+			String[] parts = line.split(":"); // TODO use split with limit
 			keyVal.put(parts[0], parts[1]);
 		}
 		return keyVal;
@@ -33,11 +38,11 @@ public class SettingsIO {
 	public static ArrayList<String> generateSrc(ArrayList<Setting> settings) {
 		ArrayList<String> lines = new ArrayList<String>();
 		for(Setting setting : settings) {
-			if(setting instanceof Divider || setting.getName() == "enabled") continue;
+			if(setting instanceof Legend || setting.name == "enabled") continue;
 			for(String comment : setting.comments) {
 				lines.add("\t# " + comment);
 			}
-			lines.add("\t" + setting.getName() + Constants.PROPERTY_SEPARATOR + setting.toString());
+			lines.add("\t" + setting.name + ":" + setting.toString());
 		}
 		return lines;
 	}
@@ -46,39 +51,38 @@ public class SettingsIO {
 	 * @param logger A {@link Logger} instance for info or error messages */
 	public static void saveSettings(Logger logger, ClientProxy proxy) {
 		try {
-			FileWriter writer = new FileWriter(Constants.CONFIG_PATH);
+			FileWriter writer = new FileWriter(CONFIG_PATH);
 			StringBuilder src = new StringBuilder();
 
 			String[] comments = {BetterHud.MODID, new Timestamp(new Date().getTime()).toString()};
 			for(String comment : comments) {
-				src.append("# ").append(comment).append(Constants.LINE_SEPARATOR);
+				src.append("# ").append(comment).append(LINE_SEPARATOR);
 			}
-			src.append(Constants.LINE_SEPARATOR);
+			src.append(LINE_SEPARATOR);
 
 			// Special case for global settings
-			src.append(proxy.elements.globalSettings.name).append(Constants.PROPERTY_SEPARATOR).append(Constants.LINE_SEPARATOR);
-			src.append("\tenabled").append(Constants.PROPERTY_SEPARATOR).append(String.valueOf(proxy.elements.globalSettings.enabled)).append(Constants.LINE_SEPARATOR);
-			ArrayList<String> global = generateSrc(proxy.elements.globalSettings.settings);
+			src.append(HudElement.GLOBAL.name).append(":").append(LINE_SEPARATOR);
+			src.append("\tenabled").append(":").append(String.valueOf(BetterHud.isEnabled())).append(LINE_SEPARATOR);
+			ArrayList<String> global = generateSrc(HudElement.GLOBAL.settings);
 			for(String line : global) {
-				src.append(line).append(Constants.LINE_SEPARATOR);
+				src.append(line).append(LINE_SEPARATOR);
 			}
 
-			for(HudElement element : proxy.elements.elements) {
-				src.append(element.name).append(Constants.PROPERTY_SEPARATOR).append(Constants.LINE_SEPARATOR);
-				src.append("\tenabled").append(Constants.PROPERTY_SEPARATOR).append(String.valueOf(element.enabled)).append(Constants.LINE_SEPARATOR);
+			for(HudElement element : HudElement.ELEMENTS) {
+				src.append(element.name).append(":").append(LINE_SEPARATOR);
+				src.append("\tenabled").append(":").append(String.valueOf(element.isEnabled())).append(LINE_SEPARATOR);
 				ArrayList<String> s = generateSrc(element.settings);
 				for(String line : s) {
-					src.append(line).append(Constants.LINE_SEPARATOR);
+					src.append(line).append(LINE_SEPARATOR);
 				}
 			}
 
 			writer.write(src.toString());
 			writer.close();
 
-			logger.log(Level.INFO, "Settings have been saved at " + Constants.CONFIG_PATH);
+			logger.log(Level.INFO, "Settings have been saved at " + CONFIG_PATH);
 		} catch(IOException e) {
-			logger.log(Level.WARN, "Failed to save settings to " + Constants.CONFIG_PATH + "." + Constants.LINE_SEPARATOR
-				+ e.getMessage());
+			logger.log(Level.WARN, "Failed to save settings to " + CONFIG_PATH + "." + LINE_SEPARATOR + e.getMessage());
 		}
 	}
 
@@ -86,13 +90,13 @@ public class SettingsIO {
 	 * @param logger A {@link Logger} instance for info or error messages */
 	public static void loadSettings(Logger logger, ClientProxy proxy) {
 		try {
-			logger.log(Level.INFO, "Loading HUD settings from " + Constants.CONFIG_PATH);
+			logger.log(Level.INFO, "Loading HUD settings from " + CONFIG_PATH);
 
 			String currentName = null;
 			ArrayList<String> valueLines = new ArrayList<String>();
 			HashMap<String, ArrayList<String>> namedSections = new HashMap<String, ArrayList<String>>();
 
-			FileReader reader = new FileReader(Constants.CONFIG_PATH);
+			FileReader reader = new FileReader(CONFIG_PATH);
 			BufferedReader buffer = new BufferedReader(reader);
 
 			String line;
@@ -109,16 +113,16 @@ public class SettingsIO {
 			}
 			namedSections.put(currentName, valueLines);
 
-			for(HudElement element : proxy.elements.elements) {
+			for(HudElement element : HudElement.ELEMENTS) {
 				if(!namedSections.containsKey(element.name)) continue;
 				try {
 					element.loadSettings(generateKeyVal(namedSections.get(element.name)));
 				} catch(Exception e) {}
 			}
 			// Special case for global settings
-			if(namedSections.containsKey(proxy.elements.globalSettings.name)) {
+			if(namedSections.containsKey(HudElement.GLOBAL.name)) {
 				try {
-					proxy.elements.globalSettings.loadSettings(generateKeyVal(namedSections.get(proxy.elements.globalSettings.name)));
+					HudElement.GLOBAL.loadSettings(generateKeyVal(namedSections.get(HudElement.GLOBAL.name)));
 				} catch(Exception e) {}
 			}
 
@@ -126,8 +130,8 @@ public class SettingsIO {
 			reader.close();
 		} catch(IOException e) {
 			saveSettings(logger, proxy);
-			logger.log(Level.WARN, "Failed to load settings from " + Constants.CONFIG_PATH
-				+ "." + Constants.LINE_SEPARATOR + e.getMessage() + Constants.LINE_SEPARATOR
+			logger.log(Level.WARN, "Failed to load settings from " + CONFIG_PATH
+				+ "." + LINE_SEPARATOR + e.getMessage() + LINE_SEPARATOR
 				+ "The default configuration was saved.");
 		}
 	}

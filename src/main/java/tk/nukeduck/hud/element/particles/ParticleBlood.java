@@ -14,7 +14,7 @@ public class ParticleBlood extends Particle {
 	float size;
 	int rotation;
 	int u, v;
-	
+
 	public ParticleBlood(int x, int y, float opacity, int rotation, float size, int u, int v) {
 		super(x, y);
 		this.opacity = opacity;
@@ -23,7 +23,7 @@ public class ParticleBlood extends Particle {
 		this.u = u;
 		this.v = v;
 	}
-	
+
 	public static ParticleBlood random(int width, int height) {
 		int x = RANDOM.nextInt(width);
 		int y = RANDOM.nextInt(height);
@@ -34,7 +34,7 @@ public class ParticleBlood extends Particle {
 		int v = RANDOM.nextInt(4);
 		return new ParticleBlood(x, y, opacity, rotation, size, u, v);
 	}
-	
+
 	@Override
 	public void render() {
 		glPushMatrix(); {

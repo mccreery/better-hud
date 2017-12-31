@@ -2,139 +2,119 @@ package tk.nukeduck.hud.element.settings;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 import tk.nukeduck.hud.gui.GuiElementSettings;
 import tk.nukeduck.hud.gui.GuiUpDownButton;
-import tk.nukeduck.hud.util.constants.Constants;
+import tk.nukeduck.hud.util.Point;
 
 public class SettingAbsolutePosition extends Setting {
 	public GuiTextField xBox, yBox;
 	public GuiButton pick;
 	private GuiButton xUp, xDown, yUp, yDown;
-	
-	public int x = 0;
-	public int y = 0;
-	
+
+	public Point position = new Point();
+	public Point cancelPosition;
+
 	public SettingAbsolutePosition(String name) {
 		super(name);
 	}
-	
+
 	@Override
-	public int getGuiHeight() {
-		return 42;
+	public int getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, int width, int y) {
+		parts.add(xBox = new GuiTextField(0, Minecraft.getMinecraft().fontRenderer, width / 2 - 106, y + 1, 80, 18));
+		xBox.setText(String.valueOf(position.x));
+		parts.add(yBox = new GuiTextField(0, Minecraft.getMinecraft().fontRenderer, width / 2 + 2, y + 1, 80, 18));
+		yBox.setText(String.valueOf(position.y));
+		parts.add(xUp = new GuiUpDownButton(0, width / 2 - 22, y, 0));
+		parts.add(xDown = new GuiUpDownButton(1, width / 2 - 22, y + 10, 1));
+		parts.add(yUp = new GuiUpDownButton(2, width / 2 + 86, y, 0));
+		parts.add(yDown = new GuiUpDownButton(3, width / 2 + 86, y + 10, 1));
+
+		parts.add(pick = new GuiButton(4, width / 2 - 75, y + 22, 150, 20, I18n.format("betterHud.menu.pick")));
+
+		return y + 42;
 	}
-	
-	@Override
-	public Gui[] getGuiParts(int width, int y) {
-		this.xBox = new GuiTextField(0, Minecraft.getMinecraft().fontRenderer, width / 2 - 106, y + 1, 80, 18);
-		xBox.setText(String.valueOf(this.x));
-		this.yBox = new GuiTextField(0, Minecraft.getMinecraft().fontRenderer, width / 2 + 2, y + 1, 80, 18);
-		yBox.setText(String.valueOf(this.y));
-		xUp = new GuiUpDownButton(0, width / 2 - 22, y, 0);
-		xDown = new GuiUpDownButton(1, width / 2 - 22, y + 10, 1);
-		yUp = new GuiUpDownButton(2, width / 2 + 86, y, 0);
-		yDown = new GuiUpDownButton(3, width / 2 + 86, y + 10, 1);
-		
-		pick = new GuiButton(4, width / 2 - 75, y + 22, 150, 20, I18n.format("betterHud.menu.pick"));
-		
-		return new Gui[] {xBox, xUp, xDown, yUp, yDown, yBox, pick};
-	}
-	
+
 	public boolean isPicking = false;
-	public int xRestore, yRestore;
-	
-	public void updateText() {updateText(x, y);}
-	public void updateText(int x, int y) {
-		xBox.setText(String.valueOf(x));
-		yBox.setText(String.valueOf(y));
+
+	public void updateText() {
+		xBox.setText(String.valueOf(position.x));
+		yBox.setText(String.valueOf(position.y));
 	}
-	
+
 	@Override
 	public void actionPerformed(GuiElementSettings gui, GuiButton button) {
 		switch(button.id) {
 			case 0:
-				xBox.setText(String.valueOf(++x));
+				xBox.setText(String.valueOf(++position.x));
 				break;
 			case 1:
-				xBox.setText(String.valueOf(--x));
+				xBox.setText(String.valueOf(--position.x));
 				break;
 			case 2:
-				yBox.setText(String.valueOf(++y));
+				yBox.setText(String.valueOf(++position.y));
 				break;
 			case 3:
-				yBox.setText(String.valueOf(--y));
+				yBox.setText(String.valueOf(--position.y));
 				break;
 			case 4:
-				isPicking = !isPicking;
-				if(isPicking) {
-					xRestore = x;
-					yRestore = y;
+				if(isPicking = !isPicking) {
+					cancelPosition = new Point(position);
 				} else {
-					x = xRestore;
-					y = yRestore;
+					position = cancelPosition;
 				}
-				
+
 				gui.currentPicking = isPicking ? this : null;
 				button.displayString = I18n.format(isPicking ? "betterHud.menu.picking" : "betterHud.menu.pick");
 				updateText();
 				break;
 		}
 	}
-	
+
 	@Override
 	public void keyTyped(char typedChar, int keyCode) throws IOException {
 		if(!pick.enabled) return;
-		
+
 		xUp.enabled = true;
 		xDown.enabled = true;
 		try {
-			this.x = Integer.parseInt(xBox.getText());
+			position.x = Integer.parseInt(xBox.getText());
 		} catch(NumberFormatException e) {
-			this.x = 0;
+			position.x = 0;
 			xUp.enabled = false;
 			xDown.enabled = false;
 		}
 		yUp.enabled = true;
 		yDown.enabled = true;
 		try {
-			this.y = Integer.parseInt(yBox.getText());
+			position.y = Integer.parseInt(yBox.getText());
 		} catch(NumberFormatException e) {
-			this.y = 0;
+			position.y = 0;
 			yUp.enabled = false;
 			yDown.enabled = false;
 		}
 	}
-	
+
 	@Override
-	public void render(GuiScreen gui, int yScroll) {}
-	
-	@Override
-	public String toString() {
-		return String.valueOf(this.x) + Constants.VALUE_SEPARATOR + String.valueOf(this.y);
+	public String save() {
+		return position.save();
 	}
-	
+
 	@Override
-	public void fromString(String val) {
-		if(val.contains(Constants.VALUE_SEPARATOR)) {
-			String[] xy = val.split(Constants.VALUE_SEPARATOR);
-			if(xy.length >= 2) {
-				try {
-					this.x = Integer.parseInt(xy[0]);
-					this.y = Integer.parseInt(xy[1]);
-				} catch(NumberFormatException e) {}
-			}
-		}
+	public void load(String val) {
+		position.load(val);
 	}
-	
+
 	@Override
 	public void otherAction(Collection<Setting> settings) {
-		boolean enabled = this.getEnabled();
+		boolean enabled = enabled();
 		xBox.setEnabled(enabled);
 		yBox.setEnabled(enabled);
 		pick.enabled = enabled;

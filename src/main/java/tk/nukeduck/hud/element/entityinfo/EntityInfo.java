@@ -1,31 +1,44 @@
 package tk.nukeduck.hud.element.entityinfo;
 
-import net.minecraft.client.Minecraft;
+import static org.lwjgl.opengl.GL11.glTranslatef;
+
+import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.element.settings.SettingSlider;
+import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.LayoutManager;
-import tk.nukeduck.hud.util.StringManager;
 
 public abstract class EntityInfo extends HudElement {
-	public SettingSlider distance;
-	
+	protected final SettingSlider distance = new SettingSlider("distance", 5, 200) {
+		@Override
+		public String getSliderText() {
+			return I18n.format("betterHud.menu.settingButton", this.getLocalizedName(), I18n.format("betterHud.strings.distanceShort", this.value));
+		}
+	};
+
+	public double getDistance() {
+		return distance.value;
+	}
+
+	@Override
+	public void loadDefaults() {
+		distance.value = 100;
+	}
+
 	protected EntityInfo(String name) {
 		super(name);
+		settings.add(distance);
 	}
-	
-	public void update() {}
-	public void render(RenderGameOverlayEvent event, StringManager stringManager, LayoutManager layoutManager) {}
-	public abstract void renderInfo(EntityLivingBase entity, Minecraft mc, float partialTicks);
-	
-	@Override
-	public boolean shouldRender() {
-		return false;
-	}
-	
-	@Override
-	public boolean shouldProfile() {
-		return false;
+
+	public abstract void renderInfo(EntityLivingBase entity, float partialTicks);
+
+	// Entity info isn't technically part of the HUD
+	@Override public Bounds render(RenderGameOverlayEvent event, LayoutManager manager) {return null;}
+	@Override public boolean shouldRender() {return false;}
+
+	public static void zIncrease() {
+		glTranslatef(0.0F, 0.0F, -0.001F);
 	}
 }

@@ -2,68 +2,67 @@ package tk.nukeduck.hud.element.settings;
 
 import java.io.IOException;
 import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.math.MathHelper;
 import tk.nukeduck.hud.gui.GuiElementSettings;
 import tk.nukeduck.hud.gui.GuiOptionSliderA;
-import tk.nukeduck.hud.util.FuncsUtil;
+import tk.nukeduck.hud.util.Bounds;
+import tk.nukeduck.hud.util.Direction;
 
-public class SettingSlider extends Setting {
-	double minValue = 0.0;
-	double maxValue = 1.0;
-	public double value = 0.0;
-	
-	public double accuracy = -1;
-	
-	public SettingSlider(String name, double minValue, double maxValue) {
-		super(name);
-		this.minValue = minValue;
-		this.maxValue = maxValue;
-		this.value = FuncsUtil.clamp(value, minValue, maxValue);
+public class SettingSlider extends SettingAlignable {
+	private final double min;
+	private final double max;
+	public final double accuracy;
+	public double value = 0;
+
+	public SettingSlider(String name, double min, double max) {
+		this(name, min, max, -1, Direction.CENTER);
 	}
-	
+	public SettingSlider(String name, double min, double max, double accuracy) {
+		this(name, min, max, accuracy, Direction.CENTER);
+	}
+	public SettingSlider(String name, double min, double max, double accuracy, Direction alignment) {
+		super(name, alignment);
+		this.min = min;
+		this.max = max;
+		this.accuracy = accuracy;
+		this.value = MathHelper.clamp(value, min, max);
+	}
+
 	public double normalize(double value) {
-		return (value - minValue) / (maxValue - minValue);
+		return (value - min) / (max - min);
 	}
-	
+
 	public double denormalize(double normalized) {
-		double toRound = normalized * (maxValue - minValue) + minValue;
-		return accuracy == -1 ? toRound : FuncsUtil.clamp(Math.round(toRound / accuracy) * accuracy, minValue, maxValue);
+		double toRound = normalized * (max - min) + min;
+		return accuracy == -1 ? toRound : MathHelper.clamp(Math.round(toRound / accuracy) * accuracy, min, max);
 	}
-	
+
 	public String getSliderText() {
-		return I18n.format("betterHud.menu.settingButton", this.getLocalizedName(), this.value);
+		return I18n.format("betterHud.menu.settingButton", this.getLocalizedName(), value);
 	}
-	
+
 	@Override
-	public Gui[] getGuiParts(int width, int y) {
-		return new Gui[] {new GuiOptionSliderA(0, width / 2 - 100, y, 200, 20, this)};
+	public void getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Bounds bounds) {
+		parts.add(new GuiOptionSliderA(0, bounds.x(), bounds.y(), bounds.width(), bounds.height(), this));
 	}
-	
+
+	@Override public void actionPerformed(GuiElementSettings gui, GuiButton button) {}
+	@Override public void keyTyped(char typedChar, int keyCode) throws IOException {}
+	@Override public void otherAction(Collection<Setting> settings) {}
+
 	@Override
-	public void actionPerformed(GuiElementSettings gui, GuiButton button) {}
-	
-	@Override
-	public void keyTyped(char typedChar, int keyCode) throws IOException {}
-	
-	@Override
-	public void otherAction(Collection<Setting> settings) {}
-	
-	@Override
-	public void render(GuiScreen gui, int yScroll) {}
-	
-	@Override
-	public String toString() {
+	public String save() {
 		return String.valueOf(value);
 	}
-	
+
 	@Override
-	public void fromString(String val) {
-		try {
-			this.value = FuncsUtil.clamp(Double.parseDouble(val), minValue, maxValue);
-		} catch(NumberFormatException e) {}
+	public void load(String val) {
+		value = MathHelper.clamp(Double.parseDouble(val), min, max);
 	}
 }

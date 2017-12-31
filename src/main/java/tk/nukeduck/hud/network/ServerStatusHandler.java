@@ -10,19 +10,11 @@ public class ServerStatusHandler {
 	@SubscribeEvent
 	public void onPlayerConnected(PlayerLoggedInEvent e) {
 		if(!(e.player instanceof EntityPlayerMP)) return;
-		BetterHud.netWrapper.sendTo(new MessageNotifyClient(), (EntityPlayerMP) e.player);
+		BetterHud.NET_WRAPPER.sendTo(new MessageNotifyClient(), (EntityPlayerMP) e.player);
 	}
 
 	@SubscribeEvent
 	public void onPlayerDisconnected(ClientDisconnectionFromServerEvent e) {
-		this.clearPresence();
-	}
-
-	public void notifyPresence() {
-		BetterHud.proxy.notifyPresence();
-	}
-
-	public void clearPresence() {
-		BetterHud.proxy.clearPresence();
+		BetterHud.proxy.notifyServer(false);
 	}
 }

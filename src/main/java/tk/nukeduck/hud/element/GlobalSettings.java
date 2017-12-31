@@ -2,32 +2,25 @@ package tk.nukeduck.hud.element;
 
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
+import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.LayoutManager;
-import tk.nukeduck.hud.util.StringManager;
 
 public class GlobalSettings extends HudElement {
 	public GlobalSettings() {
 		super("global");
-		this.settings.add(new SettingBoolean("enabled") {
-			@Override
-			public void set(boolean bool) {enabled = bool;}
-			@Override
-			public boolean get() {return enabled;}
+
+		settings.add(new SettingBoolean(null) {
+			@Override public void set(boolean bool) {setEnabled(bool);}
+			@Override public boolean get() {return isEnabled();}
 		});
 	}
 
 	// Just a dummy element, never render
-	@Override
-	public boolean shouldRender() {return false;}
-	@Override
-	public boolean shouldProfile() {return false;}
-	@Override
-	public void update() {}
-	@Override
-	public void render(RenderGameOverlayEvent event, StringManager stringManager, LayoutManager layoutManager) {}
+	@Override public boolean shouldRender() {return false;}
+	@Override public Bounds render(RenderGameOverlayEvent event, LayoutManager manager) {return null;}
 
 	@Override
 	public void loadDefaults() {
-		this.enabled = true;
+		setEnabled(true);
 	}
 }

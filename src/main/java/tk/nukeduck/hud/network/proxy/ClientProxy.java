@@ -6,7 +6,7 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import tk.nukeduck.hud.BetterHud;
-import tk.nukeduck.hud.element.HudElements;
+import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.events.EntityInfoRenderer;
 import tk.nukeduck.hud.util.SettingsIO;
 
@@ -24,14 +24,16 @@ public class ClientProxy extends CommonProxy {
 		ClientRegistry.registerKeyBinding(disable);
 	}
 
+	@Deprecated
 	@Override
 	public void initElements() {
-		this.elements = new HudElements();
+		HudElement.initAll();
 	}
 
+	@Deprecated
 	@Override
 	public void loadDefaults() {
-		this.elements.loadDefaults();
+		HudElement.reloadAll();
 	}
 
 	@Override
@@ -40,14 +42,7 @@ public class ClientProxy extends CommonProxy {
 	}
 
 	@Override
-	public void notifyPresence() {
-		//this.elements.breedIndicator.unsupported = false;
-		this.elements.pickup.unsupported = false;
-	}
-
-	@Override
-	public void clearPresence() {
-		//this.elements.breedIndicator.unsupported = true;
-		this.elements.pickup.unsupported = true;
+	public void notifyServer(boolean supported) {
+		HudElement.PICKUP.unsupported = !supported;
 	}
 }

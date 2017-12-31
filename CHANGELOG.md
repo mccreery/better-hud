@@ -1,5 +1,15 @@
 # Changelog
 
+## [Unreleased]
+### Changed
+- Code refactoring, easier to work with
+- Much smaller code
+- Multiple choice settings now save their names rather than indices
+### Removed
+- Text mode for sign viewer
+### Fixed
+- Absolute positions are correctly anchored
+
 ## [1.3.9] - 2017-07-06
 ### Added
 - Global on/off keybinding

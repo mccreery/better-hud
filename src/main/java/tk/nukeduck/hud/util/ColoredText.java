@@ -1,5 +1,6 @@
 package tk.nukeduck.hud.util;
 
+@Deprecated
 public class ColoredText {
 	public String text;
 	public int color;

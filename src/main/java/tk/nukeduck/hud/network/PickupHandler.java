@@ -7,10 +7,12 @@ import java.util.Map.Entry;
 import java.util.concurrent.ConcurrentHashMap;
 
 import net.minecraft.item.ItemStack;
-import tk.nukeduck.hud.BetterHud;
-import tk.nukeduck.hud.util.FuncsUtil;
+import tk.nukeduck.hud.element.HudElement;
+import tk.nukeduck.hud.events.PickupNotifier;
+import tk.nukeduck.hud.util.Ticker.Tickable;
 
-public class PickupHandler {
+public class PickupHandler implements Tickable {
+	// TODO replace map with better data structure
 	public ConcurrentHashMap<ItemStack, Float> pickedUp = new ConcurrentHashMap<ItemStack, Float>();
 
 	public void pickupItem(ItemStack it) {
@@ -25,19 +27,20 @@ public class PickupHandler {
 		}
 	}
 
-	public ItemStack existingItem(ItemStack item) {
-		for(ItemStack stack : pickedUp.keySet()) {
-			if(FuncsUtil.isEqual(stack, item)) {
+	public ItemStack existingItem(ItemStack stack) {
+		for(ItemStack existing : pickedUp.keySet()) {
+			if(PickupNotifier.stackEqualExact(stack, existing)) {
 				return stack;
 			}
 		}
 		return null;
 	}
 
-	public void update() {
+	@Override
+	public void tick() {
 		if(!MC.isGamePaused()) {
 			Iterator<Entry<ItemStack, Float>> it2 = pickedUp.entrySet().iterator();
-			float delta = 0.0025F + (float)BetterHud.proxy.elements.pickup.fadeSpeed.value * 0.0225F;
+			float delta = 0.0025F + (float)HudElement.PICKUP.fadeSpeed.value * 0.0225F;
 
 			while(it2.hasNext()) {
 				Entry<ItemStack, Float> entry = it2.next();

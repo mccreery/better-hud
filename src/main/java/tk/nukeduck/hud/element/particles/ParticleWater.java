@@ -21,7 +21,7 @@ public class ParticleWater extends Particle {
 		this.u = u;
 		this.speed = speed;
 	}
-	
+
 	public static ParticleWater random(int width, int height) {
 		int x = RANDOM.nextInt(width);
 		int y = RANDOM.nextInt(height);
@@ -31,7 +31,7 @@ public class ParticleWater extends Particle {
 		float speed = 100f + RANDOM.nextFloat() * 250f;
 		return new ParticleWater(x, y, opacity, size, u, speed);
 	}
-	
+
 	@Override
 	public void render() {
 		glPushMatrix(); {

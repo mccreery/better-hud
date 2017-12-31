@@ -1,32 +1,58 @@
 package tk.nukeduck.hud.util;
 
-public class Point {
-	private int x, y;
-	
+import net.minecraft.client.gui.ScaledResolution;
+
+public class Point implements ISaveLoad {
+	public static final Point ZERO = new Point(0, 0);
+
+	public int x, y;
+
+	public Point() {
+		this(0, 0);
+	}
+
 	public Point(int x, int y) {
 		this.x = x;
 		this.y = y;
 	}
-	
-	public int getX() {
-		return this.x;
+
+	public Point(Point point) {
+		this(point.x, point.y);
 	}
-	public void setX(int x) {
-		this.x = x;
+
+	public Point(ScaledResolution resolution) {
+		this(resolution.getScaledWidth(), resolution.getScaledHeight());
 	}
-	
-	public int getY() {
-		return this.y;
+
+	public Point add(Point point) {
+		return new Point(x + point.x, y + point.y);
 	}
-	public void setY(int y) {
-		this.y = y;
+
+	/*public Point add(int x, int y) {
+		return new Point(this.x + x, this.y + y);
+	}*/
+
+	public Point sub(Point point) {
+		return new Point(x - point.x, y - point.y);
 	}
-	
-	public Point clone() {
-		return new Point(this.x, this.y);
+
+	/*public Point sub(int x, int y) {
+		return new Point(this.x - x, this.y - y);
+	}*/
+
+	public Point scale(float x, float y) {
+		return new Point((int)(this.x * x), (int)(this.y * y));
 	}
-	
-	public static Point add(Point p1, Point p2) {
-		return new Point(p1.getX() + p2.getX(), p1.getY() + p2.getY());
+
+	@Override
+	public String save() {
+		return x + "," + y;
+	}
+
+	@Override
+	public void load(String save) {
+		String[] coordinates = save.split(",");
+		x = Integer.parseInt(coordinates[0]);
+		y = Integer.parseInt(coordinates[1]);
 	}
 }

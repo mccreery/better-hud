@@ -1,52 +1,60 @@
 package tk.nukeduck.hud.util;
 
-import tk.nukeduck.hud.element.settings.SettingPosition.Position;
+import java.util.HashMap;
+import java.util.Map;
+
+import net.minecraft.client.gui.ScaledResolution;
 
 public class LayoutManager {
-	private int topLeft;
-	private int topRight;
-	private int bottomLeft;
-	private int bottomRight;
-	
 	public static final int SPACER = 5;
-	
-	public LayoutManager() {
-		this.topLeft = SPACER;
-		this.topRight = SPACER;
-		this.bottomLeft = SPACER;
-		this.bottomRight = SPACER;
+
+	private final Map<Direction, Integer> corners = new HashMap<Direction, Integer>();
+	private final Point resolution;
+	private final Bounds bounds;
+
+	public LayoutManager(ScaledResolution resolution) {
+		this.resolution = new Point(resolution);
+		bounds = new Bounds(this.resolution).inset(SPACER);
 	}
-	
-	public void add(int value, Position corner) {
-		switch(corner) {
-			case TOP_LEFT:
-				topLeft += value + SPACER;
-				break;
-			case TOP_RIGHT:
-				topRight += value + SPACER;
-				break;
-			case BOTTOM_LEFT:
-				bottomLeft += value + SPACER;
-				break;
-			case BOTTOM_RIGHT:
-				bottomRight += value + SPACER;
-				break;
-			default:
-		}
+
+	public Point getResolution() {
+		return resolution;
 	}
-	
-	public int get(Position corner) {
-		switch(corner) {
-			case TOP_LEFT:
-				return topLeft;
-			case TOP_RIGHT:
-				return topRight;
-			case BOTTOM_LEFT:
-				return bottomLeft;
-			case BOTTOM_RIGHT:
-				return bottomRight;
-			default:
-				return 0;
+
+	public void reset() {
+		corners.clear();
+	}
+
+	/** @param size The generated bounds are guaranteed to be this size
+	 * @return The bounds to draw an element in {@code corner} of the screen */
+	@Deprecated
+	public Bounds getBounds(Direction corner, Point size) {
+		return position(corner, new Bounds(size));
+	}
+
+	public <T extends Bounds> T position(Direction corner, T bounds) {
+		if(corner.in(Direction.HORIZONTAL)) {
+			throw new IllegalArgumentException("Vertical centering is not allowed");
 		}
+		corner.anchor(bounds, this.bounds);
+
+		int y = bounds.y();
+		if(corner.in(Direction.TOP)) {
+			y += get(corner);
+		} else {
+			y -= get(corner);
+		}
+		bounds.y(y);
+		add(corner, bounds.height() + SPACER);
+
+		return bounds;
+	}
+
+	private int get(Direction corner) {
+		return corners.containsKey(corner) ? corners.get(corner) : 0;
+	}
+
+	private void add(Direction corner, int value) {
+		corners.put(corner, get(corner) + value);
 	}
 }
