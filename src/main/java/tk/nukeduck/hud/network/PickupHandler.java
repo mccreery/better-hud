@@ -9,7 +9,7 @@ import java.util.concurrent.ConcurrentHashMap;
 import net.minecraft.item.ItemStack;
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.events.PickupNotifier;
-import tk.nukeduck.hud.util.Ticker.Tickable;
+import tk.nukeduck.hud.util.Tickable;
 
 public class PickupHandler implements Tickable {
 	// TODO replace map with better data structure

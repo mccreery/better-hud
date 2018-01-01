@@ -9,7 +9,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
-import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.FormatUtil;
@@ -20,15 +19,7 @@ import tk.nukeduck.hud.util.RenderUtil;
 public class Clock extends TextElement {
 	private static final ItemStack BED = new ItemStack(Items.BED, 1);
 
-	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS);
 	private final SettingBoolean twentyFour = new SettingBoolean("24hr");
-
-	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-		position.load(Direction.NORTH_EAST);
-		twentyFour.set(false);
-	}
 
 	public Clock() {
 		super("clock", Direction.CORNERS);
@@ -36,6 +27,13 @@ public class Clock extends TextElement {
 
 		settings.add(new Legend("misc"));
 		settings.add(twentyFour);
+	}
+
+	@Override
+	public void loadDefaults() {
+		super.loadDefaults();
+		position.load(Direction.NORTH_EAST);
+		twentyFour.set(false);
 	}
 
 	@Override

@@ -12,39 +12,52 @@ import net.minecraft.client.resources.I18n;
 import tk.nukeduck.hud.gui.GuiElementSettings;
 import tk.nukeduck.hud.util.ISaveLoad;
 
-public abstract class Setting extends Gui implements ISaveLoad {
-	/** Returns the Gui objects which should be added to the settings screen for this setting.
-	 * @param width The current screen width, in scaled pixels.
-	 * @param y The current Y position of the space below the previous setting on the screen.
-	 * @return The new Y position */
+public abstract class Setting implements ISaveLoad {
+	protected final List<Setting> children = new ArrayList<Setting>();
+
+	/** Populates {@code parts} with {@link Gui}s which should be added to the settings screen.<br>
+	 * Also populates {@code callbacks} with {@link #keyTyped(char, int)} and {@link #actionPerformed(GuiElementSettings, GuiButton)} callbacks.
+	 *
+	 * <p>The minimum implementation (in {@link Setting#getGuiParts(List, Map, int, int)})
+	 * populates {@code parts} and {@code callbacks} with those of the element's children
+	 *
+	 * @param width The screen width
+	 * @param y The topmost Y coordinate of {@code Gui}s in this setting
+	 * @return The bottommost Y coordinate of {@code Gui}s in this setting */
 	public int getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, int width, int y) {
 		return getGuiParts(parts, callbacks, width, y, children);
 	}
 
+	/** Populates {@code parts} and {@code callbacks} by calling
+	 * {@link #getGuiParts(List, Map, int, int)} on the given {@code settings},
+	 * and maintaining {@code y} between them
+	 *
+	 * @return The bottommost Y coordinate of all {@code Gui}s across all {@code settings}
+	 * @see #getGuiParts(List, Map, int, int) */
 	public static int getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, int width, int y, List<Setting> settings) {
 		if(!settings.isEmpty()) {
 			for(Setting setting : settings) {
-				int yNext = setting.getGuiParts(parts, callbacks, width, y);
-				if(yNext != -1) y = yNext + SPACER;
+				int bottom = setting.getGuiParts(parts, callbacks, width, y); 
+				if(bottom != -1) y = bottom;
 			}
-			y -= SPACER;
 		}
 		return y;
 	}
 
 	private Setting parent = null;
-	private final List<Setting> children = new ArrayList<Setting>();
 
-	protected void addChild(Setting child) {
-		children.add(child);
-		child.parent = this;
+	public void add(Setting element) {
+		children.add(element);
+		element.parent = this;
 	}
 
-	/** Renders extra parts of this GUI TODO consider drawing GUI parts here */
+	public boolean isEmpty() {
+		return children.isEmpty();
+	}
+
+	/** Renders extra parts of this GUI */
 	public void draw() {}
 
-	protected static final int SPACER = 5;
-	
 	/** Passed on from the element's setting screen when a GuiButton for this setting is pressed.
 	 * @param button The GuiButton that was pressed. */
 	public abstract void actionPerformed(GuiElementSettings gui, GuiButton button);

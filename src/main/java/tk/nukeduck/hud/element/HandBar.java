@@ -34,7 +34,7 @@ public class HandBar extends HudElement {
 
 	@Override
 	public void loadDefaults() {
-		this.setEnabled(true);
+		this.settings.set(true);
 		position.load(Direction.SOUTH);
 
 		showName.set(true);
@@ -52,6 +52,7 @@ public class HandBar extends HudElement {
 	public HandBar() {
 		super("handBar");
 
+		// TODO move sets
 		settings.add(position);
 		settings.add(new Legend("misc"));
 		settings.add(showItem = new SettingBoolean("showItem"));

@@ -21,10 +21,6 @@ public class LayoutManager {
 		return resolution;
 	}
 
-	public void reset() {
-		corners.clear();
-	}
-
 	/** @param size The generated bounds are guaranteed to be this size
 	 * @return The bounds to draw an element in {@code corner} of the screen */
 	@Deprecated

@@ -6,6 +6,7 @@ import org.lwjgl.opengl.GL11;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.enchantment.Enchantment;
@@ -23,6 +24,7 @@ import tk.nukeduck.hud.util.RenderUtil;
 public class MobInfo extends EntityInfo {
 	private final SettingBoolean players = new SettingBoolean("players");
 	private final SettingBoolean mobs = new SettingBoolean("mobs");
+
 	private final SettingSlider compress = new SettingSlider("compress", 0, 200, 20) {
 		@Override
 		public String getSliderText() {
@@ -34,16 +36,6 @@ public class MobInfo extends EntityInfo {
 		}
 	};
 
-	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-		this.setEnabled(true);
-		players.set(true);
-		mobs.set(true);
-		distance.value = 100;
-		compress.value = 40;
-	}
-
 	public MobInfo() {
 		super("mobInfo");
 
@@ -52,83 +44,91 @@ public class MobInfo extends EntityInfo {
 		settings.add(compress);
 	}
 
-	private static ResourceLocation icons = new ResourceLocation("textures/gui/icons.png");
-	
-	public void renderInfo(EntityLivingBase entity, float partialTicks) {
-		if(isEnabled()) {
-			EntityPlayer player = MC.player;
-			if(player == null) return; // TODO is this necessary
-			
-			boolean isPlayer = entity instanceof EntityPlayer;
-			if((isPlayer && !players.get()) || (!isPlayer && !mobs.get())) {
-				return;
-			}
-			
-			GL11.glPushMatrix(); {
-				Tessellator t = Tessellator.getInstance();
-				RenderUtil.billBoard(entity, player, partialTicks);
-				
-				// seems irrelevant
-				/*if(!(entity.getHeldItemMainhand() != null && entity.getHeldItemMainhand().isItemEnchanted())) {
-					GL11.glTranslatef(0, 0.2F, 0);
-				}*/
-				
-				String text = entity.getName() + " (" + (int) entity.getHealth() + "/" + (int) entity.getMaxHealth() + ")";
-				float perLine = 10;
-				
-				int width = Math.max(8 * Math.min(10, (int) entity.getMaxHealth() / 2) + 1 + (isPlayer ? 5 + 8 * 10 : 0), MC.fontRenderer.getStringWidth(text)) + 10;
-				int height;
-				if(compress.value != 0 && entity.getHealth() >= compress.value) {
-					height = 2 * MC.fontRenderer.FONT_HEIGHT + 12 + ((int)entity.getHealth() % 20 != 0 ? 9 : 0);
-				} else {
-					height = MC.fontRenderer.FONT_HEIGHT + 12;
-					height += 9 * (compress.value != 0 && entity.getMaxHealth() > compress.value ? compress.value / 20 : (int) Math.ceil(Math.ceil(entity.getMaxHealth() / 2) / perLine));
-				}
-				
-				float scale = 1.0F / width;
-				GL11.glScalef(scale, scale, scale);
-				
-				// Rendering starts
-				GL11.glEnable(GL11.GL_BLEND);
-				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+	@Override
+	public void loadDefaults() {
+		super.loadDefaults();
+		settings.set(true);
+		players.set(true);
+		mobs.set(true);
+		distance.value = 100;
+		compress.value = 40;
+	}
 
-				drawRect(0, 0, width, height, Colors.TRANSLUCENT);
-				zIncrease();
-				MC.ingameGUI.drawString(MC.fontRenderer, text, 5, 5, Colors.WHITE);
+	private static ResourceLocation icons = new ResourceLocation("textures/gui/icons.png");
+
+	public void renderInfo(EntityLivingBase entity, float partialTicks) {
+		EntityPlayer player = MC.player;
+		if(player == null) return; // TODO is this necessary
+		
+		boolean isPlayer = entity instanceof EntityPlayer;
+		if((isPlayer && !players.get()) || (!isPlayer && !mobs.get())) {
+			return;
+		}
+		
+		GL11.glPushMatrix(); {
+			Tessellator t = Tessellator.getInstance();
+			RenderUtil.billBoard(entity, player, partialTicks);
+			
+			// seems irrelevant
+			/*if(!(entity.getHeldItemMainhand() != null && entity.getHeldItemMainhand().isItemEnchanted())) {
+				GL11.glTranslatef(0, 0.2F, 0);
+			}*/
+			
+			String text = entity.getName() + " (" + (int) entity.getHealth() + "/" + (int) entity.getMaxHealth() + ")";
+			float perLine = 10;
+			
+			int width = Math.max(8 * Math.min(10, (int) entity.getMaxHealth() / 2) + 1 + (isPlayer ? 5 + 8 * 10 : 0), MC.fontRenderer.getStringWidth(text)) + 10;
+			int height;
+			if(compress.value != 0 && entity.getHealth() >= compress.value) {
+				height = 2 * MC.fontRenderer.FONT_HEIGHT + 12 + ((int)entity.getHealth() % 20 != 0 ? 9 : 0);
+			} else {
+				height = MC.fontRenderer.FONT_HEIGHT + 12;
+				height += 9 * (compress.value != 0 && entity.getMaxHealth() > compress.value ? compress.value / 20 : (int) Math.ceil(Math.ceil(entity.getMaxHealth() / 2) / perLine));
+			}
+			
+			float scale = 1.0F / width;
+			GL11.glScalef(scale, scale, scale);
+			
+			// Rendering starts
+			GL11.glEnable(GL11.GL_BLEND);
+			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+
+			Gui.drawRect(0, 0, width, height, Colors.fromARGB(85, 0, 0, 0));
+			zIncrease();
+			MC.ingameGUI.drawString(MC.fontRenderer, text, 5, 5, Colors.WHITE);
+			
+			if(isPlayer) {
+				String text2 = "(" + entity.getTotalArmorValue() + "/20)";
+				MC.ingameGUI.drawString(MC.fontRenderer, text2, width - 5 - MC.fontRenderer.getStringWidth(text2), 5, Colors.WHITE);
+			}
+			
+			// Render health bar
+			renderHealth(t, (int)entity.getHealth(), (int)entity.getMaxHealth());
+			
+			if(isPlayer) {
+				// Armor bar
+				int armor = entity.getTotalArmorValue();
 				
-				if(isPlayer) {
-					String text2 = "(" + entity.getTotalArmorValue() + "/20)";
-					MC.ingameGUI.drawString(MC.fontRenderer, text2, width - 5 - MC.fontRenderer.getStringWidth(text2), 5, Colors.WHITE);
+				int i;
+				for(i = 0; i < 10; i++) {
+					RenderUtil.renderQuadWithUV(t, 8 * Math.min(10, (int) entity.getMaxHealth() / 2) + 10 + (i * 8), MC.fontRenderer.FONT_HEIGHT + 7 + (int) (i / 10) * 9, 16 / 256F, 9 / 256F, 25 / 256F, 18 / 256F, 9, 9);
+				}
+				for(i = 0; i < armor / 2; i++) {
+					RenderUtil.renderQuadWithUV(t, 8 * Math.min(10, (int) entity.getMaxHealth() / 2) + 10 + (i * 8), MC.fontRenderer.FONT_HEIGHT + 7 + (int) (i / 10) * 9, 34 / 256F, 9 / 256F, 43 / 256F, 18 / 256F, 9, 9);
+				}
+				if(armor % 2 == 1) {
+					RenderUtil.renderQuadWithUV(t, 8 * Math.min(10, (int) entity.getMaxHealth() / 2) + 10 + (i * 8), MC.fontRenderer.FONT_HEIGHT + 7 + (int) (i / 10) * 9, 25 / 256F, 9 / 256F, 34 / 256F, 18 / 256F, 9, 9);
 				}
 				
-				// Render health bar
-				renderHealth(t, (int)entity.getHealth(), (int)entity.getMaxHealth());
+				EntityPlayer playerObj = (EntityPlayer) entity;
 				
-				if(isPlayer) {
-					// Armor bar
-					int armor = entity.getTotalArmorValue();
-					
-					int i;
-					for(i = 0; i < 10; i++) {
-						RenderUtil.renderQuadWithUV(t, 8 * Math.min(10, (int) entity.getMaxHealth() / 2) + 10 + (i * 8), MC.fontRenderer.FONT_HEIGHT + 7 + (int) (i / 10) * 9, 16 / 256F, 9 / 256F, 25 / 256F, 18 / 256F, 9, 9);
-					}
-					for(i = 0; i < armor / 2; i++) {
-						RenderUtil.renderQuadWithUV(t, 8 * Math.min(10, (int) entity.getMaxHealth() / 2) + 10 + (i * 8), MC.fontRenderer.FONT_HEIGHT + 7 + (int) (i / 10) * 9, 34 / 256F, 9 / 256F, 43 / 256F, 18 / 256F, 9, 9);
-					}
-					if(armor % 2 == 1) {
-						RenderUtil.renderQuadWithUV(t, 8 * Math.min(10, (int) entity.getMaxHealth() / 2) + 10 + (i * 8), MC.fontRenderer.FONT_HEIGHT + 7 + (int) (i / 10) * 9, 25 / 256F, 9 / 256F, 34 / 256F, 18 / 256F, 9, 9);
-					}
-					
-					EntityPlayer playerObj = (EntityPlayer) entity;
-					
-					ItemStack mainHand = playerObj.getHeldItemMainhand();
-					if(mainHand != null && !mainHand.isEmpty()) {
-						renderHolding(playerObj.getHeldItemMainhand(), height);
-					}
+				ItemStack mainHand = playerObj.getHeldItemMainhand();
+				if(mainHand != null && !mainHand.isEmpty()) {
+					renderHolding(playerObj.getHeldItemMainhand(), height);
 				}
 			}
-			GL11.glPopMatrix();
 		}
+		GL11.glPopMatrix();
 	}
 
 	private void renderHealth(Tessellator t, int health, int max) {

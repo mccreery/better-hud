@@ -28,22 +28,22 @@ public class SettingPosition extends Setting {
 
 	public SettingPosition(String name, int options) {
 		super(name);
-		addChild(new Legend("position"));
+		add(new Legend("position"));
 
-		addChild(mode = new SettingChoose(name + "Mode", MODES));
-		addChild(direction = new SettingDirection(name + "Direction", options) {
+		add(mode = new SettingChoose(name + "Mode", MODES));
+		add(direction = new SettingDirection(name + "Direction", options) {
 			@Override
 			public boolean enabled() {
 				return mode.index == 0 && super.enabled();
 			}
 		});
-		addChild(position = new SettingAbsolutePosition(name + "Absolute") {
+		add(position = new SettingAbsolutePosition(name + "Absolute") {
 			@Override
 			public boolean enabled() {
 				return mode.index == 1 && super.enabled();
 			}
 		});
-		addChild(anchor = new SettingDirection(name + "Anchor") {
+		add(anchor = new SettingDirection(name + "Anchor") {
 			@Override
 			public boolean enabled() {
 				return mode.index == 1 && super.enabled();

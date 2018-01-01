@@ -6,174 +6,151 @@ import java.util.Random;
 
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
-import org.lwjgl.opengl.GL11;
+import org.lwjgl.input.Keyboard;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.events.EntityInfoRenderer;
 import tk.nukeduck.hud.events.PickupNotifier;
-import tk.nukeduck.hud.gui.GuiHUDMenu;
-import tk.nukeduck.hud.network.MessageNotifyClient;
+import tk.nukeduck.hud.gui.GuiHudMenu;
 import tk.nukeduck.hud.network.MessageNotifyClientHandler;
 import tk.nukeduck.hud.network.MessagePickup;
 import tk.nukeduck.hud.network.MessagePickupHandler;
-import tk.nukeduck.hud.network.ServerStatusHandler;
-import tk.nukeduck.hud.network.proxy.CommonProxy;
+import tk.nukeduck.hud.network.Version;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.LayoutManager;
-import tk.nukeduck.hud.util.Ticker;
+import tk.nukeduck.hud.util.Tickable.Ticker;
 
 @Mod(modid = BetterHud.MODID, name = "Better HUD", version = "1.3.9")
 public class BetterHud { // TODO thoroughly test GL, replace drawRect coords
 	public static final String MODID = "hud";
+	public static final Version VERSION = new Version(1, 3, 9);
 	public static final Logger LOGGER = LogManager.getLogger(MODID);
 
-	public static final Minecraft MC = Minecraft.getMinecraft();
-	public static final GuiScreen MENU = new GuiHUDMenu();
-	public static final Random RANDOM = new Random();
+	@SideOnly(Side.CLIENT) public static Minecraft MC;
+	@SideOnly(Side.CLIENT) public static GuiHudMenu MENU;
+
+	@SideOnly(Side.CLIENT) public static KeyBinding MENU_KEY;
+	@SideOnly(Side.CLIENT) public static KeyBinding TOGGLE_KEY;
 
 	public static final int SPACER = 5;
+	public static final Random RANDOM = new Random();
+
+	public static Version serverVersion = Version.ZERO;
 
 	public static boolean isEnabled() {
-		return HudElement.GLOBAL.isEnabled();
+		return HudElement.GLOBAL.settings.get();
+	}
+
+	public static void toggleEnabled() {
+		HudElement.GLOBAL.settings.toggle();
 	}
 
 	public static final Map<HudElement, Bounds> boundsCache = new HashMap<HudElement, Bounds>();
 
 	// TODO allow reordering of elements to render some closer to top
 
-	@SidedProxy(clientSide="tk.nukeduck.hud.network.proxy.ClientProxy", serverSide="tk.nukeduck.hud.network.proxy.CommonProxy")
-	public static CommonProxy proxy;
-
-	public static final SimpleNetworkWrapper NET_WRAPPER = NetworkRegistry.INSTANCE.newSimpleChannel(BetterHud.MODID);
-
-	private static int packetId = 0;
-	public static final <REQ extends IMessage, REPLY extends IMessage> void registerMessage(Class<? extends IMessageHandler<REQ, REPLY>> handler, Class<REQ> message, Side side) {
-		NET_WRAPPER.registerMessage(handler, message, packetId++, side);
-	}
+	public static final SimpleNetworkWrapper NET_WRAPPER = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
 
 	public static EntityInfoRenderer entityInfoRenderer;
-	public static ServerStatusHandler serverStatus;
 	public static PickupNotifier pickupNotifier;
 	//public static BreedInfoNotifier breedNotifier;
 
 	@EventHandler
 	public void init(FMLInitializationEvent e) {
-		registerMessage(MessageNotifyClientHandler.class, MessageNotifyClient.class, Side.CLIENT);
-		registerMessage(MessagePickupHandler.class, MessagePickup.class, Side.CLIENT);
-		//registerMessage(MessageBreedingHandler.class, MessageBreeding.class, Side.CLIENT);
+		if(e.getSide() == Side.CLIENT) {
+			MC = Minecraft.getMinecraft();
+			MENU = new GuiHudMenu();
 
-		BetterHud.proxy.init();
-		BetterHud.proxy.initElements();
+			MENU_KEY = new KeyBinding("key.betterHud.open", Keyboard.KEY_U, "key.categories.misc");
+			TOGGLE_KEY = new KeyBinding("key.betterHud.disable", Keyboard.KEY_F3, "key.categories.misc");
+			ClientRegistry.registerKeyBinding(MENU_KEY);
+			ClientRegistry.registerKeyBinding(TOGGLE_KEY);
 
-		MinecraftForge.EVENT_BUS.register(serverStatus = new ServerStatusHandler());
+			HudElement.initAll(e);
+			HudElement.loadAllDefaults();
+		}
+
+		// Message ID 0 reserved for ignored server presence message from [,1.4)
+		NET_WRAPPER.registerMessage(MessagePickupHandler.class, MessagePickup.class, 1, Side.CLIENT);
+		NET_WRAPPER.registerMessage(MessageNotifyClientHandler.class, Version.class, 2, Side.CLIENT);
+		//NET_WRAPPER.registerMessage(MessageBreedingHandler.class, MessageBreeding.class, 3, Side.CLIENT);
+
+		MinecraftForge.EVENT_BUS.register(entityInfoRenderer = new EntityInfoRenderer());
 		MinecraftForge.EVENT_BUS.register(pickupNotifier = new PickupNotifier());
 		//MinecraftForge.EVENT_BUS.register(breedNotifier = new BreedInfoNotifier());
 
 		MinecraftForge.EVENT_BUS.register(this);
-
-		BetterHud.proxy.initKeys();
-		BetterHud.proxy.loadDefaults();
-		//BetterHud.proxy.loadSettings();
+		//SettingsIO.loadSettings(BetterHud.LOGGER, this);
 	}
 
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void onRenderTick(RenderGameOverlayEvent event) {
-		if(!isEnabled()) return;
+		if(!isEnabled() || event.getType() != RenderGameOverlayEvent.ElementType.EXPERIENCE) return;
 
-		// Special case
-		if(event.isCancelable()) {
-			if(HudElement.POTION_BAR.disableDefault() && event.getType() == ElementType.POTION_ICONS) {
-				event.setCanceled(true);
+		MC.mcProfiler.startSection("betterHud");
+
+		LayoutManager layoutManager = new LayoutManager(event.getResolution());
+
+		for(HudElement element : HudElement.ELEMENTS) {
+			if(element.isEnabled() && element.shouldRender()) {
+				MC.mcProfiler.startSection(element.name);
+				boundsCache.put(element, element.render(event, layoutManager));
+				MC.mcProfiler.endSection();
 			}
-			return;
 		}
-		if(event.getType() != RenderGameOverlayEvent.ElementType.EXPERIENCE) return;
+		MC.mcProfiler.endSection();
 
-		// TODO do we need to check all of these? investigate
-		if(MC != null && MC.ingameGUI != null && MC.player != null) {
-			MC.mcProfiler.startSection("betterHud");
-			//GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
-			GL11.glDisable(GL11.GL_LIGHTING);
+		// Expected state by vanilla GUI
+		MC.getTextureManager().bindTexture(Gui.ICONS);
+	}
 
-			GL11.glPushMatrix();
+	@SideOnly(Side.CLIENT)
+	@SubscribeEvent
+	public void onKey(KeyInputEvent event) {
+		if(MC.inGameHasFocus && MENU_KEY.isPressed()) {
+			MC.displayGuiScreen(MENU);
+		} else if(TOGGLE_KEY.isPressed()) {
+			toggleEnabled();
+		}
+	}
 
-			// General functions, sure to fix a few lighting bugs!
-			// TODO don't weasel out of work
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-
-			// TODO static?
-			LayoutManager layoutManager = new LayoutManager(event.getResolution());
-			//StringManager stringManager = new StringManager();
-
-			for(HudElement element : HudElement.ELEMENTS) {
-				if(element.isEnabled() && element.shouldRender()) {
-					MC.mcProfiler.startSection(element.name);
-					boundsCache.put(element, element.render(event, layoutManager));
-					MC.mcProfiler.endSection();
-				}
-			}
-
-			//MC.mcProfiler.startSection("drawStrings");
-			/*for(Position p : new Position[] {Position.TOP_LEFT, Position.TOP_RIGHT, Position.BOTTOM_LEFT, Position.BOTTOM_RIGHT}) {
-				int x = p == Position.TOP_LEFT || p == Position.BOTTOM_LEFT ? Constants.SPACER : resolution.getScaledWidth() - Constants.SPACER;
-				int y = layoutManager.get(p);
-				if(p == Position.BOTTOM_LEFT || p == Position.BOTTOM_RIGHT) y = resolution.getScaledHeight() - y;
-
-				RenderUtil.renderStrings(mc.fontRendererObj, stringManager.get(p), x, y, p);
-			}*/
-
-			/*int right = event.getResolution().getScaledWidth() - Constants.SPACER;
-			RenderUtil.renderStrings(MC.fontRenderer, stringManager.get(Direction.NORTH_WEST), Constants.SPACER, layoutManager.get(Direction.NORTH_WEST), Direction.NORTH_WEST);
-			RenderUtil.renderStrings(MC.fontRenderer, stringManager.get(Direction.NORTH_EAST), right, layoutManager.get(Direction.NORTH_EAST), Direction.NORTH_EAST);
-			RenderUtil.renderStrings(MC.fontRenderer, stringManager.get(Direction.SOUTH_WEST), Constants.SPACER, event.getResolution().getScaledHeight() - layoutManager.get(Direction.SOUTH_WEST), Direction.SOUTH_WEST);
-			RenderUtil.renderStrings(MC.fontRenderer, stringManager.get(Direction.SOUTH_EAST), right, event.getResolution().getScaledHeight() - layoutManager.get(Direction.SOUTH_EAST), Direction.SOUTH_EAST);*/
-
-			//MC.mcProfiler.endSection();
-			GL11.glPopMatrix();
-			// glPopAttrib();
-			MC.mcProfiler.endSection();
-
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-			//GL11.glPopAttrib();
+	@SideOnly(Side.CLIENT)
+	@SubscribeEvent
+	public void clientTick(ClientTickEvent event) {
+		if(isEnabled()) {
+			Ticker.FASTER.tick();
 		}
 	}
 
 	@SubscribeEvent
-	@SideOnly(Side.CLIENT) // GuiScreen doesn't exist on server side
-	public void clientTick(ClientTickEvent e) {
-		if(isEnabled()) {
-			Ticker.FASTER.tick();
-		}
+	public void onPlayerConnected(PlayerLoggedInEvent e) {
+		if(!(e.player instanceof EntityPlayerMP)) return;
+		NET_WRAPPER.sendTo(VERSION, (EntityPlayerMP)e.player);
+	}
 
-		// TODO move to key event
-		if(MC != null && MC.player != null && MC.inGameHasFocus && MC.currentScreen == null) {
-			if(proxy.openMenu.isPressed()) {
-				MC.displayGuiScreen(MENU);
-			} else if(proxy.disable.isPressed()) {
-				HudElement.GLOBAL.toggleEnabled();
-			}
-		}
+	@SideOnly(Side.CLIENT)
+	@SubscribeEvent
+	public void onPlayerDisconnected(ClientDisconnectionFromServerEvent e) {
+		serverVersion = Version.ZERO;
 	}
 }

@@ -4,6 +4,7 @@ import static tk.nukeduck.hud.BetterHud.MC;
 
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.ResourceLocation;
@@ -23,7 +24,7 @@ public class SignReader extends HudElement {
 
 	@Override
 	public void loadDefaults() {
-		setEnabled(true);
+		settings.set(true);
 		position.load(Direction.NORTH_WEST);
 	}
 
@@ -50,7 +51,7 @@ public class SignReader extends HudElement {
 		Bounds bounds = position.applyTo(new Bounds(96, 48), manager);
 
 		MC.getTextureManager().bindTexture(SIGN_TEXTURE);
-		drawScaledCustomSizeModalRect(bounds.x(), bounds.y(), 2, 2, 24, 12, 96, 48, 64, 32);
+		Gui.drawScaledCustomSizeModalRect(bounds.x(), bounds.y(), 2, 2, 24, 12, 96, 48, 64, 32);
 
 		int y = bounds.y() + 3;
 

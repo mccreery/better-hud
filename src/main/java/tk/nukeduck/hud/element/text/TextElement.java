@@ -1,8 +1,7 @@
 package tk.nukeduck.hud.element.text;
 
-import static tk.nukeduck.hud.BetterHud.SPACER;
-
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.element.settings.SettingColor;
 import tk.nukeduck.hud.element.settings.SettingPosition;
@@ -14,8 +13,8 @@ import tk.nukeduck.hud.util.PaddedBounds;
 import tk.nukeduck.hud.util.Point;
 
 public abstract class TextElement extends HudElement {
-	protected final SettingPosition position;
-	protected final SettingColor color = new SettingColor("color");
+	protected SettingPosition position;
+	protected SettingColor color = new SettingColor("color");
 
 	protected boolean border = false;
 
@@ -29,6 +28,7 @@ public abstract class TextElement extends HudElement {
 
 	public TextElement(String name, int directions) {
 		super(name);
+
 		settings.add(position = new SettingPosition("position", directions));
 		settings.add(color);
 	}
@@ -39,13 +39,13 @@ public abstract class TextElement extends HudElement {
 
 	@Override
 	public void loadDefaults() {
-		setEnabled(true);
+		settings.set(true);
 		position.load(Direction.NORTH_WEST);
 		color.set(Colors.WHITE);
 	}
 
 	protected Bounds getPadding() {
-		return border ? new Bounds(-SPACER, -SPACER, 2*SPACER, 2*SPACER) : Bounds.EMPTY;
+		return border ? new Bounds(-BetterHud.SPACER, -BetterHud.SPACER, 2*BetterHud.SPACER, 2*BetterHud.SPACER) : Bounds.EMPTY;
 	}
 
 	protected Bounds getMargin() {

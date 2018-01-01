@@ -1,5 +1,8 @@
 package tk.nukeduck.hud.element.settings;
 
+import static tk.nukeduck.hud.BetterHud.MC;
+import static tk.nukeduck.hud.BetterHud.SPACER;
+
 import java.io.IOException;
 import java.util.Collection;
 
@@ -71,7 +74,7 @@ public class SettingDirection extends Setting {
 			bottomLeft, bottomCenter, bottomRight
 		};
 		otherAction(null);
-		return y;
+		return y + SPACER;
 	}
 
 	@Override
@@ -99,7 +102,7 @@ public class SettingDirection extends Setting {
 		final int x = middleRight.x + middleRight.width + 5;
 		final int y = middleRight.y + (middleRight.height - Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT) / 2;
 
-		drawString(Minecraft.getMinecraft().fontRenderer, text, x, y, Colors.WHITE);
+		MC.fontRenderer.drawStringWithShadow(text, x, y, Colors.WHITE);
 	}
 
 	@Override

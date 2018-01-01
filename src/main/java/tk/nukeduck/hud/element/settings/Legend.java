@@ -1,6 +1,7 @@
 package tk.nukeduck.hud.element.settings;
 
 import static tk.nukeduck.hud.BetterHud.MC;
+import static tk.nukeduck.hud.BetterHud.SPACER;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -26,7 +27,7 @@ public class Legend extends Setting {
 		label.addLine("betterHud.group." + this.name);
 		parts.add(label);
 
-		return y + MC.fontRenderer.FONT_HEIGHT;
+		return y + MC.fontRenderer.FONT_HEIGHT + SPACER;
 	}
 
 	private static class GuiLegendLabel extends GuiLabel {

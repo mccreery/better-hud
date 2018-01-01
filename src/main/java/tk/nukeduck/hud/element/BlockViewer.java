@@ -56,7 +56,7 @@ public class BlockViewer extends HudElement {
 
 	@Override
 	public void loadDefaults() {
-		this.setEnabled(true);
+		this.settings.set(true);
 		position.load(Direction.NORTH_WEST);
 		showBlock.set(true);
 		distance.value = 256;
@@ -119,7 +119,6 @@ public class BlockViewer extends HudElement {
 		if(showBlock.get()) {
 			MC.ingameGUI.drawString(MC.fontRenderer, text, bounds.x() + 26, bounds.y() + 6, Colors.WHITE);
 
-			// TODO check lighting
 			RenderHelper.enableGUIStandardItemLighting();
 			MC.getRenderItem().renderItemAndEffectIntoGUI(stack, bounds.x() + 5, bounds.y() + 2);
 			RenderHelper.disableStandardItemLighting();

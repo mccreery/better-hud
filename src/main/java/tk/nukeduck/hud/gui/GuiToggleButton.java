@@ -4,8 +4,11 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import tk.nukeduck.hud.util.ISaveLoad;
 
+@SideOnly(Side.CLIENT)
 public class GuiToggleButton extends GuiButton implements ISaveLoad {
 	public boolean updateText = false;
 	public String unlocalized;

@@ -11,7 +11,11 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingPosition;
@@ -32,8 +36,13 @@ public class PotionBar extends HudElement {
 
 	@Override
 	public void loadDefaults() {
-		this.setEnabled(true);
+		this.settings.set(true);
 		position.load(Direction.NORTH_WEST);
+	}
+
+	@Override
+	public void init(FMLInitializationEvent event) {
+		MinecraftForge.EVENT_BUS.register(this);
 	}
 
 	public PotionBar() {
@@ -42,6 +51,13 @@ public class PotionBar extends HudElement {
 		settings.add(position);
 		this.settings.add(new Legend("potionsUseless"));
 		this.settings.add(disableDefault);
+	}
+
+	@SubscribeEvent
+	public void onRenderTick(RenderGameOverlayEvent.Pre event) {
+		if(event.getType() == ElementType.POTION_ICONS) {
+			event.setCanceled(true);
+		}
 	}
 
 	@Override

@@ -28,7 +28,7 @@ public class SystemClock extends TextElement {
 	@Override
 	public void loadDefaults() {
 		super.loadDefaults();
-		this.setEnabled(false);
+		this.settings.set(false);
 		twentyFour.set(false);
 		showSeconds.set(false);
 		dateType.index = 1;

@@ -18,16 +18,18 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.I18n;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.element.settings.Setting;
 import tk.nukeduck.hud.element.settings.SettingAbsolutePosition;
-import tk.nukeduck.hud.network.proxy.ClientProxy;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Point;
 import tk.nukeduck.hud.util.SettingsIO;
 
+@SideOnly(Side.CLIENT)
 public class GuiElementSettings extends GuiScreen {
 	public HudElement element;
 	ArrayList<GuiTextField> textboxList = new ArrayList<GuiTextField>();
@@ -55,7 +57,7 @@ public class GuiElementSettings extends GuiScreen {
 
 		List<Gui> parts = new ArrayList<Gui>();
 		this.totalHeight = 0;
-		totalHeight = element.getGuiParts(parts, callbacks, new Point(width, height), totalHeight);
+		totalHeight = element.settings.getGuiParts(parts, callbacks, width, totalHeight);
 
 		for(Gui gui : parts) {
 			if(gui instanceof GuiButton) {
@@ -143,7 +145,7 @@ public class GuiElementSettings extends GuiScreen {
 			if(!Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
 				ArrayList<Bounds> bounds = new ArrayList<Bounds>();
 				for(HudElement element : HudElement.ELEMENTS) {
-					if(element == this.element || !element.isEnabled()) continue;
+					if(element == this.element || !element.settings.get()) continue;
 
 					Bounds elementBounds = BetterHud.boundsCache.get(element);
 					if(elementBounds != null && elementBounds != Bounds.EMPTY) {
@@ -163,9 +165,7 @@ public class GuiElementSettings extends GuiScreen {
 
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
 		if(keyCode == 1) {
-			if(BetterHud.proxy instanceof ClientProxy) {
-				SettingsIO.saveSettings(BetterHud.LOGGER, (ClientProxy)BetterHud.proxy);
-			}
+			SettingsIO.saveSettings(BetterHud.LOGGER);
 		}
 		super.keyTyped(typedChar, keyCode);
 
@@ -306,7 +306,7 @@ public class GuiElementSettings extends GuiScreen {
 			for(HudElement element : HudElement.ELEMENTS) {
 				Bounds b = BetterHud.boundsCache.get(element);
 
-				if(element.isEnabled() && b != null && b != Bounds.EMPTY) {
+				if(element.settings.get() && b != null && b != Bounds.EMPTY) {
 					Gui.drawRect(b.left(), b.top(), b.right(), b.bottom(), Colors.fromARGB(element == this.element ? 255 : 50, 255, 0, 0));
 				}
 			}

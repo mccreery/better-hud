@@ -1,7 +1,5 @@
 package tk.nukeduck.hud.element.text;
 
-import static org.lwjgl.opengl.GL11.GL_LIGHTING;
-import static org.lwjgl.opengl.GL11.glDisable;
 import static tk.nukeduck.hud.BetterHud.MC;
 
 import net.minecraft.client.resources.I18n;
@@ -14,7 +12,7 @@ import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.LayoutManager;
 
 public class FoodHealthStats extends TextElement {
-	private final SettingBoolean saturation;
+	private final SettingBoolean saturation = new SettingBoolean("saturation");
 
 	@Override
 	public void loadDefaults() {
@@ -25,16 +23,14 @@ public class FoodHealthStats extends TextElement {
 
 	public FoodHealthStats() {
 		super("foodHealthStats");
-		this.settings.add(0, new Legend("position"));
-		this.settings.add(new Legend("misc"));
-		this.settings.add(saturation = new SettingBoolean("saturation"));
-		this.settings.add(0, new Legend("fhNotice"));
+
+		settings.add(new Legend("misc"));
+		settings.add(saturation);
+		settings.add(new Legend("fhNotice"));
 	}
 
 	@Override
 	public Bounds render(RenderGameOverlayEvent event, LayoutManager manager) {
-		glDisable(GL_LIGHTING); // TODO are you sure about that
-
 		String health = String.valueOf(((int)MC.player.getHealth()) / 2.0f);
 		String food = String.valueOf(MC.player.getFoodStats().getFoodLevel() / 2.0F);
 

@@ -24,8 +24,8 @@ public class ExperienceInfo extends TextElement {
 
 	public ExperienceInfo() {
 		super("experienceInfo");
-		settings.add(0, new Legend("position"));
-		settings.add(0, new Legend("expInfoNotice"));
+
+		settings.add(new Legend("expInfoNotice"));
 		settings.add(new Legend("misc"));
 		settings.add(total = new SettingBoolean("total"));
 	}
@@ -50,7 +50,7 @@ public class ExperienceInfo extends TextElement {
 		}
 	}
 
-	// TODO hmm
+	// TODO improve rendering of bordered string
 	public void drawBorderedString(FontRenderer fontrenderer, String s, int x, int y, int color) {
 		fontrenderer.drawString(s, x + 1, y, 0, false);
 		fontrenderer.drawString(s, x - 1, y, 0, false);

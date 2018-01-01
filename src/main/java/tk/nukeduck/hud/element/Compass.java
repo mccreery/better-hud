@@ -10,6 +10,7 @@ import static tk.nukeduck.hud.BetterHud.MC;
 
 import org.lwjgl.opengl.GL11;
 
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import tk.nukeduck.hud.element.settings.Legend;
@@ -39,7 +40,7 @@ public class Compass extends HudElement {
 
 	@Override
 	public void loadDefaults() {
-		this.setEnabled(true);
+		this.settings.set(true);
 		position.load(Direction.NORTH_WEST);
 		directionScaling.value = 50.0;
 		showNotches.set(true);
@@ -88,8 +89,8 @@ public class Compass extends HudElement {
 		GL11.glScaled(scale.value / 100, scale.value / 100, 1);
 		GL11.glTranslatef(-x - 90, -y, 0);*/
 
-		drawRect(bounds.x(),      bounds.y(), 180, 12, Colors.fromARGB(170,  0,  0,  0));
-		drawRect(bounds.x() + 50, bounds.y(),  80, 12, Colors.fromARGB( 85, 85, 85, 85));
+		drawRect(bounds, Colors.fromARGB(170,  0,  0,  0));
+		Gui.drawRect(bounds.x() + 50, bounds.y(), bounds.x() + 130, bounds.y() + 12, Colors.fromARGB( 85, 85, 85, 85));
 
 		glEnable(GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
@@ -157,14 +158,14 @@ public class Compass extends HudElement {
 			largeNotch = Colors.RED;
 
 			for(int loc : notchX) {
-				HudElement.drawRect(bounds.x() + loc - 1, bounds.y() - 2, 1, 6, Colors.WHITE);
-				HudElement.drawRect(bounds.x() - loc + 180, bounds.y() - 2, 1, 6, Colors.WHITE);
+				Gui.drawRect(bounds.x() + loc - 1, bounds.y() - 2, bounds.x() + loc, bounds.y()+4, Colors.WHITE);
+				Gui.drawRect(bounds.x() - loc + 180, bounds.y() - 2, bounds.x()-loc+181, bounds.y()+4, Colors.WHITE);
 			}
 		}
 
-		HudElement.drawRect(bounds.x()+89,  bounds.y()-3, 1, 7, largeNotch);
-		HudElement.drawRect(bounds.x(),     bounds.y()-3, 1, 7, largeNotch);
-		HudElement.drawRect(bounds.x()+179, bounds.y()-3, 1, 7, largeNotch);
+		Gui.drawRect(bounds.x()+89,  bounds.y()-3, bounds.x()+90, bounds.y()+4, largeNotch);
+		Gui.drawRect(bounds.x(),     bounds.y()-3, bounds.x()+1, bounds.y()+4, largeNotch);
+		Gui.drawRect(bounds.x()+179, bounds.y()-3, bounds.x()+180, bounds.y()+4, largeNotch);
 
 		MC.mcProfiler.endSection();
 		//GL11.glPopMatrix();

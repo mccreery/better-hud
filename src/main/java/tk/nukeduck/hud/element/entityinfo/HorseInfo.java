@@ -10,6 +10,7 @@ import java.util.ArrayList;
 
 import org.lwjgl.opengl.GL11;
 
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
@@ -26,7 +27,7 @@ public class HorseInfo extends EntityInfo {
 	@Override
 	public void loadDefaults() {
 		super.loadDefaults();
-		this.setEnabled(true);
+		settings.set(true);
 		jump.set(true);
 		speed.set(true);
 		distance.value = 100;
@@ -40,7 +41,7 @@ public class HorseInfo extends EntityInfo {
 	}
 
 	public void renderInfo(EntityLivingBase entity, float partialTicks) {
-		if(isEnabled() && entity instanceof EntityHorse) {
+		if(settings.get() && entity instanceof EntityHorse) {
 			glPushMatrix(); {
 				ArrayList<String> infoParts = new ArrayList<String>();
 				
@@ -63,7 +64,7 @@ public class HorseInfo extends EntityInfo {
 
 				glTranslatef(0.0F, -horseHeight - 5, 0.0F);
 
-				drawRect(0, 0, horseWidth, horseHeight, Colors.TRANSLUCENT);
+				Gui.drawRect(0, 0, horseWidth, horseHeight, Colors.TRANSLUCENT);
 				zIncrease();
 				for(int i = 0; i < infoParts.size(); i++) {
 					MC.ingameGUI.drawString(MC.fontRenderer, infoParts.get(i), 5, 5 + (MC.fontRenderer.FONT_HEIGHT + 2) * i, Colors.WHITE);

@@ -10,7 +10,7 @@ public class GlobalSettings extends HudElement {
 		super("global");
 
 		settings.add(new SettingBoolean(null) {
-			@Override public void set(boolean bool) {setEnabled(bool);}
+			@Override public void set(boolean bool) {settings.set(bool);}
 			@Override public boolean get() {return isEnabled();}
 		});
 	}
@@ -21,6 +21,6 @@ public class GlobalSettings extends HudElement {
 
 	@Override
 	public void loadDefaults() {
-		setEnabled(true);
+		settings.set(true);
 	}
 }

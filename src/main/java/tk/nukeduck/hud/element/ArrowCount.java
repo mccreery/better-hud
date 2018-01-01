@@ -33,7 +33,7 @@ public class ArrowCount extends HudElement {
 
 	@Override
 	public void loadDefaults() {
-		setEnabled(true);
+		settings.set(true);
 		overlay.set(true);
 		position.load(Direction.EAST);
 	}

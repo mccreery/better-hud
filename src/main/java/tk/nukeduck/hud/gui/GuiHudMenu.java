@@ -10,13 +10,15 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.element.HudElement;
-import tk.nukeduck.hud.network.proxy.ClientProxy;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.SettingsIO;
 
-public class GuiHUDMenu extends GuiScreen {
+@SideOnly(Side.CLIENT)
+public class GuiHudMenu extends GuiScreen {
 	public int buttonOffset = 0;
 	public int currentPage = 0;
 	public int perPage = 10;
@@ -52,13 +54,13 @@ public class GuiHUDMenu extends GuiScreen {
 			HudElement element = HudElement.ELEMENTS[i];
 
 			GuiToggleButton b = new GuiToggleButton(i * 2 + buttonOffset, hW - 126, height / 16 + 78 + ((i % perPage) * 24), 150, 20, element.getUnlocalizedName(), true);
-			b.set(element.isEnabled());
-			b.enabled = !element.unsupported;
-			
+			b.set(element.settings.get());
+			b.enabled = element.isSupportedByServer();
+
 			this.buttonList.add(b);
 
 			GuiButton options = new GuiButton(i * 2 + buttonOffset + 1, hW + 26, height / 16 + 78 + ((i % perPage) * 24), 100, 20, I18n.format("betterHud.menu.options"));
-			options.enabled = element.hasSettings();
+			options.enabled = !element.settings.isEmpty();
 			this.buttonList.add(options);
 		}
 		updatePage();
@@ -70,9 +72,7 @@ public class GuiHUDMenu extends GuiScreen {
 			mc.setIngameFocus();
 		}
 
-		if(BetterHud.proxy instanceof ClientProxy) {
-			SettingsIO.saveSettings(BetterHud.LOGGER, (ClientProxy)BetterHud.proxy);
-		}
+		SettingsIO.saveSettings(BetterHud.LOGGER);
 	}
 
 	@Override
@@ -110,8 +110,8 @@ public class GuiHUDMenu extends GuiScreen {
 				setAll(false);
 				break;
 			case 3:
-				BetterHud.proxy.loadDefaults();
-				mc.displayGuiScreen(new GuiHUDMenu());
+				HudElement.loadAllDefaults();
+				initGui();
 				break;
 			case 4:
 				currentPage--;
@@ -131,9 +131,9 @@ public class GuiHUDMenu extends GuiScreen {
 				HudElement el = HudElement.ELEMENTS[i];
 				int offset = i * 2 + buttonOffset;
 				if(id == offset) {
-					el.toggleEnabled();
-					button.displayString = I18n.format("betterHud.menu.settingButton", el.getLocalizedName(), (el.isEnabled() ? ChatFormatting.GREEN : ChatFormatting.RED) + I18n.format(el.isEnabled() ? "options.on" : "options.off"));
-					((GuiToggleButton)button).set(el.isEnabled());
+					el.settings.toggle();
+					button.displayString = I18n.format("betterHud.menu.settingButton", el.getLocalizedName(), (el.settings.get() ? ChatFormatting.GREEN : ChatFormatting.RED) + I18n.format(el.settings.get() ? "options.on" : "options.off"));
+					((GuiToggleButton)button).set(el.settings.get());
 				} else if(id == offset + 1) { // <
 					GuiElementSettings gui = new GuiElementSettings(el, this);
 					mc.displayGuiScreen(gui);
@@ -148,9 +148,9 @@ public class GuiHUDMenu extends GuiScreen {
 				GuiButton b = (GuiButton) buttonList.get(i);
 				if(b.id >= buttonOffset && (b.id - buttonOffset) % 2 == 0) {
 					HudElement element = HudElement.ELEMENTS[(b.id - buttonOffset) / 2];
-					element.setEnabled(enabled);
-					b.displayString = I18n.format("betterHud.menu.settingButton", element.getLocalizedName(), (element.isEnabled() ? ChatFormatting.GREEN : ChatFormatting.RED) + I18n.format(element.isEnabled() ? "options.on" : "options.off"));
-					((GuiToggleButton) b).set(element.isEnabled());
+					element.settings.set(enabled);
+					b.displayString = I18n.format("betterHud.menu.settingButton", element.getLocalizedName(), (element.settings.get() ? ChatFormatting.GREEN : ChatFormatting.RED) + I18n.format(element.settings.get() ? "options.on" : "options.off"));
+					((GuiToggleButton) b).set(element.settings.get());
 				}
 			}
 		}
@@ -209,7 +209,7 @@ public class GuiHUDMenu extends GuiScreen {
 	public int countEnabled(HudElement[] elements) {
 		int i = 0;
 		for(HudElement element : elements) {
-			if(element.isEnabled()) i++;
+			if(element.settings.get()) i++;
 		}
 		return i;
 	}

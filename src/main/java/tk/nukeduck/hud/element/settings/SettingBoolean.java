@@ -1,5 +1,7 @@
 package tk.nukeduck.hud.element.settings;
 
+import static tk.nukeduck.hud.BetterHud.SPACER;
+
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
@@ -26,9 +28,13 @@ public class SettingBoolean extends SettingAlignable {
 
 	public boolean get() {return value;}
 	public void set(boolean value) {this.value = value;}
+	public boolean toggle() {
+		set(!get());
+		return get();
+	}
 
 	@Override
-	public void getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Bounds bounds) {
+	public int getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Bounds bounds) {
 		toggler = new GuiToggleButton(0, bounds.x(), bounds.y(), bounds.width(), bounds.height(), getUnlocalizedName(), true) {
 			@Override
 			public boolean get() {
@@ -41,6 +47,7 @@ public class SettingBoolean extends SettingAlignable {
 			}
 		};
 		parts.add(toggler);
+		return bounds.bottom() + SPACER;
 	}
 
 	@Override

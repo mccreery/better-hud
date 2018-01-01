@@ -17,7 +17,6 @@ import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.Setting;
-import tk.nukeduck.hud.network.proxy.ClientProxy;
 
 public class SettingsIO {
 	public static final String FILE_SEPARATOR = System.getProperty("file.separator");
@@ -28,9 +27,10 @@ public class SettingsIO {
 	public static HashMap<String, String> generateKeyVal(ArrayList<String> lines) {
 		HashMap<String, String> keyVal = new HashMap<String, String>();
 		for(String line : lines) {
-			if(!line.contains(":")) continue;
-			String[] parts = line.split(":"); // TODO use split with limit
-			keyVal.put(parts[0], parts[1]);
+			int colon = line.indexOf(':');
+			if(colon < 0) continue;
+
+			keyVal.put(line.substring(0, colon), line.substring(colon + 1));
 		}
 		return keyVal;
 	}
@@ -49,7 +49,7 @@ public class SettingsIO {
 
 	/** Saves settings to the config file.
 	 * @param logger A {@link Logger} instance for info or error messages */
-	public static void saveSettings(Logger logger, ClientProxy proxy) {
+	public static void saveSettings(Logger logger) {
 		try {
 			FileWriter writer = new FileWriter(CONFIG_PATH);
 			StringBuilder src = new StringBuilder();
@@ -61,21 +61,21 @@ public class SettingsIO {
 			src.append(LINE_SEPARATOR);
 
 			// Special case for global settings
-			src.append(HudElement.GLOBAL.name).append(":").append(LINE_SEPARATOR);
+			/*src.append(HudElement.GLOBAL.name).append(":").append(LINE_SEPARATOR);
 			src.append("\tenabled").append(":").append(String.valueOf(BetterHud.isEnabled())).append(LINE_SEPARATOR);
 			ArrayList<String> global = generateSrc(HudElement.GLOBAL.settings);
 			for(String line : global) {
 				src.append(line).append(LINE_SEPARATOR);
-			}
+			}*/
 
-			for(HudElement element : HudElement.ELEMENTS) {
+			/*for(HudElement element : HudElement.ELEMENTS) { TODO
 				src.append(element.name).append(":").append(LINE_SEPARATOR);
 				src.append("\tenabled").append(":").append(String.valueOf(element.isEnabled())).append(LINE_SEPARATOR);
 				ArrayList<String> s = generateSrc(element.settings);
 				for(String line : s) {
 					src.append(line).append(LINE_SEPARATOR);
 				}
-			}
+			}*/
 
 			writer.write(src.toString());
 			writer.close();
@@ -88,7 +88,7 @@ public class SettingsIO {
 
 	/** Loads settings from the config file.
 	 * @param logger A {@link Logger} instance for info or error messages */
-	public static void loadSettings(Logger logger, ClientProxy proxy) {
+	public static void loadSettings(Logger logger) {
 		try {
 			logger.log(Level.INFO, "Loading HUD settings from " + CONFIG_PATH);
 
@@ -129,7 +129,7 @@ public class SettingsIO {
 			buffer.close();
 			reader.close();
 		} catch(IOException e) {
-			saveSettings(logger, proxy);
+			saveSettings(logger);
 			logger.log(Level.WARN, "Failed to load settings from " + CONFIG_PATH
 				+ "." + LINE_SEPARATOR + e.getMessage() + LINE_SEPARATOR
 				+ "The default configuration was saved.");

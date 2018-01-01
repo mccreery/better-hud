@@ -13,7 +13,7 @@ public class FullInvIndicator extends TextElement {
 	public void loadDefaults() {
 		super.loadDefaults();
 
-		this.setEnabled(true);
+		this.settings.set(true);
 		position.load(Direction.NORTH_EAST);
 		offHand.set(false);
 	}

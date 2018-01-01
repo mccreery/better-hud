@@ -11,6 +11,7 @@ import static tk.nukeduck.hud.BetterHud.MC;
 
 import org.lwjgl.opengl.GL11;
 
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.passive.EntityAnimal;
@@ -24,19 +25,19 @@ import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.RenderUtil;
 
 public class BreedIndicator extends EntityInfo {
-	private final SettingDirection pos = new SettingDirection("side", Direction.WEST, Direction.EAST);
+	private final SettingDirection pos;
 
 	@Override
 	public void loadDefaults() {
 		super.loadDefaults();
-		this.setEnabled(true);
+		settings.set(true);
 		pos.value = Direction.WEST;
 		distance.value = 100;
 	}
 
 	public BreedIndicator() {
 		super("breedIndicator");
-		settings.add(pos);
+		settings.add(pos = new SettingDirection("side", Direction.WEST, Direction.EAST));
 	}
 
 	public int getBreedingItemIndex(EntityAnimal entity) {
@@ -86,7 +87,7 @@ public class BreedIndicator extends EntityInfo {
 					GL11.glEnable(GL11.GL_BLEND);
 					GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
 
-					drawRect(0, 0, width, height, Colors.TRANSLUCENT);
+					Gui.drawRect(0, 0, width, height, Colors.TRANSLUCENT);
 					zIncrease();
 
 					glPushAttrib(GL_ALL_ATTRIB_BITS);

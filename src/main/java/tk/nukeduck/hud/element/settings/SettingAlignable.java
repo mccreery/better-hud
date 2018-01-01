@@ -17,6 +17,7 @@ public abstract class SettingAlignable extends Setting {
 
 	@Override
 	public int getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, int width, int y) {
+		y = super.getGuiParts(parts, callbacks, width, y);
 		Bounds bounds;
 
 		if(alignment == Direction.CENTER) {
@@ -25,9 +26,10 @@ public abstract class SettingAlignable extends Setting {
 			bounds = alignment.anchor(new Bounds(0, 0, 150, 20), new Bounds(width / 2 - 100, y, 200, 20));
 		}
 
-		getGuiParts(parts, callbacks, bounds);
-		return alignment != Direction.WEST ? y + 20 : -1;
+		int bottom = getGuiParts(parts, callbacks, bounds);
+		return alignment != Direction.WEST ? bottom : -1;
 	}
 
-	public abstract void getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Bounds bounds);
+	/** @see Setting#getGuiParts(List, Map, int, int) */
+	public abstract int getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Bounds bounds);
 }

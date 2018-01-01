@@ -5,10 +5,10 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import tk.nukeduck.hud.BetterHud;
 
-public class MessageNotifyClientHandler implements IMessageHandler<MessageNotifyClient, IMessage> {
+public class MessageNotifyClientHandler implements IMessageHandler<Version, IMessage> {
 	@Override
-	public IMessage onMessage(MessageNotifyClient message, MessageContext ctx) {
-		BetterHud.proxy.notifyServer(true);
+	public IMessage onMessage(Version version, MessageContext context) {
+		BetterHud.serverVersion = version;
 		return null;
 	}
 }

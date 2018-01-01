@@ -1,5 +1,7 @@
 package tk.nukeduck.hud.element.settings;
 
+import static tk.nukeduck.hud.BetterHud.SPACER;
+
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
@@ -48,8 +50,9 @@ public class SettingSlider extends SettingAlignable {
 	}
 
 	@Override
-	public void getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Bounds bounds) {
+	public int getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Bounds bounds) {
 		parts.add(new GuiOptionSliderA(0, bounds.x(), bounds.y(), bounds.width(), bounds.height(), this));
+		return bounds.bottom() + SPACER;
 	}
 
 	@Override public void actionPerformed(GuiElementSettings gui, GuiButton button) {}

@@ -19,6 +19,8 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.relauncher.SideOnly;
 import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.element.entityinfo.EntityInfo;
@@ -26,13 +28,14 @@ import tk.nukeduck.hud.element.entityinfo.EntityInfo;
 public class EntityInfoRenderer {
 	private static ResourceLocation font = new ResourceLocation("textures/font/ascii.png");
 
+	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void worldRender(RenderWorldLastEvent e) {
 		if(!BetterHud.isEnabled()) return;
 
 		double maxDist = 0;
 		for(EntityInfo element : HudElement.ENTITY_INFO) {
-			if(element.isEnabled() && element.getDistance() > maxDist) maxDist = element.getDistance();
+			if(element.settings.get() && element.getDistance() > maxDist) maxDist = element.getDistance();
 		}
 		if(maxDist == 0) return;
 
@@ -42,7 +45,7 @@ public class EntityInfoRenderer {
 		if(entity != null && entity instanceof EntityLivingBase) {
 			GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
 			for(EntityInfo element : HudElement.ENTITY_INFO) {
-				if(element.isEnabled() && this.lastDistance <= element.getDistance()) {
+				if(element.settings.get() && this.lastDistance <= element.getDistance()) {
 					element.renderInfo((EntityLivingBase)entity, e.getPartialTicks());
 				}
 			}
@@ -58,6 +61,7 @@ public class EntityInfoRenderer {
 	public double lastDistance = 0;
 
 	// TODO source and clean up (maybe find in vanilla)
+	@SideOnly(Side.CLIENT)
 	public Entity getMouseOver(Minecraft mc, float partialTick, double length) {
 		Entity entity = mc.getRenderViewEntity();
 		

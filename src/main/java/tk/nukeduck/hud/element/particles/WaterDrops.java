@@ -12,25 +12,30 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.element.settings.SettingChoose;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.LayoutManager;
-import tk.nukeduck.hud.util.Ticker;
-import tk.nukeduck.hud.util.Ticker.Tickable;
+import tk.nukeduck.hud.util.Tickable;
 
 public class WaterDrops extends HudElement implements Tickable {
-	public SettingChoose density;
-
-	@Override
-	public void loadDefaults() {
-		this.setEnabled(true);
-		density.index = 1;
-	}
+	private final SettingChoose density = new SettingChoose("density", new String[] {"blood.sparse", "blood.normal", "blood.dense", "blood.denser"});
 
 	public WaterDrops() {
 		super("waterDrops");
-		settings.add(density = new SettingChoose("density", new String[] {"blood.sparse", "blood.normal", "blood.dense", "blood.denser"}));
+
+		settings.add(density);
+	}
+
+	@Override
+	public void loadDefaults() {
+		settings.set(true);
+		density.index = 1;
+	}
+
+	@Override
+	public void init(FMLInitializationEvent event) {
 		Ticker.FASTER.register(this);
 	}
 

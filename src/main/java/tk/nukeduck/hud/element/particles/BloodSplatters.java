@@ -7,26 +7,29 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.client.FMLClientHandler;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.element.settings.SettingChoose;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.LayoutManager;
-import tk.nukeduck.hud.util.Ticker;
-import tk.nukeduck.hud.util.Ticker.Tickable;
+import tk.nukeduck.hud.util.Tickable;
 
 public class BloodSplatters extends HudElement implements Tickable {
 	private final SettingChoose density = new SettingChoose("density", "blood.sparse", "blood.normal", "blood.dense", "blood.denser");
 
+	public BloodSplatters() {
+		super("bloodSplatters");
+		settings.add(density);
+	}
+
 	@Override
 	public void loadDefaults() {
-		setEnabled(true);
+		settings.set(true);
 		density.index = 1;
 	}
 
-	public BloodSplatters() {
-		super("bloodSplatters");
-
-		settings.add(density);
+	@Override
+	public void init(FMLInitializationEvent event) {
 		Ticker.FASTER.register(this);
 	}
 
@@ -45,7 +48,7 @@ public class BloodSplatters extends HudElement implements Tickable {
 			int width = scaledresolution.getScaledWidth();
 			int height = scaledresolution.getScaledHeight();
 
-			if (this.isEnabled()) {
+			if (isEnabled()) {
 				int max = (int) (2 * ((currentHealth - MC.player.getHealth()) - 1) * (density.index + 1 * 2));
 				for (int i = 0; i < max; i++) {
 					particleManager.particles.add(ParticleBlood.random(width, height));

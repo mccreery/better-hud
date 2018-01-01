@@ -2,10 +2,7 @@ package tk.nukeduck.hud.element;
 
 import static tk.nukeduck.hud.BetterHud.MC;
 
-import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
@@ -14,14 +11,14 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.element.entityinfo.BreedIndicator;
 import tk.nukeduck.hud.element.entityinfo.EntityInfo;
 import tk.nukeduck.hud.element.entityinfo.HorseInfo;
 import tk.nukeduck.hud.element.entityinfo.MobInfo;
 import tk.nukeduck.hud.element.particles.BloodSplatters;
 import tk.nukeduck.hud.element.particles.WaterDrops;
-import tk.nukeduck.hud.element.settings.Legend;
-import tk.nukeduck.hud.element.settings.Setting;
+import tk.nukeduck.hud.element.settings.RootSetting;
 import tk.nukeduck.hud.element.text.BiomeName;
 import tk.nukeduck.hud.element.text.Clock;
 import tk.nukeduck.hud.element.text.Connection;
@@ -32,13 +29,14 @@ import tk.nukeduck.hud.element.text.FpsCount;
 import tk.nukeduck.hud.element.text.FullInvIndicator;
 import tk.nukeduck.hud.element.text.LightLevel;
 import tk.nukeduck.hud.element.text.SystemClock;
+import tk.nukeduck.hud.network.Version;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.LayoutManager;
 import tk.nukeduck.hud.util.Point;
 
-public abstract class HudElement extends Gui {
+public abstract class HudElement { // Can't extend Gui due to @SideOnly
 	public static final ArmorBars ARMOR_BARS = new ArmorBars();
 	public static final ArrowCount ARROW_COUNT = new ArrowCount();
 	public static final BiomeName BIOME_NAME = new BiomeName();
@@ -85,41 +83,24 @@ public abstract class HudElement extends Gui {
 	public static final ResourceLocation HUD_ICONS = new ResourceLocation("hud", "textures/gui/icons_hud.png");
 	public static final ResourceLocation PARTICLES = new ResourceLocation("textures/particle/particles.png");
 
-	private boolean enabled = true;
+	public final RootSetting settings = new RootSetting();
 
 	public boolean isEnabled() {
-		return enabled;
+		return settings.get() && isSupportedByServer();
 	}
-
-	public void setEnabled(boolean enabled) {
-		this.enabled = enabled;
-	}
-
-	public final void toggleEnabled() {
-		setEnabled(!isEnabled());
-	}
-
-	/** A list of settings this element contains. */
-	public ArrayList<Setting> settings = new ArrayList<Setting>();
 
 	public final String name;
 	protected HudElement(String name) {
 		this.name = name;
 	}
 
-	/** @param y The top Y coordinate
-	 * @return The bottom Y coordinate
-	 * @see Setting#getGuiParts(List, Map, int, int, List) */
-	public int getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Point resolution, int top) {
-		return Setting.getGuiParts(parts, callbacks, resolution.x, top, settings);
+	public Version getMinimumServerVersion() {
+		return Version.ZERO;
 	}
 
-	public boolean hasSettings() {
-		return settings.size() > 0;
+	public boolean isSupportedByServer() {
+		return BetterHud.serverVersion.compareTo(getMinimumServerVersion()) >= 0;
 	}
-
-	/** {@code false} if the element is unsupported by the server. */
-	public boolean unsupported = false; // TODO private?
 
 	public final String getLocalizedName() {
 		return I18n.format(getUnlocalizedName());
@@ -129,6 +110,8 @@ public abstract class HudElement extends Gui {
 		return "betterHud.element." + name;
 	}
 
+	public boolean shouldRender() {return true;}
+
 	/** Renders this element to the screen
 	 * @return The bounds containing the element drawn */
 	public abstract Bounds render(RenderGameOverlayEvent event, LayoutManager manager);
@@ -136,39 +119,46 @@ public abstract class HudElement extends Gui {
 	/** Loads this element's default settings. */
 	public abstract void loadDefaults();
 
-	/** Called for all elements during {@link FMLInitializationEvent} */
-	public void init() {}
-
-	public boolean shouldRender() {return true;}
+	/** Called for all elements during {@link FMLInitializationEvent}
+	 * @see BetterHud#init(FMLInitializationEvent) */
+	public void init(FMLInitializationEvent event) {}
 
 	/** Loads this element's settings from the key-value combination map.
 	 * @param keyVals Key-value combinations containing setting names and values. */
+	@Deprecated // TODO respond to children
 	public final void loadSettings(HashMap<String, String> keyVals) {
-		if(keyVals.containsKey("enabled")) this.setEnabled(Boolean.parseBoolean(keyVals.get("enabled")));
+		settings.load(keyVals.get(settings.name));
 
-		for(Setting setting : this.settings) {
+		/*for(Setting setting : this.settings) {
 			if(setting instanceof Legend || setting.name == "enabled") continue;
 			if(keyVals.containsKey(setting.name)) setting.load(keyVals.get(setting.name));
-		}
+		}*/
 	}
 
 	/** Saves this element's settings into a key-value combination map. TODO investigate
 	 * @return Key-value combinations containing this element's setting names and values. */
-	/*public final HashMap<String, String> saveSettings() {
+	@Deprecated // TODO
+	public final HashMap<String, String> saveSettings() {
 		HashMap<String, String> keyVals = new HashMap<String, String>();
-		for(ElementSetting setting : this.settings) {
+		keyVals.put(settings.name, settings.save());
+		/*for(Setting setting : this.settings) {
 			keyVals.put(setting.getName(), setting.toString());
-		}
+		}*/
 		return keyVals;
-	}*/
+	}
 
-	public static void initAll() {
+	/** Calls {@link #init(FMLInitializationEvent)} on all elements
+	 * @see #init(FMLInitializationEvent)
+	 * @see BetterHud#init(FMLInitializationEvent) */
+	public static void initAll(FMLInitializationEvent event) {
 		for(HudElement element : ELEMENTS) {
-			element.init();
+			element.init(event);
 		}
 	}
 
-	public static void reloadAll() { // TODO refactor
+	/** Calls {@link #loadDefaults()} on all elements
+	 * @see #loadDefaults() */
+	public static void loadAllDefaults() {
 		GLOBAL.loadDefaults();
 
 		for (HudElement element : ELEMENTS) {
@@ -180,7 +170,7 @@ public abstract class HudElement extends Gui {
 
 	/** @see Gui#drawRect(int, int, int, int, int) */
 	public static void drawRect(Bounds bounds, int color) {
-		drawRect(bounds.left(), bounds.top(), bounds.right(), bounds.bottom(), color);
+		Gui.drawRect(bounds.left(), bounds.top(), bounds.right(), bounds.bottom(), color);
 	}
 
 	/** {@code progress} defaults to the durability of {@code stack}

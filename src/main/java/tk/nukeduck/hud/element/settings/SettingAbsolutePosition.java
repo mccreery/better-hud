@@ -1,5 +1,7 @@
 package tk.nukeduck.hud.element.settings;
 
+import static tk.nukeduck.hud.BetterHud.SPACER;
+
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
@@ -39,7 +41,7 @@ public class SettingAbsolutePosition extends Setting {
 
 		parts.add(pick = new GuiButton(4, width / 2 - 75, y + 22, 150, 20, I18n.format("betterHud.menu.pick")));
 
-		return y + 42;
+		return y + 42 + SPACER;
 	}
 
 	public boolean isPicking = false;

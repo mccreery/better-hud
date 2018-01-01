@@ -1,5 +1,7 @@
 package tk.nukeduck.hud.element.settings;
 
+import static tk.nukeduck.hud.BetterHud.SPACER;
+
 import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
@@ -9,15 +11,16 @@ import org.apache.commons.lang3.ArrayUtils;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiLabel;
 import net.minecraft.client.resources.I18n;
+import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.gui.GuiElementSettings;
 import tk.nukeduck.hud.util.Bounds;
+import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.Point;
 
 public class SettingChoose extends Setting {
 	protected GuiButton last, next, backing;
-	protected GuiLabel label;
 	protected final Direction alignment;
 	public String[] modes;
 	public int index = 0;
@@ -32,15 +35,20 @@ public class SettingChoose extends Setting {
 		this.alignment = alignment;
 	}
 
-	public int last() { // TODO find modulo solution maybe
+	public int last() {
 		if(index == 0) {
-			set(modes.length - 1);
-		} else {
-			set(index - 1);
+			index = modes.length;
+		}
+		return --index;
+	}
+	public int next() {
+		++index;
+
+		if(index == modes.length) {
+			index = 0;
 		}
 		return index;
 	}
-	public int next() {set((index + 1) % modes.length); return index;}
 
 	public void set(String value) {
 		set(ArrayUtils.indexOf(this.modes, value));
@@ -48,8 +56,6 @@ public class SettingChoose extends Setting {
 
 	public void set(int index) {
 		this.index = index;
-		// TODO remove line pls
-		label.addLine(I18n.format("betterHud.setting." + getValue()));
 	}
 	
 	public String getValue() {
@@ -71,10 +77,15 @@ public class SettingChoose extends Setting {
 		parts.add(backing = new GuiButton(2, bounds.x(), bounds.y(), bounds.width(), bounds.height(), ""));
 		backing.enabled = false;
 
-		//parts.add(label = new GuiLabel(MC.fontRenderer, 0, width / 2 - 100, y, 200, 20, Colors.WHITE).setCentered());
-		//label.addLine(I18n.format("betterHud.setting." + getValue())); TODO
+		return alignment != Direction.WEST ? y + 20 + SPACER : -1;
+	}
 
-		return alignment != Direction.WEST ? y + 20 : -1;
+	@Override
+	public void draw() {
+		String value = I18n.format("betterHud.setting." + getValue());
+		Point center = new Point(backing.x + backing.width / 2, backing.y + backing.height / 2);
+
+		HudElement.drawString(value, center, Direction.CENTER, Colors.WHITE);
 	}
 
 	@Override

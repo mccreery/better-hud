@@ -19,7 +19,7 @@ public class HealIndicator extends HudElement {
 
 	@Override
 	public void loadDefaults() {
-		this.setEnabled(true);
+		this.settings.set(true);
 		position.load(Direction.NORTH_WEST);
 		mode.index = 1;
 	}
@@ -55,6 +55,6 @@ public class HealIndicator extends HudElement {
 	/** @see net.minecraft.util.FoodStats#onUpdate(net.minecraft.entity.player.EntityPlayer) */
 	@Override
 	public boolean shouldRender() {
-		return super.shouldRender() && MC.world.getGameRules().getBoolean("naturalRegeneration") && MC.player.getFoodStats().getFoodLevel() >= 18 && MC.player.shouldHeal();
+		return MC.world.getGameRules().getBoolean("naturalRegeneration") && MC.player.getFoodStats().getFoodLevel() >= 18 && MC.player.shouldHeal();
 	}
 }

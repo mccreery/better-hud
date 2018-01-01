@@ -6,6 +6,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.util.Bounds;
@@ -29,12 +30,12 @@ public class HidePlayers extends HudElement {
 
 	@Override
 	public void loadDefaults() {
-		this.setEnabled(false);
+		this.settings.set(false);
 		includeMe.set(false);
 	}
 
 	@Override
-	public void init() {
+	public void init(FMLInitializationEvent event) {
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 

@@ -1,6 +1,8 @@
 # Changelog
 
 ## [Unreleased]
+### Added
+- Server compatibility checks for future elements
 ### Changed
 - Code refactoring, easier to work with
 - Much smaller code

@@ -28,7 +28,7 @@ public class Coordinates extends TextElement {
 
 	public Coordinates() {
 		super("coordinates", Direction.CORNERS | Direction.flags(Direction.NORTH));
-		this.settings.add(0, new Legend("position"));
+
 		this.settings.add(new Legend("misc"));
 		this.settings.add(spaced = new SettingBoolean("spaced"));
 		this.settings.add(decimalPlaces = new SettingSlider("decimals", 0, 5, 1) {

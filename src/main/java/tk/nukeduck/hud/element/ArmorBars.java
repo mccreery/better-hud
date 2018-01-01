@@ -41,7 +41,7 @@ public class ArmorBars extends HudElement {
 
 	@Override
 	public void loadDefaults() {
-		this.setEnabled(true);
+		settings.set(true);
 		bars.index = 2;
 		showName.set(true);
 		showDurability.set(true);
@@ -173,13 +173,13 @@ public class ArmorBars extends HudElement {
 
 		MC.mcProfiler.startSection("items");
 		RenderHelper.enableGUIStandardItemLighting();
-		for(int i = 0; i < 4; i++) {
+		for(int i = 3; i >= 0; i--) {
 			ItemStack stack = MC.player.inventory.armorItemInSlot(i);
 
 			if(stack != null) {
 				MC.getRenderItem().renderItemAndEffectIntoGUI(stack, item.x(), item.y());
 			} else {
-				TextureAtlasSprite empty = MC.getTextureMapBlocks().getAtlasSprite(ItemArmor.EMPTY_SLOT_NAMES[i]); // TODO check order
+				TextureAtlasSprite empty = MC.getTextureMapBlocks().getAtlasSprite(ItemArmor.EMPTY_SLOT_NAMES[i]);
 
 				GlStateManager.disableLighting();
 				MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);

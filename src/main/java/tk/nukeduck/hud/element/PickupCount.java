@@ -20,13 +20,14 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.element.settings.SettingSlider;
 import tk.nukeduck.hud.network.PickupHandler;
+import tk.nukeduck.hud.network.Version;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.FormatUtil;
 import tk.nukeduck.hud.util.LayoutManager;
 import tk.nukeduck.hud.util.PaddedBounds;
-import tk.nukeduck.hud.util.Ticker;
+import tk.nukeduck.hud.util.Tickable.Ticker;
 
 public class PickupCount extends HudElement {
 	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS | Direction.CENTER.flag());
@@ -50,7 +51,7 @@ public class PickupCount extends HudElement {
 
 	@Override
 	public void loadDefaults() {
-		this.setEnabled(true);
+		this.settings.set(true);
 		position.load(Direction.CENTER);
 		fadeSpeed.value = .5;
 	}
@@ -61,6 +62,11 @@ public class PickupCount extends HudElement {
 		settings.add(position);
 		settings.add(fadeSpeed);
 		Ticker.FASTER.register(handler);
+	}
+
+	@Override
+	public Version getMinimumServerVersion() {
+		return new Version(1, 3, 9);
 	}
 
 	@Override
