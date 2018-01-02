@@ -1,3 +1,6 @@
+tile.null.name=Unknown Block
+tile.endPortal.name=End Portal
+
 betterHud.menu.hudSettings=HUD Settings
 betterHud.menu.settings=%s Settings
 betterHud.menu.enableAll=Enable All
@@ -6,12 +9,11 @@ betterHud.menu.resetDefaults=Reset Defaults
 betterHud.menu.lastPage=Last Page
 betterHud.menu.nextPage=Next Page
 betterHud.menu.page=Page %s
-betterHud.menu.settingButton=%s: %s
 betterHud.menu.picking=Picking (Cancel)
 betterHud.menu.pick=Pick
 betterHud.menu.options=Options
 
-betterHud.unsupported=This element is unsupported by the server
+betterHud.unsupported=This element is not supported by the server
 
 betterHud.element.bloodSplatters=Blood Splatters
 betterHud.element.arrowCount=Arrow Count
@@ -107,9 +109,9 @@ betterHud.setting.total=Total
 betterHud.setting.showBlock=Show Block
 betterHud.setting.invNames=Inventory Names
 betterHud.setting.distance=Distance
-betterHud.setting.damaged.0=§c!§r
-betterHud.setting.damaged.1=§c! !§r
-betterHud.setting.damaged.2=§c! ! !§r
+betterHud.setting.damaged.1=§c!§r
+betterHud.setting.damaged.2=§c! !§r
+betterHud.setting.damaged.3=§c! ! !§r
 betterHud.setting.showIds=Show IDs
 betterHud.setting.scale=Scale
 betterHud.setting.colorRed=§cRed
@@ -161,11 +163,11 @@ betterHud.strings.x=X: %s
 betterHud.strings.y=Y: %s
 betterHud.strings.z=Z: %s
 betterHud.strings.xyz=X: %s, Y: %s, Z: %s
-betterHud.strings.separator=, 
+betterHud.strings.separator=,
 betterHud.strings.fullInv=Inventory Full
 betterHud.strings.biome=Biome: %s
 betterHud.strings.outOf=%s/%s
-betterHud.strings.splitter= - 
+betterHud.strings.splitter= -
 betterHud.strings.time=%s:%s
 betterHud.strings.time.am=%s:%s AM
 betterHud.strings.time.pm=%s:%s PM

@@ -10,7 +10,7 @@ import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingChoose;
 import tk.nukeduck.hud.element.settings.SettingPosition;
-import tk.nukeduck.hud.element.settings.SettingSlider;
+import tk.nukeduck.hud.element.settings.SettingWarnings;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
@@ -22,15 +22,13 @@ import tk.nukeduck.hud.util.RenderUtil;
 public class HandBar extends HudElement {
 	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS | Direction.SOUTH.flag());
 
-	private final SettingBoolean showName;
-	private final SettingBoolean showDurability;
-	private final SettingChoose durabilityMode;
-	private final SettingBoolean showItem;
-	private final SettingBoolean offHand;
-	private final SettingBoolean showBars;
-
-	private final SettingBoolean enableWarnings;
-	private final SettingSlider[] damageWarnings;
+	private final SettingBoolean showName = new SettingBoolean("showName");
+	private final SettingBoolean showDurability = new SettingBoolean("showDurability", Direction.WEST);
+	private final SettingChoose durabilityMode = new SettingChoose("durabilityMode", Direction.EAST, "values", "percent");
+	private final SettingBoolean showItem = new SettingBoolean("showItem");
+	private final SettingBoolean offHand = new SettingBoolean("offHand");
+	private final SettingBoolean showBars = new SettingBoolean("showBars");
+	private final SettingWarnings warnings = new SettingWarnings("damageWarning");
 
 	@Override
 	public void loadDefaults() {
@@ -43,37 +41,21 @@ public class HandBar extends HudElement {
 		showItem.set(true);
 		showBars.set(true);
 		offHand.set(false);
-		enableWarnings.set(true);
-		damageWarnings[0].value = 45.0;
-		damageWarnings[1].value = 25.0;
-		damageWarnings[2].value = 10.0;
+		warnings.set(true, 45, 25, 10);
 	}
 
 	public HandBar() {
 		super("handBar");
 
-		// TODO move sets
 		settings.add(position);
 		settings.add(new Legend("misc"));
-		settings.add(showItem = new SettingBoolean("showItem"));
-		settings.add(showBars = new SettingBoolean("showBars"));
-		settings.add(showDurability = new SettingBoolean("showDurability", Direction.WEST));
-		settings.add(durabilityMode = new SettingChoose("durabilityMode", Direction.EAST, new String[] {"values", "percent"}));
-		settings.add(showName = new SettingBoolean("showName"));
-		settings.add(offHand = new SettingBoolean("offHand"));
-
-		this.settings.add(new Legend("damageWarning"));
-		this.settings.add(this.enableWarnings = new SettingBoolean("damageWarning"));
-		damageWarnings = new SettingSlider[3];
-		Direction[] positions = new Direction[] {Direction.WEST, Direction.CENTER, Direction.EAST};
-		for(int i = 0; i < 3; i++) {
-			this.settings.add(damageWarnings[i] = new SettingSlider("damaged." + String.valueOf(i), 1, 100, 1, positions[i]) {
-				@Override
-				public String getSliderText() {
-					return I18n.format("betterHud.menu.settingButton", this.getLocalizedName(), I18n.format("betterHud.strings.percent", String.valueOf((int) this.value)));
-				}
-			});
-		}
+		settings.add(showItem);
+		settings.add(showBars);
+		settings.add(showDurability);
+		settings.add(durabilityMode);
+		settings.add(showName);
+		settings.add(offHand);
+		settings.add(warnings);
 	}
 
 	private String generateText(ItemStack stack) {
@@ -82,7 +64,7 @@ public class HandBar extends HudElement {
 
 		String dur, text;
 		if(durabilityMode.getValue().equals("percent")) {
-			dur = I18n.format("betterHud.strings.percent", FormatUtil.ONE_PLACE.format(value * 100.0));
+			dur = I18n.format("betterHud.strings.percent", FormatUtil.formatToPlaces(value * 100.0, 1));
 		} else {
 			dur = I18n.format("betterHud.strings.outOf", String.valueOf(maxDamage - stack.getItemDamage()), String.valueOf(maxDamage));
 		}
@@ -97,14 +79,10 @@ public class HandBar extends HudElement {
 			text = "";
 		}
 
-		if(enableWarnings.get()) {
-			int count = -1;
-			for(int a = 0; a < this.damageWarnings.length; a++) {
-				if(value * 100.0f <= damageWarnings[a].value) {
-					count = a;
-				}
-			}
-			text += count == -1 ? "" : " " + I18n.format("betterHud.strings.damaged." + count);
+		int count = warnings.getWarning(value);
+
+		if(count > 0) {
+			text += " " + I18n.format("betterHud.strings.damaged." + count);
 		}
 		return text;
 	}

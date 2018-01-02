@@ -13,12 +13,7 @@ import tk.nukeduck.hud.element.settings.SettingSlider;
 import tk.nukeduck.hud.util.Tickable;
 
 public class CpsCount extends TextElement implements Tickable {
-	private final SettingSlider timeoutMax = new SettingSlider("timeout", 1, 10, 1) {
-		@Override
-		public String getSliderText() {
-			return I18n.format("betterHud.menu.settingButton", this.getLocalizedName(), I18n.format("betterHud.strings.seconds", (int)value));
-		}
-	};
+	private final SettingSlider timeoutMax = new SettingSlider("timeout", 1, 10, 1).setUnlocalizedValue("betterHud.strings.seconds");
 	private final SettingBoolean showBurst = new SettingBoolean("showBurst");
 	private final SettingBoolean remember = new SettingBoolean("remember");
 

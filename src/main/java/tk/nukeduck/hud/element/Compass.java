@@ -11,7 +11,6 @@ import static tk.nukeduck.hud.BetterHud.MC;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.resources.I18n;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
@@ -24,19 +23,9 @@ import tk.nukeduck.hud.util.LayoutManager;
 
 public class Compass extends HudElement {
 	private final SettingPosition position = new SettingPosition("position");
-	private final SettingSlider directionScaling = new SettingSlider("scaledDirections", 0, 100, 1) {
-		@Override
-		public String getSliderText() {
-			return I18n.format("betterHud.menu.settingButton", this.getLocalizedName(), I18n.format("betterHud.strings.percent", String.valueOf((int) this.value)));
-		}
-	};
+	private final SettingSlider directionScaling = new SettingSlider("scaledDirections", 0, 100, 1).setUnlocalizedValue("betterHud.strings.percent");
 	private final SettingBoolean showNotches = new SettingBoolean("showNotches");
-	private final SettingSlider scale = new SettingSlider("scale", 25, 200, 1) {
-		@Override
-		public String getSliderText() {
-			return I18n.format("betterHud.menu.settingButton", this.getLocalizedName(), I18n.format("betterHud.strings.percent", String.valueOf((int) this.value)));
-		}
-	};
+	private final SettingSlider scale = new SettingSlider("scale", 25, 200, 1).setUnlocalizedValue("betterHud.strings.percent");
 
 	@Override
 	public void loadDefaults() {

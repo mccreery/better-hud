@@ -34,4 +34,10 @@ public class FuncsUtil {
 	public static boolean stackEqualExact(ItemStack stack1, ItemStack stack2) {
 		return stack1.getItem() == stack2.getItem() && (!stack1.getHasSubtypes() || stack1.getMetadata() == stack2.getMetadata()) && ItemStack.areItemStackTagsEqual(stack1, stack2);
 	}
+
+	/** Considers {@code null} to be empty
+	 * @see ItemStack#isEmpty() */
+	public static boolean isStackEmpty(ItemStack stack) {
+		return stack == null || stack.isEmpty();
+	}
 }

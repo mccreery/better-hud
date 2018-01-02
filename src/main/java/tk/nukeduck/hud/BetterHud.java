@@ -31,6 +31,7 @@ import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.events.EntityInfoRenderer;
 import tk.nukeduck.hud.events.PickupNotifier;
 import tk.nukeduck.hud.gui.GuiHudMenu;
+import tk.nukeduck.hud.network.InventoryNameQuery;
 import tk.nukeduck.hud.network.MessageNotifyClientHandler;
 import tk.nukeduck.hud.network.MessagePickup;
 import tk.nukeduck.hud.network.MessagePickupHandler;
@@ -92,7 +93,10 @@ public class BetterHud { // TODO thoroughly test GL, replace drawRect coords
 		// Message ID 0 reserved for ignored server presence message from [,1.4)
 		NET_WRAPPER.registerMessage(MessagePickupHandler.class, MessagePickup.class, 1, Side.CLIENT);
 		NET_WRAPPER.registerMessage(MessageNotifyClientHandler.class, Version.class, 2, Side.CLIENT);
-		//NET_WRAPPER.registerMessage(MessageBreedingHandler.class, MessageBreeding.class, 3, Side.CLIENT);
+
+		// Used to update inventory names
+		NET_WRAPPER.registerMessage(InventoryNameQuery.ServerHandler.class, InventoryNameQuery.Request.class, 3, Side.SERVER);
+		NET_WRAPPER.registerMessage(InventoryNameQuery.ClientHandler.class, InventoryNameQuery.Response.class, 4, Side.CLIENT);
 
 		MinecraftForge.EVENT_BUS.register(entityInfoRenderer = new EntityInfoRenderer());
 		MinecraftForge.EVENT_BUS.register(pickupNotifier = new PickupNotifier());

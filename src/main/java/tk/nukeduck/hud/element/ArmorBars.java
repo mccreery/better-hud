@@ -16,7 +16,7 @@ import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingChoose;
 import tk.nukeduck.hud.element.settings.SettingPosition;
-import tk.nukeduck.hud.element.settings.SettingSlider;
+import tk.nukeduck.hud.element.settings.SettingWarnings;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
@@ -32,9 +32,7 @@ public class ArmorBars extends HudElement {
 	private final SettingChoose durabilityMode;
 
 	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS);
-
-	private SettingBoolean enableWarnings;
-	private SettingSlider[] damageWarnings;
+	private final SettingWarnings warnings = new SettingWarnings("damageWarning");
 
 	String[] textCache = new String[4];
 	int[] widthCache = new int[4];
@@ -48,10 +46,7 @@ public class ArmorBars extends HudElement {
 		durabilityMode.index = 0;
 		position.load(Direction.NORTH_WEST);
 
-		enableWarnings.set(true);
-		damageWarnings[0].value = 45.0;
-		damageWarnings[1].value = 25.0;
-		damageWarnings[2].value = 10.0;
+		warnings.set(true, 45, 25, 10);
 	}
 
 	public ArmorBars() {
@@ -69,19 +64,8 @@ public class ArmorBars extends HudElement {
 		this.settings.add(showName = new SettingBoolean("showName"));
 		this.settings.add(bars = new SettingChoose("barType", new String[] {"hidden", "smallBars", "largeBars"}));
 		bars.comments.add("hidden, smallBars, largeBars");
-		
-		this.settings.add(new Legend("damageWarning"));
-		this.settings.add(this.enableWarnings = new SettingBoolean("damageWarning"));
-		damageWarnings = new SettingSlider[3];
-		Direction[] positions = new Direction[] {Direction.WEST, Direction.CENTER, Direction.EAST};
-		for(int i = 0; i < 3; i++) {
-			this.settings.add(damageWarnings[i] = new SettingSlider("damaged." + String.valueOf(i), 1, 100, 1, positions[i]) {
-				@Override
-				public String getSliderText() {
-					return I18n.format("betterHud.menu.settingButton", this.getLocalizedName(), I18n.format("betterHud.strings.percent", String.valueOf((int) this.value)));
-				}
-			});
-		}
+
+		settings.add(warnings);
 	}
 
 	public String generateText(ItemStack item) {
@@ -89,63 +73,23 @@ public class ArmorBars extends HudElement {
 		if(this.showName.get()) parts.add(item.getDisplayName());
 		int maxDamage = item.getMaxDamage();
 		float value = (float) (maxDamage - item.getItemDamage()) / (float) maxDamage;
+
 		if(this.showDurability.get()) {
 			if(durabilityMode.getValue().equals("percent")) {
-				parts.add(I18n.format("betterHud.strings.percent", FormatUtil.ONE_PLACE.format(value * 100.0)));
+				parts.add(I18n.format("betterHud.strings.percent", FormatUtil.formatToPlaces(value * 100.0, 1)));
 			} else {
 				parts.add(I18n.format("betterHud.strings.outOf", String.valueOf(maxDamage - item.getItemDamage()), String.valueOf(maxDamage)));
 			}
 		}
 
-		if(enableWarnings.get()) {
-			int count = -1;
-			for(int a = 0; a < this.damageWarnings.length; a++) {
-				if(value * 100.0f <= damageWarnings[a].value) {
-					count = a;
-				}
-			}
-			String exclamation = count == -1 ? "" : I18n.format("betterHud.strings.damaged." + count);
-			return FormatUtil.separate(I18n.format("betterHud.strings.splitter"), parts.toArray(new String[parts.size()])) + " " + exclamation;
-		} else {
-			return FormatUtil.separate(I18n.format("betterHud.strings.splitter"), parts.toArray(new String[parts.size()]));
+		String text = FormatUtil.separate(I18n.format("betterHud.strings.splitter"), parts.toArray(new String[parts.size()]));
+		int count = warnings.getWarning(value);
+
+		if(count > 0) {
+			text += " " + I18n.format("betterHud.strings.damaged." + count);
 		}
+		return text;
 	}
-	
-	/*public Point getPosition(ScaledResolution resolution, LayoutManager manager) {
-		if(position.getDirection() != null) {
-			return manager.getPosition(position.getDirection(), new Point(resolution));
-		} else {
-			return position.getPosition();
-		}
-	}*/
-
-	/*private Bounds generateBounds(ScaledResolution resolution, LayoutManager layoutManager, ItemStack[] armor) {
-		Bounds b = new Bounds(0, 0, 16, 0);
-
-		boolean anyArmor = false;
-		for(int i = 0; i < 4; i++) {
-			if(isStackValid(armor[i])) {
-				anyArmor = true;
-				
-				if(this.showName.get() || this.showDurability.get()) {
-					this.textCache[i] = generateText(armor[i]);
-					widthCache[i] = 21 + MC.fontRenderer.getStringWidth(textCache[i]);
-					if(widthCache[i] > b.width()) b.width(widthCache[i]);
-				}
-			}
-		}
-		if(!anyArmor) return b;
-		
-		if(this.bars.index == 2) {
-			b.width(Math.max(b.width(), 85));
-		} else if(this.bars.index == 1) {
-			b.width(Math.max(b.width(), 20));
-		}
-		
-		b.height(70);
-		b.position = getPosition(resolution, layoutManager);
-		return b;
-	}*/
 
 	@Override
 	public Bounds render(RenderGameOverlayEvent event, LayoutManager manager) {

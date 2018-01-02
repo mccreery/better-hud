@@ -8,26 +8,29 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import tk.nukeduck.hud.element.settings.SettingSlider;
 
-// TODO clean up
 @SideOnly(Side.CLIENT)
 public class GuiOptionSliderA extends GuiButton {
 	private double sliderValue = 0.0;
 	public boolean dragging;
 	private SettingSlider setting;
 
-	public GuiOptionSliderA(int p_i45016_1_, int p_i45016_2_, int p_i45016_3_, SettingSlider setting) {
-		this(p_i45016_1_, p_i45016_2_, p_i45016_3_, 150, 20, setting);
+	public GuiOptionSliderA(int id, int x, int y, SettingSlider setting) {
+		this(id, x, y, 150, 20, setting);
 	}
 
-	public GuiOptionSliderA(int p_i45017_1_, int p_i45017_2_, int p_i45017_3_, int width, int height, SettingSlider setting) {
-		super(p_i45017_1_, p_i45017_2_, p_i45017_3_, width, height, "");
+	public GuiOptionSliderA(int id, int x, int y, int width, int height, SettingSlider setting) {
+		super(id, x, y, width, height, "");
 		this.setting = setting;
 
 		this.sliderValue = setting.normalize(setting.value);
 		this.sliderValue = MathHelper.clamp(this.sliderValue, 0.0, 1.0);
 		this.setting.value = setting.denormalize(this.sliderValue);
 		
-		this.displayString = setting.getSliderText();
+		updateText();
+	}
+
+	private void updateText() {
+		displayString = setting.getDisplayString();
 	}
 
 	@Override
@@ -44,7 +47,7 @@ public class GuiOptionSliderA extends GuiButton {
 				this.setting.value = setting.denormalize(this.sliderValue);
 				this.sliderValue = setting.normalize(this.setting.value);
 				
-				this.displayString = setting.getSliderText();
+				updateText();
 			}
 
 			mc.getTextureManager().bindTexture(BUTTON_TEXTURES);
@@ -57,13 +60,8 @@ public class GuiOptionSliderA extends GuiButton {
 	@Override
 	public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
 		if(super.mousePressed(mc, mouseX, mouseY)) {
-			this.sliderValue = (float) (mouseX - (this.x + 4)) / (float) (this.width - 8);
-			this.sliderValue = MathHelper.clamp(this.sliderValue, 0.0, 1.0);
-			this.setting.value = setting.denormalize(this.sliderValue);
-			this.sliderValue = setting.normalize(this.setting.value);
-			
-			this.displayString = setting.getSliderText();
 			this.dragging = true;
+			mouseDragged(mc, mouseX, mouseY);
 			return true;
 		} else {
 			return false;

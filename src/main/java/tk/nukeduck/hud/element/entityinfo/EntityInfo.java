@@ -2,7 +2,6 @@ package tk.nukeduck.hud.element.entityinfo;
 
 import static org.lwjgl.opengl.GL11.glTranslatef;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import tk.nukeduck.hud.element.HudElement;
@@ -11,12 +10,7 @@ import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.LayoutManager;
 
 public abstract class EntityInfo extends HudElement {
-	protected final SettingSlider distance = new SettingSlider("distance", 5, 200) {
-		@Override
-		public String getSliderText() {
-			return I18n.format("betterHud.menu.settingButton", this.getLocalizedName(), I18n.format("betterHud.strings.distanceShort", this.value));
-		}
-	};
+	protected final SettingSlider distance = new SettingSlider("distance", 5, 200).setUnlocalizedValue("betterHud.strings.distanceShort");
 
 	public double getDistance() {
 		return distance.value;

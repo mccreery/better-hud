@@ -14,7 +14,6 @@ public class GuiScrollbar extends Gui {
 	private final Bounds grabber;
 	private final float scaleFactor;
 	private final int background, foreground, highlight;
-	//private final boolean vertical; // TODO vertical
 
 	/** The size of the visible part of the content */
 	private final int viewport;

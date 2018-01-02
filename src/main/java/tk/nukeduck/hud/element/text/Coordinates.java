@@ -31,12 +31,7 @@ public class Coordinates extends TextElement {
 
 		this.settings.add(new Legend("misc"));
 		this.settings.add(spaced = new SettingBoolean("spaced"));
-		this.settings.add(decimalPlaces = new SettingSlider("decimals", 0, 5, 1) {
-			@Override
-			public String getSliderText() {
-				return I18n.format("betterHud.menu.settingButton", this.getLocalizedName(), String.valueOf((int) this.value));
-			}
-		});
+		this.settings.add(decimalPlaces = new SettingSlider("decimals", 0, 5, 1));
 	}
 
 	@Override

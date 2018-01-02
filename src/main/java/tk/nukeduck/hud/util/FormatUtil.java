@@ -7,8 +7,6 @@ import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.resources.I18n;
 
 public class FormatUtil {
-	public static final DecimalFormat ONE_PLACE = new DecimalFormat("#.#");
-
 	public static String formatTime(int hours, int minutes, boolean twentyFourHour) {
 		String unlocalized, hourS, minuteS;
 
@@ -27,7 +25,15 @@ public class FormatUtil {
 		minuteS = String.format("%02d", minutes);
 		return I18n.format(unlocalized, hourS, minuteS);
 	}
-	
+
+	/** Formats {@code x} to {@code n} decimal places */
+	public static String formatToPlaces(double x, int n) {
+		DecimalFormat format = new DecimalFormat();
+		format.setMaximumFractionDigits(n);
+
+		return format.format(x);
+	}
+
 	public static int getLongestWidth(FontRenderer fr, ArrayList<String> strings) {
 		int longest = 0;
 		for(String s : strings) {

@@ -10,7 +10,7 @@ import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 
 public abstract class SettingAlignable extends Setting {
-	protected final Direction alignment;
+	protected Direction alignment;
 
 	public SettingAlignable(String name, Direction alignment) {
 		super(name);

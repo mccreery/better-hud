@@ -27,11 +27,11 @@ public class MobInfo extends EntityInfo {
 
 	private final SettingSlider compress = new SettingSlider("compress", 0, 200, 20) {
 		@Override
-		public String getSliderText() {
+		public String getDisplayValue(double value) {
 			if(value == 0) {
-				return I18n.format("betterHud.menu.settingButton", getLocalizedName(), I18n.format("betterHud.setting.never"));
+				return I18n.format("betterHud.setting.never");
 			} else {
-				return I18n.format("betterHud.menu.settingButton", getLocalizedName(), (int)value);
+				return super.getDisplayValue(value);
 			}
 		}
 	};

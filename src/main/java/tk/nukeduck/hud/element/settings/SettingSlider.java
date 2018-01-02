@@ -15,25 +15,44 @@ import tk.nukeduck.hud.gui.GuiElementSettings;
 import tk.nukeduck.hud.gui.GuiOptionSliderA;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.FormatUtil;
 
 public class SettingSlider extends SettingAlignable {
 	private final double min;
 	private final double max;
 	public final double accuracy;
+
 	public double value = 0;
 
+	private int displayPlaces;
+	private String unlocalizedValue = null;
+
 	public SettingSlider(String name, double min, double max) {
-		this(name, min, max, -1, Direction.CENTER);
+		this(name, min, max, -1);
 	}
 	public SettingSlider(String name, double min, double max, double accuracy) {
-		this(name, min, max, accuracy, Direction.CENTER);
-	}
-	public SettingSlider(String name, double min, double max, double accuracy, Direction alignment) {
-		super(name, alignment);
+		super(name, Direction.CENTER);
 		this.min = min;
 		this.max = max;
 		this.accuracy = accuracy;
+		this.displayPlaces = accuracy == (int)accuracy ? 0 : 1;
+
 		this.value = MathHelper.clamp(value, min, max);
+	}
+
+	public SettingSlider setAlignment(Direction alignment) {
+		this.alignment = alignment;
+		return this;
+	}
+
+	public SettingSlider setDisplayPlaces(int displayPlaces) {
+		this.displayPlaces = displayPlaces;
+		return this;
+	}
+
+	public SettingSlider setUnlocalizedValue(String unlocalizedValue) {
+		this.unlocalizedValue = unlocalizedValue;
+		return this;
 	}
 
 	public double normalize(double value) {
@@ -45,8 +64,17 @@ public class SettingSlider extends SettingAlignable {
 		return accuracy == -1 ? toRound : MathHelper.clamp(Math.round(toRound / accuracy) * accuracy, min, max);
 	}
 
-	public String getSliderText() {
-		return I18n.format("betterHud.menu.settingButton", this.getLocalizedName(), value);
+	public String getDisplayString() {
+		return getLocalizedName() + ": " + getDisplayValue(value);
+	}
+
+	public String getDisplayValue(double value) {
+		String s = FormatUtil.formatToPlaces(value, displayPlaces);
+
+		if(unlocalizedValue != null) {
+			s = I18n.format(unlocalizedValue, s);
+		}
+		return s;
 	}
 
 	@Override

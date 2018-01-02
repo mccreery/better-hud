@@ -1,6 +1,5 @@
 package tk.nukeduck.hud.element.settings;
 
-import static tk.nukeduck.hud.BetterHud.MC;
 import static tk.nukeduck.hud.BetterHud.SPACER;
 
 import java.io.IOException;
@@ -8,13 +7,10 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.resources.I18n;
 import tk.nukeduck.hud.gui.GuiElementSettings;
 import tk.nukeduck.hud.gui.GuiToggleButton;
-import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
 
 public class SettingDirection extends Setting {
@@ -103,11 +99,11 @@ public class SettingDirection extends Setting {
 
 	@Override
 	public void draw() {
-		final String text = I18n.format("betterHud.menu.settingButton", this.getLocalizedName(), I18n.format("betterHud.setting." + this.value.getUnlocalizedName()));
+		/*final String text = I18n.format("betterHud.menu.settingButton", this.getLocalizedName(), I18n.format("betterHud.setting." + this.value.getUnlocalizedName()));
 		final int x = middleRight.x + middleRight.width + 5;
 		final int y = middleRight.y + (middleRight.height - Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT) / 2;
 
-		MC.fontRenderer.drawStringWithShadow(text, x, y, Colors.WHITE);
+		MC.fontRenderer.drawStringWithShadow(text, x, y, Colors.WHITE);*/
 	}
 
 	@Override

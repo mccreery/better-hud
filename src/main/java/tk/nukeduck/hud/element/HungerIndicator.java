@@ -14,7 +14,7 @@ import tk.nukeduck.hud.util.LayoutManager;
 
 public class HungerIndicator extends HudElement {
 	private final SettingPosition position = new SettingPosition("position", Direction.CENTER, Direction.SOUTH);
-	private final SettingSlider maxLimit;
+	private final SettingSlider maxLimit = new SettingSlider("maxLimit", 0, 10, .5);
 
 	@Override
 	public void loadDefaults() {
@@ -27,7 +27,6 @@ public class HungerIndicator extends HudElement {
 		super("foodIndicator");
 		settings.add(position);
 		this.settings.add(new Legend("misc"));
-		this.settings.add(maxLimit = new SettingSlider("maxLimit", 0, 10, .5));
 	}
 
 	@Override

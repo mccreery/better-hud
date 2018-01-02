@@ -24,7 +24,6 @@ import tk.nukeduck.hud.network.Version;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.FormatUtil;
 import tk.nukeduck.hud.util.LayoutManager;
 import tk.nukeduck.hud.util.PaddedBounds;
 import tk.nukeduck.hud.util.Tickable.Ticker;
@@ -32,20 +31,18 @@ import tk.nukeduck.hud.util.Tickable.Ticker;
 public class PickupCount extends HudElement {
 	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS | Direction.CENTER.flag());
 
-	public final SettingSlider fadeSpeed = new SettingSlider("fadeSpeed", 0.0, 1.0) {
+	public final SettingSlider fadeSpeed = new SettingSlider("fadeSpeed", 0, 1) {
 		@Override
-		public String getSliderText() {
-			String display;
-
-			if(this.value == 0.0) display = I18n.format("betterHud.setting.slowest");
-			else if(this.value == 1.0) display = I18n.format("betterHud.setting.fastest");
-			else {
-				display = I18n.format("betterHud.strings.percent", FormatUtil.ONE_PLACE.format(this.value * 100));
+		public String getDisplayValue(double value) {
+			if(value == 0) {
+				return I18n.format("betterHud.setting.slowest");
+			} else if(value == 1) {
+				return I18n.format("betterHud.setting.fastest");
+			} else {
+				return super.getDisplayValue(value / 100);
 			}
-
-			return I18n.format("betterHud.menu.settingButton", getLocalizedName(), display);
 		}
-	};
+	}.setUnlocalizedValue("betterHud.strings.percent");
 
 	public final PickupHandler handler = new PickupHandler();
 
