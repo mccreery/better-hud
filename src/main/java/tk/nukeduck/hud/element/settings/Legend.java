@@ -13,6 +13,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiLabel;
+import net.minecraft.client.resources.I18n;
 import tk.nukeduck.hud.gui.GuiElementSettings;
 import tk.nukeduck.hud.util.Colors;
 
@@ -44,7 +45,7 @@ public class Legend extends Setting {
 		@Override
 		public void addLine(String line) {
 			super.addLine(line);
-			lines.add(line);
+			lines.add(I18n.format(line));
 		}
 
 		private int getMaxWidth(Collection<String> lines) {

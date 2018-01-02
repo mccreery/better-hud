@@ -2,7 +2,7 @@ package tk.nukeduck.hud.util;
 
 /** One of 8 cardinal directions or {@link CENTER}, the null direction */
 public enum Direction {
-	CENTER(0, 0, "center"),
+	CENTER(.5f, .5f, "center"),
 
 	NORTH(.5f,  0f, "north"),
 	EAST ( 1f, .5f, "east"),

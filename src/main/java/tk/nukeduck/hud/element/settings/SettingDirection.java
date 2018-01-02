@@ -4,7 +4,9 @@ import static tk.nukeduck.hud.BetterHud.MC;
 import static tk.nukeduck.hud.BetterHud.SPACER;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -48,31 +50,34 @@ public class SettingDirection extends Setting {
 
 	@Override
 	public int getGuiParts(java.util.List<Gui> parts, java.util.Map<Gui,Setting> callbacks, int width, int y) {
+		List<GuiToggleButton> radios = new ArrayList<GuiToggleButton>(9);
+
 		if((options & Direction.TOP) != 0) {
-			parts.add(topLeft = new GuiToggleButton(Direction.NORTH_WEST.ordinal(), width / 2 - 100, y, 20, 20, "", false));
-			parts.add(topCenter = new GuiToggleButton(Direction.NORTH.ordinal(), width / 2 - 78, y, 20, 20, "", false));
-			parts.add(topRight = new GuiToggleButton(Direction.NORTH_EAST.ordinal(), width / 2 - 56, y, 20, 20, "", false));
+			radios.add(topLeft = new GuiToggleButton(Direction.NORTH_WEST.ordinal(), width / 2 - 100, y, 20, 20, "", false));
+			radios.add(topCenter = new GuiToggleButton(Direction.NORTH.ordinal(), width / 2 - 78, y, 20, 20, "", false));
+			radios.add(topRight = new GuiToggleButton(Direction.NORTH_EAST.ordinal(), width / 2 - 56, y, 20, 20, "", false));
 			y += 22;
 		}
 
 		if((options & Direction.HORIZONTAL) != 0 || (options & (Direction.TOP | Direction.BOTTOM)) != 0) {
-			parts.add(middleLeft = new GuiToggleButton(Direction.WEST.ordinal(), width / 2 - 100, y + 22, 20, 20, "", false));
-			parts.add(middleCenter = new GuiToggleButton(Direction.CENTER.ordinal(), width / 2 - 78, y + 22, 20, 20, "", false));
-			parts.add(middleRight = new GuiToggleButton(Direction.EAST.ordinal(), width / 2 - 56, y + 22, 20, 20, "", false));
-		}
-
-		if((options & Direction.BOTTOM) != 0) {
-			parts.add(bottomLeft = new GuiToggleButton(Direction.SOUTH_WEST.ordinal(), width / 2 - 100, y + 44, 20, 20, "", false));
-			parts.add(bottomCenter = new GuiToggleButton(Direction.SOUTH.ordinal(), width / 2 - 78, y + 44, 20, 20, "", false));
-			parts.add(bottomRight = new GuiToggleButton(Direction.SOUTH_EAST.ordinal(), width / 2 - 56, y + 44, 20, 20, "", false));
+			radios.add(middleLeft = new GuiToggleButton(Direction.WEST.ordinal(), width / 2 - 100, y, 20, 20, "", false));
+			radios.add(middleCenter = new GuiToggleButton(Direction.CENTER.ordinal(), width / 2 - 78, y, 20, 20, "", false));
+			radios.add(middleRight = new GuiToggleButton(Direction.EAST.ordinal(), width / 2 - 56, y, 20, 20, "", false));
 			y += 22;
 		}
 
-		radios = new GuiToggleButton[] {
-			topLeft, topCenter, topRight,
-			middleLeft, middleCenter, middleRight,
-			bottomLeft, bottomCenter, bottomRight
-		};
+		if((options & Direction.BOTTOM) != 0) {
+			radios.add(bottomLeft = new GuiToggleButton(Direction.SOUTH_WEST.ordinal(), width / 2 - 100, y, 20, 20, "", false));
+			radios.add(bottomCenter = new GuiToggleButton(Direction.SOUTH.ordinal(), width / 2 - 78, y, 20, 20, "", false));
+			radios.add(bottomRight = new GuiToggleButton(Direction.SOUTH_EAST.ordinal(), width / 2 - 56, y, 20, 20, "", false));
+			y += 22;
+		}
+
+		for(GuiToggleButton radio : radios) {
+			parts.add(radio);
+			callbacks.put(radio, this);
+		}
+		this.radios = radios.toArray(new GuiToggleButton[radios.size()]);
 		otherAction(null);
 		return y + SPACER;
 	}

@@ -19,10 +19,9 @@ import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.Point;
 
-public class SettingChoose extends Setting {
+public class SettingChoose extends SettingAlignable {
 	protected GuiButton last, next, backing;
-	protected final Direction alignment;
-	public String[] modes;
+	public String[] modes; // TODO
 	public int index = 0;
 
 	public SettingChoose(String name, String... modes) {
@@ -30,9 +29,8 @@ public class SettingChoose extends Setting {
 	}
 
 	public SettingChoose(String name, Direction alignment, String... modes) {
-		super(name);
+		super(name, alignment);
 		this.modes = modes;
-		this.alignment = alignment;
 	}
 
 	public int last() {
@@ -57,27 +55,22 @@ public class SettingChoose extends Setting {
 	public void set(int index) {
 		this.index = index;
 	}
-	
+
 	public String getValue() {
 		return index < 0 || index >= modes.length ? String.valueOf(index) : this.modes[index];
 	}
-	
+
 	@Override
-	public int getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, int width, int y) {
-		Bounds bounds;
-
-		if(alignment == Direction.CENTER) {
-			bounds = new Bounds(width / 2 - 100, y, 200, 20);
-		} else {
-			bounds = alignment.anchor(new Bounds(0, 0, 150, 20), new Bounds(width / 2 - 100, y, 200, 20));
-		}
-
+	public int getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Bounds bounds) {
+		parts.add(backing = new GuiButton(2, bounds.x(), bounds.y(), bounds.width(), bounds.height(), ""));
 		parts.add(last = new GuiButton(0, bounds.left(), bounds.y(), 20, bounds.height(), "<"));
 		parts.add(next = new GuiButton(1, bounds.right() - 20, bounds.y(), 20, bounds.height(), ">"));
-		parts.add(backing = new GuiButton(2, bounds.x(), bounds.y(), bounds.width(), bounds.height(), ""));
 		backing.enabled = false;
 
-		return alignment != Direction.WEST ? y + 20 + SPACER : -1;
+		callbacks.put(last, this);
+		callbacks.put(next, this);
+
+		return bounds.bottom() + SPACER;
 	}
 
 	@Override

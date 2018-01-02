@@ -56,7 +56,11 @@ public abstract class Setting implements ISaveLoad {
 	}
 
 	/** Renders extra parts of this GUI */
-	public void draw() {}
+	public void draw() {
+		for(Setting setting : children) {
+			setting.draw();
+		}
+	}
 
 	/** Passed on from the element's setting screen when a GuiButton for this setting is pressed.
 	 * @param button The GuiButton that was pressed. */

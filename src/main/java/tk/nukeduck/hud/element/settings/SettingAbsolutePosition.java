@@ -41,6 +41,14 @@ public class SettingAbsolutePosition extends Setting {
 
 		parts.add(pick = new GuiButton(4, width / 2 - 75, y + 22, 150, 20, I18n.format("betterHud.menu.pick")));
 
+		callbacks.put(xBox, this);
+		callbacks.put(yBox, this);
+		callbacks.put(xUp, this);
+		callbacks.put(xDown, this);
+		callbacks.put(yUp, this);
+		callbacks.put(yDown, this);
+		callbacks.put(pick, this);
+
 		return y + 42 + SPACER;
 	}
 

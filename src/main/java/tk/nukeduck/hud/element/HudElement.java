@@ -23,6 +23,7 @@ import tk.nukeduck.hud.element.text.BiomeName;
 import tk.nukeduck.hud.element.text.Clock;
 import tk.nukeduck.hud.element.text.Connection;
 import tk.nukeduck.hud.element.text.Coordinates;
+import tk.nukeduck.hud.element.text.CpsCount;
 import tk.nukeduck.hud.element.text.Distance;
 import tk.nukeduck.hud.element.text.FoodHealthStats;
 import tk.nukeduck.hud.element.text.FpsCount;
@@ -66,6 +67,7 @@ public abstract class HudElement { // Can't extend Gui due to @SideOnly
 	public static final BreedIndicator BREED_INFO = new BreedIndicator();
 	public static final HorseInfo HORSE_INFO = new HorseInfo();
 	public static final MobInfo MOB_INFO = new MobInfo();
+	public static final CpsCount CPS = new CpsCount();
 
 	public static final HudElement[] ELEMENTS = {
 		ARMOR_BARS, ARROW_COUNT, BIOME_NAME, BLOCK_VIEWER, BLOOD_SPLATTERS,
@@ -73,7 +75,7 @@ public abstract class HudElement { // Can't extend Gui due to @SideOnly
 		MAX_LEVEL, EXPERIENCE, STATS, FPS, FULL_INV,
 		HOLDING, HEAL, HUNGER, LIGHT_LEVEL, SIGN_READER,
 		SYSTEM_CLOCK, WATER_DROPS, BREED_INFO, HIDE_PLAYERS,
-		HORSE_INFO, MOB_INFO, PICKUP, POTION_BAR
+		HORSE_INFO, MOB_INFO, PICKUP, POTION_BAR, CPS
 	};
 
 	public static final EntityInfo[] ENTITY_INFO = {

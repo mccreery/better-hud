@@ -44,9 +44,11 @@ public class SettingBoolean extends SettingAlignable {
 			@Override
 			public void set(boolean value) {
 				SettingBoolean.this.set(value);
+				updateText();
 			}
 		};
 		parts.add(toggler);
+		callbacks.put(toggler, this);
 		return bounds.bottom() + SPACER;
 	}
 

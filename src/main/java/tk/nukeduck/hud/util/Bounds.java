@@ -108,6 +108,13 @@ public class Bounds {
 		return pad(-left, -top, -right, -bottom);
 	}
 
+	public boolean contains(Point point) {
+		return contains(point.x, point.y);
+	}
+	public boolean contains(int x, int y) {
+		return x >= left() && x < right() && y >= top() && y < bottom();
+	}
+
 	public void snapTest(Bounds... b) {snapTest(SPACER, b);}
 	public void snapTest(int hitRadius, Bounds... bounds) {
 		ArrayList<Integer> xClips = new ArrayList<Integer>();

@@ -3,6 +3,7 @@
 ## [Unreleased]
 ### Added
 - Server compatibility checks for future elements
+- CPS counter
 ### Changed
 - Code refactoring, easier to work with
 - Much smaller code

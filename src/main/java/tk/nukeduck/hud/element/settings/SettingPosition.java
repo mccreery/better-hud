@@ -30,20 +30,20 @@ public class SettingPosition extends Setting {
 		super(name);
 		add(new Legend("position"));
 
-		add(mode = new SettingChoose(name + "Mode", MODES));
-		add(direction = new SettingDirection(name + "Direction", options) {
+		add(mode = new SettingChoose("position", MODES));
+		add(direction = new SettingDirection("direction", options) {
 			@Override
 			public boolean enabled() {
 				return mode.index == 0 && super.enabled();
 			}
 		});
-		add(position = new SettingAbsolutePosition(name + "Absolute") {
+		add(position = new SettingAbsolutePosition("absolute") {
 			@Override
 			public boolean enabled() {
 				return mode.index == 1 && super.enabled();
 			}
 		});
-		add(anchor = new SettingDirection(name + "Anchor") {
+		add(anchor = new SettingDirection("anchor") {
 			@Override
 			public boolean enabled() {
 				return mode.index == 1 && super.enabled();

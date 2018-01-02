@@ -15,7 +15,7 @@ public class GuiToggleButton extends GuiButton implements ISaveLoad {
 
 	public GuiToggleButton(int buttonId, int x, int y, String buttonText, boolean updateText) {
 		super(buttonId, x, y, buttonText);
-		unlocalized = buttonText;
+		this.displayString = unlocalized = buttonText;
 		this.updateText = updateText;
 		updateText();
 	}
@@ -23,14 +23,15 @@ public class GuiToggleButton extends GuiButton implements ISaveLoad {
 	public GuiToggleButton(int buttonId, int x, int y, int widthIn, int heightIn, String buttonText, boolean updateText) {
 		super(buttonId, x, y, widthIn, heightIn, buttonText);
 		unlocalized = buttonText;
-		if(this.updateText = updateText) updateText();
+		this.updateText = updateText;
+		updateText();
 	}
 
 	private boolean value = false;
 
 	public void set(boolean value) {
 		this.value = value;
-		if(updateText) updateText();
+		updateText();
 	}
 
 	public boolean get() {
@@ -41,8 +42,8 @@ public class GuiToggleButton extends GuiButton implements ISaveLoad {
 		set(!get());
 	}
 
-	private void updateText() {
-		displayString = I18n.format(unlocalized) + ": " + (get() ? ChatFormatting.GREEN : ChatFormatting.RED) + I18n.format(get() ? "options.on" : "options.off");
+	protected void updateText() {
+		if(updateText) displayString = I18n.format(unlocalized) + ": " + (get() ? ChatFormatting.GREEN : ChatFormatting.RED) + I18n.format(get() ? "options.on" : "options.off");
 	}
 
 	@Override

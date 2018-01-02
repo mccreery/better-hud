@@ -189,20 +189,7 @@ public class GuiHudMenu extends GuiScreen {
 		}
 		
 		this.drawCenteredString(this.fontRenderer, I18n.format("betterHud.menu.hudSettings"), this.width / 2, height / 16 + 5, 16777215);
-
 		this.drawString(this.fontRenderer, countEnabled(HudElement.ELEMENTS) + "/" + HudElement.ELEMENTS.length + " enabled", 5, 5, Colors.WHITE);
-
-		/*for(Object button : buttonList) {
-        	if(button instanceof GuiButton) {
-        		GuiButton b = (GuiButton) button;
-        		if(b.displayString == "<" && b.visible) {
-	        		ExtraGuiElement e = HudElements.elements[((b.id - buttonOffset) + 1) / 3];
-	        		int color = e.countModes() > 1 ? RenderUtil.colorRGB(255, 255, 255) : RenderUtil.colorARGB(85, 85, 85, 85);
-	        		this.drawCenteredString(BetterHud.fr, I18n.format("betterHud.mode." + e.modeAt(e.mode)), b.xPosition + 53, b.yPosition + 6, color);
-        		}
-        	}
-        }*/
-
 		this.drawCenteredString(this.fontRenderer, I18n.format("betterHud.menu.page", (currentPage + 1) + "/" + (int) Math.ceil((float) HudElement.ELEMENTS.length / perPage)), width / 2, height - height / 16 - 13, Colors.WHITE);
 	}
 
@@ -213,14 +200,4 @@ public class GuiHudMenu extends GuiScreen {
 		}
 		return i;
 	}
-
-	/*public static ExtraGuiElement[][] divideArray(ExtraGuiElement[] source, int chunksize) {
-        ExtraGuiElement[][] ret = new ExtraGuiElement[(int)Math.ceil(source.length / (double)chunksize)][chunksize];
-        int start = 0;
-        for(int i = 0; i < ret.length; i++) {
-            ret[i] = Arrays.copyOfRange(source,start, start + chunksize);
-            start += chunksize;
-        }
-        return ret;
-    }*/
 }

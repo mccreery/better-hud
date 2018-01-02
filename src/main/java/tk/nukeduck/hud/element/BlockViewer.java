@@ -1,6 +1,7 @@
 package tk.nukeduck.hud.element;
 
 import static tk.nukeduck.hud.BetterHud.MC;
+import static tk.nukeduck.hud.BetterHud.SPACER;
 
 import java.util.HashMap;
 
@@ -23,6 +24,7 @@ import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.LayoutManager;
+import tk.nukeduck.hud.util.Point;
 import tk.nukeduck.hud.util.RenderUtil;
 
 public class BlockViewer extends HudElement {
@@ -68,11 +70,11 @@ public class BlockViewer extends HudElement {
 		super("blockViewer");
 
 		settings.add(position);
-		this.settings.add(new Legend("misc"));
-		this.settings.add(showBlock);
-		this.settings.add(invNames);
-		this.settings.add(distance);
-		this.settings.add(showIds);
+		settings.add(new Legend("misc"));
+		settings.add(showBlock);
+		settings.add(invNames);
+		settings.add(distance);
+		settings.add(showIds);
 	}
 
 	private static final ItemStack UNKNOWN_STACK = new ItemStack(Blocks.STONE);
@@ -113,7 +115,12 @@ public class BlockViewer extends HudElement {
 		int w = MC.fontRenderer.getStringWidth(text) + 10;
 		if(showBlock.get()) w += 21;
 
-		Bounds bounds = position.applyTo(new Bounds(w, 10 + MC.fontRenderer.FONT_HEIGHT), manager);
+		Bounds bounds = new Bounds(w, 10 + MC.fontRenderer.FONT_HEIGHT);
+		if(position.getDirection() == Direction.CENTER) {
+			bounds.position = new Point(manager.getResolution().x / 2 + SPACER, manager.getResolution().y / 2 + SPACER);
+		} else {
+			bounds = position.applyTo(new Bounds(w, 10 + MC.fontRenderer.FONT_HEIGHT), manager);
+		}
 		RenderUtil.drawTooltipBox(bounds.x(), bounds.y(), bounds.width(), bounds.height());
 
 		if(showBlock.get()) {
