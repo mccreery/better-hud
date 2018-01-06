@@ -2,7 +2,6 @@ package tk.nukeduck.hud.element;
 
 import static tk.nukeduck.hud.BetterHud.MC;
 
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -11,6 +10,7 @@ import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.LayoutManager;
+import tk.nukeduck.hud.util.Util;
 
 public class MaxLevelIndicator extends HudElement {
 	private static final ItemStack BOOK = new ItemStack(Items.ENCHANTED_BOOK);
@@ -36,10 +36,7 @@ public class MaxLevelIndicator extends HudElement {
 			bounds = position.applyTo(new Bounds(16, 16), manager);
 		}
 
-		RenderHelper.enableGUIStandardItemLighting();
-		MC.getRenderItem().renderItemAndEffectIntoGUI(BOOK, bounds.x(), bounds.y());
-		RenderHelper.disableStandardItemLighting();
-
+		Util.renderItem(BOOK, bounds.position);
 		return bounds;
 	}
 

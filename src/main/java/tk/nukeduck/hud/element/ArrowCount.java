@@ -5,7 +5,6 @@ import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glTranslatef;
 import static tk.nukeduck.hud.BetterHud.MC;
 
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemArrow;
@@ -17,7 +16,7 @@ import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.LayoutManager;
-import tk.nukeduck.hud.util.RenderUtil;
+import tk.nukeduck.hud.util.Util;
 
 public class ArrowCount extends HudElement {
 	private static final ItemStack ARROW = new ItemStack(Items.ARROW, 1);
@@ -90,8 +89,7 @@ public class ArrowCount extends HudElement {
 		if(!overlay.get()) { // TODO test
 			Bounds bounds = position.applyTo(new Bounds(16, 16), manager);
 
-			MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-			RenderUtil.renderItem(MC.getRenderItem(), MC.fontRenderer, MC.getTextureManager(), ARROW, bounds.x(), bounds.y());
+			Util.renderItem(ARROW, bounds.position);
 			drawHotbarText(arrowsDisplay, bounds.x(), bounds.y());
 
 			return bounds;

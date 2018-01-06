@@ -2,6 +2,7 @@ package tk.nukeduck.hud.util;
 
 /** One of 8 cardinal directions or {@link CENTER}, the null direction */
 public enum Direction {
+	// TODO easier way to manipulate directions, like mirroring etc
 	CENTER(.5f, .5f, "center"),
 
 	NORTH(.5f,  0f, "north"),
@@ -52,16 +53,6 @@ public enum Direction {
 
 	public boolean in(int flags) {
 		return (flags & flag()) != 0;
-	}
-
-	@Deprecated
-	public Direction roundLeft() {
-		switch(this) {
-			case NORTH: return NORTH_WEST;
-			case CENTER: return WEST;
-			case SOUTH: return SOUTH_WEST;
-			default: return this;
-		}
 	}
 
 	/** @return The anchor point between zero and {@code size}

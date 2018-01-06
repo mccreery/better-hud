@@ -2,7 +2,6 @@ package tk.nukeduck.hud.element.text;
 
 import static tk.nukeduck.hud.BetterHud.MC;
 
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -11,13 +10,13 @@ import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.FormatUtil;
 import tk.nukeduck.hud.util.LayoutManager;
 import tk.nukeduck.hud.util.PaddedBounds;
-import tk.nukeduck.hud.util.RenderUtil;
+import tk.nukeduck.hud.util.Util;
 
+// TODO make subclass of system clock
 public class Clock extends TextElement {
-	private static final ItemStack BED = new ItemStack(Items.BED, 1);
+	private static final ItemStack BED = new ItemStack(Items.BED);
 
 	private final SettingBoolean twentyFour = new SettingBoolean("24hr");
 
@@ -49,8 +48,7 @@ public class Clock extends TextElement {
 			Direction bedAnchor = position.getAnchor().in(Direction.RIGHT) ? Direction.WEST : Direction.EAST;
 			Bounds bed = bedAnchor.anchor(new Bounds(16, 16), bounds);
 
-			MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-			RenderUtil.renderItem(MC.getRenderItem(), MC.fontRenderer, MC.getTextureManager(), BED, bed.x(), bed.y());
+			Util.renderItem(BED, bed.position);
 		}
 		return bounds;
 	}
@@ -62,8 +60,27 @@ public class Clock extends TextElement {
 		String time;
 		int h = (int) (t / 1000);
 
-		time = FormatUtil.formatTime(h, (int) ((t % 1000) / 1000.0 * 60.0), twentyFour.get());
+		time = Clock.formatTime(h, (int) ((t % 1000) / 1000.0 * 60.0), twentyFour.get());
 
 		return new String[] {time, day};
+	}
+
+	private static String formatTime(int hours, int minutes, boolean twentyFourHour) {
+		String unlocalized, hourS, minuteS;
+	
+		if(twentyFourHour) {
+			unlocalized = "betterHud.strings.time";
+			hourS = String.format("%02d", hours);
+		} else {
+			final boolean pm = hours >= 12;
+			if(pm) hours -= 12;
+			if(hours == 0) hours = 12;
+	
+			unlocalized = pm ? "betterHud.strings.time.pm" : "betterHud.strings.time.am";
+			hourS = String.valueOf(hours);
+		}
+	
+		minuteS = String.format("%02d", minutes);
+		return I18n.format(unlocalized, hourS, minuteS);
 	}
 }

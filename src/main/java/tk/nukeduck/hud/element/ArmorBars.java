@@ -20,10 +20,10 @@ import tk.nukeduck.hud.element.settings.SettingWarnings;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.FormatUtil;
 import tk.nukeduck.hud.util.LayoutManager;
 import tk.nukeduck.hud.util.PaddedBounds;
 import tk.nukeduck.hud.util.Point;
+import tk.nukeduck.hud.util.Util;
 
 public class ArmorBars extends HudElement {
 	private final SettingChoose bars = new SettingChoose("barType", new String[] {"hidden", "smallBars", "largeBars"});
@@ -69,6 +69,7 @@ public class ArmorBars extends HudElement {
 		settings.add(warnings);
 	}
 
+	// TODO duplication
 	public String generateText(ItemStack item) {
 		ArrayList<String> parts = new ArrayList<String>();
 		if(this.showName.get()) parts.add(item.getDisplayName());
@@ -77,13 +78,13 @@ public class ArmorBars extends HudElement {
 
 		if(this.showDurability.get()) {
 			if(durabilityMode.getIndex() == 1) {
-				parts.add(I18n.format("betterHud.strings.percent", FormatUtil.formatToPlaces(value * 100.0, 1)));
+				parts.add(I18n.format("betterHud.strings.percent", Util.formatToPlaces(value * 100.0, 1)));
 			} else {
 				parts.add(I18n.format("betterHud.strings.outOf", String.valueOf(maxDamage - item.getItemDamage()), String.valueOf(maxDamage)));
 			}
 		}
 
-		String text = FormatUtil.separate(I18n.format("betterHud.strings.splitter"), parts.toArray(new String[parts.size()]));
+		String text = Util.join(I18n.format("betterHud.strings.splitter"), parts.toArray(new String[parts.size()]));
 		int count = warnings.getWarning(value);
 
 		if(count > 0) {

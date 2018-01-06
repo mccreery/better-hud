@@ -14,8 +14,8 @@ import tk.nukeduck.hud.gui.GuiElementSettings;
 import tk.nukeduck.hud.gui.GuiOptionSliderA;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.FormatUtil;
 import tk.nukeduck.hud.util.ISaveLoad.ISlider;
+import tk.nukeduck.hud.util.Util;
 
 public class SettingSlider extends SettingAlignable<Double> implements ISlider {
 	private GuiOptionSliderA slider;
@@ -61,7 +61,7 @@ public class SettingSlider extends SettingAlignable<Double> implements ISlider {
 	}
 
 	public String getDisplayValue(double value) {
-		String displayValue = FormatUtil.formatToPlaces(value, displayPlaces);
+		String displayValue = Util.formatToPlaces(value, displayPlaces);
 
 		if(unlocalizedValue != null) {
 			displayValue = I18n.format(unlocalizedValue, displayValue);

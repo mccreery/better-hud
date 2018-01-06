@@ -38,10 +38,9 @@ import tk.nukeduck.hud.network.Version;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.FuncsUtil;
 import tk.nukeduck.hud.util.LayoutManager;
 import tk.nukeduck.hud.util.Point;
-import tk.nukeduck.hud.util.RenderUtil;
+import tk.nukeduck.hud.util.Util;
 
 // TODO can this be a TextElement?
 public class BlockViewer extends HudElement {
@@ -103,7 +102,7 @@ public class BlockViewer extends HudElement {
 		} else {
 			bounds = position.applyTo(new Bounds(w, 10 + MC.fontRenderer.FONT_HEIGHT), manager);
 		}
-		RenderUtil.drawTooltipBox(bounds.x(), bounds.y(), bounds.width(), bounds.height());
+		Util.drawTooltipBox(bounds.x(), bounds.y(), bounds.width(), bounds.height());
 
 		if(stack != null && showBlock.get()) {
 			MC.ingameGUI.drawString(MC.fontRenderer, text, bounds.x() + 26, bounds.y() + 6, Colors.WHITE);
@@ -124,11 +123,11 @@ public class BlockViewer extends HudElement {
 	private static ItemStack getDisplayStack(RayTraceResult trace, IBlockState state) {
 		ItemStack stack = state.getBlock().getPickBlock(state, trace, MC.world, trace.getBlockPos(), MC.player);
 
-		if(FuncsUtil.isStackEmpty(stack)) {
+		if(isStackEmpty(stack)) {
 			// Pick block is disabled, however we can grab the information directly
 			stack = new ItemStack(state.getBlock(), state.getBlock().getMetaFromState(state));
 
-			if(FuncsUtil.isStackEmpty(stack)) { // There's no registered ItemBlock, no stack exists
+			if(isStackEmpty(stack)) { // There's no registered ItemBlock, no stack exists
 				return null;
 			}
 		}
@@ -168,7 +167,7 @@ public class BlockViewer extends HudElement {
 			}
 		}
 		
-		return FuncsUtil.isStackEmpty(stack) ? state.getBlock().getLocalizedName() : stack.getDisplayName();
+		return isStackEmpty(stack) ? state.getBlock().getLocalizedName() : stack.getDisplayName();
 	}
 
 	/** @return Information about the block's related IDs */
@@ -208,7 +207,7 @@ public class BlockViewer extends HudElement {
 	 * asks the server, then until the response is given, a generic
 	 * container name will be returned. When the client finds out the actual name
 	 * of the inventory, it will return that value */
-	private ITextComponent ensureInvName(BlockPos pos) {
+	private static ITextComponent ensureInvName(BlockPos pos) {
 		if(!nameCache.containsKey(pos)) {
 			BetterHud.NET_WRAPPER.sendToServer(new InventoryNameQuery.Request(pos));
 			nameCache.put(pos, null);
@@ -220,5 +219,11 @@ public class BlockViewer extends HudElement {
 		} else {
 			return MC.world.getTileEntity(pos).getDisplayName();
 		}
+	}
+
+	/** Considers {@code null} to be empty
+	 * @see ItemStack#isEmpty() */
+	private static boolean isStackEmpty(ItemStack stack) {
+		return stack == null || stack.isEmpty();
 	}
 }

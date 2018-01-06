@@ -17,8 +17,7 @@ import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.passive.EntityHorse;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.util.Colors;
-import tk.nukeduck.hud.util.FormatUtil;
-import tk.nukeduck.hud.util.RenderUtil;
+import tk.nukeduck.hud.util.Util;
 
 public class HorseInfo extends EntityInfo {
 	private final SettingBoolean jump = new SettingBoolean("jump");
@@ -50,10 +49,10 @@ public class HorseInfo extends EntityInfo {
 				if(jump.get())  infoParts.add(I18n.format("betterHud.strings.jump", Math.round(getJumpHeight(horse) * 1000.0d) / 1000.0d));
 				if(speed.get()) infoParts.add(I18n.format("betterHud.strings.speed", Math.round(getSpeed(horse) * 1000.0d) / 1000.0d));
 
-				int horseWidth = FormatUtil.getLongestWidth(MC.fontRenderer, infoParts) + 10;
+				int horseWidth = getLinesSize(infoParts).x + 10;
 				int horseHeight = infoParts.size() * (MC.fontRenderer.FONT_HEIGHT + 2) + 8;
 				
-				RenderUtil.billBoard(entity, MC.player, partialTicks);
+				Util.billBoard(entity, MC.player, partialTicks);
 				
 				float scale = 1.0F / horseWidth;
 				glScalef(scale, scale, scale);

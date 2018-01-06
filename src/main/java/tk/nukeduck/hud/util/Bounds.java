@@ -115,6 +115,7 @@ public class Bounds {
 		return x >= left() && x < right() && y >= top() && y < bottom();
 	}
 
+	// TODO everything here
 	public void snapTest(Bounds... b) {snapTest(SPACER, b);}
 	public void snapTest(int hitRadius, Bounds... bounds) {
 		ArrayList<Integer> xClips = new ArrayList<Integer>();
@@ -153,7 +154,7 @@ public class Bounds {
 			if(clipY != this.y()) yClips.add(clipY);
 		}
 
-		this.position = new Point(FuncsUtil.getSmallestDistance(this.x(), xClips), FuncsUtil.getSmallestDistance(this.y(), yClips));
+		this.position = new Point(getSmallestDistance(this.x(), xClips), getSmallestDistance(this.y(), yClips));
 	}
 
 	private static boolean lineOverlaps(int min, int max, int min2, int max2) {
@@ -161,5 +162,21 @@ public class Bounds {
 			|| max  >= min2 && max  < max2
 			|| min2 >= min  && min2 < max
 			|| max2 >= min  && max2 < max;
+	}
+
+	// TODO find out what this actually does
+	private static int getSmallestDistance(int value, Iterable<Integer> clips) {
+		int currentDistance = Integer.MAX_VALUE;
+		int smallest = value;
+
+		for(int clip : clips) {
+			int distance = Math.abs(clip - value);
+
+			if(distance < currentDistance) {
+				currentDistance = distance;
+				smallest = clip;
+			}
+		}
+		return smallest;
 	}
 }

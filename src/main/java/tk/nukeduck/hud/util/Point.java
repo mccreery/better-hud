@@ -28,17 +28,17 @@ public class Point implements ISaveLoad {
 		return new Point(x + point.x, y + point.y);
 	}
 
-	/*public Point add(int x, int y) {
+	public Point add(int x, int y) {
 		return new Point(this.x + x, this.y + y);
-	}*/
+	}
 
 	public Point sub(Point point) {
 		return new Point(x - point.x, y - point.y);
 	}
 
-	/*public Point sub(int x, int y) {
+	public Point sub(int x, int y) {
 		return new Point(this.x - x, this.y - y);
-	}*/
+	}
 
 	public Point scale(float x, float y) {
 		return new Point((int)(this.x * x), (int)(this.y * y));

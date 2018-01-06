@@ -19,7 +19,7 @@ import net.minecraft.util.ResourceLocation;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingSlider;
 import tk.nukeduck.hud.util.Colors;
-import tk.nukeduck.hud.util.RenderUtil;
+import tk.nukeduck.hud.util.Util;
 
 public class MobInfo extends EntityInfo {
 	private final SettingBoolean players = new SettingBoolean("players");
@@ -68,7 +68,7 @@ public class MobInfo extends EntityInfo {
 		
 		GL11.glPushMatrix(); {
 			Tessellator t = Tessellator.getInstance();
-			RenderUtil.billBoard(entity, player, partialTicks);
+			Util.billBoard(entity, player, partialTicks);
 			
 			// seems irrelevant
 			/*if(!(entity.getHeldItemMainhand() != null && entity.getHeldItemMainhand().isItemEnchanted())) {
@@ -112,13 +112,13 @@ public class MobInfo extends EntityInfo {
 				
 				int i;
 				for(i = 0; i < 10; i++) {
-					RenderUtil.renderQuadWithUV(t, 8 * Math.min(10, (int) entity.getMaxHealth() / 2) + 10 + (i * 8), MC.fontRenderer.FONT_HEIGHT + 7 + (int) (i / 10) * 9, 16 / 256F, 9 / 256F, 25 / 256F, 18 / 256F, 9, 9);
+					Util.renderQuadWithUV(t, 8 * Math.min(10, (int) entity.getMaxHealth() / 2) + 10 + (i * 8), MC.fontRenderer.FONT_HEIGHT + 7 + (int) (i / 10) * 9, 16 / 256F, 9 / 256F, 25 / 256F, 18 / 256F, 9, 9);
 				}
 				for(i = 0; i < armor / 2; i++) {
-					RenderUtil.renderQuadWithUV(t, 8 * Math.min(10, (int) entity.getMaxHealth() / 2) + 10 + (i * 8), MC.fontRenderer.FONT_HEIGHT + 7 + (int) (i / 10) * 9, 34 / 256F, 9 / 256F, 43 / 256F, 18 / 256F, 9, 9);
+					Util.renderQuadWithUV(t, 8 * Math.min(10, (int) entity.getMaxHealth() / 2) + 10 + (i * 8), MC.fontRenderer.FONT_HEIGHT + 7 + (int) (i / 10) * 9, 34 / 256F, 9 / 256F, 43 / 256F, 18 / 256F, 9, 9);
 				}
 				if(armor % 2 == 1) {
-					RenderUtil.renderQuadWithUV(t, 8 * Math.min(10, (int) entity.getMaxHealth() / 2) + 10 + (i * 8), MC.fontRenderer.FONT_HEIGHT + 7 + (int) (i / 10) * 9, 25 / 256F, 9 / 256F, 34 / 256F, 18 / 256F, 9, 9);
+					Util.renderQuadWithUV(t, 8 * Math.min(10, (int) entity.getMaxHealth() / 2) + 10 + (i * 8), MC.fontRenderer.FONT_HEIGHT + 7 + (int) (i / 10) * 9, 25 / 256F, 9 / 256F, 34 / 256F, 18 / 256F, 9, 9);
 				}
 				
 				EntityPlayer playerObj = (EntityPlayer) entity;
@@ -140,8 +140,8 @@ public class MobInfo extends EntityInfo {
 			if(health >= compress.get()) {
 				int rows = health / 20;
 				for(int i = 0; i < 10; i++) {
-					RenderUtil.renderQuadWithUV(t, 5 + i*4, y, 16 / 256F, 0, 25 / 256F, 9 / 256F, 9, 9);
-					RenderUtil.renderQuadWithUV(t, 5 + i*4, y, 52 / 256F, 0, 61 / 256F, 9 / 256F, 9, 9);
+					Util.renderQuadWithUV(t, 5 + i*4, y, 16 / 256F, 0, 25 / 256F, 9 / 256F, 9, 9);
+					Util.renderQuadWithUV(t, 5 + i*4, y, 52 / 256F, 0, 61 / 256F, 9 / 256F, 9, 9);
 				}
 				MC.ingameGUI.drawString(MC.fontRenderer, I18n.format("betterHud.strings.times", rows), 55, y, Colors.WHITE);
 				y += MC.fontRenderer.FONT_HEIGHT;
@@ -159,13 +159,13 @@ public class MobInfo extends EntityInfo {
 			MC.renderEngine.bindTexture(icons);
 			int i; // changes here
 			for(i = 0; i < (max + 1) / 2; i++) { // Background
-				RenderUtil.renderQuadWithUV(t, 5 + ((i % 10) * 8), y + (int) (i / 10) * 9, 16 / 256F, 0, 25 / 256F, 9 / 256F, 9, 9);
+				Util.renderQuadWithUV(t, 5 + ((i % 10) * 8), y + (int) (i / 10) * 9, 16 / 256F, 0, 25 / 256F, 9 / 256F, 9, 9);
 			}
 			for(i = 0; i < health / 2; i++) { // Hearts
-				RenderUtil.renderQuadWithUV(t, 5 + ((i % 10) * 8), y + (int) (i / 10) * 9, 52 / 256F, 0, 61 / 256F, 9 / 256F, 9, 9);
+				Util.renderQuadWithUV(t, 5 + ((i % 10) * 8), y + (int) (i / 10) * 9, 52 / 256F, 0, 61 / 256F, 9 / 256F, 9, 9);
 			}
 			if(health % 2 == 1) { // Half heart
-				RenderUtil.renderQuadWithUV(t, 5 + ((i % 10) * 8), y + (int) (i / 10) * 9, 61 / 256F, 0, 70 / 256F, 9 / 256F, 9, 9);
+				Util.renderQuadWithUV(t, 5 + ((i % 10) * 8), y + (int) (i / 10) * 9, 61 / 256F, 0, 70 / 256F, 9 / 256F, 9, 9);
 			}
 		}
 	}

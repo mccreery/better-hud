@@ -2,7 +2,6 @@ package tk.nukeduck.hud.element;
 
 import static tk.nukeduck.hud.BetterHud.MC;
 
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -14,10 +13,9 @@ import tk.nukeduck.hud.element.settings.SettingWarnings;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.FormatUtil;
 import tk.nukeduck.hud.util.LayoutManager;
 import tk.nukeduck.hud.util.Point;
-import tk.nukeduck.hud.util.RenderUtil;
+import tk.nukeduck.hud.util.Util;
 
 public class HandBar extends HudElement {
 	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS | Direction.SOUTH.flag());
@@ -59,19 +57,20 @@ public class HandBar extends HudElement {
 		settings.add(warnings);
 	}
 
+	// TODO duplication
 	private String generateText(ItemStack stack) {
 		int maxDamage = stack.getMaxDamage();
 		float value = (float) (maxDamage - stack.getItemDamage()) / (float) maxDamage;
 
 		String dur, text;
 		if(durabilityMode.getIndex() == 1) {
-			dur = I18n.format("betterHud.strings.percent", FormatUtil.formatToPlaces(value * 100.0, 1));
+			dur = I18n.format("betterHud.strings.percent", Util.formatToPlaces(value * 100.0, 1));
 		} else {
 			dur = I18n.format("betterHud.strings.outOf", String.valueOf(maxDamage - stack.getItemDamage()), String.valueOf(maxDamage));
 		}
 
 		if(showName.get() && showDurability.get()) {
-			text = FormatUtil.separate(I18n.format("betterHud.strings.splitter"), stack.getDisplayName(), dur);
+			text = Util.join(I18n.format("betterHud.strings.splitter"), stack.getDisplayName(), dur);
 		} else if(showName.get()) {
 			text =  stack.getDisplayName();
 		} else if(showDurability.get()) {
@@ -99,8 +98,7 @@ public class HandBar extends HudElement {
 
 		if(showItem.get()) {
 			MC.mcProfiler.startSection("items");
-			MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-			RenderUtil.renderItem(MC.getRenderItem(), MC.fontRenderer, MC.getTextureManager(), stack, x + 90 - totalWidth / 2, y);
+			Util.renderItem(stack, x + 90 - totalWidth / 2, y);
 			MC.mcProfiler.endSection();
 		}
 
@@ -110,7 +108,7 @@ public class HandBar extends HudElement {
 
 		if(showBars.get()) {
 			MC.mcProfiler.startSection("bars");
-			HudElement.drawDamageBar(new Bounds(x, y + 16, 180, 2), stack, false);
+			drawDamageBar(new Bounds(x, y + 16, 180, 2), stack, false);
 			MC.mcProfiler.endSection();
 		}
 	}

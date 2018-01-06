@@ -62,6 +62,7 @@ public class EntityInfoRenderer {
 
 	public double lastDistance = 0;
 
+	/** @see net.minecraft.client.renderer.EntityRenderer#getMouseOver(float) */
 	// TODO source and clean up (maybe find in vanilla)
 	@SideOnly(Side.CLIENT)
 	public Entity getMouseOver(Minecraft mc, float partialTick, double length) {

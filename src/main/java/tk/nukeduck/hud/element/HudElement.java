@@ -2,6 +2,8 @@ package tk.nukeduck.hud.element;
 
 import static tk.nukeduck.hud.BetterHud.MC;
 
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.HashMap;
 
 import net.minecraft.client.gui.Gui;
@@ -207,10 +209,15 @@ public abstract class HudElement { // Can't extend Gui due to @SideOnly
 		return lines > 0 ? (MC.fontRenderer.FONT_HEIGHT + 2) * lines - 2 : 0;
 	}
 
+	/** @see #getLinesSize(Collection) */
+	public static Point getLinesSize(String... strings) {
+		return getLinesSize(Arrays.asList(strings));
+	}
+
 	/** @return The size of {@code strings}
 	 * @see #drawLines(String[], Bounds, Direction, int) */
-	public static Point getLinesSize(String... strings) {
-		if(strings.length == 0) {
+	public static Point getLinesSize(Collection<String> strings) {
+		if(strings.isEmpty()) {
 			return Point.ZERO;
 		}
 		int maxWidth = 0;
@@ -221,7 +228,7 @@ public abstract class HudElement { // Can't extend Gui due to @SideOnly
 				if(width > maxWidth) maxWidth = width;
 			}
 		}
-		return new Point(maxWidth, getLinesHeight(strings.length));
+		return new Point(maxWidth, getLinesHeight(strings.size()));
 	}
 
 	/** Draws a line of text aligned around {@code position} by {@code anchor} */
@@ -232,8 +239,13 @@ public abstract class HudElement { // Can't extend Gui due to @SideOnly
 		return bounds;
 	}
 
-	/** Draws multiple lines of text anchored to {@code anchor} within {@code bounds} */
+	/** @see #drawLines(Collection, Bounds, Direction, int) */
 	public static Bounds drawLines(String[] strings, Bounds bounds, Direction anchor, int color) {
+		return drawLines(Arrays.asList(strings), bounds, anchor, color);
+	}
+
+	/** Draws multiple lines of text anchored to {@code anchor} within {@code bounds} */
+	public static Bounds drawLines(Collection<String> strings, Bounds bounds, Direction anchor, int color) {
 		bounds = anchor.anchor(new Bounds(getLinesSize(strings)), bounds);
 		Bounds drawBounds = new Bounds(bounds);
 
