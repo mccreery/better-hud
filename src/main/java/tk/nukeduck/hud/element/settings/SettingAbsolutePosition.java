@@ -16,20 +16,20 @@ import tk.nukeduck.hud.gui.GuiElementSettings;
 import tk.nukeduck.hud.gui.GuiUpDownButton;
 import tk.nukeduck.hud.util.Point;
 
-public class SettingAbsolutePosition extends Setting {
+public class SettingAbsolutePosition extends Setting<Point> {
 	public GuiTextField xBox, yBox;
 	public GuiButton pick;
 	private GuiButton xUp, xDown, yUp, yDown;
 
-	public Point position = new Point();
-	public Point cancelPosition;
+	private Point position = new Point();
+	private Point cancelPosition;
 
 	public SettingAbsolutePosition(String name) {
 		super(name);
 	}
 
 	@Override
-	public int getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, int width, int y) {
+	public int getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, int width, int y) {
 		parts.add(xBox = new GuiTextField(0, Minecraft.getMinecraft().fontRenderer, width / 2 - 106, y + 1, 80, 18));
 		xBox.setText(String.valueOf(position.x));
 		parts.add(yBox = new GuiTextField(0, Minecraft.getMinecraft().fontRenderer, width / 2 + 2, y + 1, 80, 18));
@@ -113,8 +113,18 @@ public class SettingAbsolutePosition extends Setting {
 	}
 
 	@Override
+	public void set(Point value) {
+		position = value;
+	}
+
+	@Override
+	public Point get() {
+		return position;
+	}
+
+	@Override
 	public String save() {
-		return position.save();
+		return get().toString();
 	}
 
 	@Override
@@ -123,7 +133,7 @@ public class SettingAbsolutePosition extends Setting {
 	}
 
 	@Override
-	public void otherAction(Collection<Setting> settings) {
+	public void otherAction(Collection<Setting<?>> settings) {
 		boolean enabled = enabled();
 		xBox.setEnabled(enabled);
 		yBox.setEnabled(enabled);

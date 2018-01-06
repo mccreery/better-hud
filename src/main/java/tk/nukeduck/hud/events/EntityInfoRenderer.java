@@ -35,7 +35,9 @@ public class EntityInfoRenderer {
 
 		double maxDist = 0;
 		for(EntityInfo element : HudElement.ENTITY_INFO) {
-			if(element.settings.get() && element.getDistance() > maxDist) maxDist = element.getDistance();
+			if(element.settings.get() && element.getDistance() > maxDist) {
+				maxDist = element.getDistance();
+			}
 		}
 		if(maxDist == 0) return;
 

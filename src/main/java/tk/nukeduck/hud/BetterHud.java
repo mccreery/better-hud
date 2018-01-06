@@ -1,7 +1,5 @@
 package tk.nukeduck.hud;
 
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Random;
 
 import org.apache.logging.log4j.LogManager;
@@ -30,27 +28,29 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.events.EntityInfoRenderer;
 import tk.nukeduck.hud.events.PickupNotifier;
+import tk.nukeduck.hud.gui.GuiElementSettings;
 import tk.nukeduck.hud.gui.GuiHudMenu;
 import tk.nukeduck.hud.network.InventoryNameQuery;
 import tk.nukeduck.hud.network.MessageNotifyClientHandler;
 import tk.nukeduck.hud.network.MessagePickup;
 import tk.nukeduck.hud.network.MessagePickupHandler;
 import tk.nukeduck.hud.network.Version;
-import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.LayoutManager;
 import tk.nukeduck.hud.util.Tickable.Ticker;
 
-@Mod(modid = BetterHud.MODID, name = "Better HUD", version = "1.3.9")
+@Mod(modid = BetterHud.MODID, name = "Better HUD", version = "1.4")
 public class BetterHud { // TODO thoroughly test GL, replace drawRect coords
 	public static final String MODID = "hud";
-	public static final Version VERSION = new Version(1, 3, 9);
+	public static final Version VERSION = new Version(1, 4);
 	public static final Logger LOGGER = LogManager.getLogger(MODID);
 
 	@SideOnly(Side.CLIENT) public static Minecraft MC;
 	@SideOnly(Side.CLIENT) public static GuiHudMenu MENU;
 
-	@SideOnly(Side.CLIENT) public static KeyBinding MENU_KEY;
-	@SideOnly(Side.CLIENT) public static KeyBinding TOGGLE_KEY;
+	@SideOnly(Side.CLIENT)
+	private static final KeyBinding MENU_KEY = new KeyBinding("key.betterHud.open", Keyboard.KEY_U, "key.categories.misc");
+	@SideOnly(Side.CLIENT)
+	private static final KeyBinding TOGGLE_KEY = new KeyBinding("key.betterHud.disable", Keyboard.KEY_F3, "key.categories.misc");
 
 	public static final int SPACER = 5;
 	public static final Random RANDOM = new Random();
@@ -64,8 +64,6 @@ public class BetterHud { // TODO thoroughly test GL, replace drawRect coords
 	public static void toggleEnabled() {
 		HudElement.GLOBAL.settings.toggle();
 	}
-
-	public static final Map<HudElement, Bounds> boundsCache = new HashMap<HudElement, Bounds>();
 
 	// TODO allow reordering of elements to render some closer to top
 
@@ -81,8 +79,6 @@ public class BetterHud { // TODO thoroughly test GL, replace drawRect coords
 			MC = Minecraft.getMinecraft();
 			MENU = new GuiHudMenu();
 
-			MENU_KEY = new KeyBinding("key.betterHud.open", Keyboard.KEY_U, "key.categories.misc");
-			TOGGLE_KEY = new KeyBinding("key.betterHud.disable", Keyboard.KEY_F3, "key.categories.misc");
 			ClientRegistry.registerKeyBinding(MENU_KEY);
 			ClientRegistry.registerKeyBinding(TOGGLE_KEY);
 
@@ -118,7 +114,7 @@ public class BetterHud { // TODO thoroughly test GL, replace drawRect coords
 		for(HudElement element : HudElement.ELEMENTS) {
 			if(element.isEnabled() && element.shouldRender()) {
 				MC.mcProfiler.startSection(element.name);
-				boundsCache.put(element, element.render(event, layoutManager));
+				GuiElementSettings.boundsCache.put(element, element.render(event, layoutManager));
 				MC.mcProfiler.endSection();
 			}
 		}

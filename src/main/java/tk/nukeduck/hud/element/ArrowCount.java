@@ -35,11 +35,12 @@ public class ArrowCount extends HudElement {
 	public void loadDefaults() {
 		settings.set(true);
 		overlay.set(true);
-		position.load(Direction.EAST);
+		position.set(Direction.EAST);
 	}
 
 	public ArrowCount() {
 		super("arrowCount");
+
 		settings.add(overlay);
 		settings.add(position);
 	}

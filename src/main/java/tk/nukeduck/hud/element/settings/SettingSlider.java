@@ -10,34 +10,34 @@ import java.util.Map;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.math.MathHelper;
 import tk.nukeduck.hud.gui.GuiElementSettings;
 import tk.nukeduck.hud.gui.GuiOptionSliderA;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.FormatUtil;
+import tk.nukeduck.hud.util.ISaveLoad.ISlider;
 
-public class SettingSlider extends SettingAlignable {
-	private final double min;
-	private final double max;
-	public final double accuracy;
-
-	public double value = 0;
+public class SettingSlider extends SettingAlignable<Double> implements ISlider {
+	private GuiOptionSliderA slider;
+	private final double min, max, interval;
 
 	private int displayPlaces;
-	private String unlocalizedValue = null;
+	private String unlocalizedValue;
+
+	private double value;
 
 	public SettingSlider(String name, double min, double max) {
 		this(name, min, max, -1);
 	}
-	public SettingSlider(String name, double min, double max, double accuracy) {
+
+	public SettingSlider(String name, double min, double max, double interval) {
 		super(name, Direction.CENTER);
 		this.min = min;
 		this.max = max;
-		this.accuracy = accuracy;
-		this.displayPlaces = accuracy == (int)accuracy ? 0 : 1;
+		this.interval = interval;
 
-		this.value = MathHelper.clamp(value, min, max);
+		setDisplayPlaces(interval == (int)interval ? 0 : 1);
+		set(getMinimum());
 	}
 
 	public SettingSlider setAlignment(Direction alignment) {
@@ -55,45 +55,53 @@ public class SettingSlider extends SettingAlignable {
 		return this;
 	}
 
-	public double normalize(double value) {
-		return (value - min) / (max - min);
-	}
-
-	public double denormalize(double normalized) {
-		double toRound = normalized * (max - min) + min;
-		return accuracy == -1 ? toRound : MathHelper.clamp(Math.round(toRound / accuracy) * accuracy, min, max);
-	}
-
+	@Override
 	public String getDisplayString() {
-		return getLocalizedName() + ": " + getDisplayValue(value);
+		return I18n.format("betterHud.setting." + name) + ": " + getDisplayValue(get());
 	}
 
 	public String getDisplayValue(double value) {
-		String s = FormatUtil.formatToPlaces(value, displayPlaces);
+		String displayValue = FormatUtil.formatToPlaces(value, displayPlaces);
 
 		if(unlocalizedValue != null) {
-			s = I18n.format(unlocalizedValue, s);
+			displayValue = I18n.format(unlocalizedValue, displayValue);
 		}
-		return s;
+		return displayValue;
 	}
 
 	@Override
-	public int getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Bounds bounds) {
-		parts.add(new GuiOptionSliderA(0, bounds.x(), bounds.y(), bounds.width(), bounds.height(), this));
+	public int getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Bounds bounds) {
+		slider = new GuiOptionSliderA(0, bounds.x(), bounds.y(), bounds.width(), bounds.height(), this);
+
+		parts.add(slider);
+		callbacks.put(slider, this);
 		return bounds.bottom() + SPACER;
 	}
 
 	@Override public void actionPerformed(GuiElementSettings gui, GuiButton button) {}
 	@Override public void keyTyped(char typedChar, int keyCode) throws IOException {}
-	@Override public void otherAction(Collection<Setting> settings) {}
+	@Override public void otherAction(Collection<Setting<?>> settings) {}
+
+	@Override public Double get() {return value;}
+
+	@Override
+	public void set(Double value) {
+		this.value = value;
+		ISlider.normalize(this);
+	}
 
 	@Override
 	public String save() {
-		return String.valueOf(value);
+		return get().toString();
 	}
 
 	@Override
-	public void load(String val) {
-		value = MathHelper.clamp(Double.parseDouble(val), min, max);
+	public void load(String save) {
+		set(Double.valueOf(save));
+		slider.displayString = getDisplayString();
 	}
+
+	@Override public Double getMinimum() {return min;}
+	@Override public Double getMaximum() {return max;}
+	@Override public Double getInterval() {return interval;}
 }

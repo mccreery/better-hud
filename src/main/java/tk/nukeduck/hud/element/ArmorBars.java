@@ -26,10 +26,15 @@ import tk.nukeduck.hud.util.PaddedBounds;
 import tk.nukeduck.hud.util.Point;
 
 public class ArmorBars extends HudElement {
-	private final SettingChoose bars;
-	private final SettingBoolean showName;
-	private final SettingBoolean showDurability;
-	private final SettingChoose durabilityMode;
+	private final SettingChoose bars = new SettingChoose("barType", new String[] {"hidden", "smallBars", "largeBars"});
+	private final SettingBoolean showName = new SettingBoolean("showName");
+	private final SettingBoolean showDurability = new SettingBoolean("showDurability", Direction.WEST);
+	private final SettingChoose durabilityMode = new SettingChoose("durabilityMode", Direction.EAST, "values", "percent") {
+		@Override
+		public boolean enabled() {
+			return showDurability.get();
+		}
+	};
 
 	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS);
 	private final SettingWarnings warnings = new SettingWarnings("damageWarning");
@@ -40,13 +45,14 @@ public class ArmorBars extends HudElement {
 	@Override
 	public void loadDefaults() {
 		settings.set(true);
-		bars.index = 2;
+		bars.setIndex(2);
 		showName.set(true);
 		showDurability.set(true);
-		durabilityMode.index = 0;
-		position.load(Direction.NORTH_WEST);
+		durabilityMode.setIndex(0);
+		position.set(Direction.NORTH_WEST);
 
-		warnings.set(true, 45, 25, 10);
+		warnings.set(new Integer[] {45, 25, 10});
+		warnings.setActive(true);
 	}
 
 	public ArmorBars() {
@@ -54,15 +60,10 @@ public class ArmorBars extends HudElement {
 
 		this.settings.add(position);
 		this.settings.add(new Legend("misc"));
-		this.settings.add(showDurability = new SettingBoolean("showDurability", Direction.WEST));
-		this.settings.add(durabilityMode = new SettingChoose("durabilityMode", Direction.EAST, "values", "percent") {
-			@Override
-			public boolean enabled() {
-				return showDurability.get();
-			}
-		});
-		this.settings.add(showName = new SettingBoolean("showName"));
-		this.settings.add(bars = new SettingChoose("barType", new String[] {"hidden", "smallBars", "largeBars"}));
+		this.settings.add(showDurability);
+		this.settings.add(durabilityMode);
+		this.settings.add(showName);
+		this.settings.add(bars);
 		bars.comments.add("hidden, smallBars, largeBars");
 
 		settings.add(warnings);
@@ -75,7 +76,7 @@ public class ArmorBars extends HudElement {
 		float value = (float) (maxDamage - item.getItemDamage()) / (float) maxDamage;
 
 		if(this.showDurability.get()) {
-			if(durabilityMode.getValue().equals("percent")) {
+			if(durabilityMode.getIndex() == 1) {
 				parts.add(I18n.format("betterHud.strings.percent", FormatUtil.formatToPlaces(value * 100.0, 1)));
 			} else {
 				parts.add(I18n.format("betterHud.strings.outOf", String.valueOf(maxDamage - item.getItemDamage()), String.valueOf(maxDamage)));
@@ -106,7 +107,7 @@ public class ArmorBars extends HudElement {
 		size.y = 70;
 
 		// Make sure large bar fits
-		if(bars.index == 2 && size.x < 85) {
+		if(bars.getIndex() == 2 && size.x < 85) {
 			size.x = 85;
 		}
 
@@ -145,7 +146,7 @@ public class ArmorBars extends HudElement {
 				if(textCache[i] != null) {
 					Bounds line = new Bounds();
 					itemAnchor.anchor(line, content);
-					line.y(line.y() + 18 * i + (bars.index == 2 ? 2 : 4));
+					line.y(line.y() + 18 * i + (bars.getIndex() == 2 ? 2 : 4));
 
 					MC.ingameGUI.drawString(MC.fontRenderer, this.textCache[i], bounds.x(), bounds.y(), Colors.WHITE);
 				}
@@ -153,13 +154,13 @@ public class ArmorBars extends HudElement {
 			MC.mcProfiler.endSection();
 		}
 
-		if(this.bars.index != 0) {
+		if(this.bars.getIndex() != 0) {
 			MC.mcProfiler.startSection("bars");
 			for(int i = 0; i < 4; i++) {
 				ItemStack stack = MC.player.inventory.armorItemInSlot(i);
 				if(stack == null) continue;
 
-				if(this.bars.index == 2) { // Large bars
+				if(this.bars.getIndex() == 2) { // Large bars
 					/*int x = this.alignment.value == Direction.WEST ? this.bounds.getX() + 21 : this.bounds.getX2() - 85;
 					int y = this.bounds.getY() + i * 18 + 12 + (this.showName.value || this.showDurability.value ? 0 : -4);
 					RenderUtil.drawDamageBar(x, y, 64, 2, armor[i], false); TODO */

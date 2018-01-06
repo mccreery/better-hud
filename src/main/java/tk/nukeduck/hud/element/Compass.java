@@ -14,6 +14,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
+import tk.nukeduck.hud.element.settings.SettingPercentage;
 import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.element.settings.SettingSlider;
 import tk.nukeduck.hud.util.Bounds;
@@ -23,17 +24,17 @@ import tk.nukeduck.hud.util.LayoutManager;
 
 public class Compass extends HudElement {
 	private final SettingPosition position = new SettingPosition("position");
-	private final SettingSlider directionScaling = new SettingSlider("scaledDirections", 0, 100, 1).setUnlocalizedValue("betterHud.strings.percent");
+	private final SettingSlider directionScaling = new SettingPercentage("scaledDirections", 0.01).setUnlocalizedValue("betterHud.strings.percent");
 	private final SettingBoolean showNotches = new SettingBoolean("showNotches");
-	private final SettingSlider scale = new SettingSlider("scale", 25, 200, 1).setUnlocalizedValue("betterHud.strings.percent");
+	private final SettingSlider scale = new SettingPercentage("scale", 25, 200, 0.01).setUnlocalizedValue("betterHud.strings.percent");
 
 	@Override
 	public void loadDefaults() {
 		this.settings.set(true);
-		position.load(Direction.NORTH_WEST);
-		directionScaling.value = 50.0;
+		position.set(Direction.NORTH_WEST);
+		directionScaling.set(50.0);
 		showNotches.set(true);
-		scale.value = 100;
+		scale.set(100.0);
 	}
 
 	public static final double degreesPerRadian = 180.0 / Math.PI;
@@ -95,7 +96,7 @@ public class Compass extends HudElement {
 				glTranslatef(bounds.x() + 90 - nX, bounds.y() + 2, 0.0F);
 				
 				float size = (float) nOpacity / 128F;
-				float finalSize = Math.max(0, (float) (directionScaling.value / factor) * (size - 1) + 1);
+				float finalSize = Math.max(0, (float) (directionScaling.get() / factor) * (size - 1) + 1);
 				glScalef(finalSize, finalSize, 1.0F);
 				
 				MC.ingameGUI.drawCenteredString(MC.fontRenderer, "N", 0, 0, Colors.fromARGB(nOpacity, 255, 0, 0));
@@ -107,7 +108,7 @@ public class Compass extends HudElement {
 				glTranslatef(bounds.x() + 90 - eX, bounds.y() + 2, 0.0F);
 
 				float size = (float) eOpacity / 128F;
-				float finalSize = Math.max(0, (float) (directionScaling.value / factor) * (size - 1) + 1);
+				float finalSize = Math.max(0, (float) (directionScaling.get() / factor) * (size - 1) + 1);
 				glScalef(finalSize, finalSize, 1.0F);
 				
 				MC.ingameGUI.drawCenteredString(MC.fontRenderer, "E", 0, 0, Colors.fromARGB(eOpacity, 255, 255, 255));
@@ -119,7 +120,7 @@ public class Compass extends HudElement {
 				glTranslatef(bounds.x() + 90 - sX, bounds.y() + 2, 0.0F);
 				
 				float size = (float) sOpacity / 128F;
-				float finalSize = Math.max(0, (float) (directionScaling.value / factor) * (size - 1) + 1);
+				float finalSize = Math.max(0, (float) (directionScaling.get() / factor) * (size - 1) + 1);
 				glScalef(finalSize, finalSize, 1.0F);
 				
 				MC.ingameGUI.drawCenteredString(MC.fontRenderer, "S", 0, 0, Colors.fromARGB(sOpacity, 0, 0, 255));
@@ -131,7 +132,7 @@ public class Compass extends HudElement {
 				glTranslatef(bounds.x() + 90 - wX, bounds.y() + 2, 0.0F);
 
 				float size = (float) wOpacity / 128F;
-				float finalSize = Math.max(0, (float) (directionScaling.value / factor) * (size - 1) + 1);
+				float finalSize = Math.max(0, (float) (directionScaling.get() / factor) * (size - 1) + 1);
 				glScalef(finalSize, finalSize, 1.0F);
 
 				MC.ingameGUI.drawCenteredString(MC.fontRenderer, "W", 0, 0, Colors.fromARGB(wOpacity, 255, 255, 255));

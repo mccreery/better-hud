@@ -12,7 +12,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import tk.nukeduck.hud.BetterHud;
-import tk.nukeduck.hud.element.entityinfo.BreedIndicator;
 import tk.nukeduck.hud.element.entityinfo.EntityInfo;
 import tk.nukeduck.hud.element.entityinfo.HorseInfo;
 import tk.nukeduck.hud.element.entityinfo.MobInfo;
@@ -64,7 +63,6 @@ public abstract class HudElement { // Can't extend Gui due to @SideOnly
 	public static final HidePlayers HIDE_PLAYERS = new HidePlayers();
 	public static final PickupCount PICKUP = new PickupCount();
 	public static final PotionBar POTION_BAR = new PotionBar();
-	public static final BreedIndicator BREED_INFO = new BreedIndicator();
 	public static final HorseInfo HORSE_INFO = new HorseInfo();
 	public static final MobInfo MOB_INFO = new MobInfo();
 	public static final CpsCount CPS = new CpsCount();
@@ -74,12 +72,12 @@ public abstract class HudElement { // Can't extend Gui due to @SideOnly
 		CLOCK, COMPASS, CONNECTION, COORDINATES, DISTANCE,
 		MAX_LEVEL, EXPERIENCE, STATS, FPS, FULL_INV,
 		HOLDING, HEAL, HUNGER, LIGHT_LEVEL, SIGN_READER,
-		SYSTEM_CLOCK, WATER_DROPS, BREED_INFO, HIDE_PLAYERS,
+		SYSTEM_CLOCK, WATER_DROPS, HIDE_PLAYERS,
 		HORSE_INFO, MOB_INFO, PICKUP, POTION_BAR, CPS
 	};
 
 	public static final EntityInfo[] ENTITY_INFO = {
-		BREED_INFO, HORSE_INFO, MOB_INFO
+		HORSE_INFO, MOB_INFO
 	};
 
 	public static final ResourceLocation HUD_ICONS = new ResourceLocation("hud", "textures/gui/icons_hud.png");
@@ -92,6 +90,7 @@ public abstract class HudElement { // Can't extend Gui due to @SideOnly
 	}
 
 	public final String name;
+
 	protected HudElement(String name) {
 		this.name = name;
 	}

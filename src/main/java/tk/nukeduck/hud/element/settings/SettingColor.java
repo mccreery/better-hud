@@ -1,13 +1,8 @@
 package tk.nukeduck.hud.element.settings;
 
-import java.io.IOException;
-import java.util.Collection;
-
-import net.minecraft.client.gui.GuiButton;
-import tk.nukeduck.hud.gui.GuiElementSettings;
 import tk.nukeduck.hud.util.Colors;
 
-public class SettingColor extends Setting {
+public class SettingColor extends SettingStub<Integer> {
 	protected final SettingSlider red, green, blue;
 
 	public SettingColor(String name) {
@@ -17,18 +12,15 @@ public class SettingColor extends Setting {
 		add(blue = new SettingSlider(name + "Blue", 0, 255, 1));
 	}
 
-	public void set(int color) {
-		red.value = Colors.red(color);
-		green.value = Colors.green(color);
-		blue.value = Colors.blue(color);
-	}
-	public int get() {
-		return Colors.fromRGB((int)red.value, (int)green.value, (int)blue.value);
+	@Override
+	public void set(Integer color) {
+		red.set(Double.valueOf(Colors.red(color)));
+		green.set(Double.valueOf(Colors.green(color)));
+		blue.set(Double.valueOf(Colors.blue(color)));
 	}
 
-	@Override public String save() {return null;}
-	@Override public void load(String save) {}
-	@Override public void actionPerformed(GuiElementSettings gui, GuiButton button) {}
-	@Override public void keyTyped(char typedChar, int keyCode) throws IOException {}
-	@Override public void otherAction(Collection<Setting> settings) {}
+	@Override
+	public Integer get() {
+		return Colors.fromRGB(red.get().intValue(), green.get().intValue(), blue.get().intValue());
+	}
 }

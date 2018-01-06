@@ -20,7 +20,7 @@ public class MaxLevelIndicator extends HudElement {
 	@Override
 	public void loadDefaults() {
 		this.settings.set(true);
-		position.load(Direction.SOUTH);
+		position.set(Direction.SOUTH);
 	}
 
 	public MaxLevelIndicator() {

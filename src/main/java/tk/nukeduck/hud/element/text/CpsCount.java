@@ -40,7 +40,7 @@ public class CpsCount extends TextElement implements Tickable {
 	public void loadDefaults() {
 		super.loadDefaults();
 
-		timeoutMax.value = 3;
+		timeoutMax.set(3.0);
 		showBurst.set(true);
 		remember.set(false);
 	}
@@ -61,11 +61,11 @@ public class CpsCount extends TextElement implements Tickable {
 	@Override
 	public void tick() {
 		// Tracker should start or is running
-		if(timeout < timeoutMax.value || clickHistory[i] > 0) { 
+		if(timeout < timeoutMax.get() || clickHistory[i] > 0) { 
 			//System.out.println(clickHistory[i] + " clicks this second");
 
 			if(clickHistory[i] > 0) {
-				if(timeout == timeoutMax.value) { // New burst
+				if(timeout == timeoutMax.get()) { // New burst
 					windowTotal = 0;
 					burstTotal = 0;
 					burstLength = 0;
@@ -80,7 +80,7 @@ public class CpsCount extends TextElement implements Tickable {
 				timeout = 0;
 
 				//System.out.println("Burst of " + burstLength + " seconds, total clicks " + windowTotal);
-			} else if(++timeout == timeoutMax.value) {
+			} else if(++timeout == timeoutMax.get()) {
 				//System.out.println("Burst complete.");
 				//System.out.println("Length " + burstLength + " seconds, total clicks " + windowTotal);
 				return;
@@ -102,7 +102,7 @@ public class CpsCount extends TextElement implements Tickable {
 
 	@Override
 	protected String[] getText() {
-		float cps = timeout < timeoutMax.value || remember.get() ? this.cps : 0;
+		float cps = timeout < timeoutMax.get() || remember.get() ? this.cps : 0;
 		String cpsDisplay = I18n.format("betterHud.strings.cps", String.format("%.1f", cps));
 
 		if(showBurst.get() && cps > 0) {

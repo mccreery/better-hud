@@ -40,7 +40,7 @@ public class PickupHandler implements Tickable {
 	public void tick() {
 		if(!MC.isGamePaused()) {
 			Iterator<Entry<ItemStack, Float>> it2 = pickedUp.entrySet().iterator();
-			float delta = 0.0025F + (float)HudElement.PICKUP.fadeSpeed.value * 0.0225F;
+			float delta = 0.0025F + HudElement.PICKUP.fadeSpeed.get().floatValue() * 0.0225F;
 
 			while(it2.hasNext()) {
 				Entry<ItemStack, Float> entry = it2.next();

@@ -33,15 +33,16 @@ public class HandBar extends HudElement {
 	@Override
 	public void loadDefaults() {
 		this.settings.set(true);
-		position.load(Direction.SOUTH);
+		position.set(Direction.SOUTH);
 
 		showName.set(true);
 		showDurability.set(true);
-		durabilityMode.index = 0;
+		durabilityMode.setIndex(0);
 		showItem.set(true);
 		showBars.set(true);
 		offHand.set(false);
-		warnings.set(true, 45, 25, 10);
+		warnings.set(new Integer[] {45, 25, 10});
+		warnings.setActive(true);
 	}
 
 	public HandBar() {
@@ -63,7 +64,7 @@ public class HandBar extends HudElement {
 		float value = (float) (maxDamage - stack.getItemDamage()) / (float) maxDamage;
 
 		String dur, text;
-		if(durabilityMode.getValue().equals("percent")) {
+		if(durabilityMode.getIndex() == 1) {
 			dur = I18n.format("betterHud.strings.percent", FormatUtil.formatToPlaces(value * 100.0, 1));
 		} else {
 			dur = I18n.format("betterHud.strings.outOf", String.valueOf(maxDamage - stack.getItemDamage()), String.valueOf(maxDamage));

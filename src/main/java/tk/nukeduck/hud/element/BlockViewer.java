@@ -34,6 +34,7 @@ import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.element.settings.SettingSlider;
 import tk.nukeduck.hud.network.InventoryNameQuery;
+import tk.nukeduck.hud.network.Version;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
@@ -48,7 +49,13 @@ public class BlockViewer extends HudElement {
 	private final SettingBoolean showBlock = new SettingBoolean("showBlock");
 	private final SettingSlider distance = new SettingSlider("distance", 1, 16, 1).setUnlocalizedValue("betterHud.strings.chunks");
 	private final SettingBoolean showIds = new SettingBoolean("showIds");
-	private final SettingBoolean invNames = new SettingBoolean("invNames");
+
+	private final SettingBoolean invNames = new SettingBoolean("invNames") {
+		@Override
+		public boolean enabled() {
+			return super.enabled() && BetterHud.serverVersion.compareTo(new Version(1, 4)) >= 0;
+		}
+	};
 
 	public BlockViewer() {
 		super("blockViewer");
@@ -69,16 +76,16 @@ public class BlockViewer extends HudElement {
 	@Override
 	public void loadDefaults() {
 		settings.set(true);
-		position.load(Direction.NORTH_WEST);
+		position.set(Direction.NORTH_WEST);
 		showBlock.set(true);
-		distance.value = 16;
+		distance.set(16.0);
 		showIds.set(false);
 		invNames.set(true);
 	}
 
 	@Override
 	public Bounds render(RenderGameOverlayEvent event, LayoutManager manager) {
-		RayTraceResult trace = MC.getRenderViewEntity().rayTrace(distance.value * 16, 1f);
+		RayTraceResult trace = MC.getRenderViewEntity().rayTrace(distance.get() * 16, 1f);
 		if(trace == null || trace.typeOfHit != RayTraceResult.Type.BLOCK) return null;
 
 		IBlockState state = MC.world.getBlockState(trace.getBlockPos());
@@ -132,7 +139,6 @@ public class BlockViewer extends HudElement {
 
 			if(tileEntity != null) {
 				MC.storeTEInStack(stack, tileEntity);
-				System.out.print(stack.getTagCompound() + "\n");
 			}
 		}
 		
@@ -189,7 +195,6 @@ public class BlockViewer extends HudElement {
 	@SideOnly(Side.SERVER)
 	@SubscribeEvent
 	public void onBlockBreak(BlockEvent.BreakEvent event) {
-		//System.out.println("Clearing block " + event.getPos());
 		BetterHud.NET_WRAPPER.sendToDimension(new InventoryNameQuery.Response(event.getPos(), null), event.getWorld().provider.getDimension());
 	}
 
@@ -205,7 +210,6 @@ public class BlockViewer extends HudElement {
 	 * of the inventory, it will return that value */
 	private ITextComponent ensureInvName(BlockPos pos) {
 		if(!nameCache.containsKey(pos)) {
-			//System.out.println("Asking about block " + pos);
 			BetterHud.NET_WRAPPER.sendToServer(new InventoryNameQuery.Request(pos));
 			nameCache.put(pos, null);
 		}

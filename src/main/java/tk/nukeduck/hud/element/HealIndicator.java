@@ -20,8 +20,8 @@ public class HealIndicator extends HudElement {
 	@Override
 	public void loadDefaults() {
 		this.settings.set(true);
-		position.load(Direction.NORTH_WEST);
-		mode.index = 1;
+		position.set(Direction.NORTH_WEST);
+		mode.setIndex(1);
 	}
 
 	public HealIndicator() {
@@ -35,7 +35,7 @@ public class HealIndicator extends HudElement {
 	@Override
 	public Bounds render(RenderGameOverlayEvent event, LayoutManager manager) {
 			String healIndicator = I18n.format("betterHud.strings.healIndicator");
-			Bounds bounds = mode.index == 0 ? new Bounds(MC.fontRenderer.getStringWidth(healIndicator), MC.fontRenderer.FONT_HEIGHT) : new Bounds(9, 9);
+			Bounds bounds = mode.getIndex() == 0 ? new Bounds(MC.fontRenderer.getStringWidth(healIndicator), MC.fontRenderer.FONT_HEIGHT) : new Bounds(9, 9);
 
 			if(position.isAbsolute()) {
 				position.applyTo(bounds, manager);
@@ -43,7 +43,7 @@ public class HealIndicator extends HudElement {
 				bounds.position = new Point(manager.getResolution().x / 2 - 90, manager.getResolution().y - 50);
 			}
 
-			if(mode.index == 0) {
+			if(mode.getIndex() == 0) {
 				MC.ingameGUI.drawString(MC.fontRenderer, healIndicator, bounds.x(), bounds.y(), Colors.GREEN);
 			} else {
 				MC.getTextureManager().bindTexture(HUD_ICONS);

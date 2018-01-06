@@ -10,10 +10,14 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import tk.nukeduck.hud.gui.GuiElementSettings;
-import tk.nukeduck.hud.util.ISaveLoad;
+import tk.nukeduck.hud.util.ISaveLoad.IGetSet;
 
-public abstract class Setting implements ISaveLoad {
-	protected final List<Setting> children = new ArrayList<Setting>();
+/** A setting for a {@link HudElement}. Child elements will be saved under
+ * the namespace of the parent's name
+ *
+ * @see IGetSet */
+public abstract class Setting<T> implements IGetSet<T> {
+	protected final List<Setting<?>> children = new ArrayList<Setting<?>>();
 
 	/** Populates {@code parts} with {@link Gui}s which should be added to the settings screen.<br>
 	 * Also populates {@code callbacks} with {@link #keyTyped(char, int)} and {@link #actionPerformed(GuiElementSettings, GuiButton)} callbacks.
@@ -24,7 +28,7 @@ public abstract class Setting implements ISaveLoad {
 	 * @param width The screen width
 	 * @param y The topmost Y coordinate of {@code Gui}s in this setting
 	 * @return The bottommost Y coordinate of {@code Gui}s in this setting */
-	public int getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, int width, int y) {
+	public int getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, int width, int y) {
 		return getGuiParts(parts, callbacks, width, y, children);
 	}
 
@@ -34,9 +38,9 @@ public abstract class Setting implements ISaveLoad {
 	 *
 	 * @return The bottommost Y coordinate of all {@code Gui}s across all {@code settings}
 	 * @see #getGuiParts(List, Map, int, int) */
-	public static int getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, int width, int y, List<Setting> settings) {
+	public static int getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, int width, int y, List<Setting<?>> settings) {
 		if(!settings.isEmpty()) {
-			for(Setting setting : settings) {
+			for(Setting<?> setting : settings) {
 				int bottom = setting.getGuiParts(parts, callbacks, width, y); 
 				if(bottom != -1) y = bottom;
 			}
@@ -44,9 +48,9 @@ public abstract class Setting implements ISaveLoad {
 		return y;
 	}
 
-	private Setting parent = null;
+	private Setting<?> parent = null;
 
-	public void add(Setting element) {
+	public void add(Setting<?> element) {
 		children.add(element);
 		element.parent = this;
 	}
@@ -57,7 +61,7 @@ public abstract class Setting implements ISaveLoad {
 
 	/** Renders extra parts of this GUI */
 	public void draw() {
-		for(Setting setting : children) {
+		for(Setting<?> setting : children) {
 			setting.draw();
 		}
 	}
@@ -70,7 +74,7 @@ public abstract class Setting implements ISaveLoad {
 	public abstract void keyTyped(char typedChar, int keyCode) throws IOException;
 
 	/** Called when another GuiButton is pressed in the same window, but not from this setting. */
-	public abstract void otherAction(Collection<Setting> settings);
+	public abstract void otherAction(Collection<Setting<?>> settings);
 
 	public final String name;
 
@@ -90,12 +94,12 @@ public abstract class Setting implements ISaveLoad {
 	protected boolean shouldRegister() {return name != null;}
 
 	/** Registers this setting for saving */
-	public void register(List<Setting> settings) {
+	public void register(List<Setting<?>> settings) {
 		if(shouldRegister()) {
 			settings.add(this);
 		}
 
-		for(Setting child : children) {
+		for(Setting<?> child : children) {
 			child.register(settings);
 		}
 	}
@@ -106,5 +110,5 @@ public abstract class Setting implements ISaveLoad {
 	}
 
 	// TODO integrate with forge system
-	public ArrayList<String> comments = new ArrayList<String>();
+	@Deprecated public ArrayList<String> comments = new ArrayList<String>();
 }

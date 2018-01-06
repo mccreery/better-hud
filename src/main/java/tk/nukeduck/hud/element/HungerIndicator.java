@@ -19,20 +19,22 @@ public class HungerIndicator extends HudElement {
 	@Override
 	public void loadDefaults() {
 		this.settings.set(true);
-		position.load(Direction.NORTH_WEST);
-		maxLimit.value = 9.5;
+		position.set(Direction.SOUTH);
+		maxLimit.set(9.5);
 	}
 
 	public HungerIndicator() {
 		super("foodIndicator");
+
 		settings.add(position);
-		this.settings.add(new Legend("misc"));
+		settings.add(new Legend("misc"));
+		settings.add(maxLimit);
 	}
 
 	@Override
 	public Bounds render(RenderGameOverlayEvent event, LayoutManager manager) {
 		double foodLevel = MC.player.getFoodStats().getFoodLevel();
-		double foodMax = this.maxLimit.value * 2.0;
+		double foodMax = this.maxLimit.get() * 2.0;
 
 		if(foodLevel <= foodMax) {
 			Bounds bounds;

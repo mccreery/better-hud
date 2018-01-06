@@ -28,7 +28,7 @@ public class MobInfo extends EntityInfo {
 	private final SettingSlider compress = new SettingSlider("compress", 0, 200, 20) {
 		@Override
 		public String getDisplayValue(double value) {
-			if(value == 0) {
+			if(get() == 0.0) {
 				return I18n.format("betterHud.setting.never");
 			} else {
 				return super.getDisplayValue(value);
@@ -50,8 +50,9 @@ public class MobInfo extends EntityInfo {
 		settings.set(true);
 		players.set(true);
 		mobs.set(true);
-		distance.value = 100;
-		compress.value = 40;
+
+		distance.set(100.0);
+		compress.set(40.0);
 	}
 
 	private static ResourceLocation icons = new ResourceLocation("textures/gui/icons.png");
@@ -79,11 +80,11 @@ public class MobInfo extends EntityInfo {
 			
 			int width = Math.max(8 * Math.min(10, (int) entity.getMaxHealth() / 2) + 1 + (isPlayer ? 5 + 8 * 10 : 0), MC.fontRenderer.getStringWidth(text)) + 10;
 			int height;
-			if(compress.value != 0 && entity.getHealth() >= compress.value) {
+			if(compress.get() != 0 && entity.getHealth() >= compress.get()) {
 				height = 2 * MC.fontRenderer.FONT_HEIGHT + 12 + ((int)entity.getHealth() % 20 != 0 ? 9 : 0);
 			} else {
 				height = MC.fontRenderer.FONT_HEIGHT + 12;
-				height += 9 * (compress.value != 0 && entity.getMaxHealth() > compress.value ? compress.value / 20 : (int) Math.ceil(Math.ceil(entity.getMaxHealth() / 2) / perLine));
+				height += 9 * (compress.get() != 0 && entity.getMaxHealth() > compress.get() ? compress.get() / 20 : (int) Math.ceil(Math.ceil(entity.getMaxHealth() / 2) / perLine));
 			}
 			
 			float scale = 1.0F / width;
@@ -135,8 +136,8 @@ public class MobInfo extends EntityInfo {
 		int y = MC.fontRenderer.FONT_HEIGHT + 7;
 
 		MC.renderEngine.bindTexture(icons);
-		if(compress.value != 0) {
-			if(health >= compress.value) {
+		if(compress.get() != 0) {
+			if(health >= compress.get()) {
 				int rows = health / 20;
 				for(int i = 0; i < 10; i++) {
 					RenderUtil.renderQuadWithUV(t, 5 + i*4, y, 16 / 256F, 0, 25 / 256F, 9 / 256F, 9, 9);
@@ -148,8 +149,8 @@ public class MobInfo extends EntityInfo {
 				health -= rows * 20;
 				max -= rows * 20;
 				if(max > 20) max = 20;
-			} else if(max > compress.value) {
-				max = (int)compress.value;
+			} else if(max > compress.get()) {
+				max = compress.get().intValue();
 			}
 		}
 

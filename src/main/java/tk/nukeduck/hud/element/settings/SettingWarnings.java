@@ -1,14 +1,9 @@
 package tk.nukeduck.hud.element.settings;
 
-import java.io.IOException;
-import java.util.Collection;
-
-import net.minecraft.client.gui.GuiButton;
-import tk.nukeduck.hud.gui.GuiElementSettings;
 import tk.nukeduck.hud.util.Direction;
 
-public class SettingWarnings extends Setting {
-	private final SettingBoolean enabled = new SettingBoolean("enabled");
+public class SettingWarnings extends SettingStub<Integer[]> {
+	private final SettingBoolean active = new SettingBoolean("enabled");
 	private final SettingSlider[] sliders;
 
 	public SettingWarnings(String name) {
@@ -21,35 +16,44 @@ public class SettingWarnings extends Setting {
 
 		sliders = new SettingSlider[warnings];
 		for(int i = 0; i < sliders.length; i++) {
-			add(sliders[i] = new SettingPercentage(String.valueOf(i), 1) {
+			add(sliders[i] = new SettingPercentage(String.valueOf(i), 0.01) {
 				@Override
 				public boolean enabled() {
-					return SettingWarnings.this.enabled.get() && super.enabled();
+					return SettingWarnings.this.active.get() && super.enabled();
 				}
 			}.setAlignment((i & 1) == 1 ? Direction.EAST : Direction.WEST));
 		}
 	}
 
-	public void set(boolean enabled, int... values) {
-		this.enabled.set(enabled);
+	public void setActive(boolean active) {
+		this.active.set(active);
+	}
 
-		for(int i = 0; i < values.length && i < sliders.length; i++) {
-			if(values[i] >= 0) sliders[i].value = values[i];
+	@Override
+	public void set(Integer[] values) {
+		for(int i = 0; i < sliders.length; i++) {
+			if(values[i] >= 0) {
+				sliders[i].set(Double.valueOf(values[i]));
+			}
 		}
+	}
+
+	@Override
+	public Integer[] get() {
+		Integer[] values = new Integer[sliders.length];
+
+		for(int i = 0; i < sliders.length; i++) {
+			values[i] = sliders[i].get().intValue();
+		}
+		return values;
 	}
 
 	public int getWarning(float value) {
-		if(!enabled.get()) return 0;
+		if(!active.get()) return 0;
 
 		for(int i = sliders.length - 1; i >= 0; i++) {
-			if(value <= sliders[i].value) return i + 1;
+			if(value <= sliders[i].get()) return i + 1;
 		}
 		return 0;
 	}
-
-	@Override public String save() {return null;}
-	@Override public void load(String save) {}
-	@Override public void actionPerformed(GuiElementSettings gui, GuiButton button) {}
-	@Override public void keyTyped(char typedChar, int keyCode) throws IOException {}
-	@Override public void otherAction(Collection<Setting> settings) {}
 }

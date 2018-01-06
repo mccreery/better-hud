@@ -31,7 +31,7 @@ public class WaterDrops extends HudElement implements Tickable {
 	@Override
 	public void loadDefaults() {
 		settings.set(true);
-		density.index = 1;
+		density.setIndex(1);
 	}
 
 	@Override
@@ -62,7 +62,7 @@ public class WaterDrops extends HudElement implements Tickable {
 			isUnderwater = false;
 
 			if(this.isEnabled()) {
-				int max = 10 * (density.index + 1);
+				int max = 10 * (density.getIndex() + 1);
 				for(int i = 0; i < max; i++) {
 					particleManager.particles.add(ParticleWater.random(width, height));
 				}
@@ -70,7 +70,9 @@ public class WaterDrops extends HudElement implements Tickable {
 		}
 
 		BlockPos pos = new BlockPos(entityplayer.posX, entityplayer.posY + entityplayer.getEyeHeight(), entityplayer.posZ);
-		if(MC.world.isRainingAt(pos) && RANDOM.nextInt((4 - this.density.index) * 3) == 0) {
+
+		// TODO hmm
+		if(MC.world.isRainingAt(pos) && RANDOM.nextInt((4 - density.getIndex()) * 3) == 0) {
 			particleManager.particles.add(ParticleWater.random(width, height));
 		}
 	}

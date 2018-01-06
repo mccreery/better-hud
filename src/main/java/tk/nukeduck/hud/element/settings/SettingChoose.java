@@ -19,10 +19,10 @@ import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.Point;
 
-public class SettingChoose extends SettingAlignable {
+public class SettingChoose extends SettingAlignable<String> {
 	protected GuiButton last, next, backing;
-	public String[] modes; // TODO
-	public int index = 0;
+	private final String[] modes;
+	private int index = 0;
 
 	public SettingChoose(String name, String... modes) {
 		this(name, Direction.CENTER, modes);
@@ -33,12 +33,23 @@ public class SettingChoose extends SettingAlignable {
 		this.modes = modes;
 	}
 
+	public void setIndex(int index) {
+		if(index >= 0 && index < modes.length) {
+			this.index = index;
+		}
+	}
+
+	public int getIndex() {
+		return index;
+	}
+
 	public int last() {
 		if(index == 0) {
 			index = modes.length;
 		}
 		return --index;
 	}
+
 	public int next() {
 		++index;
 
@@ -48,20 +59,21 @@ public class SettingChoose extends SettingAlignable {
 		return index;
 	}
 
+	@Override
 	public void set(String value) {
-		set(ArrayUtils.indexOf(this.modes, value));
-	}
-
-	public void set(int index) {
-		this.index = index;
-	}
-
-	public String getValue() {
-		return index < 0 || index >= modes.length ? String.valueOf(index) : this.modes[index];
+		setIndex(ArrayUtils.indexOf(modes, value));
 	}
 
 	@Override
-	public int getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Bounds bounds) {
+	public String get() {
+		return modes[index];
+	}
+
+	@Override public String save() {return get();}
+	@Override public void load(String save) {set(save);}
+
+	@Override
+	public int getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Bounds bounds) {
 		parts.add(backing = new GuiButton(2, bounds.x(), bounds.y(), bounds.width(), bounds.height(), ""));
 		parts.add(last = new GuiButton(0, bounds.left(), bounds.y(), 20, bounds.height(), "<"));
 		parts.add(next = new GuiButton(1, bounds.right() - 20, bounds.y(), 20, bounds.height(), ">"));
@@ -75,7 +87,7 @@ public class SettingChoose extends SettingAlignable {
 
 	@Override
 	public void draw() {
-		String value = I18n.format("betterHud.setting." + getValue());
+		String value = I18n.format("betterHud.setting." + get());
 		Point center = new Point(backing.x + backing.width / 2, backing.y + backing.height / 2);
 
 		HudElement.drawString(value, center, Direction.CENTER, Colors.WHITE);
@@ -91,17 +103,7 @@ public class SettingChoose extends SettingAlignable {
 	public void keyTyped(char typedChar, int keyCode) throws IOException {}
 
 	@Override
-	public String save() {
-		return modes[index];
-	}
-
-	@Override
-	public void load(String save) {
-		index = ArrayUtils.indexOf(modes, save);
-	}
-
-	@Override
-	public void otherAction(Collection<Setting> settings) {
+	public void otherAction(Collection<Setting<?>> settings) {
 		last.enabled = next.enabled = enabled();
 	}
 }

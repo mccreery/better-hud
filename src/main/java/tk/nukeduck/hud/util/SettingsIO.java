@@ -35,9 +35,9 @@ public class SettingsIO {
 		return keyVal;
 	}
 
-	public static ArrayList<String> generateSrc(ArrayList<Setting> settings) {
+	public static ArrayList<String> generateSrc(ArrayList<Setting<?>> settings) {
 		ArrayList<String> lines = new ArrayList<String>();
-		for(Setting setting : settings) {
+		for(Setting<?> setting : settings) {
 			if(setting instanceof Legend || setting.name == "enabled") continue;
 			for(String comment : setting.comments) {
 				lines.add("\t# " + comment);

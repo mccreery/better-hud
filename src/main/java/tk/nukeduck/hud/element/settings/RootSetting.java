@@ -12,7 +12,7 @@ public class RootSetting extends SettingBoolean {
 
 	/** @see Setting#getGuiParts(List, Map, int, int) */
 	@Override
-	public int getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, int width, int y) {
+	public int getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, int width, int y) {
 		return getGuiParts(parts, callbacks, width, y, children);
 	}
 }

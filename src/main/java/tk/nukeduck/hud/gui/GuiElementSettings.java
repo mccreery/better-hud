@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -39,18 +40,18 @@ public class GuiElementSettings extends GuiScreen {
 
 	public HudElement element;
 	ArrayList<GuiTextField> textboxList = new ArrayList<GuiTextField>();
-	public HashMap<Gui, Setting> callbacks = new HashMap<Gui, Setting>();
+	public HashMap<Gui, Setting<?>> callbacks = new HashMap<Gui, Setting<?>>();
+
+	private Bounds viewport;
 
 	private final GuiScreen prev;
 	private GuiButton done;
-
-	private Bounds viewport;
 	private GuiScrollbar scrollbar;
 
 	public SettingAbsolutePosition currentPicking = null;
 	private int clickTimer = 0;
-
 	private GuiButton clickedUpDown = null;
+	public static final Map<HudElement, Bounds> boundsCache = new HashMap<HudElement, Bounds>();
 
 	public GuiElementSettings(HudElement element, GuiScreen prev) {
 		this.element = element;
@@ -99,7 +100,7 @@ public class GuiElementSettings extends GuiScreen {
 			}
 
 			// Notify the rest of the elements that a button has been pressed
-			for(Setting setting : callbacks.values()) {
+			for(Setting<?> setting : callbacks.values()) {
 				setting.otherAction(callbacks.values());
 			}
 		}
@@ -137,7 +138,7 @@ public class GuiElementSettings extends GuiScreen {
 		}
 
 		if(currentPicking != null) {
-			Bounds b = new Bounds(BetterHud.boundsCache.get(element));
+			Bounds b = new Bounds(GuiElementSettings.boundsCache.get(element));
 			b.x(Mouse.getEventX() * this.width / this.mc.displayWidth);
 			b.y(this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1);
 
@@ -146,7 +147,7 @@ public class GuiElementSettings extends GuiScreen {
 				for(HudElement element : HudElement.ELEMENTS) {
 					if(element == this.element || !element.settings.get()) continue;
 
-					Bounds elementBounds = BetterHud.boundsCache.get(element);
+					Bounds elementBounds = GuiElementSettings.boundsCache.get(element);
 					if(elementBounds != null && elementBounds != Bounds.EMPTY) {
 						bounds.add(elementBounds);
 					}
@@ -156,7 +157,7 @@ public class GuiElementSettings extends GuiScreen {
 				b.snapTest(10, new Bounds(0, this.height, this.width, -this.height));
 			}
 
-			currentPicking.position = new Point(b.position);
+			currentPicking.set(new Point(b.position));
 			currentPicking.updateText();
 		}
 	}
@@ -275,7 +276,7 @@ public class GuiElementSettings extends GuiScreen {
 
 		for(HudElement element : HudElement.ELEMENTS) {
 			if(element.isEnabled()) {
-				Bounds bounds = BetterHud.boundsCache.get(element);
+				Bounds bounds = GuiElementSettings.boundsCache.get(element);
 
 				if(bounds != null && bounds != Bounds.EMPTY) {
 					HudElement.drawRect(bounds, Colors.setAlpha(Colors.RED, element == this.element ? 255 : 63));

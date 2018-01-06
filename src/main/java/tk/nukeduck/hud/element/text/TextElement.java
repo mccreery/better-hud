@@ -40,7 +40,7 @@ public abstract class TextElement extends HudElement {
 	@Override
 	public void loadDefaults() {
 		settings.set(true);
-		position.load(Direction.NORTH_WEST);
+		position.set(Direction.NORTH_WEST);
 		color.set(Colors.WHITE);
 	}
 

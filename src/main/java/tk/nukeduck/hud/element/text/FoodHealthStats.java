@@ -18,7 +18,7 @@ public class FoodHealthStats extends TextElement {
 	public void loadDefaults() {
 		super.loadDefaults();
 		saturation.set(true);
-		position.load(Direction.SOUTH_EAST);
+		position.set(Direction.SOUTH_EAST);
 	}
 
 	public FoodHealthStats() {

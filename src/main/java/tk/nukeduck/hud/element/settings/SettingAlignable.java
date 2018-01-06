@@ -9,7 +9,7 @@ import net.minecraft.client.gui.Gui;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 
-public abstract class SettingAlignable extends Setting {
+public abstract class SettingAlignable<T> extends Setting<T> {
 	protected Direction alignment;
 
 	public SettingAlignable(String name, Direction alignment) {
@@ -17,8 +17,13 @@ public abstract class SettingAlignable extends Setting {
 		this.alignment = alignment;
 	}
 
+	public SettingAlignable<T> setAlignment(Direction alignment) {
+		this.alignment = alignment;
+		return this;
+	}
+
 	@Override
-	public int getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, int width, int y) {
+	public int getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, int width, int y) {
 		y = super.getGuiParts(parts, callbacks, width, y);
 		Bounds bounds;
 
@@ -33,5 +38,5 @@ public abstract class SettingAlignable extends Setting {
 	}
 
 	/** @see Setting#getGuiParts(List, Map, int, int) */
-	public abstract int getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Bounds bounds);
+	public abstract int getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Bounds bounds);
 }

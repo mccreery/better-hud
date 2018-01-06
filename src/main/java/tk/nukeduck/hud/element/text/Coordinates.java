@@ -21,9 +21,9 @@ public class Coordinates extends TextElement {
 	public void loadDefaults() {
 		super.loadDefaults();
 
-		position.load(Direction.NORTH);
+		position.set(Direction.NORTH);
 		spaced.set(true);
-		decimalPlaces.value = 0;
+		decimalPlaces.set(0.0);
 	}
 
 	public Coordinates() {
@@ -54,7 +54,7 @@ public class Coordinates extends TextElement {
 	@Override
 	protected String[] getText() {
 		DecimalFormat format = new DecimalFormat();
-		format.setMaximumFractionDigits((int)decimalPlaces.value);
+		format.setMaximumFractionDigits(decimalPlaces.get().intValue());
 
 		String x = format.format(MC.player.posX);
 		String y = format.format(MC.player.posY);

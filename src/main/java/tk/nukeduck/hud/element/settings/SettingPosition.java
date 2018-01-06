@@ -1,16 +1,11 @@
 package tk.nukeduck.hud.element.settings;
 
-import java.io.IOException;
-import java.util.Collection;
-
-import net.minecraft.client.gui.GuiButton;
-import tk.nukeduck.hud.gui.GuiElementSettings;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.LayoutManager;
 import tk.nukeduck.hud.util.Point;
 
-public class SettingPosition extends Setting {
+public class SettingPosition extends SettingStub<Object> {
 	private static final String[] MODES = {"setPos", "absolute"};
 
 	public final SettingChoose mode;
@@ -34,61 +29,53 @@ public class SettingPosition extends Setting {
 		add(direction = new SettingDirection("direction", options) {
 			@Override
 			public boolean enabled() {
-				return mode.index == 0 && super.enabled();
+				return mode.getIndex() == 0 && super.enabled();
 			}
 		});
 		add(position = new SettingAbsolutePosition("absolute") {
 			@Override
 			public boolean enabled() {
-				return mode.index == 1 && super.enabled();
+				return mode.getIndex() == 1 && super.enabled();
 			}
 		});
 		add(anchor = new SettingDirection("anchor") {
 			@Override
 			public boolean enabled() {
-				return mode.index == 1 && super.enabled();
+				return mode.getIndex() == 1 && super.enabled();
 			}
 		});
 	}
 
 	public Direction getDirection() {
-		return !isAbsolute() ? direction.value : null;
+		return !isAbsolute() ? direction.get() : null;
 	}
 
 	public Point getPosition() {
-		return isAbsolute() ? position.position : null;
+		return isAbsolute() ? position.get() : null;
 	}
 
 	public Direction getAnchor() {
-		return (isAbsolute() ? anchor : direction).value;
+		return (isAbsolute() ? anchor : direction).get();
 	}
 
 	public boolean isAbsolute() {
-		return mode.index == 1;
+		return mode.getIndex() == 1;
 	}
 
 	/** Moves the given bounds to the correct location and returns them */
 	public <T extends Bounds> T applyTo(T bounds, LayoutManager manager) {
-		if(mode.index == 0) {
-			return manager.position(direction.value, bounds);
+		if(mode.getIndex() == 0) {
+			return manager.position(direction.get(), bounds);
 		} else {
-			bounds.position = new Point(position.position);
-			return direction.value.align(bounds);
+			bounds.position = new Point(position.get());
+			return direction.get().align(bounds);
 		}
 	}
 
-	public void load(Direction direction) {
-		mode.index = 0;
-		this.direction.value = direction;
-		position.position.x = 5;
-		position.position.y = 5;
-		anchor.value = direction;
+	public void set(Direction direction) {
+		mode.setIndex(0);
+		this.direction.set(direction);
+		position.set(new Point(5, 5));
+		anchor.set(direction);
 	}
-
-	// Never called on parent, always on children
-	@Override public String save() {return null;}
-	@Override public void load(String save) {}
-	@Override public void actionPerformed(GuiElementSettings gui, GuiButton button) {}
-	@Override public void keyTyped(char typedChar, int keyCode) throws IOException {}
-	@Override public void otherAction(Collection<Setting> settings) {}
 }

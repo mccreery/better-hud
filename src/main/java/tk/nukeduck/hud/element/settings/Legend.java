@@ -3,7 +3,6 @@ package tk.nukeduck.hud.element.settings;
 import static tk.nukeduck.hud.BetterHud.MC;
 import static tk.nukeduck.hud.BetterHud.SPACER;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -11,19 +10,17 @@ import java.util.Map;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiLabel;
 import net.minecraft.client.resources.I18n;
-import tk.nukeduck.hud.gui.GuiElementSettings;
 import tk.nukeduck.hud.util.Colors;
 
-public class Legend extends Setting {
+public class Legend extends SettingStub<Object> {
 	public Legend(String name) {
 		super(name);
 	}
 
 	@Override
-	public int getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, int width, int y) {
+	public int getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, int width, int y) {
 		GuiLegendLabel label = new GuiLegendLabel(0, width / 2 - 150, y, 300, MC.fontRenderer.FONT_HEIGHT, Colors.WHITE);
 		label.addLine("betterHud.group." + this.name);
 		parts.add(label);
@@ -73,10 +70,4 @@ public class Legend extends Setting {
 			}
 		}
 	}
-
-	@Override public void actionPerformed(GuiElementSettings gui, GuiButton button) {}
-	@Override public void keyTyped(char typedChar, int keyCode) throws IOException {}
-	@Override public String save() {return null;}
-	@Override public void load(String val) {}
-	@Override public void otherAction(Collection<Setting> settings) {}
 }

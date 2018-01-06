@@ -18,7 +18,7 @@ public class Distance extends TextElement {
 	@Override
 	public void loadDefaults() {
 		super.loadDefaults();
-		position.load(Direction.CENTER);
+		position.set(Direction.CENTER);
 	}
 
 	public Distance() {
@@ -52,7 +52,7 @@ public class Distance extends TextElement {
 
 		if(trace != null) {
 			long distance = Math.round(Math.sqrt(trace.getBlockPos().distanceSqToCenter(MC.player.posX, MC.player.posY, MC.player.posZ)));
-			return new String[] {I18n.format("betterHud.strings.distance." + mode.getValue(), String.valueOf(distance))};
+			return new String[] {I18n.format("betterHud.strings.distance." + mode.getIndex(), String.valueOf(distance))};
 		} else {
 			return new String[0];
 		}

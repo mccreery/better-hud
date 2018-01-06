@@ -12,7 +12,6 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
-import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.util.Pinger;
@@ -89,9 +88,6 @@ public class Connection extends TextElement implements Tickable {
 		if(latency.get() && MC.getCurrentServerData() != null) {
 			toRender.add(I18n.format("betterHud.strings.ping", MC.getCurrentServerData().pingToServer));
 		}
-
-		// TODO debug
-		toRender.add(BetterHud.serverVersion.toString());
 
 		return toRender.toArray(new String[toRender.size()]);
 	}

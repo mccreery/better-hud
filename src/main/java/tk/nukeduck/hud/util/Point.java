@@ -45,14 +45,20 @@ public class Point implements ISaveLoad {
 	}
 
 	@Override
+	public String toString() {
+		return String.format("(%d, %d)", x, y);
+	}
+
+	@Override
 	public String save() {
 		return x + "," + y;
 	}
 
 	@Override
 	public void load(String save) {
-		String[] coordinates = save.split(",");
-		x = Integer.parseInt(coordinates[0]);
-		y = Integer.parseInt(coordinates[1]);
+		int comma = save.indexOf(',');
+
+		x = Integer.parseInt(save.substring(0, comma));
+		y = Integer.parseInt(save.substring(comma));
 	}
 }

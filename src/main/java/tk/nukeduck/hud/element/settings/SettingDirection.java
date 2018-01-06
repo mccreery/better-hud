@@ -6,6 +6,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
@@ -13,7 +14,7 @@ import tk.nukeduck.hud.gui.GuiElementSettings;
 import tk.nukeduck.hud.gui.GuiToggleButton;
 import tk.nukeduck.hud.util.Direction;
 
-public class SettingDirection extends Setting {
+public class SettingDirection extends Setting<Direction> {
 	public GuiToggleButton topLeft, topCenter, topRight,
 		middleLeft, middleCenter, middleRight,
 		bottomLeft, bottomCenter, bottomRight;
@@ -32,20 +33,16 @@ public class SettingDirection extends Setting {
 	}
 
 	private final int options;
-	public Direction value;
+	private Direction value;
 
 	public boolean isValid(Direction direction) {
 		return direction.in(options);
 	}
 
-	public void set(Direction direction) {
-		if(isValid(direction)) value = direction;
-	}
-
 	protected GuiToggleButton[] radios;
 
 	@Override
-	public int getGuiParts(java.util.List<Gui> parts, java.util.Map<Gui,Setting> callbacks, int width, int y) {
+	public int getGuiParts(java.util.List<Gui> parts, Map<Gui,Setting<?>> callbacks, int width, int y) {
 		List<GuiToggleButton> radios = new ArrayList<GuiToggleButton>(9);
 
 		if((options & Direction.TOP) != 0) {
@@ -85,7 +82,7 @@ public class SettingDirection extends Setting {
 	}
 
 	@Override
-	public void otherAction(Collection<Setting> settings) {
+	public void otherAction(Collection<Setting<?>> settings) {
 		boolean enabled = enabled();
 
 		for(GuiToggleButton button : radios) {
@@ -108,15 +105,23 @@ public class SettingDirection extends Setting {
 
 	@Override
 	public String save() {
-		return value.getUnlocalizedName();
+		return get().getUnlocalizedName();
 	}
 
 	@Override
-	public void load(String val) {
-		value = Direction.fromUnlocalizedName(val);
+	public void load(String save) {
+		set(Direction.fromUnlocalizedName(save));
+	}
 
-		if(!isValid(value)) {
-			value = Direction.NORTH_WEST;
+	@Override
+	public Direction get() {
+		return value;
+	}
+
+	@Override
+	public void set(Direction value) {
+		if(isValid(value)) {
+			this.value = value;
 		}
 	}
 }

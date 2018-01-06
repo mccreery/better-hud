@@ -31,7 +31,7 @@ public class SystemClock extends TextElement {
 		this.settings.set(false);
 		twentyFour.set(false);
 		showSeconds.set(false);
-		dateType.index = 1;
+		dateType.setIndex(1);
 		fullYear.set(true);
 	}
 
@@ -43,7 +43,7 @@ public class SystemClock extends TextElement {
 		Date now = new Date();
 
 		// TODO find a better date formatter
-		SimpleDateFormat dateFormat = new SimpleDateFormat((fullYear.get() ? dateFormatsFull : dateFormats)[dateType.index]);
+		SimpleDateFormat dateFormat = new SimpleDateFormat((fullYear.get() ? dateFormatsFull : dateFormats)[dateType.getIndex()]);
 		SimpleDateFormat timeFormat = new SimpleDateFormat((twentyFour.get() ? "HH" : "hh") + ":mm" + (showSeconds.get() ? ":ss" : "") + (twentyFour.get() ? "" : " a"));
 
 		String time = timeFormat.format(now);

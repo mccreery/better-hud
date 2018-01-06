@@ -25,7 +25,7 @@ public class BloodSplatters extends HudElement implements Tickable {
 	@Override
 	public void loadDefaults() {
 		settings.set(true);
-		density.index = 1;
+		density.setIndex(1);
 	}
 
 	@Override
@@ -49,7 +49,9 @@ public class BloodSplatters extends HudElement implements Tickable {
 			int height = scaledresolution.getScaledHeight();
 
 			if (isEnabled()) {
-				int max = (int) (2 * ((currentHealth - MC.player.getHealth()) - 1) * (density.index + 1 * 2));
+				// TODO hmm
+				int max = (int) (2 * ((currentHealth - MC.player.getHealth()) - 1) * (density.getIndex() + 1) * 2);
+
 				for (int i = 0; i < max; i++) {
 					particleManager.particles.add(ParticleBlood.random(width, height));
 				}

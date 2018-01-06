@@ -6,10 +6,10 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import tk.nukeduck.hud.util.ISaveLoad;
+import tk.nukeduck.hud.util.ISaveLoad.IGetSet;
 
 @SideOnly(Side.CLIENT)
-public class GuiToggleButton extends GuiButton implements ISaveLoad {
+public class GuiToggleButton extends GuiButton implements IGetSet<Boolean> {
 	public boolean updateText = false;
 	public String unlocalized;
 
@@ -29,12 +29,14 @@ public class GuiToggleButton extends GuiButton implements ISaveLoad {
 
 	private boolean value = false;
 
-	public void set(boolean value) {
+	@Override
+	public void set(Boolean value) {
 		this.value = value;
 		updateText();
 	}
 
-	public boolean get() {
+	@Override
+	public Boolean get() {
 		return value;
 	}
 
@@ -53,11 +55,11 @@ public class GuiToggleButton extends GuiButton implements ISaveLoad {
 
 	@Override
 	public String save() {
-		return String.valueOf(get());
+		return get().toString();
 	}
 
 	@Override
 	public void load(String save) {
-		value = Boolean.parseBoolean(save);
+		set(Boolean.valueOf(save));
 	}
 }

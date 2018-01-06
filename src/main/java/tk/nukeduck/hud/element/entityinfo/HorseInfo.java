@@ -30,7 +30,7 @@ public class HorseInfo extends EntityInfo {
 		settings.set(true);
 		jump.set(true);
 		speed.set(true);
-		distance.value = 100;
+		distance.set(100.0);
 	}
 
 	public HorseInfo() {
@@ -76,7 +76,7 @@ public class HorseInfo extends EntityInfo {
 	
 	// TODO might want to check these matey
 	public double getJumpHeight(EntityHorse horse) {
-		double yVelocity = horse.getHorseJumpStrength(); //horses's jump strength attribute
+		double yVelocity = horse.getHorseJumpStrength();
 		double jumpHeight = 0;
 		while(yVelocity > 0) {
 			jumpHeight += yVelocity;

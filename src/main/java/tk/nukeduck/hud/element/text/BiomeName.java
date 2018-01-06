@@ -10,7 +10,7 @@ public class BiomeName extends TextElement {
 	@Override
 	public void loadDefaults() {
 		super.loadDefaults();
-		position.load(Direction.NORTH);
+		position.set(Direction.NORTH);
 	}
 
 	public BiomeName() {

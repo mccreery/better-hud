@@ -14,7 +14,7 @@ import tk.nukeduck.hud.gui.GuiToggleButton;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 
-public class SettingBoolean extends SettingAlignable {
+public class SettingBoolean extends SettingAlignable<Boolean> {
 	protected GuiToggleButton toggler;
 	protected boolean value;
 
@@ -26,23 +26,24 @@ public class SettingBoolean extends SettingAlignable {
 		super(name, alignment);
 	}
 
-	public boolean get() {return value;}
-	public void set(boolean value) {this.value = value;}
-	public boolean toggle() {
+	public Boolean get() {return enabled() && value;}
+	public void set(Boolean value) {this.value = value;}
+
+	public Boolean toggle() {
 		set(!get());
 		return get();
 	}
 
 	@Override
-	public int getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Bounds bounds) {
+	public int getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Bounds bounds) {
 		toggler = new GuiToggleButton(0, bounds.x(), bounds.y(), bounds.width(), bounds.height(), getUnlocalizedName(), true) {
 			@Override
-			public boolean get() {
+			public Boolean get() {
 				return SettingBoolean.this.get();
 			}
 
 			@Override
-			public void set(boolean value) {
+			public void set(Boolean value) {
 				SettingBoolean.this.set(value);
 				updateText();
 			}
@@ -62,16 +63,16 @@ public class SettingBoolean extends SettingAlignable {
 
 	@Override
 	public String save() {
-		return String.valueOf(value);
+		return get().toString();
 	}
 
 	@Override
 	public void load(String save) {
-		value = Boolean.parseBoolean(save);
+		set(Boolean.valueOf(save));
 	}
 
 	@Override
-	public void otherAction(Collection<Setting> settings) {
+	public void otherAction(Collection<Setting<?>> settings) {
 		toggler.enabled = enabled();
 	}
 }
