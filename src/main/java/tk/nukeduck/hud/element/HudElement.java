@@ -4,7 +4,6 @@ import static tk.nukeduck.hud.BetterHud.MC;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.HashMap;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
@@ -13,6 +12,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.element.entityinfo.EntityInfo;
 import tk.nukeduck.hud.element.entityinfo.HorseInfo;
@@ -85,7 +85,7 @@ public abstract class HudElement { // Can't extend Gui due to @SideOnly
 	public static final ResourceLocation HUD_ICONS = new ResourceLocation("hud", "textures/gui/icons_hud.png");
 	public static final ResourceLocation PARTICLES = new ResourceLocation("textures/particle/particles.png");
 
-	public final RootSetting settings = new RootSetting();
+	public final RootSetting settings = new RootSetting(this);
 
 	public boolean isEnabled() {
 		return settings.get() && isSupportedByServer();
@@ -119,37 +119,6 @@ public abstract class HudElement { // Can't extend Gui due to @SideOnly
 	 * @return The bounds containing the element drawn */
 	public abstract Bounds render(RenderGameOverlayEvent event, LayoutManager manager);
 
-	/** Loads this element's default settings. */
-	public abstract void loadDefaults();
-
-	/** Called for all elements during {@link FMLInitializationEvent}
-	 * @see BetterHud#init(FMLInitializationEvent) */
-	public void init(FMLInitializationEvent event) {}
-
-	/** Loads this element's settings from the key-value combination map.
-	 * @param keyVals Key-value combinations containing setting names and values. */
-	@Deprecated // TODO respond to children
-	public final void loadSettings(HashMap<String, String> keyVals) {
-		settings.load(keyVals.get(settings.name));
-
-		/*for(Setting setting : this.settings) {
-			if(setting instanceof Legend || setting.name == "enabled") continue;
-			if(keyVals.containsKey(setting.name)) setting.load(keyVals.get(setting.name));
-		}*/
-	}
-
-	/** Saves this element's settings into a key-value combination map. TODO investigate
-	 * @return Key-value combinations containing this element's setting names and values. */
-	@Deprecated // TODO
-	public final HashMap<String, String> saveSettings() {
-		HashMap<String, String> keyVals = new HashMap<String, String>();
-		keyVals.put(settings.name, settings.save());
-		/*for(Setting setting : this.settings) {
-			keyVals.put(setting.getName(), setting.toString());
-		}*/
-		return keyVals;
-	}
-
 	/** Calls {@link #init(FMLInitializationEvent)} on all elements
 	 * @see #init(FMLInitializationEvent)
 	 * @see BetterHud#init(FMLInitializationEvent) */
@@ -158,6 +127,10 @@ public abstract class HudElement { // Can't extend Gui due to @SideOnly
 			element.init(event);
 		}
 	}
+
+	/** Called for all elements during {@link FMLPreInitializationEvent}
+	 * @see BetterHud#init(FMLPreInitializationEvent) */
+	public void init(FMLInitializationEvent event) {}
 
 	/** Calls {@link #loadDefaults()} on all elements
 	 * @see #loadDefaults() */
@@ -168,6 +141,9 @@ public abstract class HudElement { // Can't extend Gui due to @SideOnly
 			element.loadDefaults();
 		}
 	}
+
+	/** Loads this element's default settings. */
+	public abstract void loadDefaults();
 
 	// Rendering utility functions
 

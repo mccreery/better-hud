@@ -51,7 +51,7 @@ public class ArmorBars extends HudElement {
 		durabilityMode.setIndex(0);
 		position.set(Direction.NORTH_WEST);
 
-		warnings.set(new Integer[] {45, 25, 10});
+		warnings.set(new Double[] {.45, .25, .1});
 		warnings.setActive(true);
 	}
 
@@ -64,7 +64,6 @@ public class ArmorBars extends HudElement {
 		this.settings.add(durabilityMode);
 		this.settings.add(showName);
 		this.settings.add(bars);
-		bars.comments.add("hidden, smallBars, largeBars");
 
 		settings.add(warnings);
 	}

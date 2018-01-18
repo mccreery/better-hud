@@ -15,7 +15,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.util.Colors;
-import tk.nukeduck.hud.util.SettingsIO;
 
 @SideOnly(Side.CLIENT)
 public class GuiHudMenu extends GuiScreen {
@@ -72,7 +71,7 @@ public class GuiHudMenu extends GuiScreen {
 			mc.setIngameFocus();
 		}
 
-		SettingsIO.saveSettings(BetterHud.LOGGER);
+		BetterHud.CONFIG.saveSettings();
 	}
 
 	@Override
@@ -142,15 +141,18 @@ public class GuiHudMenu extends GuiScreen {
 		}
 	}
 
+	// TODO eww
 	private void setAll(boolean enabled) {
 		for(int i = 0; i < buttonList.size(); i++) {
 			if(buttonList.get(i) instanceof GuiButton) {
 				GuiButton b = (GuiButton) buttonList.get(i);
+
 				if(b.id >= buttonOffset && (b.id - buttonOffset) % 2 == 0) {
 					HudElement element = HudElement.ELEMENTS[(b.id - buttonOffset) / 2];
 					element.settings.set(enabled);
-					b.displayString = I18n.format("betterHud.menu.settingButton", element.getLocalizedName(), (element.settings.get() ? ChatFormatting.GREEN : ChatFormatting.RED) + I18n.format(element.settings.get() ? "options.on" : "options.off"));
-					((GuiToggleButton) b).set(element.settings.get());
+
+					b.displayString = I18n.format("betterHud.menu.settingButton", element.getLocalizedName(), (enabled ? ChatFormatting.GREEN : ChatFormatting.RED) + I18n.format(enabled ? "options.on" : "options.off"));
+					((GuiToggleButton) b).set(enabled);
 				}
 			}
 		}

@@ -39,7 +39,7 @@ public class HandBar extends HudElement {
 		showItem.set(true);
 		showBars.set(true);
 		offHand.set(false);
-		warnings.set(new Integer[] {45, 25, 10});
+		warnings.set(new Double[] {.45, .25, .1});
 		warnings.setActive(true);
 	}
 

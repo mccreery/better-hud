@@ -9,6 +9,7 @@ import java.util.Map;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraftforge.common.config.Property.Type;
 import tk.nukeduck.hud.gui.GuiElementSettings;
 import tk.nukeduck.hud.gui.GuiToggleButton;
 import tk.nukeduck.hud.util.Bounds;
@@ -16,7 +17,7 @@ import tk.nukeduck.hud.util.Direction;
 
 public class SettingBoolean extends SettingAlignable<Boolean> {
 	protected GuiToggleButton toggler;
-	protected boolean value;
+	protected boolean value = false;
 
 	public SettingBoolean(String name) {
 		this(name, Direction.CENTER);
@@ -24,6 +25,11 @@ public class SettingBoolean extends SettingAlignable<Boolean> {
 
 	public SettingBoolean(String name, Direction alignment) {
 		super(name, alignment);
+	}
+
+	@Override
+	protected Type getPropertyType() {
+		return Type.BOOLEAN;
 	}
 
 	public Boolean get() {return enabled() && value;}

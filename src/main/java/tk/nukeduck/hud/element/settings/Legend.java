@@ -20,6 +20,11 @@ public class Legend extends SettingStub<Object> {
 	}
 
 	@Override
+	protected boolean hasValue() {
+		return false;
+	}
+
+	@Override
 	public int getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, int width, int y) {
 		GuiLegendLabel label = new GuiLegendLabel(0, width / 2 - 150, y, 300, MC.fontRenderer.FONT_HEIGHT, Colors.WHITE);
 		label.addLine("betterHud.group." + this.name);

@@ -31,7 +31,6 @@ import tk.nukeduck.hud.element.settings.SettingAbsolutePosition;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Point;
-import tk.nukeduck.hud.util.SettingsIO;
 
 @SideOnly(Side.CLIENT)
 public class GuiElementSettings extends GuiScreen {
@@ -165,7 +164,7 @@ public class GuiElementSettings extends GuiScreen {
 	@Override
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
 		if(keyCode == 1) {
-			SettingsIO.saveSettings(BetterHud.LOGGER);
+			BetterHud.CONFIG.saveSettings();
 		}
 		super.keyTyped(typedChar, keyCode);
 

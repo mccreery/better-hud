@@ -48,8 +48,7 @@ public interface ISaveLoad {
 		 * <li>{@code slider.getMinimum() <= slider.get() <= slider.getMaximum()}
 		 * <li>{@code slider.get() - slider.getMinimum()} is a multiple of {@code slider.getInterval()}
 		 * </ul> */
-		public static void normalize(ISlider slider) {
-			double value = slider.get();
+		public static double normalize(ISlider slider, double value) {
 			double interval = slider.getInterval();
 			double minimum = slider.getMinimum();
 
@@ -58,9 +57,7 @@ public interface ISaveLoad {
 				value = Math.round(value / interval) * interval;
 				value += minimum;
 			}
-			value = MathHelper.clamp(value, minimum, slider.getMaximum());
-
-			slider.set(value);
+			return MathHelper.clamp(value, minimum, slider.getMaximum());
 		}
 	}
 }

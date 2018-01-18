@@ -18,7 +18,7 @@ public abstract class EntityInfo extends ElementStub {
 		return distance.get();
 	}
 
-	public abstract void renderInfo(EntityLivingBase entity, float partialTicks);
+	public abstract void render(EntityLivingBase entity, float partialTicks);
 
 	public static void zIncrease() {
 		glTranslatef(0.0F, 0.0F, -0.001F);

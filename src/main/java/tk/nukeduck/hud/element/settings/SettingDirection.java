@@ -33,7 +33,7 @@ public class SettingDirection extends Setting<Direction> {
 	}
 
 	private final int options;
-	private Direction value;
+	private Direction value = Direction.NORTH_WEST;
 
 	public boolean isValid(Direction direction) {
 		return direction.in(options);

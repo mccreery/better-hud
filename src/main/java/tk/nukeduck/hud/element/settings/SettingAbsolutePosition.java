@@ -21,7 +21,7 @@ public class SettingAbsolutePosition extends Setting<Point> {
 	public GuiButton pick;
 	private GuiButton xUp, xDown, yUp, yDown;
 
-	private Point position = new Point();
+	private Point position = Point.ZERO;
 	private Point cancelPosition;
 
 	public SettingAbsolutePosition(String name) {
@@ -124,7 +124,7 @@ public class SettingAbsolutePosition extends Setting<Point> {
 
 	@Override
 	public String save() {
-		return get().toString();
+		return get().save();
 	}
 
 	@Override

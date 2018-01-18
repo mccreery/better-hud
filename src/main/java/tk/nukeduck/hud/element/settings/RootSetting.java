@@ -1,18 +1,34 @@
 package tk.nukeduck.hud.element.settings;
 
-import java.util.List;
-import java.util.Map;
+import tk.nukeduck.hud.element.HudElement;
+import tk.nukeduck.hud.util.HudConfig;
 
-import net.minecraft.client.gui.Gui;
+public class RootSetting extends SettingStub<Boolean> {
+	private final HudElement element;
+	private final SettingBoolean enabled = new SettingBoolean("enabled");
 
-public class RootSetting extends SettingBoolean {
-	public RootSetting() {
-		super("enabled");
+	public final void bindConfig(HudConfig config) {
+		bindConfig(config, element.name, new StringBuilder());
 	}
 
-	/** @see Setting#getGuiParts(List, Map, int, int) */
+	public RootSetting(HudElement element) {
+		super();
+		this.element = element;
+
+		add(enabled.setHidden());
+	}
+
 	@Override
-	public int getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, int width, int y) {
-		return getGuiParts(parts, callbacks, width, y, children);
+	public Boolean get() {
+		return enabled.get();
+	}
+
+	@Override
+	public void set(Boolean value) {
+		enabled.set(value);
+	}
+
+	public void toggle() {
+		set(!get());
 	}
 }

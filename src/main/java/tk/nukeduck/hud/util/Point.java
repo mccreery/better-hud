@@ -59,6 +59,6 @@ public class Point implements ISaveLoad {
 		int comma = save.indexOf(',');
 
 		x = Integer.parseInt(save.substring(0, comma));
-		y = Integer.parseInt(save.substring(comma));
+		y = Integer.parseInt(save.substring(comma + 1));
 	}
 }

@@ -1,19 +1,23 @@
 package tk.nukeduck.hud.events;
 
+import static org.lwjgl.opengl.GL11.GL_BLEND;
+import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
+import static org.lwjgl.opengl.GL11.GL_LIGHTING;
+import static org.lwjgl.opengl.GL11.glColor4f;
+import static org.lwjgl.opengl.GL11.glDisable;
+import static org.lwjgl.opengl.GL11.glEnable;
+import static org.lwjgl.opengl.GL11.glRotatef;
+import static org.lwjgl.opengl.GL11.glScaled;
+import static org.lwjgl.opengl.GL11.glTranslated;
+import static tk.nukeduck.hud.BetterHud.MC;
+
 import java.util.List;
 
-import javax.annotation.Nullable;
-
-import org.lwjgl.opengl.GL11;
-
 import com.google.common.base.Predicate;
-import com.google.common.base.Predicates;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.util.EntitySelectors;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -26,122 +30,125 @@ import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.element.entityinfo.EntityInfo;
 
 public class EntityInfoRenderer {
-	private static ResourceLocation font = new ResourceLocation("textures/font/ascii.png");
-
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void worldRender(RenderWorldLastEvent e) {
 		if(!BetterHud.isEnabled()) return;
 
-		double maxDist = 0;
-		for(EntityInfo element : HudElement.ENTITY_INFO) {
-			if(element.settings.get() && element.getDistance() > maxDist) {
-				maxDist = element.getDistance();
-			}
-		}
-		if(maxDist == 0) return;
-
-		Entity entity = getMouseOver(Minecraft.getMinecraft(), e.getPartialTicks(), maxDist);
-		//Entity entity = Minecraft.getMinecraft().pointedEntity;
+		Entity entity = getMouseOver(getMaxDistance(), e.getPartialTicks());
 
 		if(entity != null && entity instanceof EntityLivingBase) {
-			GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
+			//GL11.glPushAttrib(GL11.GL_ALL_ATTRIB_BITS);
+
 			for(EntityInfo element : HudElement.ENTITY_INFO) {
-				if(element.settings.get() && this.lastDistance <= element.getDistance()) {
-					element.renderInfo((EntityLivingBase)entity, e.getPartialTicks());
+				if(element.isEnabled() && distance <= element.getDistance()) {
+					element.render((EntityLivingBase)entity, e.getPartialTicks());
 				}
 			}
-			GL11.glPopAttrib();
 
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-			Minecraft.getMinecraft().getTextureManager().bindTexture(font); // Just in case TODO
+			//GL11.glPopAttrib();
+
+			//GL11.glEnable(GL11.GL_BLEND);
+			//GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+			//GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		}
 	}
 
-	public double lastDistance = 0;
+	/** @return The maximum required ray trace distance based on the enabled
+	 * entity info elements */
+	private static double getMaxDistance() {
+		double max = 0;
 
-	/** @see net.minecraft.client.renderer.EntityRenderer#getMouseOver(float) */
-	// TODO source and clean up (maybe find in vanilla)
+		for(EntityInfo element : HudElement.ENTITY_INFO) {
+			if(!element.isEnabled()) continue;
+
+			double distance = element.getDistance();
+			if(distance > max) max = distance;
+		}
+		return max;
+	}
+
+	private double distance = 0;
+
+	/** Allows a custom distance
+	 * @see net.minecraft.client.renderer.EntityRenderer#getMouseOver(float) */
 	@SideOnly(Side.CLIENT)
-	public Entity getMouseOver(Minecraft mc, float partialTick, double length) {
-		Entity entity = mc.getRenderViewEntity();
-		
-		if(entity != null) {
-			if(mc.world != null) {
-				double distance = length;
-				Vec3d vec3 = entity.getPositionEyes(partialTick);
-				
-				double blockDist = -1;
-				
-				RayTraceResult hitBlock = entity.rayTrace(distance, partialTick);
-				if(hitBlock != null) {
-					blockDist = hitBlock.hitVec.distanceTo(vec3);
+	private Entity getMouseOver(double distance, float partialTicks) {
+		if(MC.world == null) return null;
+		Entity viewEntity = MC.getRenderViewEntity();
+		if(viewEntity == null) return null;
+
+		Entity pointedEntity = null;
+
+		MC.mcProfiler.startSection("pick");
+
+		RayTraceResult trace = viewEntity.rayTrace(distance, partialTicks);
+		Vec3d eyePosition = viewEntity.getPositionEyes(partialTicks);
+		Vec3d lookDelta = viewEntity.getLookVec().scale(distance);
+
+		if(trace != null) {
+			distance = trace.hitVec.distanceTo(eyePosition);
+		}
+
+		AxisAlignedBB range = viewEntity.getEntityBoundingBox().expand(lookDelta.x, lookDelta.y, lookDelta.z).grow(1, 1, 1);
+
+		List<Entity> entitiesInRange = MC.world.getEntitiesInAABBexcluding(viewEntity, range, new Predicate<Entity>() {
+			@Override
+			public boolean apply(Entity entity) {
+				return entity != null && entity.canBeCollidedWith();
+			}
+		});
+
+		for(Entity entity : entitiesInRange) {
+			AxisAlignedBB entityBox = entity.getEntityBoundingBox().grow(entity.getCollisionBorderSize());
+			RayTraceResult entityTrace = entityBox.calculateIntercept(eyePosition, eyePosition.add(lookDelta));
+
+			if(entityBox.contains(eyePosition)) {
+				if(distance >= 0) {
+					pointedEntity = entity;
+					distance = 0;
 				}
-				
-				Vec3d vec31 = entity.getLook(partialTick);
-				Vec3d vec32 = vec3.addVector(vec31.x * distance, vec31.y * distance, vec31.z * distance);
-				Entity pointedEntity = null;
-				//Vec3d vec33 = null;
-				//float f1 = 1.0F;
-				
-				// idk
-				/*AxisAlignedBB box = entity.getEntityBoundingBox();
-				Vec3d include = vec31.scale(distance);
-				box.union(new AxisAlignedBB(include, include));
-				box.expand(f1, f1, f1);
-				
-				List<Entity> list = mc.world.getEntitiesWithinAABBExcludingEntity(entity, box);*/
-				
-				/// LIFTED FROM MC CODE (EntityRenderer)
-				List<Entity> list = mc.world.getEntitiesInAABBexcluding(entity, entity.getEntityBoundingBox().expand(vec31.x * distance, vec31.y * distance, vec31.z * distance).grow(1.0D, 1.0D, 1.0D), Predicates.and(EntitySelectors.NOT_SPECTATING, new Predicate<Entity>() {
-					public boolean apply(@Nullable Entity p_apply_1_) {
-						return p_apply_1_ != null && p_apply_1_.canBeCollidedWith();
-					}
-				}));
-				///
-				
-				double d2 = blockDist;
-				
-				for(int i = 0; i < list.size(); ++i) {
-					Entity entity1 = (Entity) list.get(i);
-					
-					if(entity1.canBeCollidedWith()) {
-						float f2 = entity1.getCollisionBorderSize();
-						AxisAlignedBB axisalignedbb = entity1.getEntityBoundingBox().expand((double) f2, (double) f2, (double) f2);
-						RayTraceResult movingobjectposition = axisalignedbb.calculateIntercept(vec3, vec32);
-						
-						if(axisalignedbb.contains(vec3)) {
-							if(d2 >= 0.0D) {
-								pointedEntity = entity1;
-								//vec33 = movingobjectposition == null ? vec3 : movingobjectposition.hitVec;
-								this.lastDistance = 0;
-								d2 = 0.0D;
-							}
-						} else if(movingobjectposition != null) {
-							double d3 = vec3.distanceTo(movingobjectposition.hitVec);
-							
-							if(d3 < d2 || d2 == 0.0D) {
-								if(entity1 == entity.getRidingEntity() && !entity.canRiderInteract()) {
-									if(d2 == 0.0D) {
-										pointedEntity = entity1;
-										this.lastDistance = d3;
-										//vec33 = movingobjectposition.hitVec;
-									}
-								} else {
-									pointedEntity = entity1;
-									this.lastDistance = d3;
-									//vec33 = movingobjectposition.hitVec;
-									d2 = d3;
-								}
-							}
+			} else if(entityTrace != null) {
+				double entityDistance = eyePosition.distanceTo(entityTrace.hitVec);
+
+				if(entityDistance < distance || distance == 0) {
+					if(entity.getLowestRidingEntity() == viewEntity.getLowestRidingEntity() && !entity.canRiderInteract()) {
+						if(distance == 0) {
+							pointedEntity = entity;
 						}
+					} else {
+						pointedEntity = entity;
+						distance = entityDistance;
 					}
 				}
-				return pointedEntity;
 			}
 		}
-		return null;
+		MC.mcProfiler.endSection();
+		return pointedEntity;
+	}
+
+	// TODO work on this
+	public static void billBoard(Entity entity, EntityPlayer player, float partialTicks) {
+		Vec3d eyes = player.getPositionEyes(partialTicks);
+		Vec3d origin = entity.getPositionEyes(partialTicks).addVector(0, 0.5 + entity.height, 0);
+
+		double dx = origin.x - eyes.x;
+		double dy = origin.y - eyes.y;
+		double dz = origin.z - eyes.z;
+		double distance = Math.sqrt(dx*dx + dy*dy + dz*dz);
+		double scale = Math.max(1, distance / 5);
+
+		glTranslated(dx, dy, dz);
+		glScaled(scale, scale, scale);
+		glRotatef(-player.rotationYaw, 0, 1, 0);
+		glRotatef(player.rotationPitch, 1, 0, 0);
+		glRotatef(180, 0, 0, 1);
+
+		//glTranslatef(-0.5F, -0.5F, 0.0F);
+
+		glDisable(GL_LIGHTING);
+		glEnable(GL_BLEND);
+		glDisable(GL_DEPTH_TEST);
+		glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 	}
 }

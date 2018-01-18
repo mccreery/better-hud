@@ -18,6 +18,7 @@ import net.minecraft.nbt.NBTTagList;
 import net.minecraft.util.ResourceLocation;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingSlider;
+import tk.nukeduck.hud.events.EntityInfoRenderer;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Util;
 
@@ -57,7 +58,7 @@ public class MobInfo extends EntityInfo {
 
 	private static ResourceLocation icons = new ResourceLocation("textures/gui/icons.png");
 
-	public void renderInfo(EntityLivingBase entity, float partialTicks) {
+	public void render(EntityLivingBase entity, float partialTicks) {
 		EntityPlayer player = MC.player;
 		if(player == null) return; // TODO is this necessary
 		
@@ -68,7 +69,7 @@ public class MobInfo extends EntityInfo {
 		
 		GL11.glPushMatrix(); {
 			Tessellator t = Tessellator.getInstance();
-			Util.billBoard(entity, player, partialTicks);
+			EntityInfoRenderer.billBoard(entity, player, partialTicks);
 			
 			// seems irrelevant
 			/*if(!(entity.getHeldItemMainhand() != null && entity.getHeldItemMainhand().isItemEnchanted())) {

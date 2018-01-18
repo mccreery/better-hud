@@ -10,6 +10,7 @@ import java.util.Map;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
+import net.minecraftforge.common.config.Property.Type;
 import tk.nukeduck.hud.gui.GuiElementSettings;
 import tk.nukeduck.hud.gui.GuiOptionSliderA;
 import tk.nukeduck.hud.util.Bounds;
@@ -86,8 +87,7 @@ public class SettingSlider extends SettingAlignable<Double> implements ISlider {
 
 	@Override
 	public void set(Double value) {
-		this.value = value;
-		ISlider.normalize(this);
+		this.value = ISlider.normalize(this, value);
 	}
 
 	@Override
@@ -98,7 +98,15 @@ public class SettingSlider extends SettingAlignable<Double> implements ISlider {
 	@Override
 	public void load(String save) {
 		set(Double.valueOf(save));
-		slider.displayString = getDisplayString();
+
+		if(slider != null) {
+			slider.updateDisplayString();
+		}
+	}
+
+	@Override
+	protected Type getPropertyType() {
+		return Type.DOUBLE;
 	}
 
 	@Override public Double getMinimum() {return min;}

@@ -16,15 +16,19 @@ public class GuiOptionSliderA extends GuiButton {
 		this(id, x, y, 150, 20, slider);
 	}
 
+	public void updateDisplayString() {
+		displayString = slider.getDisplayString();
+	}
+
 	public GuiOptionSliderA(int id, int x, int y, int width, int height, ISlider slider) {
 		super(id, x, y, width, height, "");
 		this.slider = slider;
-		displayString = slider.getDisplayString();
+		updateDisplayString();
 	}
 
 	private void setNormalized(double value) {
 		slider.set(slider.getMinimum() + value * (slider.getMaximum() - slider.getMinimum()));
-		displayString = slider.getDisplayString();
+		updateDisplayString();
 	}
 
 	@Override

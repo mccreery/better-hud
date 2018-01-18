@@ -10,6 +10,10 @@ import tk.nukeduck.hud.gui.GuiElementSettings;
  * It is used for settings which are for display only and which only store
  * the values of their children */
 public class SettingStub<T> extends Setting<T> {
+	public SettingStub() {
+		this(null);
+	}
+
 	public SettingStub(String name) {
 		super(name);
 	}
@@ -21,4 +25,5 @@ public class SettingStub<T> extends Setting<T> {
 	@Override public void actionPerformed(GuiElementSettings gui, GuiButton button) {}
 	@Override public void keyTyped(char typedChar, int keyCode) throws IOException {}
 	@Override public void otherAction(Collection<Setting<?>> settings) {}
+	@Override protected boolean hasValue() {return false;}
 }

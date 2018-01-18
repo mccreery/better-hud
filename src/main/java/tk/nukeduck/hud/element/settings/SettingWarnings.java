@@ -2,7 +2,7 @@ package tk.nukeduck.hud.element.settings;
 
 import tk.nukeduck.hud.util.Direction;
 
-public class SettingWarnings extends SettingStub<Integer[]> {
+public class SettingWarnings extends SettingStub<Double[]> {
 	private final SettingBoolean active = new SettingBoolean("enabled");
 	private final SettingSlider[] sliders;
 
@@ -30,20 +30,20 @@ public class SettingWarnings extends SettingStub<Integer[]> {
 	}
 
 	@Override
-	public void set(Integer[] values) {
+	public void set(Double[] values) {
 		for(int i = 0; i < sliders.length; i++) {
 			if(values[i] >= 0) {
-				sliders[i].set(Double.valueOf(values[i]));
+				sliders[i].set(values[i]);
 			}
 		}
 	}
 
 	@Override
-	public Integer[] get() {
-		Integer[] values = new Integer[sliders.length];
+	public Double[] get() {
+		Double[] values = new Double[sliders.length];
 
 		for(int i = 0; i < sliders.length; i++) {
-			values[i] = sliders[i].get().intValue();
+			values[i] = sliders[i].get();
 		}
 		return values;
 	}

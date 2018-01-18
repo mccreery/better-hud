@@ -2,8 +2,6 @@ package tk.nukeduck.hud;
 
 import java.util.Random;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.lwjgl.input.Keyboard;
 
 import net.minecraft.client.Minecraft;
@@ -16,6 +14,7 @@ import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
@@ -35,6 +34,7 @@ import tk.nukeduck.hud.network.MessageNotifyClientHandler;
 import tk.nukeduck.hud.network.MessagePickup;
 import tk.nukeduck.hud.network.MessagePickupHandler;
 import tk.nukeduck.hud.network.Version;
+import tk.nukeduck.hud.util.HudConfig;
 import tk.nukeduck.hud.util.LayoutManager;
 import tk.nukeduck.hud.util.Tickable.Ticker;
 
@@ -42,15 +42,17 @@ import tk.nukeduck.hud.util.Tickable.Ticker;
 public class BetterHud { // TODO thoroughly test GL, replace drawRect coords
 	public static final String MODID = "hud";
 	public static final Version VERSION = new Version(1, 4);
-	public static final Logger LOGGER = LogManager.getLogger(MODID);
+	//public static final Logger LOGGER = LogManager.getLogger(MODID);
 
 	@SideOnly(Side.CLIENT) public static Minecraft MC;
 	@SideOnly(Side.CLIENT) public static GuiHudMenu MENU;
 
-	@SideOnly(Side.CLIENT)
+	@SideOnly(Side.CLIENT) // TODO not gonna work right
 	private static final KeyBinding MENU_KEY = new KeyBinding("key.betterHud.open", Keyboard.KEY_U, "key.categories.misc");
 	@SideOnly(Side.CLIENT)
 	private static final KeyBinding TOGGLE_KEY = new KeyBinding("key.betterHud.disable", Keyboard.KEY_F3, "key.categories.misc");
+
+	public static HudConfig CONFIG;
 
 	public static final int SPACER = 5;
 	public static final Random RANDOM = new Random();
@@ -58,7 +60,7 @@ public class BetterHud { // TODO thoroughly test GL, replace drawRect coords
 	public static Version serverVersion = Version.ZERO;
 
 	public static boolean isEnabled() {
-		return HudElement.GLOBAL.settings.get();
+		return HudElement.GLOBAL.isEnabled();
 	}
 
 	public static void toggleEnabled() {
@@ -74,16 +76,23 @@ public class BetterHud { // TODO thoroughly test GL, replace drawRect coords
 	//public static BreedInfoNotifier breedNotifier;
 
 	@EventHandler
-	public void init(FMLInitializationEvent e) {
-		if(e.getSide() == Side.CLIENT) {
+	public void preInit(FMLPreInitializationEvent event) {
+		if(event.getSide() == Side.CLIENT) {
+			HudElement.loadAllDefaults();
+			CONFIG = new HudConfig(event.getSuggestedConfigurationFile());
+		}
+	}
+
+	@EventHandler
+	public void init(FMLInitializationEvent event) {
+		if(event.getSide() == Side.CLIENT) {
 			MC = Minecraft.getMinecraft();
 			MENU = new GuiHudMenu();
 
 			ClientRegistry.registerKeyBinding(MENU_KEY);
 			ClientRegistry.registerKeyBinding(TOGGLE_KEY);
 
-			HudElement.initAll(e);
-			HudElement.loadAllDefaults();
+			HudElement.initAll(event);
 		}
 
 		// Message ID 0 reserved for ignored server presence message from [,1.4)

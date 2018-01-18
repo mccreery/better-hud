@@ -1,14 +1,7 @@
 package tk.nukeduck.hud.util;
 
 import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11.GL_LIGHTING;
-import static org.lwjgl.opengl.GL11.glColor4f;
-import static org.lwjgl.opengl.GL11.glDisable;
 import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glRotatef;
-import static org.lwjgl.opengl.GL11.glTranslated;
-import static org.lwjgl.opengl.GL11.glTranslatef;
 import static tk.nukeduck.hud.BetterHud.MC;
 
 import java.text.DecimalFormat;
@@ -22,8 +15,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.client.config.GuiUtils;
 
@@ -38,7 +29,7 @@ public class Util {
 		GlStateManager.disableDepth();
 
 		final int zLevel	  = 300;
-		final int bgColor	 = 0xf7100010 /*0xF0100010*/;
+		final int bgColor	 = 0xf7100010;
 		final int borderStart = 0x505000ff;
 		final int borderEnd   = (borderStart & 0xfefefe) >> 1 | borderStart & 0xff000000;
 
@@ -75,29 +66,6 @@ public class Util {
 		t.draw();
 	}
 	
-	public static void billBoard(Entity entity, EntityPlayer player, float partialTicks) {
-		glDisable(GL_DEPTH_TEST);
-		
-		glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		
-		double dx = (entity.prevPosX + (entity.posX - entity.prevPosX) * partialTicks) - (player.prevPosX + (player.posX - player.prevPosX) * partialTicks); 
-		double dy = (entity.prevPosY + (entity.posY - entity.prevPosY) * partialTicks) - (player.prevPosY + (player.posY - player.prevPosY) * partialTicks); 
-		double dz = (entity.prevPosZ + (entity.posZ - entity.prevPosZ) * partialTicks) - (player.prevPosZ + (player.posZ - player.prevPosZ) * partialTicks);
-		
-		glDisable(GL_LIGHTING);
-		
-		double scale = Math.max(1, Math.sqrt(dx * dx + dy * dy + dz * dz) / 5);
-		
-		glTranslated(dx, dy + 0.5F + entity.height, dz);
-		GL11.glScaled(scale, scale, scale);
-		glRotatef(-player.rotationYaw, 0.0F, 1.0F, 0.0F);
-		glRotatef(player.rotationPitch, 1.0F, 0.0F, 0.0F);
-		glRotatef(180, 0, 0, 1);
-		glTranslatef(-0.5F, -0.5F, 0.0F);
-		
-		glEnable(GL_BLEND);
-	}
-
 	/** @see #renderItem(ItemStack, int, int) */
 	public static void renderItem(ItemStack stack, Point point) {
 		renderItem(stack, point.x, point.y);

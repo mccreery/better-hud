@@ -145,9 +145,9 @@ betterHud.text.invNames=For inventories, such as chests, which have been named v
 betterHud.text.unsnap=Hold %s to disable snapping
 betterHud.text.potionsUseless=This is basically useless in 1.9, but I'm leaving it in. You can disable the default one, if you like.
 
-betterHud.strings.damaged.0=§c!§r
-betterHud.strings.damaged.1=§c! !§r
-betterHud.strings.damaged.2=§c! ! !§r
+betterHud.strings.damaged.1=§c!§r
+betterHud.strings.damaged.2=§c! !§r
+betterHud.strings.damaged.3=§c! ! !§r
 betterHud.strings.saturation=Saturation: %s
 betterHud.strings.fps=%s FPS
 betterHud.strings.jump=Jump: %s
