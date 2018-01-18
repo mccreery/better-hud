@@ -11,6 +11,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraftforge.common.config.Property.Type;
 import tk.nukeduck.hud.gui.GuiElementSettings;
+import tk.nukeduck.hud.gui.GuiSettingToggle;
 import tk.nukeduck.hud.gui.GuiToggleButton;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
@@ -42,18 +43,7 @@ public class SettingBoolean extends SettingAlignable<Boolean> {
 
 	@Override
 	public int getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Bounds bounds) {
-		toggler = new GuiToggleButton(0, bounds.x(), bounds.y(), bounds.width(), bounds.height(), getUnlocalizedName(), true) {
-			@Override
-			public Boolean get() {
-				return SettingBoolean.this.get();
-			}
-
-			@Override
-			public void set(Boolean value) {
-				SettingBoolean.this.set(value);
-				updateText();
-			}
-		};
+		toggler = new GuiSettingToggle(0, bounds.x(), bounds.y(), bounds.width(), bounds.height(), getUnlocalizedName(), true, this);
 		parts.add(toggler);
 		callbacks.put(toggler, this);
 		return bounds.bottom() + SPACER;

@@ -31,20 +31,17 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
-import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.element.settings.SettingSlider;
+import tk.nukeduck.hud.element.text.TextElement;
 import tk.nukeduck.hud.network.InventoryNameQuery;
 import tk.nukeduck.hud.network.Version;
 import tk.nukeduck.hud.util.Bounds;
-import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.LayoutManager;
-import tk.nukeduck.hud.util.Point;
+import tk.nukeduck.hud.util.PaddedBounds;
 import tk.nukeduck.hud.util.Util;
 
-// TODO can this be a TextElement?
-public class BlockViewer extends HudElement {
-	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS | Direction.flags(Direction.CENTER, Direction.NORTH));
+public class BlockViewer extends TextElement {
 	private final SettingBoolean showBlock = new SettingBoolean("showBlock");
 	private final SettingSlider distance = new SettingSlider("distance", 1, 16, 1).setUnlocalizedValue("betterHud.strings.chunks");
 	private final SettingBoolean showIds = new SettingBoolean("showIds");
@@ -56,10 +53,13 @@ public class BlockViewer extends HudElement {
 		}
 	};
 
-	public BlockViewer() {
-		super("blockViewer");
+	private RayTraceResult trace;
+	private IBlockState state;
+	private ItemStack stack;
 
-		settings.add(position);
+	public BlockViewer() {
+		super("blockViewer", Direction.CORNERS | Direction.flags(Direction.CENTER, Direction.NORTH));
+
 		settings.add(new Legend("misc"));
 		settings.add(showBlock);
 		settings.add(invNames);
@@ -83,37 +83,60 @@ public class BlockViewer extends HudElement {
 	}
 
 	@Override
-	public Bounds render(RenderGameOverlayEvent event, LayoutManager manager) {
-		RayTraceResult trace = MC.getRenderViewEntity().rayTrace(distance.get() * 16, 1f);
-		if(trace == null || trace.typeOfHit != RayTraceResult.Type.BLOCK) return null;
+	public boolean shouldRender() {
+		trace = MC.getRenderViewEntity().rayTrace(distance.get() * 16, 1f);
 
-		IBlockState state = MC.world.getBlockState(trace.getBlockPos());
-		ItemStack stack = getDisplayStack(trace, state);
+		if(trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK) {
+			state = MC.world.getBlockState(trace.getBlockPos());
+			stack = getDisplayStack(trace, state);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	protected String[] getText() {
 		String text = getBlockName(trace, state, stack);
-
 		if(showIds.get()) text += " " + getIdString(state);
 
-		int w = MC.fontRenderer.getStringWidth(text) + 10;
-		if(stack != null && showBlock.get()) w += 21;
+		return new String[] {text};
+	}
 
-		Bounds bounds = new Bounds(w, 10 + MC.fontRenderer.FONT_HEIGHT);
-		if(position.getDirection() == Direction.CENTER) {
-			bounds.position = new Point(manager.getResolution().x / 2 + SPACER, manager.getResolution().y / 2 + SPACER);
-		} else {
-			bounds = position.applyTo(new Bounds(w, 10 + MC.fontRenderer.FONT_HEIGHT), manager);
-		}
-		Util.drawTooltipBox(bounds.x(), bounds.y(), bounds.width(), bounds.height());
+	@Override
+	protected Bounds getPadding() {
+		int vPad = 20 - MC.fontRenderer.FONT_HEIGHT;
+		int bottom = vPad / 2;
+		Bounds bounds = Bounds.getPadding(5, vPad - bottom, 5, bottom);
 
 		if(stack != null && showBlock.get()) {
-			MC.ingameGUI.drawString(MC.fontRenderer, text, bounds.x() + 26, bounds.y() + 6, Colors.WHITE);
+			bounds.left(bounds.left() - 21);
+		}
+		return bounds;
+	}
 
+	@Override
+	protected void drawBorder(RenderGameOverlayEvent event, PaddedBounds bounds) {
+		Util.drawTooltipBox(bounds.x(), bounds.y(), bounds.width(), bounds.height());
+	}
+
+	@Override
+	protected void drawExtras(RenderGameOverlayEvent event, PaddedBounds bounds) {
+		if(stack != null && showBlock.get()) {
 			RenderHelper.enableGUIStandardItemLighting();
 			MC.getRenderItem().renderItemAndEffectIntoGUI(stack, bounds.x() + 5, bounds.y() + 2);
 			RenderHelper.disableStandardItemLighting();
-		} else {
-			MC.ingameGUI.drawString(MC.fontRenderer, text, bounds.x() + 5, bounds.y() + 6, Colors.WHITE);
 		}
-		return bounds;
+	}
+
+	@Override
+	protected PaddedBounds moveBounds(LayoutManager manager, PaddedBounds bounds) {
+		if(position.getDirection() == Direction.CENTER) {
+			bounds.position = manager.getResolution().scale(.5f, .5f).sub(0, SPACER);
+			return Direction.SOUTH.align(bounds);
+		} else {
+			return super.moveBounds(manager, bounds);
+		}
 	}
 
 	/** Creates the most representative item stack for the given result.<br>

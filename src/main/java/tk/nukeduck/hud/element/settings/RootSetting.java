@@ -5,7 +5,7 @@ import tk.nukeduck.hud.util.HudConfig;
 
 public class RootSetting extends SettingStub<Boolean> {
 	private final HudElement element;
-	private final SettingBoolean enabled = new SettingBoolean("enabled");
+	public final SettingBoolean enabled = new SettingBoolean("enabled");
 
 	public final void bindConfig(HudConfig config) {
 		bindConfig(config, element.name, new StringBuilder());

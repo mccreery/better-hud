@@ -1,15 +1,15 @@
 package tk.nukeduck.hud.element.text;
 
 import static tk.nukeduck.hud.BetterHud.MC;
+import static tk.nukeduck.hud.BetterHud.SPACER;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingChoose;
-import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.LayoutManager;
+import tk.nukeduck.hud.util.PaddedBounds;
 import tk.nukeduck.hud.util.Point;
 
 public class Distance extends TextElement {
@@ -28,22 +28,13 @@ public class Distance extends TextElement {
 	}
 
 	@Override
-	public Bounds render(RenderGameOverlayEvent event, LayoutManager manager) {
-		String[] text = getText();
-
-		if(text.length > 0) {
-			String distance = text[0];
-			Point size = new Point(MC.fontRenderer.getStringWidth(distance), MC.fontRenderer.FONT_HEIGHT);
-
-			if(position.getDirection() == Direction.CENTER) {
-				Bounds bounds = new Bounds(new Point(manager.getResolution().x / 2 - 5 - size.x, manager.getResolution().y / 2 + 5), size);
-				MC.ingameGUI.drawString(MC.fontRenderer, distance, bounds.x(), bounds.y(), this.getColor());
-				return bounds;
-			} else {
-				return super.render(event, manager);
-			}
+	protected PaddedBounds moveBounds(LayoutManager manager, PaddedBounds bounds) {
+		if(position.getDirection() == Direction.CENTER) {
+			bounds.position = new Point(manager.getResolution().x / 2 - SPACER, manager.getResolution().y / 2 - SPACER);
+			return Direction.SOUTH_EAST.align(bounds);
+		} else {
+			return super.moveBounds(manager, bounds);
 		}
-		return null;
 	}
 
 	@Override

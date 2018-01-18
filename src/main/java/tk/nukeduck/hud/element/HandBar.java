@@ -2,14 +2,11 @@ package tk.nukeduck.hud.element;
 
 import static tk.nukeduck.hud.BetterHud.MC;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
-import tk.nukeduck.hud.element.settings.SettingChoose;
 import tk.nukeduck.hud.element.settings.SettingPosition;
-import tk.nukeduck.hud.element.settings.SettingWarnings;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
@@ -17,30 +14,22 @@ import tk.nukeduck.hud.util.LayoutManager;
 import tk.nukeduck.hud.util.Point;
 import tk.nukeduck.hud.util.Util;
 
-public class HandBar extends HudElement {
+public class HandBar extends EquipmentDisplay {
 	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS | Direction.SOUTH.flag());
-
-	private final SettingBoolean showName = new SettingBoolean("showName");
-	private final SettingBoolean showDurability = new SettingBoolean("showDurability", Direction.WEST);
-	private final SettingChoose durabilityMode = new SettingChoose("durabilityMode", Direction.EAST, "values", "percent");
 	private final SettingBoolean showItem = new SettingBoolean("showItem");
 	private final SettingBoolean offHand = new SettingBoolean("offHand");
 	private final SettingBoolean showBars = new SettingBoolean("showBars");
-	private final SettingWarnings warnings = new SettingWarnings("damageWarning");
 
 	@Override
 	public void loadDefaults() {
 		this.settings.set(true);
 		position.set(Direction.SOUTH);
 
-		showName.set(true);
-		showDurability.set(true);
-		durabilityMode.setIndex(0);
 		showItem.set(true);
 		showBars.set(true);
 		offHand.set(false);
-		warnings.set(new Double[] {.45, .25, .1});
-		warnings.setActive(true);
+
+		super.loadDefaults();
 	}
 
 	public HandBar() {
@@ -50,61 +39,30 @@ public class HandBar extends HudElement {
 		settings.add(new Legend("misc"));
 		settings.add(showItem);
 		settings.add(showBars);
-		settings.add(showDurability);
-		settings.add(durabilityMode);
-		settings.add(showName);
 		settings.add(offHand);
-		settings.add(warnings);
-	}
-
-	// TODO duplication
-	private String generateText(ItemStack stack) {
-		int maxDamage = stack.getMaxDamage();
-		float value = (float) (maxDamage - stack.getItemDamage()) / (float) maxDamage;
-
-		String dur, text;
-		if(durabilityMode.getIndex() == 1) {
-			dur = I18n.format("betterHud.strings.percent", Util.formatToPlaces(value * 100.0, 1));
-		} else {
-			dur = I18n.format("betterHud.strings.outOf", String.valueOf(maxDamage - stack.getItemDamage()), String.valueOf(maxDamage));
-		}
-
-		if(showName.get() && showDurability.get()) {
-			text = Util.join(I18n.format("betterHud.strings.splitter"), stack.getDisplayName(), dur);
-		} else if(showName.get()) {
-			text =  stack.getDisplayName();
-		} else if(showDurability.get()) {
-			text = dur;
-		} else {
-			text = "";
-		}
-
-		int count = warnings.getWarning(value);
-
-		if(count > 0) {
-			text += " " + I18n.format("betterHud.strings.damaged." + count);
-		}
-		return text;
 	}
 	
 	public void renderBar(ItemStack stack, int x, int y) {
-		//byte green = (byte) (255 * value);
-		//byte red = (byte) (256 - green);
+		String text = getText(stack);
 
-		String text = generateText(stack);
+		int width = 0;
+		if(showItem.get()) width += 21;
 
-		int totalWidth = MC.fontRenderer.getStringWidth(text);
-		if(showItem.get()) totalWidth += 21;
+		if(text != null) {
+			width += MC.fontRenderer.getStringWidth(text);
+		}
 
 		if(showItem.get()) {
 			MC.mcProfiler.startSection("items");
-			Util.renderItem(stack, x + 90 - totalWidth / 2, y);
+			Util.renderItem(stack, x + 90 - width / 2, y);
 			MC.mcProfiler.endSection();
 		}
 
-		MC.mcProfiler.startSection("text");
-		MC.ingameGUI.drawString(MC.fontRenderer, text, x + 90 - totalWidth / 2 + (showItem.get() ? 21 : 0), y + 4, Colors.WHITE);
-		MC.mcProfiler.endSection();
+		if(text != null) {
+			MC.mcProfiler.startSection("text");
+			MC.ingameGUI.drawString(MC.fontRenderer, text, x + 90 - width / 2 + (showItem.get() ? 21 : 0), y + 4, Colors.WHITE);
+			MC.mcProfiler.endSection();
+		}
 
 		if(showBars.get()) {
 			MC.mcProfiler.startSection("bars");

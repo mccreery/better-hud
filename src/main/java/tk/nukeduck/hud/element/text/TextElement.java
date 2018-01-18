@@ -1,7 +1,6 @@
 package tk.nukeduck.hud.element.text;
 
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.element.settings.SettingColor;
 import tk.nukeduck.hud.element.settings.SettingPosition;
@@ -45,11 +44,15 @@ public abstract class TextElement extends HudElement {
 	}
 
 	protected Bounds getPadding() {
-		return border ? new Bounds(-BetterHud.SPACER, -BetterHud.SPACER, 2*BetterHud.SPACER, 2*BetterHud.SPACER) : Bounds.EMPTY;
+		return border ? Bounds.PADDING : Bounds.EMPTY;
 	}
 
 	protected Bounds getMargin() {
 		return Bounds.EMPTY;
+	}
+
+	protected PaddedBounds moveBounds(LayoutManager manager, PaddedBounds bounds) {
+		return position.applyTo(bounds, manager);
 	}
 
 	@Override
@@ -58,13 +61,19 @@ public abstract class TextElement extends HudElement {
 		if(text.length == 0) return null;
 
 		Point size = getLinesSize(text);
-		PaddedBounds bounds = position.applyTo(new PaddedBounds(new Bounds(size), getPadding(), getMargin()), manager);
+		PaddedBounds bounds = moveBounds(manager, new PaddedBounds(new Bounds(size), getPadding(), getMargin()));
 
-		if(border) drawRect(bounds.paddingBounds(), Colors.TRANSLUCENT);
+		drawBorder(event, bounds);
 		drawLines(text, bounds.contentBounds(), position.getAnchor(), color.get());
+		drawExtras(event, bounds);
 
 		return bounds;
 	}
 
+	protected void drawBorder(RenderGameOverlayEvent event, PaddedBounds bounds) {
+		if(border) drawRect(bounds.paddingBounds(), Colors.TRANSLUCENT);
+	}
+
 	protected abstract String[] getText();
+	protected void drawExtras(RenderGameOverlayEvent event, PaddedBounds bounds) {}
 }

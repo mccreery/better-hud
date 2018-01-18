@@ -6,6 +6,7 @@ import java.util.ArrayList;
 
 public class Bounds {
 	public static final Bounds EMPTY = new Bounds();
+	public static final Bounds PADDING = getPadding(SPACER);
 
 	public Point position, size;
 
@@ -59,10 +60,14 @@ public class Bounds {
 	public int bottom() {return y() + height();}
 	public void bottom(int bottom) {height(bottom - y());}
 
-	/** @return An inverted bounds {@code bounds} such that least coordinates
-	 * are replaced by most coordinates, e.g. {@code bounds.left() == this.right()} */
+	/** @return {@code bounds} inverted around zero */
 	public Bounds invert() {
-		return new Bounds(right(), bottom(), -width(), -height());
+		return new Bounds(-x(), -y(), -width(), -height());
+	}
+
+	/** @see #getPadding(int, int, int, int) */
+	public static Bounds getPadding(int padding) {
+		return getPadding(padding, padding, padding, padding);
 	}
 
 	/** @return A bounds such that the distance from the origin on each side

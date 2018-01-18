@@ -4,8 +4,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -48,17 +46,18 @@ public class GuiHudMenu extends GuiScreen {
 
 		this.perPage = Math.max(1, (int) Math.floor((height / 8 * 7 - 110) / 24));
 
-		// TODO convert to rolling instead of mult
+		int id = buttonOffset;
+		int top = height / 16 + 78;
+
 		for(int i = 0; i < HudElement.ELEMENTS.length; i++) {
 			HudElement element = HudElement.ELEMENTS[i];
 
-			GuiToggleButton b = new GuiToggleButton(i * 2 + buttonOffset, hW - 126, height / 16 + 78 + ((i % perPage) * 24), 150, 20, element.getUnlocalizedName(), true);
-			b.set(element.settings.get());
-			b.enabled = element.isSupportedByServer();
+			GuiButton enabled = new GuiSettingToggle(id++, hW - 126, top + ((i % perPage) * 24), 150, 20, element.getUnlocalizedName(), true, element.settings.enabled);
+			enabled.enabled = element.isSupportedByServer();
 
-			this.buttonList.add(b);
+			this.buttonList.add(enabled);
 
-			GuiButton options = new GuiButton(i * 2 + buttonOffset + 1, hW + 26, height / 16 + 78 + ((i % perPage) * 24), 100, 20, I18n.format("betterHud.menu.options"));
+			GuiButton options = new GuiButton(id++, hW + 26, top + ((i % perPage) * 24), 100, 20, I18n.format("betterHud.menu.options"));
 			options.enabled = !element.settings.isEmpty();
 			this.buttonList.add(options);
 		}
@@ -126,17 +125,13 @@ public class GuiHudMenu extends GuiScreen {
 				break;
 			}
 		} else {
-			for(int i = 0; i < HudElement.ELEMENTS.length; i++) {
-				HudElement el = HudElement.ELEMENTS[i];
-				int offset = i * 2 + buttonOffset;
-				if(id == offset) {
-					el.settings.toggle();
-					button.displayString = I18n.format("betterHud.menu.settingButton", el.getLocalizedName(), (el.settings.get() ? ChatFormatting.GREEN : ChatFormatting.RED) + I18n.format(el.settings.get() ? "options.on" : "options.off"));
-					((GuiToggleButton)button).set(el.settings.get());
-				} else if(id == offset + 1) { // <
-					GuiElementSettings gui = new GuiElementSettings(el, this);
-					mc.displayGuiScreen(gui);
-				}
+			id -= buttonOffset;
+
+			if((id & 1) == 1) {
+				HudElement element = HudElement.ELEMENTS[id / 2];
+				mc.displayGuiScreen(new GuiElementSettings(element, this));
+			} else {
+				((GuiToggleButton)button).toggle();
 			}
 		}
 	}
@@ -148,11 +143,7 @@ public class GuiHudMenu extends GuiScreen {
 				GuiButton b = (GuiButton) buttonList.get(i);
 
 				if(b.id >= buttonOffset && (b.id - buttonOffset) % 2 == 0) {
-					HudElement element = HudElement.ELEMENTS[(b.id - buttonOffset) / 2];
-					element.settings.set(enabled);
-
-					b.displayString = I18n.format("betterHud.menu.settingButton", element.getLocalizedName(), (enabled ? ChatFormatting.GREEN : ChatFormatting.RED) + I18n.format(enabled ? "options.on" : "options.off"));
-					((GuiToggleButton) b).set(enabled);
+					((GuiToggleButton)b).set(enabled);
 				}
 			}
 		}
@@ -176,7 +167,6 @@ public class GuiHudMenu extends GuiScreen {
 		updatePage();
 
 		this.drawDefaultBackground();
-		//this.drawRect(0, 60, width, height - 20, RenderUtil.colorARGB(85, 0, 0, 0));
 		super.drawScreen(mouseX, mouseY, p_73863_3_);
 		
 		for(Object obj : this.buttonList) {
@@ -189,7 +179,7 @@ public class GuiHudMenu extends GuiScreen {
 				this.drawHoveringText(tooltip, mouseX, mouseY);
 			}
 		}
-		
+
 		this.drawCenteredString(this.fontRenderer, I18n.format("betterHud.menu.hudSettings"), this.width / 2, height / 16 + 5, 16777215);
 		this.drawString(this.fontRenderer, countEnabled(HudElement.ELEMENTS) + "/" + HudElement.ELEMENTS.length + " enabled", 5, 5, Colors.WHITE);
 		this.drawCenteredString(this.fontRenderer, I18n.format("betterHud.menu.page", (currentPage + 1) + "/" + (int) Math.ceil((float) HudElement.ELEMENTS.length / perPage)), width / 2, height - height / 16 - 13, Colors.WHITE);

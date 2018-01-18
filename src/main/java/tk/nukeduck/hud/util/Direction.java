@@ -2,18 +2,25 @@ package tk.nukeduck.hud.util;
 
 /** One of 8 cardinal directions or {@link CENTER}, the null direction */
 public enum Direction {
-	// TODO easier way to manipulate directions, like mirroring etc
-	CENTER(.5f, .5f, "center"),
+	CENTER(1, 1, "center"),
 
-	NORTH(.5f,  0f, "north"),
-	EAST ( 1f, .5f, "east"),
-	SOUTH(.5f,  1f, "south"),
-	WEST ( 0f, .5f, "west"),
+	NORTH(1, 0, "north"),
+	EAST (2, 1, "east"),
+	SOUTH(1, 2, "south"),
+	WEST (0, 1, "west"),
 
-	NORTH_EAST(1f,  0f, "northEast"),
-	SOUTH_EAST(1f,  1f, "southEast"),
-	SOUTH_WEST(0f,  1f, "southWest"),
-	NORTH_WEST(0f,  0f, "northWest");
+	NORTH_EAST(2, 0, "northEast"),
+	SOUTH_EAST(2, 2, "southEast"),
+	SOUTH_WEST(0, 2, "southWest"),
+	NORTH_WEST(0, 0, "northWest");
+
+	private static final Direction[][] GRID = new Direction[3][3];
+
+	static {
+		for(Direction value : values()) {
+			GRID[value.gridPosition.y][value.gridPosition.x] = value;
+		}
+	}
 
 	public static final int CORNERS    = flags(NORTH_EAST, SOUTH_EAST, SOUTH_WEST, NORTH_WEST);
 	public static final int SIDES      = flags(NORTH, EAST, SOUTH, WEST);
@@ -25,13 +32,29 @@ public enum Direction {
 	public static final int RIGHT      = flags(NORTH_EAST, EAST, SOUTH_EAST);
 	public static final int ALL        = TOP | HORIZONTAL | BOTTOM;
 
-	private final float scaleX, scaleY;
 	private final String name;
 
-	Direction(float x, float y, String name) {
-		scaleX = x;
-		scaleY = y;
+	private final Point gridPosition;
+	private final float scaleX, scaleY;
+
+	Direction(int x, int y, String name) {
 		this.name = name;
+
+		gridPosition = new Point(x, y);
+		scaleX = x * .5f;
+		scaleY = y * .5f;
+	}
+
+	public Direction mirrorX() {
+		return GRID[gridPosition.y][2 - gridPosition.x];
+	}
+
+	public Direction mirrorY() {
+		return GRID[2 - gridPosition.y][gridPosition.x];
+	}
+
+	public Direction mirror() {
+		return GRID[2 - gridPosition.y][2 - gridPosition.x];
 	}
 
 	public String getUnlocalizedName() {
