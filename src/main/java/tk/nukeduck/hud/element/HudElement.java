@@ -21,7 +21,7 @@ import tk.nukeduck.hud.element.particles.BloodSplatters;
 import tk.nukeduck.hud.element.particles.WaterDrops;
 import tk.nukeduck.hud.element.settings.RootSetting;
 import tk.nukeduck.hud.element.text.BiomeName;
-import tk.nukeduck.hud.element.text.Clock;
+import tk.nukeduck.hud.element.text.GameClock;
 import tk.nukeduck.hud.element.text.Connection;
 import tk.nukeduck.hud.element.text.Coordinates;
 import tk.nukeduck.hud.element.text.CpsCount;
@@ -44,7 +44,7 @@ public abstract class HudElement { // Can't extend Gui due to @SideOnly
 	public static final BiomeName BIOME_NAME = new BiomeName();
 	public static final BlockViewer BLOCK_VIEWER = new BlockViewer();
 	public static final BloodSplatters BLOOD_SPLATTERS = new BloodSplatters();
-	public static final Clock CLOCK = new Clock();
+	public static final GameClock CLOCK = new GameClock();
 	public static final Compass COMPASS = new Compass();
 	public static final Connection CONNECTION = new Connection();
 	public static final Coordinates COORDINATES = new Coordinates();

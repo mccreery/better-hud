@@ -1,86 +1,76 @@
 package tk.nukeduck.hud.element.text;
 
-import static tk.nukeduck.hud.BetterHud.MC;
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
-import net.minecraft.client.resources.I18n;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
-import tk.nukeduck.hud.util.Bounds;
+import tk.nukeduck.hud.element.settings.SettingChoose;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.LayoutManager;
-import tk.nukeduck.hud.util.PaddedBounds;
-import tk.nukeduck.hud.util.Util;
 
-// TODO make subclass of system clock
-public class Clock extends TextElement {
-	private static final ItemStack BED = new ItemStack(Items.BED);
-
+public abstract class Clock extends TextElement {
 	private final SettingBoolean twentyFour = new SettingBoolean("24hr");
+	private final SettingBoolean showSeconds = new SettingBoolean("showSeconds");
 
-	public Clock() {
-		super("clock", Direction.CORNERS);
+	private final SettingChoose dateType = new SettingChoose("dateType", "dmy", "mdy", "ymd");
+	private final SettingBoolean fullYear = new SettingBoolean("fullYear");
+
+	public Clock(String name) {
+		super(name, Direction.CORNERS);
 		border = true;
 
 		settings.add(new Legend("misc"));
 		settings.add(twentyFour);
+		settings.add(showSeconds);
+
+		settings.add(dateType);
+		settings.add(fullYear);
 	}
 
 	@Override
 	public void loadDefaults() {
 		super.loadDefaults();
-		position.set(Direction.NORTH_EAST);
+
 		twentyFour.set(false);
+		showSeconds.set(false);
+
+		dateType.setIndex(1);
+		fullYear.set(true);
 	}
 
-	@Override
-	protected Bounds getMargin() {
-		return position.getAnchor().align(new Bounds(0, 0, 21, 0));
-	}
+	// TODO maybe allow any date format in a text box
 
-	@Override
-	public Bounds render(RenderGameOverlayEvent event, LayoutManager manager) {
-		PaddedBounds bounds = (PaddedBounds)super.render(event, manager);
+	protected DateFormat getTimeFormat() {
+		StringBuilder format = new StringBuilder();
+		format.append("HH:mm");
 
-		if(!MC.world.isDaytime()) {
-			Direction bedAnchor = position.getAnchor().in(Direction.RIGHT) ? Direction.WEST : Direction.EAST;
-			Bounds bed = bedAnchor.anchor(new Bounds(16, 16), bounds);
-
-			Util.renderItem(BED, bed.position);
+		if(showSeconds.get()) {
+			format.append(":ss");
 		}
-		return bounds;
+		if(!twentyFour.get()) {
+			format.append(" a");
+			format.replace(0, 2, "hh");
+		}
+		return new SimpleDateFormat(format.toString());
+	}
+
+	private static final String[] dateFormats = {"dd/MM/yy", "MM/dd/yy", "yy/MM/dd"};
+	private static final String[] dateFormatsFull = {"dd/MM/yyyy", "MM/dd/yyyy", "yyyy/MM/dd"};
+
+	protected DateFormat getDateFormat() {
+		return new SimpleDateFormat((fullYear.get() ? dateFormatsFull : dateFormats)[dateType.getIndex()]);
 	}
 
 	@Override
 	protected String[] getText() {
-		long t = (MC.world.getWorldTime() + 6000) % 24000;
-		String day = I18n.format("betterHud.strings.day", (MC.world.getWorldTime() + 6000) / 24000 + 1);
-		String time;
-		int h = (int) (t / 1000);
+		Date date = getDate();
 
-		time = Clock.formatTime(h, (int) ((t % 1000) / 1000.0 * 60.0), twentyFour.get());
-
-		return new String[] {time, day};
+		return new String[] {
+			getTimeFormat().format(date),
+			getDateFormat().format(date)
+		};
 	}
 
-	private static String formatTime(int hours, int minutes, boolean twentyFourHour) {
-		String unlocalized, hourS, minuteS;
-	
-		if(twentyFourHour) {
-			unlocalized = "betterHud.strings.time";
-			hourS = String.format("%02d", hours);
-		} else {
-			final boolean pm = hours >= 12;
-			if(pm) hours -= 12;
-			if(hours == 0) hours = 12;
-	
-			unlocalized = pm ? "betterHud.strings.time.pm" : "betterHud.strings.time.am";
-			hourS = String.valueOf(hours);
-		}
-	
-		minuteS = String.format("%02d", minutes);
-		return I18n.format(unlocalized, hourS, minuteS);
-	}
+	protected abstract Date getDate();
 }

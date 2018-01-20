@@ -18,7 +18,7 @@ betterHud.unsupported=This element is not supported by the server
 betterHud.element.bloodSplatters=Blood Splatters
 betterHud.element.arrowCount=Arrow Count
 betterHud.element.blockViewer=Block Viewer
-betterHud.element.clock=Clock
+betterHud.element.gameClock=Game Clock
 betterHud.element.compass=Compass
 betterHud.element.connection=Connection
 betterHud.element.coordinates=Coordinates
@@ -134,6 +134,7 @@ betterHud.setting.never=Never
 betterHud.setting.timeout=Timeout
 betterHud.setting.showBurst=Show Burst
 betterHud.setting.remember=Remember Burst
+betterHud.setting.showDays=Show Days
 
 betterHud.group.position=Position
 betterHud.group.misc=Misc.
