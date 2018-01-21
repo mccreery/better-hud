@@ -44,6 +44,15 @@ public class Point implements ISaveLoad {
 		return new Point((int)(this.x * x), (int)(this.y * y));
 	}
 
+	public Point invert() {
+		return Point.ZERO.sub(this);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return obj instanceof Point && x == ((Point)obj).x && y == ((Point)obj).y;
+	}
+
 	@Override
 	public String toString() {
 		return String.format("(%d, %d)", x, y);

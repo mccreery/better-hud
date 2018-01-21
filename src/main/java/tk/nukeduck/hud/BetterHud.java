@@ -77,6 +77,7 @@ public class BetterHud { // TODO thoroughly test GL, replace drawRect coords
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
+		// TODO Takes a SUSPICIOUSLY long time
 		if(event.getSide() == Side.CLIENT) {
 			HudElement.loadAllDefaults();
 			CONFIG = new HudConfig(event.getSuggestedConfigurationFile());

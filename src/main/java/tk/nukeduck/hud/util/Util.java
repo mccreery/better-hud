@@ -6,6 +6,7 @@ import static tk.nukeduck.hud.BetterHud.MC;
 
 import java.text.DecimalFormat;
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.List;
 
 import org.lwjgl.opengl.GL11;
@@ -104,5 +105,37 @@ public class Util {
 		}
 		builder.setLength(builder.length() - delimiter.length()); // Cut tail
 		return builder.toString();
+	}
+
+	/** @return {@code true} if the line between {@code min} and {@code max}
+	 * overlaps the line between {@code min2} and {@code max2} */
+	/*public static boolean lineOverlaps(int min, int max, int min2, int max2) {
+		return min  >= min2 && min  < max2
+			|| max  >= min2 && max  < max2
+			|| min2 >= min  && min2 < max
+			|| max2 >= min  && max2 < max;
+	}*/
+
+	/** @return The closest value in {@code values} to {@code target} */
+	@Deprecated public static int getClosest(int target, Iterable<Integer> values) {
+		Iterator<Integer> iterator = values.iterator();
+
+		if(!iterator.hasNext()) {
+			throw new IllegalArgumentException("No values");
+		}
+
+		int closestValue = iterator.next();
+		int closestDistance = Math.abs(target - closestValue);
+
+		while(iterator.hasNext()) {
+			int value = iterator.next();
+			int distance = Math.abs(target - closestValue);
+
+			if(distance < closestDistance) {
+				closestValue = value;
+				closestDistance = distance;
+			}
+		}
+		return closestValue;
 	}
 }

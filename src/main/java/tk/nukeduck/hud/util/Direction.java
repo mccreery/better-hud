@@ -90,11 +90,17 @@ public enum Direction {
 		return bounds.position.add(getAnchor(bounds.size));
 	}
 
-	/** Aligns the side(s) of {@code bounds} around its original position
-	 * for example {@link EAST} aligns the east edge of
-	 * {@code bounds} to its previous north-west corner */
+	/** {@code point} defaults to the north-west corner of {@code bounds}
+	 * @see #align(Bounds, Point) */
 	public <T extends Bounds> T align(T bounds) {
 		bounds.position = bounds.position.sub(getAnchor(bounds.size));
+		return bounds;
+	}
+
+	/** Aligns the side(s) of {@code bounds} around {@code point},
+	 * for example {@link EAST} aligns the east edge of {@code bounds} to {@code point} */
+	public <T extends Bounds> T align(T bounds, Point point) {
+		bounds.position = point.sub(getAnchor(bounds.size));
 		return bounds;
 	}
 

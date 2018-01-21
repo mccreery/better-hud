@@ -2,8 +2,6 @@ package tk.nukeduck.hud.util;
 
 import static tk.nukeduck.hud.BetterHud.SPACER;
 
-import java.util.ArrayList;
-
 public class Bounds {
 	public static final Bounds EMPTY = new Bounds();
 	public static final Bounds PADDING = getPadding(SPACER);
@@ -34,6 +32,10 @@ public class Bounds {
 
 	public Bounds(Bounds bounds) {
 		this(bounds.position, bounds.size);
+	}
+
+	public boolean isEmpty() {
+		return this == EMPTY || size.equals(Point.ZERO);
 	}
 
 	public int x() {return position.x;}
@@ -89,7 +91,7 @@ public class Bounds {
 		return pad(-padding.left(), -padding.top(), padding.right(), padding.bottom());
 	}
 
-	/** @return A bounds padded by the given amount on each side */
+	/** @return A bounds padded by the given amount on each side. */
 	public Bounds pad(int left, int top, int right, int bottom) {
 		return new Bounds(left() - left, top() - top, width() + left + right, height() + top + bottom);
 	}
@@ -113,6 +115,46 @@ public class Bounds {
 		return pad(-left, -top, -right, -bottom);
 	}
 
+	/** Switches the least and most points
+	 * @see #denormalize()
+	 * @see #normalize() */
+	public Bounds flip() {
+		position = position.add(size);
+		size = size.invert();
+
+		return this;
+	}
+
+	/** Switches the least and most coordinates on each axis if
+	 * the axis has a positive size */
+	public Bounds denormalize() {
+		if(width() > 0) {
+			position.x += size.x;
+			size.x = -size.x;
+		}
+		if(height() > 0) {
+			position.y += size.y;
+			size.y = -size.y;
+		}
+
+		return this;
+	}
+
+	/** Switches the least and most coordinates on each axis if
+	 * the axis has a negative size */
+	public Bounds normalize() {
+		if(width() < 0) {
+			position.x += size.x;
+			size.x = -size.x;
+		}
+		if(height() < 0) {
+			position.y += size.y;
+			size.y = -size.y;
+		}
+
+		return this;
+	}
+
 	public boolean contains(Point point) {
 		return contains(point.x, point.y);
 	}
@@ -120,68 +162,84 @@ public class Bounds {
 		return x >= left() && x < right() && y >= top() && y < bottom();
 	}
 
-	// TODO everything here
-	public void snapTest(Bounds... b) {snapTest(SPACER, b);}
-	public void snapTest(int hitRadius, Bounds... bounds) {
-		ArrayList<Integer> xClips = new ArrayList<Integer>();
-		ArrayList<Integer> yClips = new ArrayList<Integer>();
+	private static final int SNAP_RADIUS = 10;
 
-		for(Bounds b : bounds) {
-			b = b.pad(SPACER);
-
-			int clipX = this.x();
-			int clipY = this.y();
-
-			if(lineOverlaps(this.x(), this.right(), b.x(), b.right())) {
-				int toClip = b.bottom();
-				if(Math.abs(toClip - this.y()) < hitRadius) {
-					clipY = toClip;
-				} else {
-					toClip = b.y();
-					if(Math.abs(toClip - this.bottom()) < hitRadius) {
-						clipY = toClip - this.height();
-					}
-				}
-			}
-			if(lineOverlaps(this.y(), this.bottom(), b.y(), b.bottom())) {
-				int toClip = b.right();
-				if(Math.abs(toClip - this.x()) < hitRadius) {
-					clipX = toClip;
-				} else {
-					toClip = b.x();
-					if(Math.abs(toClip - this.right()) < hitRadius) {
-						clipX = toClip - this.width();
-					}
-				}
-			}
-
-			if(clipX != this.x()) xClips.add(clipX);
-			if(clipY != this.y()) yClips.add(clipY);
-		}
-
-		this.position = new Point(getSmallestDistance(this.x(), xClips), getSmallestDistance(this.y(), yClips));
+	/** @return {@code true} if this bounds and {@code bounds} overlap
+	 * both horizontally and vertically
+	 *
+	 * @see #overlapsH(Bounds)
+	 * @see #overlapsV(Bounds) */
+	public boolean overlaps(Bounds bounds) {
+		return overlapsH(bounds) && overlapsV(bounds);
 	}
 
-	private static boolean lineOverlaps(int min, int max, int min2, int max2) {
-		return min  >= min2 && min  < max2
-			|| max  >= min2 && max  < max2
-			|| min2 >= min  && min2 < max
-			|| max2 >= min  && max2 < max;
+	/** @return {@code true} if this bounds and {@code bounds} overlap horizontally */
+	public boolean overlapsH(Bounds bounds) {
+		return linesOverlap(left(), right(), bounds.left(), bounds.right());
 	}
 
-	// TODO find out what this actually does
-	private static int getSmallestDistance(int value, Iterable<Integer> clips) {
-		int currentDistance = Integer.MAX_VALUE;
-		int smallest = value;
+	/** @return {@code true} if this bounds and {@code bounds} overlap vertically */
+	public boolean overlapsV(Bounds bounds) {
+		return linesOverlap(top(), bottom(), bounds.top(), bounds.bottom());
+	}
 
-		for(int clip : clips) {
-			int distance = Math.abs(clip - value);
+	private static boolean linesOverlap(int minX, int maxX, int minY, int maxY) {
+		return minX < maxY && minY < maxX;
+	}
 
-			if(distance < currentDistance) {
-				currentDistance = distance;
-				smallest = clip;
+	private static int difference(int x, int y) {
+		return Math.abs(x - y);
+	}
+
+	/** Aligns this bounds to the closest edge in {@code bounds}
+	 * if any is less than {@link #SNAP_RADIUS} away */
+	public void snap(Iterable<Bounds> targets) {
+		Point snapPosition = new Point(position);
+		Point snapRadius = new Point(SNAP_RADIUS, SNAP_RADIUS);
+
+		for(Bounds bounds : targets) {
+			Bounds outer = bounds.pad(SPACER);
+			int testRadius;
+
+			if(overlapsH(outer)) {
+				if((testRadius = difference(bottom(), outer.top())) < snapRadius.y) {
+					snapPosition.y = outer.top() - height();
+					snapRadius.y = testRadius;
+				} else if((testRadius = difference(top(), bounds.bottom())) < snapRadius.y) {
+					snapPosition.y = outer.bottom();
+					snapRadius.y = testRadius;
+				}
+			}
+
+			if((testRadius = difference(bottom(), bounds.bottom())) < snapRadius.y) {
+				snapPosition.y = bounds.bottom() - height();
+				snapRadius.y = testRadius;
+			} else if((testRadius = difference(top(), bounds.top())) < snapRadius.y) {
+				snapPosition.y = bounds.top();
+				snapRadius.y = testRadius;
+			}
+
+			if(overlapsV(outer)) {
+				if((testRadius = difference(right(), outer.left())) < snapRadius.x) {
+					snapPosition.x = outer.left() - width();
+					snapRadius.x = testRadius;
+				} else if((testRadius = difference(left(), outer.right())) < snapRadius.x) {
+					snapPosition.x = outer.right();
+					snapRadius.x = testRadius;
+				}
+			}
+
+			if((testRadius = difference(right(), bounds.right())) < snapRadius.x) {
+				snapPosition.x = bounds.right() - width();
+				snapRadius.x = testRadius;
+			} else if((testRadius = difference(left(), bounds.left())) < snapRadius.x) {
+				snapPosition.x = bounds.left();
+				snapRadius.x = testRadius;
 			}
 		}
-		return smallest;
+
+		if(!snapPosition.equals(position)) {
+			position = snapPosition;
+		}
 	}
 }

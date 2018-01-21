@@ -38,8 +38,9 @@ public class GuiElementSettings extends GuiScreen {
 	private static final int REPEAT_SPEED_FAST = 10; // Rate of speed-up beyond 20/s
 
 	public HudElement element;
-	ArrayList<GuiTextField> textboxList = new ArrayList<GuiTextField>();
+	private ArrayList<GuiTextField> textboxList = new ArrayList<GuiTextField>();
 	public HashMap<Gui, Setting<?>> callbacks = new HashMap<Gui, Setting<?>>();
+	private SettingAbsolutePosition picker = null;
 
 	private Bounds viewport;
 
@@ -47,7 +48,6 @@ public class GuiElementSettings extends GuiScreen {
 	private GuiButton done;
 	private GuiScrollbar scrollbar;
 
-	public SettingAbsolutePosition currentPicking = null;
 	private int clickTimer = 0;
 	private GuiButton clickedUpDown = null;
 	public static final Map<HudElement, Bounds> boundsCache = new HashMap<HudElement, Bounds>();
@@ -98,17 +98,36 @@ public class GuiElementSettings extends GuiScreen {
 				callbacks.get(button).actionPerformed(this, button);
 			}
 
+			picker = null;
+
 			// Notify the rest of the elements that a button has been pressed
 			for(Setting<?> setting : callbacks.values()) {
 				setting.otherAction(callbacks.values());
+
+				if(setting instanceof SettingAbsolutePosition) {
+					if(((SettingAbsolutePosition)setting).isPicking()) {
+						picker = (SettingAbsolutePosition)setting;
+					}
+				}
 			}
 		}
 	}
 
+	/** @see GuiScreen#handleMouseInput() */
 	@Override
 	public void updateScreen() {
 		for(GuiTextField field : this.textboxList) {
 			field.updateCursorCounter();
+		}
+
+		if(picker != null && (Mouse.getEventDX() != 0 || Mouse.getEventDY() != 0)) {
+			Point mousePosition = new Point(
+				Mouse.getEventX() * width / MC.displayWidth,
+				height - Mouse.getEventY() * height / MC.displayHeight - 1
+			);
+			Point resolution = new Point(width, height);
+
+			picker.pickMouse(mousePosition, resolution, element);
 		}
 
 		if(Mouse.isButtonDown(0)) {
@@ -134,30 +153,6 @@ public class GuiElementSettings extends GuiScreen {
 			}
 		} else {
 			clickTimer = 0;
-		}
-
-		if(currentPicking != null) {
-			Bounds b = new Bounds(GuiElementSettings.boundsCache.get(element));
-			b.x(Mouse.getEventX() * this.width / this.mc.displayWidth);
-			b.y(this.height - Mouse.getEventY() * this.height / this.mc.displayHeight - 1);
-
-			if(!Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
-				ArrayList<Bounds> bounds = new ArrayList<Bounds>();
-				for(HudElement element : HudElement.ELEMENTS) {
-					if(element == this.element || !element.settings.get()) continue;
-
-					Bounds elementBounds = GuiElementSettings.boundsCache.get(element);
-					if(elementBounds != null && elementBounds != Bounds.EMPTY) {
-						bounds.add(elementBounds);
-					}
-				}
-				b.snapTest(10, bounds.toArray(new Bounds[bounds.size()]));
-				b.snapTest(10, new Bounds(this.width, 0, -this.width, this.height));
-				b.snapTest(10, new Bounds(0, this.height, this.width, -this.height));
-			}
-
-			currentPicking.set(new Point(b.position));
-			currentPicking.updateText();
 		}
 	}
 
@@ -186,7 +181,14 @@ public class GuiElementSettings extends GuiScreen {
 
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
+		boolean picking = picker != null;
 		super.mouseClicked(mouseX, mouseY + getMouseOffset(), button);
+
+		if(picking && picker != null) {
+			picker.finishPicking();
+			picker = null;
+			return;
+		}
 
 		for(GuiTextField field : this.textboxList) {
 			field.mouseClicked(mouseX, mouseY + getMouseOffset(), button);
@@ -205,13 +207,6 @@ public class GuiElementSettings extends GuiScreen {
 			if(this.equals(MC.currentScreen)) {
 				MinecraftForge.EVENT_BUS.post(new ActionPerformedEvent.Post(this, done, buttonList));
 			}
-		}
-
-		if(currentPicking != null && !currentPicking.pick.isMouseOver()) {
-			currentPicking.pick.displayString = I18n.format("betterHud.menu.pick");
-			currentPicking.isPicking = false;
-
-			currentPicking = null;
 		}
 		scrollbar.mouseClicked(mouseX, mouseY, button);
 	}
@@ -253,7 +248,7 @@ public class GuiElementSettings extends GuiScreen {
 		GL11.glPopAttrib();
 		GL11.glPopMatrix();
 
-		if(this.currentPicking != null) {
+		if(picker != null) {
 			String key = Keyboard.getKeyName(Keyboard.KEY_LCONTROL);
 			drawString(fontRenderer, I18n.format("betterHud.text.unsnap", key), SPACER, this.height - fontRenderer.FONT_HEIGHT - SPACER, Colors.WHITE);
 
@@ -265,7 +260,7 @@ public class GuiElementSettings extends GuiScreen {
 	}
 
 	/** Add to {@code mouseY} to get the effective {@code mouseY} taking into account scroll */
-	private int getMouseOffset() {
+	@Deprecated private int getMouseOffset() {
 		return scrollbar.getScroll() - viewport.top();
 	}
 

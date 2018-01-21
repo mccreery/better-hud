@@ -19,7 +19,7 @@ import tk.nukeduck.hud.util.ISaveLoad.ISlider;
 import tk.nukeduck.hud.util.Util;
 
 public class SettingSlider extends SettingAlignable<Double> implements ISlider {
-	private GuiOptionSliderA slider;
+	protected GuiOptionSliderA slider;
 	private final double min, max, interval;
 
 	private int displayPlaces;
@@ -88,6 +88,7 @@ public class SettingSlider extends SettingAlignable<Double> implements ISlider {
 	@Override
 	public void set(Double value) {
 		this.value = ISlider.normalize(this, value);
+		if(slider != null) slider.updateDisplayString();
 	}
 
 	@Override

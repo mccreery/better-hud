@@ -12,6 +12,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
+import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.gui.GuiElementSettings;
 import tk.nukeduck.hud.gui.GuiUpDownButton;
 import tk.nukeduck.hud.util.Point;
@@ -21,8 +22,8 @@ public class SettingAbsolutePosition extends Setting<Point> {
 	public GuiButton pick;
 	private GuiButton xUp, xDown, yUp, yDown;
 
-	private Point position = Point.ZERO;
-	private Point cancelPosition;
+	protected Point position = Point.ZERO;
+	protected Point cancelPosition = null;
 
 	public SettingAbsolutePosition(String name) {
 		super(name);
@@ -52,11 +53,15 @@ public class SettingAbsolutePosition extends Setting<Point> {
 		return y + 42 + SPACER;
 	}
 
-	public boolean isPicking = false;
-
 	public void updateText() {
-		xBox.setText(String.valueOf(position.x));
-		yBox.setText(String.valueOf(position.y));
+		if(xBox != null && yBox != null) {
+			xBox.setText(String.valueOf(position.x));
+			yBox.setText(String.valueOf(position.y));
+		}
+	}
+
+	public boolean isPicking() {
+		return cancelPosition != null;
 	}
 
 	@Override
@@ -75,14 +80,13 @@ public class SettingAbsolutePosition extends Setting<Point> {
 				yBox.setText(String.valueOf(--position.y));
 				break;
 			case 4:
-				if(isPicking = !isPicking) {
-					cancelPosition = new Point(position);
-				} else {
+				if(isPicking()) {
 					position = cancelPosition;
+					finishPicking();
+				} else {
+					cancelPosition = new Point(position);
+					button.displayString = I18n.format("betterHud.menu.picking");
 				}
-
-				gui.currentPicking = isPicking ? this : null;
-				button.displayString = I18n.format(isPicking ? "betterHud.menu.picking" : "betterHud.menu.pick");
 				updateText();
 				break;
 		}
@@ -112,9 +116,22 @@ public class SettingAbsolutePosition extends Setting<Point> {
 		}
 	}
 
+	/** Sets the picked value based on {@code mousePosition}
+	 * @param element The element being positioned */
+	public void pickMouse(Point mousePosition, Point resolution, HudElement element) {
+		set(mousePosition);
+	}
+
+	/** Forgets the original position and keeps the current picked position */
+	public void finishPicking() {
+		cancelPosition = null;
+		pick.displayString = I18n.format("betterHud.menu.pick");
+	}
+
 	@Override
 	public void set(Point value) {
 		position = value;
+		updateText();
 	}
 
 	@Override

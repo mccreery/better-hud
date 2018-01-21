@@ -38,11 +38,10 @@ public abstract class EquipmentDisplay extends HudElement {
 		durabilityMode.setIndex(0);
 
 		warnings.set(new Double[] {.45, .25, .1});
-		warnings.setActive(true);
 	}
 
 	protected boolean hasText() {
-		return showName.get() || showDurability.get() || warnings.isActive();
+		return showName.get() || showDurability.get();
 	}
 
 	protected String getText(ItemStack stack) {
