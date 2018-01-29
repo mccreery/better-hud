@@ -1,5 +1,6 @@
 package tk.nukeduck.hud.element;
 
+import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
 
 import net.minecraft.client.resources.I18n;
@@ -10,12 +11,10 @@ import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.LayoutManager;
-import tk.nukeduck.hud.util.Point;
 
 public class HealIndicator extends HudElement {
 	private final SettingPosition position = new SettingPosition("position", 0);
-	private final SettingChoose mode;
+	private final SettingChoose mode = new SettingChoose(2);
 
 	@Override
 	public void loadDefaults() {
@@ -29,18 +28,18 @@ public class HealIndicator extends HudElement {
 
 		settings.add(position);
 		this.settings.add(new Legend("misc"));
-		this.settings.add(mode = new SettingChoose("mode", new String[] {"1", "2"}));
+		this.settings.add(mode);
 	}
-	
+
 	@Override
-	public Bounds render(RenderGameOverlayEvent event, LayoutManager manager) {
+	public Bounds render(RenderGameOverlayEvent event) {
 			String healIndicator = I18n.format("betterHud.strings.healIndicator");
 			Bounds bounds = mode.getIndex() == 0 ? new Bounds(MC.fontRenderer.getStringWidth(healIndicator), MC.fontRenderer.FONT_HEIGHT) : new Bounds(9, 9);
 
 			if(position.isAbsolute()) {
-				position.applyTo(bounds, manager);
+				position.applyTo(bounds);
 			} else {
-				bounds.position = new Point(manager.getResolution().x / 2 - 90, manager.getResolution().y - 50);
+				bounds.position = MANAGER.getResolution().scale(.5f, 1).sub(90, 50);
 			}
 
 			if(mode.getIndex() == 0) {

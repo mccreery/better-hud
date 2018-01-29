@@ -4,10 +4,10 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.element.settings.SettingColor;
 import tk.nukeduck.hud.element.settings.SettingPosition;
+import tk.nukeduck.hud.element.settings.SettingPositionAligned;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.LayoutManager;
 import tk.nukeduck.hud.util.PaddedBounds;
 import tk.nukeduck.hud.util.Point;
 
@@ -28,7 +28,7 @@ public abstract class TextElement extends HudElement {
 	public TextElement(String name, int directions) {
 		super(name);
 
-		settings.add(position = new SettingPosition("position", directions));
+		settings.add(position = new SettingPositionAligned("position", directions, Direction.ALL));
 		settings.add(color);
 	}
 
@@ -51,17 +51,17 @@ public abstract class TextElement extends HudElement {
 		return Bounds.EMPTY;
 	}
 
-	protected PaddedBounds moveBounds(LayoutManager manager, PaddedBounds bounds) {
-		return position.applyTo(bounds, manager);
+	protected PaddedBounds moveBounds(PaddedBounds bounds) {
+		return position.applyTo(bounds);
 	}
 
 	@Override
-	public Bounds render(RenderGameOverlayEvent event, LayoutManager manager) {
+	public Bounds render(RenderGameOverlayEvent event) {
 		String[] text = getText();
 		if(text.length == 0) return null;
 
 		Point size = getLinesSize(text);
-		PaddedBounds bounds = moveBounds(manager, new PaddedBounds(new Bounds(size), getPadding(), getMargin()));
+		PaddedBounds bounds = moveBounds(new PaddedBounds(new Bounds(size), getPadding(), getMargin()));
 
 		drawBorder(event, bounds);
 		drawLines(text, bounds.contentBounds(), position.getAnchor(), color.get());

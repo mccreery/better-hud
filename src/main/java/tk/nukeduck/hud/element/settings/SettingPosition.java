@@ -1,19 +1,19 @@
 package tk.nukeduck.hud.element.settings;
 
+import static tk.nukeduck.hud.BetterHud.MANAGER;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import org.lwjgl.input.Keyboard;
 
 import tk.nukeduck.hud.element.HudElement;
-import tk.nukeduck.hud.gui.GuiElementSettings;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.LayoutManager;
 import tk.nukeduck.hud.util.Point;
 
 public class SettingPosition extends SettingStub<Object> {
-	private final SettingChoose mode = new SettingChoose("position", "setPos", "absolute");
+	private final SettingChoose mode = new SettingChoose("position", "preset", "custom");
 
 	private final SettingDirection direction;
 
@@ -25,7 +25,7 @@ public class SettingPosition extends SettingStub<Object> {
 
 		@Override
 		public void pickMouse(Point mousePosition, Point resolution, HudElement element) {
-			Bounds sourceBounds = GuiElementSettings.boundsCache.get(element);
+			Bounds sourceBounds = element.getLastBounds();
 			Direction.CENTER.align(sourceBounds, mousePosition);
 
 			if(!Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
@@ -33,9 +33,9 @@ public class SettingPosition extends SettingStub<Object> {
 
 				for(HudElement target : HudElement.ELEMENTS) {
 					if(target == element || !target.isEnabled()) continue;
-					Bounds bounds = GuiElementSettings.boundsCache.get(target);
+					Bounds bounds = target.getLastBounds();
 
-					if(bounds != null && !bounds.isEmpty()) {
+					if(!Bounds.isEmpty(bounds)) {
 						targetBounds.add(bounds);
 					}
 				}
@@ -92,20 +92,21 @@ public class SettingPosition extends SettingStub<Object> {
 		return (isAbsolute() ? anchor : direction).get();
 	}
 
+	public Direction getAlignment() {
+		return getAnchor();
+	}
+
 	public boolean isAbsolute() {
 		return mode.getIndex() == 1;
 	}
 
 	/** Moves the given bounds to the correct location and returns them */
-	public <T extends Bounds> T applyTo(T bounds, LayoutManager manager) {
+	public <T extends Bounds> T applyTo(T bounds) {
 		if(isAbsolute()) {
-			Direction anchor = this.anchor.get();
-			Point origin = anchor.getAnchor(manager.getResolution());
-
-			bounds.position = origin.add(offset.get());
-			return anchor.align(bounds);
+			bounds.position(anchor.get(), offset.get(), getAlignment());
+			return bounds;
 		} else {
-			return manager.position(direction.get(), bounds);
+			return MANAGER.position(direction.get(), bounds);
 		}
 	}
 

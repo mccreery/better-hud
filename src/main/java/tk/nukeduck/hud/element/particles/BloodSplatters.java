@@ -11,11 +11,10 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.element.settings.SettingChoose;
 import tk.nukeduck.hud.util.Bounds;
-import tk.nukeduck.hud.util.LayoutManager;
 import tk.nukeduck.hud.util.Tickable;
 
 public class BloodSplatters extends HudElement implements Tickable {
-	private final SettingChoose density = new SettingChoose("density", "blood.sparse", "blood.normal", "blood.dense", "blood.denser");
+	private final SettingChoose density = new SettingChoose("density", "sparse", "normal", "dense", "denser");
 
 	public BloodSplatters() {
 		super("bloodSplatters");
@@ -49,8 +48,10 @@ public class BloodSplatters extends HudElement implements Tickable {
 			int height = scaledresolution.getScaledHeight();
 
 			if (isEnabled()) {
-				// TODO hmm
-				int max = (int) (2 * ((currentHealth - MC.player.getHealth()) - 1) * (density.getIndex() + 1) * 2);
+				int spawnMultiplier = (density.getIndex() + 1) * 4;
+				int healthDelta = (int)(currentHealth - MC.player.getHealth());
+
+				int max = spawnMultiplier * healthDelta;
 
 				for (int i = 0; i < max; i++) {
 					particleManager.particles.add(ParticleBlood.random(width, height));
@@ -65,7 +66,7 @@ public class BloodSplatters extends HudElement implements Tickable {
 
 	// TODO make a particles superclass
 	@Override
-	public Bounds render(RenderGameOverlayEvent event, LayoutManager manager) {
+	public Bounds render(RenderGameOverlayEvent event) {
 		GL11.glEnable(GL11.GL_BLEND);
 		FMLClientHandler.instance().getClient().renderEngine.bindTexture(HUD_ICONS);
 		particleManager.renderAll();

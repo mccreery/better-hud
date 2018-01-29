@@ -11,10 +11,10 @@ import tk.nukeduck.hud.util.Direction;
 
 public abstract class Clock extends TextElement {
 	private final SettingBoolean twentyFour = new SettingBoolean("24hr");
-	private final SettingBoolean showSeconds = new SettingBoolean("showSeconds");
+	private final SettingBoolean showSeconds = new SettingBoolean("showSeconds").setUnlocalizedValue(SettingBoolean.VISIBLE);
 
 	private final SettingChoose dateType = new SettingChoose("dateType", "dmy", "mdy", "ymd");
-	private final SettingBoolean fullYear = new SettingBoolean("fullYear");
+	private final SettingBoolean fullYear = new SettingBoolean("fullYear").setUnlocalizedValue(SettingBoolean.VISIBLE);
 
 	public Clock(String name) {
 		super(name, Direction.CORNERS);

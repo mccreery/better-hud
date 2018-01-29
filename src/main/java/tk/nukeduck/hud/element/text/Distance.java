@@ -1,5 +1,6 @@
 package tk.nukeduck.hud.element.text;
 
+import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
 import static tk.nukeduck.hud.BetterHud.SPACER;
 
@@ -8,7 +9,6 @@ import net.minecraft.util.math.RayTraceResult;
 import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingChoose;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.LayoutManager;
 import tk.nukeduck.hud.util.PaddedBounds;
 import tk.nukeduck.hud.util.Point;
 
@@ -24,16 +24,16 @@ public class Distance extends TextElement {
 	public Distance() {
 		super("distance", Direction.CORNERS | Direction.CENTER.flag());
 		this.settings.add(new Legend("misc"));
-		this.settings.add(mode = new SettingChoose("type", new String[] {"1", "2"}));
+		this.settings.add(mode = new SettingChoose(2));
 	}
 
 	@Override
-	protected PaddedBounds moveBounds(LayoutManager manager, PaddedBounds bounds) {
+	protected PaddedBounds moveBounds(PaddedBounds bounds) {
 		if(position.getDirection() == Direction.CENTER) {
-			bounds.position = new Point(manager.getResolution().x / 2 - SPACER, manager.getResolution().y / 2 - SPACER);
+			bounds.position = new Point(MANAGER.getResolution().x / 2 - SPACER, MANAGER.getResolution().y / 2 - SPACER);
 			return Direction.SOUTH_EAST.align(bounds);
 		} else {
-			return super.moveBounds(manager, bounds);
+			return super.moveBounds(bounds);
 		}
 	}
 
@@ -43,7 +43,7 @@ public class Distance extends TextElement {
 
 		if(trace != null) {
 			long distance = Math.round(Math.sqrt(trace.getBlockPos().distanceSqToCenter(MC.player.posX, MC.player.posY, MC.player.posZ)));
-			return new String[] {I18n.format("betterHud.strings.distance." + mode.getIndex(), String.valueOf(distance))};
+			return new String[] {I18n.format("betterHud.hud.distance." + mode.getIndex(), String.valueOf(distance))};
 		} else {
 			return new String[0];
 		}

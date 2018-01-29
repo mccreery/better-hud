@@ -2,7 +2,6 @@ package tk.nukeduck.hud.element.text;
 
 import static tk.nukeduck.hud.BetterHud.MC;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.EnumSkyBlock;
 import tk.nukeduck.hud.util.Direction;
@@ -27,7 +26,7 @@ public class LightLevel extends TextElement {
 			light = MC.world.getLightFor(EnumSkyBlock.SKY, position) - MC.world.calculateSkylightSubtracted(1.0F);
 			light = Math.max(light, MC.world.getLightFor(EnumSkyBlock.BLOCK, position));
 		}
-		return new String[] {I18n.format("betterHud.strings.lightLevel", String.valueOf(light > 15 ? 15 : light))};
+		return new String[] {getLocalizedName() + ": " + light};
 	}
 
 	@Override

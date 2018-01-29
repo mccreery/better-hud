@@ -15,7 +15,6 @@ import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.LayoutManager;
 
 public class SignReader extends HudElement {
 	private static final ResourceLocation SIGN_TEXTURE = new ResourceLocation("textures/entity/sign.png");
@@ -34,7 +33,7 @@ public class SignReader extends HudElement {
 	}
 
 	@Override
-	public Bounds render(RenderGameOverlayEvent event, LayoutManager manager) {
+	public Bounds render(RenderGameOverlayEvent event) {
 		RayTraceResult trace = MC.getRenderViewEntity().rayTrace(200, 1.0F);
 
 		IBlockState state = MC.world.getBlockState(trace.getBlockPos());
@@ -48,7 +47,7 @@ public class SignReader extends HudElement {
 		}
 		TileEntitySign sign = (TileEntitySign)tileEntity;
 
-		Bounds bounds = position.applyTo(new Bounds(96, 48), manager);
+		Bounds bounds = position.applyTo(new Bounds(96, 48));
 
 		MC.getTextureManager().bindTexture(SIGN_TEXTURE);
 		Gui.drawScaledCustomSizeModalRect(bounds.x(), bounds.y(), 2, 2, 24, 12, 96, 48, 64, 32);

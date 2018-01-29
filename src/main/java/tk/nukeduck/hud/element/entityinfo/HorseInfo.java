@@ -11,13 +11,13 @@ import java.util.ArrayList;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.passive.EntityHorse;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.events.EntityInfoRenderer;
 import tk.nukeduck.hud.util.Colors;
+import tk.nukeduck.hud.util.Util;
 
 public class HorseInfo extends EntityInfo {
 	private final SettingBoolean jump = new SettingBoolean("jump");
@@ -43,11 +43,13 @@ public class HorseInfo extends EntityInfo {
 		if(settings.get() && entity instanceof EntityHorse) {
 			glPushMatrix(); {
 				ArrayList<String> infoParts = new ArrayList<String>();
-				
-				EntityHorse horse = (EntityHorse) entity;
 
-				if(jump.get())  infoParts.add(I18n.format("betterHud.strings.jump", Math.round(getJumpHeight(horse) * 1000) / 1000.0));
-				if(speed.get()) infoParts.add(I18n.format("betterHud.strings.speed", Math.round(getSpeed(horse) * 1000) / 1000.0));
+				if(jump.get()) {
+					infoParts.add(jump.getLocalizedName() + ": " + Util.formatToPlaces(getJumpHeight((EntityHorse)entity), 3));
+				}
+				if(speed.get()) {
+					infoParts.add(speed.getLocalizedName() + ": " + Util.formatToPlaces(getSpeed((EntityHorse)entity), 3));
+				}
 
 				int horseWidth = getLinesSize(infoParts).x + 10;
 				int horseHeight = infoParts.size() * (MC.fontRenderer.FONT_HEIGHT + 2) + 8;
@@ -72,7 +74,7 @@ public class HorseInfo extends EntityInfo {
 			glPopMatrix();
 		}
 	}
-	
+
 	// TODO might want to check these matey
 	public double getJumpHeight(EntityHorse horse) {
 		double yVelocity = horse.getHorseJumpStrength();

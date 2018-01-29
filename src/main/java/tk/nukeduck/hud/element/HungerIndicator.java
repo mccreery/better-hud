@@ -1,5 +1,6 @@
 package tk.nukeduck.hud.element;
 
+import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
 
 import org.lwjgl.opengl.GL11;
@@ -10,7 +11,6 @@ import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.element.settings.SettingSlider;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.LayoutManager;
 
 public class HungerIndicator extends HudElement {
 	private final SettingPosition position = new SettingPosition("position", Direction.CENTER, Direction.SOUTH);
@@ -32,7 +32,7 @@ public class HungerIndicator extends HudElement {
 	}
 
 	@Override
-	public Bounds render(RenderGameOverlayEvent event, LayoutManager manager) {
+	public Bounds render(RenderGameOverlayEvent event) {
 		double foodLevel = MC.player.getFoodStats().getFoodLevel();
 		double foodMax = this.maxLimit.get() * 2.0;
 
@@ -40,12 +40,12 @@ public class HungerIndicator extends HudElement {
 			Bounds bounds;
 			if(position.getDirection() != null) {
 				if(position.getDirection() == Direction.CENTER) {
-					bounds = new Bounds(manager.getResolution().x / 2 + 5, manager.getResolution().y / 2 + 5, 16, 16);
+					bounds = new Bounds(MANAGER.getResolution().x / 2 + 5, MANAGER.getResolution().y / 2 + 5, 16, 16);
 				} else {
-					bounds = new Bounds(manager.getResolution().x / 2 + 75, manager.getResolution().y - 56, 16, 16);
+					bounds = new Bounds(MANAGER.getResolution().x / 2 + 75, MANAGER.getResolution().y - 56, 16, 16);
 				}
 			} else {
-				bounds = position.applyTo(new Bounds(16, 16), manager);
+				bounds = position.applyTo(new Bounds(16, 16));
 			}
 
 			double speed = (foodMax - foodLevel) / foodMax * 50.0 + 2.0;

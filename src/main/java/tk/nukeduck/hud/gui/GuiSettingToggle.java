@@ -5,19 +5,17 @@ import tk.nukeduck.hud.element.settings.Setting;
 public class GuiSettingToggle extends GuiToggleButton {
 	private final Setting<Boolean> setting;
 
-	public GuiSettingToggle(int buttonId, int x, int y, int widthIn, int heightIn, String buttonText, boolean updateText, Setting<Boolean> setting) {
-		super(buttonId, x, y, widthIn, heightIn, buttonText, false);
+	public GuiSettingToggle(int buttonId, int x, int y, int widthIn, int heightIn, String buttonText, Setting<Boolean> setting) {
+		super(buttonId, x, y, widthIn, heightIn, buttonText);
 		this.setting = setting;
 
-		this.updateText = updateText;
 		updateText();
 	}
 
-	public GuiSettingToggle(int buttonId, int x, int y, String buttonText, boolean updateText, Setting<Boolean> setting) {
-		super(buttonId, x, y, buttonText, false);
+	public GuiSettingToggle(int buttonId, int x, int y, String buttonText, Setting<Boolean> setting) {
+		super(buttonId, x, y, buttonText);
 		this.setting = setting;
 
-		this.updateText = updateText;
 		updateText();
 	}
 

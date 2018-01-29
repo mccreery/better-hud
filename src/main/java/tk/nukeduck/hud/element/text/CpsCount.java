@@ -11,9 +11,10 @@ import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingSlider;
 import tk.nukeduck.hud.util.Tickable;
+import tk.nukeduck.hud.util.Util;
 
 public class CpsCount extends TextElement implements Tickable {
-	private final SettingSlider timeoutMax = new SettingSlider("timeout", 1, 10, 1).setUnlocalizedValue("betterHud.strings.seconds");
+	private final SettingSlider timeoutMax = new SettingSlider("timeout", 1, 10, 1).setUnlocalizedValue("betterHud.hud.seconds");
 	private final SettingBoolean showBurst = new SettingBoolean("showBurst");
 	private final SettingBoolean remember = new SettingBoolean("remember");
 
@@ -103,12 +104,12 @@ public class CpsCount extends TextElement implements Tickable {
 	@Override
 	protected String[] getText() {
 		float cps = timeout < timeoutMax.get() || remember.get() ? this.cps : 0;
-		String cpsDisplay = I18n.format("betterHud.strings.cps", String.format("%.1f", cps));
+		String cpsDisplay = getLocalizedName() + ": " + Util.formatToPlaces(cps, 1);
 
 		if(showBurst.get() && cps > 0) {
 			return new String[] {
 				cpsDisplay,
-				I18n.format("betterHud.strings.burst", burstTotal, burstLength)
+				I18n.format("betterHud.hud.burst", burstTotal, burstLength)
 			};
 		} else {
 			return new String[] {cpsDisplay};

@@ -10,7 +10,6 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.util.Bounds;
-import tk.nukeduck.hud.util.LayoutManager;
 
 public class HidePlayers extends HudElement {
 	private final SettingBoolean includeMe;
@@ -39,6 +38,6 @@ public class HidePlayers extends HudElement {
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
-	@Override public Bounds render(RenderGameOverlayEvent event, LayoutManager manager) {return null;}
+	@Override public Bounds render(RenderGameOverlayEvent event) {return null;}
 	@Override public boolean shouldRender() {return false;}
 }

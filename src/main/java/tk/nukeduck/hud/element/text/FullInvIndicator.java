@@ -25,7 +25,7 @@ public class FullInvIndicator extends TextElement {
 
 	@Override
 	protected String[] getText() {
-		return new String[] {I18n.format("betterHud.strings.fullInv")};
+		return new String[] {I18n.format("betterHud.hud.fullInv")};
 	}
 
 	@Override

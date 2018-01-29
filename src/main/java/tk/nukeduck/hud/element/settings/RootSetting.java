@@ -28,6 +28,11 @@ public class RootSetting extends SettingStub<Boolean> {
 		enabled.set(value);
 	}
 
+	@Override
+	public boolean isEmpty() {
+		return children.size() <= 1;
+	}
+
 	public void toggle() {
 		set(!get());
 	}

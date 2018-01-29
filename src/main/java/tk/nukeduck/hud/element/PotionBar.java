@@ -13,7 +13,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import tk.nukeduck.hud.element.settings.Legend;
@@ -22,7 +21,6 @@ import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.LayoutManager;
 
 public class PotionBar extends HudElement {
 	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS | Direction.CENTER.flag());
@@ -61,32 +59,28 @@ public class PotionBar extends HudElement {
 	}
 
 	@Override
-	public Bounds render(RenderGameOverlayEvent event, LayoutManager manager) {
+	public Bounds render(RenderGameOverlayEvent event) {
 		int amount = MC.player.getActivePotionEffects().size();
-		Bounds bounds = position.applyTo(new Bounds(amount * 16, 16), manager);
+		Bounds bounds = position.applyTo(new Bounds(amount * 16, 16));
 
 		glEnable(GL_BLEND);
 		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		Bounds icon = new Bounds(bounds.x(), bounds.y(), 18, 18);
 
-		// TODO combine into one loop
-
-		// Render potion icons
-		FMLClientHandler.instance().getClient().renderEngine.bindTexture(INVENTORY);
-
-		int x = bounds.x();
 		for(PotionEffect effect : MC.player.getActivePotionEffects()) {
+			MC.getTextureManager().bindTexture(INVENTORY);
+
 			int iconIndex = effect.getPotion().getStatusIconIndex();
+
+			int u = 18 * (iconIndex & 7);
+			int v = 198 + 18 * (iconIndex >> 3);
+
 			glColor4f(1.0F, 1.0F, 1.0F, ((float) effect.getDuration() / 600F));
 
-			MC.ingameGUI.drawTexturedModalRect(x, bounds.y(), 18 * (iconIndex % 8), 198 + ((iconIndex >> 3) * 18), 18, 18); // >> 3 = / 8
-			x += 16;
-		}
+			MC.ingameGUI.drawTexturedModalRect(icon.x(), icon.y(), u, v, icon.width(), icon.height());
+			MC.ingameGUI.drawString(MC.fontRenderer, I18n.format("potion.potency." + effect.getAmplifier()), icon.x(), icon.y(), Colors.WHITE);
 
-		// Render potion potencies
-		x = bounds.x();
-		for(PotionEffect effect : MC.player.getActivePotionEffects()) {
-			MC.ingameGUI.drawString(MC.fontRenderer, I18n.format("potion.potency." + effect.getAmplifier()).replace("potion.potency.", ""), x, bounds.y(), Colors.WHITE);
-			x += 16;
+			icon.x(icon.x() + 16);
 		}
 		return bounds;
 	}

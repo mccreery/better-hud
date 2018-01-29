@@ -17,8 +17,12 @@ import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 
 public class SettingBoolean extends SettingAlignable<Boolean> {
+	public static final String VISIBLE = "betterHud.value.visible";
+
 	protected GuiToggleButton toggler;
 	protected boolean value = false;
+
+	private String unlocalizedValue = "options";
 
 	public SettingBoolean(String name) {
 		this(name, Direction.CENTER);
@@ -26,6 +30,15 @@ public class SettingBoolean extends SettingAlignable<Boolean> {
 
 	public SettingBoolean(String name, Direction alignment) {
 		super(name, alignment);
+	}
+
+	public SettingBoolean setUnlocalizedValue(String value) {
+		this.unlocalizedValue = value;
+
+		if(toggler != null) {
+			toggler.setUnlocalizedValue(value);
+		}
+		return this;
 	}
 
 	@Override
@@ -43,7 +56,7 @@ public class SettingBoolean extends SettingAlignable<Boolean> {
 
 	@Override
 	public int getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Bounds bounds) {
-		toggler = new GuiSettingToggle(0, bounds.x(), bounds.y(), bounds.width(), bounds.height(), getUnlocalizedName(), true, this);
+		toggler = new GuiSettingToggle(0, bounds.x(), bounds.y(), bounds.width(), bounds.height(), getUnlocalizedName(), this).setUnlocalizedValue(unlocalizedValue);
 		parts.add(toggler);
 		callbacks.put(toggler, this);
 		return bounds.bottom() + SPACER;

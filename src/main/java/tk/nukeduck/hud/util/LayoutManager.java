@@ -9,12 +9,13 @@ public class LayoutManager {
 	public static final int SPACER = 5;
 
 	private final Map<Direction, Integer> corners = new HashMap<Direction, Integer>();
-	private final Point resolution;
-	private final Bounds bounds;
+	private Point resolution;
+	private Bounds bounds;
 
-	public LayoutManager(ScaledResolution resolution) {
+	public void reset(ScaledResolution resolution) {
 		this.resolution = new Point(resolution);
 		bounds = new Bounds(this.resolution).inset(SPACER);
+		corners.clear();
 	}
 
 	public Point getResolution() {

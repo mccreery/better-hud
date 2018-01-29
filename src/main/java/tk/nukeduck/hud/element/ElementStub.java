@@ -2,7 +2,6 @@ package tk.nukeduck.hud.element;
 
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import tk.nukeduck.hud.util.Bounds;
-import tk.nukeduck.hud.util.LayoutManager;
 
 public abstract class ElementStub extends HudElement {
 	protected ElementStub(String name) {
@@ -10,7 +9,7 @@ public abstract class ElementStub extends HudElement {
 	}
 
 	@Override
-	public Bounds render(RenderGameOverlayEvent event, LayoutManager manager) {
+	public Bounds render(RenderGameOverlayEvent event) {
 		return null;
 	}
 

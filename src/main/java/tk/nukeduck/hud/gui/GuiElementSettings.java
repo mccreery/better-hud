@@ -7,7 +7,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -50,7 +49,7 @@ public class GuiElementSettings extends GuiScreen {
 
 	private int clickTimer = 0;
 	private GuiButton clickedUpDown = null;
-	public static final Map<HudElement, Bounds> boundsCache = new HashMap<HudElement, Bounds>();
+	//public static final Map<HudElement, Bounds> boundsCache = new HashMap<HudElement, Bounds>();
 
 	public GuiElementSettings(HudElement element, GuiScreen prev) {
 		this.element = element;
@@ -270,14 +269,13 @@ public class GuiElementSettings extends GuiScreen {
 
 		for(HudElement element : HudElement.ELEMENTS) {
 			if(element.isEnabled()) {
-				Bounds bounds = GuiElementSettings.boundsCache.get(element);
+				Bounds bounds = element.getLastBounds();
 
 				if(bounds != null && bounds != Bounds.EMPTY) {
 					HudElement.drawRect(bounds, Colors.setAlpha(Colors.RED, element == this.element ? 255 : 63));
 				}
 			}
 		}
-
 		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
 	}
 

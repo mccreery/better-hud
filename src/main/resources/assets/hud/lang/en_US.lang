@@ -1,6 +1,16 @@
 tile.null.name=Unknown Block
 tile.endPortal.name=End Portal
 
+key.betterHud.open=Open Better HUD Menu
+key.betterHud.disable=Toggle Better HUD
+
+# Generic Formatters
+betterHud.hud.meters=%sm
+betterHud.hud.seconds=%ss
+betterHud.hud.times=x%s
+betterHud.hud.millis=%sms
+
+# Menu buttons
 betterHud.menu.hudSettings=HUD Settings
 betterHud.menu.settings=%s Settings
 betterHud.menu.enableAll=Enable All
@@ -13,8 +23,17 @@ betterHud.menu.picking=Picking (Cancel)
 betterHud.menu.pick=Pick
 betterHud.menu.options=Options
 
-betterHud.unsupported=This element is not supported by the server
+# Menu text
+betterHud.menu.arrowCountNotice=Position will only have effect if the mode is set to Side.
+betterHud.menu.fhNotice=Food and health values will always be beside the hotbar. These settings are for saturation.
+betterHud.menu.expInfoNotice=These settings are only for total experience count.
+betterHud.menu.invNames=For inventories, such as chests, which have been named via anvil.
+betterHud.menu.unsnap=Hold %s to disable snapping
+betterHud.menu.potionsUseless=This is basically useless in 1.9, but I'm leaving it in. You can disable the default one, if you like.
+betterHud.menu.unsupported=This element is not supported by the server
 
+# Element names
+betterHud.element.global=Better HUD
 betterHud.element.bloodSplatters=Blood Splatters
 betterHud.element.arrowCount=Arrow Count
 betterHud.element.blockViewer=Block Viewer
@@ -44,147 +63,145 @@ betterHud.element.fullInvIndicator=Full Inv. Indicator
 betterHud.element.waterDrops=Water Drops
 betterHud.element.itemPickup=Item Pickup
 betterHud.element.systemClock=System Clock
-betterHud.element.global=Global
 
-key.betterHud.open=Open Better HUD Menu
-key.betterHud.disable=Toggle Better HUD
+# Setting Groups
+betterHud.group.position=Position
+betterHud.group.misc=Misc.
+betterHud.group.damageWarning=Damage Warnings
 
-betterHud.setting.setPos=Set Positions
-betterHud.setting.absolute=Absolute Position
-betterHud.setting.direction=Direction
+# Generic Settings
+betterHud.value.visible.on=Visible
+betterHud.value.visible.off=Hidden
 
-betterHud.setting.northWest=Northwest
-betterHud.setting.north=North
-betterHud.setting.northEast=Northeast
-betterHud.setting.west=West
-betterHud.setting.center=Center
-betterHud.setting.east=East
-betterHud.setting.southWest=Southwest
-betterHud.setting.south=South
-betterHud.setting.southEast=Southeast
-
-betterHud.setting.numberOnly=Number Only
 betterHud.setting.mode=Mode
-betterHud.setting.24hr=24 Hour
+betterHud.value.mode=Type %s
+
 betterHud.setting.position=Position
+betterHud.value.preset=Preset
+betterHud.value.custom=Custom
+
+betterHud.setting.direction=Direction
+betterHud.setting.anchor=Anchor
 betterHud.setting.alignment=Alignment
-betterHud.setting.showName=Show Name
-betterHud.setting.showDurability=Show Durability
-betterHud.setting.visible=Visible
-betterHud.setting.hidden=Hidden
-betterHud.setting.smallBars=Small Bars
-betterHud.setting.largeBars=Large Bars
-betterHud.setting.durabilityMode=Durability Mode
-betterHud.setting.values=Values
-betterHud.setting.percent=Percentage
-betterHud.setting.side=Side
-betterHud.setting.overlay=Overlay
-betterHud.setting.blood.sparse=Sparse
-betterHud.setting.blood.normal=Normal
-betterHud.setting.blood.dense=Dense
-betterHud.setting.blood.denser=Denser
-betterHud.setting.scaledDirections=Scaled Directions
-betterHud.setting.showNotches=Show Notches
-betterHud.setting.dmy=D/M/Y (UK)
-betterHud.setting.mdy=M/D/Y (US)
-betterHud.setting.ymd=Y/M/D
-betterHud.setting.showSeconds=Show Seconds
+betterHud.value.northWest=Northwest
+betterHud.value.north=North
+betterHud.value.northEast=Northeast
+betterHud.value.west=West
+betterHud.value.center=Center
+betterHud.value.east=East
+betterHud.value.southWest=Southwest
+betterHud.value.south=South
+betterHud.value.southEast=Southeast
+
+betterHud.value.percent=%s%%
+betterHud.setting.precision=Precision
+betterHud.value.places=%s places
+betterHud.setting.distance=Distance
+betterHud.setting.red=§cRed
+betterHud.setting.green=§aGreen
+betterHud.setting.blue=§1Blue
+
+# Particles
+betterHud.setting.density=Density
+betterHud.value.sparse=Sparse
+betterHud.value.normal=Normal
+betterHud.value.dense=Dense
+betterHud.value.denser=Denser
+
+# Equipment
+betterHud.setting.showItem=Item
+betterHud.setting.showName=Name
+betterHud.setting.showDurability=Durability
+betterHud.setting.offHand=Off-Hand
+
+betterHud.setting.bars=Bars
+betterHud.value.smallBars=Small
+betterHud.value.largeBars=Large
+
+betterHud.setting.durabilityFormat=Format
+betterHud.value.points=Damage Points
+betterHud.value.percentage=Percentage
+
+betterHud.setting.warning.0=§c!§r
+betterHud.setting.warning.1=§c! !§r
+betterHud.setting.warning.2=§c! ! !§r
+betterHud.value.disabled=Disabled
+
+# Block Viewer
+betterHud.setting.invNames=Inventory Names
+betterHud.setting.showIds=IDs
+betterHud.setting.chunks=%s Chunks
+
+# Compass
+betterHud.setting.letterScale=Perspective
+betterHud.setting.showNotches=Notches
+betterHud.setting.scale=Scale
+
+# Clocks
+betterHud.setting.24hr=24 Hour
+betterHud.setting.showSeconds=Seconds
+betterHud.setting.showDays=Days
 betterHud.setting.fullYear=Full Year
-betterHud.setting.includeMe=Include Me
+
+betterHud.setting.dateType=Format
+betterHud.value.dmy=D/M/Y (UK)
+betterHud.value.mdy=M/D/Y (US)
+betterHud.value.ymd=Y/M/D
+betterHud.hud.day=Day %s
+
+# Connection
 betterHud.setting.playerCount=Player Count
 betterHud.setting.showIp=IP Address
 betterHud.setting.latency=Latency (Ping)
-betterHud.setting.spaced=Spaced
-betterHud.setting.1=Type 1
-betterHud.setting.2=Type 2
-betterHud.setting.saturation=Saturation
-betterHud.setting.showItem=Show Item
+
+betterHud.hud.player=1 player
+betterHud.hud.players=%s players
+betterHud.hud.localServer=Local Server
+betterHud.hud.ip=IP: %s
+betterHud.hud.ping=Ping: %s
+
+# Coordinates
+betterHud.hud.x=X: %s
+betterHud.hud.y=Y: %s
+betterHud.hud.z=Z: %s
+betterHud.hud.xyz=X: %s, Y: %s, Z: %s
+
+# Hunger Indicator
+betterHud.setting.maxLimit=Start Flashing At
+betterHud.setting.speed=Flash Speed
+betterHud.value.slowest=Slowest
+betterHud.value.fastest=Fastest
+
+# Mob Info
 betterHud.setting.jump=Jump Height
 betterHud.setting.speed=Speed
 betterHud.setting.players=Players
 betterHud.setting.mobs=Mobs
-betterHud.setting.sign.text=Text
-betterHud.setting.sign.visual=Visual
-betterHud.setting.total=Total
-betterHud.setting.showBlock=Show Block
-betterHud.setting.invNames=Inventory Names
-betterHud.setting.distance=Distance
-betterHud.setting.damaged.1=§c!§r
-betterHud.setting.damaged.2=§c! !§r
-betterHud.setting.damaged.3=§c! ! !§r
-betterHud.setting.showIds=Show IDs
-betterHud.setting.scale=Scale
-betterHud.setting.colorRed=§cRed
-betterHud.setting.colorGreen=§aGreen
-betterHud.setting.colorBlue=§1Blue
-betterHud.setting.maxLimit=Start Flashing At
-betterHud.setting.decimals=Decimal Places
-betterHud.setting.offHand=Show Off-Hand
-betterHud.setting.disableDefault=Disable Default
-betterHud.setting.anchor=Anchor
-betterHud.setting.offhand=Check Offhand
-betterHud.setting.fadeSpeed=Fade Speed
-betterHud.setting.slowest=Slowest
-betterHud.setting.fastest=Fastest
-betterHud.setting.enabled=Enable Better HUD
-betterHud.setting.damageWarning=Damage Warnings
-betterHud.setting.warning.0=§c!§r
-betterHud.setting.warning.1=§c! !§r
-betterHud.setting.warning.2=§c! ! !§r
-betterHud.setting.disabled=Disabled
-betterHud.setting.showBars=Show Bars
+
 betterHud.setting.compress=Compress Above
-betterHud.setting.never=Never
+betterHud.value.never=Never
+
+# CPS Counter
 betterHud.setting.timeout=Timeout
 betterHud.setting.showBurst=Show Burst
 betterHud.setting.remember=Remember Burst
-betterHud.setting.showDays=Show Days
 
-betterHud.group.position=Position
-betterHud.group.misc=Misc.
-betterHud.group.damageWarning=Damage Warnings
-betterHud.text.arrowCountNotice=Position will only have effect if the mode is set to Side.
-betterHud.text.fhNotice=Food and health values will always be beside the hotbar. These settings are for saturation.
-betterHud.text.expInfoNotice=These settings are only for total experience count.
-betterHud.text.invNames=For inventories, such as chests, which have been named via anvil.
-betterHud.text.unsnap=Hold %s to disable snapping
-betterHud.text.potionsUseless=This is basically useless in 1.9, but I'm leaving it in. You can disable the default one, if you like.
-
-betterHud.strings.saturation=Saturation: %s
-betterHud.strings.fps=%s FPS
-betterHud.strings.jump=Jump: %s
-betterHud.strings.speed=Speed: %s
-betterHud.strings.healIndicator=+
-betterHud.strings.lightLevel=Light Level: %s
-betterHud.strings.player=1 player
-betterHud.strings.players=%s players
-betterHud.strings.localServer=Local Server
-betterHud.strings.ip=IP: %s
-betterHud.strings.ping=%dms
-betterHud.strings.x=X: %s
-betterHud.strings.y=Y: %s
-betterHud.strings.z=Z: %s
-betterHud.strings.xyz=X: %s, Y: %s, Z: %s
-betterHud.strings.separator=,
-betterHud.strings.fullInv=Inventory Full
-betterHud.strings.biome=Biome: %s
-betterHud.strings.outOf=%s/%s
-betterHud.strings.splitter= -
-betterHud.strings.time=%s:%s
-betterHud.strings.time.am=%s:%s AM
-betterHud.strings.time.pm=%s:%s PM
-betterHud.strings.day=Day %s
-betterHud.strings.distance.1=§a[§r%s§a]
-betterHud.strings.distance.2=%sm away
-betterHud.strings.distanceShort=%sm
-betterHud.strings.chunk=1 chunk
-betterHud.strings.chunks=%s chunks
-betterHud.strings.percent=%s%%
-betterHud.strings.total=EXP: %s
-betterHud.strings.unknownBlock=Unknown Block
-betterHud.strings.brackets=(%s)
-betterHud.strings.holding=Holding:
-betterHud.strings.times=x%s
-betterHud.strings.cps=CPS: %s
-betterHud.strings.burst=Burst: %s clicks over %ss
-betterHud.strings.seconds=%ss
+# Others
+betterHud.setting.includeMe=Include Me
+betterHud.setting.overlay=Overlay
+betterHud.setting.spaced=Spaced
+betterHud.setting.numberOnly=Number Only
+betterHud.setting.saturation=Saturation
+betterHud.setting.text=Text
+betterHud.setting.visual=Visual
+betterHud.setting.showTotalExp=Total EXP
+betterHud.setting.disableDefault=Disable Default
+betterHud.hud.distance.0=§a[§r%s§a]
+betterHud.hud.distance.1=%sm away
+betterHud.hud.day=Day %s
+betterHud.hud.healIndicator=+
+betterHud.hud.fullInv=Inventory Full
+betterHud.hud.biome=Biome: %s
+betterHud.hud.unknownBlock=Unknown Block
+betterHud.hud.holding=Holding:
+betterHud.hud.burst=Burst: %s clicks over %ss

@@ -1,5 +1,6 @@
 package tk.nukeduck.hud.element;
 
+import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
 import static tk.nukeduck.hud.BetterHud.SPACER;
 
@@ -37,14 +38,13 @@ import tk.nukeduck.hud.network.InventoryNameQuery;
 import tk.nukeduck.hud.network.Version;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.LayoutManager;
 import tk.nukeduck.hud.util.PaddedBounds;
 import tk.nukeduck.hud.util.Util;
 
 public class BlockViewer extends TextElement {
-	private final SettingBoolean showBlock = new SettingBoolean("showBlock");
-	private final SettingSlider distance = new SettingSlider("distance", 1, 16, 1).setUnlocalizedValue("betterHud.strings.chunks");
-	private final SettingBoolean showIds = new SettingBoolean("showIds");
+	private final SettingBoolean showBlock = new SettingBoolean("showItem").setUnlocalizedValue(SettingBoolean.VISIBLE);
+	private final SettingSlider distance = new SettingSlider("distance", 1, 16, 1).setUnlocalizedValue("betterHud.setting.chunks");
+	private final SettingBoolean showIds = new SettingBoolean("showIds").setUnlocalizedValue(SettingBoolean.VISIBLE);
 
 	private final SettingBoolean invNames = new SettingBoolean("invNames") {
 		@Override
@@ -74,6 +74,8 @@ public class BlockViewer extends TextElement {
 
 	@Override
 	public void loadDefaults() {
+		super.loadDefaults();
+
 		settings.set(true);
 		position.set(Direction.NORTH_WEST);
 		showBlock.set(true);
@@ -130,12 +132,12 @@ public class BlockViewer extends TextElement {
 	}
 
 	@Override
-	protected PaddedBounds moveBounds(LayoutManager manager, PaddedBounds bounds) {
+	protected PaddedBounds moveBounds(PaddedBounds bounds) {
 		if(position.getDirection() == Direction.CENTER) {
-			bounds.position = manager.getResolution().scale(.5f, .5f).sub(0, SPACER);
+			bounds.position = MANAGER.getResolution().scale(.5f, .5f).sub(0, SPACER);
 			return Direction.SOUTH.align(bounds);
 		} else {
-			return super.moveBounds(manager, bounds);
+			return super.moveBounds(bounds);
 		}
 	}
 

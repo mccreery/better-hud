@@ -11,7 +11,6 @@ import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.text.TextElement;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
-import tk.nukeduck.hud.util.LayoutManager;
 
 public class ExperienceInfo extends TextElement {
 	private final SettingBoolean total;
@@ -36,7 +35,7 @@ public class ExperienceInfo extends TextElement {
 	}
 
 	@Override
-	public Bounds render(RenderGameOverlayEvent event, LayoutManager manager) {
+	public Bounds render(RenderGameOverlayEvent event) {
 		int has = Math.round(MC.player.experience * getExperienceWithinLevel(MC.player.experienceLevel));
 		int needed = getExperienceWithinLevel(MC.player.experienceLevel) - has;
 
@@ -44,7 +43,7 @@ public class ExperienceInfo extends TextElement {
 		drawBorderedString(MC.fontRenderer, String.valueOf(needed), event.getResolution().getScaledWidth() / 2 + 90 - MC.fontRenderer.getStringWidth(String.valueOf(needed)), event.getResolution().getScaledHeight() - 30, Colors.WHITE);
 
 		if(total.get()) {
-			return super.render(event, manager);
+			return super.render(event);
 		} else {
 			return null;
 		}

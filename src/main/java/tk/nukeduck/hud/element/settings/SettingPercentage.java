@@ -15,7 +15,7 @@ public class SettingPercentage extends SettingSlider {
 
 	public SettingPercentage(String name, double min, double max, double accuracy) {
 		super(name, min, max, accuracy);
-		setUnlocalizedValue("betterHud.strings.percent");
+		setUnlocalizedValue("betterHud.value.percent");
 	}
 
 	@Override

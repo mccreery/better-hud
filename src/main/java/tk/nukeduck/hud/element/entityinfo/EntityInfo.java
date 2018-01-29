@@ -7,7 +7,7 @@ import tk.nukeduck.hud.element.ElementStub;
 import tk.nukeduck.hud.element.settings.SettingSlider;
 
 public abstract class EntityInfo extends ElementStub {
-	protected final SettingSlider distance = new SettingSlider("distance", 5, 200).setUnlocalizedValue("betterHud.strings.distanceShort");
+	protected final SettingSlider distance = new SettingSlider("distance", 5, 200).setUnlocalizedValue("betterHud.hud.meters");
 
 	protected EntityInfo(String name) {
 		super(name);

@@ -27,7 +27,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.events.EntityInfoRenderer;
 import tk.nukeduck.hud.events.PickupNotifier;
-import tk.nukeduck.hud.gui.GuiElementSettings;
 import tk.nukeduck.hud.gui.GuiHudMenu;
 import tk.nukeduck.hud.network.InventoryNameQuery;
 import tk.nukeduck.hud.network.MessageNotifyClientHandler;
@@ -42,7 +41,6 @@ import tk.nukeduck.hud.util.Tickable.Ticker;
 public class BetterHud { // TODO thoroughly test GL, replace drawRect coords
 	public static final String MODID = "hud";
 	public static final Version VERSION = new Version(1, 4);
-	//public static final Logger LOGGER = LogManager.getLogger(MODID);
 
 	@SideOnly(Side.CLIENT) public static Minecraft MC;
 	@SideOnly(Side.CLIENT) public static GuiHudMenu MENU;
@@ -53,6 +51,7 @@ public class BetterHud { // TODO thoroughly test GL, replace drawRect coords
 	private static final KeyBinding TOGGLE_KEY = new KeyBinding("key.betterHud.disable", Keyboard.KEY_F3, "key.categories.misc");
 
 	public static HudConfig CONFIG;
+	public static final LayoutManager MANAGER = new LayoutManager();
 
 	public static final int SPACER = 5;
 	public static final Random RANDOM = new Random();
@@ -118,15 +117,10 @@ public class BetterHud { // TODO thoroughly test GL, replace drawRect coords
 		if(!isEnabled() || event.getType() != RenderGameOverlayEvent.ElementType.EXPERIENCE) return;
 
 		MC.mcProfiler.startSection("betterHud");
-
-		LayoutManager layoutManager = new LayoutManager(event.getResolution());
+		MANAGER.reset(event.getResolution());
 
 		for(HudElement element : HudElement.ELEMENTS) {
-			if(element.isEnabled() && element.shouldRender()) {
-				MC.mcProfiler.startSection(element.name);
-				GuiElementSettings.boundsCache.put(element, element.render(event, layoutManager));
-				MC.mcProfiler.endSection();
-			}
+			element.tryRender(event);
 		}
 		MC.mcProfiler.endSection();
 

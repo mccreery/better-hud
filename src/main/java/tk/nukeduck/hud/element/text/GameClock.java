@@ -15,14 +15,13 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.LayoutManager;
 import tk.nukeduck.hud.util.PaddedBounds;
 import tk.nukeduck.hud.util.Util;
 
 public class GameClock extends Clock {
 	private static final ItemStack BED = new ItemStack(Items.BED);
 
-	private final SettingBoolean showDays = new SettingBoolean("showDays");
+	private final SettingBoolean showDays = new SettingBoolean("showDays").setUnlocalizedValue(SettingBoolean.VISIBLE);
 
 	public GameClock() {
 		super("gameClock");
@@ -43,8 +42,8 @@ public class GameClock extends Clock {
 	}
 
 	@Override
-	public Bounds render(RenderGameOverlayEvent event, LayoutManager manager) {
-		PaddedBounds bounds = (PaddedBounds)super.render(event, manager);
+	public Bounds render(RenderGameOverlayEvent event) {
+		PaddedBounds bounds = (PaddedBounds)super.render(event);
 
 		if(!MC.world.isDaytime()) {
 			Direction bedAnchor = position.getAnchor().in(Direction.RIGHT) ? Direction.WEST : Direction.EAST;
@@ -86,7 +85,7 @@ public class GameClock extends Clock {
 				public StringBuffer format(Date date, StringBuffer buffer, FieldPosition fieldPosition) {
 					long day = date.getTime() / 84600000 + 1;
 
-					buffer.append(I18n.format("betterHud.strings.day", day));
+					buffer.append(I18n.format("betterHud.hud.day", day));
 					return buffer;
 				}
 

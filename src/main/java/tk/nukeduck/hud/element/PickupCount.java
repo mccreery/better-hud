@@ -1,5 +1,6 @@
 package tk.nukeduck.hud.element;
 
+import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
 
 import java.util.Collections;
@@ -17,6 +18,7 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import tk.nukeduck.hud.element.settings.SettingPercentage;
 import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.element.settings.SettingSlider;
 import tk.nukeduck.hud.network.PickupHandler;
@@ -24,25 +26,24 @@ import tk.nukeduck.hud.network.Version;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.LayoutManager;
 import tk.nukeduck.hud.util.PaddedBounds;
 import tk.nukeduck.hud.util.Tickable.Ticker;
 
 public class PickupCount extends HudElement {
 	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS | Direction.CENTER.flag());
 
-	public final SettingSlider fadeSpeed = new SettingSlider("fadeSpeed", 0, 1) {
+	public final SettingSlider fadeSpeed = new SettingPercentage("speed", 0, 1) {
 		@Override
 		public String getDisplayValue(double value) {
 			if(value == 0) {
-				return I18n.format("betterHud.setting.slowest");
+				return I18n.format("betterHud.value.slowest");
 			} else if(value == 1) {
-				return I18n.format("betterHud.setting.fastest");
+				return I18n.format("betterHud.value.fastest");
 			} else {
-				return super.getDisplayValue(value / 100);
+				return super.getDisplayValue(value);
 			}
 		}
-	}.setUnlocalizedValue("betterHud.strings.percent");
+	};
 
 	public final PickupHandler handler = new PickupHandler();
 
@@ -67,14 +68,15 @@ public class PickupCount extends HudElement {
 	}
 
 	@Override
-	public Bounds render(RenderGameOverlayEvent event, LayoutManager manager) {
+	public Bounds render(RenderGameOverlayEvent event) {
 		Map<ItemStack, Float> sortedMap = sortByComparator(handler.pickedUp);
 
-		Bounds bounds;
+		Bounds bounds = new Bounds(64, 16);
+
 		if(position.getDirection() == Direction.CENTER) {
-			bounds = new Bounds(manager.getResolution().x / 2 + 5, manager.getResolution().y / 2 + 5, 64, 16);
+			bounds.position = MANAGER.getResolution().scale(.5f, .5f).add(5, 5);
 		} else {
-			bounds = position.applyTo(new Bounds(64, 16), manager);
+			position.applyTo(bounds);
 		}
 
 		//int i = 0;

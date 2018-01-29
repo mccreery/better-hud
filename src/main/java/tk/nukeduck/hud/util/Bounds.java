@@ -1,5 +1,6 @@
 package tk.nukeduck.hud.util;
 
+import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.SPACER;
 
 public class Bounds {
@@ -36,6 +37,10 @@ public class Bounds {
 
 	public boolean isEmpty() {
 		return this == EMPTY || size.equals(Point.ZERO);
+	}
+
+	public static boolean isEmpty(Bounds bounds) {
+		return bounds == null || bounds.isEmpty();
 	}
 
 	public int x() {return position.x;}
@@ -189,6 +194,10 @@ public class Bounds {
 
 	private static int difference(int x, int y) {
 		return Math.abs(x - y);
+	}
+
+	public void position(Direction anchor, Point offset, Direction alignment) {
+		alignment.align(this, anchor.getAnchor(MANAGER.getResolution()).add(offset));
 	}
 
 	/** Aligns this bounds to the closest edge in {@code bounds}

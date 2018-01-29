@@ -15,7 +15,7 @@ public abstract class EquipmentDisplay extends HudElement {
 	private final SettingBoolean showDurability = new SettingBoolean("showDurability", Direction.WEST);
 	private final SettingWarnings warnings = new SettingWarnings("damageWarning");
 
-	private final SettingChoose durabilityMode = new SettingChoose("durabilityMode", Direction.EAST, "values", "percent") {
+	private final SettingChoose durabilityMode = new SettingChoose("durabilityMode", Direction.EAST, "points", "percentage") {
 		@Override
 		public boolean enabled() {
 			return showDurability.get();
@@ -59,13 +59,13 @@ public abstract class EquipmentDisplay extends HudElement {
 
 		if(this.showDurability.get()) {
 			if(durabilityMode.getIndex() == 1) {
-				parts.add(I18n.format("betterHud.strings.percent", Util.formatToPlaces(value * 100, 1)));
+				parts.add(Util.formatToPlaces(value * 100, 1) + "%");
 			} else {
-				parts.add(I18n.format("betterHud.strings.outOf", durability, maxDurability));
+				parts.add(durability + "/" + maxDurability);
 			}
 		}
 
-		String text = Util.join(I18n.format("betterHud.strings.splitter"), parts);
+		String text = Util.join(" - ", parts);
 		int count = warnings.getWarning(value);
 
 		// TODO maybe use a single string builder for efficiency

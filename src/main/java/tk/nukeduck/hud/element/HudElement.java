@@ -35,7 +35,6 @@ import tk.nukeduck.hud.network.Version;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.LayoutManager;
 import tk.nukeduck.hud.util.Point;
 
 public abstract class HudElement { // Can't extend Gui due to @SideOnly
@@ -117,7 +116,25 @@ public abstract class HudElement { // Can't extend Gui due to @SideOnly
 
 	/** Renders this element to the screen
 	 * @return The bounds containing the element drawn */
-	public abstract Bounds render(RenderGameOverlayEvent event, LayoutManager manager);
+	public abstract Bounds render(RenderGameOverlayEvent event);
+
+	/** Calls {@link #render(RenderGameOverlayEvent)} if the element
+	 * should be rendered and caches the bounds so they are available from {@link #getLastBounds()} */
+	public void tryRender(RenderGameOverlayEvent event) {
+		if(isEnabled() && shouldRender()) {
+			MC.mcProfiler.startSection(name);
+			lastBounds = render(event);
+			MC.mcProfiler.endSection();
+		} else {
+			lastBounds = null;
+		}
+	}
+
+	private Bounds lastBounds;
+
+	public Bounds getLastBounds() {
+		return lastBounds;
+	}
 
 	/** Calls {@link #init(FMLInitializationEvent)} on all elements
 	 * @see #init(FMLInitializationEvent)

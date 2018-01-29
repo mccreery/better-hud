@@ -1,5 +1,6 @@
 package tk.nukeduck.hud.element;
 
+import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
 
 import net.minecraft.item.ItemStack;
@@ -10,13 +11,12 @@ import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.LayoutManager;
 import tk.nukeduck.hud.util.Point;
 import tk.nukeduck.hud.util.Util;
 
 public class HandBar extends EquipmentDisplay {
 	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS | Direction.SOUTH.flag());
-	private final SettingBoolean showItem = new SettingBoolean("showItem");
+	private final SettingBoolean showItem = new SettingBoolean("showItem").setUnlocalizedValue(SettingBoolean.VISIBLE);
 	private final SettingBoolean offHand = new SettingBoolean("offHand");
 	private final SettingBoolean showBars = new SettingBoolean("showBars");
 
@@ -72,14 +72,14 @@ public class HandBar extends EquipmentDisplay {
 	}
 
 	@Override
-	public Bounds render(RenderGameOverlayEvent event, LayoutManager manager) {
+	public Bounds render(RenderGameOverlayEvent event) {
 		Bounds bounds = new Bounds(180, offHand.get() ? 41 : 18);
 
 		if(position.getDirection() == Direction.SOUTH) {
-			bounds.position = new Point(manager.getResolution().x / 2, manager.getResolution().y - 64);
+			bounds.position = new Point(MANAGER.getResolution().x / 2, MANAGER.getResolution().y - 64);
 			Direction.SOUTH.align(bounds);
 		} else {
-			position.applyTo(bounds, manager);
+			position.applyTo(bounds);
 		}
 
 		ItemStack stack = MC.player.getHeldItemMainhand();

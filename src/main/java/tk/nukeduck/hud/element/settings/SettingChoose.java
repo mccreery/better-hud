@@ -22,7 +22,18 @@ import tk.nukeduck.hud.util.Point;
 public class SettingChoose extends SettingAlignable<String> {
 	protected GuiButton last, next, backing;
 	private final String[] modes;
+
 	private int index = 0;
+	private int length;
+
+	public SettingChoose(int length) {
+		this("mode", length);
+	}
+
+	public SettingChoose(String name, int length) {
+		this(name);
+		this.length = length;
+	}
 
 	public SettingChoose(String name, String... modes) {
 		this(name, Direction.CENTER, modes);
@@ -30,11 +41,13 @@ public class SettingChoose extends SettingAlignable<String> {
 
 	public SettingChoose(String name, Direction alignment, String... modes) {
 		super(name, alignment);
+
 		this.modes = modes;
+		this.length = modes.length;
 	}
 
 	public void setIndex(int index) {
-		if(index >= 0 && index < modes.length) {
+		if(index >= 0 && index < length) {
 			this.index = index;
 		}
 	}
@@ -45,7 +58,7 @@ public class SettingChoose extends SettingAlignable<String> {
 
 	public int last() {
 		if(index == 0) {
-			index = modes.length;
+			index = length;
 		}
 		return --index;
 	}
@@ -53,7 +66,7 @@ public class SettingChoose extends SettingAlignable<String> {
 	public int next() {
 		++index;
 
-		if(index == modes.length) {
+		if(index == length) {
 			index = 0;
 		}
 		return index;
@@ -61,12 +74,15 @@ public class SettingChoose extends SettingAlignable<String> {
 
 	@Override
 	public void set(String value) {
-		setIndex(ArrayUtils.indexOf(modes, value));
+		int index = ArrayUtils.indexOf(modes, value);
+		if(index == -1) index = Integer.parseUnsignedInt(value);
+
+		if(index < length) setIndex(index);
 	}
 
 	@Override
 	public String get() {
-		return modes[index];
+		return index < modes.length ? modes[index] : String.valueOf(index);
 	}
 
 	@Override public String save() {return get();}
@@ -87,7 +103,7 @@ public class SettingChoose extends SettingAlignable<String> {
 
 	@Override
 	public void draw() {
-		String value = I18n.format("betterHud.setting." + get());
+		String value = index < modes.length ? I18n.format("betterHud.value." + modes[index]) : I18n.format("betterHud.value.mode", index);
 		Point center = new Point(backing.x + backing.width / 2, backing.y + backing.height / 2);
 
 		HudElement.drawString(value, center, Direction.CENTER, Colors.WHITE);

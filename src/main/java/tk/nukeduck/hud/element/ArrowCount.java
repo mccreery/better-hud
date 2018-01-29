@@ -15,7 +15,6 @@ import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.LayoutManager;
 import tk.nukeduck.hud.util.Util;
 
 public class ArrowCount extends HudElement {
@@ -23,7 +22,7 @@ public class ArrowCount extends HudElement {
 
 	private final SettingBoolean overlay = new SettingBoolean("overlay");
 
-	private final SettingPosition position = new SettingPosition("position", Direction.WEST, Direction.EAST) {
+	private final SettingPosition position = new SettingPosition("position", Direction.SOUTH_WEST, Direction.SOUTH_EAST) {
 		@Override
 		public boolean enabled() {
 			return !overlay.get();
@@ -83,14 +82,14 @@ public class ArrowCount extends HudElement {
 	}
 
 	@Override
-	public Bounds render(RenderGameOverlayEvent event, LayoutManager manager) {
+	public Bounds render(RenderGameOverlayEvent event) {
 		String arrowsDisplay = String.valueOf(arrowCount(MC.player));
 
 		if(!overlay.get()) { // TODO test
-			Bounds bounds = position.applyTo(new Bounds(16, 16), manager);
+			Bounds bounds = position.applyTo(new Bounds(16, 16));
 
 			Util.renderItem(ARROW, bounds.position);
-			drawHotbarText(arrowsDisplay, bounds.x(), bounds.y());
+			drawHotbarText(arrowsDisplay, bounds.right(), bounds.bottom());
 
 			return bounds;
 		} else { // Look through hotbar
@@ -108,6 +107,17 @@ public class ArrowCount extends HudElement {
 				drawHotbarText(arrowsDisplay, center - 100, y);
 			}
 			return null;
+		}
+	}
+
+	@Override
+	public Bounds getLastBounds() {
+		Bounds bounds = super.getLastBounds();
+
+		if(bounds != null || overlay.get()) {
+			return bounds;
+		} else {
+			return position.applyTo(new Bounds(16, 16));
 		}
 	}
 

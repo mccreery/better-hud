@@ -10,21 +10,32 @@ import tk.nukeduck.hud.util.ISaveLoad.IGetSet;
 
 @SideOnly(Side.CLIENT)
 public class GuiToggleButton extends GuiButton implements IGetSet<Boolean> {
-	public boolean updateText = false;
-	public String unlocalized;
+	public String unlocalizedName;
+	private String unlocalizedValue = "options";
 
-	public GuiToggleButton(int buttonId, int x, int y, String buttonText, boolean updateText) {
+	/** @see #updateText() */
+	private boolean staticText = false;
+
+	public GuiToggleButton(int buttonId, int x, int y, String buttonText) {
 		super(buttonId, x, y, buttonText);
-		this.displayString = unlocalized = buttonText;
-		this.updateText = updateText;
 		updateText();
 	}
 
-	public GuiToggleButton(int buttonId, int x, int y, int widthIn, int heightIn, String buttonText, boolean updateText) {
+	public GuiToggleButton(int buttonId, int x, int y, int widthIn, int heightIn, String buttonText) {
 		super(buttonId, x, y, widthIn, heightIn, buttonText);
-		unlocalized = buttonText;
-		this.updateText = updateText;
+		unlocalizedName = buttonText;
 		updateText();
+	}
+
+	public GuiToggleButton setStaticText() {
+		staticText = true;
+		return this;
+	}
+
+	public GuiToggleButton setUnlocalizedValue(String value) {
+		this.unlocalizedValue = value;
+		updateText();
+		return this;
 	}
 
 	private boolean value = false;
@@ -44,8 +55,19 @@ public class GuiToggleButton extends GuiButton implements IGetSet<Boolean> {
 		set(!get());
 	}
 
-	protected void updateText() {
-		if(updateText) displayString = I18n.format(unlocalized) + ": " + (get() ? ChatFormatting.GREEN : ChatFormatting.RED) + I18n.format(get() ? "options.on" : "options.off");
+	public void updateText() {
+		if(!staticText) {
+			String valueDisplay;
+	
+			if(get()) {
+				valueDisplay = ChatFormatting.GREEN + I18n.format(unlocalizedValue + ".on");
+			} else {
+				valueDisplay = ChatFormatting.RED + I18n.format(unlocalizedValue + ".off");
+			}
+			displayString = I18n.format(unlocalizedName) + ": " + valueDisplay;
+		} else {
+			displayString = unlocalizedName;
+		}
 	}
 
 	@Override

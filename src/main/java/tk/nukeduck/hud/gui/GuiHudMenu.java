@@ -52,13 +52,13 @@ public class GuiHudMenu extends GuiScreen {
 		for(int i = 0; i < HudElement.ELEMENTS.length; i++) {
 			HudElement element = HudElement.ELEMENTS[i];
 
-			GuiButton enabled = new GuiSettingToggle(id++, hW - 126, top + ((i % perPage) * 24), 150, 20, element.getUnlocalizedName(), true, element.settings.enabled);
+			GuiButton enabled = new GuiSettingToggle(id++, hW - 126, top + ((i % perPage) * 24), 150, 20, element.getUnlocalizedName(), element.settings.enabled);
 			enabled.enabled = element.isSupportedByServer();
 
 			this.buttonList.add(enabled);
 
 			GuiButton options = new GuiButton(id++, hW + 26, top + ((i % perPage) * 24), 100, 20, I18n.format("betterHud.menu.options"));
-			options.enabled = !element.settings.isEmpty();
+			options.enabled = enabled.enabled && !element.settings.isEmpty();
 			this.buttonList.add(options);
 		}
 		updatePage();
@@ -136,15 +136,10 @@ public class GuiHudMenu extends GuiScreen {
 		}
 	}
 
-	// TODO eww
 	private void setAll(boolean enabled) {
-		for(int i = 0; i < buttonList.size(); i++) {
-			if(buttonList.get(i) instanceof GuiButton) {
-				GuiButton b = (GuiButton) buttonList.get(i);
-
-				if(b.id >= buttonOffset && (b.id - buttonOffset) % 2 == 0) {
-					((GuiToggleButton)b).set(enabled);
-				}
+		for(GuiButton button : buttonList) {
+			if(button instanceof GuiSettingToggle) {
+				((GuiSettingToggle) button).set(enabled);
 			}
 		}
 	}

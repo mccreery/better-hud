@@ -50,7 +50,7 @@ public class Point implements ISaveLoad {
 
 	@Override
 	public boolean equals(Object obj) {
-		return obj instanceof Point && x == ((Point)obj).x && y == ((Point)obj).y;
+		return obj instanceof Point && obj == null ? equals(ZERO) : x == ((Point)obj).x && y == ((Point)obj).y;
 	}
 
 	@Override

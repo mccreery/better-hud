@@ -9,6 +9,11 @@ public class GlobalSettings extends ElementStub {
 		settings.add(new SettingBoolean("enabled") {
 			@Override public void set(Boolean bool) {settings.set(bool);}
 			@Override public Boolean get() {return isEnabled();}
+			
+			@Override
+			public String getUnlocalizedName() {
+				return GlobalSettings.this.getUnlocalizedName();
+			}
 		});
 	}
 

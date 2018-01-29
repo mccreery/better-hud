@@ -11,7 +11,6 @@ import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingSlider;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.LayoutManager;
 
 public class Coordinates extends TextElement {
 	private final SettingBoolean spaced;
@@ -31,23 +30,23 @@ public class Coordinates extends TextElement {
 
 		this.settings.add(new Legend("misc"));
 		this.settings.add(spaced = new SettingBoolean("spaced"));
-		this.settings.add(decimalPlaces = new SettingSlider("decimals", 0, 5, 1));
+		this.settings.add(decimalPlaces = new SettingSlider("precision", 0, 5, 1).setUnlocalizedValue("betterHud.value.places"));
 	}
 
 	@Override
-	public Bounds render(RenderGameOverlayEvent event, LayoutManager manager) {
+	public Bounds render(RenderGameOverlayEvent event) {
 		if(position.getAnchor() == Direction.NORTH && spaced.get()) {
 			String[] coordinates = getText();
 
 			Bounds bounds = new Bounds(100 + (MC.fontRenderer.getStringWidth(coordinates[0]) + MC.fontRenderer.getStringWidth(coordinates[2])) / 2, MC.fontRenderer.FONT_HEIGHT);
-			position.applyTo(bounds, manager);
+			position.applyTo(bounds);
 
 			for(int i = 0, x = bounds.x() + bounds.width() / 2 - 50; i < 3; i++, x += 50) {
 				MC.ingameGUI.drawCenteredString(MC.fontRenderer, coordinates[i], x, bounds.y(), color.get());
 			}
 			return bounds;
 		} else {
-			return super.render(event, manager);
+			return super.render(event);
 		}
 	}
 
@@ -61,12 +60,12 @@ public class Coordinates extends TextElement {
 		String z = format.format(MC.player.posZ);
 
 		if(spaced.get()) {
-			x = I18n.format("betterHud.strings.x", x);
-			y = I18n.format("betterHud.strings.y", y);
-			z = I18n.format("betterHud.strings.z", z);
+			x = I18n.format("betterHud.hud.x", x);
+			y = I18n.format("betterHud.hud.y", y);
+			z = I18n.format("betterHud.hud.z", z);
 			return new String[] {x, y, z};
 		} else {
-			return new String[] {I18n.format("betterHud.strings.xyz", x, y, z)};
+			return new String[] {I18n.format("betterHud.hud.xyz", x, y, z)};
 		}
 	}
 }

@@ -2,7 +2,6 @@ package tk.nukeduck.hud.element.text;
 
 import static tk.nukeduck.hud.BetterHud.MC;
 
-import net.minecraft.client.resources.I18n;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 
 public class FpsCount extends TextElement {
@@ -22,6 +21,10 @@ public class FpsCount extends TextElement {
 	@Override
 	protected String[] getText() {
 		String fps = MC.debug.substring(0, MC.debug.indexOf(' '));
-		return new String[] {numberOnly.get() ? fps : I18n.format("betterHud.strings.fps", fps)};
+
+		if(!numberOnly.get()) {
+			fps = getLocalizedName() + ": " + fps;
+		}
+		return new String[] {fps};
 	}
 }

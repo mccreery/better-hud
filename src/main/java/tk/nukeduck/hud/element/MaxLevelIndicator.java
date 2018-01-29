@@ -1,5 +1,6 @@
 package tk.nukeduck.hud.element;
 
+import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
 
 import net.minecraft.entity.passive.EntityHorse;
@@ -9,7 +10,6 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.LayoutManager;
 import tk.nukeduck.hud.util.Util;
 
 public class MaxLevelIndicator extends HudElement {
@@ -28,12 +28,12 @@ public class MaxLevelIndicator extends HudElement {
 	}
 
 	@Override
-	public Bounds render(RenderGameOverlayEvent event, LayoutManager manager) {
+	public Bounds render(RenderGameOverlayEvent event) {
 		Bounds bounds;
 		if(position.getDirection() == Direction.SOUTH) {
-			bounds = new Bounds(manager.getResolution().x / 2 - 8, manager.getResolution().y - 50, 16, 16);
+			bounds = new Bounds(MANAGER.getResolution().x / 2 - 8, MANAGER.getResolution().y - 50, 16, 16);
 		} else {
-			bounds = position.applyTo(new Bounds(16, 16), manager);
+			bounds = position.applyTo(new Bounds(16, 16));
 		}
 
 		Util.renderItem(BOOK, bounds.position);

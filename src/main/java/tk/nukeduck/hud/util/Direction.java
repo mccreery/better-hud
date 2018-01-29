@@ -45,6 +45,13 @@ public enum Direction {
 		scaleY = y * .5f;
 	}
 
+	public Direction moveX(int x) {
+		return GRID[gridPosition.y][x];
+	}
+	public Direction moveY(int y) {
+		return GRID[y][gridPosition.x];
+	}
+
 	public Direction mirrorX() {
 		return GRID[gridPosition.y][2 - gridPosition.x];
 	}
@@ -58,7 +65,7 @@ public enum Direction {
 	}
 
 	public String getUnlocalizedName() {
-		return name;
+		return "betterHud.value." + name;
 	}
 
 	public int flag() {

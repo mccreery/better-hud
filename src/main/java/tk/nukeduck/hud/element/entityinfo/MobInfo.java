@@ -30,7 +30,7 @@ public class MobInfo extends EntityInfo {
 		@Override
 		public String getDisplayValue(double value) {
 			if(get() == 0.0) {
-				return I18n.format("betterHud.setting.never");
+				return I18n.format("betterHud.value.never");
 			} else {
 				return super.getDisplayValue(value);
 			}

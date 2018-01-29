@@ -2,17 +2,16 @@ package tk.nukeduck.hud.element.text;
 
 import static tk.nukeduck.hud.BetterHud.MC;
 
-import net.minecraft.client.resources.I18n;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.LayoutManager;
+import tk.nukeduck.hud.util.Util;
 
 public class FoodHealthStats extends TextElement {
-	private final SettingBoolean saturation = new SettingBoolean("saturation");
+	private final SettingBoolean saturation = new SettingBoolean("saturation").setUnlocalizedValue(SettingBoolean.VISIBLE);
 
 	@Override
 	public void loadDefaults() {
@@ -30,7 +29,7 @@ public class FoodHealthStats extends TextElement {
 	}
 
 	@Override
-	public Bounds render(RenderGameOverlayEvent event, LayoutManager manager) {
+	public Bounds render(RenderGameOverlayEvent event) {
 		String health = String.valueOf(((int)MC.player.getHealth()) / 2.0f);
 		String food = String.valueOf(MC.player.getFoodStats().getFoodLevel() / 2.0F);
 
@@ -41,13 +40,17 @@ public class FoodHealthStats extends TextElement {
 		MC.ingameGUI.drawString(MC.fontRenderer, food, center + 95, textY, Colors.WHITE);
 		MC.ingameGUI.drawString(MC.fontRenderer, health, center - 95 - healthWidth, textY, Colors.WHITE);
 
-		return super.render(event, manager);
+		return super.render(event);
 	}
 
 	@Override
 	protected String[] getText() {
-		if(!this.saturation.get()) return new String[] {};
-		return new String[] {I18n.format("betterHud.strings.saturation",
-			Math.round(MC.player.getFoodStats().getSaturationLevel() * 10) / 10.0f)};
+		if(saturation.get()) {
+			return new String[] {
+				saturation.getLocalizedName() + ": " + Util.formatToPlaces(MC.player.getFoodStats().getSaturationLevel(), 1)
+			};
+		} else {
+			return new String[0];
+		}
 	}
 }

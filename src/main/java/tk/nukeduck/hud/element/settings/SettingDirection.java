@@ -49,23 +49,23 @@ public class SettingDirection extends Setting<Direction> {
 		List<GuiToggleButton> radios = new ArrayList<GuiToggleButton>(9);
 
 		if((options & Direction.TOP) != 0) {
-			radios.add(topLeft = new GuiToggleButton(Direction.NORTH_WEST.ordinal(), width / 2 - 100, y, 20, 20, "", false));
-			radios.add(topCenter = new GuiToggleButton(Direction.NORTH.ordinal(), width / 2 - 78, y, 20, 20, "", false));
-			radios.add(topRight = new GuiToggleButton(Direction.NORTH_EAST.ordinal(), width / 2 - 56, y, 20, 20, "", false));
+			radios.add(topLeft = new GuiToggleButton(Direction.NORTH_WEST.ordinal(), width / 2 - 100, y, 20, 20, "").setStaticText());
+			radios.add(topCenter = new GuiToggleButton(Direction.NORTH.ordinal(), width / 2 - 78, y, 20, 20, "").setStaticText());
+			radios.add(topRight = new GuiToggleButton(Direction.NORTH_EAST.ordinal(), width / 2 - 56, y, 20, 20, "").setStaticText());
 			y += 22;
 		}
 
 		if((options & Direction.HORIZONTAL) != 0 || (options & (Direction.TOP | Direction.BOTTOM)) != 0) {
-			radios.add(middleLeft = new GuiToggleButton(Direction.WEST.ordinal(), width / 2 - 100, y, 20, 20, "", false));
-			radios.add(middleCenter = new GuiToggleButton(Direction.CENTER.ordinal(), width / 2 - 78, y, 20, 20, "", false));
-			radios.add(middleRight = new GuiToggleButton(Direction.EAST.ordinal(), width / 2 - 56, y, 20, 20, "", false));
+			radios.add(middleLeft = new GuiToggleButton(Direction.WEST.ordinal(), width / 2 - 100, y, 20, 20, "").setStaticText());
+			radios.add(middleCenter = new GuiToggleButton(Direction.CENTER.ordinal(), width / 2 - 78, y, 20, 20, "").setStaticText());
+			radios.add(middleRight = new GuiToggleButton(Direction.EAST.ordinal(), width / 2 - 56, y, 20, 20, "").setStaticText());
 			y += 22;
 		}
 
 		if((options & Direction.BOTTOM) != 0) {
-			radios.add(bottomLeft = new GuiToggleButton(Direction.SOUTH_WEST.ordinal(), width / 2 - 100, y, 20, 20, "", false));
-			radios.add(bottomCenter = new GuiToggleButton(Direction.SOUTH.ordinal(), width / 2 - 78, y, 20, 20, "", false));
-			radios.add(bottomRight = new GuiToggleButton(Direction.SOUTH_EAST.ordinal(), width / 2 - 56, y, 20, 20, "", false));
+			radios.add(bottomLeft = new GuiToggleButton(Direction.SOUTH_WEST.ordinal(), width / 2 - 100, y, 20, 20, "").setStaticText());
+			radios.add(bottomCenter = new GuiToggleButton(Direction.SOUTH.ordinal(), width / 2 - 78, y, 20, 20, "").setStaticText());
+			radios.add(bottomRight = new GuiToggleButton(Direction.SOUTH_EAST.ordinal(), width / 2 - 56, y, 20, 20, "").setStaticText());
 			y += 22;
 		}
 
@@ -99,7 +99,7 @@ public class SettingDirection extends Setting<Direction> {
 
 	@Override
 	public void draw() {
-		final String text = getLocalizedName() + ": " + I18n.format("betterHud.setting." + value.getUnlocalizedName());
+		final String text = getLocalizedName() + ": " + I18n.format(value.getUnlocalizedName());
 		final int x = radios[2].x + radios[2].width + 5;
 		final int y = radios[2].y + (radios.length / 3 * 22 - 2 - MC.fontRenderer.FONT_HEIGHT) / 2;
 

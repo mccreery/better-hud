@@ -27,7 +27,7 @@ public class SettingWarnings extends SettingStub<Double[]> {
 					if(next == null || next.get() < get()) {
 						return super.getDisplayValue(value);
 					} else {
-						return I18n.format("betterHud.setting.disabled");
+						return I18n.format("betterHud.value.disabled");
 					}
 				}
 

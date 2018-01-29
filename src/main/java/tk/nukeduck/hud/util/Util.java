@@ -75,7 +75,7 @@ public class Util {
 	/** Renders an item using the correct lighting */
 	public static void renderItem(ItemStack stack, int x, int y) {
 		RenderHelper.enableGUIStandardItemLighting();
-		MC.getRenderItem().renderItemAndEffectIntoGUI(stack, x + 5, y + 2);
+		MC.getRenderItem().renderItemAndEffectIntoGUI(stack, x, y);
 		RenderHelper.disableStandardItemLighting();
 	}
 

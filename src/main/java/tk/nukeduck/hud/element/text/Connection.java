@@ -18,7 +18,7 @@ import tk.nukeduck.hud.util.Pinger;
 import tk.nukeduck.hud.util.Tickable;
 
 public class Connection extends TextElement implements Tickable {
-	private final SettingBoolean playerCount = new SettingBoolean("playerCount");
+	private final SettingBoolean playerCount = new SettingBoolean("playerCount").setUnlocalizedValue(SettingBoolean.VISIBLE);
 	private final SettingBoolean showIp = new SettingBoolean("showIp");
 	private final SettingBoolean latency = new SettingBoolean("latency");
 
@@ -81,12 +81,12 @@ public class Connection extends TextElement implements Tickable {
 
 		if(playerCount.get()) {
 			int players = MC.getConnection().getPlayerInfoMap().size();
-			String conn = I18n.format(players != 1 ? "betterHud.strings.players" : "betterHud.strings.player", players);
+			String conn = I18n.format(players != 1 ? "betterHud.hud.players" : "betterHud.hud.player", players);
 			toRender.add(conn);
 		}
-		if(showIp.get()) toRender.add(I18n.format(ip.equals("localServer") ? "betterHud.strings.localServer" : "betterHud.strings.ip", ip));
+		if(showIp.get()) toRender.add(I18n.format(ip.equals("localServer") ? "betterHud.hud.localServer" : "betterHud.hud.ip", ip));
 		if(latency.get() && MC.getCurrentServerData() != null) {
-			toRender.add(I18n.format("betterHud.strings.ping", MC.getCurrentServerData().pingToServer));
+			toRender.add(I18n.format("betterHud.hud.ping", MC.getCurrentServerData().pingToServer));
 		}
 
 		return toRender.toArray(new String[toRender.size()]);

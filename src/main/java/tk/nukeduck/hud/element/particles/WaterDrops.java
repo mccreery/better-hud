@@ -16,11 +16,10 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.element.settings.SettingChoose;
 import tk.nukeduck.hud.util.Bounds;
-import tk.nukeduck.hud.util.LayoutManager;
 import tk.nukeduck.hud.util.Tickable;
 
 public class WaterDrops extends HudElement implements Tickable {
-	private final SettingChoose density = new SettingChoose("density", new String[] {"blood.sparse", "blood.normal", "blood.dense", "blood.denser"});
+	private final SettingChoose density = new SettingChoose("density", "sparse", "normal", "dense", "denser");
 
 	public WaterDrops() {
 		super("waterDrops");
@@ -77,7 +76,7 @@ public class WaterDrops extends HudElement implements Tickable {
 		}
 	}
 
-	public Bounds render(RenderGameOverlayEvent event, LayoutManager manager) {
+	public Bounds render(RenderGameOverlayEvent event) {
 		GL11.glEnable(GL11.GL_BLEND);
 
 		FMLClientHandler.instance().getClient().renderEngine.bindTexture(PARTICLES);

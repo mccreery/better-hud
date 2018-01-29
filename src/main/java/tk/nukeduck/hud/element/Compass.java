@@ -20,13 +20,12 @@ import tk.nukeduck.hud.element.settings.SettingSlider;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.LayoutManager;
 
 public class Compass extends HudElement {
 	private final SettingPosition position = new SettingPosition("position");
-	private final SettingSlider directionScaling = new SettingPercentage("scaledDirections", 0.01).setUnlocalizedValue("betterHud.strings.percent");
-	private final SettingBoolean showNotches = new SettingBoolean("showNotches");
-	private final SettingSlider scale = new SettingPercentage("scale", 25, 200, 0.01).setUnlocalizedValue("betterHud.strings.percent");
+	private final SettingSlider directionScaling = new SettingPercentage("letterScale", 0.01);
+	private final SettingBoolean showNotches = new SettingBoolean("showNotches").setUnlocalizedValue(SettingBoolean.VISIBLE);
+	//private final SettingSlider scale = new SettingPercentage("scale", 25, 200, 0.01);
 
 	@Override
 	public void loadDefaults() {
@@ -34,7 +33,7 @@ public class Compass extends HudElement {
 		position.set(Direction.NORTH_WEST);
 		directionScaling.set(50.0);
 		showNotches.set(true);
-		scale.set(100.0);
+		//scale.set(100.0);
 	}
 
 	public static final double degreesPerRadian = 180.0 / Math.PI;
@@ -52,12 +51,12 @@ public class Compass extends HudElement {
 		settings.add(position);
 		settings.add(new Legend("misc"));
 		settings.add(directionScaling);
-		settings.add(scale);
+		//settings.add(scale);
 		settings.add(showNotches);
 	}
 
 	@Override
-	public Bounds render(RenderGameOverlayEvent event, LayoutManager manager) {
+	public Bounds render(RenderGameOverlayEvent event) {
 		double offsetQuarter = Math.toRadians(90);
 		double transform = Math.toRadians(MC.player.rotationYaw);
 
@@ -71,8 +70,8 @@ public class Compass extends HudElement {
 		int sX = (int) (Math.sin(transform) * 100);
 		int wX = (int) (Math.sin(transform - offsetQuarter) * 100);
 
-		Bounds bounds = position.applyTo(new Bounds(180, 12), manager);
-		
+		Bounds bounds = position.applyTo(new Bounds(180, 12));
+
 		// TODO scale
 		/*GL11.glPushMatrix();
 		GL11.glTranslatef(x + 90, y, 0);

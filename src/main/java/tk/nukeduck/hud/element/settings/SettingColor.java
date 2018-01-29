@@ -7,9 +7,9 @@ public class SettingColor extends SettingStub<Integer> {
 
 	public SettingColor(String name) {
 		super(name);
-		add(red = new SettingSlider(name + "Red", 0, 255, 1));
-		add(green = new SettingSlider(name + "Green", 0, 255, 1));
-		add(blue = new SettingSlider(name + "Blue", 0, 255, 1));
+		add(red = new SettingSlider("red", 0, 255, 1));
+		add(green = new SettingSlider("green", 0, 255, 1));
+		add(blue = new SettingSlider("blue", 0, 255, 1));
 	}
 
 	@Override
