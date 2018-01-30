@@ -12,14 +12,14 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.config.Property.Type;
 import tk.nukeduck.hud.gui.GuiElementSettings;
-import tk.nukeduck.hud.gui.GuiOptionSliderA;
+import tk.nukeduck.hud.gui.GuiSlider;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.ISaveLoad.ISlider;
 import tk.nukeduck.hud.util.FormatUtil;
 
 public class SettingSlider extends SettingAlignable<Double> implements ISlider {
-	protected GuiOptionSliderA slider;
+	protected GuiSlider slider;
 	private final double min, max, interval;
 
 	private int displayPlaces;
@@ -78,7 +78,7 @@ public class SettingSlider extends SettingAlignable<Double> implements ISlider {
 
 	@Override
 	public int getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Bounds bounds) {
-		slider = new GuiOptionSliderA(0, bounds.x(), bounds.y(), bounds.width(), bounds.height(), this);
+		slider = new GuiSlider(0, bounds.x(), bounds.y(), bounds.width(), bounds.height(), this);
 
 		parts.add(slider);
 		callbacks.put(slider, this);

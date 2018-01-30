@@ -38,17 +38,14 @@ import tk.nukeduck.hud.util.LayoutManager;
 import tk.nukeduck.hud.util.Tickable.Ticker;
 
 @Mod(modid = BetterHud.MODID, name = "Better HUD", version = "1.4")
-public class BetterHud { // TODO thoroughly test GL, replace drawRect coords
+public class BetterHud {
 	public static final String MODID = "hud";
 	public static final Version VERSION = new Version(1, 4);
 
 	@SideOnly(Side.CLIENT) public static Minecraft MC;
 	@SideOnly(Side.CLIENT) public static GuiHudMenu MENU;
 
-	@SideOnly(Side.CLIENT) // TODO not gonna work right
-	private static final KeyBinding MENU_KEY = new KeyBinding("key.betterHud.open", Keyboard.KEY_U, "key.categories.misc");
-	@SideOnly(Side.CLIENT)
-	private static final KeyBinding TOGGLE_KEY = new KeyBinding("key.betterHud.disable", Keyboard.KEY_F3, "key.categories.misc");
+	@SideOnly(Side.CLIENT) private static KeyBinding MENU_KEY, TOGGLE_KEY;
 
 	public static HudConfig CONFIG;
 	public static final LayoutManager MANAGER = new LayoutManager();
@@ -72,11 +69,9 @@ public class BetterHud { // TODO thoroughly test GL, replace drawRect coords
 
 	public static EntityInfoRenderer entityInfoRenderer;
 	public static PickupNotifier pickupNotifier;
-	//public static BreedInfoNotifier breedNotifier;
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
-		// TODO Takes a SUSPICIOUSLY long time
 		if(event.getSide() == Side.CLIENT) {
 			HudElement.loadAllDefaults();
 			CONFIG = new HudConfig(event.getSuggestedConfigurationFile());
@@ -89,8 +84,8 @@ public class BetterHud { // TODO thoroughly test GL, replace drawRect coords
 			MC = Minecraft.getMinecraft();
 			MENU = new GuiHudMenu();
 
-			ClientRegistry.registerKeyBinding(MENU_KEY);
-			ClientRegistry.registerKeyBinding(TOGGLE_KEY);
+			ClientRegistry.registerKeyBinding(MENU_KEY = new KeyBinding("key.betterHud.open", Keyboard.KEY_U, "key.categories.misc"));
+			ClientRegistry.registerKeyBinding(TOGGLE_KEY = new KeyBinding("key.betterHud.disable", Keyboard.KEY_F3, "key.categories.misc"));
 
 			HudElement.initAll(event);
 		}

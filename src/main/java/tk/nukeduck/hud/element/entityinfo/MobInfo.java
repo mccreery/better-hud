@@ -58,22 +58,14 @@ public class MobInfo extends EntityInfo {
 	private static ResourceLocation icons = new ResourceLocation("textures/gui/icons.png");
 
 	public void render(EntityLivingBase entity, float partialTicks) {
-		EntityPlayer player = MC.player;
-		if(player == null) return; // TODO is this necessary
-		
 		boolean isPlayer = entity instanceof EntityPlayer;
 		if((isPlayer && !players.get()) || (!isPlayer && !mobs.get())) {
 			return;
 		}
-		
+
 		GlStateManager.pushMatrix();
 		Tessellator t = Tessellator.getInstance();
-		EntityInfoRenderer.billBoard(entity, player, partialTicks);
-		
-		// seems irrelevant
-		/*if(!(entity.getHeldItemMainhand() != null && entity.getHeldItemMainhand().isItemEnchanted())) {
-			GL11.glTranslatef(0, 0.2F, 0);
-		}*/
+		EntityInfoRenderer.billBoard(entity, MC.player, partialTicks);
 		
 		String text = entity.getName() + " (" + (int) entity.getHealth() + "/" + (int) entity.getMaxHealth() + ")";
 		float perLine = 10;

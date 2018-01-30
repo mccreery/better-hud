@@ -8,11 +8,11 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import tk.nukeduck.hud.util.ISaveLoad.ISlider;
 
 @SideOnly(Side.CLIENT)
-public class GuiOptionSliderA extends GuiButton {
+public class GuiSlider extends GuiButton {
 	private final ISlider slider;
 	public boolean dragging;
 
-	public GuiOptionSliderA(int id, int x, int y, ISlider slider) {
+	public GuiSlider(int id, int x, int y, ISlider slider) {
 		this(id, x, y, 150, 20, slider);
 	}
 
@@ -20,7 +20,7 @@ public class GuiOptionSliderA extends GuiButton {
 		displayString = slider.getDisplayString();
 	}
 
-	public GuiOptionSliderA(int id, int x, int y, int width, int height, ISlider slider) {
+	public GuiSlider(int id, int x, int y, int width, int height, ISlider slider) {
 		super(id, x, y, width, height, "");
 		this.slider = slider;
 		updateDisplayString();
@@ -41,7 +41,7 @@ public class GuiOptionSliderA extends GuiButton {
 		if(this.visible) {
 			if(this.dragging) {
 				int mouseOffset = mouseX - (x + 4);
-				setNormalized((double)mouseOffset / (width - 8)); // TODO make text update
+				setNormalized((double)mouseOffset / (width - 8));
 			}
 			int sliderOffset = (int)((slider.get() - slider.getMinimum()) / (slider.getMaximum() - slider.getMinimum()) * (width - 8));
 
