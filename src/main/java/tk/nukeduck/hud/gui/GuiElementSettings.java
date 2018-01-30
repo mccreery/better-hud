@@ -85,6 +85,11 @@ public class GuiElementSettings extends GuiScreen {
 		viewport = new Bounds(width / 2 - 200, height / 16 + 40 + SPACER, 400, 0);
 		viewport.bottom(height - 20);
 		scrollbar = new GuiScrollbar(viewport, content);
+
+		// TODO change otherAction for a more suitable method like "updateGUIParts"
+		for(Setting<?> setting : callbacks.values()) {
+			setting.otherAction(callbacks.values());
+		}
 	}
 
 	@Override

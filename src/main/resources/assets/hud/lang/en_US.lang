@@ -115,16 +115,16 @@ betterHud.setting.showDurability=Durability
 betterHud.setting.offHand=Off-Hand
 
 betterHud.setting.bars=Bars
-betterHud.value.smallBars=Small
-betterHud.value.largeBars=Large
+betterHud.value.smallBars=Small Bars
+betterHud.value.largeBars=Large Bars
 
 betterHud.setting.durabilityFormat=Format
 betterHud.value.points=Damage Points
 betterHud.value.percentage=Percentage
 
-betterHud.setting.warning.0=§c!§r
-betterHud.setting.warning.1=§c! !§r
-betterHud.setting.warning.2=§c! ! !§r
+betterHud.setting.warning.1=§c!§r
+betterHud.setting.warning.2=§c! !§r
+betterHud.setting.warning.3=§c! ! !§r
 betterHud.value.disabled=Disabled
 
 # Block Viewer
@@ -197,6 +197,8 @@ betterHud.setting.visual=Visual
 betterHud.setting.showTotalExp=Total XP
 betterHud.setting.showLifetimeExp=XP Since Death
 betterHud.setting.disableDefault=Disable Default
+betterHud.setting.alwaysVisible=Always Visible
+
 betterHud.hud.distance.0=§a[§r%s§a]
 betterHud.hud.distance.1=%sm away
 betterHud.hud.day=Day %s

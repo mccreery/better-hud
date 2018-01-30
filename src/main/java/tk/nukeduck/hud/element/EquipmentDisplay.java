@@ -70,7 +70,7 @@ public abstract class EquipmentDisplay extends HudElement {
 
 		// TODO maybe use a single string builder for efficiency
 		if(count > 0) {
-			text += " " + I18n.format("betterHud.strings.damaged." + count);
+			text += " " + I18n.format("betterHud.setting.warning." + count);
 		}
 		return text;
 	}
