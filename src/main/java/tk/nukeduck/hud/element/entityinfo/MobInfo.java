@@ -2,11 +2,10 @@ package tk.nukeduck.hud.element.entityinfo;
 
 import static tk.nukeduck.hud.BetterHud.MC;
 
-import org.lwjgl.opengl.GL11;
-
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.enchantment.Enchantment;
@@ -20,6 +19,7 @@ import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingSlider;
 import tk.nukeduck.hud.events.EntityInfoRenderer;
 import tk.nukeduck.hud.util.Colors;
+import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Util;
 
 public class MobInfo extends EntityInfo {
@@ -67,70 +67,69 @@ public class MobInfo extends EntityInfo {
 			return;
 		}
 		
-		GL11.glPushMatrix(); {
-			Tessellator t = Tessellator.getInstance();
-			EntityInfoRenderer.billBoard(entity, player, partialTicks);
-			
-			// seems irrelevant
-			/*if(!(entity.getHeldItemMainhand() != null && entity.getHeldItemMainhand().isItemEnchanted())) {
-				GL11.glTranslatef(0, 0.2F, 0);
-			}*/
-			
-			String text = entity.getName() + " (" + (int) entity.getHealth() + "/" + (int) entity.getMaxHealth() + ")";
-			float perLine = 10;
-			
-			int width = Math.max(8 * Math.min(10, (int) entity.getMaxHealth() / 2) + 1 + (isPlayer ? 5 + 8 * 10 : 0), MC.fontRenderer.getStringWidth(text)) + 10;
-			int height;
-			if(compress.get() != 0 && entity.getHealth() >= compress.get()) {
-				height = 2 * MC.fontRenderer.FONT_HEIGHT + 12 + ((int)entity.getHealth() % 20 != 0 ? 9 : 0);
-			} else {
-				height = MC.fontRenderer.FONT_HEIGHT + 12;
-				height += 9 * (compress.get() != 0 && entity.getMaxHealth() > compress.get() ? compress.get() / 20 : (int) Math.ceil(Math.ceil(entity.getMaxHealth() / 2) / perLine));
-			}
-			
-			float scale = 1.0F / width;
-			GL11.glScalef(scale, scale, scale);
-			
-			// Rendering starts
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GlStateManager.pushMatrix();
+		Tessellator t = Tessellator.getInstance();
+		EntityInfoRenderer.billBoard(entity, player, partialTicks);
+		
+		// seems irrelevant
+		/*if(!(entity.getHeldItemMainhand() != null && entity.getHeldItemMainhand().isItemEnchanted())) {
+			GL11.glTranslatef(0, 0.2F, 0);
+		}*/
+		
+		String text = entity.getName() + " (" + (int) entity.getHealth() + "/" + (int) entity.getMaxHealth() + ")";
+		float perLine = 10;
+		
+		int width = Math.max(8 * Math.min(10, (int) entity.getMaxHealth() / 2) + 1 + (isPlayer ? 5 + 8 * 10 : 0), MC.fontRenderer.getStringWidth(text)) + 10;
+		int height;
+		if(compress.get() != 0 && entity.getHealth() >= compress.get()) {
+			height = 2 * MC.fontRenderer.FONT_HEIGHT + 12 + ((int)entity.getHealth() % 20 != 0 ? 9 : 0);
+		} else {
+			height = MC.fontRenderer.FONT_HEIGHT + 12;
+			height += 9 * (compress.get() != 0 && entity.getMaxHealth() > compress.get() ? compress.get() / 20 : (int) Math.ceil(Math.ceil(entity.getMaxHealth() / 2) / perLine));
+		}
+		
+		float scale = 1.0F / width;
+		GlStateManager.scale(scale, scale, scale);
+		
+		// Rendering starts
+		GlUtil.enableBlendTranslucent();
 
-			Gui.drawRect(0, 0, width, height, Colors.fromARGB(85, 0, 0, 0));
-			zIncrease();
-			MC.ingameGUI.drawString(MC.fontRenderer, text, 5, 5, Colors.WHITE);
+		Gui.drawRect(0, 0, width, height, Colors.fromARGB(85, 0, 0, 0));
+		zIncrease();
+		MC.ingameGUI.drawString(MC.fontRenderer, text, 5, 5, Colors.WHITE);
+		
+		if(isPlayer) {
+			String text2 = "(" + entity.getTotalArmorValue() + "/20)";
+			MC.ingameGUI.drawString(MC.fontRenderer, text2, width - 5 - MC.fontRenderer.getStringWidth(text2), 5, Colors.WHITE);
+		}
+		
+		// Render health bar
+		renderHealth(t, (int)entity.getHealth(), (int)entity.getMaxHealth());
+		
+		if(isPlayer) {
+			// Armor bar
+			int armor = entity.getTotalArmorValue();
 			
-			if(isPlayer) {
-				String text2 = "(" + entity.getTotalArmorValue() + "/20)";
-				MC.ingameGUI.drawString(MC.fontRenderer, text2, width - 5 - MC.fontRenderer.getStringWidth(text2), 5, Colors.WHITE);
+			int i;
+			for(i = 0; i < 10; i++) {
+				
+				Util.renderQuadWithUV(t, 8 * Math.min(10, (int) entity.getMaxHealth() / 2) + 10 + (i * 8), MC.fontRenderer.FONT_HEIGHT + 7 + (int) (i / 10) * 9, 16 / 256F, 9 / 256F, 25 / 256F, 18 / 256F, 9, 9);
+			}
+			for(i = 0; i < armor / 2; i++) {
+				Util.renderQuadWithUV(t, 8 * Math.min(10, (int) entity.getMaxHealth() / 2) + 10 + (i * 8), MC.fontRenderer.FONT_HEIGHT + 7 + (int) (i / 10) * 9, 34 / 256F, 9 / 256F, 43 / 256F, 18 / 256F, 9, 9);
+			}
+			if(armor % 2 == 1) {
+				Util.renderQuadWithUV(t, 8 * Math.min(10, (int) entity.getMaxHealth() / 2) + 10 + (i * 8), MC.fontRenderer.FONT_HEIGHT + 7 + (int) (i / 10) * 9, 25 / 256F, 9 / 256F, 34 / 256F, 18 / 256F, 9, 9);
 			}
 			
-			// Render health bar
-			renderHealth(t, (int)entity.getHealth(), (int)entity.getMaxHealth());
+			EntityPlayer playerObj = (EntityPlayer) entity;
 			
-			if(isPlayer) {
-				// Armor bar
-				int armor = entity.getTotalArmorValue();
-				
-				int i;
-				for(i = 0; i < 10; i++) {
-					Util.renderQuadWithUV(t, 8 * Math.min(10, (int) entity.getMaxHealth() / 2) + 10 + (i * 8), MC.fontRenderer.FONT_HEIGHT + 7 + (int) (i / 10) * 9, 16 / 256F, 9 / 256F, 25 / 256F, 18 / 256F, 9, 9);
-				}
-				for(i = 0; i < armor / 2; i++) {
-					Util.renderQuadWithUV(t, 8 * Math.min(10, (int) entity.getMaxHealth() / 2) + 10 + (i * 8), MC.fontRenderer.FONT_HEIGHT + 7 + (int) (i / 10) * 9, 34 / 256F, 9 / 256F, 43 / 256F, 18 / 256F, 9, 9);
-				}
-				if(armor % 2 == 1) {
-					Util.renderQuadWithUV(t, 8 * Math.min(10, (int) entity.getMaxHealth() / 2) + 10 + (i * 8), MC.fontRenderer.FONT_HEIGHT + 7 + (int) (i / 10) * 9, 25 / 256F, 9 / 256F, 34 / 256F, 18 / 256F, 9, 9);
-				}
-				
-				EntityPlayer playerObj = (EntityPlayer) entity;
-				
-				ItemStack mainHand = playerObj.getHeldItemMainhand();
-				if(mainHand != null && !mainHand.isEmpty()) {
-					renderHolding(playerObj.getHeldItemMainhand(), height);
-				}
+			ItemStack mainHand = playerObj.getHeldItemMainhand();
+			if(mainHand != null && !mainHand.isEmpty()) {
+				renderHolding(playerObj.getHeldItemMainhand(), height);
 			}
 		}
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 	}
 
 	private void renderHealth(Tessellator t, int health, int max) {

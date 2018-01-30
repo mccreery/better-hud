@@ -1,5 +1,7 @@
 package tk.nukeduck.hud.util;
 
+import net.minecraft.util.math.MathHelper;
+
 /** Functions for working with 32-bit ARGB colors */
 public class Colors {
 	public static final int WHITE = fromRGB(0xff, 0xff, 0xff);
@@ -14,19 +16,31 @@ public class Colors {
 	public static final int FOREGROUND  = fromARGB(0x7f, 0x3f, 0x3f, 0x3f);
 	public static final int HIGHLIGHT   = fromARGB(0xbf, 0x3f, 0x3f, 0x3f);
 
-	/** @return a 32-bit ARGB representation of the given opaque RGB color */
-	public static int fromRGB(int r, int g, int b) {
-		return fromARGB(255, r, g, b);
+	/** @return A 32-bit composite ARGB color converted from HSV */
+	public static int fromHSV(float hue, float saturation, float value) {
+		hue %= 1;
+		if(hue < 0) ++hue; // Math.floorMod doesn't work on floats
+
+		saturation = MathHelper.clamp(saturation, 0, 1);
+		value = MathHelper.clamp(value, 0, 1);
+
+		return setAlpha(MathHelper.hsvToRGB(hue, saturation, value), 0xff);
 	}
 
-	/** @return A 32-bit ARGB representation of the given color */
-	public static int fromARGB(int a, int r, int g, int b) {
-		return (a & 0xff) << 24 | (r & 0xff) << 16 | (g & 0xff) << 8 | (b & 0xff);
+	/** {@code alpha} defaults to {@code 0xff}
+	 * @see #fromARGB(int, int, int, int) */
+	public static int fromRGB(int red, int green, int blue) {
+		return fromARGB(0xff, red, green, blue);
 	}
 
-	/** @return {@code color} with the alpha component set to {@code alpha} */
+	/** @return A 32-bit composite ARGB color */
+	public static int fromARGB(int alpha, int red, int green, int blue) {
+		return setAlpha(MathHelper.rgb(red & 0xff, green & 0xff, blue & 0xff), alpha);
+	}
+
+	/** @return {@code color} with its alpha component set to {@code alpha} */
 	public static int setAlpha(int color, int alpha) {
-		return color | (alpha & 0xff) << 24;
+		return (alpha & 0xff) << 24 | (color & 0xffffff);
 	}
 
 	/** @return The alpha component of {@code color} */

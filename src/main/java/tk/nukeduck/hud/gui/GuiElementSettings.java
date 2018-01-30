@@ -1,5 +1,8 @@
 package tk.nukeduck.hud.gui;
 
+import static org.lwjgl.opengl.GL11.GL_FILL;
+import static org.lwjgl.opengl.GL11.GL_FRONT_AND_BACK;
+import static org.lwjgl.opengl.GL11.GL_LINE;
 import static tk.nukeduck.hud.BetterHud.MC;
 import static tk.nukeduck.hud.BetterHud.SPACER;
 
@@ -18,6 +21,7 @@ import net.minecraft.client.gui.GuiLabel;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -230,7 +234,7 @@ public class GuiElementSettings extends GuiScreen {
 		ScaledResolution resolution = new ScaledResolution(MC);
 		done.drawButton(MC, mouseX, mouseY, partialTicks);
 
-		GL11.glPushMatrix();
+		GlStateManager.pushMatrix();
 		GL11.glPushAttrib(GL11.GL_SCISSOR_BIT);
 
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
@@ -245,7 +249,7 @@ public class GuiElementSettings extends GuiScreen {
 		element.settings.draw();
 
 		GL11.glPopAttrib();
-		GL11.glPopMatrix();
+		GlStateManager.popMatrix();
 
 		if(picker != null) {
 			String key = Keyboard.getKeyName(Keyboard.KEY_LCONTROL);
@@ -265,7 +269,7 @@ public class GuiElementSettings extends GuiScreen {
 
 	/** Draws bounds for all elements on the screen */
 	private void drawBounds() {
-		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_LINE);
+		GlStateManager.glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 
 		for(HudElement element : HudElement.ELEMENTS) {
 			if(element.isEnabled()) {
@@ -276,7 +280,7 @@ public class GuiElementSettings extends GuiScreen {
 				}
 			}
 		}
-		GL11.glPolygonMode(GL11.GL_FRONT_AND_BACK, GL11.GL_FILL);
+		GlStateManager.glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 	}
 
 	/** Draws a diagram of the size of the HUD */

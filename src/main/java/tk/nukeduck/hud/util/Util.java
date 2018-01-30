@@ -1,29 +1,21 @@
 package tk.nukeduck.hud.util;
 
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static tk.nukeduck.hud.BetterHud.MC;
-
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-import org.lwjgl.opengl.GL11;
-
-import net.minecraft.client.renderer.BufferBuilder;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.client.config.GuiUtils;
 
 /** Functions that are used in multiple parts of the mod */
 public class Util {
 	public static void drawTooltipBox(int x, int y, int w, int h) {
-		GlStateManager.enableBlend();
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GlUtil.enableBlendTranslucent();
 		GlStateManager.disableRescaleNormal();
 		RenderHelper.disableStandardItemLighting();
 		GlStateManager.disableLighting();
@@ -44,39 +36,27 @@ public class Util {
 		GuiUtils.drawGradientRect(zLevel, x+1,   y+2,   x+2,   y+h-2, borderStart, borderEnd);   // Left
 		GuiUtils.drawGradientRect(zLevel, x+w-2, y+2,   x+w-1, y+h-2, borderStart, borderEnd);   // Right
 		GuiUtils.drawGradientRect(zLevel, x+1,   y+h-2, x+w-1, y+h-1, borderEnd,   borderEnd);   // Bottom
-		
-		GlStateManager.enableDepth();
 	}
 
-	public static void renderQuadWithUV(Tessellator t, int x, int y, float u, float v, int width, int height) {
+	@Deprecated public static void renderQuadWithUV(Tessellator t, int x, int y, float u, float v, int width, int height) {
 		renderQuadWithUV(t, x, y, u, v, u + width / 256F, v + height / 256F, width, height);
 	}
 
-	public static void renderQuadWithUV(Tessellator t, int x, int y, float u, float v, float u2, float v2, int width, int height) {
-		glEnable(GL_BLEND);
-		
-		BufferBuilder wr = t.getBuffer();
-		
-		wr.begin(GL11.GL_QUADS, DefaultVertexFormats.POSITION_TEX);
-		
-		wr.pos(x, y, 0).tex(u, v).endVertex();
-		wr.pos(x, y + height, 0).tex(u, v2).endVertex();
-		wr.pos(x + width, y + height, 0).tex(u2, v2).endVertex();
-		wr.pos(x + width, y, 0).tex(u2, v).endVertex();
-		
-		t.draw();
+	// TODO why is this here
+	@Deprecated public static void renderQuadWithUV(Tessellator t, int x, int y, float u, float v, float u2, float v2, int width, int height) {
+		GlUtil.enableBlendTranslucent();
+		Gui.drawModalRectWithCustomSizedTexture(x, y, u2, v2, width, height, u2 - u, v2 - v);
 	}
-	
+
 	/** @see #renderItem(ItemStack, int, int) */
 	public static void renderItem(ItemStack stack, Point point) {
 		renderItem(stack, point.x, point.y);
 	}
 
-	/** Renders an item using the correct lighting */
-	public static void renderItem(ItemStack stack, int x, int y) {
-		RenderHelper.enableGUIStandardItemLighting();
-		MC.getRenderItem().renderItemAndEffectIntoGUI(stack, x, y);
-		RenderHelper.disableStandardItemLighting();
+	/** Renders an item using the correct lighting.<br>
+	 * Remember to call {@link RenderHelper#disableStandardItemLighting()} after calling this method! */
+	@Deprecated public static void renderItem(ItemStack stack, int x, int y) {
+		GlUtil.renderSingleItem(stack, x, y);
 	}
 
 	/** Formats {@code x} to {@code n} decimal places */

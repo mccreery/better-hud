@@ -1,10 +1,11 @@
 package tk.nukeduck.hud.element;
 
+import static org.lwjgl.opengl.GL11.*;
 import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
 
-import org.lwjgl.opengl.GL11;
-
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingPosition;
@@ -14,7 +15,7 @@ import tk.nukeduck.hud.util.Direction;
 
 public class HungerIndicator extends HudElement {
 	private final SettingPosition position = new SettingPosition("position", Direction.CENTER, Direction.SOUTH);
-	private final SettingSlider maxLimit = new SettingSlider("maxLimit", 0, 10, .5);
+	private final SettingSlider maxLimit = new SettingSlider("maxLimit", 0, 20, 1).setDisplayScale(.5);
 
 	@Override
 	public void loadDefaults() {
@@ -33,8 +34,8 @@ public class HungerIndicator extends HudElement {
 
 	@Override
 	public Bounds render(RenderGameOverlayEvent event) {
-		double foodLevel = MC.player.getFoodStats().getFoodLevel();
-		double foodMax = this.maxLimit.get() * 2.0;
+		int foodLevel = MC.player.getFoodStats().getFoodLevel();
+		int foodMax = this.maxLimit.getInt() * 2;
 
 		if(foodLevel <= foodMax) {
 			Bounds bounds;
@@ -48,12 +49,13 @@ public class HungerIndicator extends HudElement {
 				bounds = position.applyTo(new Bounds(16, 16));
 			}
 
-			double speed = (foodMax - foodLevel) / foodMax * 50.0 + 2.0;
-			
-			double alpha = Math.sin(System.currentTimeMillis() / 3000.0 * speed) + 1.0 / 2.0;
-			GL11.glEnable(GL11.GL_BLEND);
-			GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-			GL11.glColor4d(1.0, 1.0, 1.0, alpha);
+			float speed = (foodMax - foodLevel) / foodMax * 50 + 2;
+			float alpha = (MathHelper.sin(System.currentTimeMillis() / 3000 * speed) + 1 / 2);
+
+			GlStateManager.enableBlend();
+			GlStateManager.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+			GlStateManager.color(1, 1, 1, alpha);
+
 			MC.getTextureManager().bindTexture(HUD_ICONS);
 
 			/*int x = 0, y = 0;

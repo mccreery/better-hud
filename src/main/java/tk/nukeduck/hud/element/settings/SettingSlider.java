@@ -26,6 +26,7 @@ public class SettingSlider extends SettingAlignable<Double> implements ISlider {
 	private String unlocalizedValue;
 
 	private double value;
+	private double displayScale = 1;
 
 	public SettingSlider(String name, double min, double max) {
 		this(name, min, max, -1);
@@ -46,6 +47,11 @@ public class SettingSlider extends SettingAlignable<Double> implements ISlider {
 		return this;
 	}
 
+	public SettingSlider setDisplayScale(double displayScale) {
+		this.displayScale = displayScale;
+		return this;
+	}
+
 	public SettingSlider setDisplayPlaces(int displayPlaces) {
 		this.displayPlaces = displayPlaces;
 		return this;
@@ -58,11 +64,11 @@ public class SettingSlider extends SettingAlignable<Double> implements ISlider {
 
 	@Override
 	public String getDisplayString() {
-		return I18n.format("betterHud.setting." + name) + ": " + getDisplayValue(get());
+		return I18n.format("betterHud.setting." + name) + ": " + getDisplayValue(get() * displayScale);
 	}
 
-	public String getDisplayValue(double value) {
-		String displayValue = Util.formatToPlaces(value, displayPlaces);
+	public String getDisplayValue(double scaledValue) {
+		String displayValue = Util.formatToPlaces(scaledValue, displayPlaces);
 
 		if(unlocalizedValue != null) {
 			displayValue = I18n.format(unlocalizedValue, displayValue);
@@ -84,6 +90,10 @@ public class SettingSlider extends SettingAlignable<Double> implements ISlider {
 	@Override public void otherAction(Collection<Setting<?>> settings) {}
 
 	@Override public Double get() {return value;}
+
+	public int getInt() {
+		return get().intValue();
+	}
 
 	@Override
 	public void set(Double value) {

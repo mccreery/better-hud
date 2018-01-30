@@ -12,8 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
@@ -96,10 +94,9 @@ public class PickupCount extends HudElement {
 			RenderHelper.enableGUIStandardItemLighting();
 			Bounds itemBounds = position.getAnchor().anchor(new Bounds(16, 16), lineBounds);
 
-			GL11.glPushMatrix(); {
-				MC.getRenderItem().renderItemAndEffectIntoGUI(stack, itemBounds.x(), itemBounds.y());
-			}
-			GL11.glPopMatrix();
+			//GlStateManager.pushMatrix();
+			MC.getRenderItem().renderItemAndEffectIntoGUI(stack, itemBounds.x(), itemBounds.y());
+			//GlStateManager.popMatrix();
 		}
 		return bounds;
 	}

@@ -1,16 +1,10 @@
 package tk.nukeduck.hud.element;
 
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glScalef;
-import static org.lwjgl.opengl.GL11.glTranslatef;
+import static org.lwjgl.opengl.GL11.*;
 import static tk.nukeduck.hud.BetterHud.MC;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
@@ -81,8 +75,8 @@ public class Compass extends HudElement {
 		drawRect(bounds, Colors.fromARGB(170,  0,  0,  0));
 		Gui.drawRect(bounds.x() + 50, bounds.y(), bounds.x() + 130, bounds.y() + 12, Colors.fromARGB( 85, 85, 85, 85));
 
-		glEnable(GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GlStateManager.enableBlend();
+		GlStateManager.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 		MC.mcProfiler.startSection("text");
 
@@ -91,16 +85,17 @@ public class Compass extends HudElement {
 		
 		// TODO repeated code
 		if(nOpacity > 10) {
-			glPushMatrix(); {
-				glTranslatef(bounds.x() + 90 - nX, bounds.y() + 2, 0.0F);
-				
-				float size = (float) nOpacity / 128F;
-				float finalSize = Math.max(0, (float) (directionScaling.get() / factor) * (size - 1) + 1);
-				glScalef(finalSize, finalSize, 1.0F);
-				
-				MC.ingameGUI.drawCenteredString(MC.fontRenderer, "N", 0, 0, Colors.fromARGB(nOpacity, 255, 0, 0));
-			}
-			glPopMatrix();
+			GlStateManager.pushMatrix();
+
+			glTranslatef(bounds.x() + 90 - nX, bounds.y() + 2, 0.0F);
+			
+			float size = (float) nOpacity / 128F;
+			float finalSize = Math.max(0, (float) (directionScaling.get() / factor) * (size - 1) + 1);
+			glScalef(finalSize, finalSize, 1.0F);
+			
+			MC.ingameGUI.drawCenteredString(MC.fontRenderer, "N", 0, 0, Colors.fromARGB(nOpacity, 255, 0, 0));
+
+			GlStateManager.popMatrix();
 		}
 		if(eOpacity > 10) {
 			glPushMatrix(); {

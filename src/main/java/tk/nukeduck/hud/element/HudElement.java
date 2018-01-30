@@ -21,7 +21,6 @@ import tk.nukeduck.hud.element.particles.BloodSplatters;
 import tk.nukeduck.hud.element.particles.WaterDrops;
 import tk.nukeduck.hud.element.settings.RootSetting;
 import tk.nukeduck.hud.element.text.BiomeName;
-import tk.nukeduck.hud.element.text.GameClock;
 import tk.nukeduck.hud.element.text.Connection;
 import tk.nukeduck.hud.element.text.Coordinates;
 import tk.nukeduck.hud.element.text.CpsCount;
@@ -29,6 +28,7 @@ import tk.nukeduck.hud.element.text.Distance;
 import tk.nukeduck.hud.element.text.FoodHealthStats;
 import tk.nukeduck.hud.element.text.FpsCount;
 import tk.nukeduck.hud.element.text.FullInvIndicator;
+import tk.nukeduck.hud.element.text.GameClock;
 import tk.nukeduck.hud.element.text.LightLevel;
 import tk.nukeduck.hud.element.text.SystemClock;
 import tk.nukeduck.hud.network.Version;
@@ -183,7 +183,7 @@ public abstract class HudElement { // Can't extend Gui due to @SideOnly
 		drawRect(bounds, Colors.BLACK);
 		progress = MathHelper.clamp(progress, 0, 1);
 
-		int color = MathHelper.hsvToRGB(progress / 3, 1, 1) | 0xff000000;
+		int color = Colors.fromHSV(progress / 3, 1, 1);
 
 		Bounds bar;
 		if(vertical) {

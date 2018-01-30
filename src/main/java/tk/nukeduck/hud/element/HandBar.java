@@ -11,8 +11,8 @@ import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Point;
-import tk.nukeduck.hud.util.Util;
 
 public class HandBar extends EquipmentDisplay {
 	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS | Direction.SOUTH.flag());
@@ -54,7 +54,7 @@ public class HandBar extends EquipmentDisplay {
 
 		if(showItem.get()) {
 			MC.mcProfiler.startSection("items");
-			Util.renderItem(stack, x + 90 - width / 2, y);
+			GlUtil.renderSingleItem(stack, x + 90 - width / 2, y);
 			MC.mcProfiler.endSection();
 		}
 

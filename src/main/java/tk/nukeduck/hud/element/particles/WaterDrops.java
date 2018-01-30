@@ -4,18 +4,16 @@ import static org.lwjgl.opengl.GL11.glColor4f;
 import static tk.nukeduck.hud.BetterHud.MC;
 import static tk.nukeduck.hud.BetterHud.RANDOM;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.block.material.Material;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.BlockPos;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fml.client.FMLClientHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.element.settings.SettingChoose;
 import tk.nukeduck.hud.util.Bounds;
+import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Tickable;
 
 public class WaterDrops extends HudElement implements Tickable {
@@ -77,9 +75,9 @@ public class WaterDrops extends HudElement implements Tickable {
 	}
 
 	public Bounds render(RenderGameOverlayEvent event) {
-		GL11.glEnable(GL11.GL_BLEND);
+		GlUtil.enableBlendTranslucent();
 
-		FMLClientHandler.instance().getClient().renderEngine.bindTexture(PARTICLES);
+		MC.getTextureManager().bindTexture(PARTICLES);
 		particleManager.renderAll();
 		glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		return null;

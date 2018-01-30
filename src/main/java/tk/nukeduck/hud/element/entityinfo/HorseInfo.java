@@ -3,20 +3,19 @@ package tk.nukeduck.hud.element.entityinfo;
 import static org.lwjgl.opengl.GL11.glPopMatrix;
 import static org.lwjgl.opengl.GL11.glPushMatrix;
 import static org.lwjgl.opengl.GL11.glScalef;
-import static org.lwjgl.opengl.GL11.glTranslatef;
 import static tk.nukeduck.hud.BetterHud.MC;
 
 import java.util.ArrayList;
 
-import org.lwjgl.opengl.GL11;
-
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.passive.EntityHorse;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.events.EntityInfoRenderer;
 import tk.nukeduck.hud.util.Colors;
+import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Util;
 
 public class HorseInfo extends EntityInfo {
@@ -60,11 +59,9 @@ public class HorseInfo extends EntityInfo {
 				glScalef(scale, scale, scale);
 				
 				// Rendering starts
-				GL11.glEnable(GL11.GL_BLEND);
-				GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
-
-				glTranslatef(0.0F, -horseHeight - 5, 0.0F);
-
+				GlUtil.enableBlendTranslucent();
+				GlStateManager.translate(0, -(horseHeight + 5), 0);
+				
 				Gui.drawRect(0, 0, horseWidth, horseHeight, Colors.TRANSLUCENT);
 				zIncrease();
 				for(int i = 0; i < infoParts.size(); i++) {

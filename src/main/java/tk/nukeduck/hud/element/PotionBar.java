@@ -1,12 +1,8 @@
 package tk.nukeduck.hud.element;
 
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.glColor4f;
-import static org.lwjgl.opengl.GL11.glEnable;
 import static tk.nukeduck.hud.BetterHud.MC;
 
-import org.lwjgl.opengl.GL11;
-
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
@@ -21,6 +17,7 @@ import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.GlUtil;
 
 public class PotionBar extends HudElement {
 	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS | Direction.CENTER.flag());
@@ -63,8 +60,8 @@ public class PotionBar extends HudElement {
 		int amount = MC.player.getActivePotionEffects().size();
 		Bounds bounds = position.applyTo(new Bounds(amount * 16, 16));
 
-		glEnable(GL_BLEND);
-		GL11.glBlendFunc(GL11.GL_SRC_ALPHA, GL11.GL_ONE_MINUS_SRC_ALPHA);
+		GlUtil.enableBlendTranslucent();
+
 		Bounds icon = new Bounds(bounds.x(), bounds.y(), 18, 18);
 
 		for(PotionEffect effect : MC.player.getActivePotionEffects()) {
@@ -75,7 +72,7 @@ public class PotionBar extends HudElement {
 			int u = 18 * (iconIndex & 7);
 			int v = 198 + 18 * (iconIndex >> 3);
 
-			glColor4f(1.0F, 1.0F, 1.0F, ((float) effect.getDuration() / 600F));
+			GlStateManager.color(1, 1, 1, effect.getDuration() / 600);
 
 			MC.ingameGUI.drawTexturedModalRect(icon.x(), icon.y(), u, v, icon.width(), icon.height());
 			MC.ingameGUI.drawString(MC.fontRenderer, I18n.format("potion.potency." + effect.getAmplifier()), icon.x(), icon.y(), Colors.WHITE);
