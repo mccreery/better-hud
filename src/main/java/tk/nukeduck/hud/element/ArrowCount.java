@@ -1,5 +1,6 @@
 package tk.nukeduck.hud.element;
 
+import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
 
 import net.minecraft.client.renderer.GlStateManager;
@@ -7,6 +8,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemArrow;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHandSide;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingPosition;
@@ -20,7 +22,7 @@ public class ArrowCount extends HudElement {
 
 	private final SettingBoolean overlay = new SettingBoolean("overlay");
 
-	private final SettingPosition position = new SettingPosition("position", Direction.SOUTH_WEST, Direction.SOUTH_EAST) {
+	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS) {
 		@Override
 		public boolean enabled() {
 			return !overlay.get();
@@ -41,12 +43,6 @@ public class ArrowCount extends HudElement {
 		settings.add(position);
 	}
 
-	@Deprecated
-	private boolean isHoldingBow(EntityPlayer player) {
-		return (player.getHeldItemMainhand() != null && player.getHeldItemMainhand().getItem() == Items.BOW)
-			|| (player.getHeldItemOffhand()  != null && player.getHeldItemOffhand().getItem()  == Items.BOW);
-	}
-
 	/** Note this method only cares about arrows which can be shot by a vanilla bow
 	 * @return The number of arrows in the player's inventory
 	 * @see net.minecraft.item.ItemBow#isArrow(ItemStack) */
@@ -56,7 +52,6 @@ public class ArrowCount extends HudElement {
 		for(int i = 0; i < player.inventory.getSizeInventory(); i++) {
 			ItemStack stack = player.inventory.getStackInSlot(i);
 
-			// TODO NPE check necessary?
 			if(stack != null && stack.getItem() instanceof ItemArrow) {
 				count += stack.getCount();
 			}
@@ -66,45 +61,57 @@ public class ArrowCount extends HudElement {
 
 	@Override
 	public boolean shouldRender() {
-		if(overlay.get()) {
+		if(MC.player.getHeldItemOffhand() != null && MC.player.getHeldItemOffhand().getItem() == Items.BOW) {
+			return true;
+		} else if(overlay.get()) {
 			for(int i = 0; i < 9; i++) {
 				ItemStack stack = MC.player.inventory.getStackInSlot(i);
+
 				if(stack != null && stack.getItem() == Items.BOW) {
 					return true;
 				}
 			}
 			return false;
 		} else {
-			return isHoldingBow(MC.player);
+			return MC.player.getHeldItemMainhand() != null && MC.player.getHeldItemMainhand().getItem() == Items.BOW;
 		}
 	}
 
 	@Override
 	public Bounds render(RenderGameOverlayEvent event) {
-		String arrowsDisplay = String.valueOf(arrowCount(MC.player));
+		int totalArrows = arrowCount(MC.player);
 
-		if(!overlay.get()) { // TODO test
-			Bounds bounds = position.applyTo(new Bounds(16, 16));
-
-			GlUtil.renderSingleItem(ARROW, bounds.position);
-			drawHotbarText(arrowsDisplay, bounds.right(), bounds.bottom());
-
-			return bounds;
-		} else { // Look through hotbar
-			int center = event.getResolution().getScaledWidth() / 2;
-			int y = event.getResolution().getScaledHeight() - 1;
+		if(overlay.get()) {
+			int center = MANAGER.getResolution().x / 2;
+			Bounds stackBounds = new Bounds(center - 88, MANAGER.getResolution().y - 17, 16, 16);
 
 			for(int i = 0; i < 9; i++) {
 				ItemStack stack = MC.player.inventory.getStackInSlot(i);
+
 				if(stack != null && stack.getItem() == Items.BOW) {
-					drawHotbarText(arrowsDisplay, center - 71 + (i * 20), y);
+					drawCounter(stackBounds, totalArrows);
 				}
+				stackBounds.x(stackBounds.x() + 20);
 			}
+
 			ItemStack stack = MC.player.inventory.getStackInSlot(40);
+
 			if(stack != null && stack.getItem() == Items.BOW) {
-				drawHotbarText(arrowsDisplay, center - 100, y);
+				if (MC.player.getPrimaryHand() == EnumHandSide.RIGHT) {
+					stackBounds.x(center - 117);
+				} else {
+					stackBounds.x(center + 101);
+				}
+				drawCounter(stackBounds, totalArrows);
 			}
 			return null;
+		} else {
+			Bounds bounds = position.applyTo(new Bounds(16, 16));
+
+			GlUtil.renderSingleItem(ARROW, bounds.position);
+			drawCounter(bounds, totalArrows);
+
+			return bounds;
 		}
 	}
 
@@ -119,13 +126,12 @@ public class ArrowCount extends HudElement {
 		}
 	}
 
-	@Deprecated // TODO delet
-	private void drawHotbarText(String text, int x, int y) {
-		GlStateManager.pushMatrix();
-		GlStateManager.translate(0, 0, 151);
+	private static void drawCounter(Bounds stackBounds, int count) {
+		GlStateManager.disableDepth();
+		String countDisplay = String.valueOf(count);
+		Bounds text = Direction.SOUTH_EAST.anchor(new Bounds(getLinesSize(countDisplay)), stackBounds);
 
-		MC.ingameGUI.drawString(MC.fontRenderer, text, x - MC.fontRenderer.getStringWidth(text), y - MC.fontRenderer.FONT_HEIGHT, Colors.WHITE);
-
-		GlStateManager.popMatrix();
+		MC.ingameGUI.drawString(MC.fontRenderer, countDisplay, text.x(), text.y(), Colors.WHITE);
+		GlStateManager.enableDepth();
 	}
 }
