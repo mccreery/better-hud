@@ -8,7 +8,7 @@ import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingChoose;
 import tk.nukeduck.hud.element.settings.SettingWarnings;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.Util;
+import tk.nukeduck.hud.util.FormatUtil;
 
 public abstract class EquipmentDisplay extends HudElement {
 	private final SettingBoolean showName = new SettingBoolean("showName");
@@ -59,13 +59,13 @@ public abstract class EquipmentDisplay extends HudElement {
 
 		if(this.showDurability.get()) {
 			if(durabilityMode.getIndex() == 1) {
-				parts.add(Util.formatToPlaces(value * 100, 1) + "%");
+				parts.add(FormatUtil.formatToPlaces(value * 100, 1) + "%");
 			} else {
 				parts.add(durability + "/" + maxDurability);
 			}
 		}
 
-		String text = Util.join(" - ", parts);
+		String text = FormatUtil.join(" - ", parts);
 		int count = warnings.getWarning(value);
 
 		// TODO maybe use a single string builder for efficiency

@@ -10,7 +10,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.Util;
+import tk.nukeduck.hud.util.GlUtil;
 
 public class MaxLevelIndicator extends HudElement {
 	private static final ItemStack BOOK = new ItemStack(Items.ENCHANTED_BOOK);
@@ -36,7 +36,7 @@ public class MaxLevelIndicator extends HudElement {
 			bounds = position.applyTo(new Bounds(16, 16));
 		}
 
-		Util.renderItem(BOOK, bounds.position);
+		GlUtil.renderSingleItem(BOOK, bounds.position);
 		return bounds;
 	}
 

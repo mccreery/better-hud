@@ -15,8 +15,8 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.PaddedBounds;
-import tk.nukeduck.hud.util.Util;
 
 public class GameClock extends Clock {
 	private static final ItemStack BED = new ItemStack(Items.BED);
@@ -49,7 +49,7 @@ public class GameClock extends Clock {
 			Direction bedAnchor = position.getAnchor().in(Direction.RIGHT) ? Direction.WEST : Direction.EAST;
 			Bounds bed = bedAnchor.anchor(new Bounds(16, 16), bounds);
 
-			Util.renderItem(BED, bed.position);
+			GlUtil.renderSingleItem(BED, bed.position);
 		}
 		return bounds;
 	}

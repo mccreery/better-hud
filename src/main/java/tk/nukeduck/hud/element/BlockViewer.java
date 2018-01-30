@@ -38,8 +38,8 @@ import tk.nukeduck.hud.network.InventoryNameQuery;
 import tk.nukeduck.hud.network.Version;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.PaddedBounds;
-import tk.nukeduck.hud.util.Util;
 
 public class BlockViewer extends TextElement {
 	private final SettingBoolean showBlock = new SettingBoolean("showItem").setUnlocalizedValue(SettingBoolean.VISIBLE);
@@ -119,7 +119,7 @@ public class BlockViewer extends TextElement {
 
 	@Override
 	protected void drawBorder(RenderGameOverlayEvent event, PaddedBounds bounds) {
-		Util.drawTooltipBox(bounds.x(), bounds.y(), bounds.width(), bounds.height());
+		GlUtil.drawTooltipBox(bounds.x(), bounds.y(), bounds.width(), bounds.height());
 	}
 
 	@Override

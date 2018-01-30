@@ -1,8 +1,9 @@
 package tk.nukeduck.hud.util;
 
 import net.minecraft.client.gui.ScaledResolution;
+import tk.nukeduck.hud.util.ISaveLoad.IGetSet;
 
-public class Point implements ISaveLoad {
+public class Point implements IGetSet<Point> {
 	public static final Point ZERO = new Point(0, 0);
 
 	public int x, y;
@@ -56,6 +57,17 @@ public class Point implements ISaveLoad {
 	@Override
 	public String toString() {
 		return String.format("(%d, %d)", x, y);
+	}
+
+	@Override
+	public Point get() {
+		return this;
+	}
+
+	@Override
+	public void set(Point value) {
+		this.x = value.x;
+		this.y = value.y;
 	}
 
 	@Override

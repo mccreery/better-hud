@@ -20,7 +20,6 @@ import tk.nukeduck.hud.element.settings.SettingSlider;
 import tk.nukeduck.hud.events.EntityInfoRenderer;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.GlUtil;
-import tk.nukeduck.hud.util.Util;
 
 public class MobInfo extends EntityInfo {
 	private final SettingBoolean players = new SettingBoolean("players");
@@ -95,7 +94,7 @@ public class MobInfo extends EntityInfo {
 		GlUtil.enableBlendTranslucent();
 
 		Gui.drawRect(0, 0, width, height, Colors.fromARGB(85, 0, 0, 0));
-		zIncrease();
+		//zIncrease();
 		MC.ingameGUI.drawString(MC.fontRenderer, text, 5, 5, Colors.WHITE);
 		
 		if(isPlayer) {
@@ -110,16 +109,24 @@ public class MobInfo extends EntityInfo {
 			// Armor bar
 			int armor = entity.getTotalArmorValue();
 			
+			
+			GlUtil.enableBlendTranslucent();
+
 			int i;
 			for(i = 0; i < 10; i++) {
-				
-				Util.renderQuadWithUV(t, 8 * Math.min(10, (int) entity.getMaxHealth() / 2) + 10 + (i * 8), MC.fontRenderer.FONT_HEIGHT + 7 + (int) (i / 10) * 9, 16 / 256F, 9 / 256F, 25 / 256F, 18 / 256F, 9, 9);
+				float u2 = 25 / 256F;
+				float v2 = 18 / 256F;
+				Gui.drawModalRectWithCustomSizedTexture(8 * Math.min(10, (int) entity.getMaxHealth() / 2) + 10 + (i * 8), MC.fontRenderer.FONT_HEIGHT + 7 + (int) (i / 10) * 9, u2, v2, 9, 9, u2 - 16 / 256F, v2 - 9 / 256F);
 			}
 			for(i = 0; i < armor / 2; i++) {
-				Util.renderQuadWithUV(t, 8 * Math.min(10, (int) entity.getMaxHealth() / 2) + 10 + (i * 8), MC.fontRenderer.FONT_HEIGHT + 7 + (int) (i / 10) * 9, 34 / 256F, 9 / 256F, 43 / 256F, 18 / 256F, 9, 9);
+				float u2 = 43 / 256F;
+				float v2 = 18 / 256F;
+				Gui.drawModalRectWithCustomSizedTexture(8 * Math.min(10, (int) entity.getMaxHealth() / 2) + 10 + (i * 8), MC.fontRenderer.FONT_HEIGHT + 7 + (int) (i / 10) * 9, u2, v2, 9, 9, u2 - 34 / 256F, v2 - 9 / 256F);
 			}
 			if(armor % 2 == 1) {
-				Util.renderQuadWithUV(t, 8 * Math.min(10, (int) entity.getMaxHealth() / 2) + 10 + (i * 8), MC.fontRenderer.FONT_HEIGHT + 7 + (int) (i / 10) * 9, 25 / 256F, 9 / 256F, 34 / 256F, 18 / 256F, 9, 9);
+				float u2 = 34 / 256F;
+				float v2 = 18 / 256F;
+				Gui.drawModalRectWithCustomSizedTexture(8 * Math.min(10, (int) entity.getMaxHealth() / 2) + 10 + (i * 8), MC.fontRenderer.FONT_HEIGHT + 7 + (int) (i / 10) * 9, u2, v2, 9, 9, u2 - 25 / 256F, v2 - 9 / 256F);
 			}
 			
 			EntityPlayer playerObj = (EntityPlayer) entity;
@@ -132,6 +139,7 @@ public class MobInfo extends EntityInfo {
 		GlStateManager.popMatrix();
 	}
 
+	// TODO format
 	private void renderHealth(Tessellator t, int health, int max) {
 		int y = MC.fontRenderer.FONT_HEIGHT + 7;
 
@@ -140,8 +148,13 @@ public class MobInfo extends EntityInfo {
 			if(health >= compress.get()) {
 				int rows = health / 20;
 				for(int i = 0; i < 10; i++) {
-					Util.renderQuadWithUV(t, 5 + i*4, y, 16 / 256F, 0, 25 / 256F, 9 / 256F, 9, 9);
-					Util.renderQuadWithUV(t, 5 + i*4, y, 52 / 256F, 0, 61 / 256F, 9 / 256F, 9, 9);
+					float u2 = 25 / 256F;
+					float v2 = 9 / 256F;
+					GlUtil.enableBlendTranslucent();
+					Gui.drawModalRectWithCustomSizedTexture(5 + i*4, y, u2, v2, 9, 9, u2 - 16 / 256F, v2 - (float) 0);
+					float u21 = 61 / 256F;
+					float v21 = 9 / 256F;
+					Gui.drawModalRectWithCustomSizedTexture(5 + i*4, y, u21, v21, 9, 9, u21 - 52 / 256F, v21 - (float) 0);
 				}
 				MC.ingameGUI.drawString(MC.fontRenderer, I18n.format("betterHud.strings.times", rows), 55, y, Colors.WHITE);
 				y += MC.fontRenderer.FONT_HEIGHT;
@@ -156,16 +169,24 @@ public class MobInfo extends EntityInfo {
 
 		// changes made here to fix glitch where background doesn't show up on half a heart
 		if(health != 0) {
-			MC.renderEngine.bindTexture(icons);
+			MC.getTextureManager().bindTexture(icons);
+			GlUtil.enableBlendTranslucent();
+
 			int i; // changes here
 			for(i = 0; i < (max + 1) / 2; i++) { // Background
-				Util.renderQuadWithUV(t, 5 + ((i % 10) * 8), y + (int) (i / 10) * 9, 16 / 256F, 0, 25 / 256F, 9 / 256F, 9, 9);
+				float u2 = 25 / 256F;
+				float v2 = 9 / 256F;
+				Gui.drawModalRectWithCustomSizedTexture(5 + ((i % 10) * 8), y + (int) (i / 10) * 9, u2, v2, 9, 9, u2 - 16 / 256F, v2 - (float) 0);
 			}
 			for(i = 0; i < health / 2; i++) { // Hearts
-				Util.renderQuadWithUV(t, 5 + ((i % 10) * 8), y + (int) (i / 10) * 9, 52 / 256F, 0, 61 / 256F, 9 / 256F, 9, 9);
+				float u2 = 61 / 256F;
+				float v2 = 9 / 256F;
+				Gui.drawModalRectWithCustomSizedTexture(5 + ((i % 10) * 8), y + (int) (i / 10) * 9, u2, v2, 9, 9, u2 - 52 / 256F, v2 - (float) 0);
 			}
 			if(health % 2 == 1) { // Half heart
-				Util.renderQuadWithUV(t, 5 + ((i % 10) * 8), y + (int) (i / 10) * 9, 61 / 256F, 0, 70 / 256F, 9 / 256F, 9, 9);
+				float u2 = 70 / 256F;
+				float v2 = 9 / 256F;
+				Gui.drawModalRectWithCustomSizedTexture(5 + ((i % 10) * 8), y + (int) (i / 10) * 9, u2, v2, 9, 9, u2 - 61 / 256F, v2 - (float) 0);
 			}
 		}
 	}

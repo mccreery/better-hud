@@ -13,7 +13,7 @@ import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.Util;
+import tk.nukeduck.hud.util.GlUtil;
 
 public class ArrowCount extends HudElement {
 	private static final ItemStack ARROW = new ItemStack(Items.ARROW, 1);
@@ -86,7 +86,7 @@ public class ArrowCount extends HudElement {
 		if(!overlay.get()) { // TODO test
 			Bounds bounds = position.applyTo(new Bounds(16, 16));
 
-			Util.renderItem(ARROW, bounds.position);
+			GlUtil.renderSingleItem(ARROW, bounds.position);
 			drawHotbarText(arrowsDisplay, bounds.right(), bounds.bottom());
 
 			return bounds;

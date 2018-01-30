@@ -1,7 +1,5 @@
 package tk.nukeduck.hud.element;
 
-import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
-import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
 import static tk.nukeduck.hud.BetterHud.MC;
 
 import net.minecraft.client.gui.Gui;

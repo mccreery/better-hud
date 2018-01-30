@@ -4,8 +4,6 @@ import static tk.nukeduck.hud.BetterHud.MC;
 
 import java.util.List;
 
-import org.lwjgl.util.Point;
-
 import com.google.common.base.Predicate;
 
 import net.minecraft.client.renderer.GlStateManager;
@@ -14,7 +12,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;

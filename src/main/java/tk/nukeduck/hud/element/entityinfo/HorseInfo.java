@@ -13,7 +13,7 @@ import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.events.EntityInfoRenderer;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.GlUtil;
-import tk.nukeduck.hud.util.Util;
+import tk.nukeduck.hud.util.FormatUtil;
 
 public class HorseInfo extends EntityInfo {
 	private final SettingBoolean jump = new SettingBoolean("jump");
@@ -41,10 +41,10 @@ public class HorseInfo extends EntityInfo {
 			ArrayList<String> infoParts = new ArrayList<String>();
 
 			if(jump.get()) {
-				infoParts.add(jump.getLocalizedName() + ": " + Util.formatToPlaces(getJumpHeight((EntityHorse)entity), 3));
+				infoParts.add(jump.getLocalizedName() + ": " + FormatUtil.formatToPlaces(getJumpHeight((EntityHorse)entity), 3));
 			}
 			if(speed.get()) {
-				infoParts.add(speed.getLocalizedName() + ": " + Util.formatToPlaces(getSpeed((EntityHorse)entity), 3));
+				infoParts.add(speed.getLocalizedName() + ": " + FormatUtil.formatToPlaces(getSpeed((EntityHorse)entity), 3));
 			}
 
 			int horseWidth = getLinesSize(infoParts).x + 10;
@@ -60,7 +60,7 @@ public class HorseInfo extends EntityInfo {
 			GlStateManager.translate(0, -(horseHeight + 5), 0);
 			
 			Gui.drawRect(0, 0, horseWidth, horseHeight, Colors.TRANSLUCENT);
-			zIncrease();
+			//zIncrease();
 			for(int i = 0; i < infoParts.size(); i++) {
 				MC.ingameGUI.drawString(MC.fontRenderer, infoParts.get(i), 5, 5 + (MC.fontRenderer.FONT_HEIGHT + 2) * i, Colors.WHITE);
 			}

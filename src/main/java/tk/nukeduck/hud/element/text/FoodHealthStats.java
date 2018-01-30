@@ -8,7 +8,7 @@ import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.Util;
+import tk.nukeduck.hud.util.FormatUtil;
 
 public class FoodHealthStats extends TextElement {
 	private final SettingBoolean saturation = new SettingBoolean("saturation").setUnlocalizedValue(SettingBoolean.VISIBLE);
@@ -47,7 +47,7 @@ public class FoodHealthStats extends TextElement {
 	protected String[] getText() {
 		if(saturation.get()) {
 			return new String[] {
-				saturation.getLocalizedName() + ": " + Util.formatToPlaces(MC.player.getFoodStats().getSaturationLevel(), 1)
+				saturation.getLocalizedName() + ": " + FormatUtil.formatToPlaces(MC.player.getFoodStats().getSaturationLevel(), 1)
 			};
 		} else {
 			return new String[0];

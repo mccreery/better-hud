@@ -2,10 +2,13 @@ package tk.nukeduck.hud.util;
 
 import static tk.nukeduck.hud.BetterHud.MC;
 
+import java.util.List;
+
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.Profile;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.client.config.GuiUtils;
 
 public class GlUtil {
 	/** Enables general blending for translucent primitives */
@@ -38,5 +41,30 @@ public class GlUtil {
 		RenderHelper.enableGUIStandardItemLighting();
 		MC.getRenderItem().renderItemAndEffectIntoGUI(stack, x, y);
 		RenderHelper.disableStandardItemLighting();
+	}
+
+	/** @see GuiUtils#drawHoveringText(ItemStack, List, int, int, int, int, int, net.minecraft.client.gui.FontRenderer) */
+	public static void drawTooltipBox(int x, int y, int w, int h) {
+		enableBlendTranslucent();
+		GlStateManager.disableRescaleNormal();
+		RenderHelper.disableStandardItemLighting();
+		GlStateManager.disableLighting();
+		GlStateManager.disableDepth();
+
+		final int zLevel	  = 300;
+		final int bgColor	 = 0xf7100010;
+		final int borderStart = 0x505000ff;
+		final int borderEnd   = (borderStart & 0xfefefe) >> 1 | borderStart & 0xff000000;
+
+		// Box
+		GuiUtils.drawGradientRect(zLevel, x+1, y,	 x+w-1, y+1,   bgColor, bgColor); // Top
+		GuiUtils.drawGradientRect(zLevel, x,   y+1,   x+w,   y+h-1, bgColor, bgColor); // Middle
+		GuiUtils.drawGradientRect(zLevel, x+1, y+h-1, x+w-1, y+h,   bgColor, bgColor); // Bottom
+	
+		// Borders
+		GuiUtils.drawGradientRect(zLevel, x+1,   y+1,   x+w-1, y+2,   borderStart, borderStart); // Top
+		GuiUtils.drawGradientRect(zLevel, x+1,   y+2,   x+2,   y+h-2, borderStart, borderEnd);   // Left
+		GuiUtils.drawGradientRect(zLevel, x+w-2, y+2,   x+w-1, y+h-2, borderStart, borderEnd);   // Right
+		GuiUtils.drawGradientRect(zLevel, x+1,   y+h-2, x+w-1, y+h-1, borderEnd,   borderEnd);   // Bottom
 	}
 }
