@@ -1,6 +1,7 @@
 package tk.nukeduck.hud.element;
 
-import static org.lwjgl.opengl.GL11.*;
+import static org.lwjgl.opengl.GL11.GL_ONE_MINUS_SRC_ALPHA;
+import static org.lwjgl.opengl.GL11.GL_SRC_ALPHA;
 import static tk.nukeduck.hud.BetterHud.MC;
 
 import net.minecraft.client.gui.Gui;
@@ -14,6 +15,7 @@ import tk.nukeduck.hud.element.settings.SettingSlider;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.GlUtil;
 
 public class Compass extends HudElement {
 	private final SettingPosition position = new SettingPosition("position");
@@ -75,8 +77,7 @@ public class Compass extends HudElement {
 		drawRect(bounds, Colors.fromARGB(170,  0,  0,  0));
 		Gui.drawRect(bounds.x() + 50, bounds.y(), bounds.x() + 130, bounds.y() + 12, Colors.fromARGB( 85, 85, 85, 85));
 
-		GlStateManager.enableBlend();
-		GlStateManager.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		GlUtil.enableBlendTranslucent();
 
 		MC.mcProfiler.startSection("text");
 
@@ -86,52 +87,48 @@ public class Compass extends HudElement {
 		// TODO repeated code
 		if(nOpacity > 10) {
 			GlStateManager.pushMatrix();
-
-			glTranslatef(bounds.x() + 90 - nX, bounds.y() + 2, 0.0F);
+			GlStateManager.translate(bounds.x() + 90 - nX, bounds.y() + 2, 0);
 			
 			float size = (float) nOpacity / 128F;
 			float finalSize = Math.max(0, (float) (directionScaling.get() / factor) * (size - 1) + 1);
-			glScalef(finalSize, finalSize, 1.0F);
+			GlStateManager.scale(finalSize, finalSize, 1);
 			
 			MC.ingameGUI.drawCenteredString(MC.fontRenderer, "N", 0, 0, Colors.fromARGB(nOpacity, 255, 0, 0));
 
 			GlStateManager.popMatrix();
 		}
 		if(eOpacity > 10) {
-			glPushMatrix(); {
-				glTranslatef(bounds.x() + 90 - eX, bounds.y() + 2, 0.0F);
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(bounds.x() + 90 - eX, bounds.y() + 2, 0.0F);
 
-				float size = (float) eOpacity / 128F;
-				float finalSize = Math.max(0, (float) (directionScaling.get() / factor) * (size - 1) + 1);
-				glScalef(finalSize, finalSize, 1.0F);
-				
-				MC.ingameGUI.drawCenteredString(MC.fontRenderer, "E", 0, 0, Colors.fromARGB(eOpacity, 255, 255, 255));
-			}
-			glPopMatrix();
+			float size = (float) eOpacity / 128F;
+			float finalSize = Math.max(0, (float) (directionScaling.get() / factor) * (size - 1) + 1);
+			GlStateManager.scale(finalSize, finalSize, 1.0F);
+
+			MC.ingameGUI.drawCenteredString(MC.fontRenderer, "E", 0, 0, Colors.fromARGB(eOpacity, 255, 255, 255));
+			GlStateManager.popMatrix();
 		}
 		if(sOpacity > 10) {
-			glPushMatrix(); {
-				glTranslatef(bounds.x() + 90 - sX, bounds.y() + 2, 0.0F);
-				
-				float size = (float) sOpacity / 128F;
-				float finalSize = Math.max(0, (float) (directionScaling.get() / factor) * (size - 1) + 1);
-				glScalef(finalSize, finalSize, 1.0F);
-				
-				MC.ingameGUI.drawCenteredString(MC.fontRenderer, "S", 0, 0, Colors.fromARGB(sOpacity, 0, 0, 255));
-			}
-			glPopMatrix();
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(bounds.x() + 90 - sX, bounds.y() + 2, 0.0F);
+			
+			float size = (float) sOpacity / 128F;
+			float finalSize = Math.max(0, (float) (directionScaling.get() / factor) * (size - 1) + 1);
+			GlStateManager.scale(finalSize, finalSize, 1.0F);
+			
+			MC.ingameGUI.drawCenteredString(MC.fontRenderer, "S", 0, 0, Colors.fromARGB(sOpacity, 0, 0, 255));
+			GlStateManager.popMatrix();
 		}
 		if(wOpacity > 10) {
-			glPushMatrix(); {
-				glTranslatef(bounds.x() + 90 - wX, bounds.y() + 2, 0.0F);
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(bounds.x() + 90 - wX, bounds.y() + 2, 0.0F);
 
-				float size = (float) wOpacity / 128F;
-				float finalSize = Math.max(0, (float) (directionScaling.get() / factor) * (size - 1) + 1);
-				glScalef(finalSize, finalSize, 1.0F);
+			float size = (float) wOpacity / 128F;
+			float finalSize = Math.max(0, (float) (directionScaling.get() / factor) * (size - 1) + 1);
+			GlStateManager.scale(finalSize, finalSize, 1.0F);
 
-				MC.ingameGUI.drawCenteredString(MC.fontRenderer, "W", 0, 0, Colors.fromARGB(wOpacity, 255, 255, 255));
-			}
-			glPopMatrix();
+			MC.ingameGUI.drawCenteredString(MC.fontRenderer, "W", 0, 0, Colors.fromARGB(wOpacity, 255, 255, 255));
+			GlStateManager.popMatrix();
 		}
 		MC.mcProfiler.endSection();
 		

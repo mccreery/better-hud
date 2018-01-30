@@ -1,7 +1,6 @@
 package tk.nukeduck.hud.element.entityinfo;
 
-import static org.lwjgl.opengl.GL11.glTranslatef;
-
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.EntityLivingBase;
 import tk.nukeduck.hud.element.ElementStub;
 import tk.nukeduck.hud.element.settings.SettingSlider;
@@ -20,8 +19,8 @@ public abstract class EntityInfo extends ElementStub {
 
 	public abstract void render(EntityLivingBase entity, float partialTicks);
 
-	public static void zIncrease() {
-		glTranslatef(0.0F, 0.0F, -0.001F);
+	@Deprecated public static void zIncrease() {
+		GlStateManager.translate(0, 0, -.001f);
 	}
 
 	@Override

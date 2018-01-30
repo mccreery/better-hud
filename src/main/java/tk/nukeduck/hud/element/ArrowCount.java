@@ -1,10 +1,8 @@
 package tk.nukeduck.hud.element;
 
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glTranslatef;
 import static tk.nukeduck.hud.BetterHud.MC;
 
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemArrow;
@@ -123,9 +121,11 @@ public class ArrowCount extends HudElement {
 
 	@Deprecated // TODO delet
 	private void drawHotbarText(String text, int x, int y) {
-		glPushMatrix();
-		glTranslatef(0.0f, 0.0f, 151.0f);
+		GlStateManager.pushMatrix();
+		GlStateManager.translate(0, 0, 151);
+
 		MC.ingameGUI.drawString(MC.fontRenderer, text, x - MC.fontRenderer.getStringWidth(text), y - MC.fontRenderer.FONT_HEIGHT, Colors.WHITE);
-		glPopMatrix();
+
+		GlStateManager.popMatrix();
 	}
 }

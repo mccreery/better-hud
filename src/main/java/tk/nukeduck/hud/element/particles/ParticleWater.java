@@ -1,12 +1,9 @@
 package tk.nukeduck.hud.element.particles;
 
-import static org.lwjgl.opengl.GL11.glColor4f;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glScalef;
-import static org.lwjgl.opengl.GL11.glTranslatef;
 import static tk.nukeduck.hud.BetterHud.MC;
 import static tk.nukeduck.hud.BetterHud.RANDOM;
+
+import net.minecraft.client.renderer.GlStateManager;
 
 public class ParticleWater extends Particle {
 	float opacity;
@@ -34,13 +31,14 @@ public class ParticleWater extends Particle {
 
 	@Override
 	public void render() {
-		glPushMatrix(); {
-			glColor4f(1.0F, 1.0F, 1.0F, this.opacity);
-			glTranslatef(this.x, this.y - this.opacity * this.speed, 0.0F);
-			glScalef(this.size, this.size, 1.0F);
-			MC.ingameGUI.drawTexturedModalRect(0, 0, this.u * 16, 96, 16, 16);
-		}
-		glPopMatrix();
+		GlStateManager.pushMatrix();
+
+		GlStateManager.color(1.0F, 1.0F, 1.0F, opacity);
+		GlStateManager.translate(x, y - opacity * speed, 0.0F);
+		GlStateManager.scale(size, size, 1.0F);
+		MC.ingameGUI.drawTexturedModalRect(0, 0, u * 16, 96, 16, 16);
+
+		GlStateManager.popMatrix();
 	}
 
 	@Override

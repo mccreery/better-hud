@@ -18,6 +18,12 @@ public class GlUtil {
 		GlStateManager.color(Colors.red(color), Colors.green(color), Colors.blue(color), Colors.alpha(color));
 	}
 
+	/** All axes default to {@code scale}
+	 * @see GlStateManager#scale(float, float, float) */
+	public static void scale(float scale) {
+		GlStateManager.scale(scale, scale, scale);
+	}
+
 	/** @see #renderSingleItem(ItemStack, int, int) */
 	public static void renderSingleItem(ItemStack stack, Point point) {
 		renderSingleItem(stack, point.x, point.y);

@@ -1,13 +1,9 @@
 package tk.nukeduck.hud.element.particles;
 
-import static org.lwjgl.opengl.GL11.glColor4f;
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glRotatef;
-import static org.lwjgl.opengl.GL11.glScalef;
-import static org.lwjgl.opengl.GL11.glTranslatef;
 import static tk.nukeduck.hud.BetterHud.MC;
 import static tk.nukeduck.hud.BetterHud.RANDOM;
+
+import net.minecraft.client.renderer.GlStateManager;
 
 public class ParticleBlood extends Particle {
 	float opacity;
@@ -37,14 +33,15 @@ public class ParticleBlood extends Particle {
 
 	@Override
 	public void render() {
-		glPushMatrix(); {
-			glColor4f(1.0F, 1.0F, 1.0F, this.opacity);
-			glTranslatef(this.x, this.y, 0.0F);
-			glRotatef(this.rotation, 0.0F, 0.0F, 1.0F);
-			glScalef(this.size, this.size, 1.0F);
-			MC.ingameGUI.drawTexturedModalRect(0, 0, this.u * 16, this.v * 16, 16, 16);
-		}
-		glPopMatrix();
+		GlStateManager.pushMatrix();
+
+		GlStateManager.color(1, 1, 1, opacity);
+		GlStateManager.translate(this.x, this.y, 0.0F);
+		GlStateManager.rotate(rotation, 0, 0, 1);
+		GlStateManager.scale(this.size, this.size, 1.0F);
+		MC.ingameGUI.drawTexturedModalRect(0, 0, this.u * 16, this.v * 16, 16, 16);
+
+		GlStateManager.popMatrix();
 	}
 
 	@Override

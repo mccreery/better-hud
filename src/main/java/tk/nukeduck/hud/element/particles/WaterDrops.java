@@ -1,6 +1,5 @@
 package tk.nukeduck.hud.element.particles;
 
-import static org.lwjgl.opengl.GL11.glColor4f;
 import static tk.nukeduck.hud.BetterHud.MC;
 import static tk.nukeduck.hud.BetterHud.RANDOM;
 
@@ -13,6 +12,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.element.settings.SettingChoose;
 import tk.nukeduck.hud.util.Bounds;
+import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Tickable;
 
@@ -76,10 +76,11 @@ public class WaterDrops extends HudElement implements Tickable {
 
 	public Bounds render(RenderGameOverlayEvent event) {
 		GlUtil.enableBlendTranslucent();
-
 		MC.getTextureManager().bindTexture(PARTICLES);
+
 		particleManager.renderAll();
-		glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+
+		GlUtil.color(Colors.WHITE);
 		return null;
 	}
 

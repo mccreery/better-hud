@@ -1,25 +1,20 @@
 package tk.nukeduck.hud.events;
 
-import static org.lwjgl.opengl.GL11.GL_BLEND;
-import static org.lwjgl.opengl.GL11.GL_DEPTH_TEST;
-import static org.lwjgl.opengl.GL11.GL_LIGHTING;
-import static org.lwjgl.opengl.GL11.glColor4f;
-import static org.lwjgl.opengl.GL11.glDisable;
-import static org.lwjgl.opengl.GL11.glEnable;
-import static org.lwjgl.opengl.GL11.glRotatef;
-import static org.lwjgl.opengl.GL11.glScaled;
-import static org.lwjgl.opengl.GL11.glTranslated;
 import static tk.nukeduck.hud.BetterHud.MC;
 
 import java.util.List;
 
+import org.lwjgl.util.Point;
+
 import com.google.common.base.Predicate;
 
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.Vec2f;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -28,6 +23,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.element.entityinfo.EntityInfo;
+import tk.nukeduck.hud.util.GlUtil;
 
 public class EntityInfoRenderer {
 	@SideOnly(Side.CLIENT)
@@ -135,20 +131,14 @@ public class EntityInfoRenderer {
 		double dx = origin.x - eyes.x;
 		double dy = origin.y - eyes.y;
 		double dz = origin.z - eyes.z;
-		double distance = Math.sqrt(dx*dx + dy*dy + dz*dz);
-		double scale = Math.max(1, distance / 5);
+		float distance = (float)Math.sqrt(dx*dx + dy*dy + dz*dz);
+		float scale = (float)Math.max(1, distance / 5);
 
-		glTranslated(dx, dy, dz);
-		glScaled(scale, scale, scale);
-		glRotatef(-player.rotationYaw, 0, 1, 0);
-		glRotatef(player.rotationPitch, 1, 0, 0);
-		glRotatef(180, 0, 0, 1);
+		GlStateManager.translate(dx, dy, dz);
+		GlUtil.scale(scale);
+		GlStateManager.rotate(-player.rotationYaw, 0, 1, 0);
+		GlStateManager.rotate(180, 0, 0, 1);
 
-		//glTranslatef(-0.5F, -0.5F, 0.0F);
-
-		glDisable(GL_LIGHTING);
-		glEnable(GL_BLEND);
-		glDisable(GL_DEPTH_TEST);
-		glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
+		GlStateManager.disableDepth();
 	}
 }

@@ -1,8 +1,5 @@
 package tk.nukeduck.hud.element.entityinfo;
 
-import static org.lwjgl.opengl.GL11.glPopMatrix;
-import static org.lwjgl.opengl.GL11.glPushMatrix;
-import static org.lwjgl.opengl.GL11.glScalef;
 import static tk.nukeduck.hud.BetterHud.MC;
 
 import java.util.ArrayList;
@@ -40,35 +37,34 @@ public class HorseInfo extends EntityInfo {
 
 	public void render(EntityLivingBase entity, float partialTicks) {
 		if(settings.get() && entity instanceof EntityHorse) {
-			glPushMatrix(); {
-				ArrayList<String> infoParts = new ArrayList<String>();
+			GlStateManager.pushMatrix();
+			ArrayList<String> infoParts = new ArrayList<String>();
 
-				if(jump.get()) {
-					infoParts.add(jump.getLocalizedName() + ": " + Util.formatToPlaces(getJumpHeight((EntityHorse)entity), 3));
-				}
-				if(speed.get()) {
-					infoParts.add(speed.getLocalizedName() + ": " + Util.formatToPlaces(getSpeed((EntityHorse)entity), 3));
-				}
-
-				int horseWidth = getLinesSize(infoParts).x + 10;
-				int horseHeight = infoParts.size() * (MC.fontRenderer.FONT_HEIGHT + 2) + 8;
-				
-				EntityInfoRenderer.billBoard(entity, MC.player, partialTicks);
-				
-				float scale = 1.0F / horseWidth;
-				glScalef(scale, scale, scale);
-				
-				// Rendering starts
-				GlUtil.enableBlendTranslucent();
-				GlStateManager.translate(0, -(horseHeight + 5), 0);
-				
-				Gui.drawRect(0, 0, horseWidth, horseHeight, Colors.TRANSLUCENT);
-				zIncrease();
-				for(int i = 0; i < infoParts.size(); i++) {
-					MC.ingameGUI.drawString(MC.fontRenderer, infoParts.get(i), 5, 5 + (MC.fontRenderer.FONT_HEIGHT + 2) * i, Colors.WHITE);
-				}
+			if(jump.get()) {
+				infoParts.add(jump.getLocalizedName() + ": " + Util.formatToPlaces(getJumpHeight((EntityHorse)entity), 3));
 			}
-			glPopMatrix();
+			if(speed.get()) {
+				infoParts.add(speed.getLocalizedName() + ": " + Util.formatToPlaces(getSpeed((EntityHorse)entity), 3));
+			}
+
+			int horseWidth = getLinesSize(infoParts).x + 10;
+			int horseHeight = infoParts.size() * (MC.fontRenderer.FONT_HEIGHT + 2) + 8;
+			
+			EntityInfoRenderer.billBoard(entity, MC.player, partialTicks);
+			
+			float scale = 1.0F / horseWidth;
+			GlStateManager.scale(scale, scale, scale);
+			
+			// Rendering starts
+			GlUtil.enableBlendTranslucent();
+			GlStateManager.translate(0, -(horseHeight + 5), 0);
+			
+			Gui.drawRect(0, 0, horseWidth, horseHeight, Colors.TRANSLUCENT);
+			zIncrease();
+			for(int i = 0; i < infoParts.size(); i++) {
+				MC.ingameGUI.drawString(MC.fontRenderer, infoParts.get(i), 5, 5 + (MC.fontRenderer.FONT_HEIGHT + 2) * i, Colors.WHITE);
+			}
+			GlStateManager.popMatrix();
 		}
 	}
 
