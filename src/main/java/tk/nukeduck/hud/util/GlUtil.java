@@ -67,4 +67,15 @@ public class GlUtil {
 		GuiUtils.drawGradientRect(zLevel, x+w-2, y+2,   x+w-1, y+h-2, borderStart, borderEnd);   // Right
 		GuiUtils.drawGradientRect(zLevel, x+1,   y+h-2, x+w-1, y+h-1, borderEnd,   borderEnd);   // Bottom
 	}
+
+	/** Draws text with black borders on all sides */
+	public static void drawBorderedString(String text, int x, int y, int color) {
+		// Borders
+		MC.fontRenderer.drawString(text, x + 1, y, Colors.BLACK, false);
+		MC.fontRenderer.drawString(text, x - 1, y, Colors.BLACK, false);
+		MC.fontRenderer.drawString(text, x, y + 1, Colors.BLACK, false);
+		MC.fontRenderer.drawString(text, x, y - 1, Colors.BLACK, false);
+	
+		MC.fontRenderer.drawString(text, x, y, color, false);
+	}
 }

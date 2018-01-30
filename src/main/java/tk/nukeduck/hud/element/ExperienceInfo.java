@@ -1,9 +1,11 @@
 package tk.nukeduck.hud.element;
 
+import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
 
-import net.minecraft.client.gui.FontRenderer;
-import net.minecraft.client.resources.I18n;
+import java.util.ArrayList;
+import java.util.List;
+
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import tk.nukeduck.hud.element.settings.Legend;
@@ -11,22 +13,26 @@ import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.text.TextElement;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
+import tk.nukeduck.hud.util.GlUtil;
 
 public class ExperienceInfo extends TextElement {
-	private final SettingBoolean total;
+	private final SettingBoolean total = new SettingBoolean("showTotalExp").setUnlocalizedValue(SettingBoolean.VISIBLE);
+	private final SettingBoolean lifetime = new SettingBoolean("showLifetimeExp").setUnlocalizedValue(SettingBoolean.VISIBLE);
 
 	@Override
 	public void loadDefaults() {
 		super.loadDefaults();
+
 		total.set(false);
+		lifetime.set(false);
 	}
 
 	public ExperienceInfo() {
 		super("experienceInfo");
 
-		settings.add(new Legend("expInfoNotice"));
 		settings.add(new Legend("misc"));
-		settings.add(total = new SettingBoolean("total"));
+		settings.add(total);
+		settings.add(lifetime);
 	}
 
 	@Override
@@ -36,29 +42,21 @@ public class ExperienceInfo extends TextElement {
 
 	@Override
 	public Bounds render(RenderGameOverlayEvent event) {
-		int has = Math.round(MC.player.experience * getExperienceWithinLevel(MC.player.experienceLevel));
-		int needed = getExperienceWithinLevel(MC.player.experienceLevel) - has;
+		int fullBar = getExperienceWithinLevel(MC.player.experienceLevel);
 
-		drawBorderedString(MC.fontRenderer, String.valueOf(has), event.getResolution().getScaledWidth() / 2 - 90, event.getResolution().getScaledHeight() - 30, Colors.WHITE); // 30
-		drawBorderedString(MC.fontRenderer, String.valueOf(needed), event.getResolution().getScaledWidth() / 2 + 90 - MC.fontRenderer.getStringWidth(String.valueOf(needed)), event.getResolution().getScaledHeight() - 30, Colors.WHITE);
+		int has = (int)(MC.player.experience * fullBar);
+		int needed = fullBar - has;
 
-		if(total.get()) {
-			return super.render(event);
-		} else {
-			return null;
-		}
+		GlUtil.drawBorderedString(String.valueOf(has), MANAGER.getResolution().x / 2 - 90, MANAGER.getResolution().y - 30, Colors.WHITE); // 30
+		GlUtil.drawBorderedString(String.valueOf(needed), MANAGER.getResolution().x / 2 + 90 - MC.fontRenderer.getStringWidth(String.valueOf(needed)), MANAGER.getResolution().y - 30, Colors.WHITE);
+
+		return super.render(event);
 	}
 
-	// TODO improve rendering of bordered string
-	public void drawBorderedString(FontRenderer fontrenderer, String s, int x, int y, int color) {
-		fontrenderer.drawString(s, x + 1, y, 0, false);
-		fontrenderer.drawString(s, x - 1, y, 0, false);
-		fontrenderer.drawString(s, x, y + 1, 0, false);
-		fontrenderer.drawString(s, x, y - 1, 0, false);
-		fontrenderer.drawString(s, x, y, color, false);
-	}
-
-	public static int getExperienceWithinLevel(int level) {
+	/** @param level The player's current level
+	 * @return The total amount of experience in the current experience bar
+	 * @see <a href="https://minecraft.gamepedia.com/Experience#Leveling_up">Levelling Up</a> */
+	private static int getExperienceWithinLevel(int level) {
 		if (level >= 31) {
 			return 9 * level - 158;
 		} else if (level >= 16) {
@@ -68,14 +66,34 @@ public class ExperienceInfo extends TextElement {
 		}
 	}
 
+	/** @return The total amount of experience required to reach {@code level}
+	 * @see <a href="https://minecraft.gamepedia.com/Experience#Leveling_up">Levelling Up</a> */
+	private static int getExperienceToLevel(int level) {
+		/* Result is always integer despite real coefficients
+		 * because level and level^2 are either both odd or both even */
+
+		if(level >= 32) {
+			return (int)((4.5 * level - 162.5) * level) + 2220;
+		} else if(level >= 17) {
+			return (int)((2.5 * level - 40.5) * level) + 360;
+		} else {
+			return (level + 6) * level;
+		}
+	}
+
 	@Override
 	protected String[] getText() {
-		if(!total.get()) return new String[] {};
+		List<String> parts = new ArrayList<String>(2);
 
-		int totalExp = Math.round(MC.player.experience * getExperienceWithinLevel(MC.player.experienceLevel));
-		for(int i = 0; i < MC.player.experienceLevel; ++i) {
-			totalExp += getExperienceWithinLevel(i);
+		if(total.get()) {
+			int totalDisplay = getExperienceToLevel(MC.player.experienceLevel);
+			totalDisplay += MC.player.experience * getExperienceWithinLevel(MC.player.experienceLevel);
+
+			parts.add(total.getLocalizedName() + ": "+ totalDisplay);
 		}
-		return new String[] {I18n.format("betterHud.strings.total", String.valueOf(totalExp))};
+		if(lifetime.get()) {
+			parts.add(lifetime.getLocalizedName() + ": " + MC.player.experienceTotal);
+		}
+		return parts.toArray(new String[parts.size()]);
 	}
 }

@@ -4,14 +4,23 @@
 ### Added
 - Server compatibility checks for future elements
 - CPS counter
+- Block viewer recognises custom inventory names
+- Block viewer is smarter with special blocks
+- New positioning system which accepts an anchor, an offset and an alignment
+- XP viewer can show both total XP and XP since death
 ### Changed
 - Code refactoring, easier to work with
 - Much smaller code
 - Multiple choice settings now save their names rather than indices
+- Config uses Forge's system
+- Some settings show different text
+- Language file made easier to view
 ### Removed
 - Text mode for sign viewer
 ### Fixed
 - Absolute positions are correctly anchored
+- No longer corrupts the game's OpenGL state manager, so most render bugs should be fixed
+- Arrow count works correctly if the player is left-handed and has a bow in their offhand
 
 ## [1.3.9] - 2017-07-06
 ### Added
