@@ -2,7 +2,6 @@ package tk.nukeduck.hud.element.settings;
 
 import static tk.nukeduck.hud.BetterHud.SPACER;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -92,30 +91,6 @@ public class SettingAbsolutePosition extends Setting<Point> {
 		}
 	}
 
-	@Override
-	public void keyTyped(char typedChar, int keyCode) throws IOException {
-		if(!pick.enabled) return;
-
-		xUp.enabled = true;
-		xDown.enabled = true;
-		try {
-			position.x = Integer.parseInt(xBox.getText());
-		} catch(NumberFormatException e) {
-			position.x = 0;
-			xUp.enabled = false;
-			xDown.enabled = false;
-		}
-		yUp.enabled = true;
-		yDown.enabled = true;
-		try {
-			position.y = Integer.parseInt(yBox.getText());
-		} catch(NumberFormatException e) {
-			position.y = 0;
-			yUp.enabled = false;
-			yDown.enabled = false;
-		}
-	}
-
 	/** Sets the picked value based on {@code mousePosition}
 	 * @param element The element being positioned */
 	public void pickMouse(Point mousePosition, Point resolution, HudElement element) {
@@ -150,14 +125,31 @@ public class SettingAbsolutePosition extends Setting<Point> {
 	}
 
 	@Override
-	public void otherAction(Collection<Setting<?>> settings) {
+	public void updateGuiParts(Collection<Setting<?>> settings) {
 		boolean enabled = enabled();
 		xBox.setEnabled(enabled);
 		yBox.setEnabled(enabled);
+
 		pick.enabled = enabled;
-		xUp.enabled = enabled;
-		xDown.enabled = enabled;
-		yUp.enabled = enabled;
-		yDown.enabled = enabled;
+
+		if(enabled) {
+			try {
+				position.x = Integer.parseInt(xBox.getText());
+				xUp.enabled = xDown.enabled = true;
+			} catch(NumberFormatException e) {
+				position.x = 0;
+				xUp.enabled = xDown.enabled = false;
+			}
+
+			try {
+				position.y = Integer.parseInt(yBox.getText());
+				yUp.enabled = yDown.enabled = true;
+			} catch(NumberFormatException e) {
+				position.y = 0;
+				yUp.enabled = yDown.enabled = false;
+			}
+		} else {
+			xUp.enabled = xDown.enabled = yUp.enabled = yDown.enabled = false;
+		}
 	}
 }

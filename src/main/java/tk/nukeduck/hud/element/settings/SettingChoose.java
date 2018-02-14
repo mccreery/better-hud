@@ -2,7 +2,6 @@ package tk.nukeduck.hud.element.settings;
 
 import static tk.nukeduck.hud.BetterHud.SPACER;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -114,12 +113,9 @@ public class SettingChoose extends SettingAlignable<String> {
 		if(button.id == 0) last();
 		else next();
 	}
-	
-	@Override
-	public void keyTyped(char typedChar, int keyCode) throws IOException {}
 
 	@Override
-	public void otherAction(Collection<Setting<?>> settings) {
+	public void updateGuiParts(Collection<Setting<?>> settings) {
 		last.enabled = next.enabled = enabled();
 	}
 }

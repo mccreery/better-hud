@@ -2,7 +2,6 @@ package tk.nukeduck.hud.element.settings;
 
 import static tk.nukeduck.hud.BetterHud.SPACER;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -68,9 +67,6 @@ public class SettingBoolean extends SettingAlignable<Boolean> {
 	}
 
 	@Override
-	public void keyTyped(char typedChar, int keyCode) throws IOException {}
-
-	@Override
 	public String save() {
 		return get().toString();
 	}
@@ -81,7 +77,7 @@ public class SettingBoolean extends SettingAlignable<Boolean> {
 	}
 
 	@Override
-	public void otherAction(Collection<Setting<?>> settings) {
+	public void updateGuiParts(Collection<Setting<?>> settings) {
 		toggler.enabled = enabled();
 	}
 }

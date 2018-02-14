@@ -87,9 +87,8 @@ public class GuiElementSettings extends GuiScreen {
 		viewport.bottom(height - 20);
 		scrollbar = new GuiScrollbar(viewport, content);
 
-		// TODO change otherAction for a more suitable method like "updateGUIParts"
 		for(Setting<?> setting : callbacks.values()) {
-			setting.otherAction(callbacks.values());
+			setting.updateGuiParts(callbacks.values());
 		}
 	}
 
@@ -111,7 +110,7 @@ public class GuiElementSettings extends GuiScreen {
 
 			// Notify the rest of the elements that a button has been pressed
 			for(Setting<?> setting : callbacks.values()) {
-				setting.otherAction(callbacks.values());
+				setting.updateGuiParts(callbacks.values());
 
 				if(setting instanceof SettingAbsolutePosition) {
 					if(((SettingAbsolutePosition)setting).isPicking()) {
@@ -172,12 +171,11 @@ public class GuiElementSettings extends GuiScreen {
 		}
 		super.keyTyped(typedChar, keyCode);
 
-		// TODO can keyTyped and otherAction be combined? maybe "update"?
 		for(GuiTextField field : this.textboxList) {
 			field.textboxKeyTyped(typedChar, keyCode);
 
 			if(callbacks.containsKey(field)) {
-				callbacks.get(field).keyTyped(typedChar, keyCode);
+				callbacks.get(field).updateGuiParts(callbacks.values());
 			}
 		}
 	}

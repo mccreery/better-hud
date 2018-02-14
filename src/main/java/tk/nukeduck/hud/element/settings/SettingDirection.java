@@ -3,7 +3,6 @@ package tk.nukeduck.hud.element.settings;
 import static tk.nukeduck.hud.BetterHud.MC;
 import static tk.nukeduck.hud.BetterHud.SPACER;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -74,7 +73,7 @@ public class SettingDirection extends Setting<Direction> {
 			callbacks.put(radio, this);
 		}
 		this.radios = radios.toArray(new GuiToggleButton[radios.size()]);
-		otherAction(null);
+		updateGuiParts(null);
 		return y + SPACER;
 	}
 
@@ -85,7 +84,7 @@ public class SettingDirection extends Setting<Direction> {
 	}
 
 	@Override
-	public void otherAction(Collection<Setting<?>> settings) {
+	public void updateGuiParts(Collection<Setting<?>> settings) {
 		boolean enabled = enabled();
 
 		for(GuiToggleButton button : radios) {
@@ -93,9 +92,6 @@ public class SettingDirection extends Setting<Direction> {
 			button.set(button.id == value.ordinal());
 		}
 	}
-
-	@Override
-	public void keyTyped(char typedChar, int keyCode) throws IOException {}
 
 	@Override
 	public void draw() {

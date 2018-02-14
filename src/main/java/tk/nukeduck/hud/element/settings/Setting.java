@@ -1,6 +1,5 @@
 package tk.nukeduck.hud.element.settings;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -176,9 +175,7 @@ public abstract class Setting<T> implements IGetSet<T> {
 	 * @param button The GuiButton that was pressed. */
 	public abstract void actionPerformed(GuiElementSettings gui, GuiButton button);
 
-	/** Called when another GuiButton is pressed in the same window, but not from this setting. */
-	public abstract void otherAction(Collection<Setting<?>> settings);
-
-	/** Passed on from the element's setting screen when a key is pressed. */
-	public abstract void keyTyped(char typedChar, int keyCode) throws IOException;
+	/** Updates the GUI elements based on the state of other settings.
+	 * This is called when any button tied to a setting callback is pressed */
+	public abstract void updateGuiParts(Collection<Setting<?>> settings);
 }

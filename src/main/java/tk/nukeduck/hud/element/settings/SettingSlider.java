@@ -2,7 +2,6 @@ package tk.nukeduck.hud.element.settings;
 
 import static tk.nukeduck.hud.BetterHud.SPACER;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -15,8 +14,8 @@ import tk.nukeduck.hud.gui.GuiElementSettings;
 import tk.nukeduck.hud.gui.GuiSlider;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.ISaveLoad.ISlider;
 import tk.nukeduck.hud.util.FormatUtil;
+import tk.nukeduck.hud.util.ISaveLoad.ISlider;
 
 public class SettingSlider extends SettingAlignable<Double> implements ISlider {
 	protected GuiSlider slider;
@@ -86,8 +85,7 @@ public class SettingSlider extends SettingAlignable<Double> implements ISlider {
 	}
 
 	@Override public void actionPerformed(GuiElementSettings gui, GuiButton button) {}
-	@Override public void keyTyped(char typedChar, int keyCode) throws IOException {}
-	@Override public void otherAction(Collection<Setting<?>> settings) {}
+	@Override public void updateGuiParts(Collection<Setting<?>> settings) {}
 
 	@Override public Double get() {return value;}
 

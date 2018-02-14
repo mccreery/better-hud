@@ -47,7 +47,7 @@ public class SettingWarnings extends SettingStub<Double[]> {
 				}
 
 				@Override
-				public void otherAction(java.util.Collection<tk.nukeduck.hud.element.settings.Setting<?>> settings) {
+				public void updateGuiParts(java.util.Collection<tk.nukeduck.hud.element.settings.Setting<?>> settings) {
 					slider.updateDisplayString();
 				}
 			}.setAlignment((i & 1) == 1 ? Direction.EAST : Direction.WEST));
