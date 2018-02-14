@@ -108,12 +108,12 @@ public class SettingDirection extends Setting<Direction> {
 
 	@Override
 	public String save() {
-		return get().getUnlocalizedName();
+		return get().name;
 	}
 
 	@Override
 	public void load(String save) {
-		set(Direction.fromUnlocalizedName(save));
+		set(Direction.fromName(save));
 	}
 
 	@Override

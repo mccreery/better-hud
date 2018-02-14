@@ -58,7 +58,7 @@ public class GlUtil {
 		GlStateManager.disableDepth();
 
 		final int zLevel	  = 300;
-		final int bgColor	 = 0xf7100010;
+		final int bgColor	  = 0xb7100010;
 		final int borderStart = 0x505000ff;
 		final int borderEnd   = (borderStart & 0xfefefe) >> 1 | borderStart & 0xff000000;
 
@@ -72,6 +72,8 @@ public class GlUtil {
 		GuiUtils.drawGradientRect(zLevel, x+1,   y+2,   x+2,   y+h-2, borderStart, borderEnd);   // Left
 		GuiUtils.drawGradientRect(zLevel, x+w-2, y+2,   x+w-1, y+h-2, borderStart, borderEnd);   // Right
 		GuiUtils.drawGradientRect(zLevel, x+1,   y+h-2, x+w-1, y+h-1, borderEnd,   borderEnd);   // Bottom
+
+		GlStateManager.enableDepth();
 	}
 
 	/** Draws text with black borders on all sides */

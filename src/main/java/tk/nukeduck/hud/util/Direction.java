@@ -32,7 +32,7 @@ public enum Direction {
 	public static final int RIGHT      = flags(NORTH_EAST, EAST, SOUTH_EAST);
 	public static final int ALL        = TOP | HORIZONTAL | BOTTOM;
 
-	private final String name;
+	public final String name;
 
 	private final Point gridPosition;
 	private final float scaleX, scaleY;
@@ -116,7 +116,7 @@ public enum Direction {
 		return align(bounds);
 	}
 
-	public static Direction fromUnlocalizedName(String name) {
+	public static Direction fromName(String name) {
 		for(Direction direction : values()) {
 			if(direction.name.equals(name)) return direction;
 		}
