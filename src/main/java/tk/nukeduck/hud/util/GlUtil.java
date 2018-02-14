@@ -4,13 +4,19 @@ import static tk.nukeduck.hud.BetterHud.MC;
 
 import java.util.List;
 
+import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.Profile;
+import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
+import net.minecraft.entity.Entity;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.client.config.GuiUtils;
 
 public class GlUtil {
+	private static final double TEXTURE_NORMALIZE = 1.0 / 256.0;
+
 	/** Enables general blending for translucent primitives */
 	public static void enableBlendTranslucent() {
 		GlStateManager.enableBlendProfile(Profile.PLAYER_SKIN);
@@ -77,5 +83,45 @@ public class GlUtil {
 		MC.fontRenderer.drawString(text, x, y - 1, Colors.BLACK, false);
 	
 		MC.fontRenderer.drawString(text, x, y, color, false);
+	}
+
+	/** @see net.minecraft.client.gui.Gui#drawTexturedModalRect(int, int, int, int, int, int) */
+	public static void drawTexturedModalRect(int x, int y, int u, int v, int width, int height) {
+		Tessellator tessellator = Tessellator.getInstance();
+		BufferBuilder builder = tessellator.getBuffer();
+		builder.begin(7, DefaultVertexFormats.POSITION_TEX);
+
+		builder.pos(x,         y + height, 0).tex( u          * TEXTURE_NORMALIZE, (v + height) * TEXTURE_NORMALIZE).endVertex();
+		builder.pos(x + width, y + height, 0).tex((u + width) * TEXTURE_NORMALIZE, (v + height) * TEXTURE_NORMALIZE).endVertex();
+		builder.pos(x + width, y,          0).tex((u + width) * TEXTURE_NORMALIZE,  v           * TEXTURE_NORMALIZE).endVertex();
+		builder.pos(x,         y,          0).tex( u          * TEXTURE_NORMALIZE,  v           * TEXTURE_NORMALIZE).endVertex();
+
+		tessellator.draw();
+	}
+
+	/** Applies transformations such that the Z axis faces directly towards the player
+	 * and (0, 0) is translated to above {@code entity}'s head.
+	 * <p>This is similar to the method used to render player names, but any functionality can be implemented
+	 *
+	 * @param scaleFactor Linearly affects the size of things drawn to the billboard
+	 * @see net.minecraft.client.renderer.EntityRenderer#drawNameplate(net.minecraft.client.gui.FontRenderer, String, float, float, float, int, float, float, boolean, boolean) */
+	public static void setupBillboard(Entity entity, float partialTicks, float scaleFactor) {
+		double dx = (entity.prevPosX + (entity.posX - entity.prevPosX) * partialTicks) - (MC.player.prevPosX + (MC.player.posX - MC.player.prevPosX) * partialTicks); 
+		double dy = (entity.prevPosY + (entity.posY - entity.prevPosY) * partialTicks) - (MC.player.prevPosY + (MC.player.posY - MC.player.prevPosY) * partialTicks); 
+		double dz = (entity.prevPosZ + (entity.posZ - entity.prevPosZ) * partialTicks) - (MC.player.prevPosZ + (MC.player.posZ - MC.player.prevPosZ) * partialTicks);
+
+		dy += entity.height + 0.5;
+
+		scaleFactor = (scaleFactor * 0.75f + 0.25f);
+		float scale = (float)(Math.sqrt(dx * dx + dy * dy + dz * dz) / 300f + 0.01f) * scaleFactor;
+
+		GlStateManager.translate(dx, dy, dz);
+		scale(scale);
+
+		GlStateManager.rotate(-MC.player.rotationYaw,  0, 1, 0);
+		GlStateManager.rotate(MC.player.rotationPitch, 1, 0, 0);
+		GlStateManager.rotate(180, 0, 0, 1);
+
+		//enableBlendTranslucent();
 	}
 }

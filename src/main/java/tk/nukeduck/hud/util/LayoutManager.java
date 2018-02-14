@@ -13,7 +13,11 @@ public class LayoutManager {
 	private Bounds screen;
 
 	public void reset(ScaledResolution resolution) {
-		this.resolution = new Point(resolution);
+		reset(new Point(resolution), SPACER);
+	}
+
+	public void reset(Point resolution, int spacer) {
+		this.resolution = resolution;
 		screen = new Bounds(this.resolution).inset(SPACER);
 		corners.clear();
 	}

@@ -173,6 +173,7 @@ betterHud.value.slowest=Slowest
 betterHud.value.fastest=Fastest
 
 # Mob Info
+betterHud.setting.billboardScale=Billboard Scale
 betterHud.setting.jump=Jump Height
 betterHud.setting.speed=Speed
 betterHud.setting.players=Players

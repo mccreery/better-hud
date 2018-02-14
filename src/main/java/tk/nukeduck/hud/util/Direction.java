@@ -100,8 +100,7 @@ public enum Direction {
 	/** {@code point} defaults to the north-west corner of {@code bounds}
 	 * @see #align(Bounds, Point) */
 	public <T extends Bounds> T align(T bounds) {
-		bounds.position = bounds.position.sub(getAnchor(bounds.size));
-		return bounds;
+		return align(bounds, bounds.position);
 	}
 
 	/** Aligns the side(s) of {@code bounds} around {@code point},
