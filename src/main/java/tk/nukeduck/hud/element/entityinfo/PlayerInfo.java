@@ -17,6 +17,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
+import tk.nukeduck.hud.element.settings.SettingSlider;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
@@ -25,23 +26,45 @@ import tk.nukeduck.hud.util.PaddedBounds;
 import tk.nukeduck.hud.util.Point;
 
 public class PlayerInfo extends EntityInfo {
+	private final SettingSlider tooltipLines = new SettingSlider("tooltipLines", -1, 10, 1) {
+		@Override
+		public String getDisplayValue(double scaledValue) {
+			if(scaledValue == -1) {
+				return I18n.format("betterHud.value.unlimited");
+			} else {
+				return super.getDisplayValue(scaledValue);
+			}
+		}
+	};
+
 	public PlayerInfo() {
 		super("playerInfo");
+
+		settings.add(tooltipLines);
 	}
 
 	@Override
 	public boolean shouldRender(EntityLivingBase entity) {
-		return true;
-		//return entity instanceof EntityPlayer;
+		return entity instanceof EntityPlayer;
 	}
 
 	@Override
 	public void render(EntityLivingBase entity, float partialTicks) {
-		entity = MC.player;
+		List<String> tooltip = new ArrayList<String>();
 
-		String text = I18n.format("betterHud.hud.holding", getStackName(entity.getHeldItemMainhand()));
-		Point size = getLinesSize(text);
+		ItemStack held = entity.getHeldItemMainhand();
 
+		if(!held.isEmpty()) {
+			tooltip.add(I18n.format("betterHud.hud.holding", getStackName(held)));
+			getEnchantmentLines(held, tooltip);
+
+			int lines = tooltipLines.getInt();
+			if(lines != -1 && lines < tooltip.size()) {
+				tooltip = tooltip.subList(0, lines);
+			}
+		}
+
+		Point size = getLinesSize(tooltip);
 		if(size.x < 81) size.x = 81;
 
 		PaddedBounds bounds = new PaddedBounds(new Bounds(size), new Bounds(0, 9), Bounds.PADDING);
@@ -49,31 +72,38 @@ public class PlayerInfo extends EntityInfo {
 
 		drawRect(bounds, Colors.TRANSLUCENT);
 
-		drawString(text, Direction.NORTH_WEST.getAnchor(bounds.contentBounds()), Direction.NORTH_WEST, Colors.WHITE);
+		drawLines(tooltip, bounds.contentBounds(), Direction.NORTH_WEST, Colors.WHITE);
 		MC.getTextureManager().bindTexture(ICONS);
 		GlUtil.renderBar(entity.getTotalArmorValue(), 20, Direction.SOUTH_WEST.getAnchor(bounds.contentBounds()), new Bounds(16, 9, 9, 9), new Bounds(25, 9, 9, 9), new Bounds(34, 9, 9, 9));
 	}
 
 	/** @see ItemStack#getTooltip(EntityPlayer, net.minecraft.client.util.ITooltipFlag) */
 	private String getStackName(ItemStack stack) {
-		String name = stack.getDisplayName();
+		StringBuilder builder = new StringBuilder();
 
 		if(stack.hasDisplayName()) {
-			name = TextFormatting.ITALIC + name;
+			builder.append(TextFormatting.ITALIC);
 		}
-		return name;
+		if(stack.isItemEnchanted()) {
+			builder.append(TextFormatting.AQUA);
+		} else {
+			builder.append(TextFormatting.GRAY);
+		}
+		builder.append(stack.getDisplayName());
+		return builder.toString();
+	}
+
+	/** Adds strings representing the enchantments on {@code stack} to {@code dest} */
+	private void getEnchantmentLines(ItemStack stack, List<String> dest) {
+		Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
+
+		for(Map.Entry<Enchantment, Integer> enchantment : enchantments.entrySet()) {
+			dest.add(ChatFormatting.GRAY + enchantment.getKey().getTranslatedName(enchantment.getValue()));
+		}
 	}
 
 	@Override
-	public void loadDefaults() {}
-
-	private List<String> getEnchantmentLines(ItemStack stack) {
-		Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
-		List<String> enchantLines = new ArrayList<String>();
-
-		for(Map.Entry<Enchantment, Integer> enchantment : enchantments.entrySet()) {
-			enchantLines.add(ChatFormatting.LIGHT_PURPLE + enchantment.getKey().getTranslatedName(enchantment.getValue()));
-		}
-		return enchantLines;
+	public void loadDefaults() {
+		tooltipLines.set(-1.);
 	}
 }

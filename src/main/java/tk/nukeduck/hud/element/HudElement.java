@@ -124,11 +124,11 @@ public abstract class HudElement { // Can't extend Gui due to @SideOnly
 			lastBounds = render(event);
 			MC.mcProfiler.endSection();
 		} else {
-			lastBounds = null;
+			lastBounds = Bounds.EMPTY;
 		}
 	}
 
-	private Bounds lastBounds;
+	private Bounds lastBounds = Bounds.EMPTY;
 
 	public Bounds getLastBounds() {
 		return lastBounds;
@@ -209,7 +209,7 @@ public abstract class HudElement { // Can't extend Gui due to @SideOnly
 	 * @see #drawLines(String[], Bounds, Direction, int) */
 	public static Point getLinesSize(Collection<String> strings) {
 		if(strings.isEmpty()) {
-			return Point.ZERO;
+			return new Point(Point.ZERO);
 		}
 		int maxWidth = 0;
 

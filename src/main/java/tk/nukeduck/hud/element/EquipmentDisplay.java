@@ -72,7 +72,7 @@ public abstract class EquipmentDisplay extends HudElement {
 
 		if(count > 0) {
 			builder.append(' ');
-			FormatUtil.repeat(I18n.format("betterHud.setting.warning"), " ", count, builder);
+			builder.append(I18n.format("betterHud.setting.warning." + count));
 		}
 		return builder.toString();
 	}

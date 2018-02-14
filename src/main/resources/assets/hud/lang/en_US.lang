@@ -54,6 +54,7 @@ betterHud.element.lightLevel=Light Level
 betterHud.element.potionBar=Potion Display
 betterHud.element.signReader=Sign Reader
 betterHud.element.mobInfo=Mob Info
+betterHud.element.playerInfo=Player Info
 betterHud.element.horseInfo=Horse Info
 betterHud.element.distance=Distance
 betterHud.element.hidePlayers=Hide Players
@@ -122,7 +123,9 @@ betterHud.setting.durabilityFormat=Format
 betterHud.value.points=Damage Points
 betterHud.value.percentage=Percentage
 
-betterHud.setting.warning=§c!
+betterHud.setting.warning.1=§c!§r
+betterHud.setting.warning.2=§c! !§r
+betterHud.setting.warning.3=§c! ! !§r
 betterHud.value.disabled=Disabled
 
 # Block Viewer
@@ -179,6 +182,7 @@ betterHud.setting.mobs=Mobs
 
 betterHud.setting.compress=Compress Above
 betterHud.value.never=Never
+betterHud.value.unlimited=Unlimited
 
 # CPS Counter
 betterHud.setting.timeout=Timeout
@@ -197,6 +201,7 @@ betterHud.setting.showTotalExp=Total XP
 betterHud.setting.showLifetimeExp=XP Since Death
 betterHud.setting.disableDefault=Disable Default
 betterHud.setting.alwaysVisible=Always Visible
+betterHud.setting.tooltipLines=Tooltip Lines
 
 betterHud.hud.distance.0=§a[§r%s§a]
 betterHud.hud.distance.1=%sm away
