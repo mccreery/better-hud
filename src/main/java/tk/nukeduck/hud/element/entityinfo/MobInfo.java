@@ -113,7 +113,7 @@ public class MobInfo extends EntityInfo {
 
 		String text = String.format("%s %s(%d/%d)", entity.getName(), ChatFormatting.GRAY, health, maxHealth);
 
-		Point textSize = getLinesSize(text);
+		Point textSize = GlUtil.getLinesSize(text);
 
 		int compressLimit = compress.getInt();
 		if(compressLimit == 0) compressLimit = maxHealth;
@@ -127,8 +127,8 @@ public class MobInfo extends EntityInfo {
 		PaddedBounds bounds = new PaddedBounds(new Bounds(textSize), new Bounds(0, healthSize.y), Bounds.PADDING);
 		MANAGER.position(Direction.SOUTH, bounds);
 
-		drawRect(bounds, Colors.TRANSLUCENT);
-		drawString(text, bounds.contentBounds().position, Direction.NORTH_WEST, Colors.WHITE);
+		GlUtil.drawRect(bounds, Colors.TRANSLUCENT);
+		GlUtil.drawString(text, bounds.contentBounds().position, Direction.NORTH_WEST, Colors.WHITE);
 
 		renderHealth(health, maxHealth, compressLimit, Direction.SOUTH_WEST.getAnchor(bounds.contentBounds()));
 	}

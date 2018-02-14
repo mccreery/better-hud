@@ -33,6 +33,7 @@ import tk.nukeduck.hud.element.settings.Setting;
 import tk.nukeduck.hud.element.settings.SettingAbsolutePosition;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
+import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Point;
 
 @SideOnly(Side.CLIENT)
@@ -281,7 +282,7 @@ public class GuiElementSettings extends GuiScreen {
 				Bounds bounds = element.getLastBounds();
 
 				if(bounds != null && bounds != Bounds.EMPTY) {
-					HudElement.drawRect(bounds, Colors.setAlpha(Colors.RED, element == this.element ? 255 : 63));
+					GlUtil.drawRect(bounds, Colors.setAlpha(Colors.RED, element == this.element ? 255 : 63));
 				}
 			}
 		}

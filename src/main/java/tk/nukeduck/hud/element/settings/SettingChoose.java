@@ -12,11 +12,11 @@ import org.apache.commons.lang3.ArrayUtils;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
-import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.gui.GuiElementSettings;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Point;
 
 public class SettingChoose extends SettingAlignable<String> {
@@ -106,7 +106,7 @@ public class SettingChoose extends SettingAlignable<String> {
 		String value = index < modes.length ? I18n.format("betterHud.value." + modes[index]) : I18n.format("betterHud.value.mode", index);
 		Point center = new Point(backing.x + backing.width / 2, backing.y + backing.height / 2);
 
-		HudElement.drawString(value, center, Direction.CENTER, Colors.WHITE);
+		GlUtil.drawString(value, center, Direction.CENTER, Colors.WHITE);
 	}
 
 	@Override

@@ -2,13 +2,7 @@ package tk.nukeduck.hud.element;
 
 import static tk.nukeduck.hud.BetterHud.MC;
 
-import java.util.Arrays;
-import java.util.Collection;
-
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -33,9 +27,6 @@ import tk.nukeduck.hud.element.text.LightLevel;
 import tk.nukeduck.hud.element.text.SystemClock;
 import tk.nukeduck.hud.network.Version;
 import tk.nukeduck.hud.util.Bounds;
-import tk.nukeduck.hud.util.Colors;
-import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.Point;
 
 public abstract class HudElement { // Can't extend Gui due to @SideOnly
 	public static final ArmorBars ARMOR_BARS = new ArmorBars();
@@ -159,95 +150,4 @@ public abstract class HudElement { // Can't extend Gui due to @SideOnly
 
 	/** Loads this element's default settings. */
 	public abstract void loadDefaults();
-
-	// Rendering utility functions
-
-	/** @see Gui#drawRect(int, int, int, int, int) */
-	public static void drawRect(Bounds bounds, int color) {
-		Gui.drawRect(bounds.left(), bounds.top(), bounds.right(), bounds.bottom(), color);
-	}
-
-	/** {@code progress} defaults to the durability of {@code stack}
-	 * @see #drawProgressBar(Bounds, float, boolean) */
-	public static void drawDamageBar(Bounds bounds, ItemStack stack, boolean vertical) {
-		float progress = (float)(stack.getMaxDamage() - stack.getItemDamage()) / stack.getMaxDamage();
-		drawProgressBar(bounds, progress, vertical);
-	}
-
-	/** Draws a progress bar for item damage
-	 * @param progress Index of progress between 0 and 1
-	 * @param vertical {@code true} to render bar from bottom to top */
-	public static void drawProgressBar(Bounds bounds, float progress, boolean vertical) {
-		drawRect(bounds, Colors.BLACK);
-		progress = MathHelper.clamp(progress, 0, 1);
-
-		int color = Colors.fromHSV(progress / 3, 1, 1);
-
-		Bounds bar;
-		if(vertical) {
-			bar = new Bounds(bounds.width() - 1, (int)(progress * bounds.height()));
-			Direction.SOUTH_WEST.anchor(bar, bounds);
-		} else {
-			bar = new Bounds((int)(progress * bounds.width()), bounds.height() - 1);
-			Direction.NORTH_WEST.anchor(bar, bounds);
-		}
-		drawRect(bar, color);
-	}
-
-	/** @return The height of {@code lines} of text
-	 * @see #drawLines(String[], Bounds, Direction, int) */
-	public static int getLinesHeight(int lines) {
-		return lines > 0 ? (MC.fontRenderer.FONT_HEIGHT + 2) * lines - 2 : 0;
-	}
-
-	/** @see #getLinesSize(Collection) */
-	public static Point getLinesSize(String... strings) {
-		return getLinesSize(Arrays.asList(strings));
-	}
-
-	/** @return The size of {@code strings}
-	 * @see #drawLines(String[], Bounds, Direction, int) */
-	public static Point getLinesSize(Collection<String> strings) {
-		if(strings.isEmpty()) {
-			return new Point(Point.ZERO);
-		}
-		int maxWidth = 0;
-
-		for(String string : strings) {
-			if(string != null) {
-				int width = MC.fontRenderer.getStringWidth(string);
-				if(width > maxWidth) maxWidth = width;
-			}
-		}
-		return new Point(maxWidth, getLinesHeight(strings.size()));
-	}
-
-	/** Draws a line of text aligned around {@code position} by {@code anchor} */
-	public static Bounds drawString(String string, Point position, Direction anchor, int color) {
-		Bounds bounds = anchor.align(new Bounds(position, getLinesSize(string)));
-
-		MC.fontRenderer.drawStringWithShadow(string, bounds.x(), bounds.y(), color);
-		return bounds;
-	}
-
-	/** @see #drawLines(Collection, Bounds, Direction, int) */
-	public static Bounds drawLines(String[] strings, Bounds bounds, Direction anchor, int color) {
-		return drawLines(Arrays.asList(strings), bounds, anchor, color);
-	}
-
-	/** Draws multiple lines of text anchored to {@code anchor} within {@code bounds} */
-	public static Bounds drawLines(Collection<String> strings, Bounds bounds, Direction anchor, int color) {
-		bounds = anchor.anchor(new Bounds(getLinesSize(strings)), bounds);
-		Bounds drawBounds = new Bounds(bounds);
-
-		if(anchor.in(Direction.LEFT)) anchor = Direction.NORTH_WEST;
-		else if(anchor.in(Direction.RIGHT)) anchor = Direction.NORTH_EAST;
-		else anchor = Direction.NORTH;
-
-		// Render lines top to bottom
-		for(String line : strings) {
-			drawBounds.top(drawString(line, anchor.getAnchor(drawBounds), anchor, color).bottom() + 2);
-		}
-		return bounds;
-	}
 }

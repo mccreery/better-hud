@@ -52,26 +52,26 @@ public class Compass extends HudElement {
 	}
 
 	private void drawBackground(Bounds bounds) {
-		drawRect(bounds, Colors.fromARGB(170, 0, 0, 0));
-		drawRect(bounds.inset(50, 0, 50, 0), Colors.fromARGB(85, 85, 85, 85));
+		GlUtil.drawRect(bounds, Colors.fromARGB(170, 0, 0, 0));
+		GlUtil.drawRect(bounds.inset(50, 0, 50, 0), Colors.fromARGB(85, 85, 85, 85));
 
 		if(showNotches.get()) {
 			Bounds notch = new Bounds(0, bounds.y() - 2, 1, 6);
 
 			for(int loc : notchX) {
 				notch.x(bounds.x() + loc - 1);
-				drawRect(notch, Colors.WHITE);
+				GlUtil.drawRect(notch, Colors.WHITE);
 				notch.x(bounds.x() - loc + 180);
-				drawRect(notch, Colors.WHITE);
+				GlUtil.drawRect(notch, Colors.WHITE);
 			}
 		}
 
 		Bounds notches = bounds.pad(0, 3, 0, 0);
 		Bounds largeNotch = new Bounds(1, 7);
 
-		drawRect(Direction.NORTH_WEST.anchor(largeNotch, notches), Colors.RED);
-		drawRect(Direction.NORTH     .anchor(largeNotch, notches), Colors.RED);
-		drawRect(Direction.NORTH_EAST.anchor(largeNotch, notches), Colors.RED);
+		GlUtil.drawRect(Direction.NORTH_WEST.anchor(largeNotch, notches), Colors.RED);
+		GlUtil.drawRect(Direction.NORTH     .anchor(largeNotch, notches), Colors.RED);
+		GlUtil.drawRect(Direction.NORTH_EAST.anchor(largeNotch, notches), Colors.RED);
 	}
 
 	private void drawDirections(Bounds bounds) {

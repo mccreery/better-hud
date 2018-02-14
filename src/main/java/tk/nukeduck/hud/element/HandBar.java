@@ -66,7 +66,7 @@ public class HandBar extends EquipmentDisplay {
 
 		if(showBars.get()) {
 			MC.mcProfiler.startSection("bars");
-			drawDamageBar(new Bounds(x, y + 16, 180, 2), stack, false);
+			GlUtil.drawDamageBar(new Bounds(x, y + 16, 180, 2), stack, false);
 			MC.mcProfiler.endSection();
 		}
 	}

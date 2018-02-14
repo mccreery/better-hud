@@ -11,6 +11,7 @@ import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.FormatUtil;
+import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.PaddedBounds;
 
 public class HorseInfo extends EntityInfo {
@@ -41,11 +42,11 @@ public class HorseInfo extends EntityInfo {
 			infoParts.add(speed.getLocalizedName() + ": " + FormatUtil.formatToPlaces(getSpeed((EntityHorse)entity), 3) + "m/s");
 		}
 
-		PaddedBounds bounds = new PaddedBounds(new Bounds(getLinesSize(infoParts)), Bounds.PADDING, Bounds.EMPTY);
+		PaddedBounds bounds = new PaddedBounds(new Bounds(GlUtil.getLinesSize(infoParts)), Bounds.PADDING, Bounds.EMPTY);
 		BetterHud.MANAGER.position(Direction.SOUTH, bounds);
 
-		drawRect(bounds, Colors.TRANSLUCENT);
-		drawLines(infoParts, bounds.contentBounds(), Direction.NORTH_WEST, Colors.WHITE);
+		GlUtil.drawRect(bounds, Colors.TRANSLUCENT);
+		GlUtil.drawLines(infoParts, bounds.contentBounds(), Direction.NORTH_WEST, Colors.WHITE);
 	}
 
 	/** Calculates horse jump height using a derived polynomial

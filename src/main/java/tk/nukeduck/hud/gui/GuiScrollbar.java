@@ -4,10 +4,10 @@ import org.lwjgl.input.Mouse;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.util.math.MathHelper;
-import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.GlUtil;
 
 public class GuiScrollbar extends Gui {
 	private final Bounds bounds;
@@ -64,11 +64,11 @@ public class GuiScrollbar extends Gui {
 	}
 
 	public void drawScrollbar(int mouseX, int mouseY) {
-		HudElement.drawRect(bounds, background);
+		GlUtil.drawRect(bounds, background);
 
 		if(canScroll()) {
 			int grabColor = isScrolling() || bounds.contains(mouseX, mouseY) ? highlight : foreground;
-			HudElement.drawRect(grabber, grabColor);
+			GlUtil.drawRect(grabber, grabColor);
 		}
 	}
 

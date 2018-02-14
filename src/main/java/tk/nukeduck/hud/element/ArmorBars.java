@@ -78,7 +78,7 @@ public class ArmorBars extends EquipmentDisplay {
 			for(int i = 0; i < 4; i++) {
 				text[i] = getText(MC.player.inventory.armorItemInSlot(i));
 			}
-			size = getLinesSize(text);
+			size = GlUtil.getLinesSize(text);
 			size.y = 16;
 		} else {
 			size = new Point(0, 16);
@@ -113,7 +113,7 @@ public class ArmorBars extends EquipmentDisplay {
 				if(hasText() && text[i] != null) {
 					MC.mcProfiler.startSection("text");
 
-					Bounds textBounds = alignment.anchor(new Bounds(getLinesSize(text[i])), content);
+					Bounds textBounds = alignment.anchor(new Bounds(GlUtil.getLinesSize(text[i])), content);
 					if(largeBars()) textBounds.y(textBounds.y() - 1);
 
 					MC.ingameGUI.drawString(MC.fontRenderer, text[i], textBounds.x(), textBounds.y(), Colors.WHITE);
@@ -125,10 +125,10 @@ public class ArmorBars extends EquipmentDisplay {
 
 					if(largeBars()) {
 						Bounds bar = Direction.SOUTH.anchor(new Bounds(content.width(), 2), content);
-						drawDamageBar(bar, stack, false);
+						GlUtil.drawDamageBar(bar, stack, false);
 					} else {
 						Bounds bar = alignment.mirrorX().anchor(new Bounds(2, item.height()), item);
-						drawDamageBar(bar, stack, true);
+						GlUtil.drawDamageBar(bar, stack, true);
 					}
 
 					MC.mcProfiler.endSection();
