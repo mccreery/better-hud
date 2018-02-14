@@ -6,10 +6,6 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.entity.player.InventoryPlayer;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.item.ItemStack;
-import net.minecraft.nbt.NBTTagCompound;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.World;
 import net.minecraftforge.event.entity.player.EntityItemPickupEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -27,15 +23,6 @@ public class PickupNotifier {
 			if(!delta.isEmpty()) {
 				BetterHud.NET_WRAPPER.sendTo(new MessagePickup(delta), (EntityPlayerMP)e.getEntityPlayer());
 			}
-		}
-
-		World world = e.getItem().getEntityWorld();
-		TileEntity te = world.getTileEntity(new BlockPos(627, 134, -95));
-
-		if(te != null) {
-			NBTTagCompound compound = new NBTTagCompound();
-			te.writeToNBT(compound);
-			System.out.println(compound);
 		}
 	}
 

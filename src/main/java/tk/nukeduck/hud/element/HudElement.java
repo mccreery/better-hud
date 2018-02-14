@@ -82,6 +82,7 @@ public abstract class HudElement { // Can't extend Gui due to @SideOnly
 	};
 
 	public static final ResourceLocation HUD_ICONS = new ResourceLocation("hud", "textures/gui/icons_hud.png");
+	public static final ResourceLocation ICONS     = new ResourceLocation("textures/gui/icons.png");
 	public static final ResourceLocation PARTICLES = new ResourceLocation("textures/particle/particles.png");
 
 	public final RootSetting settings = new RootSetting(this);

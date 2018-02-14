@@ -156,7 +156,6 @@ public class BetterHud {
 			element.tryRender(entityLiving, e.getPartialTicks());
 		}
 
-		GlStateManager.depthMask(true);
 		GlStateManager.enableDepth();
 		GlStateManager.popMatrix();
 

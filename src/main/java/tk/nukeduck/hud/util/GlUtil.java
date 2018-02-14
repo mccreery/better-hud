@@ -85,6 +85,11 @@ public class GlUtil {
 		MC.fontRenderer.drawString(text, x, y, color, false);
 	}
 
+	/** @see #drawTexturedModalRect(int, int, int, int, int, int) */
+	public static void drawTexturedModalRect(Point position, Bounds texture) {
+		drawTexturedModalRect(position.x, position.y, texture.x(), texture.y(), texture.width(), texture.height());
+	}
+
 	/** @see net.minecraft.client.gui.Gui#drawTexturedModalRect(int, int, int, int, int, int) */
 	public static void drawTexturedModalRect(int x, int y, int u, int v, int width, int height) {
 		Tessellator tessellator = Tessellator.getInstance();
