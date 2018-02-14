@@ -111,17 +111,14 @@ public class GlUtil {
 		double dz = (entity.prevPosZ + (entity.posZ - entity.prevPosZ) * partialTicks) - (MC.player.prevPosZ + (MC.player.posZ - MC.player.prevPosZ) * partialTicks);
 
 		dy += entity.height + 0.5;
-
-		scaleFactor = (scaleFactor * 0.75f + 0.25f);
-		float scale = (float)(Math.sqrt(dx * dx + dy * dy + dz * dz) / 300f + 0.01f) * scaleFactor;
-
 		GlStateManager.translate(dx, dy, dz);
-		scale(scale);
+
+		dy -= MC.player.getEyeHeight();
+		float distance = (float)Math.sqrt(dx*dx + dy*dy + dz*dz);
+		scale(distance * (scaleFactor + 0.5f) / 300f);
 
 		GlStateManager.rotate(-MC.player.rotationYaw,  0, 1, 0);
 		GlStateManager.rotate(MC.player.rotationPitch, 1, 0, 0);
 		GlStateManager.rotate(180, 0, 0, 1);
-
-		//enableBlendTranslucent();
 	}
 }
