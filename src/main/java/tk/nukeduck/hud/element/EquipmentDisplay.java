@@ -65,13 +65,15 @@ public abstract class EquipmentDisplay extends HudElement {
 			}
 		}
 
-		String text = FormatUtil.join(" - ", parts);
+		StringBuilder builder = new StringBuilder();
+
+		FormatUtil.join(" - ", parts, builder);
 		int count = warnings.getWarning(value);
 
-		// TODO maybe use a single string builder for efficiency
 		if(count > 0) {
-			text += " " + I18n.format("betterHud.setting.warning." + count);
+			builder.append(' ');
+			FormatUtil.repeat(I18n.format("betterHud.setting.warning"), " ", count, builder);
 		}
-		return text;
+		return builder.toString();
 	}
 }

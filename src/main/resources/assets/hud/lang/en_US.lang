@@ -122,9 +122,7 @@ betterHud.setting.durabilityFormat=Format
 betterHud.value.points=Damage Points
 betterHud.value.percentage=Percentage
 
-betterHud.setting.warning.1=§c!§r
-betterHud.setting.warning.2=§c! !§r
-betterHud.setting.warning.3=§c! ! !§r
+betterHud.setting.warning=§c!
 betterHud.value.disabled=Disabled
 
 # Block Viewer
