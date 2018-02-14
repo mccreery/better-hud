@@ -1,14 +1,15 @@
 package tk.nukeduck.hud.element.particles;
 
-public abstract class Particle {
-	public int x, y;
+import tk.nukeduck.hud.util.Point;
 
-	public Particle(int x, int y) {
-		this.x = x;
-		this.y = y;
+public abstract class Particle {
+	public Point position;
+
+	public Particle(Point position) {
+		this.position = position;
 	}
 
-	/** @return {@code true} if the particle should be removed. */
+	/** @return {@code true} if the particle is dead */
 	public abstract boolean update();
 	public abstract void render();
 }

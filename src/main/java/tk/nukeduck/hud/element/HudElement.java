@@ -28,7 +28,7 @@ import tk.nukeduck.hud.element.text.SystemClock;
 import tk.nukeduck.hud.network.Version;
 import tk.nukeduck.hud.util.Bounds;
 
-public abstract class HudElement { // Can't extend Gui due to @SideOnly
+public abstract class HudElement {
 	public static final ArmorBars ARMOR_BARS = new ArmorBars();
 	public static final ArrowCount ARROW_COUNT = new ArrowCount();
 	public static final BiomeName BIOME_NAME = new BiomeName();
