@@ -1,0 +1,79 @@
+package tk.nukeduck.hud.element.entityinfo;
+
+import static tk.nukeduck.hud.BetterHud.ICONS;
+import static tk.nukeduck.hud.BetterHud.MANAGER;
+import static tk.nukeduck.hud.BetterHud.MC;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+
+import com.mojang.realmsclient.gui.ChatFormatting;
+
+import net.minecraft.client.resources.I18n;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextFormatting;
+import tk.nukeduck.hud.util.Bounds;
+import tk.nukeduck.hud.util.Colors;
+import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.GlUtil;
+import tk.nukeduck.hud.util.PaddedBounds;
+import tk.nukeduck.hud.util.Point;
+
+public class PlayerInfo extends EntityInfo {
+	public PlayerInfo() {
+		super("playerInfo");
+	}
+
+	@Override
+	public boolean shouldRender(EntityLivingBase entity) {
+		return true;
+		//return entity instanceof EntityPlayer;
+	}
+
+	@Override
+	public void render(EntityLivingBase entity, float partialTicks) {
+		entity = MC.player;
+
+		String text = I18n.format("betterHud.hud.holding", getStackName(entity.getHeldItemMainhand()));
+		Point size = getLinesSize(text);
+
+		if(size.x < 81) size.x = 81;
+
+		PaddedBounds bounds = new PaddedBounds(new Bounds(size), new Bounds(0, 9), Bounds.PADDING);
+		MANAGER.position(Direction.SOUTH, bounds);
+
+		drawRect(bounds, Colors.TRANSLUCENT);
+
+		drawString(text, Direction.NORTH_WEST.getAnchor(bounds.contentBounds()), Direction.NORTH_WEST, Colors.WHITE);
+		MC.getTextureManager().bindTexture(ICONS);
+		GlUtil.renderBar(entity.getTotalArmorValue(), 20, Direction.SOUTH_WEST.getAnchor(bounds.contentBounds()), new Bounds(16, 9, 9, 9), new Bounds(25, 9, 9, 9), new Bounds(34, 9, 9, 9));
+	}
+
+	/** @see ItemStack#getTooltip(EntityPlayer, net.minecraft.client.util.ITooltipFlag) */
+	private String getStackName(ItemStack stack) {
+		String name = stack.getDisplayName();
+
+		if(stack.hasDisplayName()) {
+			name = TextFormatting.ITALIC + name;
+		}
+		return name;
+	}
+
+	@Override
+	public void loadDefaults() {}
+
+	private List<String> getEnchantmentLines(ItemStack stack) {
+		Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
+		List<String> enchantLines = new ArrayList<String>();
+
+		for(Map.Entry<Enchantment, Integer> enchantment : enchantments.entrySet()) {
+			enchantLines.add(ChatFormatting.LIGHT_PURPLE + enchantment.getKey().getTranslatedName(enchantment.getValue()));
+		}
+		return enchantLines;
+	}
+}

@@ -1,5 +1,6 @@
 package tk.nukeduck.hud.element;
 
+import static tk.nukeduck.hud.BetterHud.HUD_ICONS;
 import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
 

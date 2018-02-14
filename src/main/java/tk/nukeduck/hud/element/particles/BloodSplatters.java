@@ -1,5 +1,6 @@
 package tk.nukeduck.hud.element.particles;
 
+import static tk.nukeduck.hud.BetterHud.HUD_ICONS;
 import static tk.nukeduck.hud.BetterHud.MC;
 
 import net.minecraft.client.gui.ScaledResolution;

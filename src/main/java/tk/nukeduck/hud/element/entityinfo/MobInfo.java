@@ -1,22 +1,14 @@
 package tk.nukeduck.hud.element.entityinfo;
 
+import static tk.nukeduck.hud.BetterHud.ICONS;
 import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
 import static tk.nukeduck.hud.BetterHud.SPACER;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import net.minecraft.client.resources.I18n;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingSlider;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
@@ -26,9 +18,6 @@ import tk.nukeduck.hud.util.PaddedBounds;
 import tk.nukeduck.hud.util.Point;
 
 public class MobInfo extends EntityInfo {
-	private final SettingBoolean players = new SettingBoolean("players");
-	private final SettingBoolean mobs = new SettingBoolean("mobs");
-
 	private final SettingSlider compress = new SettingSlider("compress", 0, 200, 20) {
 		@Override
 		public String getDisplayValue(double value) {
@@ -42,27 +31,21 @@ public class MobInfo extends EntityInfo {
 
 	public MobInfo() {
 		super("mobInfo");
-
-		settings.add(players);
-		settings.add(mobs);
 		settings.add(compress);
 	}
 
 	@Override
 	public void loadDefaults() {
 		settings.set(true);
-		players.set(true);
-		mobs.set(true);
-
 		compress.set(40.0);
 	}
 
-	private String getCompressString(int rows) {
+	private static String getCompressString(int rows) {
 		return "x" + rows;
 	}
 
 	/** Precalculates the size required for {@link #renderH(EntityLivingBase, int, Point)} */
-	private Point getHealthSize(int health, int maxHealth, int compressLimit) {
+	private static Point getHealthSize(int health, int maxHealth, int compressLimit) {
 		int width = 0;
 		int rows = 0;
 
@@ -104,12 +87,12 @@ public class MobInfo extends EntityInfo {
 	 *
 	 * @param compressLimit The maximum health at which the bar should not be compressed.
 	 * Should be a multiple of 20 (one row) */
-	private void renderHealth(int health, int maxHealth, int compressLimit, Point position) {
+	private static void renderHealth(int health, int maxHealth, int compressLimit, Point position) {
 		position = new Point(position);
 
 		if(health > compressLimit) {
 			int rows = health / 20;
-			renderCompressedRows(rows, position);
+			MobInfo.renderCompressedRows(rows, position);
 
 			// Remaining health between 0 and 19 points, max health between 0 and 20
 			health -= rows * 20;
@@ -121,77 +104,14 @@ public class MobInfo extends EntityInfo {
 			maxHealth = compressLimit;
 		}
 
-		renderHealthBar(health, maxHealth, position);
-	}
-
-	/** Renders a graphic representing a total of {@code rows} compressed rows */
-	private void renderCompressedRows(int rows, Point position) {
-		Bounds emptyTexture = new Bounds(16, 0, 9, 9);
-		Bounds heartTexture = new Bounds(52, 0, 9, 9);
-
-		position = new Point(position);
-
-		MC.getTextureManager().bindTexture(ICONS);
-		GlUtil.color(Colors.WHITE);
-
-		for(int i = 0; i < 10; i++, position.x += 4) {
-			GlUtil.drawTexturedModalRect(position, emptyTexture);
-			GlUtil.drawTexturedModalRect(position, heartTexture);
-		}
-		position.x += SPACER;
-
-		MC.fontRenderer.drawString(getCompressString(rows), position.x, position.y, Colors.WHITE);
-	}
-
-	/** @see #renderBar(int, int, Point, Bounds, Bounds, Bounds) */
-	private void renderHealthBar(int health, int maxHealth, Point position) {
-		MC.getTextureManager().bindTexture(ICONS);
-
-		renderBar(health, maxHealth, position,
-			new Bounds(16, 0, 9, 9), new Bounds(61, 0, 9, 9), new Bounds(52, 0, 9, 9));
-	}
-
-	/** Renders a multi-row health bar with {@code health} full hearts
-	 * and {@code maxHealth} total hearts
-	 *
-	 * @param background The texture coordinates for the background icon
-	 * @param half The texture coordinates for the half unit icon
-	 * @param full The texture coordinates for a full unit icon */
-	private void renderBar(int current, int max, Point position, Bounds background, Bounds half, Bounds full) {
-		Point icon = new Point(position);
-
-		GlUtil.color(Colors.WHITE);
-		for(int i = 0; i < max; icon.x = position.x, icon.y += 9) {
-			for(int j = 0; j < 20 && i < max; i += 2, j += 2, icon.x += 8) {
-				if(background != null) {
-					GlUtil.drawTexturedModalRect(icon, background);
-				}
-
-				if(i + 1 < current) {
-					GlUtil.drawTexturedModalRect(icon, full);
-				} else if(i < current) {
-					GlUtil.drawTexturedModalRect(icon, half);
-				}
-			}
-		}
+		GlUtil.renderHealthBar(health, maxHealth, position);
 	}
 
 	public void render(EntityLivingBase entity, float partialTicks) {
-		boolean isPlayer = entity instanceof EntityPlayer;
-		if((isPlayer && !players.get()) || (!isPlayer && !mobs.get())) {
-			return;
-		}
-
 		int health = (int)entity.getHealth();
 		int maxHealth = (int)entity.getMaxHealth();
 
 		String text = String.format("%s %s(%d/%d)", entity.getName(), ChatFormatting.GRAY, health, maxHealth);
-		//List<String> text = new ArrayList<String>();
-		//text.add(String.format("%s %s(%d/%d)", entity.getName(), ChatFormatting.GRAY, (int)entity.getHealth(), (int)entity.getMaxHealth()));
-
-		/*if(isPlayer) {
-			text.add(String.format("(%d/%d)", entity.getTotalArmorValue(), 20));
-		}*/
 
 		Point textSize = getLinesSize(text);
 
@@ -211,34 +131,24 @@ public class MobInfo extends EntityInfo {
 		drawString(text, bounds.contentBounds().position, Direction.NORTH_WEST, Colors.WHITE);
 
 		renderHealth(health, maxHealth, compressLimit, Direction.SOUTH_WEST.getAnchor(bounds.contentBounds()));
-
-		if(isPlayer) {
-			PaddedBounds armor = new PaddedBounds(new Bounds(81, 9), Bounds.PADDING, Bounds.EMPTY);
-			MANAGER.position(Direction.SOUTH, armor);
-			drawRect(armor, Colors.TRANSLUCENT);
-			renderBar(entity.getTotalArmorValue(), 20, Direction.NORTH_WEST.getAnchor(armor.contentBounds()), new Bounds(16, 9, 9, 9), new Bounds(25, 9, 9, 9), new Bounds(34, 9, 9, 9));
-		}
 	}
 
-	private List<String> getEnchantmentLines(ItemStack stack) {
-		Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
-		List<String> enchantLines = new ArrayList<String>();
-
-		for(Map.Entry<Enchantment, Integer> enchantment : enchantments.entrySet()) {
-			enchantLines.add(ChatFormatting.LIGHT_PURPLE + enchantment.getKey().getTranslatedName(enchantment.getValue()));
+	/** Renders a graphic representing a total of {@code rows} compressed rows */
+	private static void renderCompressedRows(int rows, Point position) {
+		Bounds emptyTexture = new Bounds(16, 0, 9, 9);
+		Bounds heartTexture = new Bounds(52, 0, 9, 9);
+	
+		position = new Point(position);
+	
+		MC.getTextureManager().bindTexture(ICONS);
+		GlUtil.color(Colors.WHITE);
+	
+		for(int i = 0; i < 10; i++, position.x += 4) {
+			GlUtil.drawTexturedModalRect(position, emptyTexture);
+			GlUtil.drawTexturedModalRect(position, heartTexture);
 		}
-		return enchantLines;
-	}
-
-	// TODO show what other players are holding
-	private void renderHolding(ItemStack stack, int top) {
-		final String holding = I18n.format("betterHud.strings.holding");
-		MC.ingameGUI.drawString(MC.fontRenderer, holding, SPACER, top + SPACER, Colors.WHITE);
-
-		List<String> enchantLines = getEnchantmentLines(stack);
-		drawLines(enchantLines, new Bounds(0, top, 0, 0), Direction.NORTH_WEST, Colors.WHITE);
-
-		String stackName = (stack.hasDisplayName() ? ChatFormatting.ITALIC : "") + "" + (stack.isItemEnchanted() ? ChatFormatting.AQUA : "") + stack.getDisplayName();
-		MC.ingameGUI.drawString(MC.fontRenderer, stackName, 10 + 16 + MC.fontRenderer.getStringWidth(holding), top + 5, Colors.WHITE);
+		position.x += SPACER;
+	
+		MC.fontRenderer.drawString(getCompressString(rows), position.x, position.y, Colors.WHITE);
 	}
 }

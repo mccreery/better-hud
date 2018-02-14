@@ -1,5 +1,6 @@
 package tk.nukeduck.hud.util;
 
+import static tk.nukeduck.hud.BetterHud.ICONS;
 import static tk.nukeduck.hud.BetterHud.MC;
 
 import java.util.List;
@@ -127,5 +128,38 @@ public class GlUtil {
 		GlStateManager.rotate(-MC.player.rotationYaw,  0, 1, 0);
 		GlStateManager.rotate(MC.player.rotationPitch, 1, 0, 0);
 		GlStateManager.rotate(180, 0, 0, 1);
+	}
+
+	/** Renders a multi-row health bar with {@code health} full hearts
+	 * and {@code maxHealth} total hearts
+	 *
+	 * @param background The texture coordinates for the background icon
+	 * @param half The texture coordinates for the half unit icon
+	 * @param full The texture coordinates for a full unit icon */
+	public static void renderBar(int current, int max, Point position, Bounds background, Bounds half, Bounds full) {
+		Point icon = new Point(position);
+	
+		color(Colors.WHITE);
+		for(int i = 0; i < max; icon.x = position.x, icon.y += 9) {
+			for(int j = 0; j < 20 && i < max; i += 2, j += 2, icon.x += 8) {
+				if(background != null) {
+					drawTexturedModalRect(icon, background);
+				}
+	
+				if(i + 1 < current) {
+					drawTexturedModalRect(icon, full);
+				} else if(i < current) {
+					drawTexturedModalRect(icon, half);
+				}
+			}
+		}
+	}
+
+	/** @see renderBar */
+	public static void renderHealthBar(int health, int maxHealth, Point position) {
+		MC.getTextureManager().bindTexture(ICONS);
+	
+		renderBar(health, maxHealth, position,
+			new Bounds(16, 0, 9, 9), new Bounds(61, 0, 9, 9), new Bounds(52, 0, 9, 9));
 	}
 }

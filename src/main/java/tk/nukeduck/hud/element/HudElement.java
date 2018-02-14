@@ -8,7 +8,6 @@ import java.util.Collection;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -17,6 +16,7 @@ import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.element.entityinfo.EntityInfo;
 import tk.nukeduck.hud.element.entityinfo.HorseInfo;
 import tk.nukeduck.hud.element.entityinfo.MobInfo;
+import tk.nukeduck.hud.element.entityinfo.PlayerInfo;
 import tk.nukeduck.hud.element.particles.BloodSplatters;
 import tk.nukeduck.hud.element.particles.WaterDrops;
 import tk.nukeduck.hud.element.settings.RootSetting;
@@ -63,6 +63,7 @@ public abstract class HudElement { // Can't extend Gui due to @SideOnly
 	public static final GlobalSettings GLOBAL = new GlobalSettings();
 	public static final HidePlayers HIDE_PLAYERS = new HidePlayers();
 	public static final PickupCount PICKUP = new PickupCount();
+	public static final PlayerInfo PLAYER_INFO = new PlayerInfo();
 	public static final PotionBar POTION_BAR = new PotionBar();
 	public static final HorseInfo HORSE_INFO = new HorseInfo();
 	public static final MobInfo MOB_INFO = new MobInfo();
@@ -74,16 +75,12 @@ public abstract class HudElement { // Can't extend Gui due to @SideOnly
 		MAX_LEVEL, EXPERIENCE, STATS, FPS, FULL_INV,
 		HOLDING, HEAL, HUNGER, LIGHT_LEVEL, SIGN_READER,
 		SYSTEM_CLOCK, WATER_DROPS, HIDE_PLAYERS,
-		HORSE_INFO, MOB_INFO, PICKUP, POTION_BAR, CPS
+		HORSE_INFO, MOB_INFO, PICKUP, PLAYER_INFO, POTION_BAR, CPS
 	};
 
 	public static final EntityInfo[] ENTITY_INFO = {
-		HORSE_INFO, MOB_INFO
+		HORSE_INFO, MOB_INFO, PLAYER_INFO
 	};
-
-	public static final ResourceLocation HUD_ICONS = new ResourceLocation("hud", "textures/gui/icons_hud.png");
-	public static final ResourceLocation ICONS     = new ResourceLocation("textures/gui/icons.png");
-	public static final ResourceLocation PARTICLES = new ResourceLocation("textures/particle/particles.png");
 
 	public final RootSetting settings = new RootSetting(this);
 

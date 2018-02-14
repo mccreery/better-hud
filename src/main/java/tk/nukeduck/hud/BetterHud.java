@@ -14,6 +14,7 @@ import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
@@ -58,6 +59,10 @@ public class BetterHud {
 	@SideOnly(Side.CLIENT) public static Minecraft MC;
 	@SideOnly(Side.CLIENT) public static GuiHudMenu MENU;
 	@SideOnly(Side.CLIENT) private static KeyBinding MENU_KEY, TOGGLE_KEY;
+
+	public static final ResourceLocation HUD_ICONS = new ResourceLocation("hud", "textures/gui/icons_hud.png");
+	public static final ResourceLocation ICONS     = new ResourceLocation("textures/gui/icons.png");
+	public static final ResourceLocation PARTICLES = new ResourceLocation("textures/particle/particles.png");
 
 	public static HudConfig CONFIG;
 	public static final LayoutManager MANAGER = new LayoutManager();

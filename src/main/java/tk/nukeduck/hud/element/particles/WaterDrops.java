@@ -1,6 +1,7 @@
 package tk.nukeduck.hud.element.particles;
 
 import static tk.nukeduck.hud.BetterHud.MC;
+import static tk.nukeduck.hud.BetterHud.PARTICLES;
 import static tk.nukeduck.hud.BetterHud.RANDOM;
 
 import net.minecraft.block.material.Material;
@@ -59,19 +60,26 @@ public class WaterDrops extends HudElement implements Tickable {
 			isUnderwater = false;
 
 			if(this.isEnabled()) {
-				int max = 10 * (density.getIndex() + 1);
-				for(int i = 0; i < max; i++) {
+				int count = getParticleCount();
+
+				for(int i = 0; i < count; i++) {
 					particleManager.particles.add(ParticleWater.random(width, height));
 				}
 			}
 		}
-
 		BlockPos pos = new BlockPos(entityplayer.posX, entityplayer.posY + entityplayer.getEyeHeight(), entityplayer.posZ);
 
-		// TODO hmm
-		if(MC.world.isRainingAt(pos) && RANDOM.nextInt((4 - density.getIndex()) * 3) == 0) {
+		if(MC.world.isRainingAt(pos) && RANDOM.nextFloat() < getParticleChance()) {
 			particleManager.particles.add(ParticleWater.random(width, height));
 		}
+	}
+
+	private float getParticleChance() {
+		return 0.2f + density.getIndex() * 0.15f;
+	}
+
+	private int getParticleCount() {
+		return RANDOM.nextInt(20 * (density.getIndex() + 1));
 	}
 
 	public Bounds render(RenderGameOverlayEvent event) {

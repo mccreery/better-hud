@@ -205,5 +205,5 @@ betterHud.hud.healIndicator=+
 betterHud.hud.fullInv=Inventory Full
 betterHud.hud.biome=Biome: %s
 betterHud.hud.unknownBlock=Unknown Block
-betterHud.hud.holding=Holding:
+betterHud.hud.holding=Holding: %s
 betterHud.hud.burst=Burst: %s clicks over %ss

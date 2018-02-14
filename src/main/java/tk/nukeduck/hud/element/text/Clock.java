@@ -39,8 +39,6 @@ public abstract class Clock extends TextElement {
 		fullYear.set(true);
 	}
 
-	// TODO maybe allow any date format in a text box
-
 	protected DateFormat getTimeFormat() {
 		StringBuilder format = new StringBuilder();
 		format.append("HH:mm");
