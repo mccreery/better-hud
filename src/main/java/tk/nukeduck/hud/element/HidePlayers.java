@@ -21,7 +21,7 @@ public class HidePlayers extends HudElement {
 
 	@SubscribeEvent
 	public void entityRender(RenderLivingEvent.Pre<EntityPlayer> e) {
-		if(super.shouldRender() && e.getEntity() instanceof EntityPlayer &&
+		if(isEnabled() && e.getEntity() instanceof EntityPlayer &&
 				(includeMe.get() || !e.getEntity().equals(MC.player))) {
 			e.setCanceled(true);
 		}
