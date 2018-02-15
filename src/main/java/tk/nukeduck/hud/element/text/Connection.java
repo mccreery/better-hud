@@ -3,26 +3,20 @@ package tk.nukeduck.hud.element.text;
 import static tk.nukeduck.hud.BetterHud.MC;
 
 import java.util.ArrayList;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
 
+import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
-import tk.nukeduck.hud.util.Pinger;
-import tk.nukeduck.hud.util.Tickable;
 
-public class Connection extends TextElement implements Tickable {
+public class Connection extends TextElement {
 	private final SettingBoolean playerCount = new SettingBoolean("playerCount").setUnlocalizedValue(SettingBoolean.VISIBLE);
 	private final SettingBoolean showIp = new SettingBoolean("showIp");
 	private final SettingBoolean latency = new SettingBoolean("latency");
-
-	private static ExecutorService executor;
 
 	private String ip = "localServer";
 
@@ -38,7 +32,6 @@ public class Connection extends TextElement implements Tickable {
 	public void init(FMLInitializationEvent event) {
 		super.init(event);
 		MinecraftForge.EVENT_BUS.register(this);
-		Ticker.SLOW.register(this);
 	}
 
 	public Connection() {
@@ -50,43 +43,37 @@ public class Connection extends TextElement implements Tickable {
 		settings.add(latency);
 	}
 
-	@Override
-	public void tick() {
-		if(executor != null) {
-			executor.submit(new Pinger(MC.getCurrentServerData()));
-		}
-	}
 
 	@SubscribeEvent
 	public void onConnect(ClientConnectedToServerEvent event) {
 		if(!event.isLocal()) {
-			executor = Executors.newSingleThreadExecutor();
 			ip = event.getManager().getRemoteAddress().toString();
 		} else {
 			ip = "localServer";
 		}
 	}
 
-	@SubscribeEvent
-	public void onDisconnect(ClientDisconnectionFromServerEvent event) {
-		if(executor != null) {
-			executor.shutdown();
-			executor = null;
-		}
-	}
-
 	@Override
 	protected String[] getText() {
-		ArrayList<String> toRender = new ArrayList<String>();
+		ArrayList<String> toRender = new ArrayList<String>(3);
 
 		if(playerCount.get()) {
 			int players = MC.getConnection().getPlayerInfoMap().size();
 			String conn = I18n.format(players != 1 ? "betterHud.hud.players" : "betterHud.hud.player", players);
 			toRender.add(conn);
 		}
-		if(showIp.get()) toRender.add(I18n.format(ip.equals("localServer") ? "betterHud.hud.localServer" : "betterHud.hud.ip", ip));
+
+		if(showIp.get()) {
+			toRender.add(I18n.format(ip.equals("localServer") ? "betterHud.hud.localServer" : "betterHud.hud.ip", ip));
+		}
+
 		if(latency.get() && MC.getCurrentServerData() != null) {
-			toRender.add(I18n.format("betterHud.hud.ping", MC.getCurrentServerData().pingToServer));
+			NetworkPlayerInfo info = MC.getConnection().getPlayerInfo(MC.player.getUniqueID());
+
+			if(info != null) {
+				int ping = info.getResponseTime();
+				toRender.add(I18n.format("betterHud.hud.ping", ping));
+			}
 		}
 
 		return toRender.toArray(new String[toRender.size()]);

@@ -237,9 +237,7 @@ public class BetterHud {
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void clientTick(ClientTickEvent event) {
-		if(isEnabled()) {
-			Ticker.FASTER.tick();
-		}
+		if(isEnabled()) Ticker.startTick();
 	}
 
 	@SubscribeEvent

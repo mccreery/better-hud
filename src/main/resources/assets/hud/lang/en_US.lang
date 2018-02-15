@@ -7,8 +7,6 @@ key.betterHud.disable=Toggle Better HUD
 # Generic Formatters
 betterHud.hud.meters=%sm
 betterHud.hud.seconds=%ss
-betterHud.hud.times=x%s
-betterHud.hud.millis=%sms
 
 # Menu buttons
 betterHud.menu.hudSettings=HUD Settings
@@ -159,7 +157,7 @@ betterHud.hud.player=1 player
 betterHud.hud.players=%s players
 betterHud.hud.localServer=Local Server
 betterHud.hud.ip=IP: %s
-betterHud.hud.ping=Ping: %s
+betterHud.hud.ping=Ping: %sms
 
 # Coordinates
 betterHud.hud.x=X: %s
