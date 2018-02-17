@@ -29,6 +29,11 @@ public class FoodHealthStats extends TextElement {
 	}
 
 	@Override
+	public boolean shouldRender() {
+		return MC.playerController.gameIsSurvivalOrAdventure();
+	}
+
+	@Override
 	public Bounds render(RenderGameOverlayEvent event) {
 		String health = String.valueOf(((int)MC.player.getHealth()) / 2.0f);
 		String food = String.valueOf(MC.player.getFoodStats().getFoodLevel() / 2.0F);

@@ -42,7 +42,7 @@ public class MaxLevelIndicator extends HudElement {
 
 	@Override
 	public boolean shouldRender() {
-		return !MC.player.capabilities.isCreativeMode
+		return MC.playerController.gameIsSurvivalOrAdventure()
 			&& !(MC.player.getRidingEntity() != null && MC.player.getRidingEntity() instanceof EntityHorse)
 			&& MC.player.experienceLevel >= 30;
 	}

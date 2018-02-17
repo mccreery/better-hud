@@ -55,6 +55,9 @@ public class HealIndicator extends HudElement {
 	/** @see net.minecraft.util.FoodStats#onUpdate(net.minecraft.entity.player.EntityPlayer) */
 	@Override
 	public boolean shouldRender() {
-		return MC.world.getGameRules().getBoolean("naturalRegeneration") && MC.player.getFoodStats().getFoodLevel() >= 18 && MC.player.shouldHeal();
+		return MC.playerController.gameIsSurvivalOrAdventure()
+			&& MC.world.getGameRules().getBoolean("naturalRegeneration")
+			&& MC.player.getFoodStats().getFoodLevel() >= 18
+			&& MC.player.shouldHeal();
 	}
 }

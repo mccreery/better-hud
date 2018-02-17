@@ -35,50 +35,37 @@ public class HungerIndicator extends HudElement {
 	}
 
 	@Override
+	public boolean shouldRender() {
+		return MC.playerController.gameIsSurvivalOrAdventure()
+			&& MC.player.getFoodStats().getFoodLevel() < maxLimit.getInt() * 2;
+	}
+
+	@Override
 	public Bounds render(RenderGameOverlayEvent event) {
 		int foodLevel = MC.player.getFoodStats().getFoodLevel();
 		int foodMax = this.maxLimit.getInt() * 2;
 
-		if(foodLevel <= foodMax) {
-			Bounds bounds;
-			if(position.getDirection() != null) {
-				if(position.getDirection() == Direction.CENTER) {
-					bounds = new Bounds(MANAGER.getResolution().x / 2 + 5, MANAGER.getResolution().y / 2 + 5, 16, 16);
-				} else {
-					bounds = new Bounds(MANAGER.getResolution().x / 2 + 75, MANAGER.getResolution().y - 56, 16, 16);
-				}
+		Bounds bounds;
+		if(position.getDirection() != null) {
+			if(position.getDirection() == Direction.CENTER) {
+				bounds = new Bounds(MANAGER.getResolution().x / 2 + 5, MANAGER.getResolution().y / 2 + 5, 16, 16);
 			} else {
-				bounds = position.applyTo(new Bounds(16, 16));
+				bounds = new Bounds(MANAGER.getResolution().x / 2 + 75, MANAGER.getResolution().y - 56, 16, 16);
 			}
-
-			float speed = (foodMax - foodLevel) / foodMax * 50 + 2;
-			float alpha = (MathHelper.sin(System.currentTimeMillis() / 3000 * speed) + 1 / 2);
-
-			GlStateManager.enableBlend();
-			GlStateManager.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-			GlStateManager.color(1, 1, 1, alpha);
-
-			MC.getTextureManager().bindTexture(HUD_ICONS);
-
-			/*int x = 0, y = 0;
-
-			if(posMode.index == 1) {
-				this.pos2.update(event.getResolution(), this.getBounds(event.getResolution(), null));
-				x = pos2.x;
-				y = pos2.y;
-			} else if(pos.value == Direction.CENTER) {
-				x = event.getResolution().getScaledWidth() / 2 + 5;
-				y = event.getResolution().getScaledHeight() / 2 + 5;
-				//RenderUtil.renderItemAlpha(ri, fr, mc.getTextureManager(), beef, width / 2 + 5, height / 2 + 5, );
-			} else {
-				x = event.getResolution().getScaledWidth() / 2 + 75;
-				y = event.getResolution().getScaledHeight() - 56;
-				//RenderUtil.renderItemAlpha(ri, fr, mc.getTextureManager(), beef, width / 2 + 75, height - 56, Math.sin(System.currentTimeMillis() % ((mc.thePlayer.getFoodStats().getFoodLevel() + 1) * 100) / 1050.0 * Math.PI));
-			}*/
-			MC.ingameGUI.drawTexturedModalRect(bounds.x(), bounds.y(), 0, 64, 16, 16);
-
-			return bounds;
+		} else {
+			bounds = position.applyTo(new Bounds(16, 16));
 		}
-		return null;
+
+		float speed = (foodMax - foodLevel) / foodMax * 50 + 2;
+		float alpha = (MathHelper.sin(System.currentTimeMillis() / 3000 * speed) + 1 / 2);
+
+		GlStateManager.enableBlend();
+		GlStateManager.blendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		GlStateManager.color(1, 1, 1, alpha);
+
+		MC.getTextureManager().bindTexture(HUD_ICONS);
+		MC.ingameGUI.drawTexturedModalRect(bounds.x(), bounds.y(), 0, 64, 16, 16);
+
+		return bounds;
 	}
 }
