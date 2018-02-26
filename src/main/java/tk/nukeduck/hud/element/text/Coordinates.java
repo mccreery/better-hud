@@ -3,6 +3,8 @@ package tk.nukeduck.hud.element.text;
 import static tk.nukeduck.hud.BetterHud.MC;
 
 import java.text.DecimalFormat;
+import java.util.Arrays;
+import java.util.List;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -34,24 +36,22 @@ public class Coordinates extends TextElement {
 	}
 
 	@Override
-	public Bounds render(RenderGameOverlayEvent event) {
-		if(position.getAnchor() == Direction.NORTH && spaced.get()) {
-			String[] coordinates = getText();
-
-			Bounds bounds = new Bounds(100 + (MC.fontRenderer.getStringWidth(coordinates[0]) + MC.fontRenderer.getStringWidth(coordinates[2])) / 2, MC.fontRenderer.FONT_HEIGHT);
-			position.applyTo(bounds);
-
-			for(int i = 0, x = bounds.x() + bounds.width() / 2 - 50; i < 3; i++, x += 50) {
-				MC.ingameGUI.drawCenteredString(MC.fontRenderer, coordinates[i], x, bounds.y(), color.get());
-			}
-			return bounds;
-		} else {
-			return super.render(event);
+	public Bounds render(RenderGameOverlayEvent event, List<String> text) {
+		if(!position.getAlignment().in(Direction.VERTICAL) || !spaced.get()) {
+			return super.render(event, text);
 		}
+
+		Bounds bounds = new Bounds(100 + (MC.fontRenderer.getStringWidth(text.get(0)) + MC.fontRenderer.getStringWidth(text.get(2))) / 2, MC.fontRenderer.FONT_HEIGHT);
+		position.applyTo(bounds);
+
+		for(int i = 0, x = bounds.x() + bounds.width() / 2 - 50; i < 3; i++, x += 50) {
+			MC.ingameGUI.drawCenteredString(MC.fontRenderer, text.get(i), x, bounds.y(), color.get());
+		}
+		return bounds;
 	}
 
 	@Override
-	protected String[] getText() {
+	protected List<String> getText() {
 		DecimalFormat format = new DecimalFormat();
 		format.setMaximumFractionDigits(decimalPlaces.get().intValue());
 
@@ -63,9 +63,9 @@ public class Coordinates extends TextElement {
 			x = I18n.format("betterHud.hud.x", x);
 			y = I18n.format("betterHud.hud.y", y);
 			z = I18n.format("betterHud.hud.z", z);
-			return new String[] {x, y, z};
+			return Arrays.asList(x, y, z);
 		} else {
-			return new String[] {I18n.format("betterHud.hud.xyz", x, y, z)};
+			return Arrays.asList(I18n.format("betterHud.hud.xyz", x, y, z));
 		}
 	}
 }

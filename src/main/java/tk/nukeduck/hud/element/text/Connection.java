@@ -3,6 +3,7 @@ package tk.nukeduck.hud.element.text;
 import static tk.nukeduck.hud.BetterHud.MC;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.resources.I18n;
@@ -54,8 +55,8 @@ public class Connection extends TextElement {
 	}
 
 	@Override
-	protected String[] getText() {
-		ArrayList<String> toRender = new ArrayList<String>(3);
+	protected List<String> getText() {
+		List<String> toRender = new ArrayList<String>(3);
 
 		if(playerCount.get()) {
 			int players = MC.getConnection().getPlayerInfoMap().size();
@@ -75,7 +76,6 @@ public class Connection extends TextElement {
 				toRender.add(I18n.format("betterHud.hud.ping", ping));
 			}
 		}
-
-		return toRender.toArray(new String[toRender.size()]);
+		return toRender;
 	}
 }

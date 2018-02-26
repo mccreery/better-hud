@@ -1,5 +1,8 @@
 package tk.nukeduck.hud.element.text;
 
+import java.util.Arrays;
+import java.util.List;
+
 import org.lwjgl.input.Mouse;
 
 import net.minecraft.client.resources.I18n;
@@ -102,17 +105,17 @@ public class CpsCount extends TextElement implements Tickable {
 	}
 
 	@Override
-	protected String[] getText() {
+	protected List<String> getText() {
 		float cps = timeout < timeoutMax.get() || remember.get() ? this.cps : 0;
 		String cpsDisplay = getLocalizedName() + ": " + FormatUtil.formatToPlaces(cps, 1);
 
 		if(showBurst.get() && cps > 0) {
-			return new String[] {
+			return Arrays.asList(
 				cpsDisplay,
 				I18n.format("betterHud.hud.burst", burstTotal, burstLength)
-			};
+			);
 		} else {
-			return new String[] {cpsDisplay};
+			return Arrays.asList(cpsDisplay);
 		}
 	}
 }

@@ -4,6 +4,9 @@ import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
 import static tk.nukeduck.hud.BetterHud.SPACER;
 
+import java.util.Arrays;
+import java.util.List;
+
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.RayTraceResult;
 import tk.nukeduck.hud.element.settings.Legend;
@@ -38,14 +41,14 @@ public class Distance extends TextElement {
 	}
 
 	@Override
-	protected String[] getText() {
+	protected List<String> getText() {
 		RayTraceResult trace = MC.getRenderViewEntity().rayTrace(200, 1.0F);
 
 		if(trace != null) {
 			long distance = Math.round(Math.sqrt(trace.getBlockPos().distanceSqToCenter(MC.player.posX, MC.player.posY, MC.player.posZ)));
-			return new String[] {I18n.format("betterHud.hud.distance." + mode.getIndex(), String.valueOf(distance))};
+			return Arrays.asList(I18n.format("betterHud.hud.distance." + mode.getIndex(), String.valueOf(distance)));
 		} else {
-			return new String[0];
+			return null;
 		}
 	}
 }

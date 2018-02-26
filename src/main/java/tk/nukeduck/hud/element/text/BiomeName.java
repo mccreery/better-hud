@@ -2,6 +2,9 @@ package tk.nukeduck.hud.element.text;
 
 import static tk.nukeduck.hud.BetterHud.MC;
 
+import java.util.Arrays;
+import java.util.List;
+
 import net.minecraft.util.math.BlockPos;
 import tk.nukeduck.hud.util.Direction;
 
@@ -17,8 +20,9 @@ public class BiomeName extends TextElement {
 	}
 
 	@Override
-	protected String[] getText() {
+	protected List<String> getText() {
 		BlockPos pos = new BlockPos((int)MC.player.posX, 0, (int)MC.player.posZ);
-		return new String[] {getLocalizedName() + ": " + MC.world.getBiomeForCoordsBody(pos).getBiomeName()};
+
+		return Arrays.asList(getLocalizedName() + ": " + MC.world.getBiomeForCoordsBody(pos).getBiomeName());
 	}
 }

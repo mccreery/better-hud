@@ -2,6 +2,9 @@ package tk.nukeduck.hud.element.text;
 
 import static tk.nukeduck.hud.BetterHud.MC;
 
+import java.util.Arrays;
+import java.util.List;
+
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 
 public class FpsCount extends TextElement {
@@ -19,12 +22,12 @@ public class FpsCount extends TextElement {
 	}
 
 	@Override
-	protected String[] getText() {
+	protected List<String> getText() {
 		String fps = MC.debug.substring(0, MC.debug.indexOf(' '));
 
 		if(!numberOnly.get()) {
 			fps = getLocalizedName() + ": " + fps;
 		}
-		return new String[] {fps};
+		return Arrays.asList(fps);
 	}
 }

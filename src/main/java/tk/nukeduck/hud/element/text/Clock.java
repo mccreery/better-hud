@@ -2,7 +2,9 @@ package tk.nukeduck.hud.element.text;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
 import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
@@ -61,13 +63,13 @@ public abstract class Clock extends TextElement {
 	}
 
 	@Override
-	protected String[] getText() {
+	protected List<String> getText() {
 		Date date = getDate();
 
-		return new String[] {
+		return Arrays.asList(
 			getTimeFormat().format(date),
 			getDateFormat().format(date)
-		};
+		);
 	}
 
 	protected abstract Date getDate();

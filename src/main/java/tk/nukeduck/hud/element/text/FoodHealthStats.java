@@ -2,6 +2,9 @@ package tk.nukeduck.hud.element.text;
 
 import static tk.nukeduck.hud.BetterHud.MC;
 
+import java.util.Arrays;
+import java.util.List;
+
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
@@ -49,13 +52,10 @@ public class FoodHealthStats extends TextElement {
 	}
 
 	@Override
-	protected String[] getText() {
-		if(saturation.get()) {
-			return new String[] {
-				saturation.getLocalizedName() + ": " + FormatUtil.formatToPlaces(MC.player.getFoodStats().getSaturationLevel(), 1)
-			};
-		} else {
-			return new String[0];
-		}
+	protected List<String> getText() {
+		if(!saturation.get()) return null;
+
+		return Arrays.asList(saturation.getLocalizedName() + ": "
+			+ FormatUtil.formatToPlaces(MC.player.getFoodStats().getSaturationLevel(), 1));
 	}
 }

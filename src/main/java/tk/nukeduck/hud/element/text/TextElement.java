@@ -1,5 +1,7 @@
 package tk.nukeduck.hud.element.text;
 
+import java.util.List;
+
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.element.settings.SettingColor;
@@ -59,9 +61,11 @@ public abstract class TextElement extends HudElement {
 
 	@Override
 	public Bounds render(RenderGameOverlayEvent event) {
-		String[] text = getText();
-		if(text.length == 0) return null;
+		List<String> text = getText();
+		return text == null || text.isEmpty() ? null : render(event, text);
+	}
 
+	protected Bounds render(RenderGameOverlayEvent event, List<String> text) {
 		Point size = GlUtil.getLinesSize(text);
 		PaddedBounds bounds = moveBounds(new PaddedBounds(new Bounds(size), getPadding(), getMargin()));
 
@@ -76,6 +80,6 @@ public abstract class TextElement extends HudElement {
 		if(border) GlUtil.drawRect(bounds.paddingBounds(), Colors.TRANSLUCENT);
 	}
 
-	protected abstract String[] getText();
+	protected abstract List<String> getText();
 	protected void drawExtras(RenderGameOverlayEvent event, PaddedBounds bounds) {}
 }

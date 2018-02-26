@@ -82,7 +82,7 @@ public class ExperienceInfo extends TextElement {
 	}
 
 	@Override
-	protected String[] getText() {
+	protected List<String> getText() {
 		List<String> parts = new ArrayList<String>(2);
 
 		if(total.get()) {
@@ -94,6 +94,6 @@ public class ExperienceInfo extends TextElement {
 		if(lifetime.get()) {
 			parts.add(lifetime.getLocalizedName() + ": " + MC.player.experienceTotal);
 		}
-		return parts.toArray(new String[parts.size()]);
+		return parts;
 	}
 }

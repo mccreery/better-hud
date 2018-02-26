@@ -2,6 +2,9 @@ package tk.nukeduck.hud.element.text;
 
 import static tk.nukeduck.hud.BetterHud.MC;
 
+import java.util.Arrays;
+import java.util.List;
+
 import net.minecraft.client.resources.I18n;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.util.Direction;
@@ -23,8 +26,8 @@ public class FullInvIndicator extends TextElement {
 	}
 
 	@Override
-	protected String[] getText() {
-		return new String[] {I18n.format("betterHud.hud.fullInv")};
+	protected List<String> getText() {
+		return Arrays.asList(I18n.format("betterHud.hud.fullInv"));
 	}
 
 	@Override

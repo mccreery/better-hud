@@ -4,7 +4,9 @@ import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
 import static tk.nukeduck.hud.BetterHud.SPACER;
 
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
@@ -97,11 +99,11 @@ public class BlockViewer extends TextElement {
 	}
 
 	@Override
-	protected String[] getText() {
+	protected List<String> getText() {
 		String text = getBlockName(trace, state, stack);
 		if(showIds.get()) text += " " + getIdString(state);
 
-		return new String[] {text};
+		return Arrays.asList(text);
 	}
 
 	@Override
