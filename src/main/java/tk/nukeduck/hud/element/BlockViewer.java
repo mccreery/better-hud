@@ -76,7 +76,6 @@ public class BlockViewer extends TextElement {
 	public void loadDefaults() {
 		super.loadDefaults();
 
-		settings.set(true);
 		position.set(Direction.NORTH_WEST);
 		showBlock.set(true);
 		distance.set(16.0);

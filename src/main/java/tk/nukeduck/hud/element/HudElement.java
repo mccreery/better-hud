@@ -148,6 +148,11 @@ public abstract class HudElement {
 		}
 	}
 
-	/** Loads this element's default settings. */
-	public abstract void loadDefaults();
+	/** Loads this element's default settings.<br>
+	 *
+	 * You should always call the {@code super} implementation to handle the default enabled value of {@code true}
+	 * and to allow for future expansion */
+	public void loadDefaults() {
+		settings.set(true);
+	}
 }

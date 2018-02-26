@@ -21,7 +21,8 @@ public class HungerIndicator extends HudElement {
 
 	@Override
 	public void loadDefaults() {
-		this.settings.set(true);
+		super.loadDefaults();
+
 		position.set(Direction.SOUTH);
 		maxLimit.set(9.5);
 	}

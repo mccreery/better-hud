@@ -31,7 +31,7 @@ public class PotionBar extends HudElement {
 
 	@Override
 	public void loadDefaults() {
-		this.settings.set(true);
+		super.loadDefaults();
 		position.set(Direction.NORTH_WEST);
 	}
 

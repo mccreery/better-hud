@@ -15,7 +15,6 @@ public class SystemClock extends Clock {
 	@Override
 	public void loadDefaults() {
 		super.loadDefaults();
-
 		settings.set(false);
 	}
 }

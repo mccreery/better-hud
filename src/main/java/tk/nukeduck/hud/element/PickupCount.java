@@ -39,7 +39,8 @@ public class PickupCount extends HudElement {
 
 	@Override
 	public void loadDefaults() {
-		this.settings.set(true);
+		super.loadDefaults();
+
 		position.set(Direction.CENTER);
 		fadeSpeed.set(.5);
 	}

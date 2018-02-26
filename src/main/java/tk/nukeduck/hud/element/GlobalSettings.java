@@ -14,7 +14,7 @@ public class GlobalSettings extends ElementStub {
 		settings.add(new SettingBoolean("enabled") {
 			@Override public void set(Boolean bool) {settings.set(bool);}
 			@Override public Boolean get() {return isEnabled();}
-			
+
 			@Override
 			public String getUnlocalizedName() {
 				return GlobalSettings.this.getUnlocalizedName();
@@ -34,7 +34,8 @@ public class GlobalSettings extends ElementStub {
 
 	@Override
 	public void loadDefaults() {
-		settings.set(true);
+		super.loadDefaults();
+
 		billboardScale.set(0.5);
 		billboardDistance.set(100.0);
 	}

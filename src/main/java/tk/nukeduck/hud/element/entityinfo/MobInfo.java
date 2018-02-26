@@ -36,7 +36,7 @@ public class MobInfo extends EntityInfo {
 
 	@Override
 	public void loadDefaults() {
-		settings.set(true);
+		super.loadDefaults();
 		compress.set(40.0);
 	}
 

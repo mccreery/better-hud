@@ -33,6 +33,8 @@ public abstract class EquipmentDisplay extends HudElement {
 
 	@Override
 	public void loadDefaults() {
+		super.loadDefaults();
+
 		showName.set(true);
 		showDurability.set(true);
 		durabilityMode.setIndex(0);

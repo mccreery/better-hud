@@ -26,7 +26,8 @@ public class Compass extends HudElement {
 
 	@Override
 	public void loadDefaults() {
-		this.settings.set(true);
+		super.loadDefaults();
+
 		position.set(Direction.NORTH_WEST);
 		directionScaling.set(50.0);
 		showNotches.set(true);

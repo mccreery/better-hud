@@ -20,7 +20,8 @@ public class HorseInfo extends EntityInfo {
 
 	@Override
 	public void loadDefaults() {
-		settings.set(true);
+		super.loadDefaults();
+
 		jump.set(true);
 		speed.set(true);
 	}

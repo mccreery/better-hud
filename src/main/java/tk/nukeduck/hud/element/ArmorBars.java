@@ -26,7 +26,6 @@ public class ArmorBars extends EquipmentDisplay {
 	public void loadDefaults() {
 		super.loadDefaults();
 
-		settings.set(true);
 		barType.setIndex(2);
 		position.set(Direction.NORTH_WEST);
 		alwaysVisible.set(false);

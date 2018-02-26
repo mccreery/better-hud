@@ -22,14 +22,12 @@ public class HandBar extends EquipmentDisplay {
 
 	@Override
 	public void loadDefaults() {
-		this.settings.set(true);
-		position.set(Direction.SOUTH);
+		super.loadDefaults();
 
+		position.set(Direction.SOUTH);
 		showItem.set(true);
 		showBars.set(true);
 		offHand.set(false);
-
-		super.loadDefaults();
 	}
 
 	public HandBar() {

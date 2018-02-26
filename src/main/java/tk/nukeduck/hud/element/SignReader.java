@@ -23,7 +23,7 @@ public class SignReader extends HudElement {
 
 	@Override
 	public void loadDefaults() {
-		settings.set(true);
+		super.loadDefaults();
 		position.set(Direction.NORTH_WEST);
 	}
 
