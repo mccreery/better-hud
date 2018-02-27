@@ -3,8 +3,6 @@ package tk.nukeduck.hud.util;
 import static tk.nukeduck.hud.BetterHud.ICONS;
 import static tk.nukeduck.hud.BetterHud.MC;
 
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.List;
 
 import net.minecraft.client.gui.Gui;
@@ -209,60 +207,18 @@ public class GlUtil {
 		drawRect(bar, color);
 	}
 
-	/** Draws a line of text aligned around {@code position} by {@code anchor} */
-	public static Bounds drawString(String string, Point position, Direction anchor, int color) {
-		Bounds bounds = anchor.align(new Bounds(position, getLinesSize(string)));
-	
+	/** @return The size of {@code string} as rendered by Minecraft's font renderer */
+	public static Point getStringSize(String string) {
+		return new Point(MC.fontRenderer.getStringWidth(string), MC.fontRenderer.FONT_HEIGHT);
+	}
+
+	/** @param origin The anchor point
+	 * @param alignment The alignment around {@code origin}
+	 * @see net.minecraft.client.gui.FontRenderer#drawStringWithShadow(String, float, float, int) */
+	public static Bounds drawString(String string, Point origin, Direction alignment, int color) {
+		Bounds bounds = alignment.align(new Bounds(getStringSize(string)), origin);
 		MC.fontRenderer.drawStringWithShadow(string, bounds.x(), bounds.y(), color);
-		return bounds;
-	}
 
-	/** @return The height of {@code lines} of text
-	 * @see #drawLines(String[], Bounds, Direction, int) */
-	public static int getLinesHeight(int lines) {
-		return lines > 0 ? (MC.fontRenderer.FONT_HEIGHT + 2) * lines - 2 : 0;
-	}
-
-	/** @see #getLinesSize(Collection) */
-	public static Point getLinesSize(String... strings) {
-		return getLinesSize(Arrays.asList(strings));
-	}
-
-	/** @return The size of {@code strings}
-	 * @see #drawLines(String[], Bounds, Direction, int) */
-	public static Point getLinesSize(Collection<String> strings) {
-		if(strings.isEmpty()) {
-			return new Point(Point.ZERO);
-		}
-		int maxWidth = 0;
-
-		for(String string : strings) {
-			if(string != null) {
-				int width = MC.fontRenderer.getStringWidth(string);
-				if(width > maxWidth) maxWidth = width;
-			}
-		}
-		return new Point(maxWidth, getLinesHeight(strings.size()));
-	}
-
-	/** @see #drawLines(Collection, Bounds, Direction, int) */
-	public static Bounds drawLines(String[] strings, Bounds bounds, Direction anchor, int color) {
-		return drawLines(Arrays.asList(strings), bounds, anchor, color);
-	}
-
-	/** Draws multiple lines of text anchored to {@code anchor} within {@code bounds} */
-	public static Bounds drawLines(Collection<String> strings, Bounds bounds, Direction anchor, int color) {
-		bounds = anchor.anchor(new Bounds(getLinesSize(strings)), bounds);
-		Bounds drawBounds = new Bounds(bounds);
-
-		if(anchor.in(Direction.LEFT)) anchor = Direction.NORTH_WEST;
-		else if(anchor.in(Direction.RIGHT)) anchor = Direction.NORTH_EAST;
-		else anchor = Direction.NORTH;
-
-		// Render lines top to bottom
-		for(String line : strings) {
-			drawBounds.top(drawString(line, anchor.getAnchor(drawBounds), anchor, color).bottom() + 2);
-		}
 		return bounds;
 	}
 }

@@ -12,7 +12,7 @@ import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.PaddedBounds;
-import tk.nukeduck.hud.util.Point;
+import tk.nukeduck.hud.util.StringGroup;
 
 public abstract class TextElement extends HudElement {
 	protected SettingPosition position;
@@ -66,11 +66,14 @@ public abstract class TextElement extends HudElement {
 	}
 
 	protected Bounds render(RenderGameOverlayEvent event, List<String> text) {
-		Point size = GlUtil.getLinesSize(text);
-		PaddedBounds bounds = moveBounds(new PaddedBounds(new Bounds(size), getPadding(), getMargin()));
+		StringGroup group = new StringGroup(text);
+		group.setColor(color.get());
+		group.setAlignment(position.getAlignment());
+
+		PaddedBounds bounds = moveBounds(new PaddedBounds(new Bounds(group.getSize()), getPadding(), getMargin()));
 
 		drawBorder(event, bounds);
-		GlUtil.drawLines(text, bounds.contentBounds(), position.getAnchor(), color.get());
+		group.draw(bounds.contentBounds());
 		drawExtras(event, bounds);
 
 		return bounds;

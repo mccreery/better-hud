@@ -112,8 +112,7 @@ public enum Direction {
 
 	/** Aligns the side(s) of {@code bounds} to the side(s) of {@code container} */
 	public <T extends Bounds> T anchor(T bounds, Bounds container) {
-		bounds.position = getAnchor(container);
-		return align(bounds);
+		return align(bounds, getAnchor(container));
 	}
 
 	public static Direction fromName(String name) {

@@ -112,8 +112,7 @@ public class MobInfo extends EntityInfo {
 		int maxHealth = (int)entity.getMaxHealth();
 
 		String text = String.format("%s %s(%d/%d)", entity.getName(), ChatFormatting.GRAY, health, maxHealth);
-
-		Point textSize = GlUtil.getLinesSize(text);
+		Point textSize = GlUtil.getStringSize(text);
 
 		int compressLimit = compress.getInt();
 		if(compressLimit == 0) compressLimit = maxHealth;

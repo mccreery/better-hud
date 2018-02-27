@@ -130,7 +130,7 @@ public class ArrowCount extends HudElement {
 	private static void drawCounter(Bounds stackBounds, int count) {
 		GlStateManager.disableDepth();
 		String countDisplay = String.valueOf(count);
-		Bounds text = Direction.SOUTH_EAST.anchor(new Bounds(GlUtil.getLinesSize(countDisplay)), stackBounds);
+		Bounds text = Direction.SOUTH_EAST.anchor(new Bounds(GlUtil.getStringSize(countDisplay)), stackBounds);
 
 		MC.ingameGUI.drawString(MC.fontRenderer, countDisplay, text.x(), text.y(), Colors.WHITE);
 		GlStateManager.enableDepth();

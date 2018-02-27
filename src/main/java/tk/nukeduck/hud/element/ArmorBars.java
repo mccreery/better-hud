@@ -16,6 +16,7 @@ import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.PaddedBounds;
 import tk.nukeduck.hud.util.Point;
+import tk.nukeduck.hud.util.StringGroup;
 
 public class ArmorBars extends EquipmentDisplay {
 	private final SettingPositionAligned position = new SettingPositionAligned("position", Direction.CORNERS, Direction.flags(Direction.WEST, Direction.EAST));
@@ -73,11 +74,12 @@ public class ArmorBars extends EquipmentDisplay {
 
 		if(hasText()) {
 			text = new String[4];
+			StringGroup group = new StringGroup(text);
 
 			for(int i = 0; i < 4; i++) {
 				text[i] = getText(MC.player.inventory.armorItemInSlot(i));
 			}
-			size = GlUtil.getLinesSize(text);
+			size = group.getSize();
 			size.y = 16;
 		} else {
 			size = new Point(0, 16);
@@ -112,7 +114,7 @@ public class ArmorBars extends EquipmentDisplay {
 				if(hasText() && text[i] != null) {
 					MC.mcProfiler.startSection("text");
 
-					Bounds textBounds = alignment.anchor(new Bounds(GlUtil.getLinesSize(text[i])), content);
+					Bounds textBounds = alignment.anchor(new Bounds(GlUtil.getStringSize(text[i])), content);
 					if(largeBars()) textBounds.y(textBounds.y() - 1);
 
 					MC.ingameGUI.drawString(MC.fontRenderer, text[i], textBounds.x(), textBounds.y(), Colors.WHITE);

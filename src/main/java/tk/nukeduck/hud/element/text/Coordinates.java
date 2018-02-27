@@ -1,5 +1,6 @@
 package tk.nukeduck.hud.element.text;
 
+import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
 
 import java.text.DecimalFormat;
@@ -13,6 +14,7 @@ import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingSlider;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.StringGroup;
 
 public class Coordinates extends TextElement {
 	private final SettingBoolean spaced;
@@ -41,13 +43,10 @@ public class Coordinates extends TextElement {
 			return super.render(event, text);
 		}
 
-		Bounds bounds = new Bounds(100 + (MC.fontRenderer.getStringWidth(text.get(0)) + MC.fontRenderer.getStringWidth(text.get(2))) / 2, MC.fontRenderer.FONT_HEIGHT);
-		position.applyTo(bounds);
+		StringGroup group = new StringGroup(text).setAlignment(Direction.NORTH).setSpacing(50).setRow();
+		Bounds bounds = MANAGER.position(Direction.NORTH, new Bounds(group.getSize()));
 
-		for(int i = 0, x = bounds.x() + bounds.width() / 2 - 50; i < 3; i++, x += 50) {
-			MC.ingameGUI.drawCenteredString(MC.fontRenderer, text.get(i), x, bounds.y(), color.get());
-		}
-		return bounds;
+		return group.draw(bounds);
 	}
 
 	@Override

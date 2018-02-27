@@ -167,7 +167,35 @@ public class Bounds {
 		return x >= left() && x < right() && y >= top() && y < bottom();
 	}
 
-	private static final int SNAP_RADIUS = 10;
+	/** Moves any necessary corners such that {@link #contains(Point)} returns true for {@code point}
+	 *
+	 * @param inclusive {@code true} if {@code point} should move the exclusive boundary slightly past it.<br>
+	 * If {@code false}, points to the right or below the original bounds will still return {@code false} from {@link #contains(Point)}
+	 * @see #contains(Point) */
+	public Bounds ensureContains(Point point, boolean inclusive) {
+		if(point.x < left()) {
+			left(point.x);
+		} else if(point.x >= right()) {
+			right(inclusive ? point.x + 1 : point.x);
+		}
+
+		if(point.y < top()) {
+			top(point.y);
+		} else if(point.y >= bottom()) {
+			bottom(inclusive ? point.y + 1 : point.y);
+		}
+		return this;
+	}
+
+	/** Creates a new {@link Bounds} such that any point within {@code a} or {@code b} is also within the union.<br>
+	 * The inverse is not guaranteed */
+	public static Bounds union(Bounds a, Bounds b) {
+		Bounds union = new Bounds(a);
+		union.ensureContains(b.position, false);
+		union.ensureContains(Direction.SOUTH_EAST.getAnchor(b), false);
+
+		return union;
+	}
 
 	/** @return {@code true} if this bounds and {@code bounds} overlap
 	 * both horizontally and vertically
@@ -199,6 +227,8 @@ public class Bounds {
 	public void position(Direction anchor, Point offset, Direction alignment) {
 		alignment.align(this, anchor.getAnchor(MANAGER.getResolution()).add(offset));
 	}
+
+	private static final int SNAP_RADIUS = 10;
 
 	/** Aligns this bounds to the closest edge in {@code bounds}
 	 * if any is less than {@link #SNAP_RADIUS} away */

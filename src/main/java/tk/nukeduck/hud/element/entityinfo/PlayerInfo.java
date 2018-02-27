@@ -22,6 +22,7 @@ import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.PaddedBounds;
 import tk.nukeduck.hud.util.Point;
+import tk.nukeduck.hud.util.StringGroup;
 
 public class PlayerInfo extends EntityInfo {
 	private final SettingSlider tooltipLines = new SettingSlider("tooltipLines", -1, 10, 1) {
@@ -62,14 +63,15 @@ public class PlayerInfo extends EntityInfo {
 			}
 		}
 
-		Point size = GlUtil.getLinesSize(tooltip);
+		StringGroup group = new StringGroup(tooltip);
+		Point size = group.getSize();
 		if(size.x < 81) size.x = 81;
 
 		PaddedBounds bounds = new PaddedBounds(new Bounds(size), new Bounds(0, 9), Bounds.PADDING);
 		MANAGER.position(Direction.SOUTH, bounds);
 
 		GlUtil.drawRect(bounds, Colors.TRANSLUCENT);
-		GlUtil.drawLines(tooltip, bounds.contentBounds(), Direction.NORTH_WEST, Colors.WHITE);
+		group.draw(bounds.contentBounds());
 		GlUtil.renderArmorBar(entity.getTotalArmorValue(), 20, Direction.SOUTH_WEST.getAnchor(bounds.contentBounds()));
 	}
 
