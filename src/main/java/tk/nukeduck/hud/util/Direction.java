@@ -1,78 +1,61 @@
 package tk.nukeduck.hud.util;
 
+import net.minecraft.client.resources.I18n;
+
 /** One of 8 cardinal directions or {@link CENTER}, the null direction */
 public enum Direction {
-	CENTER(1, 1, "center"),
+	NORTH_WEST("northWest"),
+	NORTH("north"),
+	NORTH_EAST("northEast"),
 
-	NORTH(1, 0, "north"),
-	EAST (2, 1, "east"),
-	SOUTH(1, 2, "south"),
-	WEST (0, 1, "west"),
+	WEST ("west"),
+	CENTER("center"),
+	EAST ("east"),
 
-	NORTH_EAST(2, 0, "northEast"),
-	SOUTH_EAST(2, 2, "southEast"),
-	SOUTH_WEST(0, 2, "southWest"),
-	NORTH_WEST(0, 0, "northWest");
+	SOUTH_WEST("southWest"),
+	SOUTH("south"),
+	SOUTH_EAST("southEast");
 
-	private static final Direction[][] GRID = new Direction[3][3];
-
-	static {
-		for(Direction value : values()) {
-			GRID[value.gridPosition.y][value.gridPosition.x] = value;
-		}
-	}
-
-	public static final int CORNERS    = flags(NORTH_EAST, SOUTH_EAST, SOUTH_WEST, NORTH_WEST);
-	public static final int SIDES      = flags(NORTH, EAST, SOUTH, WEST);
-	public static final int TOP        = flags(NORTH_WEST, NORTH, NORTH_EAST);
-	public static final int HORIZONTAL = flags(WEST, CENTER, EAST);
-	public static final int BOTTOM     = flags(SOUTH_WEST, SOUTH, SOUTH_EAST);
-	public static final int LEFT       = flags(NORTH_WEST, WEST, SOUTH_WEST);
-	public static final int VERTICAL   = flags(NORTH, CENTER, SOUTH);
-	public static final int RIGHT      = flags(NORTH_EAST, EAST, SOUTH_EAST);
+	public static final int CORNERS    = getFlags(NORTH_EAST, SOUTH_EAST, SOUTH_WEST, NORTH_WEST);
+	public static final int SIDES      = getFlags(NORTH, EAST, SOUTH, WEST);
+	public static final int TOP        = getFlags(NORTH_WEST, NORTH, NORTH_EAST);
+	public static final int HORIZONTAL = getFlags(WEST, CENTER, EAST);
+	public static final int BOTTOM     = getFlags(SOUTH_WEST, SOUTH, SOUTH_EAST);
+	public static final int LEFT       = getFlags(NORTH_WEST, WEST, SOUTH_WEST);
+	public static final int VERTICAL   = getFlags(NORTH, CENTER, SOUTH);
+	public static final int RIGHT      = getFlags(NORTH_EAST, EAST, SOUTH_EAST);
 	public static final int ALL        = TOP | HORIZONTAL | BOTTOM;
+
+	private static final int[] ROWS = new int[] {TOP, HORIZONTAL, BOTTOM};
+	private static final int[] COLUMNS = new int[] {LEFT, VERTICAL, RIGHT};
 
 	public final String name;
 
-	private final Point gridPosition;
-	private final float scaleX, scaleY;
-
-	Direction(int x, int y, String name) {
+	Direction(String name) {
 		this.name = name;
-
-		gridPosition = new Point(x, y);
-		scaleX = x * .5f;
-		scaleY = y * .5f;
 	}
 
-	public Direction moveX(int x) {
-		return GRID[gridPosition.y][x];
-	}
-	public Direction moveY(int y) {
-		return GRID[y][gridPosition.x];
+	public String getLocalizedName() {
+		return I18n.format("betterHud.value." + name);
 	}
 
-	public Direction mirrorX() {
-		return GRID[gridPosition.y][2 - gridPosition.x];
+	public int getColumn() {return ordinal() % 3;}
+	public int getRow() {return ordinal() / 3;}
+
+	public Direction toColumn(int column) {return get(getRow(), column);}
+	public Direction toRow(int row) {return get(row, getColumn());}
+
+	public Direction mirrorRow() {return get(2 - getRow(), getColumn());}
+	public Direction mirrorColumn() {return get(getRow(), 2 - getColumn());}
+	public Direction mirror() {return get(2 - getRow(), 2 - getColumn());}
+
+	public boolean in(int flags) {
+		return (flags & flag()) != 0;
 	}
 
-	public Direction mirrorY() {
-		return GRID[2 - gridPosition.y][gridPosition.x];
-	}
+	public int flag() {return 1 << ordinal();}
 
-	public Direction mirror() {
-		return GRID[2 - gridPosition.y][2 - gridPosition.x];
-	}
-
-	public String getUnlocalizedName() {
-		return "betterHud.value." + name;
-	}
-
-	public int flag() {
-		return 1 << ordinal();
-	}
-
-	public static int flags(Direction... directions) {
+	public static int getFlags(Direction... directions) {
 		int flags = 0;
 
 		for(Direction direction : directions) {
@@ -81,14 +64,17 @@ public enum Direction {
 		return flags;
 	}
 
-	public boolean in(int flags) {
-		return (flags & flag()) != 0;
+	public static int getRowFlags(int y) {
+		return ROWS[y];
+	}
+	public static int getColumnFlags(int x) {
+		return COLUMNS[x];
 	}
 
 	/** @return The anchor point between zero and {@code size}
 	 * corresponding to this direction */
 	public Point getAnchor(Point size) {
-		return size.scale(scaleX, scaleY);
+		return size.scale(getColumn() / 2f, getRow() / 2f);
 	}
 
 	/** @return The anchor point within {@code bounds}
@@ -115,7 +101,15 @@ public enum Direction {
 		return align(bounds, getAnchor(container));
 	}
 
-	public static Direction fromName(String name) {
+	public static Direction get(int row, int column) {
+		return get(row * 3 + column);
+	}
+
+	public static Direction get(int i) {
+		return values()[i];
+	}
+
+	public static Direction get(String name) {
 		for(Direction direction : values()) {
 			if(direction.name.equals(name)) return direction;
 		}
