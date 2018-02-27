@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import tk.nukeduck.hud.element.settings.SettingBoolean;
+import tk.nukeduck.hud.util.Direction;
 
 public class FpsCount extends TextElement {
 	private final SettingBoolean numberOnly;
@@ -13,6 +14,8 @@ public class FpsCount extends TextElement {
 	@Override
 	public void loadDefaults() {
 		super.loadDefaults();
+
+		position.set(Direction.SOUTH_WEST);
 		numberOnly.set(false);
 	}
 

@@ -16,18 +16,20 @@ import tk.nukeduck.hud.util.PaddedBounds;
 import tk.nukeduck.hud.util.Point;
 
 public class Distance extends TextElement {
-	private final SettingChoose mode;
+	private final SettingChoose mode = new SettingChoose(2);
 
 	@Override
 	public void loadDefaults() {
 		super.loadDefaults();
+
 		position.set(Direction.CENTER);
+		mode.setIndex(0);
 	}
 
 	public Distance() {
 		super("distance", Direction.CORNERS | Direction.CENTER.flag());
 		this.settings.add(new Legend("misc"));
-		this.settings.add(mode = new SettingChoose(2));
+		this.settings.add(mode);
 	}
 
 	@Override

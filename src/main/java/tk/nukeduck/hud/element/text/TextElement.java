@@ -25,7 +25,7 @@ public abstract class TextElement extends HudElement {
 	}
 
 	public TextElement(String name, Direction... directions) {
-		this(name, Direction.flags(directions));
+		this(name, Direction.getFlags(directions));
 	}
 
 	public TextElement(String name, int directions) {

@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.client.resources.I18n;
+import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.util.Direction;
 
@@ -22,6 +23,8 @@ public class FullInvIndicator extends TextElement {
 
 	public FullInvIndicator() {
 		super("fullInvIndicator");
+
+		settings.add(new Legend("misc"));
 		settings.add(offHand);
 	}
 

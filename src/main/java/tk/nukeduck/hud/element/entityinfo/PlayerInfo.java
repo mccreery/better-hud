@@ -102,6 +102,7 @@ public class PlayerInfo extends EntityInfo {
 
 	@Override
 	public void loadDefaults() {
-		tooltipLines.set(-1.);
+		super.loadDefaults();
+		tooltipLines.set(-1);
 	}
 }

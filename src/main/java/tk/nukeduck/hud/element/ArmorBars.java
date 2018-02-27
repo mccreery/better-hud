@@ -19,7 +19,7 @@ import tk.nukeduck.hud.util.Point;
 import tk.nukeduck.hud.util.StringGroup;
 
 public class ArmorBars extends EquipmentDisplay {
-	private final SettingPositionAligned position = new SettingPositionAligned("position", Direction.CORNERS, Direction.flags(Direction.WEST, Direction.EAST));
+	private final SettingPositionAligned position = new SettingPositionAligned("position", Direction.CORNERS, Direction.getFlags(Direction.WEST, Direction.EAST));
 	private final SettingChoose barType = new SettingChoose("bars", "visible.off", "smallBars", "largeBars");
 	private final SettingBoolean alwaysVisible = new SettingBoolean("alwaysVisible");
 
@@ -128,7 +128,7 @@ public class ArmorBars extends EquipmentDisplay {
 						Bounds bar = Direction.SOUTH.anchor(new Bounds(content.width(), 2), content);
 						GlUtil.drawDamageBar(bar, stack, false);
 					} else {
-						Bounds bar = alignment.mirrorX().anchor(new Bounds(2, item.height()), item);
+						Bounds bar = alignment.mirrorColumn().anchor(new Bounds(2, item.height()), item);
 						GlUtil.drawDamageBar(bar, stack, true);
 					}
 

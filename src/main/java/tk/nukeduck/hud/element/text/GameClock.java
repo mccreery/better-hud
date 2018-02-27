@@ -33,7 +33,7 @@ public class GameClock extends Clock {
 	@Override
 	public void loadDefaults() {
 		super.loadDefaults();
-		showDays.set(false);
+		showDays.set(true);
 	}
 
 	@Override

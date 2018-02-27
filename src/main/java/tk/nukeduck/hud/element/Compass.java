@@ -20,7 +20,7 @@ import tk.nukeduck.hud.util.Point;
 public class Compass extends HudElement {
 	private static final String[] DIRECTIONS = {"S", "E", "N", "W"};
 
-	private final SettingPosition position = new SettingPositionAligned("position", Direction.TOP | Direction.BOTTOM, Direction.flags(Direction.NORTH, Direction.SOUTH));
+	private final SettingPosition position = new SettingPositionAligned("position", Direction.TOP | Direction.CORNERS, Direction.getFlags(Direction.NORTH, Direction.SOUTH));
 	private final SettingSlider directionScaling = new SettingPercentage("letterScale", 0.01);
 	private final SettingBoolean showNotches = new SettingBoolean("showNotches").setUnlocalizedValue(SettingBoolean.VISIBLE);
 
@@ -28,8 +28,8 @@ public class Compass extends HudElement {
 	public void loadDefaults() {
 		super.loadDefaults();
 
-		position.set(Direction.NORTH_WEST);
-		directionScaling.set(50.0);
+		position.set(Direction.NORTH);
+		directionScaling.set(0.5);
 		showNotches.set(true);
 	}
 
@@ -107,6 +107,8 @@ public class Compass extends HudElement {
 			GlStateManager.popMatrix();
 		}
 	}
+
+	// TODO implement alignment
 
 	@Override
 	public Bounds render(RenderGameOverlayEvent event) {

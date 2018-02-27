@@ -34,6 +34,7 @@ public abstract class Clock extends TextElement {
 	public void loadDefaults() {
 		super.loadDefaults();
 
+		position.set(Direction.NORTH_EAST);
 		twentyFour.set(false);
 		showSeconds.set(false);
 

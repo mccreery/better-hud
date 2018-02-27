@@ -17,8 +17,8 @@ import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.StringGroup;
 
 public class Coordinates extends TextElement {
-	private final SettingBoolean spaced;
-	private final SettingSlider decimalPlaces;
+	private final SettingBoolean spaced = new SettingBoolean("spaced");
+	private final SettingSlider decimalPlaces = new SettingSlider("precision", 0, 5, 1).setUnlocalizedValue("betterHud.value.places");
 
 	@Override
 	public void loadDefaults() {
@@ -26,15 +26,15 @@ public class Coordinates extends TextElement {
 
 		position.set(Direction.NORTH);
 		spaced.set(true);
-		decimalPlaces.set(0.0);
+		decimalPlaces.set(0);
 	}
 
 	public Coordinates() {
-		super("coordinates", Direction.CORNERS | Direction.flags(Direction.NORTH));
+		super("coordinates", Direction.CORNERS | Direction.getFlags(Direction.NORTH));
 
 		this.settings.add(new Legend("misc"));
-		this.settings.add(spaced = new SettingBoolean("spaced"));
-		this.settings.add(decimalPlaces = new SettingSlider("precision", 0, 5, 1).setUnlocalizedValue("betterHud.value.places"));
+		this.settings.add(spaced);
+		this.settings.add(decimalPlaces);
 	}
 
 	@Override

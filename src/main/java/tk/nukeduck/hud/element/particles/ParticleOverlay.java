@@ -49,7 +49,7 @@ public abstract class ParticleOverlay extends HudElement implements Tickable {
 	@Override
 	public void loadDefaults() {
 		super.loadDefaults();
-		density.setIndex(2);
+		density.setIndex(1);
 	}
 
 	@Override

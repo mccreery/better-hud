@@ -34,7 +34,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
-import tk.nukeduck.hud.element.settings.SettingSlider;
 import tk.nukeduck.hud.element.text.TextElement;
 import tk.nukeduck.hud.network.InventoryNameQuery;
 import tk.nukeduck.hud.network.Version;
@@ -45,7 +44,6 @@ import tk.nukeduck.hud.util.PaddedBounds;
 
 public class BlockViewer extends TextElement {
 	private final SettingBoolean showBlock = new SettingBoolean("showItem").setUnlocalizedValue(SettingBoolean.VISIBLE);
-	private final SettingSlider distance = new SettingSlider("distance", 1, 16, 1).setUnlocalizedValue("betterHud.setting.chunks");
 	private final SettingBoolean showIds = new SettingBoolean("showIds").setUnlocalizedValue(SettingBoolean.VISIBLE);
 
 	private final SettingBoolean invNames = new SettingBoolean("invNames") {
@@ -60,12 +58,11 @@ public class BlockViewer extends TextElement {
 	private ItemStack stack;
 
 	public BlockViewer() {
-		super("blockViewer", Direction.CORNERS | Direction.flags(Direction.CENTER, Direction.NORTH));
+		super("blockViewer", Direction.CORNERS | Direction.getFlags(Direction.CENTER, Direction.NORTH));
 
 		settings.add(new Legend("misc"));
 		settings.add(showBlock);
 		settings.add(invNames);
-		settings.add(distance);
 		settings.add(showIds);
 	}
 
@@ -78,16 +75,15 @@ public class BlockViewer extends TextElement {
 	public void loadDefaults() {
 		super.loadDefaults();
 
-		position.set(Direction.NORTH_WEST);
+		position.set(Direction.NORTH);
 		showBlock.set(true);
-		distance.set(16.0);
 		showIds.set(false);
 		invNames.set(true);
 	}
 
 	@Override
 	public boolean shouldRender() {
-		trace = MC.getRenderViewEntity().rayTrace(distance.get() * 16, 1f);
+		trace = MC.getRenderViewEntity().rayTrace(HudElement.GLOBAL.getBillboardDistance(), 1f);
 
 		if(trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK) {
 			state = MC.world.getBlockState(trace.getBlockPos());

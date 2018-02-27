@@ -99,6 +99,10 @@ public class SettingSlider extends SettingAlignable<Double> implements ISlider {
 		if(slider != null) slider.updateDisplayString();
 	}
 
+	public void set(int value) {
+		set((double)value);
+	}
+
 	@Override
 	public String save() {
 		return get().toString();

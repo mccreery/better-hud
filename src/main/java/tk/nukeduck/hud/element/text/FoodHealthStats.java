@@ -19,8 +19,9 @@ public class FoodHealthStats extends TextElement {
 	@Override
 	public void loadDefaults() {
 		super.loadDefaults();
-		saturation.set(true);
+
 		position.set(Direction.SOUTH_EAST);
+		saturation.set(true);
 	}
 
 	public FoodHealthStats() {
@@ -28,7 +29,6 @@ public class FoodHealthStats extends TextElement {
 
 		settings.add(new Legend("misc"));
 		settings.add(saturation);
-		settings.add(new Legend("fhNotice"));
 	}
 
 	@Override

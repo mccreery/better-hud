@@ -111,7 +111,7 @@ betterHud.value.denser=Denser
 betterHud.setting.showItem=Item
 betterHud.setting.showName=Name
 betterHud.setting.showDurability=Durability
-betterHud.setting.offHand=Off-Hand
+betterHud.setting.offhand=Off-Hand
 
 betterHud.setting.bars=Bars
 betterHud.value.smallBars=Small Bars

@@ -10,7 +10,7 @@ public class SettingPositionAligned extends SettingPosition {
 	}
 
 	public SettingPositionAligned(String name, Direction[] directions, Direction[] alignments) {
-		this(name, Direction.flags(directions), Direction.flags(alignments));
+		this(name, Direction.getFlags(directions), Direction.getFlags(alignments));
 	}
 
 	public SettingPositionAligned(String name, int anchors, int alignments) {

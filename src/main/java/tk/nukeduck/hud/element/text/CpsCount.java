@@ -14,6 +14,7 @@ import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingSlider;
 import tk.nukeduck.hud.util.Tickable;
+import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.FormatUtil;
 
 public class CpsCount extends TextElement implements Tickable {
@@ -44,6 +45,7 @@ public class CpsCount extends TextElement implements Tickable {
 	public void loadDefaults() {
 		super.loadDefaults();
 
+		position.set(Direction.SOUTH_WEST);
 		timeoutMax.set(3.0);
 		showBurst.set(true);
 		remember.set(false);

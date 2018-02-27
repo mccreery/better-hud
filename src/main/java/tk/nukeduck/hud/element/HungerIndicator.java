@@ -17,14 +17,14 @@ import tk.nukeduck.hud.util.Direction;
 
 public class HungerIndicator extends HudElement {
 	private final SettingPosition position = new SettingPosition("position", Direction.CENTER, Direction.SOUTH);
-	private final SettingSlider maxLimit = new SettingSlider("maxLimit", 0, 20, 1).setDisplayScale(.5);
+	private final SettingSlider maxLimit = new SettingSlider("maxLimit", 0, 20, 1).setDisplayPlaces(1).setDisplayScale(.5);
 
 	@Override
 	public void loadDefaults() {
 		super.loadDefaults();
 
 		position.set(Direction.SOUTH);
-		maxLimit.set(9.5);
+		maxLimit.set(19);
 	}
 
 	public HungerIndicator() {

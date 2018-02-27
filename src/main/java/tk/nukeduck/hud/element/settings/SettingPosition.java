@@ -62,7 +62,7 @@ public class SettingPosition extends SettingStub<Object> {
 	}
 
 	public SettingPosition(String name, Direction... options) {
-		this(name, Direction.flags(options));
+		this(name, Direction.getFlags(options));
 	}
 
 	public SettingPosition(String name, int options) {

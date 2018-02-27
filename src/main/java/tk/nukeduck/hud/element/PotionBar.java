@@ -11,7 +11,6 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
@@ -25,14 +24,13 @@ public class PotionBar extends HudElement {
 
 	public static final ResourceLocation INVENTORY = new ResourceLocation("textures/gui/container/inventory.png");
 
-	public boolean disableDefault() {
-		return disableDefault.get();
-	}
-
 	@Override
 	public void loadDefaults() {
 		super.loadDefaults();
-		position.set(Direction.NORTH_WEST);
+
+		settings.set(false);
+		position.set(Direction.NORTH_EAST);
+		disableDefault.set(true);
 	}
 
 	@Override
@@ -44,13 +42,12 @@ public class PotionBar extends HudElement {
 		super("potionBar");
 
 		settings.add(position);
-		this.settings.add(new Legend("potionsUseless"));
 		this.settings.add(disableDefault);
 	}
 
 	@SubscribeEvent
 	public void onRenderTick(RenderGameOverlayEvent.Pre event) {
-		if(event.getType() == ElementType.POTION_ICONS) {
+		if(isEnabled() && disableDefault.get() && event.getType() == ElementType.POTION_ICONS) {
 			event.setCanceled(true);
 		}
 	}

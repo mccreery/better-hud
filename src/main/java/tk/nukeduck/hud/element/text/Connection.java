@@ -24,6 +24,7 @@ public class Connection extends TextElement {
 	@Override
 	public void loadDefaults() {
 		super.loadDefaults();
+
 		playerCount.set(true);
 		showIp.set(true);
 		latency.set(true);
