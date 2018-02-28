@@ -2,12 +2,18 @@ package tk.nukeduck.hud.element.entityinfo;
 
 import static tk.nukeduck.hud.BetterHud.MC;
 
+import java.util.Set;
+import java.util.TreeSet;
+
 import net.minecraft.entity.EntityLivingBase;
 import tk.nukeduck.hud.element.ElementStub;
 
 public abstract class EntityInfo extends ElementStub {
+	public static final Set<EntityInfo> ENTITY_INFO = new TreeSet<EntityInfo>();
+
 	protected EntityInfo(String name) {
 		super(name);
+		ENTITY_INFO.add(this);
 	}
 
 	/** Calls {@link #render(EntityLivingBase, float)}

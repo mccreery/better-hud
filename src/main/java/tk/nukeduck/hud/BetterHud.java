@@ -157,7 +157,7 @@ public class BetterHud {
 		GlUtil.color(Colors.WHITE);
 		GlUtil.enableBlendTranslucent();
 
-		for(EntityInfo element : HudElement.ENTITY_INFO) {
+		for(EntityInfo element : EntityInfo.ENTITY_INFO) {
 			element.tryRender(entityLiving, e.getPartialTicks());
 		}
 

@@ -10,6 +10,7 @@ public class GlobalSettings extends ElementStub {
 
 	public GlobalSettings() {
 		super("global");
+		ELEMENTS.remove(this);
 
 		settings.add(new SettingBoolean("enabled") {
 			@Override public void set(Boolean bool) {settings.set(bool);}

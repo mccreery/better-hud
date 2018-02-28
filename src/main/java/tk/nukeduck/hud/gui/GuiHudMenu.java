@@ -2,7 +2,9 @@ package tk.nukeduck.hud.gui;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -16,6 +18,8 @@ import tk.nukeduck.hud.util.Colors;
 
 @SideOnly(Side.CLIENT)
 public class GuiHudMenu extends GuiScreen {
+	private Map<GuiButton, HudElement> buttonMap = new HashMap<GuiButton, HudElement>();
+
 	public int buttonOffset = 0;
 	public int currentPage = 0;
 	public int perPage = 10;
@@ -49,17 +53,20 @@ public class GuiHudMenu extends GuiScreen {
 		int id = buttonOffset;
 		int top = height / 16 + 78;
 
-		for(int i = 0; i < HudElement.ELEMENTS.length; i++) {
-			HudElement element = HudElement.ELEMENTS[i];
-
+		int i = 0;
+		for(HudElement element : HudElement.ELEMENTS) {
 			GuiButton enabled = new GuiSettingToggle(id++, hW - 126, top + ((i % perPage) * 24), 150, 20, element.getUnlocalizedName(), element.settings.enabled);
 			enabled.enabled = element.isSupportedByServer();
 
 			this.buttonList.add(enabled);
 
 			GuiButton options = new GuiButton(id++, hW + 26, top + ((i % perPage) * 24), 100, 20, I18n.format("betterHud.menu.options"));
+			buttonMap.put(options, element);
+
 			options.enabled = enabled.enabled && !element.settings.isEmpty();
 			this.buttonList.add(options);
+
+			i++;
 		}
 		updatePage();
 	}
@@ -82,9 +89,9 @@ public class GuiHudMenu extends GuiScreen {
 
 	private void updatePage() {
 		((GuiButton) buttonList.get(4)).enabled = currentPage != 0;
-		((GuiButton) buttonList.get(5)).enabled = currentPage != Math.ceil((float) HudElement.ELEMENTS.length / perPage) - 1;
+		((GuiButton) buttonList.get(5)).enabled = currentPage != Math.ceil((float) HudElement.ELEMENTS.size() / perPage) - 1;
 
-		for(int i = 0; i < HudElement.ELEMENTS.length; i++) {
+		for(int i = 0; i < HudElement.ELEMENTS.size(); i++) {
 			int offset = i * 2 + buttonOffset;
 			boolean a = i >= (currentPage * perPage) && i < ((currentPage + 1) * perPage);
 			((GuiButton) this.buttonList.get(offset)).visible = a;
@@ -124,15 +131,10 @@ public class GuiHudMenu extends GuiScreen {
 				mc.displayGuiScreen(gui);
 				break;
 			}
-		} else {
-			id -= buttonOffset;
-
-			if((id & 1) == 1) {
-				HudElement element = HudElement.ELEMENTS[id / 2];
-				mc.displayGuiScreen(new GuiElementSettings(element, this));
-			} else {
-				((GuiToggleButton)button).toggle();
-			}
+		} else if(button instanceof GuiToggleButton) {
+			((GuiToggleButton)button).toggle();
+		} else if(buttonMap.containsKey(button)) {
+			mc.displayGuiScreen(new GuiElementSettings(buttonMap.get(button), this));
 		}
 	}
 
@@ -155,8 +157,8 @@ public class GuiHudMenu extends GuiScreen {
 			currentPage = 0;
 		}
 
-		if(currentPage > HudElement.ELEMENTS.length / perPage) {
-			currentPage = HudElement.ELEMENTS.length / perPage;
+		if(currentPage > HudElement.ELEMENTS.size() / perPage) {
+			currentPage = HudElement.ELEMENTS.size() / perPage;
 		}
 
 		updatePage();
@@ -175,16 +177,13 @@ public class GuiHudMenu extends GuiScreen {
 			}
 		}
 
-		this.drawCenteredString(this.fontRenderer, I18n.format("betterHud.menu.hudSettings"), this.width / 2, height / 16 + 5, 16777215);
-		this.drawString(this.fontRenderer, countEnabled(HudElement.ELEMENTS) + "/" + HudElement.ELEMENTS.length + " enabled", 5, 5, Colors.WHITE);
-		this.drawCenteredString(this.fontRenderer, I18n.format("betterHud.menu.page", (currentPage + 1) + "/" + (int) Math.ceil((float) HudElement.ELEMENTS.length / perPage)), width / 2, height - height / 16 - 13, Colors.WHITE);
-	}
-
-	public int countEnabled(HudElement[] elements) {
-		int i = 0;
-		for(HudElement element : elements) {
-			if(element.settings.get()) i++;
+		int enabled = 0;
+		for(HudElement element : HudElement.ELEMENTS) {
+			if(element.settings.get()) ++enabled;
 		}
-		return i;
+
+		this.drawCenteredString(this.fontRenderer, I18n.format("betterHud.menu.hudSettings"), this.width / 2, height / 16 + 5, 16777215);
+		this.drawString(this.fontRenderer, enabled + "/" + HudElement.ELEMENTS.size() + " enabled", 5, 5, Colors.WHITE);
+		this.drawCenteredString(this.fontRenderer, I18n.format("betterHud.menu.page", (currentPage + 1) + "/" + (int) Math.ceil((float) HudElement.ELEMENTS.size() / perPage)), width / 2, height - height / 16 - 13, Colors.WHITE);
 	}
 }

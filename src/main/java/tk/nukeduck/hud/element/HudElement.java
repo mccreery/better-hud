@@ -2,12 +2,14 @@ package tk.nukeduck.hud.element;
 
 import static tk.nukeduck.hud.BetterHud.MC;
 
+import java.util.Set;
+import java.util.TreeSet;
+
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import tk.nukeduck.hud.BetterHud;
-import tk.nukeduck.hud.element.entityinfo.EntityInfo;
 import tk.nukeduck.hud.element.entityinfo.HorseInfo;
 import tk.nukeduck.hud.element.entityinfo.MobInfo;
 import tk.nukeduck.hud.element.entityinfo.PlayerInfo;
@@ -28,7 +30,9 @@ import tk.nukeduck.hud.element.text.SystemClock;
 import tk.nukeduck.hud.network.Version;
 import tk.nukeduck.hud.util.Bounds;
 
-public abstract class HudElement {
+public abstract class HudElement implements Comparable<HudElement> {
+	public static final Set<HudElement> ELEMENTS = new TreeSet<HudElement>();
+
 	public static final ArmorBars ARMOR_BARS = new ArmorBars();
 	public static final ArrowCount ARROW_COUNT = new ArrowCount();
 	public static final BiomeName BIOME_NAME = new BiomeName();
@@ -60,19 +64,6 @@ public abstract class HudElement {
 	public static final MobInfo MOB_INFO = new MobInfo();
 	public static final CpsCount CPS = new CpsCount();
 
-	public static final HudElement[] ELEMENTS = {
-		ARMOR_BARS, ARROW_COUNT, BIOME_NAME, BLOCK_VIEWER, BLOOD_SPLATTERS,
-		CLOCK, COMPASS, CONNECTION, COORDINATES, DISTANCE,
-		MAX_LEVEL, EXPERIENCE, STATS, FPS, FULL_INV,
-		HOLDING, HEAL, HUNGER, LIGHT_LEVEL, SIGN_READER,
-		SYSTEM_CLOCK, WATER_DROPS, HIDE_PLAYERS,
-		HORSE_INFO, MOB_INFO, PICKUP, PLAYER_INFO, POTION_BAR, CPS
-	};
-
-	public static final EntityInfo[] ENTITY_INFO = {
-		HORSE_INFO, MOB_INFO, PLAYER_INFO
-	};
-
 	public final RootSetting settings = new RootSetting(this);
 
 	public boolean isEnabled() {
@@ -83,6 +74,12 @@ public abstract class HudElement {
 
 	protected HudElement(String name) {
 		this.name = name;
+		ELEMENTS.add(this);
+	}
+
+	@Override
+	public int compareTo(HudElement element) {
+		return name.compareTo(element.name);
 	}
 
 	public Version getMinimumServerVersion() {
