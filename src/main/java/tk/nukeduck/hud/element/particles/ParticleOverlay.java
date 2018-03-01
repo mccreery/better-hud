@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.element.settings.SettingChoose;
@@ -53,7 +52,7 @@ public abstract class ParticleOverlay extends HudElement implements Tickable {
 	}
 
 	@Override
-	public Bounds render(RenderGameOverlayEvent event) {
+	public Bounds render(RenderPhase phase) {
 		GlUtil.enableBlendTranslucent();
 		MC.getTextureManager().bindTexture(getTexture());
 
@@ -66,7 +65,7 @@ public abstract class ParticleOverlay extends HudElement implements Tickable {
 	}
 
 	@Override
-	public boolean shouldRender() {
+	public boolean shouldRender(RenderPhase phase) {
 		return !particles.isEmpty();
 	}
 }

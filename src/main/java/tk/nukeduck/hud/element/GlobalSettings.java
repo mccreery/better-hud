@@ -3,8 +3,9 @@ package tk.nukeduck.hud.element;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingPercentage;
 import tk.nukeduck.hud.element.settings.SettingSlider;
+import tk.nukeduck.hud.util.Bounds;
 
-public class GlobalSettings extends ElementStub {
+public class GlobalSettings extends HudElement {
 	private final SettingPercentage billboardScale = new SettingPercentage("billboardScale");
 	private final SettingSlider billboardDistance = new SettingSlider("distance", 5, 200).setUnlocalizedValue("betterHud.hud.meters");
 
@@ -40,4 +41,7 @@ public class GlobalSettings extends ElementStub {
 		billboardScale.set(0.5);
 		billboardDistance.set(100.0);
 	}
+
+	@Override public boolean shouldRender(RenderPhase phase) {return false;}
+	@Override public Bounds render(RenderPhase phase) {return null;}
 }

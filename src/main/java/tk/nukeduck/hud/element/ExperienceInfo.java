@@ -7,7 +7,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraftforge.client.GuiIngameForge;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.text.TextElement;
@@ -36,12 +35,12 @@ public class ExperienceInfo extends TextElement {
 	}
 
 	@Override
-	public boolean shouldRender() {
-		return GuiIngameForge.renderExperiance && MC.playerController.gameIsSurvivalOrAdventure();
+	public boolean shouldRender(RenderPhase phase) {
+		return super.shouldRender(phase) && GuiIngameForge.renderExperiance && MC.playerController.gameIsSurvivalOrAdventure();
 	}
 
 	@Override
-	public Bounds render(RenderGameOverlayEvent event) {
+	public Bounds render(RenderPhase phase) {
 		int fullBar = getExperienceWithinLevel(MC.player.experienceLevel);
 
 		int has = (int)(MC.player.experience * fullBar);
@@ -50,7 +49,7 @@ public class ExperienceInfo extends TextElement {
 		GlUtil.drawBorderedString(String.valueOf(has), MANAGER.getResolution().x / 2 - 90, MANAGER.getResolution().y - 30, Colors.WHITE); // 30
 		GlUtil.drawBorderedString(String.valueOf(needed), MANAGER.getResolution().x / 2 + 90 - MC.fontRenderer.getStringWidth(String.valueOf(needed)), MANAGER.getResolution().y - 30, Colors.WHITE);
 
-		return super.render(event);
+		return super.render(phase);
 	}
 
 	/** @param level The player's current level

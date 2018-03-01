@@ -3,7 +3,6 @@ package tk.nukeduck.hud.element;
 import static tk.nukeduck.hud.BetterHud.MC;
 
 import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderLivingEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -40,6 +39,6 @@ public class HidePlayers extends HudElement {
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
-	@Override public Bounds render(RenderGameOverlayEvent event) {return null;}
-	@Override public boolean shouldRender() {return false;}
+	@Override public Bounds render(RenderPhase phase) {return null;}
+	@Override public boolean shouldRender(RenderPhase phase) {return false;}
 }

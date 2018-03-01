@@ -31,9 +31,4 @@ public class LightLevel extends TextElement {
 		}
 		return Arrays.asList(getLocalizedName() + ": " + light);
 	}
-
-	@Override
-	public boolean shouldRender() {
-		return MC.player != null && MC.world != null;
-	}
 }

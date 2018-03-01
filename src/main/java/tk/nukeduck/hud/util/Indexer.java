@@ -24,15 +24,15 @@ public class Indexer<T> extends AbstractList<T> {
 	private final ProxyComparator<T> proxyComparator;
 
 	@SafeVarargs
-	public Indexer(List<T> data, Comparator<T> comparator, Order order, Comparator<T>... index) {
-		this(data, comparator, order, Arrays.asList(index));
+	public Indexer(List<T> data, Comparator<T> comparator, Order order, Comparator<T>... comparators) {
+		this(data, comparator, order, Arrays.asList(comparators));
 	}
 
-	public Indexer(List<T> data, Comparator<T> comparator, Order order, Collection<Comparator<T>> candidates) {
+	public Indexer(List<T> data, Comparator<T> comparator, Order order, Collection<Comparator<T>> comparators) {
 		this.data = data;
 		proxyComparator = new ProxyComparator<T>(data, null);
 
-		addComparators(candidates);
+		addComparators(comparators);
 		setComparator(comparator, order);
 	}
 
@@ -41,7 +41,6 @@ public class Indexer<T> extends AbstractList<T> {
 			order = order.opposite();
 		} else {
 			setComparator(comparator, Order.ASCENDING);
-			System.out.println("Comparator is now " + this.comparator);
 		}
 	}
 
@@ -67,7 +66,7 @@ public class Indexer<T> extends AbstractList<T> {
 	public void addComparators(Collection<Comparator<T>> comparators) {
 		for(Comparator<T> comparator : comparators) {
 			if(!indices.containsKey(comparator)) {
-				recalculateIndex(comparator);
+				indices.put(comparator, EMPTY_INDEX);
 			}
 		}
 	}
@@ -82,7 +81,7 @@ public class Indexer<T> extends AbstractList<T> {
 		}
 	}
 
-	private void recalculateIndex(Comparator<T> comparator) {
+	public void recalculateIndex(Comparator<T> comparator) {
 		Integer[] index = indices.containsKey(comparator) ? indices.get(comparator) : EMPTY_INDEX;
 		int previousSize = index.length;
 
@@ -103,22 +102,26 @@ public class Indexer<T> extends AbstractList<T> {
 	}
 
 	public void updateIndex(Comparator<T> comparator, int i) {
-		if(indices.containsKey(comparator)) {
-			Integer[] index = indices.get(comparator);
-	
-			proxyComparator.setComparator(comparator);
-			SortUtil.updateSort(Arrays.asList(index), proxyComparator, ArrayUtils.indexOf(index, i));
-		} else {
-			recalculateIndex(comparator);
+		Integer[] index = indices.get(comparator);
+		if(index == null) {
+			throw new IllegalStateException("Index has not been calculated for current comparator");
 		}
+
+		proxyComparator.setComparator(comparator);
+		SortUtil.updateSort(Arrays.asList(index), proxyComparator, ArrayUtils.indexOf(index, i));
 	}
 
 	@Override
 	public T get(int i) {
+		Integer[] index = indices.get(comparator);
+		if(index == null) {
+			throw new IllegalStateException("Index has not been calculated for current comparator");
+		}
+
 		if(order == Order.DESCENDING) {
 			i = data.size() - 1 - i;
 		}
-		return data.get(indices.get(comparator)[i]);
+		return data.get(index[i]);
 	}
 
 	@Override

@@ -34,8 +34,8 @@ public class FullInvIndicator extends TextElement {
 	}
 
 	@Override
-	public boolean shouldRender() {
-		return MC.player.inventory.getFirstEmptyStack() == -1 &&
+	public boolean shouldRender(RenderPhase phase) {
+		return super.shouldRender(phase) && MC.player.inventory.getFirstEmptyStack() == -1 &&
 			(!offHand.get() || !MC.player.inventory.offHandInventory.get(0).isEmpty());
 	}
 }

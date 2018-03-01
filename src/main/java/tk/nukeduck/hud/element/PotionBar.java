@@ -53,7 +53,7 @@ public class PotionBar extends HudElement {
 	}
 
 	@Override
-	public Bounds render(RenderGameOverlayEvent event) {
+	public Bounds render(RenderPhase phase) {
 		int amount = MC.player.getActivePotionEffects().size();
 		Bounds bounds = position.applyTo(new Bounds(amount * 16, 16));
 

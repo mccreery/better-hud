@@ -1,11 +1,11 @@
 package tk.nukeduck.hud.element.text;
 
+import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
 
 import java.util.Arrays;
 import java.util.List;
 
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.util.Bounds;
@@ -32,23 +32,23 @@ public class FoodHealthStats extends TextElement {
 	}
 
 	@Override
-	public boolean shouldRender() {
-		return MC.playerController.gameIsSurvivalOrAdventure();
+	public boolean shouldRender(RenderPhase phase) {
+		return super.shouldRender(phase) && MC.playerController.gameIsSurvivalOrAdventure();
 	}
 
 	@Override
-	public Bounds render(RenderGameOverlayEvent event) {
+	public Bounds render(RenderPhase phase) {
 		String health = String.valueOf(((int)MC.player.getHealth()) / 2.0f);
 		String food = String.valueOf(MC.player.getFoodStats().getFoodLevel() / 2.0F);
 
-		int center = event.getResolution().getScaledWidth() / 2;
-		int textY = event.getResolution().getScaledHeight() - 35;
+		int center = MANAGER.getResolution().x / 2;
+		int textY = MANAGER.getResolution().y - 35;
 		int healthWidth = MC.fontRenderer.getStringWidth(health);
 
 		MC.ingameGUI.drawString(MC.fontRenderer, food, center + 95, textY, Colors.WHITE);
 		MC.ingameGUI.drawString(MC.fontRenderer, health, center - 95 - healthWidth, textY, Colors.WHITE);
 
-		return super.render(event);
+		return super.render(phase);
 	}
 
 	@Override

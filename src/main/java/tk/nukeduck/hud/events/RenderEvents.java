@@ -2,6 +2,7 @@ package tk.nukeduck.hud.events;
 
 import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
+import static tk.nukeduck.hud.BetterHud.pointedEntity;
 
 import java.util.List;
 
@@ -22,7 +23,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.element.HudElement;
-import tk.nukeduck.hud.element.entityinfo.EntityInfo;
+import tk.nukeduck.hud.element.HudElement.RenderPhase;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Point;
@@ -42,13 +43,11 @@ public final class RenderEvents {
 		MC.mcProfiler.startSection("betterHud");
 		MANAGER.reset(event.getResolution());
 
-		for(HudElement element : HudElement.ELEMENTS) {
-			element.tryRender(event);
-		}
-		MC.mcProfiler.endSection();
+		HudElement.renderAll(RenderPhase.HUD);
 
 		// Expected state by vanilla GUI
 		MC.getTextureManager().bindTexture(Gui.ICONS);
+		MC.mcProfiler.endSection();
 	}
 
 	@SubscribeEvent
@@ -56,27 +55,26 @@ public final class RenderEvents {
 		if(!BetterHud.isEnabled()) return;
 
 		MC.mcProfiler.startSection("betterHud");
-		MANAGER.reset(Point.ZERO, 0);
+		Entity pointed = getMouseOver(HudElement.GLOBAL.getBillboardDistance(), e.getPartialTicks());
 
-		Entity entity = getMouseOver(HudElement.GLOBAL.getBillboardDistance(), e.getPartialTicks());
-		if(entity == null || !(entity instanceof EntityLivingBase)) return;
+		if(pointed != null && pointed instanceof EntityLivingBase) {
+			MANAGER.reset(Point.ZERO, 0);
+			pointedEntity = (EntityLivingBase)pointed;
 
-		EntityLivingBase entityLiving = (EntityLivingBase)entity;
+			GlStateManager.pushMatrix();
+			GlUtil.setupBillboard(pointedEntity, e.getPartialTicks(), HudElement.GLOBAL.getBillboardScale());
 
-		GlStateManager.pushMatrix();
-		GlUtil.setupBillboard(entity, e.getPartialTicks(), HudElement.GLOBAL.getBillboardScale());
+			GlStateManager.disableDepth();
+			GlUtil.color(Colors.WHITE);
+			GlUtil.enableBlendTranslucent();
 
-		GlStateManager.disableDepth();
-		GlUtil.color(Colors.WHITE);
-		GlUtil.enableBlendTranslucent();
+			HudElement.renderAll(RenderPhase.BILLBOARD);
 
-		for(EntityInfo element : EntityInfo.ENTITY_INFO) {
-			element.tryRender(entityLiving, e.getPartialTicks());
+			GlStateManager.enableDepth();
+			GlStateManager.popMatrix();
+		} else {
+			pointedEntity = null;
 		}
-
-		GlStateManager.enableDepth();
-		GlStateManager.popMatrix();
-
 		MC.mcProfiler.endSection();
 	}
 

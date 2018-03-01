@@ -22,7 +22,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IWorldNameable;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -82,7 +81,9 @@ public class BlockViewer extends TextElement {
 	}
 
 	@Override
-	public boolean shouldRender() {
+	public boolean shouldRender(RenderPhase phase) {
+		if(!super.shouldRender(phase)) return false;
+
 		trace = MC.getRenderViewEntity().rayTrace(HudElement.GLOBAL.getBillboardDistance(), 1f);
 
 		if(trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK) {
@@ -115,12 +116,12 @@ public class BlockViewer extends TextElement {
 	}
 
 	@Override
-	protected void drawBorder(RenderGameOverlayEvent event, PaddedBounds bounds) {
+	protected void drawBorder(PaddedBounds bounds) {
 		GlUtil.drawTooltipBox(bounds.x(), bounds.y(), bounds.width(), bounds.height());
 	}
 
 	@Override
-	protected void drawExtras(RenderGameOverlayEvent event, PaddedBounds bounds) {
+	protected void drawExtras(PaddedBounds bounds) {
 		if(stack != null && showBlock.get()) {
 			RenderHelper.enableGUIStandardItemLighting();
 			MC.getRenderItem().renderItemAndEffectIntoGUI(stack, bounds.x() + 5, bounds.y() + 2);

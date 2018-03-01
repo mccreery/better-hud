@@ -36,7 +36,7 @@ public abstract class Setting<T> implements IGetSet<T> {
 		this.name = name;
 	}
 
-	public Setting<?> setHidden() {
+	public Setting<T> setHidden() {
 		this.hidden = true;
 		return this;
 	}

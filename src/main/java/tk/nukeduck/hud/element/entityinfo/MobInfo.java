@@ -107,7 +107,8 @@ public class MobInfo extends EntityInfo {
 		GlUtil.renderHealthBar(health, maxHealth, position);
 	}
 
-	public void render(EntityLivingBase entity, float partialTicks) {
+	@Override
+	public void render(EntityLivingBase entity) {
 		int health = (int)entity.getHealth();
 		int maxHealth = (int)entity.getMaxHealth();
 

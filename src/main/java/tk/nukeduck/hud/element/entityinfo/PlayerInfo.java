@@ -48,7 +48,7 @@ public class PlayerInfo extends EntityInfo {
 	}
 
 	@Override
-	public void render(EntityLivingBase entity, float partialTicks) {
+	public void render(EntityLivingBase entity) {
 		List<String> tooltip = new ArrayList<String>();
 
 		ItemStack held = entity.getHeldItemMainhand();

@@ -2,7 +2,6 @@ package tk.nukeduck.hud.element.text;
 
 import java.util.List;
 
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.element.settings.SettingColor;
 import tk.nukeduck.hud.element.settings.SettingPosition;
@@ -60,29 +59,29 @@ public abstract class TextElement extends HudElement {
 	}
 
 	@Override
-	public Bounds render(RenderGameOverlayEvent event) {
+	public Bounds render(RenderPhase phase) {
 		List<String> text = getText();
-		return text == null || text.isEmpty() ? null : render(event, text);
+		return text == null || text.isEmpty() ? null : render(phase, text);
 	}
 
-	protected Bounds render(RenderGameOverlayEvent event, List<String> text) {
+	protected Bounds render(RenderPhase phase, List<String> text) {
 		StringGroup group = new StringGroup(text);
 		group.setColor(color.get());
 		group.setAlignment(position.getAlignment());
 
 		PaddedBounds bounds = moveBounds(new PaddedBounds(new Bounds(group.getSize()), getPadding(), getMargin()));
 
-		drawBorder(event, bounds);
+		drawBorder(bounds);
 		group.draw(bounds.contentBounds());
-		drawExtras(event, bounds);
+		drawExtras(bounds);
 
 		return bounds;
 	}
 
-	protected void drawBorder(RenderGameOverlayEvent event, PaddedBounds bounds) {
+	protected void drawBorder(PaddedBounds bounds) {
 		if(border) GlUtil.drawRect(bounds.paddingBounds(), Colors.TRANSLUCENT);
 	}
 
 	protected abstract List<String> getText();
-	protected void drawExtras(RenderGameOverlayEvent event, PaddedBounds bounds) {}
+	protected void drawExtras(PaddedBounds bounds) {}
 }

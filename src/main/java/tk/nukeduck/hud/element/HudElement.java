@@ -7,7 +7,6 @@ import java.util.Comparator;
 import java.util.List;
 
 import net.minecraft.client.resources.I18n;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import tk.nukeduck.hud.BetterHud;
@@ -32,6 +31,7 @@ import tk.nukeduck.hud.network.Version;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Indexer;
 import tk.nukeduck.hud.util.Indexer.Order;
+import tk.nukeduck.hud.util.SortField;
 
 public abstract class HudElement {
 	public static final List<HudElement> ELEMENTS = new ArrayList<HudElement>();
@@ -67,19 +67,40 @@ public abstract class HudElement {
 	public static final MobInfo MOB_INFO = new MobInfo();
 	public static final CpsCount CPS = new CpsCount();
 
-	public enum SortType implements Comparator<HudElement> {
-		ALPHABETICAL {
+	public enum SortType implements SortField<HudElement> {
+		ALPHABETICAL("alphabetical", false) {
 			@Override
 			public int compare(HudElement a, HudElement b) {
 				return a.name.compareTo(b.name);
 			}
-		}, ENABLED {
+		}, ENABLED("enabled", false) {
 			@Override
 			public int compare(HudElement a, HudElement b) {
-				int compare = Boolean.compare(a.settings.get(), b.settings.get());
+				int compare = a.settings.get().compareTo(b.settings.get());
+				return compare != 0 ? compare : ALPHABETICAL.compare(a, b);
+			}
+		}, PRIORITY("priority", true) {
+			@Override
+			public int compare(HudElement a, HudElement b) {
+				int compare = a.settings.priority.get().compareTo(b.settings.priority.get());
 				return compare != 0 ? compare : ALPHABETICAL.compare(a, b);
 			}
 		};
+
+		private final String unlocalizedName;
+		private final boolean inverted;
+
+		SortType(String unlocalizedName, boolean inverted) {
+			this.unlocalizedName = "betterHud.menu." + unlocalizedName;
+			this.inverted = inverted;
+		}
+
+		public String getUnlocalizedName() {
+			return unlocalizedName;
+		}
+		public boolean isInverted() {
+			return inverted;
+		}
 	};
 
 	public static final Indexer<HudElement> INDEXER = new Indexer<HudElement>(ELEMENTS, SortType.ALPHABETICAL, Order.ASCENDING, SortType.values());
@@ -88,7 +109,6 @@ public abstract class HudElement {
 
 	public void setEnabled(boolean value) {
 		settings.set(value);
-		INDEXER.updateIndex(SortType.ENABLED, id);
 	}
 
 	public boolean isEnabled() {
@@ -121,22 +141,40 @@ public abstract class HudElement {
 		return "betterHud.element." + name;
 	}
 
-	public boolean shouldRender() {return true;}
+	public enum RenderPhase {
+		HUD, BILLBOARD;
+	}
+
+	public boolean shouldRender(RenderPhase phase) {
+		return phase == RenderPhase.HUD;
+	}
 
 	/** Renders this element to the screen
+	 * @param phase TODO
 	 * @return The bounds containing the element drawn */
-	public abstract Bounds render(RenderGameOverlayEvent event);
+	public abstract Bounds render(RenderPhase phase);
 
-	/** Calls {@link #render(RenderGameOverlayEvent)} if the element
+	/** Calls {@link #render(RenderPhase)} if the element
 	 * should be rendered and caches the bounds so they are available from {@link #getLastBounds()} */
-	public void tryRender(RenderGameOverlayEvent event) {
-		if(isEnabled() && shouldRender()) {
+	public void tryRender(RenderPhase phase) {
+		if(isEnabled() && shouldRender(phase)) {
 			MC.mcProfiler.startSection(name);
-			lastBounds = render(event);
+			lastBounds = render(null);
 			MC.mcProfiler.endSection();
-		} else {
-			lastBounds = Bounds.EMPTY;
 		}
+	}
+
+	public static void renderAll(RenderPhase phase) {
+		Comparator<HudElement> previousComparator = INDEXER.getComparator();
+		Order previousOrder = INDEXER.getOrder();
+
+		INDEXER.setComparator(SortType.PRIORITY, Order.ASCENDING);
+
+		for(HudElement element : INDEXER) {
+			element.tryRender(phase);
+		}
+
+		INDEXER.setComparator(previousComparator, previousOrder);
 	}
 
 	private Bounds lastBounds = Bounds.EMPTY;

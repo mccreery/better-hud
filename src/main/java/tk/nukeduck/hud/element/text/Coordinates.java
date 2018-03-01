@@ -8,7 +8,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.client.resources.I18n;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingSlider;
@@ -38,9 +37,9 @@ public class Coordinates extends TextElement {
 	}
 
 	@Override
-	public Bounds render(RenderGameOverlayEvent event, List<String> text) {
+	public Bounds render(RenderPhase phase, List<String> text) {
 		if(!position.getAlignment().in(Direction.VERTICAL) || !spaced.get()) {
-			return super.render(event, text);
+			return super.render(phase, text);
 		}
 
 		StringGroup group = new StringGroup(text).setAlignment(Direction.NORTH).setSpacing(50).setRow();

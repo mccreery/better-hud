@@ -5,7 +5,19 @@ import tk.nukeduck.hud.util.HudConfig;
 
 public class RootSetting extends SettingStub<Boolean> {
 	private final HudElement element;
-	public final SettingBoolean enabled = new SettingBoolean("enabled");
+	private int priorityRank = 0;
+
+	public final SettingBoolean enabled = (SettingBoolean)new SettingBoolean("enabled").setHidden();
+
+	public final Setting<Integer> priority = new SettingStub<Integer>("priority") {
+		@Override public void set(Integer value) {priorityRank = value;}
+		@Override public Integer get() {return priorityRank;}
+		
+		@Override public String save() {return String.valueOf(priorityRank);}
+		@Override public void load(String save) {priorityRank = Integer.parseInt(save);}
+
+		@Override protected boolean hasValue() {return true;}
+	}.setHidden();
 
 	public final void bindConfig(HudConfig config) {
 		bindConfig(config, element.name, new StringBuilder());
@@ -15,7 +27,8 @@ public class RootSetting extends SettingStub<Boolean> {
 		super();
 		this.element = element;
 
-		add(enabled.setHidden());
+		add(enabled);
+		add(priority);
 	}
 
 	@Override

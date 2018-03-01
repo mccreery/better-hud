@@ -1,14 +1,15 @@
 package tk.nukeduck.hud.element.entityinfo;
 
-import static tk.nukeduck.hud.BetterHud.MC;
+import static tk.nukeduck.hud.BetterHud.pointedEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.entity.EntityLivingBase;
-import tk.nukeduck.hud.element.ElementStub;
+import tk.nukeduck.hud.element.HudElement;
+import tk.nukeduck.hud.util.Bounds;
 
-public abstract class EntityInfo extends ElementStub {
+public abstract class EntityInfo extends HudElement {
 	public static final List<EntityInfo> ENTITY_INFO = new ArrayList<EntityInfo>();
 
 	protected EntityInfo(String name) {
@@ -16,14 +17,15 @@ public abstract class EntityInfo extends ElementStub {
 		ENTITY_INFO.add(this);
 	}
 
-	/** Calls {@link #render(EntityLivingBase, float)}
-	 * if the element should be rendered */
-	public void tryRender(EntityLivingBase entity, float partialTicks) {
-		if(isEnabled() && shouldRender(entity)) {
-			MC.mcProfiler.startSection(name);
-			render(entity, partialTicks);
-			MC.mcProfiler.endSection();
-		}
+	@Override
+	public boolean shouldRender(RenderPhase phase) {
+		return phase == RenderPhase.BILLBOARD && shouldRender(pointedEntity);
+	}
+
+	@Override
+	public Bounds render(RenderPhase phase) {
+		render(pointedEntity);
+		return null;
 	}
 
 	public boolean shouldRender(EntityLivingBase entity) {
@@ -31,5 +33,5 @@ public abstract class EntityInfo extends ElementStub {
 	}
 
 	/** Renders this element to the current billboard */
-	public abstract void render(EntityLivingBase entity, float partialTicks);
+	public abstract void render(EntityLivingBase entity);
 }

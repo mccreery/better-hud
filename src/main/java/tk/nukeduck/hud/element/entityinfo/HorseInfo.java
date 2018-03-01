@@ -34,7 +34,8 @@ public class HorseInfo extends EntityInfo {
 		settings.add(speed);
 	}
 
-	public void render(EntityLivingBase entity, float partialTicks) {
+	@Override
+	public void render(EntityLivingBase entity) {
 		ArrayList<String> infoParts = new ArrayList<String>();
 
 		if(jump.get()) {

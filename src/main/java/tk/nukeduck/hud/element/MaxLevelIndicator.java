@@ -6,7 +6,6 @@ import static tk.nukeduck.hud.BetterHud.MC;
 import net.minecraft.entity.passive.EntityHorse;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
@@ -28,7 +27,7 @@ public class MaxLevelIndicator extends HudElement {
 	}
 
 	@Override
-	public Bounds render(RenderGameOverlayEvent event) {
+	public Bounds render(RenderPhase phase) {
 		Bounds bounds;
 		if(position.getDirection() == Direction.SOUTH) {
 			bounds = new Bounds(MANAGER.getResolution().x / 2 - 8, MANAGER.getResolution().y - 50, 16, 16);
@@ -41,8 +40,9 @@ public class MaxLevelIndicator extends HudElement {
 	}
 
 	@Override
-	public boolean shouldRender() {
-		return MC.playerController.gameIsSurvivalOrAdventure()
+	public boolean shouldRender(RenderPhase phase) {
+		return super.shouldRender(phase)
+			&& MC.playerController.gameIsSurvivalOrAdventure()
 			&& !(MC.player.getRidingEntity() != null && MC.player.getRidingEntity() instanceof EntityHorse)
 			&& MC.player.experienceLevel >= 30;
 	}

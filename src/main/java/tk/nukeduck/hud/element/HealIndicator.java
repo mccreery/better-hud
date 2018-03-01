@@ -5,7 +5,6 @@ import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
 
 import net.minecraft.client.resources.I18n;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingChoose;
 import tk.nukeduck.hud.element.settings.SettingPosition;
@@ -34,7 +33,7 @@ public class HealIndicator extends HudElement {
 	}
 
 	@Override
-	public Bounds render(RenderGameOverlayEvent event) {
+	public Bounds render(RenderPhase phase) {
 			String healIndicator = I18n.format("betterHud.strings.healIndicator");
 			Bounds bounds = mode.getIndex() == 0 ? new Bounds(MC.fontRenderer.getStringWidth(healIndicator), MC.fontRenderer.FONT_HEIGHT) : new Bounds(9, 9);
 
@@ -55,8 +54,9 @@ public class HealIndicator extends HudElement {
 
 	/** @see net.minecraft.util.FoodStats#onUpdate(net.minecraft.entity.player.EntityPlayer) */
 	@Override
-	public boolean shouldRender() {
-		return MC.playerController.gameIsSurvivalOrAdventure()
+	public boolean shouldRender(RenderPhase phase) {
+		return super.shouldRender(phase)
+			&& MC.playerController.gameIsSurvivalOrAdventure()
 			&& MC.world.getGameRules().getBoolean("naturalRegeneration")
 			&& MC.player.getFoodStats().getFoodLevel() >= 18
 			&& MC.player.shouldHeal();
