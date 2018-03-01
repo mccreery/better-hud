@@ -2,27 +2,21 @@ package tk.nukeduck.hud.gui;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import tk.nukeduck.hud.util.ISaveLoad.IGetSet;
 
 @SideOnly(Side.CLIENT)
-public class GuiToggleButton extends GuiButton implements IGetSet<Boolean> {
+public class GuiToggleButton extends GuiActionButton implements IGetSet<Boolean> {
 	public String unlocalizedName;
 	private String unlocalizedValue = "options";
 
 	/** @see #updateText() */
 	private boolean staticText = false;
 
-	public GuiToggleButton(int buttonId, int x, int y, String buttonText) {
-		super(buttonId, x, y, buttonText);
-		updateText();
-	}
-
-	public GuiToggleButton(int buttonId, int x, int y, int widthIn, int heightIn, String buttonText) {
-		super(buttonId, x, y, widthIn, heightIn, buttonText);
+	public GuiToggleButton(String buttonText) {
+		super(buttonText);
 		unlocalizedName = buttonText;
 		updateText();
 	}
@@ -51,7 +45,7 @@ public class GuiToggleButton extends GuiButton implements IGetSet<Boolean> {
 		return value;
 	}
 
-	public void toggle() {
+	public void actionPerformed() {
 		set(!get());
 	}
 

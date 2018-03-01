@@ -1,7 +1,12 @@
 package tk.nukeduck.hud.gui;
 
+import static tk.nukeduck.hud.BetterHud.MC;
+import static tk.nukeduck.hud.BetterHud.SPACER;
+
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -10,73 +15,119 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.element.HudElement;
+import tk.nukeduck.hud.element.HudElement.SortType;
+import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
+import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.GlUtil;
+import tk.nukeduck.hud.util.Indexer;
+import tk.nukeduck.hud.util.Paginator;
+import tk.nukeduck.hud.util.Point;
+import tk.nukeduck.hud.util.Indexer.Order;
 
 @SideOnly(Side.CLIENT)
 public class GuiHudMenu extends GuiScreen {
-	private Map<GuiButton, HudElement> buttonMap = new HashMap<GuiButton, HudElement>();
+	private final Map<HudElement, ButtonRow> rows = new HashMap<HudElement, ButtonRow>(HudElement.ELEMENTS.size());
+	private final Paginator<HudElement> paginator = new Paginator<HudElement>(HudElement.INDEXER);
 
-	public int buttonOffset = 0;
-	public int currentPage = 0;
-	public int perPage = 10;
+	private final GuiButton returnToGame   = new GuiButton(0, 0, 0, I18n.format("menu.returnToGame"));
+	private final GuiButton enableAll      = new GuiButton(0, 0, 0, I18n.format("betterHud.menu.enableAll"));
+	private final GuiButton disableAll     = new GuiButton(0, 0, 0, I18n.format("betterHud.menu.disableAll"));
+	private final GuiButton resetDefaults  = new GuiButton(0, 0, 0, I18n.format("betterHud.menu.resetDefaults"));
+	private final GuiButton globalSettings = new GuiButton(0, 0, 0, I18n.format("betterHud.menu.settings", HudElement.GLOBAL.getLocalizedName()));
+
+	private final GuiButton lastPage = new GuiButton(0, 0, 0, I18n.format("betterHud.menu.lastPage"));
+	private final GuiButton nextPage = new GuiButton(0, 0, 0, I18n.format("betterHud.menu.nextPage"));
+
+	public GuiHudMenu() {
+		for(HudElement element : HudElement.ELEMENTS) {
+			rows.put(element, new ButtonRow(element));
+		}
+	}
 
 	public void initGui() {
-		super.initGui();
-		this.mc = Minecraft.getMinecraft();
+		paginator.setPageSize(Math.max(1, (int) Math.floor((height / 8 * 7 - 110) / 24)));
+		addDefaultButtons();
 
-		this.buttonList.clear();
-		//boolean flag = true;
+		Bounds largeButton = new Bounds(150, 20);
+		Bounds smallButton = new Bounds(100, 20);
+		Bounds buttonBounds = Direction.NORTH.align(new Bounds(largeButton.width() + smallButton.width() + 2, 20), new Point(width / 2, height / 16 + 78));
 
-		int hW = this.width / 2;
-		int yBase = this.height / 16 + 42;
+		for(HudElement element : paginator.getPage()) {
+			ButtonRow row = rows.get(element);
 
-		this.buttonList.add(new GuiButton(0, hW - 152, yBase - 22, 150, 20, I18n.format("menu.returnToGame")));
-		this.buttonList.add(new GuiButton(1, hW - 152, yBase, 98, 20, I18n.format("betterHud.menu.enableAll")));
-		this.buttonList.add(new GuiButton(2, hW - 49, yBase, 98, 20, I18n.format("betterHud.menu.disableAll")));
-		this.buttonList.add(new GuiButton(3, hW + 54, yBase, 98, 20, I18n.format("betterHud.menu.resetDefaults")));
+			row.toggle.setBounds(Direction.NORTH_WEST.anchor(largeButton, buttonBounds));
+			row.toggle.enabled = element.isSupportedByServer();
+			row.toggle.updateText();
+			buttonList.add(row.toggle);
 
-		this.buttonList.add(new GuiButton(4, hW - 129, height - 20 - height / 16, 98, 20, I18n.format("betterHud.menu.lastPage")));
-		((GuiButton) buttonList.get(4)).enabled = false;
-		this.buttonList.add(new GuiButton(5, hW + 31, height - 20 - height / 16, 98, 20, I18n.format("betterHud.menu.nextPage")));
+			row.options.setBounds(Direction.NORTH_EAST.anchor(smallButton, buttonBounds));
+			row.options.enabled = row.toggle.enabled && !element.settings.isEmpty();
+			buttonList.add(row.options);
 
-		// Global settings button
-		this.buttonList.add(new GuiButton(6, hW + 2, yBase - 22, 150, 20, I18n.format("betterHud.menu.settings", HudElement.GLOBAL.getLocalizedName())));
-
-		buttonOffset = this.buttonList.size(); // Set the button offset for actual element buttons
-
-		this.perPage = Math.max(1, (int) Math.floor((height / 8 * 7 - 110) / 24));
-
-		int id = buttonOffset;
-		int top = height / 16 + 78;
-
-		int i = 0;
-		for(HudElement element : HudElement.ELEMENTS) {
-			GuiButton enabled = new GuiSettingToggle(id++, hW - 126, top + ((i % perPage) * 24), 150, 20, element.getUnlocalizedName(), element.settings.enabled);
-			enabled.enabled = element.isSupportedByServer();
-
-			this.buttonList.add(enabled);
-
-			GuiButton options = new GuiButton(id++, hW + 26, top + ((i % perPage) * 24), 100, 20, I18n.format("betterHud.menu.options"));
-			buttonMap.put(options, element);
-
-			options.enabled = enabled.enabled && !element.settings.isEmpty();
-			this.buttonList.add(options);
-
-			i++;
+			buttonBounds.y(buttonBounds.bottom() + 4);
 		}
-		updatePage();
+	}
+
+	private void addDefaultButtons() {
+		Bounds buttons = Direction.NORTH.align(new Bounds(300, 42), new Point(width / 2, height / 16 + 20));
+		Bounds halfWidth = new Bounds((buttons.width() - 2) / 2, 20);
+		Bounds thirdWidth = new Bounds((buttons.width() - 4) / 3, 20);
+
+		moveButton(returnToGame,   Direction.NORTH_WEST.anchor(halfWidth, buttons));
+		moveButton(globalSettings, Direction.NORTH_EAST.anchor(halfWidth, buttons));
+
+		moveButton(enableAll,     Direction.SOUTH_WEST.anchor(thirdWidth, buttons));
+		moveButton(disableAll,    Direction.SOUTH.anchor(thirdWidth, buttons));
+		moveButton(resetDefaults, Direction.SOUTH_EAST.anchor(thirdWidth, buttons));
+
+		lastPage.enabled = paginator.hasPrevious();
+		nextPage.enabled = paginator.hasNext();
+
+		buttons = Direction.NORTH.align(buttons, new Point(width / 2, height - 20 - height / 16));
+		moveButton(lastPage, Direction.NORTH_WEST.anchor(thirdWidth, buttons));
+		moveButton(nextPage, Direction.NORTH_EAST.anchor(thirdWidth, buttons));
+
+		buttonList.clear();
+
+		buttonList.add(returnToGame);
+		buttonList.add(globalSettings);
+
+		buttonList.add(enableAll);
+		buttonList.add(disableAll);
+		buttonList.add(resetDefaults);
+
+		buttonList.add(lastPage);
+		buttonList.add(nextPage);
+
+		List<GuiActionButton> indexerControls = getIndexControls(HudElement.INDEXER, Arrays.asList(SortType.values()), Arrays.asList("A-Z", "Enabled"));
+		Bounds bounds = new Bounds(5, height - 25, 50, 20);
+
+		for(GuiActionButton button : indexerControls) {
+			button.setBounds(bounds);
+			bounds.x(bounds.right() + SPACER);
+		}
+		buttonList.addAll(indexerControls);
+	}
+
+	private void moveButton(GuiButton button, Bounds bounds) {
+		button.x = bounds.x();
+		button.y = bounds.y();
+		button.width = bounds.width();
+		button.height = bounds.height();
 	}
 
 	private void closeMe() {
 		mc.displayGuiScreen((GuiScreen)null);
+
 		if(this.mc.currentScreen == null) {
 			mc.setIngameFocus();
 		}
-
 		BetterHud.CONFIG.saveSettings();
 	}
 
@@ -87,103 +138,118 @@ public class GuiHudMenu extends GuiScreen {
 		}
 	}
 
-	private void updatePage() {
-		((GuiButton) buttonList.get(4)).enabled = currentPage != 0;
-		((GuiButton) buttonList.get(5)).enabled = currentPage != Math.ceil((float) HudElement.ELEMENTS.size() / perPage) - 1;
-
-		for(int i = 0; i < HudElement.ELEMENTS.size(); i++) {
-			int offset = i * 2 + buttonOffset;
-			boolean a = i >= (currentPage * perPage) && i < ((currentPage + 1) * perPage);
-			((GuiButton) this.buttonList.get(offset)).visible = a;
-			((GuiButton) this.buttonList.get(offset + 1)).visible = a;
-		}
-	}
-
 	@Override
 	protected void actionPerformed(GuiButton button) {
-		int id = button.id;
-
-		if(id < buttonOffset) {
-			switch(id) {
-			case 0:
-				closeMe();
-				break;
-			case 1:
-				setAll(true);
-				break;
-			case 2:
-				setAll(false);
-				break;
-			case 3:
-				HudElement.loadAllDefaults();
-				initGui();
-				break;
-			case 4:
-				currentPage--;
-				updatePage();
-				break;
-			case 5:
-				currentPage++;
-				updatePage();
-				break;
-			case 6:
-				GuiElementSettings gui = new GuiElementSettings(HudElement.GLOBAL, this);
-				mc.displayGuiScreen(gui);
-				break;
-			}
-		} else if(button instanceof GuiToggleButton) {
-			((GuiToggleButton)button).toggle();
-		} else if(buttonMap.containsKey(button)) {
-			mc.displayGuiScreen(new GuiElementSettings(buttonMap.get(button), this));
+		if(button == returnToGame) {
+			closeMe();
+		} else if(button == enableAll) {
+			setAll(true);
+		} else if(button == disableAll) {
+			setAll(false);
+		} else if(button == resetDefaults) {
+			HudElement.loadAllDefaults();
+			initGui();
+		} else if(button == lastPage) {
+			paginator.previousPage();
+			initGui();
+		} else if(button == nextPage) {
+			paginator.nextPage();
+			initGui();
+		} else if(button instanceof GuiActionButton) {
+			((GuiActionButton)button).actionPerformed();
 		}
 	}
 
 	private void setAll(boolean enabled) {
-		for(GuiButton button : buttonList) {
-			if(button instanceof GuiSettingToggle) {
-				((GuiSettingToggle) button).set(enabled);
-			}
+		for(HudElement element : HudElement.ELEMENTS) {
+			rows.get(element).toggle.set(enabled);
 		}
 	}
 
-	@Override
-	public void updateScreen() {
-		super.updateScreen();
-	}
-	
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float p_73863_3_) {
-		if(currentPage < 0) {
-			currentPage = 0;
-		}
-
-		if(currentPage > HudElement.ELEMENTS.size() / perPage) {
-			currentPage = HudElement.ELEMENTS.size() / perPage;
-		}
-
-		updatePage();
-
 		this.drawDefaultBackground();
 		super.drawScreen(mouseX, mouseY, p_73863_3_);
-		
-		for(Object obj : this.buttonList) {
-			if(!(obj instanceof GuiToggleButton)) continue;
-			GuiButton button = (GuiButton) obj;
-			
-			if(button.isMouseOver() && !button.enabled) {
-				List<String> tooltip = new ArrayList<String>();
-				tooltip.add(I18n.format("betterHud.unsupported"));
-				this.drawHoveringText(tooltip, mouseX, mouseY);
-			}
-		}
 
 		int enabled = 0;
 		for(HudElement element : HudElement.ELEMENTS) {
 			if(element.settings.get()) ++enabled;
 		}
 
-		this.drawCenteredString(this.fontRenderer, I18n.format("betterHud.menu.hudSettings"), this.width / 2, height / 16 + 5, 16777215);
-		this.drawString(this.fontRenderer, enabled + "/" + HudElement.ELEMENTS.size() + " enabled", 5, 5, Colors.WHITE);
-		this.drawCenteredString(this.fontRenderer, I18n.format("betterHud.menu.page", (currentPage + 1) + "/" + (int) Math.ceil((float) HudElement.ELEMENTS.size() / perPage)), width / 2, height - height / 16 - 13, Colors.WHITE);
+		drawCenteredString(fontRenderer, I18n.format("betterHud.menu.hudSettings"), width / 2, height / 16 + 5, Colors.WHITE);
+		drawString(fontRenderer, enabled + "/" + HudElement.ELEMENTS.size() + " enabled", 5, 5, Colors.WHITE);
+
+		String page = I18n.format("betterHud.menu.page", (paginator.getPageIndex() + 1) + "/" + paginator.getPageCount());
+		drawCenteredString(fontRenderer, page, width / 2, height - height / 16 - 13, Colors.WHITE);
+	}
+
+	private <T> List<GuiActionButton> getIndexControls(Indexer<T> indexer, List<Comparator<T>> comparators, List<String> names) {
+		List<GuiActionButton> buttons = new ArrayList<GuiActionButton>(comparators.size());
+
+		for(int i = 0; i < comparators.size(); i++) {
+			String text = i < names.size() ? names.get(i) : "";
+			buttons.add(new SortButton<T>(indexer, comparators.get(i), text));
+		}
+		return buttons;
+	}
+
+	private class SortButton<T> extends GuiActionButton {
+		Indexer<T> indexer;
+		Comparator<T> target;
+
+		SortButton(Indexer<T> indexer, Comparator<T> target, String buttonText) {
+			super(buttonText);
+			this.indexer = indexer;
+			this.target = target;
+		}
+
+		@Override
+		public void actionPerformed() {
+			indexer.changeComparator(target);
+			initGui();
+		}
+
+		boolean isTargeted() {
+			return indexer.getComparator() == target;
+		}
+
+		@Override
+		protected int getHoverState(boolean mouseOver) {
+			return isTargeted() ? 2 : super.getHoverState(mouseOver);
+		}
+
+		@Override
+		public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
+			super.drawButton(mc, mouseX, mouseY, partialTicks);
+
+			if(isTargeted()) {
+				Bounds arrow;
+				if(indexer.getOrder() == Order.ASCENDING) {
+					arrow = new Bounds(114, 5, 11, 7);
+				} else {
+					arrow = new Bounds(82, 20, 11, 7);
+				}
+
+				Point position = Direction.EAST.anchor(new Bounds(arrow.size), getBounds()).position.add(-2, 0);
+				MC.getTextureManager().bindTexture(new ResourceLocation("textures/gui/resource_packs.png"));
+				GlUtil.drawTexturedModalRect(position, arrow);
+			}
+		}
+	}
+
+	private class ButtonRow {
+		final GuiElementToggle toggle;
+		final GuiActionButton options;
+
+		ButtonRow(HudElement element) {
+			toggle = new GuiElementToggle(element, GuiHudMenu.this);
+
+			options = new GuiActionButton(I18n.format("betterHud.menu.options")) {
+				@Override
+				public void actionPerformed() {
+					MC.displayGuiScreen(new GuiElementSettings(element, GuiHudMenu.this));
+				}
+			};
+		}
 	}
 }

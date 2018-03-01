@@ -13,7 +13,7 @@ public class GlobalSettings extends ElementStub {
 		ELEMENTS.remove(this);
 
 		settings.add(new SettingBoolean("enabled") {
-			@Override public void set(Boolean bool) {settings.set(bool);}
+			@Override public void set(Boolean bool) {setEnabled(bool);}
 			@Override public Boolean get() {return isEnabled();}
 
 			@Override

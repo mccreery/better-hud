@@ -55,7 +55,7 @@ public class SettingBoolean extends SettingAlignable<Boolean> {
 
 	@Override
 	public int getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Bounds bounds) {
-		toggler = new GuiSettingToggle(0, bounds.x(), bounds.y(), bounds.width(), bounds.height(), getUnlocalizedName(), this).setUnlocalizedValue(unlocalizedValue);
+		toggler = (GuiToggleButton)new GuiSettingToggle(getUnlocalizedName(), this).setUnlocalizedValue(unlocalizedValue).setBounds(bounds);
 		parts.add(toggler);
 		callbacks.put(toggler, this);
 		return bounds.bottom() + SPACER;
@@ -63,7 +63,7 @@ public class SettingBoolean extends SettingAlignable<Boolean> {
 
 	@Override
 	public void actionPerformed(GuiElementSettings gui, GuiButton button) {
-		toggler.toggle();
+		toggler.actionPerformed();
 	}
 
 	@Override

@@ -31,7 +31,7 @@ public class HidePlayers extends HudElement {
 	public void loadDefaults() {
 		super.loadDefaults();
 
-		settings.set(false);
+		setEnabled(false);
 		includeMe.set(false);
 	}
 

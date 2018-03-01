@@ -2,8 +2,9 @@ package tk.nukeduck.hud.element;
 
 import static tk.nukeduck.hud.BetterHud.MC;
 
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -29,9 +30,11 @@ import tk.nukeduck.hud.element.text.LightLevel;
 import tk.nukeduck.hud.element.text.SystemClock;
 import tk.nukeduck.hud.network.Version;
 import tk.nukeduck.hud.util.Bounds;
+import tk.nukeduck.hud.util.Indexer;
+import tk.nukeduck.hud.util.Indexer.Order;
 
-public abstract class HudElement implements Comparable<HudElement> {
-	public static final Set<HudElement> ELEMENTS = new TreeSet<HudElement>();
+public abstract class HudElement {
+	public static final List<HudElement> ELEMENTS = new ArrayList<HudElement>();
 
 	public static final ArmorBars ARMOR_BARS = new ArmorBars();
 	public static final ArrowCount ARROW_COUNT = new ArrowCount();
@@ -64,22 +67,42 @@ public abstract class HudElement implements Comparable<HudElement> {
 	public static final MobInfo MOB_INFO = new MobInfo();
 	public static final CpsCount CPS = new CpsCount();
 
+	public enum SortType implements Comparator<HudElement> {
+		ALPHABETICAL {
+			@Override
+			public int compare(HudElement a, HudElement b) {
+				return a.name.compareTo(b.name);
+			}
+		}, ENABLED {
+			@Override
+			public int compare(HudElement a, HudElement b) {
+				int compare = Boolean.compare(a.settings.get(), b.settings.get());
+				return compare != 0 ? compare : ALPHABETICAL.compare(a, b);
+			}
+		};
+	};
+
+	public static final Indexer<HudElement> INDEXER = new Indexer<HudElement>(ELEMENTS, SortType.ALPHABETICAL, Order.ASCENDING, SortType.values());
+
 	public final RootSetting settings = new RootSetting(this);
+
+	public void setEnabled(boolean value) {
+		settings.set(value);
+		INDEXER.updateIndex(SortType.ENABLED, id);
+	}
 
 	public boolean isEnabled() {
 		return settings.get() && isSupportedByServer();
 	}
 
+	public final int id;
 	public final String name;
 
 	protected HudElement(String name) {
 		this.name = name;
-		ELEMENTS.add(this);
-	}
 
-	@Override
-	public int compareTo(HudElement element) {
-		return name.compareTo(element.name);
+		id = ELEMENTS.size();
+		ELEMENTS.add(this);
 	}
 
 	public Version getMinimumServerVersion() {
@@ -150,6 +173,6 @@ public abstract class HudElement implements Comparable<HudElement> {
 	 * You should always call the {@code super} implementation to handle the default enabled value of {@code true}
 	 * and to allow for future expansion */
 	public void loadDefaults() {
-		settings.set(true);
+		setEnabled(true);
 	}
 }

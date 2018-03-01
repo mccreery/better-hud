@@ -51,7 +51,7 @@ public class SettingDirection extends Setting<Direction> {
 					Direction direction = Direction.get(row, col);
 					direction.toRow(2).anchor(radio, bounds);
 
-					GuiToggleButton button = new GuiToggleButton(direction.ordinal(), radio.x(), radio.y(), radio.width(), radio.height(), "").setStaticText();
+					GuiToggleButton button = (GuiToggleButton)new GuiToggleButton("").setStaticText().setId(direction.ordinal()).setBounds(radio);
 					parts.add(button);
 					callbacks.put(button, this);
 
