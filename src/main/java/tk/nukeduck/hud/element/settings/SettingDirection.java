@@ -16,7 +16,7 @@ import tk.nukeduck.hud.util.GlUtil;
 
 public class SettingDirection extends Setting<Direction> {
 	private GuiToggleButton[] toggles = new GuiToggleButton[9];
-	private Bounds bounds = Bounds.EMPTY;
+	private Bounds bounds;
 
 	public SettingDirection(String name) {
 		this(name, Direction.ALL);

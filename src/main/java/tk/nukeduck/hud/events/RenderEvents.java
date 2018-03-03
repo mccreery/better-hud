@@ -19,6 +19,8 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import tk.nukeduck.hud.BetterHud;
@@ -37,10 +39,17 @@ public final class RenderEvents {
 	}
 
 	@SubscribeEvent
+	public void onTickStart(RenderTickEvent event) {
+		if(event.phase == Phase.START) {
+			HudElement.resetBounds();
+		}
+	}
+
+	@SubscribeEvent
 	public void onRenderTick(RenderGameOverlayEvent event) {
 		if(!BetterHud.isEnabled() || event.getType() != RenderGameOverlayEvent.ElementType.EXPERIENCE) return;
 
-		MC.mcProfiler.startSection("betterHud");
+		MC.mcProfiler.startSection(BetterHud.MODID);
 		MANAGER.reset(event.getResolution());
 
 		HudElement.renderAll(RenderPhase.HUD);
@@ -54,7 +63,7 @@ public final class RenderEvents {
 	public void worldRender(RenderWorldLastEvent e) {
 		if(!BetterHud.isEnabled()) return;
 
-		MC.mcProfiler.startSection("betterHud");
+		MC.mcProfiler.startSection(BetterHud.MODID);
 		Entity pointed = getMouseOver(HudElement.GLOBAL.getBillboardDistance(), e.getPartialTicks());
 
 		if(pointed != null && pointed instanceof EntityLivingBase) {

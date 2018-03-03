@@ -149,17 +149,24 @@ public abstract class HudElement {
 		return phase == RenderPhase.HUD;
 	}
 
-	/** Renders this element to the screen
-	 * @param phase TODO
-	 * @return The bounds containing the element drawn */
-	public abstract Bounds render(RenderPhase phase);
+	/** Renders this element to the screen.<br>
+	 * Should only be called if {@link #shouldRender(RenderPhase)} returns {@code true}
+	 *
+	 * @param phase The current render phase
+	 * @return The bounds containing the element. {@code null} will be replaced by {@link Bounds#EMPTY} */
+	protected abstract Bounds render(RenderPhase phase);
 
 	/** Calls {@link #render(RenderPhase)} if the element
 	 * should be rendered and caches the bounds so they are available from {@link #getLastBounds()} */
 	public void tryRender(RenderPhase phase) {
 		if(isEnabled() && shouldRender(phase)) {
 			MC.mcProfiler.startSection(name);
-			lastBounds = render(null);
+
+			Bounds bounds = render(phase);
+			if(bounds != null) {
+				lastBounds = bounds;
+			}
+
 			MC.mcProfiler.endSection();
 		}
 	}
@@ -177,10 +184,18 @@ public abstract class HudElement {
 		INDEXER.setComparator(previousComparator, previousOrder);
 	}
 
-	private Bounds lastBounds = Bounds.EMPTY;
+	private Bounds lastBounds;
 
+	/** @return The last or appropriate bounds for this element.<br>
+	 * {@link Bounds#EMPTY} if the element has no appropriate bounds */
 	public Bounds getLastBounds() {
 		return lastBounds;
+	}
+
+	public static void resetBounds() {
+		for(HudElement element : ELEMENTS) {
+			element.lastBounds = Bounds.EMPTY;
+		}
 	}
 
 	/** Calls {@link #init(FMLInitializationEvent)} on all elements

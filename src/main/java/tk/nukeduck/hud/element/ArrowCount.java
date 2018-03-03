@@ -106,7 +106,7 @@ public class ArrowCount extends HudElement {
 				}
 				drawCounter(stackBounds, totalArrows);
 			}
-			return null;
+			return Bounds.EMPTY;
 		} else {
 			Bounds bounds = position.applyTo(new Bounds(16, 16));
 
@@ -121,11 +121,10 @@ public class ArrowCount extends HudElement {
 	public Bounds getLastBounds() {
 		Bounds bounds = super.getLastBounds();
 
-		if(bounds != null || overlay.get()) {
-			return bounds;
-		} else {
-			return position.applyTo(new Bounds(16, 16));
+		if(!overlay.get() && bounds.equals(Bounds.EMPTY)) {
+			bounds = position.applyTo(new Bounds(16, 16));
 		}
+		return bounds;
 	}
 
 	private static void drawCounter(Bounds stackBounds, int count) {

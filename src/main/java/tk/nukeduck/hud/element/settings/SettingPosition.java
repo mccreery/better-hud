@@ -25,7 +25,7 @@ public class SettingPosition extends SettingStub<Object> {
 
 		@Override
 		public void pickMouse(Point mousePosition, Point resolution, HudElement element) {
-			Bounds sourceBounds = element.getLastBounds();
+			Bounds sourceBounds = new Bounds(element.getLastBounds());
 			Direction.CENTER.align(sourceBounds, mousePosition);
 
 			if(!Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
@@ -35,7 +35,7 @@ public class SettingPosition extends SettingStub<Object> {
 					if(target == element || !target.isEnabled()) continue;
 					Bounds bounds = target.getLastBounds();
 
-					if(!Bounds.isEmpty(bounds)) {
+					if(!bounds.isEmpty()) {
 						targetBounds.add(bounds);
 					}
 				}
@@ -47,6 +47,11 @@ public class SettingPosition extends SettingStub<Object> {
 
 			//Bounds desired = anchor.align(sourceBounds, sourceBounds.position);
 			offset.set(anchor.getAnchor(sourceBounds).sub(anchor.getAnchor(resolution)));
+		}
+
+		@Override
+		public Point getAbsolute() {
+			return anchor.get().getAnchor(MANAGER.getResolution()).add(offset.get());
 		}
 	};
 

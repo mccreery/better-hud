@@ -274,14 +274,21 @@ public class GuiElementSettings extends GuiScreen {
 	/** Draws bounds for all elements on the screen */
 	private void drawBounds() {
 		GlStateManager.glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		GlStateManager.glLineWidth(2);
 
 		for(HudElement element : HudElement.ELEMENTS) {
-			if(element.isEnabled()) {
-				Bounds bounds = element.getLastBounds();
+			Bounds bounds = element.getLastBounds();
 
-				if(bounds != null && bounds != Bounds.EMPTY) {
-					GlUtil.drawRect(bounds, Colors.setAlpha(Colors.RED, element == this.element ? 255 : 63));
-				}
+			if(!bounds.isEmpty()) {
+				GlUtil.drawRect(bounds, Colors.setAlpha(Colors.RED, element == this.element ? 255 : 63));
+			} else if(element == this.element && picker != null) {
+				GlStateManager.glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+
+				Point crosshair = picker.getAbsolute();
+				drawHorizontalLine(crosshair.x - 10, crosshair.x + 10, crosshair.y, Colors.RED);
+				drawVerticalLine(crosshair.x, crosshair.y - 10, crosshair.y + 10, Colors.RED);
+
+				GlStateManager.glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
 			}
 		}
 		GlStateManager.glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

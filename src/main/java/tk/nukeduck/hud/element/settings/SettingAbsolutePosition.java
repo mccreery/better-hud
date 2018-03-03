@@ -21,7 +21,7 @@ public class SettingAbsolutePosition extends Setting<Point> {
 	public GuiButton pick;
 	private GuiButton xUp, xDown, yUp, yDown;
 
-	protected Point position = Point.ZERO;
+	protected Point position = new Point();
 	protected Point cancelPosition = null;
 
 	public SettingAbsolutePosition(String name) {
@@ -151,5 +151,9 @@ public class SettingAbsolutePosition extends Setting<Point> {
 		} else {
 			xUp.enabled = xDown.enabled = yUp.enabled = yDown.enabled = false;
 		}
+	}
+
+	public Point getAbsolute() {
+		return get();
 	}
 }
