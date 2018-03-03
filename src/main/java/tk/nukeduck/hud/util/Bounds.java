@@ -3,6 +3,8 @@ package tk.nukeduck.hud.util;
 import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.SPACER;
 
+import java.util.Objects;
+
 public class Bounds {
 	public static final Bounds EMPTY = new Bounds();
 	public static final Bounds PADDING = getPadding(SPACER);
@@ -41,6 +43,23 @@ public class Bounds {
 
 	public static boolean isEmpty(Bounds bounds) {
 		return bounds == null || bounds.isEmpty();
+	}
+
+	@Override
+	public boolean equals(Object other) {
+		if(super.equals(other)) {
+			return true;
+		} else if(other instanceof Bounds) {
+			Bounds otherBounds = (Bounds)other;
+			return position.equals(otherBounds.position) && size.equals(otherBounds.size);
+		} else {
+			return false;
+		}
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(position, size);
 	}
 
 	public int x() {return position.x;}

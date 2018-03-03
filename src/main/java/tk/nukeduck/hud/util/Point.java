@@ -1,5 +1,7 @@
 package tk.nukeduck.hud.util;
 
+import java.util.Objects;
+
 import net.minecraft.client.gui.ScaledResolution;
 import tk.nukeduck.hud.util.ISaveLoad.IGetSet;
 
@@ -46,12 +48,17 @@ public class Point implements IGetSet<Point> {
 	}
 
 	public Point invert() {
-		return Point.ZERO.sub(this);
+		return new Point(-x, -y);
 	}
 
 	@Override
-	public boolean equals(Object obj) {
-		return obj instanceof Point && obj == null ? equals(ZERO) : x == ((Point)obj).x && y == ((Point)obj).y;
+	public boolean equals(Object other) {
+		return other instanceof Point && x == ((Point)other).x && y == ((Point)other).y;
+	}
+
+	@Override
+	public int hashCode() {
+		return Objects.hash(x, y);
 	}
 
 	@Override
