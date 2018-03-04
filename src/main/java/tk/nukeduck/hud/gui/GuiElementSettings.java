@@ -1,8 +1,5 @@
 package tk.nukeduck.hud.gui;
 
-import static org.lwjgl.opengl.GL11.GL_FILL;
-import static org.lwjgl.opengl.GL11.GL_FRONT_AND_BACK;
-import static org.lwjgl.opengl.GL11.GL_LINE;
 import static tk.nukeduck.hud.BetterHud.MC;
 import static tk.nukeduck.hud.BetterHud.SPACER;
 
@@ -33,7 +30,6 @@ import tk.nukeduck.hud.element.settings.Setting;
 import tk.nukeduck.hud.element.settings.SettingAbsolutePosition;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
-import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Point;
 
 @SideOnly(Side.CLIENT)
@@ -188,17 +184,20 @@ public class GuiElementSettings extends GuiScreen {
 
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
-		boolean picking = picker != null;
-		super.mouseClicked(mouseX, mouseY + getMouseOffset(), button);
+		boolean wasPicking = picker != null;
 
-		if(picking && picker != null) {
+		if(mouseY >= viewport.top() && mouseY < viewport.bottom()) {
+			super.mouseClicked(mouseX, mouseY + getMouseOffset(), button);
+
+			for(GuiTextField field : this.textboxList) {
+				field.mouseClicked(mouseX, mouseY + getMouseOffset(), button);
+			}
+		}
+
+		if(wasPicking && picker != null) {
 			picker.finishPicking();
 			picker = null;
 			return;
-		}
-
-		for(GuiTextField field : this.textboxList) {
-			field.mouseClicked(mouseX, mouseY + getMouseOffset(), button);
 		}
 
 		// Done button isn't in buttonList, have to handle it manually
@@ -273,25 +272,28 @@ public class GuiElementSettings extends GuiScreen {
 
 	/** Draws bounds for all elements on the screen */
 	private void drawBounds() {
-		GlStateManager.glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
-		GlStateManager.glLineWidth(2);
-
 		for(HudElement element : HudElement.ELEMENTS) {
 			Bounds bounds = element.getLastBounds();
 
 			if(!bounds.isEmpty()) {
-				GlUtil.drawRect(bounds, Colors.setAlpha(Colors.RED, element == this.element ? 255 : 63));
+				drawBounds(bounds, Colors.setAlpha(Colors.RED, element == this.element ? 255 : 63));
 			} else if(element == this.element && picker != null) {
-				GlStateManager.glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-
-				Point crosshair = picker.getAbsolute();
-				drawHorizontalLine(crosshair.x - 10, crosshair.x + 10, crosshair.y, Colors.RED);
-				drawVerticalLine(crosshair.x, crosshair.y - 10, crosshair.y + 10, Colors.RED);
-
-				GlStateManager.glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+				drawCrosshair(picker.getAbsolute(), Colors.RED);
 			}
 		}
-		GlStateManager.glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	}
+
+	private void drawBounds(Bounds bounds, int color) {
+		drawHorizontalLine(bounds.left(), bounds.right(), bounds.top(), color);
+		drawHorizontalLine(bounds.left(), bounds.right(), bounds.bottom(), color);
+
+		drawVerticalLine(bounds.left(), bounds.top(), bounds.bottom(), color);
+		drawVerticalLine(bounds.right(), bounds.top(), bounds.bottom(), color);
+	}
+
+	private void drawCrosshair(Point center, int color) {
+		drawHorizontalLine(center.x - 10, center.x + 10, center.y, color);
+		drawVerticalLine(center.x, center.y - 10, center.y + 10, color);
 	}
 
 	/** Draws a diagram of the size of the HUD */
@@ -304,14 +306,14 @@ public class GuiElementSettings extends GuiScreen {
 
 		// Horizontal
 		int textX = x + (width - stringWidth) / 2;
-		drawRect(x, y, textX - SPACER, y + 1, Colors.WHITE);
-		drawRect(x + (width + stringWidth) / 2 + SPACER, y, x + width, y + 1, Colors.WHITE);
+		drawHorizontalLine(x, textX - SPACER, y, Colors.WHITE);
+		drawHorizontalLine(x + (width + stringWidth) / 2 + SPACER, x + width, y, Colors.WHITE);
 		fontRenderer.drawString(widthDisplay, textX, y, Colors.WHITE);
 
 		// Vertical
 		int textY = y + (height - fontRenderer.FONT_HEIGHT) / 2;
-		drawRect(x, y, x + 1, textY - SPACER, Colors.WHITE);
-		drawRect(x, y + (height + fontRenderer.FONT_HEIGHT) / 2 + SPACER, x + 1, y + height, Colors.WHITE);
+		drawVerticalLine(x, y, textY - SPACER, Colors.WHITE);
+		drawVerticalLine(x, y + (height + fontRenderer.FONT_HEIGHT) / 2 + SPACER, y + height, Colors.WHITE);
 		fontRenderer.drawString(String.valueOf(this.height), x, textY, Colors.WHITE);
 	}
 }
