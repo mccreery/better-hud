@@ -8,13 +8,8 @@ public class Paginator<T> {
 	private int pageOffset;
 	private int pageSize;
 
-	public Paginator(List<T> data) {
-		this(data, 0);
-	}
-
-	public Paginator(List<T> collection, int pageSize) {
-		this.data = collection;
-		setPageSize(pageSize);
+	public void setData(List<T> data) {
+		this.data = data;
 	}
 
 	public void setPageSize(int pageSize) {

@@ -3,7 +3,6 @@ package tk.nukeduck.hud.element;
 import static tk.nukeduck.hud.BetterHud.MC;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.List;
 
 import net.minecraft.client.resources.I18n;
@@ -29,8 +28,7 @@ import tk.nukeduck.hud.element.text.LightLevel;
 import tk.nukeduck.hud.element.text.SystemClock;
 import tk.nukeduck.hud.network.Version;
 import tk.nukeduck.hud.util.Bounds;
-import tk.nukeduck.hud.util.Indexer;
-import tk.nukeduck.hud.util.Indexer.Order;
+import tk.nukeduck.hud.util.Sorter;
 import tk.nukeduck.hud.util.SortField;
 
 public abstract class HudElement {
@@ -103,7 +101,7 @@ public abstract class HudElement {
 		}
 	};
 
-	public static final Indexer<HudElement> INDEXER = new Indexer<HudElement>(ELEMENTS, SortType.ALPHABETICAL, Order.ASCENDING, SortType.values());
+	public static final Sorter<HudElement> SORTER = new Sorter<HudElement>(ELEMENTS);
 
 	public final RootSetting settings = new RootSetting(this);
 
@@ -172,16 +170,9 @@ public abstract class HudElement {
 	}
 
 	public static void renderAll(RenderPhase phase) {
-		Comparator<HudElement> previousComparator = INDEXER.getComparator();
-		Order previousOrder = INDEXER.getOrder();
-
-		INDEXER.setComparator(SortType.PRIORITY, Order.ASCENDING);
-
-		for(HudElement element : INDEXER) {
+		for(HudElement element : SORTER.getSortedData(SortType.PRIORITY)) {
 			element.tryRender(phase);
 		}
-
-		INDEXER.setComparator(previousComparator, previousOrder);
 	}
 
 	private Bounds lastBounds;

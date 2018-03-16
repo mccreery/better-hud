@@ -5,9 +5,6 @@ import static tk.nukeduck.hud.BetterHud.SPACER;
 
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -26,16 +23,14 @@ import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
-import tk.nukeduck.hud.util.Indexer;
 import tk.nukeduck.hud.util.Paginator;
 import tk.nukeduck.hud.util.Point;
 import tk.nukeduck.hud.util.SortField;
-import tk.nukeduck.hud.util.Indexer.Order;
 
 @SideOnly(Side.CLIENT)
 public class GuiHudMenu extends GuiScreen {
 	private final Map<HudElement, ButtonRow> rows = new HashMap<HudElement, ButtonRow>(HudElement.ELEMENTS.size());
-	private final Paginator<HudElement> paginator = new Paginator<HudElement>(HudElement.INDEXER);
+	private final Paginator<HudElement> paginator = new Paginator<HudElement>();
 
 	private final GuiButton returnToGame   = new GuiButton(0, 0, 0, I18n.format("menu.returnToGame"));
 	private final GuiButton enableAll      = new GuiButton(0, 0, 0, I18n.format("betterHud.menu.enableAll"));
@@ -46,6 +41,9 @@ public class GuiHudMenu extends GuiScreen {
 	private final GuiButton lastPage = new GuiButton(0, 0, 0, I18n.format("betterHud.menu.lastPage"));
 	private final GuiButton nextPage = new GuiButton(0, 0, 0, I18n.format("betterHud.menu.nextPage"));
 
+	private SortField<HudElement> sortCriteria = SortType.ALPHABETICAL;
+	private boolean descending;
+
 	public GuiHudMenu() {
 		for(HudElement element : HudElement.ELEMENTS) {
 			rows.put(element, new ButtonRow(element));
@@ -53,7 +51,9 @@ public class GuiHudMenu extends GuiScreen {
 	}
 
 	public void initGui() {
+		paginator.setData(HudElement.SORTER.getSortedData(sortCriteria, descending ^ sortCriteria.isInverted()));
 		paginator.setPageSize(Math.max(1, (int) Math.floor((height / 8 * 7 - 110) / 24)));
+
 		addDefaultButtons();
 
 		Bounds largeButton = new Bounds(150, 20);
@@ -107,7 +107,7 @@ public class GuiHudMenu extends GuiScreen {
 		buttonList.add(lastPage);
 		buttonList.add(nextPage);
 
-		List<GuiActionButton> indexerControls = getIndexControls(HudElement.INDEXER, SortType.values());
+		List<GuiActionButton> indexerControls = getIndexControls(SortType.values());
 		Bounds bounds = new Bounds(5, height - 25, 50, 20);
 
 		for(GuiActionButton button : indexerControls) {
@@ -150,6 +150,7 @@ public class GuiHudMenu extends GuiScreen {
 			setAll(false);
 		} else if(button == resetDefaults) {
 			HudElement.loadAllDefaults();
+			HudElement.SORTER.markDirty();
 			initGui();
 		} else if(button == lastPage) {
 			paginator.previousPage();
@@ -166,6 +167,9 @@ public class GuiHudMenu extends GuiScreen {
 		for(HudElement element : HudElement.ELEMENTS) {
 			rows.get(element).toggle.set(enabled);
 		}
+
+		HudElement.SORTER.markDirty(SortType.ENABLED);
+		initGui();
 	}
 
 	@Override
@@ -185,38 +189,38 @@ public class GuiHudMenu extends GuiScreen {
 		drawCenteredString(fontRenderer, page, width / 2, height - height / 16 - 13, Colors.WHITE);
 	}
 
-	@SafeVarargs
-	private final <T> List<GuiActionButton> getIndexControls(Indexer<T> indexer, Comparator<T>... comparators) {
-		return getIndexControls(indexer, Arrays.asList(comparators));
-	}
+	private List<GuiActionButton> getIndexControls(SortField<HudElement>[] sortValues) {
+		List<GuiActionButton> buttons = new ArrayList<GuiActionButton>(sortValues.length);
 
-	private <T> List<GuiActionButton> getIndexControls(Indexer<T> indexer, Collection<Comparator<T>> comparators) {
-		List<GuiActionButton> buttons = new ArrayList<GuiActionButton>(comparators.size());
-
-		for(Comparator<T> comparator : comparators) {
-			buttons.add(new SortButton<T>(indexer, comparator));
+		for(SortField<HudElement> sortValue : sortValues) {
+			buttons.add(new SortButton(sortValue));
 		}
 		return buttons;
 	}
 
-	private class SortButton<T> extends GuiActionButton {
-		Indexer<T> indexer;
-		Comparator<T> target;
+	private class SortButton extends GuiActionButton {
+		SortField<HudElement> sortValue;
 
-		SortButton(Indexer<T> indexer, Comparator<T> target) {
-			super(target instanceof SortField ? I18n.format(((SortField<?>)target).getUnlocalizedName()) : "?");
-			this.indexer = indexer;
-			this.target = target;
+		SortButton(SortField<HudElement> sortValue) {
+			super(I18n.format(sortValue.getUnlocalizedName()));
+
+			this.sortValue = sortValue;
 		}
 
 		@Override
 		public void actionPerformed() {
-			indexer.changeComparator(target);
+			if(isTargeted()) {
+				descending = !descending;
+			} else {
+				sortCriteria = sortValue;
+				descending = sortValue.isInverted();
+			}
+
 			initGui();
 		}
 
-		boolean isTargeted() {
-			return indexer.getComparator() == target;
+		private boolean isTargeted() {
+			return sortCriteria == sortValue;
 		}
 
 		@Override
@@ -229,21 +233,17 @@ public class GuiHudMenu extends GuiScreen {
 			super.drawButton(mc, mouseX, mouseY, partialTicks);
 
 			if(isTargeted()) {
-				Bounds arrow;
-				boolean upArrow = indexer.getOrder() == Order.ASCENDING;
+				Bounds arrowTexture;
 
-				if(target instanceof SortField && ((SortField<?>)target).isInverted()) {
-					upArrow = !upArrow;
-				}
-				if(upArrow) {
-					arrow = new Bounds(114, 5, 11, 7);
+				if(descending) {
+					arrowTexture = new Bounds(82, 20, 11, 7);
 				} else {
-					arrow = new Bounds(82, 20, 11, 7);
+					arrowTexture = new Bounds(114, 5, 11, 7);
 				}
+				Point position = Direction.EAST.anchor(new Bounds(arrowTexture), getBounds()).position.add(-2, 0);
 
-				Point position = Direction.EAST.anchor(new Bounds(arrow.size), getBounds()).position.add(-2, 0);
 				MC.getTextureManager().bindTexture(new ResourceLocation("textures/gui/resource_packs.png"));
-				GlUtil.drawTexturedModalRect(position, arrow);
+				GlUtil.drawTexturedModalRect(position, arrowTexture);
 			}
 		}
 	}

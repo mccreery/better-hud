@@ -1,12 +1,11 @@
 package tk.nukeduck.hud.util;
 
 import java.io.File;
-import java.util.Comparator;
+import java.util.List;
 
 import net.minecraftforge.common.config.Configuration;
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.element.HudElement.SortType;
-import tk.nukeduck.hud.util.Indexer.Order;
 
 public class HudConfig extends Configuration {
 	public HudConfig(File file) {
@@ -21,8 +20,6 @@ public class HudConfig extends Configuration {
 			element.settings.bindConfig(this);
 			element.settings.loadConfig();
 		}
-
-		HudElement.INDEXER.recalculateIndices();
 		normalizePriority();
 
 		if(hasChanged()) save();
@@ -36,14 +33,10 @@ public class HudConfig extends Configuration {
 	}
 
 	private static void normalizePriority() {
-		Comparator<HudElement> previousComparator = HudElement.INDEXER.getComparator();
-		Order previousOrder = HudElement.INDEXER.getOrder();
+		List<HudElement> prioritySort = HudElement.SORTER.getSortedData(SortType.PRIORITY);
 
-		HudElement.INDEXER.setComparator(SortType.PRIORITY, Order.ASCENDING);
-		for(int i = 0; i < HudElement.INDEXER.size(); i++) {
-			HudElement.INDEXER.get(i).settings.priority.set(i);
+		for(int i = 0; i < prioritySort.size(); i++) {
+			prioritySort.get(i).settings.priority.set(i);
 		}
-
-		HudElement.INDEXER.setComparator(previousComparator, previousOrder);
 	}
 }

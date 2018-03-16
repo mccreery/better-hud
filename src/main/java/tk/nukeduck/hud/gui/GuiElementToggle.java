@@ -9,20 +9,18 @@ import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.element.HudElement.SortType;
 
 public class GuiElementToggle extends GuiSettingToggle {
-	private final HudElement element;
 	private final GuiScreen callback;
 
 	public GuiElementToggle(HudElement element, GuiScreen callback) {
 		super(element.getUnlocalizedName(), element.settings);
-		this.element = element;
 		this.callback = callback;
 	}
 
 	@Override
 	public void actionPerformed() {
 		super.actionPerformed();
-		//HudElement.INDEXER.recalculateIndices();
-		HudElement.INDEXER.updateIndex(SortType.ENABLED, element.id);
+
+		HudElement.SORTER.markDirty(SortType.ENABLED);
 		callback.initGui();
 	}
 
