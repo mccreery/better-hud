@@ -58,6 +58,8 @@ public class GuiHudMenu extends GuiScreen {
 
 		Bounds largeButton = new Bounds(150, 20);
 		Bounds smallButton = new Bounds(100, 20);
+		Bounds arrowButtons = new Bounds(20, 20);
+
 		Bounds buttonBounds = Direction.NORTH.align(new Bounds(largeButton.width() + smallButton.width() + 2, 20), new Point(width / 2, height / 16 + 78));
 
 		for(HudElement element : paginator.getPage()) {
@@ -71,6 +73,15 @@ public class GuiHudMenu extends GuiScreen {
 			row.options.setBounds(Direction.NORTH_EAST.anchor(smallButton, buttonBounds));
 			row.options.enabled = row.toggle.enabled && !element.settings.isEmpty();
 			buttonList.add(row.options);
+
+			Direction.WEST.anchor(arrowButtons, buttonBounds);
+			arrowButtons.x(arrowButtons.x() - SPACER - arrowButtons.width());
+
+			row.moveUp.setBounds(Direction.NORTH_WEST.anchor(new Bounds(20, 10), arrowButtons));
+			buttonList.add(row.moveUp);
+
+			row.moveDown.setBounds(Direction.SOUTH_WEST.anchor(new Bounds(20, 10), arrowButtons));
+			buttonList.add(row.moveDown);
 
 			buttonBounds.y(buttonBounds.bottom() + 4);
 		}
@@ -187,6 +198,8 @@ public class GuiHudMenu extends GuiScreen {
 
 		String page = I18n.format("betterHud.menu.page", (paginator.getPageIndex() + 1) + "/" + paginator.getPageCount());
 		drawCenteredString(fontRenderer, page, width / 2, height - height / 16 - 13, Colors.WHITE);
+
+		drawString(MC.fontRenderer, String.valueOf(descending), 5, 5, Colors.WHITE);
 	}
 
 	private List<GuiActionButton> getIndexControls(SortField<HudElement>[] sortValues) {
@@ -249,10 +262,13 @@ public class GuiHudMenu extends GuiScreen {
 	}
 
 	private class ButtonRow {
+		final HudElement element;
 		final GuiElementToggle toggle;
 		final GuiActionButton options;
+		final GuiActionButton moveUp, moveDown;
 
 		ButtonRow(HudElement element) {
+			this.element = element;
 			toggle = new GuiElementToggle(element, GuiHudMenu.this);
 
 			options = new GuiActionButton(I18n.format("betterHud.menu.options")) {
@@ -261,6 +277,49 @@ public class GuiHudMenu extends GuiScreen {
 					MC.displayGuiScreen(new GuiElementSettings(element, GuiHudMenu.this));
 				}
 			};
+
+			moveUp = new ArrowButton(true);
+			moveDown = new ArrowButton(false);
+		}
+
+		private class ArrowButton extends GuiUpDownButton {
+			final boolean up;
+
+			ArrowButton(boolean up) {
+				super(up ? 0 : 1);
+				this.up = up;
+			}
+
+			@Override
+			public void actionPerformed() {
+				int swapIndex = paginator.getData().indexOf(element);
+				swapIndex += up ? -1 : 1;
+
+				if(swapIndex >= 0 && swapIndex < paginator.getData().size()) {
+					HudElement toSwap = paginator.getData().get(swapIndex);
+
+					int tempPriority = element.settings.priority.get();
+					element.settings.priority.set(toSwap.settings.priority.get());
+					toSwap.settings.priority.set(tempPriority);
+
+					HudElement.SORTER.markDirty(SortType.PRIORITY);
+					initGui();
+				}
+			}
+
+			@Override
+			public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
+				if(sortCriteria == SortType.PRIORITY) {
+					super.drawButton(mc, mouseX, mouseY, partialTicks);
+				} else {
+					hovered = false;
+				}
+			}
+
+			@Override
+			public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
+				return sortCriteria == SortType.PRIORITY && super.mousePressed(mc, mouseX, mouseY);
+			}
 		}
 	}
 }

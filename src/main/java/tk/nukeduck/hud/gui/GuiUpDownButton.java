@@ -1,20 +1,27 @@
 package tk.nukeduck.hud.gui;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import tk.nukeduck.hud.util.Bounds;
 
 @SideOnly(Side.CLIENT)
-public class GuiUpDownButton extends GuiButton {
+public class GuiUpDownButton extends GuiActionButton {
 	private static final ResourceLocation settings = new ResourceLocation("hud", "textures/gui/settings.png");
 	
 	private int index;
 	
+	public GuiUpDownButton(int index) {
+		super("");
+		this.index = index;
+	}
+	
 	public GuiUpDownButton(int buttonId, int x, int y, int index) {
-		super(buttonId, x, y, 20, 10, "");
+		super("");
+		setId(buttonId);
+		setBounds(new Bounds(x, y, 20, 10));
 		this.index = index;
 	}
 	
@@ -37,4 +44,7 @@ public class GuiUpDownButton extends GuiButton {
 			this.mouseDragged(mc, mouseX, mouseY);
 		}
 	}
+
+	@Override
+	public void actionPerformed() {}
 }

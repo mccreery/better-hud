@@ -32,6 +32,10 @@ public class Paginator<T> {
 		return data.size();
 	}
 
+	public List<T> getData() {
+		return data;
+	}
+
 	public List<T> getPage() {
 		return data.subList(getLow(), getHigh());
 	}
