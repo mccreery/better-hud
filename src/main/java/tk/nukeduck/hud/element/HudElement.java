@@ -6,8 +6,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.client.resources.I18n;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.element.entityinfo.HorseInfo;
 import tk.nukeduck.hud.element.entityinfo.MobInfo;
@@ -139,28 +141,25 @@ public abstract class HudElement {
 		return "betterHud.element." + name;
 	}
 
-	public enum RenderPhase {
-		HUD, BILLBOARD;
-	}
-
-	public boolean shouldRender(RenderPhase phase) {
-		return phase == RenderPhase.HUD;
+	public boolean shouldRender(Event event) {
+		return event instanceof RenderGameOverlayEvent;
 	}
 
 	/** Renders this element to the screen.<br>
-	 * Should only be called if {@link #shouldRender(RenderPhase)} returns {@code true}
+	 * Should only be called if {@link #shouldRender(Event)} returns {@code true}
 	 *
 	 * @param phase The current render phase
+	 * @param partialTicks TODO
 	 * @return The bounds containing the element. {@code null} will be replaced by {@link Bounds#EMPTY} */
-	protected abstract Bounds render(RenderPhase phase);
+	protected abstract Bounds render(Event event);
 
-	/** Calls {@link #render(RenderPhase)} if the element
+	/** Calls {@link #render(Event)} if the element
 	 * should be rendered and caches the bounds so they are available from {@link #getLastBounds()} */
-	public void tryRender(RenderPhase phase) {
-		if(isEnabled() && shouldRender(phase)) {
+	public void tryRender(Event event) {
+		if(isEnabled() && shouldRender(event)) {
 			MC.mcProfiler.startSection(name);
 
-			Bounds bounds = render(phase);
+			Bounds bounds = render(null);
 			if(bounds != null) {
 				lastBounds = bounds;
 			}
@@ -169,13 +168,13 @@ public abstract class HudElement {
 		}
 	}
 
-	public static void renderAll(RenderPhase phase) {
+	public static void renderAll(Event event) {
 		for(HudElement element : SORTER.getSortedData(SortType.PRIORITY)) {
-			element.tryRender(phase);
+			element.tryRender(event);
 		}
 	}
 
-	private Bounds lastBounds;
+	protected Bounds lastBounds;
 
 	/** @return The last or appropriate bounds for this element.<br>
 	 * {@link Bounds#EMPTY} if the element has no appropriate bounds */

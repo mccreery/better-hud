@@ -6,6 +6,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingChoose;
 import tk.nukeduck.hud.element.settings.SettingPositionAligned;
@@ -55,8 +56,8 @@ public class ArmorBars extends EquipmentDisplay {
 	}
 
 	@Override
-	public boolean shouldRender(RenderPhase phase) {
-		if(!super.shouldRender(phase)) return false;
+	public boolean shouldRender(Event event) {
+		if(!super.shouldRender(event)) return false;
 		if(alwaysVisible.get()) return true;
 
 		for(int i = 0; i < 4; i++) {
@@ -68,7 +69,7 @@ public class ArmorBars extends EquipmentDisplay {
 	}
 
 	@Override
-	public Bounds render(RenderPhase phase) {
+	public Bounds render(Event event) {
 		String[] text = null;
 		Point size;
 

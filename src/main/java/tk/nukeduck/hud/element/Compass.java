@@ -4,6 +4,7 @@ import static tk.nukeduck.hud.BetterHud.MC;
 import static tk.nukeduck.hud.BetterHud.SPACER;
 
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingPercentage;
@@ -110,7 +111,7 @@ public class Compass extends HudElement {
 	// TODO implement alignment
 
 	@Override
-	public Bounds render(RenderPhase phase) {
+	public Bounds render(Event event) {
 		GlUtil.enableBlendTranslucent();
 		Bounds bounds = position.applyTo(new Bounds(180, 12));
 

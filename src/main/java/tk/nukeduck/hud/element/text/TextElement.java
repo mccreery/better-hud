@@ -2,6 +2,7 @@ package tk.nukeduck.hud.element.text;
 
 import java.util.List;
 
+import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.element.settings.SettingColor;
 import tk.nukeduck.hud.element.settings.SettingPosition;
@@ -59,12 +60,12 @@ public abstract class TextElement extends HudElement {
 	}
 
 	@Override
-	public Bounds render(RenderPhase phase) {
+	public Bounds render(Event event) {
 		List<String> text = getText();
-		return text == null || text.isEmpty() ? null : render(phase, text);
+		return text == null || text.isEmpty() ? null : render(event, text);
 	}
 
-	protected Bounds render(RenderPhase phase, List<String> text) {
+	protected Bounds render(Event event, List<String> text) {
 		StringGroup group = new StringGroup(text);
 		group.setColor(color.get());
 		group.setAlignment(position.getAlignment());

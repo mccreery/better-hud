@@ -5,6 +5,7 @@ import static tk.nukeduck.hud.BetterHud.MC;
 
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.settings.SettingPercentage;
 import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.element.settings.SettingSlider;
@@ -58,7 +59,7 @@ public class PickupCount extends HudElement {
 	}
 
 	@Override
-	public Bounds render(RenderPhase phase) {
+	public Bounds render(Event event) {
 		Bounds bounds = new Bounds(64, 16);
 
 		if(position.getDirection() == Direction.CENTER) {

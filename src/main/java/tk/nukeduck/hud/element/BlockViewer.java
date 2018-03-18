@@ -25,6 +25,7 @@ import net.minecraft.world.IWorldNameable;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
@@ -81,8 +82,8 @@ public class BlockViewer extends TextElement {
 	}
 
 	@Override
-	public boolean shouldRender(RenderPhase phase) {
-		if(!super.shouldRender(phase)) return false;
+	public boolean shouldRender(Event event) {
+		if(!super.shouldRender(event)) return false;
 
 		trace = MC.getRenderViewEntity().rayTrace(HudElement.GLOBAL.getBillboardDistance(), 1f);
 

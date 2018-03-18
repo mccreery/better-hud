@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.util.Bounds;
 
@@ -18,12 +20,12 @@ public abstract class EntityInfo extends HudElement {
 	}
 
 	@Override
-	public boolean shouldRender(RenderPhase phase) {
-		return phase == RenderPhase.BILLBOARD && shouldRender(pointedEntity);
+	public boolean shouldRender(Event event) {
+		return event instanceof RenderWorldLastEvent && shouldRender(pointedEntity);
 	}
 
 	@Override
-	public Bounds render(RenderPhase phase) {
+	public Bounds render(Event event) {
 		render(pointedEntity);
 		return null;
 	}

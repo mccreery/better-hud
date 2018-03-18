@@ -9,6 +9,7 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemArrow;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHandSide;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
@@ -60,8 +61,8 @@ public class ArrowCount extends HudElement {
 	}
 
 	@Override
-	public boolean shouldRender(RenderPhase phase) {
-		if(!super.shouldRender(phase)) return false;
+	public boolean shouldRender(Event event) {
+		if(!super.shouldRender(event)) return false;
 
 		if(MC.player.getHeldItemOffhand() != null && MC.player.getHeldItemOffhand().getItem() == Items.BOW) {
 			return true;
@@ -80,7 +81,7 @@ public class ArrowCount extends HudElement {
 	}
 
 	@Override
-	public Bounds render(RenderPhase phase) {
+	public Bounds render(Event event) {
 		int totalArrows = arrowCount(MC.player);
 
 		if(overlay.get()) {

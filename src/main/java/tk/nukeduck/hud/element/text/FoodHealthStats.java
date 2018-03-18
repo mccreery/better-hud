@@ -6,6 +6,7 @@ import static tk.nukeduck.hud.BetterHud.MC;
 import java.util.Arrays;
 import java.util.List;
 
+import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.util.Bounds;
@@ -32,12 +33,12 @@ public class FoodHealthStats extends TextElement {
 	}
 
 	@Override
-	public boolean shouldRender(RenderPhase phase) {
-		return super.shouldRender(phase) && MC.playerController.gameIsSurvivalOrAdventure();
+	public boolean shouldRender(Event event) {
+		return super.shouldRender(event) && MC.playerController.gameIsSurvivalOrAdventure();
 	}
 
 	@Override
-	public Bounds render(RenderPhase phase) {
+	public Bounds render(Event event) {
 		String health = String.valueOf(((int)MC.player.getHealth()) / 2.0f);
 		String food = String.valueOf(MC.player.getFoodStats().getFoodLevel() / 2.0F);
 
@@ -48,7 +49,7 @@ public class FoodHealthStats extends TextElement {
 		MC.ingameGUI.drawString(MC.fontRenderer, food, center + 95, textY, Colors.WHITE);
 		MC.ingameGUI.drawString(MC.fontRenderer, health, center - 95 - healthWidth, textY, Colors.WHITE);
 
-		return super.render(phase);
+		return super.render(event);
 	}
 
 	@Override

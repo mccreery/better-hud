@@ -25,7 +25,6 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.element.HudElement;
-import tk.nukeduck.hud.element.HudElement.RenderPhase;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Point;
@@ -46,13 +45,13 @@ public final class RenderEvents {
 	}
 
 	@SubscribeEvent
-	public void onRenderTick(RenderGameOverlayEvent event) {
-		if(!BetterHud.isEnabled() || event.getType() != RenderGameOverlayEvent.ElementType.EXPERIENCE) return;
+	public void onRenderTick(RenderGameOverlayEvent.Post event) {
+		if(!BetterHud.isEnabled() || event.getType() != RenderGameOverlayEvent.ElementType.ALL) return;
 
 		MC.mcProfiler.startSection(BetterHud.MODID);
 		MANAGER.reset(event.getResolution());
 
-		HudElement.renderAll(RenderPhase.HUD);
+		HudElement.renderAll(event);
 
 		// Expected state by vanilla GUI
 		MC.getTextureManager().bindTexture(Gui.ICONS);
@@ -60,24 +59,24 @@ public final class RenderEvents {
 	}
 
 	@SubscribeEvent
-	public void worldRender(RenderWorldLastEvent e) {
+	public void worldRender(RenderWorldLastEvent event) {
 		if(!BetterHud.isEnabled()) return;
 
 		MC.mcProfiler.startSection(BetterHud.MODID);
-		Entity pointed = getMouseOver(HudElement.GLOBAL.getBillboardDistance(), e.getPartialTicks());
+		Entity pointed = getMouseOver(HudElement.GLOBAL.getBillboardDistance(), event.getPartialTicks());
 
 		if(pointed != null && pointed instanceof EntityLivingBase) {
 			MANAGER.reset(Point.ZERO, 0);
 			pointedEntity = (EntityLivingBase)pointed;
 
 			GlStateManager.pushMatrix();
-			GlUtil.setupBillboard(pointedEntity, e.getPartialTicks(), HudElement.GLOBAL.getBillboardScale());
+			GlUtil.setupBillboard(pointedEntity, event.getPartialTicks(), HudElement.GLOBAL.getBillboardScale());
 
 			GlStateManager.disableDepth();
 			GlUtil.color(Colors.WHITE);
 			GlUtil.enableBlendTranslucent();
 
-			HudElement.renderAll(RenderPhase.BILLBOARD);
+			HudElement.renderAll(event);
 
 			GlStateManager.enableDepth();
 			GlStateManager.popMatrix();

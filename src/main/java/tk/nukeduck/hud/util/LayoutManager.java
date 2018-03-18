@@ -9,11 +9,13 @@ public class LayoutManager {
 	public static final int SPACER = 5;
 
 	private final Map<Direction, Integer> corners = new HashMap<Direction, Integer>();
+	private ScaledResolution scaledResolution;
 	private Point resolution;
 	private Bounds screen;
 
-	public void reset(ScaledResolution resolution) {
-		reset(new Point(resolution), SPACER);
+	public void reset(ScaledResolution scaledResolution) {
+		reset(new Point(scaledResolution), SPACER);
+		this.scaledResolution = scaledResolution;
 	}
 
 	public void reset(Point resolution, int spacer) {
@@ -24,6 +26,10 @@ public class LayoutManager {
 
 	public Point getResolution() {
 		return resolution;
+	}
+
+	public ScaledResolution getScaledResolution() {
+		return scaledResolution;
 	}
 
 	public <T extends Bounds> T position(Direction corner, T bounds) {

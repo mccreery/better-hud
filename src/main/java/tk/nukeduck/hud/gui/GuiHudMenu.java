@@ -174,8 +174,6 @@ public class GuiHudMenu extends GuiScreen {
 
 		String page = I18n.format("betterHud.menu.page", (paginator.getPageIndex() + 1) + "/" + paginator.getPageCount());
 		drawCenteredString(fontRenderer, page, width / 2, height - height / 16 - 13, Colors.WHITE);
-
-		drawString(MC.fontRenderer, String.valueOf(descending), 5, 5, Colors.WHITE);
 	}
 
 	private List<GuiActionButton> getIndexControls(SortField<HudElement>[] sortValues) {

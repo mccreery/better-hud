@@ -10,6 +10,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingPosition;
@@ -53,7 +54,7 @@ public class PotionBar extends HudElement {
 	}
 
 	@Override
-	public Bounds render(RenderPhase phase) {
+	public Bounds render(Event event) {
 		int amount = MC.player.getActivePotionEffects().size();
 		Bounds bounds = position.applyTo(new Bounds(amount * 16, 16));
 

@@ -1,5 +1,6 @@
 package tk.nukeduck.hud.element;
 
+import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingPercentage;
 import tk.nukeduck.hud.element.settings.SettingSlider;
@@ -42,6 +43,6 @@ public class GlobalSettings extends HudElement {
 		billboardDistance.set(100.0);
 	}
 
-	@Override public boolean shouldRender(RenderPhase phase) {return false;}
-	@Override public Bounds render(RenderPhase phase) {return null;}
+	@Override public boolean shouldRender(Event event) {return false;}
+	@Override public Bounds render(Event event) {return null;}
 }

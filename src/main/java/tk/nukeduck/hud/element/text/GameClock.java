@@ -11,6 +11,7 @@ import java.util.TimeZone;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
@@ -41,8 +42,8 @@ public class GameClock extends Clock {
 	}
 
 	@Override
-	public Bounds render(RenderPhase phase) {
-		PaddedBounds bounds = (PaddedBounds)super.render(phase);
+	public Bounds render(Event event) {
+		PaddedBounds bounds = (PaddedBounds)super.render(event);
 
 		if(!MC.world.isDaytime()) {
 			Direction bedAnchor = position.getAnchor().in(Direction.RIGHT) ? Direction.WEST : Direction.EAST;

@@ -8,6 +8,7 @@ import static tk.nukeduck.hud.BetterHud.MC;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.MathHelper;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.element.settings.SettingSlider;
@@ -35,14 +36,14 @@ public class HungerIndicator extends HudElement {
 	}
 
 	@Override
-	public boolean shouldRender(RenderPhase phase) {
-		return super.shouldRender(phase)
+	public boolean shouldRender(Event event) {
+		return super.shouldRender(event)
 			&& MC.playerController.gameIsSurvivalOrAdventure()
 			&& MC.player.getFoodStats().getFoodLevel() < maxLimit.getInt() * 2;
 	}
 
 	@Override
-	public Bounds render(RenderPhase phase) {
+	public Bounds render(Event event) {
 		int foodLevel = MC.player.getFoodStats().getFoodLevel();
 		int foodMax = this.maxLimit.getInt() * 2;
 

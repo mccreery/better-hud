@@ -10,6 +10,7 @@ import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
@@ -32,7 +33,7 @@ public class SignReader extends HudElement {
 	}
 
 	@Override
-	public Bounds render(RenderPhase phase) {
+	public Bounds render(Event event) {
 		RayTraceResult trace = MC.getRenderViewEntity().rayTrace(200, 1.0F);
 
 		IBlockState state = MC.world.getBlockState(trace.getBlockPos());

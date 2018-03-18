@@ -4,6 +4,7 @@ import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
 
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingPosition;
@@ -69,7 +70,7 @@ public class HandBar extends EquipmentDisplay {
 	}
 
 	@Override
-	public Bounds render(RenderPhase phase) {
+	public Bounds render(Event event) {
 		Bounds bounds = new Bounds(180, offHand.get() ? 41 : 18);
 
 		if(position.getDirection() == Direction.SOUTH) {

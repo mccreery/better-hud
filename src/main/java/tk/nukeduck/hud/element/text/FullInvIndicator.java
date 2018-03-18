@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.client.resources.I18n;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.util.Direction;
@@ -34,8 +35,8 @@ public class FullInvIndicator extends TextElement {
 	}
 
 	@Override
-	public boolean shouldRender(RenderPhase phase) {
-		return super.shouldRender(phase) && MC.player.inventory.getFirstEmptyStack() == -1 &&
+	public boolean shouldRender(Event event) {
+		return super.shouldRender(event) && MC.player.inventory.getFirstEmptyStack() == -1 &&
 			(!offHand.get() || !MC.player.inventory.offHandInventory.get(0).isEmpty());
 	}
 }
