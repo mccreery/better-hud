@@ -43,7 +43,7 @@ public class RootSetting extends SettingStub<Boolean> {
 
 	@Override
 	public boolean isEmpty() {
-		return children.size() <= 1;
+		return children.size() <= 2;
 	}
 
 	public void toggle() {

@@ -91,6 +91,7 @@ public class GuiElementSettings extends GuiScreen {
 	@Override
 	public void onGuiClosed() {
 		Keyboard.enableRepeatEvents(false);
+		
 	}
 
 	@Override
@@ -162,10 +163,11 @@ public class GuiElementSettings extends GuiScreen {
 
 	@Override
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
-		if(keyCode == 1) {
+		super.keyTyped(typedChar, keyCode);
+
+		if(MC.currentScreen == null) {
 			BetterHud.CONFIG.saveSettings();
 		}
-		super.keyTyped(typedChar, keyCode);
 
 		for(GuiTextField field : this.textboxList) {
 			field.textboxKeyTyped(typedChar, keyCode);

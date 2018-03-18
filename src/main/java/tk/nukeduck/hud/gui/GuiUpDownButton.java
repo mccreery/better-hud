@@ -1,16 +1,15 @@
 package tk.nukeduck.hud.gui;
 
+import static tk.nukeduck.hud.BetterHud.SETTINGS;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import tk.nukeduck.hud.util.Bounds;
 
 @SideOnly(Side.CLIENT)
 public class GuiUpDownButton extends GuiActionButton {
-	private static final ResourceLocation settings = new ResourceLocation("hud", "textures/gui/settings.png");
-	
 	private int index;
 	
 	public GuiUpDownButton(int index) {
@@ -32,7 +31,7 @@ public class GuiUpDownButton extends GuiActionButton {
 	@Override
 	public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
 		if(this.visible) {
-			mc.getTextureManager().bindTexture(settings);
+			mc.getTextureManager().bindTexture(SETTINGS);
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 			this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
 			int k = this.getHoverState(this.hovered);

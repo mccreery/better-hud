@@ -3,7 +3,7 @@ package tk.nukeduck.hud.gui;
 import net.minecraft.client.gui.GuiButton;
 import tk.nukeduck.hud.util.Bounds;
 
-public abstract class GuiActionButton extends GuiButton {
+public abstract class GuiActionButton extends GuiButton implements ActionCallback {
 	public GuiActionButton(String buttonText) {
 		super(0, 0, 0, buttonText);
 	}
@@ -26,5 +26,17 @@ public abstract class GuiActionButton extends GuiButton {
 		return new Bounds(x, y, width, height);
 	}
 
-	public abstract void actionPerformed();
+	public static class GuiCallbackButton extends GuiActionButton {
+		private final ActionCallback callback;
+
+		public GuiCallbackButton(String buttonText, ActionCallback callback) {
+			super(buttonText);
+			this.callback = callback;
+		}
+
+		@Override
+		public void actionPerformed() {
+			callback.actionPerformed();
+		}
+	}
 }
