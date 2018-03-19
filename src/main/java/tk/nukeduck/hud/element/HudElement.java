@@ -43,6 +43,7 @@ import tk.nukeduck.hud.util.Sorter;
 import tk.nukeduck.hud.util.SortField;
 
 public abstract class HudElement {
+	/** A list of all the registered elements */
 	public static final List<HudElement> ELEMENTS = new ArrayList<HudElement>();
 
 	public static final ArmorBars ARMOR_BARS = new ArmorBars();
@@ -124,6 +125,7 @@ public abstract class HudElement {
 
 	public static final Sorter<HudElement> SORTER = new Sorter<HudElement>(ELEMENTS);
 
+	/** The settings saved to the config file for this element */
 	public final RootSetting settings = new RootSetting(this);
 
 	public void setEnabled(boolean value) {
@@ -144,22 +146,32 @@ public abstract class HudElement {
 		ELEMENTS.add(this);
 	}
 
+	/** @return The minimum server version that supports this element
+	 * @see #isSupportedByServer() */
 	public Version getMinimumServerVersion() {
 		return Version.ZERO;
 	}
 
+	/** @return {@code true} if the current connected server supports the element.
+	 * If the server version is too low, some communications may not be supported
+	 * @see #getMinimumServerVersion() */
 	public boolean isSupportedByServer() {
 		return BetterHud.serverVersion.compareTo(getMinimumServerVersion()) >= 0;
 	}
 
+	/** @return The localized name of the element
+	 * @see #getUnlocalizedName() */
 	public final String getLocalizedName() {
 		return I18n.format(getUnlocalizedName());
 	}
 
+	/** @return The unlocalized name of the element */
 	public final String getUnlocalizedName() {
 		return "betterHud.element." + name;
 	}
 
+	/** @return {@code true} if the element should render in the current world and event context
+	 * @param event The current render event */
 	public boolean shouldRender(Event event) {
 		return event instanceof RenderGameOverlayEvent;
 	}
@@ -167,8 +179,7 @@ public abstract class HudElement {
 	/** Renders this element to the screen.<br>
 	 * Should only be called if {@link #shouldRender(Event)} returns {@code true}
 	 *
-	 * @param phase The current render phase
-	 * @param partialTicks TODO
+	 * @param event The current render event
 	 * @return The bounds containing the element. {@code null} will be replaced by {@link Bounds#EMPTY} */
 	protected abstract Bounds render(Event event);
 
@@ -187,12 +198,15 @@ public abstract class HudElement {
 		}
 	}
 
+	/** Renders all elements for the current render event
+	 * @param event The current render event */
 	public static void renderAll(Event event) {
 		for(HudElement element : SORTER.getSortedData(SortType.PRIORITY)) {
 			element.tryRender(event);
 		}
 	}
 
+	/** The previous bounds within which the element was rendered */
 	protected Bounds lastBounds;
 
 	/** @return The last or appropriate bounds for this element.<br>
@@ -201,6 +215,7 @@ public abstract class HudElement {
 		return lastBounds;
 	}
 
+	/** Resets the previous render bounds for all elements to empty bounds */
 	public static void resetBounds() {
 		for(HudElement element : ELEMENTS) {
 			element.lastBounds = Bounds.EMPTY;
