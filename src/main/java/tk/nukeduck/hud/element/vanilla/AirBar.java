@@ -13,6 +13,13 @@ public class AirBar extends Bar {
 	}
 
 	@Override
+	public void loadDefaults() {
+		super.loadDefaults();
+		settings.priority.set(4);
+		side.setIndex(1);
+	}
+
+	@Override
 	protected int getCurrent() {
 		int air = MC.player.getAir();
 

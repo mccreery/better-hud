@@ -13,9 +13,9 @@ import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
 
 public abstract class Bar extends OverrideElement {
-	private final SettingPosition position = new SettingPositionAligned("position", Direction.CORNERS | Direction.SOUTH.flag(), Direction.getFlags(Direction.WEST, Direction.EAST));
+	protected final SettingPosition position = new SettingPositionAligned("position", Direction.CORNERS | Direction.SOUTH.flag(), Direction.getFlags(Direction.WEST, Direction.EAST));
 
-	private final SettingChoose side = new SettingChoose("side", Direction.WEST.name, Direction.EAST.name) {
+	protected final SettingChoose side = new SettingChoose("side", Direction.WEST.name, Direction.EAST.name) {
 		@Override
 		public boolean enabled() {
 			return position.getDirection() == Direction.SOUTH;
@@ -37,6 +37,12 @@ public abstract class Bar extends OverrideElement {
 
 	protected abstract int getCurrent();
 	protected abstract int getMaximum();
+
+	@Override
+	public void loadDefaults() {
+		super.loadDefaults();
+		position.set(Direction.SOUTH);
+	}
 
 	@Override
 	protected Bounds render(Event event) {

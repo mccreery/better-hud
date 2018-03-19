@@ -21,6 +21,12 @@ public class HelmetOverlay extends OverrideElement {
 	}
 
 	@Override
+	public void loadDefaults() {
+		super.loadDefaults();
+		settings.priority.set(Integer.MIN_VALUE);
+	}
+
+	@Override
 	protected ElementType getType() {
 		return ElementType.HELMET;
 	}

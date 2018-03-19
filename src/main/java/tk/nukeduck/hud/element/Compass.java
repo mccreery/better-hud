@@ -31,6 +31,7 @@ public class Compass extends HudElement {
 		position.set(Direction.NORTH);
 		directionScaling.set(0.5);
 		showNotches.set(true);
+		settings.priority.set(-3);
 	}
 
 	private static final int[] notchX = new int[9];

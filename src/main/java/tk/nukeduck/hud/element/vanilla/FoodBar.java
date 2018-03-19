@@ -11,6 +11,13 @@ public class FoodBar extends Bar {
 	}
 
 	@Override
+	public void loadDefaults() {
+		super.loadDefaults();
+		settings.priority.set(3);
+		side.setIndex(1);
+	}
+
+	@Override
 	protected ElementType getType() {
 		return ElementType.FOOD;
 	}

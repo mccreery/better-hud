@@ -43,7 +43,7 @@ public abstract class TextElement extends HudElement {
 	public void loadDefaults() {
 		super.loadDefaults();
 
-		position.set(Direction.NORTH_WEST);
+		position.set(Direction.NORTH_EAST);
 		color.set(Colors.WHITE);
 	}
 

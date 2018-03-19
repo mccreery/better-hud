@@ -13,6 +13,13 @@ public class RidingHealth extends Bar {
 	}
 
 	@Override
+	public void loadDefaults() {
+		super.loadDefaults();
+		settings.priority.set(5);
+		side.setIndex(1);
+	}
+
+	@Override
 	public boolean shouldRender(Event event) {
 		return super.shouldRender(event) && MC.player.getRidingEntity() instanceof EntityLivingBase;
 	}

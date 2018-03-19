@@ -11,6 +11,13 @@ public class HealthBar extends Bar {
 	}
 
 	@Override
+	public void loadDefaults() {
+		super.loadDefaults();
+		settings.priority.set(3);
+		side.setIndex(0);
+	}
+
+	@Override
 	protected ElementType getType() {
 		return ElementType.HEALTH;
 	}

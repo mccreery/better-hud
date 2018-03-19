@@ -2,6 +2,7 @@ package tk.nukeduck.hud.element;
 
 import static tk.nukeduck.hud.BetterHud.MC;
 
+import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.potion.PotionEffect;
@@ -30,7 +31,7 @@ public class PotionBar extends HudElement {
 		super.loadDefaults();
 
 		setEnabled(false);
-		position.set(Direction.NORTH_EAST);
+		position.set(Direction.NORTH_WEST);
 		disableDefault.set(true);
 	}
 
@@ -63,17 +64,23 @@ public class PotionBar extends HudElement {
 		Bounds icon = new Bounds(bounds.x(), bounds.y(), 18, 18);
 
 		for(PotionEffect effect : MC.player.getActivePotionEffects()) {
-			MC.getTextureManager().bindTexture(INVENTORY);
+			if(!effect.getPotion().shouldRenderHUD(effect)) continue;
+
+			MC.getTextureManager().bindTexture(GuiContainer.INVENTORY_BACKGROUND);
 
 			int iconIndex = effect.getPotion().getStatusIconIndex();
 
-			int u = 18 * (iconIndex & 7);
-			int v = 198 + 18 * (iconIndex >> 3);
+			int u = 18 * (iconIndex % 8);
+			int v = 198 + 18 * (iconIndex / 8);
 
 			GlStateManager.color(1, 1, 1, effect.getDuration() / 600);
 
 			MC.ingameGUI.drawTexturedModalRect(icon.x(), icon.y(), u, v, icon.width(), icon.height());
-			MC.ingameGUI.drawString(MC.fontRenderer, I18n.format("potion.potency." + effect.getAmplifier()), icon.x(), icon.y(), Colors.WHITE);
+
+			String unlocalizedLevel = "potion.potency." + effect.getAmplifier();
+			if(I18n.hasKey(unlocalizedLevel)) {
+				MC.ingameGUI.drawString(MC.fontRenderer, I18n.format(unlocalizedLevel), icon.x(), icon.y(), Colors.WHITE);
+			}
 
 			icon.x(icon.x() + 16);
 		}

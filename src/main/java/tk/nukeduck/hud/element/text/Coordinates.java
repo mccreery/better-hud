@@ -27,6 +27,7 @@ public class Coordinates extends TextElement {
 		position.set(Direction.NORTH);
 		spaced.set(true);
 		decimalPlaces.set(0);
+		settings.priority.set(-2);
 	}
 
 	public Coordinates() {

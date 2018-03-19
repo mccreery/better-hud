@@ -12,6 +12,7 @@ import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.GlUtil;
 
 public class HealIndicator extends HudElement {
 	private final SettingPosition position = new SettingPosition("position", 0);
@@ -44,12 +45,16 @@ public class HealIndicator extends HudElement {
 				bounds.position = MANAGER.getResolution().scale(.5f, 1).sub(90, 50);
 			}
 
+			GlUtil.color(Colors.WHITE);
+
 			if(mode.getIndex() == 0) {
 				MC.ingameGUI.drawString(MC.fontRenderer, healIndicator, bounds.x(), bounds.y(), Colors.GREEN);
 			} else {
 				MC.getTextureManager().bindTexture(HUD_ICONS);
 				MC.ingameGUI.drawTexturedModalRect(bounds.x(), bounds.y(), 0, 80, 9, 9);
 			}
+
+			GlUtil.color(Colors.WHITE);
 			return bounds;
 	}
 

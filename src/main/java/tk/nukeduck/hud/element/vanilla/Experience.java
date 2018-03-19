@@ -29,6 +29,12 @@ public class Experience extends OverrideElement {
 	}
 
 	@Override
+	public void loadDefaults() {
+		super.loadDefaults();
+		settings.priority.set(1);
+	}
+
+	@Override
 	protected Bounds render(Event event) {
 		MC.getTextureManager().bindTexture(ICONS);
 

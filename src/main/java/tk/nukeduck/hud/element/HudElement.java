@@ -251,5 +251,6 @@ public abstract class HudElement {
 	 * and to allow for future expansion */
 	public void loadDefaults() {
 		setEnabled(true);
+		settings.priority.set(0);
 	}
 }

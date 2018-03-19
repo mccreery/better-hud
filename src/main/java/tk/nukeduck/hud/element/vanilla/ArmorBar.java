@@ -12,6 +12,13 @@ public class ArmorBar extends Bar {
 	}
 
 	@Override
+	public void loadDefaults() {
+		super.loadDefaults();
+		settings.priority.set(4);
+		side.setIndex(0);
+	}
+
+	@Override
 	public boolean shouldRender(Event event) {
 		return super.shouldRender(event) && getCurrent() > 0;
 	}

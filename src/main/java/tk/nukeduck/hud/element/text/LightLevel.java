@@ -13,7 +13,7 @@ public class LightLevel extends TextElement {
 	@Override
 	public void loadDefaults() {
 		super.loadDefaults();
-		position.set(Direction.NORTH_EAST);
+		position.set(Direction.SOUTH_EAST);
 	}
 
 	public LightLevel() {

@@ -19,6 +19,12 @@ public class JumpBar extends HudElement {
 	}
 
 	@Override
+	public void loadDefaults() {
+		super.loadDefaults();
+		settings.priority.set(2);
+	}
+
+	@Override
 	public boolean shouldRender(Event event) {
 		return super.shouldRender(event) && MC.player.isRidingHorse();
 	}

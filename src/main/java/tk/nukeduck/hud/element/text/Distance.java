@@ -9,14 +9,16 @@ import java.util.List;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingChoose;
+import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.PaddedBounds;
 import tk.nukeduck.hud.util.Point;
 
 public class Distance extends TextElement {
-	private final SettingChoose mode = new SettingChoose(2);
+	private final SettingChoose mode = new SettingChoose(3);
 
 	@Override
 	public void loadDefaults() {
@@ -43,12 +45,28 @@ public class Distance extends TextElement {
 	}
 
 	@Override
+	protected Bounds getPadding() {
+		return Bounds.getPadding(border ? 2 : 0);
+	}
+
+	@Override
+	protected Bounds render(Event event, List<String> text) {
+		border = mode.getIndex() == 2;
+		return super.render(event, text);
+	}
+
+	@Override
 	protected List<String> getText() {
 		RayTraceResult trace = MC.getRenderViewEntity().rayTrace(200, 1.0F);
 
 		if(trace != null) {
 			long distance = Math.round(Math.sqrt(trace.getBlockPos().distanceSqToCenter(MC.player.posX, MC.player.posY, MC.player.posZ)));
-			return Arrays.asList(I18n.format("betterHud.hud.distance." + mode.getIndex(), String.valueOf(distance)));
+
+			if(mode.getIndex() == 2) {
+				return Arrays.asList(String.valueOf(distance));
+			} else {
+				return Arrays.asList(I18n.format("betterHud.hud.distance." + mode.getIndex(), String.valueOf(distance)));
+			}
 		} else {
 			return null;
 		}

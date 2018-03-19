@@ -38,6 +38,7 @@ public class MobInfo extends EntityInfo {
 	public void loadDefaults() {
 		super.loadDefaults();
 		compress.set(40.0);
+		settings.priority.set(-1);
 	}
 
 	private static String getCompressString(int rows) {
