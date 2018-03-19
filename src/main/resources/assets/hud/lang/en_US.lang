@@ -67,6 +67,17 @@ betterHud.element.waterDrops=Water Drops
 betterHud.element.itemPickup=Item Pickup
 betterHud.element.systemClock=System Clock
 
+# Vanilla elements
+betterHud.element.helmetOverlay=Helmet Overlay
+betterHud.element.hotbar=Hotbar
+betterHud.element.airBar=Air Bar
+betterHud.element.armor=Armor Bar
+betterHud.element.experience=Experience Bar
+betterHud.element.health=Health Bar
+betterHud.element.jumpBar=Jump Bar
+betterHud.element.mountHealth=Mount Health
+betterHud.element.food=Hunger Bar
+
 # Setting Groups
 betterHud.group.position=Position
 betterHud.group.misc=Misc.

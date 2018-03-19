@@ -28,6 +28,15 @@ import tk.nukeduck.hud.element.text.FullInvIndicator;
 import tk.nukeduck.hud.element.text.GameClock;
 import tk.nukeduck.hud.element.text.LightLevel;
 import tk.nukeduck.hud.element.text.SystemClock;
+import tk.nukeduck.hud.element.vanilla.AirBar;
+import tk.nukeduck.hud.element.vanilla.ArmorBar;
+import tk.nukeduck.hud.element.vanilla.Experience;
+import tk.nukeduck.hud.element.vanilla.FoodBar;
+import tk.nukeduck.hud.element.vanilla.HealthBar;
+import tk.nukeduck.hud.element.vanilla.HelmetOverlay;
+import tk.nukeduck.hud.element.vanilla.Hotbar;
+import tk.nukeduck.hud.element.vanilla.JumpBar;
+import tk.nukeduck.hud.element.vanilla.RidingHealth;
 import tk.nukeduck.hud.network.Version;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Sorter;
@@ -47,7 +56,7 @@ public abstract class HudElement {
 	public static final Coordinates COORDINATES = new Coordinates();
 	public static final Distance DISTANCE = new Distance();
 	public static final MaxLevelIndicator MAX_LEVEL = new MaxLevelIndicator();
-	public static final ExperienceInfo EXPERIENCE = new ExperienceInfo();
+	public static final ExperienceInfo EXPERIENCE_INFO = new ExperienceInfo();
 	public static final FoodHealthStats STATS = new FoodHealthStats();
 	public static final FpsCount FPS = new FpsCount();
 	public static final FullInvIndicator FULL_INV = new FullInvIndicator();
@@ -66,6 +75,16 @@ public abstract class HudElement {
 	public static final HorseInfo HORSE_INFO = new HorseInfo();
 	public static final MobInfo MOB_INFO = new MobInfo();
 	public static final CpsCount CPS = new CpsCount();
+
+	public static final HelmetOverlay HELMET_OVERLAY = new HelmetOverlay();
+	public static final Hotbar HOTBAR = new Hotbar();
+	public static final Experience EXPERIENCE = new Experience();
+	public static final HealthBar HEALTH = new HealthBar();
+	public static final FoodBar FOOD_BAR = new FoodBar();
+	public static final ArmorBar ARMOR_BAR = new ArmorBar();
+	public static final AirBar AIR_BAR = new AirBar();
+	public static final JumpBar JUMP_BAR = new JumpBar();
+	public static final RidingHealth MOUNT = new RidingHealth();
 
 	public enum SortType implements SortField<HudElement> {
 		ALPHABETICAL("alphabetical", false) {

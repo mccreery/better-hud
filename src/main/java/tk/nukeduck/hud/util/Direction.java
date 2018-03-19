@@ -35,8 +35,12 @@ public enum Direction {
 		this.name = name;
 	}
 
+	public String getUnlocalizedName() {
+		return "betterHud.value." + name;
+	}
+
 	public String getLocalizedName() {
-		return I18n.format("betterHud.value." + name);
+		return I18n.format(getUnlocalizedName());
 	}
 
 	public int getColumn() {return ordinal() % 3;}

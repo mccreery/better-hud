@@ -155,6 +155,12 @@ public class GlUtil {
 			new Bounds(16, 9, 9, 9), new Bounds(25, 9, 9, 9), new Bounds(34, 9, 9, 9));
 	}
 
+	/** @return The size of the bar drawn by {@link #renderBar(int, int, Point, Bounds, Bounds, Bounds)}
+	 * @see #renderBar(int, int, Point, Bounds, Bounds, Bounds) */
+	public static Point getBarSize(int max) {
+		return new Point(81, (max + 19) / 20 * 9);
+	}
+
 	/** Renders a multi-row health bar with {@code health} full hearts
 	 * and {@code maxHealth} total hearts
 	 *
