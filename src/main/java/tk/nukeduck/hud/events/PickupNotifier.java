@@ -13,7 +13,7 @@ import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.network.MessagePickup;
 
 public class PickupNotifier {
-	@SubscribeEvent(priority = EventPriority.LOWEST)
+	@SubscribeEvent(priority = EventPriority.HIGHEST)
 	public void onItemPickedUp(EntityItemPickupEvent e) {
 		if(e.isCanceled()) return;
 
