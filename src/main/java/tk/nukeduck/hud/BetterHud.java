@@ -111,4 +111,15 @@ public class BetterHud {
 	public void onPlayerDisconnected(ClientDisconnectionFromServerEvent e) {
 		serverVersion = Version.ZERO;
 	}
+
+	/** @param dividend The left-hand argument of the division
+	 * @param divisor The right-hand argument of the division
+	 * @return The ceiling of the quotient ({@code dividend / divisor}) */
+	public static int ceilDiv(int dividend, int divisor) {
+		if(divisor < 0) {
+			dividend = -dividend;
+			divisor  = -divisor;
+		}
+		return (dividend + divisor - 1) / divisor;
+	}
 }
