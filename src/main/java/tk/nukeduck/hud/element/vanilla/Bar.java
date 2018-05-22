@@ -10,7 +10,7 @@ import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.element.settings.SettingPositionAligned;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.GlUtil;
+import tk.nukeduck.hud.util.bars.StatBar;
 
 public abstract class Bar extends OverrideElement {
 	protected final SettingPosition position = new SettingPositionAligned("position", Direction.CORNERS | Direction.SOUTH.flag(), Direction.getFlags(Direction.WEST, Direction.EAST));
@@ -22,21 +22,15 @@ public abstract class Bar extends OverrideElement {
 		}
 	};
 
-	private final Bounds bgTexture, halfTexture, fullTexture;
+	private final StatBar bar;
 
-	public Bar(String name, Bounds bgTexture, Bounds halfTexture, Bounds fullTexture) {
+	public Bar(String name, StatBar bar) {
 		super(name);
 
-		this.bgTexture = bgTexture;
-		this.halfTexture = halfTexture;
-		this.fullTexture = fullTexture;
-
+		this.bar = bar;
 		settings.add(position);
 		settings.add(side);
 	}
-
-	protected abstract int getCurrent();
-	protected abstract int getMaximum();
 
 	@Override
 	public void loadDefaults() {
@@ -48,15 +42,14 @@ public abstract class Bar extends OverrideElement {
 	protected Bounds render(Event event) {
 		MC.getTextureManager().bindTexture(ICONS);
 
-		Bounds bounds = new Bounds(GlUtil.getBarSize(getMaximum()));
+		Bounds bounds = new Bounds(bar.getSize());
 		if(position.getDirection() == Direction.SOUTH) {
 			bounds = MANAGER.positionBar(bounds, side.getIndex() == 1 ? Direction.EAST : Direction.WEST, 1);
 		} else {
 			bounds = position.applyTo(bounds);
 		}
 
-		GlUtil.enableBlendTranslucent();
-		GlUtil.renderBar(getCurrent(), getMaximum(), bounds.position, bgTexture, halfTexture, fullTexture);
+		bar.render(bounds.position, position.getAlignment());
 		return bounds;
 	}
 }

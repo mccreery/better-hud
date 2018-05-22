@@ -2,7 +2,10 @@ package tk.nukeduck.hud.events;
 
 import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
+import static tk.nukeduck.hud.BetterHud.MODID;
 import static tk.nukeduck.hud.BetterHud.pointedEntity;
+
+import static net.minecraftforge.client.GuiIngameForge.*;
 
 import java.util.List;
 
@@ -15,7 +18,6 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
-import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -47,20 +49,22 @@ public final class RenderEvents {
 
 	@SubscribeEvent
 	public void onRenderTick(RenderGameOverlayEvent.Pre event) {
-		if(!BetterHud.isEnabled() || event.getType() != RenderGameOverlayEvent.ElementType.ALL) return;
+		final boolean disabled = !BetterHud.isEnabled();
 
-		// Disable vanilla HUD parts we override
-		GuiIngameForge.renderHotbar = false;
-		GuiIngameForge.renderExperiance = false;
-		GuiIngameForge.renderHelmet = false;
-		GuiIngameForge.renderHealth = false;
-		GuiIngameForge.renderFood = false;
-		GuiIngameForge.renderArmor = false;
-		GuiIngameForge.renderAir = false;
-		GuiIngameForge.renderJumpBar = false;
-		GuiIngameForge.renderHealthMount = false;
+		renderHotbar      = disabled;
+		renderExperiance  = disabled;
+		renderHealth      = disabled;
+		renderFood        = disabled;
+		renderArmor       = disabled;
+		renderAir         = disabled;
+		renderJumpBar     = disabled;
+		renderHealthMount = disabled;
 
-		MC.mcProfiler.startSection(BetterHud.MODID);
+		if(disabled || event.getType() != RenderGameOverlayEvent.ElementType.ALL) {
+			return;
+		}
+
+		MC.mcProfiler.startSection(MODID);
 		MANAGER.reset(event.getResolution());
 
 		HudElement.renderAll(event);
