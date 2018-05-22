@@ -47,17 +47,23 @@ public class GlUtil {
 		drawTexturedModalRect(position.x, position.y, texture.x(), texture.y(), texture.width(), texture.height());
 	}
 
-	/** @see net.minecraft.client.gui.Gui#drawTexturedModalRect(int, int, int, int, int, int) */
+	/** @see #drawTexturedModalRect(int, int, int, int, int, int, int, int) */
 	public static void drawTexturedModalRect(int x, int y, int u, int v, int width, int height) {
+		drawTexturedModalRect(x, y, u, v, Math.abs(width), Math.abs(height), width, height);
+	}
+
+	/** Supports negative sized textures
+	 * @see net.minecraft.client.gui.Gui#drawTexturedModalRect(int, int, int, int, int, int) */
+	public static void drawTexturedModalRect(int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight) {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder builder = tessellator.getBuffer();
 		builder.begin(7, DefaultVertexFormats.POSITION_TEX);
-	
-		builder.pos(x,         y + height, 0).tex( u          * TEXTURE_NORMALIZE, (v + height) * TEXTURE_NORMALIZE).endVertex();
-		builder.pos(x + width, y + height, 0).tex((u + width) * TEXTURE_NORMALIZE, (v + height) * TEXTURE_NORMALIZE).endVertex();
-		builder.pos(x + width, y,          0).tex((u + width) * TEXTURE_NORMALIZE,  v           * TEXTURE_NORMALIZE).endVertex();
-		builder.pos(x,         y,          0).tex( u          * TEXTURE_NORMALIZE,  v           * TEXTURE_NORMALIZE).endVertex();
-	
+
+		builder.pos(x,         y + height, 0).tex( u                 * TEXTURE_NORMALIZE, (v + textureHeight) * TEXTURE_NORMALIZE).endVertex();
+		builder.pos(x + width, y + height, 0).tex((u + textureWidth) * TEXTURE_NORMALIZE, (v + textureHeight) * TEXTURE_NORMALIZE).endVertex();
+		builder.pos(x + width, y,          0).tex((u + textureWidth) * TEXTURE_NORMALIZE,  v                  * TEXTURE_NORMALIZE).endVertex();
+		builder.pos(x,         y,          0).tex( u                 * TEXTURE_NORMALIZE,  v                  * TEXTURE_NORMALIZE).endVertex();
+
 		tessellator.draw();
 	}
 

@@ -3,11 +3,12 @@ package tk.nukeduck.hud.element.vanilla;
 import static tk.nukeduck.hud.BetterHud.MC;
 
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import tk.nukeduck.hud.util.Bounds;
+import tk.nukeduck.hud.util.bars.StatBar;
+import tk.nukeduck.hud.util.bars.StatBarFood;
 
 public class FoodBar extends Bar {
 	public FoodBar() {
-		super("food", new Bounds(16, 27, 9, 9), new Bounds(61, 27, 9, 9), new Bounds(52, 27, 9, 9));
+		super("food");
 	}
 
 	@Override
@@ -23,12 +24,7 @@ public class FoodBar extends Bar {
 	}
 
 	@Override
-	protected int getCurrent() {
-		return MC.player.getFoodStats().getFoodLevel();
-	}
-
-	@Override
-	protected int getMaximum() {
-		return 20;
+	public StatBar getBar() {
+		return new StatBarFood(MC.player);
 	}
 }

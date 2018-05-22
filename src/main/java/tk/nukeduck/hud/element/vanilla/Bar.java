@@ -10,6 +10,7 @@ import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.element.settings.SettingPositionAligned;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.bars.StatBar;
 
 public abstract class Bar extends OverrideElement {
@@ -22,12 +23,11 @@ public abstract class Bar extends OverrideElement {
 		}
 	};
 
-	private final StatBar bar;
+	private StatBar bar;
 
-	public Bar(String name, StatBar bar) {
+	public Bar(String name) {
 		super(name);
 
-		this.bar = bar;
 		settings.add(position);
 		settings.add(side);
 	}
@@ -38,18 +38,33 @@ public abstract class Bar extends OverrideElement {
 		position.set(Direction.SOUTH);
 	}
 
+	public abstract StatBar getBar();
+
+	@Override
+	public boolean shouldRender(Event event) {
+		if(bar == null) bar = getBar();
+
+		return super.shouldRender(event) && bar.shouldRender();
+	}
+
 	@Override
 	protected Bounds render(Event event) {
+		if(bar == null) bar = getBar();
+
 		MC.getTextureManager().bindTexture(ICONS);
 
 		Bounds bounds = new Bounds(bar.getSize());
+		Direction alignment;
+
 		if(position.getDirection() == Direction.SOUTH) {
-			bounds = MANAGER.positionBar(bounds, side.getIndex() == 1 ? Direction.EAST : Direction.WEST, 1);
+			alignment = side.getIndex() == 1 ? Direction.EAST : Direction.WEST;
+			bounds = MANAGER.positionBar(bounds, alignment, 1);
 		} else {
 			bounds = position.applyTo(bounds);
+			alignment = position.getAlignment();
 		}
 
-		bar.render(bounds.position, position.getAlignment());
+		bar.render(bounds.position, alignment);
 		return bounds;
 	}
 }

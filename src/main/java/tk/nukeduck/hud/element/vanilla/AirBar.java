@@ -2,14 +2,13 @@ package tk.nukeduck.hud.element.vanilla;
 
 import static tk.nukeduck.hud.BetterHud.MC;
 
-import net.minecraft.block.material.Material;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.fml.common.eventhandler.Event;
-import tk.nukeduck.hud.util.Bounds;
+import tk.nukeduck.hud.util.bars.StatBar;
+import tk.nukeduck.hud.util.bars.StatBarAir;
 
 public class AirBar extends Bar {
 	public AirBar() {
-		super("airBar", null, new Bounds(25, 18, 9, 9), new Bounds(16, 18, 9, 9));
+		super("airBar");
 	}
 
 	@Override
@@ -20,26 +19,12 @@ public class AirBar extends Bar {
 	}
 
 	@Override
-	protected int getCurrent() {
-		int air = MC.player.getAir();
-
-		int full = ((air - 2) * 10 + 299) / 300;
-		int partial = (air * 10 + 299) / 300 - full;
-		return full * 2 + partial;
-	}
-
-	@Override
-	protected int getMaximum() {
-		return 20;
-	}
-
-	@Override
 	protected ElementType getType() {
 		return ElementType.AIR;
 	}
 
 	@Override
-	public boolean shouldRender(Event event) {
-		return MC.player.isInsideOfMaterial(Material.WATER);
+	public StatBar getBar() {
+		return new StatBarAir(MC.player);
 	}
 }

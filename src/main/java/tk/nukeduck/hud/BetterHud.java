@@ -70,6 +70,10 @@ public class BetterHud {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		if(event.getSide() == Side.CLIENT) {
+			MC = Minecraft.getMinecraft();
+
+			System.out.println(MC.player);
+
 			HudElement.loadAllDefaults();
 			CONFIG = new HudConfig(event.getSuggestedConfigurationFile());
 		}
@@ -78,8 +82,6 @@ public class BetterHud {
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		if(event.getSide() == Side.CLIENT) {
-			MC = Minecraft.getMinecraft();
-
 			KeyEvents.registerEvents();
 			RenderEvents.registerEvents();
 			Ticker.registerEvents();

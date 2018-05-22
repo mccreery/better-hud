@@ -9,16 +9,24 @@ import tk.nukeduck.hud.util.Point;
 
 public abstract class StatBar {
 	protected abstract int getCurrent();
-	protected abstract int getMaximum();
+
+	protected int getMaximum() {
+		return 20;
+	}
 
 	protected enum IconType {
 		BACKGROUND, HALF, FULL;
 	}
 
 	protected abstract Bounds getIcon(IconType icon, Direction alignment, int pointsIndex);
-	protected abstract int getIconBounce(int pointsIndex);
 
-	protected abstract int getRowSpacing();
+	protected int getIconBounce(int pointsIndex) {
+		return 0;
+	}
+
+	protected int getRowSpacing() {
+		return getIconSize();
+	}
 
 	protected int getIconSize() {
 		return 9;
@@ -28,6 +36,10 @@ public abstract class StatBar {
 		return 20;
 	}
 
+	public boolean shouldRender() {
+		return true;
+	}
+
 	public void render(Point position, Direction alignment) {
 		GlUtil.enableBlendTranslucent();
 		GlUtil.color(Colors.WHITE);
@@ -35,7 +47,7 @@ public abstract class StatBar {
 
 		final int current = getCurrent(), max = getMaximum();
 
-		for(int i = 0; i < max; icon.x = position.x, icon.y += 9) {
+		for(int i = 0; i < max; icon.x = position.x, icon.y += getRowSpacing()) {
 			for(int j = 0; j < 20 && i < max; i += 2, j += 2, icon.x += 8) {
 				Bounds background = getIcon(IconType.BACKGROUND, alignment, i);
 
