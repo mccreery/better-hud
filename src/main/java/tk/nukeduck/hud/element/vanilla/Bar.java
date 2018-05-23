@@ -10,7 +10,6 @@ import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.element.settings.SettingPositionAligned;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.bars.StatBar;
 
 public abstract class Bar extends OverrideElement {

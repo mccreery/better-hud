@@ -43,12 +43,20 @@ public abstract class StatBar {
 	public void render(Point position, Direction alignment) {
 		GlUtil.enableBlendTranslucent();
 		GlUtil.color(Colors.WHITE);
-		Point icon = new Point(position);
 
-		final int current = getCurrent(), max = getMaximum();
+		final int current = getCurrent(), max = getMaximum(), rowPoints = getRowPoints();
 
-		for(int i = 0; i < max; icon.x = position.x, icon.y += getRowSpacing()) {
-			for(int j = 0; j < 20 && i < max; i += 2, j += 2, icon.x += 8) {
+		int resetX = position.x;
+
+		int iconSpacing = 8;
+		if(alignment.in(Direction.RIGHT)) {
+			resetX += iconSpacing * (BetterHud.ceilDiv(rowPoints, 2) - 1);
+			iconSpacing = -iconSpacing;
+		}
+		Point icon = new Point(resetX, position.y);
+
+		for(int i = 0; i < max; icon.x = 5, icon.y += getRowSpacing()) {
+			for(int j = 0; j < rowPoints && i < max; i += 2, j += 2, icon.x += iconSpacing) {
 				Bounds background = getIcon(IconType.BACKGROUND, alignment, i);
 
 				if(background != null) {
