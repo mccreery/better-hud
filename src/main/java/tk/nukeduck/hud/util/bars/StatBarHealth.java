@@ -4,7 +4,7 @@ import net.minecraft.entity.EntityLivingBase;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 
-public class StatBarHealth extends StatBar {
+public class StatBarHealth extends StatBarSided {
 	private final EntityLivingBase entity;
 
 	public StatBarHealth(EntityLivingBase entity) {
@@ -22,13 +22,18 @@ public class StatBarHealth extends StatBar {
 	}
 
 	@Override
-	protected Bounds getIcon(IconType icon, Direction alignment, int pointsIndex) {
+	protected Bounds getIcon(IconType icon, int pointsIndex) {
 		switch(icon) {
 			case BACKGROUND: return new Bounds(16, 0, 9, 9);
 			case HALF:       return new Bounds(61, 0, 9, 9);
 			case FULL:       return new Bounds(52, 0, 9, 9);
 			default:         return null;
 		}
+	}
+
+	@Override
+	public Direction getIconAlignment() {
+		return Direction.WEST;
 	}
 
 /*	private long lastSystemTime;

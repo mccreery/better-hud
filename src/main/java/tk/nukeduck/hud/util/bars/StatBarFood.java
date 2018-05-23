@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 
-public class StatBarFood extends StatBar {
+public class StatBarFood extends StatBarSided {
 	private final EntityPlayer entity;
 
 	public StatBarFood(EntityPlayer entity) {
@@ -17,20 +17,17 @@ public class StatBarFood extends StatBar {
 	}
 
 	@Override
-	protected Bounds getIcon(IconType icon, Direction alignment, int pointsIndex) {
-		Bounds bounds;
-
+	protected Bounds getIcon(IconType icon, int pointsIndex) {
 		switch(icon) {
-			case BACKGROUND: bounds = new Bounds(16, 27, 9, 9); break;
-			case HALF:       bounds = new Bounds(61, 27, 9, 9); break;
-			case FULL:       bounds = new Bounds(52, 27, 9, 9); break;
+			case BACKGROUND: return new Bounds(16, 27, 9, 9);
+			case HALF:       return new Bounds(61, 27, 9, 9);
+			case FULL:       return new Bounds(52, 27, 9, 9);
 			default:         return null;
 		}
+	}
 
-		if(!alignment.in(Direction.RIGHT)) { // align left
-			bounds.x(bounds.right());
-			bounds.width(-bounds.width());
-		}
-		return bounds;
+	@Override
+	public Direction getIconAlignment() {
+		return Direction.EAST;
 	}
 }
