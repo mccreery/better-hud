@@ -149,6 +149,24 @@ public class Bounds {
 		return this;
 	}
 
+	/** Switches the least and most horizontal coordinates
+	 * @see #flip() */
+	public Bounds flipX() {
+		position.x = right();
+		size.x = -size.x;
+
+		return this;
+	}
+
+	/** Switches the least and most horizontal coordinates
+	 * @see #flip() */
+	public Bounds flipY() {
+		position.y = bottom();
+		size.y = -size.y;
+
+		return this;
+	}
+
 	/** Switches the least and most coordinates on each axis if
 	 * the axis has a positive size */
 	public Bounds denormalize() {
