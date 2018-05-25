@@ -4,7 +4,7 @@ import net.minecraft.entity.EntityLivingBase;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 
-public class StatBarArmor extends StatBarSided {
+public class StatBarArmor extends StatBarBasic {
 	private final EntityLivingBase entity;
 
 	public StatBarArmor(EntityLivingBase entity) {
@@ -32,7 +32,7 @@ public class StatBarArmor extends StatBarSided {
 	}
 
 	@Override
-	public Direction getIconAlignment() {
+	public Direction getNativeAlignment() {
 		return Direction.WEST;
 	}
 }

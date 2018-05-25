@@ -4,7 +4,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 
-public class StatBarFood extends StatBarSided {
+public class StatBarFood extends StatBarBasic {
 	private final EntityPlayer entity;
 
 	public StatBarFood(EntityPlayer entity) {
@@ -27,7 +27,7 @@ public class StatBarFood extends StatBarSided {
 	}
 
 	@Override
-	public Direction getIconAlignment() {
+	public Direction getNativeAlignment() {
 		return Direction.EAST;
 	}
 }

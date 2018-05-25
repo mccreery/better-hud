@@ -3,9 +3,8 @@ package tk.nukeduck.hud.util.bars;
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import tk.nukeduck.hud.util.Bounds;
-import tk.nukeduck.hud.util.Direction;
 
-public class StatBarAir extends StatBar {
+public class StatBarAir extends StatBarBasic {
 	private final Entity entity;
 
 	public StatBarAir(Entity entity) {
@@ -22,7 +21,7 @@ public class StatBarAir extends StatBar {
 	}
 
 	@Override
-	protected Bounds getIcon(IconType icon, Direction alignment, int pointsIndex) {
+	protected Bounds getIcon(IconType icon, int pointsIndex) {
 		switch(icon) {
 			case HALF: return new Bounds(25, 18, 9, 9);
 			case FULL: return new Bounds(16, 18, 9, 9);

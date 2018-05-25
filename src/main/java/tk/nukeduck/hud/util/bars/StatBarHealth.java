@@ -12,7 +12,7 @@ import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.Point;
 
-public class StatBarHealth extends StatBarSided {
+public class StatBarHealth extends StatBarBasic {
 	private final EntityLivingBase entity;
 	private final Random random = new Random();
 
@@ -28,7 +28,6 @@ public class StatBarHealth extends StatBarSided {
 
 	@Override
 	protected int getCurrent() {
-		//System.out.println(prevHealth + " -> " + health);
 		return Math.max(prevHealth, currentHealth);
 	}
 
@@ -66,7 +65,7 @@ public class StatBarHealth extends StatBarSided {
 	}
 
 	@Override
-	public Direction getIconAlignment() {
+	public Direction getNativeAlignment() {
 		return Direction.WEST;
 	}
 
