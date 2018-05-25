@@ -58,16 +58,20 @@ public abstract class StatBar {
 		for(int i = 0; i < max; icon.x = 5, icon.y += getRowSpacing()) {
 			for(int j = 0; j < rowPoints && i < max; i += 2, j += 2, icon.x += iconSpacing) {
 				Bounds background = getIcon(IconType.BACKGROUND, alignment, i);
+				int iconBounce = getIconBounce(i);
 
 				if(background != null) {
-					GlUtil.drawTexturedModalRect(icon, background);
+					GlUtil.drawTexturedModalRect(icon.x, icon.y + iconBounce,
+						background.x(), background.y(), background.width(), background.height());
 				}
 
 				if(i < current) {
 					Bounds foreground = getIcon(i + 1 < current ? IconType.FULL : IconType.HALF, alignment, i);
 
-					GlUtil.drawTexturedModalRect(icon.x, icon.y + getIconBounce(i),
-						foreground.x(), foreground.y(), foreground.width(), foreground.height());
+					if(foreground != null) {
+						GlUtil.drawTexturedModalRect(icon.x, icon.y + iconBounce,
+							foreground.x(), foreground.y(), foreground.width(), foreground.height());
+					}
 				}
 			}
 		}
