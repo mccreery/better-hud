@@ -1,8 +1,5 @@
 package tk.nukeduck.hud.element.vanilla;
 
-import static tk.nukeduck.hud.BetterHud.MC;
-
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import tk.nukeduck.hud.util.bars.StatBar;
 import tk.nukeduck.hud.util.bars.StatBarHealth;
@@ -26,6 +23,6 @@ public class HealthBar extends Bar {
 
 	@Override
 	public StatBar getBar() {
-		return new StatBarHealth((EntityLivingBase)MC.getRenderViewEntity());
+		return new StatBarHealth();
 	}
 }

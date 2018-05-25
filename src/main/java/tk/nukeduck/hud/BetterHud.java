@@ -124,4 +124,10 @@ public class BetterHud {
 		}
 		return (dividend + divisor - 1) / divisor;
 	}
+
+	/** @return The closest {@code y >= x} such that
+	 * {@code y} is a multiple of {@code multiple} */
+	public static int ceil(int x, int multiple) {
+		return ceilDiv(x, multiple) * multiple;
+	}
 }

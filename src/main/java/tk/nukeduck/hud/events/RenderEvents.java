@@ -53,7 +53,7 @@ public final class RenderEvents {
 
 		renderHotbar      = disabled;
 		renderExperiance  = disabled;
-		renderHealth      = true;//disabled; TODO
+		renderHealth      = disabled;
 		renderFood        = disabled;
 		renderArmor       = disabled;
 		renderAir         = disabled;

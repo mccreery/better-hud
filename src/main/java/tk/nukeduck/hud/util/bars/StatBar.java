@@ -59,7 +59,7 @@ public abstract class StatBar {
 		}
 		Point icon = new Point(resetX, position.y);
 
-		for(int i = 0; i < max; icon.x = 5, icon.y += getRowSpacing()) {
+		for(int i = 0; i < max; icon.x = resetX, icon.y += getRowSpacing()) {
 			for(int j = 0; j < rowPoints && i < max; i += 2, j += 2, icon.x += iconSpacing) {
 				int iconBounce = getIconBounce(i);
 
