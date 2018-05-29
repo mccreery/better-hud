@@ -4,7 +4,6 @@ import static tk.nukeduck.hud.BetterHud.ICONS;
 import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
 
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.settings.SettingChoose;
 import tk.nukeduck.hud.element.settings.SettingPosition;
