@@ -25,7 +25,7 @@ public class Experience extends OverrideElement {
 
 	@Override
 	public boolean shouldRender(Event event) {
-		return super.shouldRender(event) && MC.playerController.gameIsSurvivalOrAdventure();
+		return super.shouldRender(event) && MC.playerController.shouldDrawHUD();
 	}
 
 	@Override

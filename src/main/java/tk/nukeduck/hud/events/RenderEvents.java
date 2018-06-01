@@ -59,6 +59,7 @@ public final class RenderEvents {
 		renderAir         = disabled;
 		renderJumpBar     = disabled;
 		renderHealthMount = disabled;
+		renderHelmet      = disabled;
 
 		if(disabled || event.getType() != RenderGameOverlayEvent.ElementType.ALL) {
 			return;

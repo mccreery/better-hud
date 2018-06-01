@@ -215,6 +215,7 @@ betterHud.setting.showLifetimeExp=XP Since Death
 betterHud.setting.disableDefault=Disable Default
 betterHud.setting.alwaysVisible=Always Visible
 betterHud.setting.tooltipLines=Tooltip Lines
+betterHud.setting.hideMount=Hide While Riding
 
 betterHud.hud.distance.0=§a[§r%s§a]
 betterHud.hud.distance.1=%sm away

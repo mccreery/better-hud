@@ -7,13 +7,13 @@ import static tk.nukeduck.hud.BetterHud.MC;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
-import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
 
-public class JumpBar extends HudElement {
+public class JumpBar extends OverrideElement {
 	public JumpBar() {
 		super("jumpBar");
 	}
@@ -50,5 +50,10 @@ public class JumpBar extends HudElement {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 
 		return bounds;
+	}
+
+	@Override
+	protected ElementType getType() {
+		return ElementType.JUMPBAR;
 	}
 }
