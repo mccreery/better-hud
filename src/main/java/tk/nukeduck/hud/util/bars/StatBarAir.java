@@ -4,16 +4,10 @@ import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 import tk.nukeduck.hud.util.Bounds;
 
-public class StatBarAir extends StatBarBasic {
-	private final Entity entity;
-
-	public StatBarAir(Entity entity) {
-		this.entity = entity;
-	}
-
+public class StatBarAir extends StatBarBasic<Entity> {
 	@Override
 	protected int getCurrent() {
-		int air = entity.getAir();
+		int air = host.getAir();
 
 		int full = ((air - 2) * 10 + 299) / 300;
 		int partial = (air * 10 + 299) / 300 - full;
@@ -31,6 +25,6 @@ public class StatBarAir extends StatBarBasic {
 
 	@Override
 	public boolean shouldRender() {
-		return entity.isInsideOfMaterial(Material.WATER);
+		return host.isInsideOfMaterial(Material.WATER);
 	}
 }

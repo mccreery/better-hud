@@ -4,16 +4,10 @@ import net.minecraft.entity.EntityLivingBase;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 
-public class StatBarArmor extends StatBarBasic {
-	private final EntityLivingBase entity;
-
-	public StatBarArmor(EntityLivingBase entity) {
-		this.entity = entity;
-	}
-
+public class StatBarArmor extends StatBarBasic<EntityLivingBase> {
 	@Override
 	protected int getCurrent() {
-		return entity.getTotalArmorValue();
+		return host.getTotalArmorValue();
 	}
 
 	@Override

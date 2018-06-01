@@ -5,16 +5,10 @@ import net.minecraft.entity.EntityLivingBase;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 
-public class StatBarMount extends StatBarBasic {
-	private final Entity entity;
-
-	public StatBarMount(Entity entity) {
-		this.entity = entity;
-	}
-
+public class StatBarMount extends StatBarBasic<Entity> {
 	@Override
 	public boolean shouldRender() {
-		return entity.getRidingEntity() instanceof EntityLivingBase;
+		return host.getRidingEntity() instanceof EntityLivingBase;
 	}
 
 	@Override
@@ -29,16 +23,16 @@ public class StatBarMount extends StatBarBasic {
 
 	@Override
 	protected int getCurrent() {
-		return (int)((EntityLivingBase)entity.getRidingEntity()).getHealth();
+		return (int)((EntityLivingBase)host.getRidingEntity()).getHealth();
 	}
 
 	@Override
 	protected int getMaximum() {
-		return (int)((EntityLivingBase)entity.getRidingEntity()).getMaxHealth();
+		return (int)((EntityLivingBase)host.getRidingEntity()).getMaxHealth();
 	}
 
 	@Override
 	public Direction getNativeAlignment() {
-		return Direction.WEST;
+		return Direction.EAST;
 	}
 }

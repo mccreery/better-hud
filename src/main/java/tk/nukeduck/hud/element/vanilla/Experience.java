@@ -7,6 +7,7 @@ import static tk.nukeduck.hud.BetterHud.MC;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
+import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
@@ -14,8 +15,11 @@ import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Point;
 
 public class Experience extends OverrideElement {
+	private final SettingBoolean hideMount = new SettingBoolean("hideMount");
+
 	public Experience() {
 		super("experience");
+		hideMount.set(true);
 	}
 
 	@Override
@@ -25,7 +29,8 @@ public class Experience extends OverrideElement {
 
 	@Override
 	public boolean shouldRender(Event event) {
-		return super.shouldRender(event) && MC.playerController.shouldDrawHUD();
+		return super.shouldRender(event) && MC.playerController.shouldDrawHUD()
+			&& (!hideMount.get() || !MC.player.isRidingHorse());
 	}
 
 	@Override
@@ -49,7 +54,7 @@ public class Experience extends OverrideElement {
 		int cap = MC.player.xpBarCap();
 		if(cap > 0) {
 			int filled = (int)(MC.player.experience * (barBounds.width() + 1));
-			GlUtil.drawTexturedModalRect(barBounds.position, bgTexture);
+			GlUtil.drawTexturedModalRect(Direction.SOUTH.anchor(new Bounds(bgTexture), barBounds).position, bgTexture);
 
 			if(filled > 0) {
 				fgTexture.width(filled);

@@ -4,12 +4,11 @@ import static tk.nukeduck.hud.BetterHud.MC;
 
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
-import tk.nukeduck.hud.util.bars.StatBar;
 import tk.nukeduck.hud.util.bars.StatBarArmor;
 
 public class ArmorBar extends Bar {
 	public ArmorBar() {
-		super("armor");
+		super("armor", new StatBarArmor());
 	}
 
 	@Override
@@ -22,11 +21,6 @@ public class ArmorBar extends Bar {
 	@Override
 	protected ElementType getType() {
 		return ElementType.ARMOR;
-	}
-
-	@Override
-	public StatBar getBar() {
-		return new StatBarArmor(MC.player);
 	}
 
 	@Override

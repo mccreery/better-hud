@@ -9,9 +9,15 @@ import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Point;
 
-public abstract class StatBar {
+public abstract class StatBar<T> {
 	protected int getMaximum() {
 		return 20;
+	}
+
+	protected T host;
+
+	public void setHost(T host) {
+		this.host = host;
 	}
 
 	protected abstract List<Bounds> getIcons(Direction alignment, int pointsIndex);

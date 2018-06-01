@@ -14,7 +14,7 @@ import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.Point;
 
-public class StatBarHealth extends StatBar {
+public class StatBarHealth extends StatBar<EntityLivingBase> {
 	private final Random random = new Random();
 
 	private int currentHealth, displayHealth, maxHealth, absorptionHealth;
@@ -49,20 +49,18 @@ public class StatBarHealth extends StatBar {
 	protected List<Bounds> getIcons(Direction alignment, int pointsIndex) {
 		List<Bounds> icons = new ArrayList<>(3);
 
-		EntityLivingBase entity = (EntityLivingBase)MC.getRenderViewEntity(); // TODO
-
 		int fullX;
 		if(pointsIndex >= maxHealth) {
 			fullX = 160;
-		} else if(entity.isPotionActive(MobEffects.POISON)) {
+		} else if(host.isPotionActive(MobEffects.POISON)) {
 			fullX = 88;
-		} else if(entity.isPotionActive(MobEffects.WITHER)) {
+		} else if(host.isPotionActive(MobEffects.WITHER)) {
 			fullX = 124;
 		} else {
 			fullX = 52;
 		}
 
-		int y = entity.getEntityWorld().getWorldInfo().isHardcoreModeEnabled() ? 45 : 0;
+		int y = host.getEntityWorld().getWorldInfo().isHardcoreModeEnabled() ? 45 : 0;
 
 		if(flash % 6 >= 3) {
 			icons.add(new Bounds(25, y, 9, 9));

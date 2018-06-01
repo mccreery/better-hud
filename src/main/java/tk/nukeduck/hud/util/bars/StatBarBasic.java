@@ -6,7 +6,7 @@ import java.util.List;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 
-public abstract class StatBarBasic extends StatBar {
+public abstract class StatBarBasic<T> extends StatBar<T> {
 	protected abstract Bounds getIcon(IconType icon, int pointsIndex);
 	protected abstract int getCurrent();
 

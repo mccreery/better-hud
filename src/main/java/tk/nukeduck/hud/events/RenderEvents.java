@@ -54,12 +54,14 @@ public final class RenderEvents {
 		renderHotbar      = disabled;
 		renderExperiance  = disabled;
 		renderHealth      = disabled;
-		renderFood        = disabled;
 		renderArmor       = disabled;
 		renderAir         = disabled;
-		renderJumpBar     = disabled;
-		renderHealthMount = disabled;
 		renderHelmet      = disabled;
+
+		// Vanilla puts preconditions in these
+		renderFood        &= disabled;
+		renderJumpBar     &= disabled;
+		renderHealthMount &= disabled;
 
 		if(disabled || event.getType() != RenderGameOverlayEvent.ElementType.ALL) {
 			return;

@@ -4,12 +4,11 @@ import static tk.nukeduck.hud.BetterHud.MC;
 
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
-import tk.nukeduck.hud.util.bars.StatBar;
 import tk.nukeduck.hud.util.bars.StatBarAir;
 
 public class AirBar extends Bar {
 	public AirBar() {
-		super("airBar");
+		super("airBar", new StatBarAir());
 	}
 
 	@Override
@@ -22,11 +21,6 @@ public class AirBar extends Bar {
 	@Override
 	protected ElementType getType() {
 		return ElementType.AIR;
-	}
-
-	@Override
-	public StatBar getBar() {
-		return new StatBarAir(MC.player);
 	}
 
 	@Override

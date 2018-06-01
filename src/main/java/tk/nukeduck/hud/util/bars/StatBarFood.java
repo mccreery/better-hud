@@ -9,18 +9,12 @@ import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.Point;
 
-public class StatBarFood extends StatBarBasic {
-	private final EntityPlayer entity;
-
+public class StatBarFood extends StatBarBasic<EntityPlayer> {
 	private final Random random = new Random();
-
-	public StatBarFood(EntityPlayer entity) {
-		this.entity = entity;
-	}
 
 	@Override
 	protected int getCurrent() {
-		return entity.getFoodStats().getFoodLevel();
+		return host.getFoodStats().getFoodLevel();
 	}
 
 	@Override
@@ -40,7 +34,7 @@ public class StatBarFood extends StatBarBasic {
 
 	@Override
 	protected int getIconBounce(int pointsIndex) {
-		if(entity.getFoodStats().getSaturationLevel() <= 0 && MC.ingameGUI.getUpdateCounter() % (getCurrent() * 3 + 1) == 0) {
+		if(host.getFoodStats().getSaturationLevel() <= 0 && MC.ingameGUI.getUpdateCounter() % (getCurrent() * 3 + 1) == 0) {
 			return random.nextInt(3) - 1;
 		} else {
 			return 0;

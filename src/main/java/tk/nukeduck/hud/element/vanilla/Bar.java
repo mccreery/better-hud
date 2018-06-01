@@ -4,6 +4,7 @@ import static tk.nukeduck.hud.BetterHud.ICONS;
 import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
 
+import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.settings.SettingChoose;
 import tk.nukeduck.hud.element.settings.SettingPosition;
@@ -22,10 +23,11 @@ public abstract class Bar extends OverrideElement {
 		}
 	};
 
-	private StatBar bar;
+	private StatBar<? super EntityPlayerSP> bar;
 
-	public Bar(String name) {
+	public Bar(String name, StatBar<? super EntityPlayerSP> bar) {
 		super(name);
+		this.bar = bar;
 
 		settings.add(position);
 		settings.add(side);
@@ -37,18 +39,14 @@ public abstract class Bar extends OverrideElement {
 		position.set(Direction.SOUTH);
 	}
 
-	public abstract StatBar getBar();
-
 	@Override
 	public boolean shouldRender(Event event) {
-		if(bar == null) bar = getBar();
-
+		bar.setHost(MC.player);
 		return super.shouldRender(event) && bar.shouldRender();
 	}
 
 	@Override
 	protected Bounds render(Event event) {
-		if(bar == null) bar = getBar();
 		MC.getTextureManager().bindTexture(ICONS);
 
 		Bounds bounds = new Bounds(bar.getSize());
