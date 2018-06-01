@@ -51,12 +51,17 @@ public final class RenderEvents {
 	public void onRenderTick(RenderGameOverlayEvent.Pre event) {
 		final boolean disabled = !BetterHud.isEnabled();
 
-		renderHotbar      = disabled;
+		renderHotbar      = disabled; // TODO spectator mode hotbar
 		renderExperiance  = disabled;
 		renderHealth      = disabled;
 		renderArmor       = disabled;
 		renderAir         = disabled;
 		renderHelmet      = disabled;
+		//renderVignette    = disabled; // TODO
+		//renderPortal      = disabled; // TODO
+		//renderCrosshairs  = disabled; // TODO
+		//renderBossHealth  = disabled; // TODO
+		//renderObjective    = disabled; // TODO
 
 		// Vanilla puts preconditions in these
 		renderFood        &= disabled;
