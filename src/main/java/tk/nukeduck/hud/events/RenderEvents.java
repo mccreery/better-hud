@@ -57,7 +57,7 @@ public final class RenderEvents {
 		renderArmor       = disabled;
 		renderAir         = disabled;
 		renderHelmet      = disabled;
-		//renderVignette    = disabled; // TODO
+		renderVignette    = disabled;
 		//renderPortal      = disabled; // TODO
 		//renderCrosshairs  = disabled; // TODO
 		//renderBossHealth  = disabled; // TODO

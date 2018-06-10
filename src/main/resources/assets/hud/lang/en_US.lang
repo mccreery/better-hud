@@ -216,6 +216,7 @@ betterHud.setting.disableDefault=Disable Default
 betterHud.setting.alwaysVisible=Always Visible
 betterHud.setting.tooltipLines=Tooltip Lines
 betterHud.setting.hideMount=Hide While Riding
+betterHud.setting.warnings=Warnings
 
 betterHud.hud.distance.0=§a[§r%s§a]
 betterHud.hud.distance.1=%sm away

@@ -37,6 +37,7 @@ import tk.nukeduck.hud.element.vanilla.HelmetOverlay;
 import tk.nukeduck.hud.element.vanilla.Hotbar;
 import tk.nukeduck.hud.element.vanilla.JumpBar;
 import tk.nukeduck.hud.element.vanilla.RidingHealth;
+import tk.nukeduck.hud.element.vanilla.Vignette;
 import tk.nukeduck.hud.network.Version;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Sorter;
@@ -86,6 +87,7 @@ public abstract class HudElement {
 	public static final AirBar AIR_BAR = new AirBar();
 	public static final JumpBar JUMP_BAR = new JumpBar();
 	public static final RidingHealth MOUNT = new RidingHealth();
+	public static final Vignette VIGNETTE = new Vignette();
 
 	public enum SortType implements SortField<HudElement> {
 		ALPHABETICAL("alphabetical", false) {
