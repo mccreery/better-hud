@@ -79,6 +79,7 @@ betterHud.element.mountHealth=Mount Health
 betterHud.element.food=Hunger Bar
 betterHud.element.crosshair=Crosshair
 betterHud.element.vignette=Vignette
+betterHud.element.scoreboard=Scoreboard
 
 # Setting Groups
 betterHud.group.position=Position
