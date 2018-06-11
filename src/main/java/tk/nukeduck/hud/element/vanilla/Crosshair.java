@@ -17,7 +17,6 @@ import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.BetterHud;
@@ -99,15 +98,23 @@ public class Crosshair extends OverrideElement {
 
 	@Override
 	public boolean shouldRender(Event event) {
-		if(!super.shouldRender(event) || MC.gameSettings.thirdPersonView != 0) return false;
-		if(!MC.playerController.isSpectator() || MC.pointedEntity != null) return true;
+		return MC.gameSettings.thirdPersonView == 0
+			&& (!MC.playerController.isSpectator() || canInteract())
+			&& super.shouldRender(event);
+	}
 
-		RayTraceResult trace = MC.objectMouseOver;
-		if(trace == null || trace.typeOfHit != Type.BLOCK) return false;
+	/** @return {@code true} if the player is looking at something that can be interacted with in spectator mode */
+	private boolean canInteract() {
+		if(MC.pointedEntity != null) {
+			return true;
+		} else {
+			RayTraceResult trace = MC.objectMouseOver;
+			if(trace == null || trace.typeOfHit != Type.BLOCK) return false;
 
-		BlockPos pos = trace.getBlockPos();
-		IBlockState state = MC.world.getBlockState(pos);
-		return state.getBlock().hasTileEntity(state) && MC.world.getTileEntity(pos) instanceof IInventory;
+			BlockPos pos = trace.getBlockPos();
+			IBlockState state = MC.world.getBlockState(pos);
+			return state.getBlock().hasTileEntity(state) && MC.world.getTileEntity(pos) instanceof IInventory;
+		}
 	}
 
 	@Override
@@ -115,7 +122,7 @@ public class Crosshair extends OverrideElement {
 		Point resolution = MANAGER.getResolution();
 
 		if(MC.gameSettings.showDebugInfo && !MC.gameSettings.reducedDebugInfo && !MC.player.hasReducedDebug()) {
-			renderAxes(resolution.scale(0.5f, 0.5f), ((RenderGameOverlayEvent)event).getPartialTicks());
+			renderAxes(resolution.scale(0.5f, 0.5f), getPartialTicks(event));
 		} else {
 			GlStateManager.enableAlpha();
 			GlStateManager.tryBlendFuncSeparate(SourceFactor.ONE_MINUS_DST_COLOR, DestFactor.ONE_MINUS_SRC_COLOR, SourceFactor.ONE, DestFactor.ZERO);

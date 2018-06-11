@@ -35,7 +35,7 @@ public class Sidebar extends OverrideElement {
 
 	@Override
 	public boolean shouldRender(Event event) {
-		return super.shouldRender(event) && getObjective() != null;
+		return getObjective() != null && super.shouldRender(event);
 	}
 
 	@Override

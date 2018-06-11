@@ -42,7 +42,7 @@ public class Vignette extends OverrideElement {
 
 	@Override
 	public boolean shouldRender(Event event) {
-		return super.shouldRender(event) && Minecraft.isFancyGraphicsEnabled(); // TODO reorder to short-circuit expensive event post
+		return Minecraft.isFancyGraphicsEnabled() && super.shouldRender(event);
 	}
 
 	@Override

@@ -7,7 +7,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.settings.SettingPosition;
@@ -39,7 +38,7 @@ public class Hotbar extends OverrideElement {
 
 	@Override
 	public boolean shouldRender(Event event) {
-		return super.shouldRender(event) && MC.getRenderViewEntity() instanceof EntityPlayer;
+		return MC.getRenderViewEntity() instanceof EntityPlayer && super.shouldRender(event);
 	}
 
 	@Override
@@ -64,7 +63,7 @@ public class Hotbar extends OverrideElement {
 		RenderHelper.enableGUIStandardItemLighting();
 
 		for (int i = 0; i < 9; i++) {
-			renderHotbarItem(bar.position.add(3 + i*20, 3), ((RenderGameOverlayEvent)event).getPartialTicks(), player, player.inventory.mainInventory.get(i));
+			renderHotbarItem(bar.position.add(3 + i*20, 3), getPartialTicks(event), player, player.inventory.mainInventory.get(i));
 		}
 
 		RenderHelper.disableStandardItemLighting();

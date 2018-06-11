@@ -7,7 +7,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.init.Blocks;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.util.Bounds;
@@ -27,22 +26,26 @@ public class PortalOverlay extends OverrideElement {
 
 	@Override
 	public boolean shouldRender(Event event) {
-		return super.shouldRender(event) && MC.player.prevTimeInPortal + (MC.player.timeInPortal - MC.player.prevTimeInPortal) * ((RenderGameOverlayEvent)event).getPartialTicks() > 0;
+		return getTimeInPortal(event) > 0 && super.shouldRender(event);
+	}
+
+	private float getTimeInPortal(Event event) {
+		return MC.player.prevTimeInPortal + (MC.player.timeInPortal - MC.player.prevTimeInPortal) * getPartialTicks(event);
 	}
 
 	@Override
 	protected Bounds render(Event event) {
-		float ticks = MC.player.prevTimeInPortal + (MC.player.timeInPortal - MC.player.prevTimeInPortal) * ((RenderGameOverlayEvent)event).getPartialTicks();
+		float timeInPortal = getTimeInPortal(event);
 
-		if(ticks < 1) {
-			ticks *= ticks;
-			ticks *= ticks;
+		if(timeInPortal < 1) {
+			timeInPortal *= timeInPortal;
+			timeInPortal *= timeInPortal;
 
-			ticks = ticks * 0.8f + 0.2f;
+			timeInPortal = timeInPortal * 0.8f + 0.2f;
 		}
 
 		GlStateManager.enableBlend();
-		GlStateManager.color(1, 1, 1, ticks);
+		GlStateManager.color(1, 1, 1, timeInPortal);
 		MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
 		TextureAtlasSprite texture = MC.getBlockRendererDispatcher().getBlockModelShapes().getTexture(Blocks.PORTAL.getDefaultState());

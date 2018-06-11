@@ -1,4 +1,5 @@
 package tk.nukeduck.hud.element.vanilla;
+
 import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
 
@@ -8,7 +9,6 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.util.Bounds;
@@ -32,6 +32,11 @@ public class HelmetOverlay extends OverrideElement {
 	}
 
 	@Override
+	public boolean shouldRender(Event event) {
+		return MC.gameSettings.thirdPersonView == 0 && !MC.player.inventory.armorItemInSlot(3).isEmpty() && super.shouldRender(event);
+	}
+
+	@Override
 	protected Bounds render(Event event) {
 		ItemStack stack = MC.player.inventory.armorItemInSlot(3);
 		Item item = stack.getItem();
@@ -45,16 +50,8 @@ public class HelmetOverlay extends OverrideElement {
 			MC.getTextureManager().bindTexture(PUMPKIN_BLUR_TEX_PATH);
 			Gui.drawModalRectWithCustomSizedTexture(0, 0, 0, 0, MANAGER.getResolution().x, MANAGER.getResolution().y, MANAGER.getResolution().x, MANAGER.getResolution().y);
 		} else {
-			item.renderHelmetOverlay(stack, MC.player, MANAGER.getScaledResolution(), ((RenderGameOverlayEvent)event).getPartialTicks());
+			item.renderHelmetOverlay(stack, MC.player, MANAGER.getScaledResolution(), getPartialTicks(event));
 		}
 		return null;
-	}
-
-	@Override
-	public boolean shouldRender(Event event) {
-		if(!super.shouldRender(event) || MC.gameSettings.thirdPersonView != 0) return false;
-
-		ItemStack stack = MC.player.inventory.armorItemInSlot(3);
-		return !stack.isEmpty();
 	}
 }

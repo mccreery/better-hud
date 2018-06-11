@@ -31,7 +31,8 @@ public class FoodBar extends Bar {
 
 	@Override
 	public boolean shouldRender(Event event) {
-		return super.shouldRender(event) && MC.playerController.shouldDrawHUD()
-			&& (!hideMount.get() || !MC.player.isRidingHorse());
+		return MC.playerController.shouldDrawHUD()
+			&& (!hideMount.get() || !MC.player.isRidingHorse())
+			&& super.shouldRender(event);
 	}
 }

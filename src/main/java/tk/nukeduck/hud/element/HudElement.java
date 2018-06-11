@@ -7,6 +7,7 @@ import java.util.List;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
@@ -251,5 +252,16 @@ public abstract class HudElement {
 	public void loadDefaults() {
 		setEnabled(true);
 		settings.priority.set(0);
+	}
+
+	/** @return The partial ticks from the given event */
+	public static float getPartialTicks(Event event) {
+		if(event instanceof RenderGameOverlayEvent) {
+			return ((RenderGameOverlayEvent)event).getPartialTicks();
+		} else if(event instanceof RenderWorldLastEvent) {
+			return ((RenderWorldLastEvent)event).getPartialTicks();
+		} else {
+			return 0;
+		}
 	}
 }

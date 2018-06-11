@@ -26,7 +26,7 @@ public class JumpBar extends OverrideElement {
 
 	@Override
 	public boolean shouldRender(Event event) {
-		return super.shouldRender(event) && MC.player.isRidingHorse();
+		return MC.player.isRidingHorse() && super.shouldRender(event);
 	}
 
 	@Override

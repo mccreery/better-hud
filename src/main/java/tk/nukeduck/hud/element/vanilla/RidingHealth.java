@@ -25,6 +25,6 @@ public class RidingHealth extends Bar {
 
 	@Override
 	public boolean shouldRender(Event event) {
-		return super.shouldRender(event) && MC.playerController.shouldDrawHUD();
+		return MC.playerController.shouldDrawHUD() && super.shouldRender(event);
 	}
 }

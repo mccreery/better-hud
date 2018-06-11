@@ -42,7 +42,7 @@ public abstract class Bar extends OverrideElement {
 	@Override
 	public boolean shouldRender(Event event) {
 		bar.setHost(MC.player);
-		return super.shouldRender(event) && bar.shouldRender();
+		return bar.shouldRender() && super.shouldRender(event);
 	}
 
 	@Override
