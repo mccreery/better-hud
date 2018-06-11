@@ -49,10 +49,10 @@ public final class RenderEvents {
 		renderAir         = disabled;
 		renderHelmet      = disabled;
 		renderVignette    = disabled;
-		//renderPortal      = disabled; // TODO
+		renderObjective    = disabled;
 		renderCrosshairs  = disabled;
+		//renderPortal      = disabled; // TODO
 		//renderBossHealth  = disabled; // TODO
-		//renderObjective    = disabled; // TODO
 
 		// Vanilla puts preconditions in these
 		renderFood        &= disabled;

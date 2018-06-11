@@ -131,4 +131,14 @@ public class BetterHud {
 	public static int ceil(int x, int multiple) {
 		return ceilDiv(x, multiple) * multiple;
 	}
+
+	/** @see Math#min(int, int) */
+	public static int min(int... values) {
+		int min = values[0];
+
+		for(int i = 1; i < values.length; i++) {
+			if(values[i] < min) min = values[i];
+		}
+		return min;
+	}
 }

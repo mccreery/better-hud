@@ -18,7 +18,10 @@ public abstract class OverrideElement extends HudElement {
 
 	@Override
 	public boolean shouldRender(Event event) {
-		return super.shouldRender(event) && !MinecraftForge.EVENT_BUS.post(
+		if(!super.shouldRender(event)) return false;
+
+		ElementType type = getType();
+		return type == null || !MinecraftForge.EVENT_BUS.post(
 			new RenderGameOverlayEvent.Pre((RenderGameOverlayEvent)event, getType()));
 	}
 
@@ -31,7 +34,11 @@ public abstract class OverrideElement extends HudElement {
 			if(bounds != null) {
 				lastBounds = bounds;
 			}
-			MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post((RenderGameOverlayEvent)event, getType()));
+
+			ElementType type = getType();
+			if(type != null) {
+				MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post((RenderGameOverlayEvent)event, getType()));
+			}
 
 			MC.mcProfiler.endSection();
 		}

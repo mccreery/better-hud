@@ -120,9 +120,7 @@ public class StringGroup {
 		bounds = alignment.align(bounds, origin);
 		lineBounds.position = new Point(bounds.position);
 
-		//int i = 0;
 		for(String line : source) {
-			//GlUtil.drawRect(lineBounds, Colors.fromHSV(i++ * 0.1f, 1, 1));
 			GlUtil.drawString(line, alignment.getAnchor(lineBounds), alignment, color);
 
 			if(vertical) {
