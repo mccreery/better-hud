@@ -50,17 +50,7 @@ public class Experience extends OverrideElement {
 		Bounds fgTexture = new Bounds(0, 69, 182, 5);
 
 		Bounds barBounds = MANAGER.position(Direction.SOUTH, new Bounds(bgTexture), false, 1);
-
-		int cap = MC.player.xpBarCap();
-		if(cap > 0) {
-			int filled = (int)(MC.player.experience * (barBounds.width() + 1));
-			GlUtil.drawTexturedModalRect(Direction.SOUTH.anchor(new Bounds(bgTexture), barBounds).position, bgTexture);
-
-			if(filled > 0) {
-				fgTexture.width(filled);
-				GlUtil.drawTexturedModalRect(barBounds.position, fgTexture);
-			}
-		}
+		GlUtil.drawTexturedProgressBar(barBounds.position, bgTexture, fgTexture, MC.player.experience, Direction.EAST);
 
 		if(MC.player.experienceLevel > 0) {
 			String numberText = String.valueOf(MC.player.experienceLevel);

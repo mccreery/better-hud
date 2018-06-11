@@ -156,17 +156,11 @@ public class Crosshair extends OverrideElement {
 					GlUtil.drawTexturedModalRect(bounds.position, new Bounds(68, 94, 16, 8));
 				}
 			} else {
-				int bar = (int)(attackStrength * (bounds.width() + 1));
 				MC.getTextureManager().bindTexture(ICONS);
-
-				GlUtil.drawTexturedModalRect(bounds.position, new Bounds(36, 94, 16, 8));
-				GlUtil.drawTexturedModalRect(bounds.position.x, bounds.position.y, 52, 94, bar, 8);
+				GlUtil.drawTexturedProgressBar(bounds.position, new Bounds(36, 94, 16, 8), new Bounds(52, 94, 16, 8), attackStrength, Direction.EAST);
 			}
 		} else if(attackStrength < 1) {
-			int bar = (int)(attackStrength * (bounds.height() + 1));
-
-			GlUtil.drawTexturedModalRect(bounds.position, new Bounds(0, 94, 18, 18));
-			GlUtil.drawTexturedModalRect(bounds.position.x, bounds.position.y + (18 - bar), 18, 94 + (18 - bar), 18, bar);
+			GlUtil.drawTexturedProgressBar(bounds.position, new Bounds(0, 94, 18, 18), new Bounds(18, 94, 18, 18), attackStrength, Direction.NORTH);
 		}
 		return bounds;
 	}

@@ -221,6 +221,35 @@ public class GlUtil {
 		drawRect(bar, color);
 	}
 
+	/** Draws a progress bar with textures
+	 * @param progress Index of progress between 0 and 1
+	 * @param direction The direction the bar should fill up in */
+	public static void drawTexturedProgressBar(Point position, Bounds background, Bounds foreground, float progress, Direction direction) {
+		drawTexturedModalRect(position, background);
+
+		Bounds bounds = new Bounds(position, background.size);
+		Bounds partialBounds = new Bounds(bounds);
+		Bounds partialForeground = new Bounds(foreground);
+
+		if(!direction.in(Direction.VERTICAL)) {
+			int partial = MathHelper.ceil(progress * partialBounds.width());
+
+			partialBounds.width(partial);
+			partialForeground.width(partial);
+		} else {
+			int partial = MathHelper.ceil(progress * partialBounds.height());
+
+			partialBounds.height(partial);
+			partialForeground.height(partial);
+		}
+
+		Direction anchor = direction.mirror();
+		anchor.anchor(partialBounds, bounds);
+		anchor.anchor(partialForeground, foreground);
+
+		drawTexturedModalRect(partialBounds.position, partialForeground);
+	}
+
 	/** @return The size of {@code string} as rendered by Minecraft's font renderer */
 	public static Point getStringSize(String string) {
 		return new Point(MC.fontRenderer.getStringWidth(string), MC.fontRenderer.FONT_HEIGHT);
