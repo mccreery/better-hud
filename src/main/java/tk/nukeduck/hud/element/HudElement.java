@@ -245,13 +245,23 @@ public abstract class HudElement {
 		for (HudElement element : ELEMENTS) {
 			element.loadDefaults();
 		}
+		normalizePriority();
+	}
+
+	public static void normalizePriority() {
+		SORTER.markDirty(SortType.PRIORITY);
+		List<HudElement> prioritySort = SORTER.getSortedData(SortType.PRIORITY);
+
+		for(int i = 0; i < prioritySort.size(); i++) {
+			prioritySort.get(i).settings.priority.set(i);
+		}
 	}
 
 	/** Loads this element's default settings.<br>
 	 *
 	 * You should always call the {@code super} implementation to handle the default enabled value of {@code true}
 	 * and to allow for future expansion */
-	public void loadDefaults() {
+	protected void loadDefaults() {
 		setEnabled(true);
 		settings.priority.set(0);
 	}
