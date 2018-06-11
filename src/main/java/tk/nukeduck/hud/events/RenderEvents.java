@@ -42,7 +42,7 @@ public final class RenderEvents {
 	public void onRenderTick(RenderGameOverlayEvent.Pre event) {
 		final boolean disabled = !BetterHud.isEnabled();
 
-		renderHotbar      = disabled; // TODO spectator mode hotbar & positioning
+		renderHotbar      = disabled; // TODO spectator mode hotbar
 		renderExperiance  = disabled;
 		renderHealth      = disabled;
 		renderArmor       = disabled;

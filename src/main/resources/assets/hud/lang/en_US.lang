@@ -81,6 +81,7 @@ betterHud.element.crosshair=Crosshair
 betterHud.element.vignette=Vignette
 betterHud.element.scoreboard=Scoreboard
 betterHud.element.portal=Portal Overlay
+betterHud.element.offhand=Off-Hand
 
 # Setting Groups
 betterHud.group.position=Position

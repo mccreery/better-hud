@@ -72,7 +72,7 @@ public class Hotbar extends OverrideElement {
 		return bar;
 	}
 
-	protected void renderHotbarItem(Point position, float partialTicks, EntityPlayer player, ItemStack stack) {
+	public static void renderHotbarItem(Point position, float partialTicks, EntityPlayer player, ItemStack stack) {
 		if(!stack.isEmpty()) {
 			float animationTicks = (float)stack.getAnimationsToGo() - partialTicks;
 
