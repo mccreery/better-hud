@@ -20,7 +20,7 @@ import tk.nukeduck.hud.util.Point;
 
 public class SettingChoose extends SettingAlignable<String> {
 	protected GuiButton last, next, backing;
-	private final String[] modes;
+	protected final String[] modes;
 
 	private int index = 0;
 	private int length;
@@ -55,20 +55,22 @@ public class SettingChoose extends SettingAlignable<String> {
 		return index;
 	}
 
-	public int last() {
+	public void last() {
+		int index = getIndex();
+
 		if(index == 0) {
 			index = length;
 		}
-		return --index;
+		setIndex(--index);
 	}
 
-	public int next() {
-		++index;
+	public void next() {
+		int index = getIndex() + 1;
 
 		if(index == length) {
 			index = 0;
 		}
-		return index;
+		setIndex(index);
 	}
 
 	@Override
@@ -76,7 +78,7 @@ public class SettingChoose extends SettingAlignable<String> {
 		int index = ArrayUtils.indexOf(modes, value);
 		if(index == -1) index = Integer.parseUnsignedInt(value);
 
-		if(index < length) setIndex(index);
+		setIndex(index);
 	}
 
 	@Override
@@ -100,12 +102,24 @@ public class SettingChoose extends SettingAlignable<String> {
 		return bounds.bottom() + SPACER;
 	}
 
+	protected String getUnlocalizedValue() {
+		return "betterHud.value." + modes[getIndex()];
+	}
+
+	protected String getLocalizedValue() {
+		int index = getIndex();
+
+		if(index >= 0 && index < modes.length) {
+			return I18n.format(getUnlocalizedValue());
+		} else {
+			return I18n.format("betterHud.value.mode", index);
+		}
+	}
+
 	@Override
 	public void draw() {
-		String value = index < modes.length ? I18n.format("betterHud.value." + modes[index]) : I18n.format("betterHud.value.mode", index);
 		Point center = new Point(backing.x + backing.width / 2, backing.y + backing.height / 2);
-
-		GlUtil.drawString(value, center, Direction.CENTER, Colors.WHITE);
+		GlUtil.drawString(getLocalizedValue(), center, Direction.CENTER, Colors.WHITE);
 	}
 
 	@Override

@@ -30,6 +30,7 @@ import tk.nukeduck.hud.element.text.LightLevel;
 import tk.nukeduck.hud.element.text.SystemClock;
 import tk.nukeduck.hud.element.vanilla.AirBar;
 import tk.nukeduck.hud.element.vanilla.ArmorBar;
+import tk.nukeduck.hud.element.vanilla.Crosshair;
 import tk.nukeduck.hud.element.vanilla.Experience;
 import tk.nukeduck.hud.element.vanilla.FoodBar;
 import tk.nukeduck.hud.element.vanilla.HealthBar;
@@ -88,6 +89,7 @@ public abstract class HudElement {
 	public static final JumpBar JUMP_BAR = new JumpBar();
 	public static final RidingHealth MOUNT = new RidingHealth();
 	public static final Vignette VIGNETTE = new Vignette();
+	public static final Crosshair CROSSHAIR = new Crosshair();
 
 	public enum SortType implements SortField<HudElement> {
 		ALPHABETICAL("alphabetical", false) {
@@ -191,10 +193,8 @@ public abstract class HudElement {
 		if(isEnabled() && shouldRender(event)) {
 			MC.mcProfiler.startSection(name);
 
-			Bounds bounds = render(null);
-			if(bounds != null) {
-				lastBounds = bounds;
-			}
+			Bounds bounds = render(event);
+			lastBounds = Bounds.isEmpty(bounds) ? Bounds.EMPTY : bounds;
 
 			MC.mcProfiler.endSection();
 		}
@@ -209,19 +209,12 @@ public abstract class HudElement {
 	}
 
 	/** The previous bounds within which the element was rendered */
-	protected Bounds lastBounds;
+	protected Bounds lastBounds = Bounds.EMPTY;
 
 	/** @return The last or appropriate bounds for this element.<br>
 	 * {@link Bounds#EMPTY} if the element has no appropriate bounds */
 	public Bounds getLastBounds() {
 		return lastBounds;
-	}
-
-	/** Resets the previous render bounds for all elements to empty bounds */
-	public static void resetBounds() {
-		for(HudElement element : ELEMENTS) {
-			element.lastBounds = Bounds.EMPTY;
-		}
 	}
 
 	/** Calls {@link #init(FMLInitializationEvent)} on all elements

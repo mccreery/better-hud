@@ -59,7 +59,6 @@ public class Hotbar extends OverrideElement {
 		RenderHelper.disableStandardItemLighting();
 		GlStateManager.disableRescaleNormal();
 		GlStateManager.disableBlend();
-
 		return bar;
 	}
 

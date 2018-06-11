@@ -77,6 +77,8 @@ betterHud.element.health=Health Bar
 betterHud.element.jumpBar=Jump Bar
 betterHud.element.mountHealth=Mount Health
 betterHud.element.food=Hunger Bar
+betterHud.element.crosshair=Crosshair
+betterHud.element.vignette=Vignette
 
 # Setting Groups
 betterHud.group.position=Position
@@ -93,6 +95,9 @@ betterHud.value.mode=Type %s
 betterHud.setting.position=Position
 betterHud.value.preset=Preset
 betterHud.value.custom=Custom
+
+betterHud.setting.positionType=Position Type
+betterHud.value.hotbar=Hotbar
 
 betterHud.setting.direction=Direction
 betterHud.setting.anchor=Anchor

@@ -22,8 +22,6 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
-import net.minecraftforge.fml.common.gameevent.TickEvent.RenderTickEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import tk.nukeduck.hud.BetterHud;
@@ -41,17 +39,10 @@ public final class RenderEvents {
 	}
 
 	@SubscribeEvent
-	public void onTickStart(RenderTickEvent event) {
-		if(event.phase == Phase.START) {
-			HudElement.resetBounds();
-		}
-	}
-
-	@SubscribeEvent
 	public void onRenderTick(RenderGameOverlayEvent.Pre event) {
 		final boolean disabled = !BetterHud.isEnabled();
 
-		renderHotbar      = disabled; // TODO spectator mode hotbar
+		renderHotbar      = disabled; // TODO spectator mode hotbar & positioning
 		renderExperiance  = disabled;
 		renderHealth      = disabled;
 		renderArmor       = disabled;
@@ -59,7 +50,7 @@ public final class RenderEvents {
 		renderHelmet      = disabled;
 		renderVignette    = disabled;
 		//renderPortal      = disabled; // TODO
-		//renderCrosshairs  = disabled; // TODO
+		renderCrosshairs  = disabled;
 		//renderBossHealth  = disabled; // TODO
 		//renderObjective    = disabled; // TODO
 

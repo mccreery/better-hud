@@ -25,6 +25,8 @@ public abstract class Setting<T> implements IGetSet<T> {
 	protected final List<Setting<?>> children = new ArrayList<Setting<?>>();
 	public final String name;
 
+	private String unlocalizedName;
+
 	/** The config property associated with this setting */
 	private Property property;
 
@@ -34,6 +36,7 @@ public abstract class Setting<T> implements IGetSet<T> {
 
 	public Setting(String name) {
 		this.name = name;
+		if(name != null) this.unlocalizedName = "betterHud.setting." + name;
 	}
 
 	public Setting<T> setHidden() {
@@ -50,8 +53,13 @@ public abstract class Setting<T> implements IGetSet<T> {
 		return children.isEmpty();
 	}
 
+	public Setting<T> setUnlocalizedName(String unlocalizedName) {
+		this.unlocalizedName = unlocalizedName;
+		return this;
+	}
+
 	public String getUnlocalizedName() {
-		return "betterHud.setting." + name;
+		return unlocalizedName;
 	}
 
 	public String getLocalizedName() {

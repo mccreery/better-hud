@@ -3,6 +3,7 @@ package tk.nukeduck.hud;
 import java.util.Random;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ResourceLocation;
@@ -38,7 +39,7 @@ public class BetterHud {
 
 	@SideOnly(Side.CLIENT) public static Minecraft MC;
 
-	public static final ResourceLocation ICONS     = new ResourceLocation("textures/gui/icons.png");
+	public static final ResourceLocation ICONS     = Gui.ICONS;
 	public static final ResourceLocation WIDGETS   = new ResourceLocation("textures/gui/widgets.png");
 	public static final ResourceLocation PARTICLES = new ResourceLocation("textures/particle/particles.png");
 

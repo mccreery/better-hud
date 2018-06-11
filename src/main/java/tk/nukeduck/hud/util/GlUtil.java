@@ -168,6 +168,7 @@ public class GlUtil {
 		return new Point(81, BetterHud.ceilDiv(max, 20) * 9);
 	}
 
+	// TODO remove
 	/** Renders a multi-row health bar with {@code health} full hearts
 	 * and {@code maxHealth} total hearts
 	 *
