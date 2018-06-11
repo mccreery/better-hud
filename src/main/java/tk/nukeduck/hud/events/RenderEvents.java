@@ -51,7 +51,7 @@ public final class RenderEvents {
 		renderVignette    = disabled;
 		renderObjective   = disabled;
 		renderCrosshairs  = disabled;
-		//renderPortal      = disabled; // TODO
+		renderPortal      = disabled;
 
 		// Vanilla puts preconditions in these
 		renderFood        &= disabled;

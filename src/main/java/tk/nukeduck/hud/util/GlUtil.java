@@ -52,6 +52,11 @@ public class GlUtil {
 		drawTexturedModalRect(x, y, u, v, Math.abs(width), Math.abs(height), width, height);
 	}
 
+	/** @see #drawTexturedModalRect(int, int, int, int, int, int, int, int) */
+	public static void drawTexturedModalRect(Bounds bounds, Bounds texture) {
+		drawTexturedModalRect(bounds.x(), bounds.y(), texture.x(), texture.y(), bounds.width(), bounds.height(), texture.width(), texture.height());
+	}
+
 	/** Supports negative sized textures
 	 * @see net.minecraft.client.gui.Gui#drawTexturedModalRect(int, int, int, int, int, int) */
 	public static void drawTexturedModalRect(int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight) {

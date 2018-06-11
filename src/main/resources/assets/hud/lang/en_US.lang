@@ -80,6 +80,7 @@ betterHud.element.food=Hunger Bar
 betterHud.element.crosshair=Crosshair
 betterHud.element.vignette=Vignette
 betterHud.element.scoreboard=Scoreboard
+betterHud.element.portal=Portal Overlay
 
 # Setting Groups
 betterHud.group.position=Position
