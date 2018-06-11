@@ -86,12 +86,11 @@ public class StatBarHealth extends StatBar<EntityLivingBase> {
 		int updateDelta = newUpdateCounter - currentUpdateCounter;
 
 		random.setSeed(newUpdateCounter);
-		EntityLivingBase entity = (EntityLivingBase)MC.getRenderViewEntity(); // TODO
 
-		maxHealth = MathHelper.ceil(entity.getMaxHealth());
-		absorptionHealth = MathHelper.ceil(entity.getAbsorptionAmount());
+		maxHealth = MathHelper.ceil(host.getMaxHealth());
+		absorptionHealth = MathHelper.ceil(host.getAbsorptionAmount());
 
-		int newHealth = MathHelper.ceil(entity.getHealth());
+		int newHealth = MathHelper.ceil(host.getHealth());
 
 		if(currentHealth <= 0 && newHealth > 0) {
 			displayHealth = newHealth;
@@ -108,7 +107,7 @@ public class StatBarHealth extends StatBar<EntityLivingBase> {
 			if(flash <= 0) displayHealth = newHealth;
 		}
 
-		if(entity.isPotionActive(MobEffects.REGENERATION)) {
+		if(host.isPotionActive(MobEffects.REGENERATION)) {
 			regenCounter += updateDelta * 2;
 
 			if(regenCounter >= maxHealth + 30) {

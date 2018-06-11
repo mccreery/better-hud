@@ -11,23 +11,23 @@ import tk.nukeduck.hud.util.Bounds;
 @SideOnly(Side.CLIENT)
 public class GuiUpDownButton extends GuiActionButton {
 	private int index;
-	
+
 	public GuiUpDownButton(int index) {
 		super("");
 		this.index = index;
 	}
-	
+
 	public GuiUpDownButton(int buttonId, int x, int y, int index) {
 		super("");
 		setId(buttonId);
 		setBounds(new Bounds(x, y, 20, 10));
 		this.index = index;
 	}
-	
+
 	public void setIndex(int index) {
 		this.index = index;
 	}
-	
+
 	@Override
 	public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
 		if(this.visible) {

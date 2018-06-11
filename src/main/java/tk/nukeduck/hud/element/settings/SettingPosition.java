@@ -63,6 +63,9 @@ public class SettingPosition extends SettingStub<Object> {
 		}
 	};
 
+	private boolean edge = false;
+	private int postSpacer = SPACER;
+
 	public SettingPosition(String name) {
 		this(name, Direction.ALL);
 	}
@@ -105,10 +108,6 @@ public class SettingPosition extends SettingStub<Object> {
 	public boolean isAbsolute() {
 		return mode.getIndex() == 1;
 	}
-
-	// TODO edgeSpacer, preSpacer, postSpacer (edgeSpacer ~= preSpacer)
-	private boolean edge = false;
-	private int postSpacer = SPACER;
 
 	public SettingPosition setEdge(boolean edge) {
 		this.edge = edge;
