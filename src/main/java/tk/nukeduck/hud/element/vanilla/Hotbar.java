@@ -1,6 +1,5 @@
 package tk.nukeduck.hud.element.vanilla;
 
-import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
 import static tk.nukeduck.hud.BetterHud.WIDGETS;
 
@@ -11,14 +10,26 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
+import tk.nukeduck.hud.element.settings.SettingPosition;
+import tk.nukeduck.hud.element.settings.SettingPositionAligned;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Point;
 
 public class Hotbar extends OverrideElement {
+	private SettingPosition position = new SettingPositionAligned("position", Direction.CORNERS | Direction.getFlags(Direction.NORTH, Direction.SOUTH), Direction.ALL)
+		.setEdge(true).setPostSpacer(2);
+
 	public Hotbar() {
 		super("hotbar");
+		settings.add(position);
+	}
+
+	@Override
+	public void loadDefaults() {
+		super.loadDefaults();
+		position.set(Direction.SOUTH);
 	}
 
 	@Override
@@ -39,7 +50,7 @@ public class Hotbar extends OverrideElement {
 		Bounds barTexture = new Bounds(182, 22);
 		Bounds selected = new Bounds(0, 22, 24, 24);
 
-		Bounds bar = MANAGER.position(Direction.SOUTH, new Bounds(barTexture), true, 2);
+		Bounds bar = position.applyTo(new Bounds(barTexture));
 
 		EntityPlayer player = (EntityPlayer)MC.getRenderViewEntity();
 

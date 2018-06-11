@@ -1,6 +1,7 @@
 package tk.nukeduck.hud.element.settings;
 
 import static tk.nukeduck.hud.BetterHud.MANAGER;
+import static tk.nukeduck.hud.BetterHud.SPACER;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -105,13 +106,27 @@ public class SettingPosition extends SettingStub<Object> {
 		return mode.getIndex() == 1;
 	}
 
+	// TODO edgeSpacer, preSpacer, postSpacer (edgeSpacer ~= preSpacer)
+	private boolean edge = false;
+	private int postSpacer = SPACER;
+
+	public SettingPosition setEdge(boolean edge) {
+		this.edge = edge;
+		return this;
+	}
+
+	public SettingPosition setPostSpacer(int postSpacer) {
+		this.postSpacer = postSpacer;
+		return this;
+	}
+
 	/** Moves the given bounds to the correct location and returns them */
 	public <T extends Bounds> T applyTo(T bounds) {
 		if(isAbsolute()) {
 			bounds.position(anchor.get(), offset.get(), getAlignment());
 			return bounds;
 		} else {
-			return MANAGER.position(direction.get(), bounds);
+			return MANAGER.position(direction.get(), bounds, edge, postSpacer);
 		}
 	}
 
