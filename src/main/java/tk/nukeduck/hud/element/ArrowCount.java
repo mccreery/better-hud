@@ -1,6 +1,5 @@
 package tk.nukeduck.hud.element;
 
-import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
 
 import net.minecraft.client.renderer.GlStateManager;
@@ -8,7 +7,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemArrow;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHandSide;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingPosition;
@@ -16,6 +14,7 @@ import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
+import tk.nukeduck.hud.util.Point;
 
 public class ArrowCount extends HudElement {
 	private static final ItemStack ARROW = new ItemStack(Items.ARROW, 1);
@@ -35,6 +34,7 @@ public class ArrowCount extends HudElement {
 
 		overlay.set(true);
 		position.set(Direction.SOUTH_EAST);
+		settings.priority.set(1);
 	}
 
 	public ArrowCount() {
@@ -85,8 +85,7 @@ public class ArrowCount extends HudElement {
 		int totalArrows = arrowCount(MC.player);
 
 		if(overlay.get()) {
-			int center = MANAGER.getResolution().x / 2;
-			Bounds stackBounds = new Bounds(center - 88, MANAGER.getResolution().y - 17, 16, 16);
+			Bounds stackBounds = Direction.WEST.anchor(new Bounds(16, 16), HOTBAR.getLastBounds().inset(3));
 
 			for(int i = 0; i < 9; i++) {
 				ItemStack stack = MC.player.inventory.getStackInSlot(i);
@@ -100,12 +99,7 @@ public class ArrowCount extends HudElement {
 			ItemStack stack = MC.player.inventory.getStackInSlot(40);
 
 			if(stack != null && stack.getItem() == Items.BOW) {
-				if (MC.player.getPrimaryHand() == EnumHandSide.RIGHT) {
-					stackBounds.x(center - 117);
-				} else {
-					stackBounds.x(center + 101);
-				}
-				drawCounter(stackBounds, totalArrows);
+				drawCounter(new Bounds(OFFHAND.getLastBounds().position.add(3, 3), new Point(16, 16)), totalArrows);
 			}
 			return Bounds.EMPTY;
 		} else {
@@ -131,7 +125,8 @@ public class ArrowCount extends HudElement {
 	private static void drawCounter(Bounds stackBounds, int count) {
 		GlStateManager.disableDepth();
 		String countDisplay = String.valueOf(count);
-		Bounds text = Direction.SOUTH_EAST.anchor(new Bounds(GlUtil.getStringSize(countDisplay)), stackBounds);
+
+		Bounds text = Direction.NORTH_EAST.align(new Bounds(GlUtil.getStringSize(countDisplay)), Direction.NORTH_EAST.getAnchor(stackBounds.pad(1, 1, 1, 2)));
 
 		MC.ingameGUI.drawString(MC.fontRenderer, countDisplay, text.x(), text.y(), Colors.WHITE);
 		GlStateManager.enableDepth();

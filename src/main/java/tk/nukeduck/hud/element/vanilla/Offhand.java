@@ -58,7 +58,7 @@ public class Offhand extends OverrideElement {
 
 		GlStateManager.enableBlend();
 		GlStateManager.enableDepth();
-		
+
 		MC.getTextureManager().bindTexture(BetterHud.WIDGETS);
 		GlUtil.drawTexturedModalRect(bounds, texture);
 
