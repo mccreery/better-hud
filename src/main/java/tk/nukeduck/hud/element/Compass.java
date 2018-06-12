@@ -81,6 +81,7 @@ public class Compass extends HudElement {
 	}
 
 	private void drawDirections(Bounds bounds) {
+		GlStateManager.enableBlend();
 		float angle = (float)Math.toRadians(MC.player.rotationYaw);
 
 		Point origin = Direction.NORTH.getAnchor(bounds).add(0, 2);
@@ -91,9 +92,7 @@ public class Compass extends HudElement {
 			double cos = Math.cos(angle);
 
 			Point letter = origin.add(-(int)(Math.sin(angle) * radius), 0);
-
-			double scale = cos + 1;
-			scale *= directionScaling.get() * 2;
+			double scale = 1 + directionScaling.get() * cos * 2;
 
 			GlStateManager.pushMatrix();
 
