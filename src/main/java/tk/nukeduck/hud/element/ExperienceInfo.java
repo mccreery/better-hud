@@ -1,6 +1,5 @@
 package tk.nukeduck.hud.element;
 
-import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
 
 import java.util.ArrayList;
