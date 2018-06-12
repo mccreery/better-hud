@@ -46,6 +46,10 @@ public class Sidebar extends OverrideElement {
 		List<Score> scores = Lists.newArrayList(Iterables.filter(scoreboard.getSortedScores(objective),
 			(score) -> score.getPlayerName() != null && !score.getPlayerName().startsWith("#")));
 
+		if(scores.isEmpty()) {
+			return null;
+		}
+
 		scores = Lists.reverse(scores);
 
 		if(scores.size() > 15) {
