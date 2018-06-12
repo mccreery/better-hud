@@ -18,6 +18,8 @@ for f in os.listdir(ROOT_DIR):
                 if len(kv) == 2: mapping[kv[0]] = kv[1]
 
     with open(os.path.join(ROOT_DIR, f), "w", encoding="utf-8") as f1:
+        untranslated = 0
+
         for line in lines:
             if not line.strip() or line[0] == "#":
                 f1.write(line)
@@ -28,7 +30,11 @@ for f in os.listdir(ROOT_DIR):
                     f1.write(key + "=" + mapping[key] + "\n")
                     del mapping[key]
                 else:
+                    untranslated += 1
                     f1.write("#" + line)
+
+        if untranslated > 0:
+            print("Found", untranslated, "untranslated lines in", f)
 
         if mapping:
             print("Found", len(mapping), "unmapped lines in", f)
