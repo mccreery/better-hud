@@ -114,31 +114,4 @@ public class BetterHud {
 	public void onPlayerDisconnected(ClientDisconnectionFromServerEvent e) {
 		serverVersion = Version.ZERO;
 	}
-
-	/** @param dividend The left-hand argument of the division
-	 * @param divisor The right-hand argument of the division
-	 * @return The ceiling of the quotient ({@code dividend / divisor}) */
-	public static int ceilDiv(int dividend, int divisor) {
-		if(divisor < 0) {
-			dividend = -dividend;
-			divisor  = -divisor;
-		}
-		return (dividend + divisor - 1) / divisor;
-	}
-
-	/** @return The closest {@code y >= x} such that
-	 * {@code y} is a multiple of {@code multiple} */
-	public static int ceil(int x, int multiple) {
-		return ceilDiv(x, multiple) * multiple;
-	}
-
-	/** @see Math#min(int, int) */
-	public static int min(int... values) {
-		int min = values[0];
-
-		for(int i = 1; i < values.length; i++) {
-			if(values[i] < min) min = values[i];
-		}
-		return min;
-	}
 }

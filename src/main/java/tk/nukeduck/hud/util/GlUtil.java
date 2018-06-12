@@ -16,9 +16,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.client.config.GuiUtils;
-import tk.nukeduck.hud.BetterHud;
 
-public class GlUtil {
+public final class GlUtil {
+	private GlUtil() {}
+
 	private static final double TEXTURE_NORMALIZE = 1.0 / 256.0;
 
 	/** Enables general blending for translucent primitives */
@@ -170,7 +171,7 @@ public class GlUtil {
 	/** @return The size of the bar drawn by {@link #renderBar(int, int, Point, Bounds, Bounds, Bounds)}
 	 * @see #renderBar(int, int, Point, Bounds, Bounds, Bounds) */
 	public static Point getBarSize(int max) {
-		return new Point(81, BetterHud.ceilDiv(max, 20) * 9);
+		return new Point(81, MathUtil.ceilDiv(max, 20) * 9);
 	}
 
 	// TODO remove

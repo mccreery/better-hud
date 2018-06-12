@@ -2,11 +2,11 @@ package tk.nukeduck.hud.util.bars;
 
 import java.util.List;
 
-import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
+import tk.nukeduck.hud.util.MathUtil;
 import tk.nukeduck.hud.util.Point;
 
 public abstract class StatBar<T> {
@@ -60,7 +60,7 @@ public abstract class StatBar<T> {
 
 		int iconSpacing = 8;
 		if(alignment.in(Direction.RIGHT)) {
-			resetX += iconSpacing * (BetterHud.ceilDiv(rowPoints, 2) - 1);
+			resetX += iconSpacing * (MathUtil.ceilDiv(rowPoints, 2) - 1);
 			iconSpacing = -iconSpacing;
 		}
 		Point icon = new Point(resetX, position.y);
@@ -87,10 +87,10 @@ public abstract class StatBar<T> {
 
 	public Point getSize() {
 		int rowPoints = getRowPoints();
-		int rows = BetterHud.ceilDiv(getMaximum(), rowPoints);
+		int rows = MathUtil.ceilDiv(getMaximum(), rowPoints);
 
 		return new Point(
-			8 * BetterHud.ceilDiv(rowPoints, 2) + 1,
+			8 * MathUtil.ceilDiv(rowPoints, 2) + 1,
 			getRowSpacing() * (rows - 1) + getIconSize());
 	}
 }

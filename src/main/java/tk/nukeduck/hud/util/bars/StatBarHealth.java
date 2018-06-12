@@ -9,9 +9,9 @@ import java.util.Random;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.MobEffects;
 import net.minecraft.util.math.MathHelper;
-import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.MathUtil;
 import tk.nukeduck.hud.util.Point;
 
 public class StatBarHealth extends StatBar<EntityLivingBase> {
@@ -42,7 +42,7 @@ public class StatBarHealth extends StatBar<EntityLivingBase> {
 
 	@Override
 	protected int getMaximum() {
-		return BetterHud.ceil(maxHealth, 2) + absorptionHealth;
+		return MathUtil.ceil(maxHealth, 2) + absorptionHealth;
 	}
 
 	@Override

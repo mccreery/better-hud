@@ -40,6 +40,7 @@ import tk.nukeduck.hud.element.vanilla.Hotbar;
 import tk.nukeduck.hud.element.vanilla.JumpBar;
 import tk.nukeduck.hud.element.vanilla.Offhand;
 import tk.nukeduck.hud.element.vanilla.PortalOverlay;
+import tk.nukeduck.hud.element.vanilla.PotionBar;
 import tk.nukeduck.hud.element.vanilla.RidingHealth;
 import tk.nukeduck.hud.element.vanilla.Sidebar;
 import tk.nukeduck.hud.element.vanilla.Vignette;
@@ -77,7 +78,6 @@ public abstract class HudElement {
 	public static final MobInfo MOB_INFO = new MobInfo();
 	public static final PickupCount PICKUP = new PickupCount();
 	public static final PlayerInfo PLAYER_INFO = new PlayerInfo();
-	public static final PotionBar POTION_BAR = new PotionBar();
 	public static final Saturation SATURATION = new Saturation();
 	public static final SignReader SIGN_READER = new SignReader();
 	public static final SystemClock SYSTEM_CLOCK = new SystemClock();
@@ -94,6 +94,7 @@ public abstract class HudElement {
 	public static final JumpBar JUMP_BAR = new JumpBar();
 	public static final Offhand OFFHAND = new Offhand();
 	public static final PortalOverlay PORTAL = new PortalOverlay();
+	public static final PotionBar POTION_BAR = new PotionBar();
 	public static final RidingHealth MOUNT = new RidingHealth();
 	public static final Sidebar SIDEBAR = new Sidebar();
 	public static final Vignette VIGNETTE = new Vignette();
