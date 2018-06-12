@@ -6,14 +6,15 @@ import static tk.nukeduck.hud.BetterHud.MC;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.text.TextElement;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
+import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
+import tk.nukeduck.hud.util.Point;
 
 public class ExperienceInfo extends TextElement {
 	private final SettingBoolean total = new SettingBoolean("showTotalExp").setUnlocalizedValue(SettingBoolean.VISIBLE);
@@ -25,6 +26,7 @@ public class ExperienceInfo extends TextElement {
 
 		total.set(false);
 		lifetime.set(false);
+		settings.priority.set(2);
 	}
 
 	public ExperienceInfo() {
@@ -37,7 +39,7 @@ public class ExperienceInfo extends TextElement {
 
 	@Override
 	public boolean shouldRender(Event event) {
-		return super.shouldRender(event) && GuiIngameForge.renderExperiance && MC.playerController.gameIsSurvivalOrAdventure();
+		return super.shouldRender(event) && MC.playerController.gameIsSurvivalOrAdventure();
 	}
 
 	@Override
@@ -47,8 +49,16 @@ public class ExperienceInfo extends TextElement {
 		int has = (int)(MC.player.experience * fullBar);
 		int needed = fullBar - has;
 
-		GlUtil.drawBorderedString(String.valueOf(has), MANAGER.getResolution().x / 2 - 90, MANAGER.getResolution().y - 30, Colors.WHITE); // 30
-		GlUtil.drawBorderedString(String.valueOf(needed), MANAGER.getResolution().x / 2 + 90 - MC.fontRenderer.getStringWidth(String.valueOf(needed)), MANAGER.getResolution().y - 30, Colors.WHITE);
+		String hasDisplay = String.valueOf(has);
+		String neededDisplay = String.valueOf(needed);
+
+		Bounds bar = EXPERIENCE.getLastBounds();
+
+		Point text = Direction.WEST.anchor(new Bounds(GlUtil.getStringSize(hasDisplay).sub(0, 2)), bar).position;
+		GlUtil.drawBorderedString(hasDisplay, text.x, text.y, Colors.WHITE);
+
+		text = Direction.EAST.anchor(new Bounds(GlUtil.getStringSize(neededDisplay).sub(0, 2)), bar).position;
+		GlUtil.drawBorderedString(neededDisplay, text.x, text.y, Colors.WHITE);
 
 		return super.render(event);
 	}
