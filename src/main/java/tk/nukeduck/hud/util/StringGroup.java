@@ -73,9 +73,9 @@ public class StringGroup {
 		Point cellSize = getCellSize();
 
 		if(vertical) {
-			return new Point(cellSize.x, (cellSize.y + gutter) * source.size() - gutter);
+			return cellSize.withY((cellSize.getY() + gutter) * source.size() - gutter);
 		} else {
-			return new Point((cellSize.x + gutter) * source.size() - gutter, cellSize.y);
+			return cellSize.withX((cellSize.getX() + gutter) * source.size() - gutter);
 		}
 	}
 
@@ -113,20 +113,21 @@ public class StringGroup {
 
 		Bounds bounds;
 		if(vertical) {
-			bounds = new Bounds(lineBounds.width(), (lineBounds.height() + gutter) * source.size() - gutter);
+			bounds = lineBounds.withHeight((lineBounds.getHeight() + gutter) * source.size() - gutter);
 		} else {
-			bounds = new Bounds((lineBounds.width() + gutter) * source.size() - gutter, lineBounds.height());
+			bounds = lineBounds.withWidth((lineBounds.getWidth() + gutter) * source.size() - gutter);
 		}
 		bounds = alignment.align(bounds, origin);
-		lineBounds.position = new Point(bounds.position);
+
+		lineBounds = lineBounds.withPosition(bounds.getPosition());
 
 		for(String line : source) {
 			GlUtil.drawString(line, alignment.getAnchor(lineBounds), alignment, color);
 
 			if(vertical) {
-				lineBounds.y(lineBounds.bottom() + gutter);
+				lineBounds = lineBounds.withY(lineBounds.getBottom() + gutter);
 			} else {
-				lineBounds.x(lineBounds.right() + gutter);
+				lineBounds = lineBounds.withX(lineBounds.getRight() + gutter);
 			}
 		}
 		return bounds;

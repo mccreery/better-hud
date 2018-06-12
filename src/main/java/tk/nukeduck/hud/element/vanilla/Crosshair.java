@@ -128,7 +128,7 @@ public class Crosshair extends OverrideElement {
 			GlStateManager.tryBlendFuncSeparate(SourceFactor.ONE_MINUS_DST_COLOR, DestFactor.ONE_MINUS_SRC_COLOR, SourceFactor.ONE, DestFactor.ZERO);
 
 			Bounds texture = new Bounds(16, 16);
-			Point position = Direction.CENTER.anchor(new Bounds(texture), MANAGER.getScreen()).position;
+			Point position = Direction.CENTER.anchor(new Bounds(texture), MANAGER.getScreen()).getPosition();
 
 			MC.getTextureManager().bindTexture(BetterHud.ICONS);
 			GlUtil.drawTexturedModalRect(position, texture);
@@ -147,34 +147,39 @@ public class Crosshair extends OverrideElement {
 
 		if(position.getDirection() == Direction.SOUTH) {
 			Direction primary = MC.player.getPrimaryHand() == EnumHandSide.RIGHT ? Direction.EAST : Direction.WEST;
-			primary.mirrorColumn().align(bounds, primary.getAnchor(HudElement.HOTBAR.getLastBounds().pad(SPACER)));
+			bounds = primary.mirrorColumn().align(bounds, primary.getAnchor(HudElement.HOTBAR.getLastBounds().withPadding(SPACER)));
 		} else if(position.getDirection() == Direction.CENTER) {
-			bounds.position(Direction.CENTER, new Point(0, SPACER), Direction.NORTH);
+			bounds = bounds.position(Direction.CENTER, new Point(0, SPACER), Direction.NORTH);
 		} else {
-			position.applyTo(bounds);
+			bounds = position.applyTo(bounds);
 		}
 
 		float attackStrength = MC.player.getCooledAttackStrength(0);
+		GlStateManager.enableBlend();
+		GlStateManager.enableAlpha();
+		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 
 		if(indicatorType.getIndex() == 0) {
 			if(attackStrength >= 1) {
 				if(MC.pointedEntity != null && MC.pointedEntity instanceof EntityLivingBase && MC.player.getCooldownPeriod() > 5 && ((EntityLivingBase)MC.pointedEntity).isEntityAlive()) {
 					MC.getTextureManager().bindTexture(ICONS);
-					GlUtil.drawTexturedModalRect(bounds.position, new Bounds(68, 94, 16, 8));
+					GlUtil.drawTexturedModalRect(bounds.getPosition(), new Bounds(68, 94, 16, 8));
 				}
 			} else {
 				MC.getTextureManager().bindTexture(ICONS);
-				GlUtil.drawTexturedProgressBar(bounds.position, new Bounds(36, 94, 16, 8), new Bounds(52, 94, 16, 8), attackStrength, Direction.EAST);
+				GlUtil.drawTexturedProgressBar(bounds.getPosition(), new Bounds(36, 94, 16, 8), new Bounds(52, 94, 16, 8), attackStrength, Direction.EAST);
 			}
 		} else if(attackStrength < 1) {
-			GlUtil.drawTexturedProgressBar(bounds.position, new Bounds(0, 94, 18, 18), new Bounds(18, 94, 18, 18), attackStrength, Direction.NORTH);
+			GlUtil.drawTexturedProgressBar(bounds.getPosition(), new Bounds(0, 94, 18, 18), new Bounds(18, 94, 18, 18), attackStrength, Direction.NORTH);
 		}
+
+		GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 		return bounds;
 	}
 
 	private void renderAxes(Point center, float partialTicks) {
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(center.x, center.y, 0);
+		GlStateManager.translate(center.getX(), center.getY(), 0);
 
 		Entity entity = MC.getRenderViewEntity();
 		GlStateManager.rotate(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks, -1.0F, 0.0F, 0.0F);

@@ -40,12 +40,12 @@ public final class GlUtil {
 
 	/** @see Gui#drawRect(int, int, int, int, int) */
 	public static void drawRect(Bounds bounds, int color) {
-		Gui.drawRect(bounds.left(), bounds.top(), bounds.right(), bounds.bottom(), color);
+		Gui.drawRect(bounds.getLeft(), bounds.getTop(), bounds.getRight(), bounds.getBottom(), color);
 	}
 
 	/** @see #drawTexturedModalRect(int, int, int, int, int, int) */
 	public static void drawTexturedModalRect(Point position, Bounds texture) {
-		drawTexturedModalRect(position.x, position.y, texture.x(), texture.y(), texture.width(), texture.height());
+		drawTexturedModalRect(position.getX(), position.getY(), texture.getX(), texture.getY(), texture.getWidth(), texture.getHeight());
 	}
 
 	/** @see #drawTexturedModalRect(int, int, int, int, int, int, int, int) */
@@ -55,7 +55,7 @@ public final class GlUtil {
 
 	/** @see #drawTexturedModalRect(int, int, int, int, int, int, int, int) */
 	public static void drawTexturedModalRect(Bounds bounds, Bounds texture) {
-		drawTexturedModalRect(bounds.x(), bounds.y(), texture.x(), texture.y(), bounds.width(), bounds.height(), texture.width(), texture.height());
+		drawTexturedModalRect(bounds.getX(), bounds.getY(), texture.getX(), texture.getY(), bounds.getWidth(), bounds.getHeight(), texture.getWidth(), texture.getHeight());
 	}
 
 	/** Supports negative sized textures
@@ -86,7 +86,7 @@ public final class GlUtil {
 
 	/** @see #renderSingleItem(ItemStack, int, int) */
 	public static void renderSingleItem(ItemStack stack, Point point) {
-		renderSingleItem(stack, point.x, point.y);
+		renderSingleItem(stack, point.getX(), point.getY());
 	}
 
 	/** Renders {@code stack} to the GUI, and reverts lighting side effects
@@ -182,11 +182,14 @@ public final class GlUtil {
 	 * @param half The texture coordinates for the half unit icon
 	 * @param full The texture coordinates for a full unit icon */
 	public static void renderBar(int current, int max, Point position, Bounds background, Bounds half, Bounds full) {
-		Point icon = new Point(position);
-
+		int x = position.getX();
+		int y = position.getY();
 		color(Colors.WHITE);
-		for(int i = 0; i < max; icon.x = position.x, icon.y += 9) {
-			for(int j = 0; j < 20 && i < max; i += 2, j += 2, icon.x += 8) {
+
+		for(int i = 0; i < max; x = position.getX(), y += 9) {
+			for(int j = 0; j < 20 && i < max; i += 2, j += 2, x += 8) {
+				Point icon = new Point(x, y);
+
 				if(background != null) {
 					drawTexturedModalRect(icon, background);
 				}
@@ -218,11 +221,11 @@ public final class GlUtil {
 
 		Bounds bar;
 		if(vertical) {
-			bar = new Bounds(bounds.width() - 1, (int)(progress * bounds.height()));
-			Direction.SOUTH_WEST.anchor(bar, bounds);
+			bar = new Bounds(bounds.getWidth() - 1, (int)(progress * bounds.getHeight()));
+			bar = Direction.SOUTH_WEST.anchor(bar, bounds);
 		} else {
-			bar = new Bounds((int)(progress * bounds.width()), bounds.height() - 1);
-			Direction.NORTH_WEST.anchor(bar, bounds);
+			bar = new Bounds((int)(progress * bounds.getWidth()), bounds.getHeight() - 1);
+			bar = Direction.NORTH_WEST.anchor(bar, bounds);
 		}
 		drawRect(bar, color);
 	}
@@ -233,27 +236,27 @@ public final class GlUtil {
 	public static void drawTexturedProgressBar(Point position, Bounds background, Bounds foreground, float progress, Direction direction) {
 		drawTexturedModalRect(position, background);
 
-		Bounds bounds = new Bounds(position, background.size);
+		Bounds bounds = background.withPosition(position);
 		Bounds partialBounds = new Bounds(bounds);
 		Bounds partialForeground = new Bounds(foreground);
 
 		if(!direction.in(Direction.VERTICAL)) {
-			int partial = MathHelper.ceil(progress * partialBounds.width());
+			int partial = MathHelper.ceil(progress * partialBounds.getWidth());
 
-			partialBounds.width(partial);
-			partialForeground.width(partial);
+			partialBounds = partialBounds.withWidth(partial);
+			partialForeground = partialForeground.withWidth(partial);
 		} else {
-			int partial = MathHelper.ceil(progress * partialBounds.height());
+			int partial = MathHelper.ceil(progress * partialBounds.getHeight());
 
-			partialBounds.height(partial);
-			partialForeground.height(partial);
+			partialBounds = partialBounds.withHeight(partial);
+			partialForeground = partialForeground.withHeight(partial);
 		}
 
 		Direction anchor = direction.mirror();
 		anchor.anchor(partialBounds, bounds);
 		anchor.anchor(partialForeground, foreground);
 
-		drawTexturedModalRect(partialBounds.position, partialForeground);
+		drawTexturedModalRect(partialBounds.getPosition(), partialForeground);
 	}
 
 	/** @return The size of {@code string} as rendered by Minecraft's font renderer */
@@ -266,7 +269,7 @@ public final class GlUtil {
 	 * @see net.minecraft.client.gui.FontRenderer#drawStringWithShadow(String, float, float, int) */
 	public static Bounds drawString(String string, Point origin, Direction alignment, int color) {
 		Bounds bounds = alignment.align(new Bounds(getStringSize(string)), origin);
-		MC.fontRenderer.drawStringWithShadow(string, bounds.x(), bounds.y(), color);
+		MC.fontRenderer.drawStringWithShadow(string, bounds.getX(), bounds.getY(), color);
 
 		return bounds;
 	}

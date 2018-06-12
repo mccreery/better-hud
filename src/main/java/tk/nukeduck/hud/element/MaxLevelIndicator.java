@@ -31,12 +31,12 @@ public class MaxLevelIndicator extends HudElement {
 	public Bounds render(Event event) {
 		Bounds bounds;
 		if(position.getDirection() == Direction.SOUTH) {
-			bounds = new Bounds(MANAGER.getResolution().x / 2 - 8, MANAGER.getResolution().y - 50, 16, 16);
+			bounds = new Bounds(MANAGER.getResolution().getX() / 2 - 8, MANAGER.getResolution().getY() - 50, 16, 16);
 		} else {
 			bounds = position.applyTo(new Bounds(16, 16));
 		}
 
-		GlUtil.renderSingleItem(BOOK, bounds.position);
+		GlUtil.renderSingleItem(BOOK, bounds.getPosition());
 		return bounds;
 	}
 

@@ -2,6 +2,7 @@ package tk.nukeduck.hud.util;
 
 import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 import java.util.function.Predicate;
 
 public final class MathUtil {
@@ -57,5 +58,16 @@ public final class MathUtil {
 			++i;
 		}
 		return i;
+	}
+
+	/** Avoids autoboxing to {@link Integer}
+	 * @see Objects#hash(Object...) */
+	public static int hash(int... values) {
+		int hashCode = 1;
+
+		for(int x : values) {
+			hashCode = 31 * hashCode + x;
+		}
+		return hashCode;
 	}
 }

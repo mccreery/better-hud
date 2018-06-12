@@ -19,7 +19,6 @@ import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
-import tk.nukeduck.hud.util.PaddedBounds;
 import tk.nukeduck.hud.util.Point;
 import tk.nukeduck.hud.util.StringGroup;
 
@@ -71,25 +70,27 @@ public class Sidebar extends OverrideElement {
 		StringGroup valuesGroup = new StringGroup(values).setColor(0xffff5555).setAlignment(Direction.EAST);
 		Point valuesSize = valuesGroup.getSize();
 
-		Point size = namesGroup.getSize();
-		size.x += MC.fontRenderer.getCharWidth(' ') * 2 + valuesSize.x;
-		size.x = Math.max(size.x, MC.fontRenderer.getStringWidth(title));
+		Point size = namesGroup.getSize().add(MC.fontRenderer.getCharWidth(' ') * 2 + valuesSize.getX(), 0);
+		size = size.withX(Math.max(size.getX(), MC.fontRenderer.getStringWidth(title)));
 
-		PaddedBounds bounds = new PaddedBounds(new Bounds(size), Bounds.getPadding(0, MC.fontRenderer.FONT_HEIGHT + 1, 0, 0), Bounds.getPadding(1));
+		Bounds padding = Bounds.createPadding(0, MC.fontRenderer.FONT_HEIGHT + 1, 0, 0);
+		Bounds margin = Bounds.createPadding(1);
+		Bounds bounds = new Bounds(size).withPadding(padding).withPadding(margin);
+
 		Direction.EAST.anchor(bounds,MANAGER.getScreen());
+		Bounds paddingBounds = bounds.withInset(margin);
+		Bounds contentBounds = paddingBounds.withInset(padding);
 
 		// Translucent background
-		Bounds background = new Bounds(bounds);
-		background.bottom(bounds.contentBounds().top() - 1);
+		Bounds background = new Bounds(bounds).withBottom(contentBounds.getTop() - 1);
 		GlUtil.drawRect(background, 0x60000000);
 
-		background.top(background.bottom());
-		background.bottom(bounds.bottom());
+		background = background.withTop(background.getBottom()).withBottom(bounds.getBottom());
 		GlUtil.drawRect(background, 0x50000000);
 
-		GlUtil.drawString(title, Direction.NORTH.getAnchor(bounds.paddingBounds()), Direction.NORTH, Colors.WHITE);
-		namesGroup.draw(bounds.contentBounds());
-		valuesGroup.draw(bounds.contentBounds());
+		GlUtil.drawString(title, Direction.NORTH.getAnchor(paddingBounds), Direction.NORTH, Colors.WHITE);
+		namesGroup.draw(contentBounds);
+		valuesGroup.draw(contentBounds);
 
 		return bounds;
 	}

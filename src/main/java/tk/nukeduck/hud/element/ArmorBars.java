@@ -14,7 +14,6 @@ import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
-import tk.nukeduck.hud.util.PaddedBounds;
 import tk.nukeduck.hud.util.Point;
 import tk.nukeduck.hud.util.StringGroup;
 
@@ -52,7 +51,7 @@ public class ArmorBars extends EquipmentDisplay {
 		MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
 		TextureAtlasSprite empty = MC.getTextureMapBlocks().getAtlasSprite(ItemArmor.EMPTY_SLOT_NAMES[slot]);
-		MC.ingameGUI.drawTexturedModalRect(position.x, position.y, empty, 16, 16);
+		MC.ingameGUI.drawTexturedModalRect(position.getX(), position.getY(), empty, 16, 16);
 	}
 
 	@Override
@@ -80,15 +79,14 @@ public class ArmorBars extends EquipmentDisplay {
 			for(int i = 0; i < 4; i++) {
 				text[i] = getText(MC.player.inventory.armorItemInSlot(i));
 			}
-			size = group.getSize();
-			size.y = 16;
+			size = group.getSize().withY(16);
 		} else {
 			size = new Point(0, 16);
 		}
 
 		// Make sure large bar fits
-		if(largeBars() && size.x < 80) {
-			size.x = 80;
+		if(largeBars() && size.getX() < 80) {
+			size = size.withX(80);
 		}
 
 		Direction alignment;
@@ -98,27 +96,31 @@ public class ArmorBars extends EquipmentDisplay {
 			alignment = Direction.WEST;
 		}
 
-		Bounds bounds = position.applyTo(new Bounds(size.x + 20, 70));
-		Bounds padding = alignment == Direction.EAST ? Bounds.getPadding(0, 0, 20, 0) : Bounds.getPadding(20, 0, 0, 0);
-		PaddedBounds row = Direction.NORTH.anchor(new PaddedBounds(new Bounds(size), padding, Bounds.EMPTY), bounds);
+		Bounds bounds = position.applyTo(new Bounds(size.getX() + 20, 70));
+		Bounds padding = alignment == Direction.EAST ? Bounds.createPadding(0, 0, 20, 0) : Bounds.createPadding(20, 0, 0, 0);
 
-		for(int i = 3; i >= 0; i--, row.y(row.y() + 18)) {
+		Bounds row = new Bounds(size).withPadding(padding);
+		row = Direction.NORTH.anchor(row, bounds);
+
+		for(int i = 3; i >= 0; i--, row = row.withY(row.getY() + 18)) {
 			ItemStack stack = MC.player.inventory.armorItemInSlot(i);
 			Bounds item = alignment.anchor(new Bounds(18, 16), row);
 
 			if(stack == null || stack.isEmpty()) {
-				drawEmptySlot(item.position, i);
+				drawEmptySlot(item.getPosition(), i);
 			} else {
-				GlUtil.renderSingleItem(stack, item.position);
-				Bounds content = row.contentBounds();
+				GlUtil.renderSingleItem(stack, item.getPosition());
+				Bounds content = row.withInset(padding);
 
 				if(hasText() && text[i] != null) {
 					MC.mcProfiler.startSection("text");
 
 					Bounds textBounds = alignment.anchor(new Bounds(GlUtil.getStringSize(text[i])), content);
-					if(largeBars()) textBounds.y(textBounds.y() - 1);
+					if(largeBars()) {
+						textBounds = textBounds.withY(textBounds.getY() - 1);
+					}
 
-					MC.ingameGUI.drawString(MC.fontRenderer, text[i], textBounds.x(), textBounds.y(), Colors.WHITE);
+					MC.ingameGUI.drawString(MC.fontRenderer, text[i], textBounds.getX(), textBounds.getY(), Colors.WHITE);
 					MC.mcProfiler.endSection();
 				}
 
@@ -126,10 +128,10 @@ public class ArmorBars extends EquipmentDisplay {
 					MC.mcProfiler.startSection("bars");
 
 					if(largeBars()) {
-						Bounds bar = Direction.SOUTH.anchor(new Bounds(content.width(), 2), content);
+						Bounds bar = Direction.SOUTH.anchor(new Bounds(content.getWidth(), 2), content);
 						GlUtil.drawDamageBar(bar, stack, false);
 					} else {
-						Bounds bar = alignment.mirrorColumn().anchor(new Bounds(2, item.height()), item);
+						Bounds bar = alignment.mirrorColumn().anchor(new Bounds(2, item.getHeight()), item);
 						GlUtil.drawDamageBar(bar, stack, true);
 					}
 

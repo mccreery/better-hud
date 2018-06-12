@@ -42,7 +42,7 @@ public class SettingPosition extends SettingStub<Object> {
 				}
 
 				//targetBounds.add(new Bounds(width, height).flip());
-				sourceBounds.snap(targetBounds);
+				sourceBounds = sourceBounds.snapped(targetBounds);
 			}
 			Direction anchor = SettingPosition.this.anchor.get();
 
@@ -120,7 +120,7 @@ public class SettingPosition extends SettingStub<Object> {
 	}
 
 	/** Moves the given bounds to the correct location and returns them */
-	public <T extends Bounds> T applyTo(T bounds) {
+	public Bounds applyTo(Bounds bounds) {
 		if(isAbsolute()) {
 			bounds.position(anchor.get(), offset.get(), getAlignment());
 			return bounds;

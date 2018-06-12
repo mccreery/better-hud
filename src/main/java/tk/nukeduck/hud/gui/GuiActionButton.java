@@ -14,10 +14,10 @@ public abstract class GuiActionButton extends GuiButton implements ActionCallbac
 	}
 
 	public final GuiActionButton setBounds(Bounds bounds) {
-		this.x = bounds.x();
-		this.y = bounds.y();
-		this.width = bounds.width();
-		this.height = bounds.height();
+		this.x = bounds.getX();
+		this.y = bounds.getY();
+		this.width = bounds.getWidth();
+		this.height = bounds.getHeight();
 
 		return this;
 	}

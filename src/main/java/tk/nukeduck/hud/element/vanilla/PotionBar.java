@@ -100,7 +100,7 @@ public class PotionBar extends OverrideElement {
 			alignment = Direction.SOUTH_WEST;
 		}
 
-		Point icon = alignment.anchor(new Bounds(24, 24), bounds).position;
+		Point icon = alignment.anchor(new Bounds(24, 24), bounds).getPosition();
 
 		int deltaX = alignment.in(Direction.RIGHT) ? -25 : 25;
 		for(int i = 0; i < helpful.size(); i++) {
@@ -168,11 +168,11 @@ public class PotionBar extends OverrideElement {
 
 			GlUtil.drawTexturedModalRect(position.add(3, 3), icon);
 		}
-		potion.renderHUDEffect(position.x, position.y, effect, MC, opacity);
+		potion.renderHUDEffect(position.getX(), position.getY(), effect, MC, opacity);
 
 		String potionLevel = getPotionLevel(effect);
 		if(!potionLevel.isEmpty()) {
-			GlUtil.drawString(potionLevel, new Point(position.x + 21, position.y + 21), Direction.SOUTH_EAST, Colors.WHITE);
+			GlUtil.drawString(potionLevel, new Point(position.getX() + 21, position.getY() + 21), Direction.SOUTH_EAST, Colors.WHITE);
 		}
 	}
 

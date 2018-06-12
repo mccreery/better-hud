@@ -75,7 +75,7 @@ public class Vignette extends OverrideElement {
 
 		MC.getTextureManager().bindTexture(VIGNETTE_TEX_PATH);
 		Point resolution = MANAGER.getResolution();
-		GlUtil.drawTexturedModalRect(0, 0, 0, 0, resolution.x, resolution.y, 256, 256);
+		GlUtil.drawTexturedModalRect(0, 0, 0, 0, resolution.getX(), resolution.getY(), 256, 256);
 
 		GlStateManager.depthMask(true);
 		GlStateManager.enableDepth();

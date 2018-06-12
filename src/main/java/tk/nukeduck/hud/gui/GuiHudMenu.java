@@ -63,7 +63,7 @@ public class GuiHudMenu extends GuiScreen {
 		Bounds smallButton = new Bounds(20, 20);
 		Bounds arrowButtons = new Bounds(20, 20);
 
-		Bounds buttonBounds = Direction.NORTH.align(new Bounds(largeButton.width() + smallButton.width(), 20), new Point(width / 2, height / 16 + 78));
+		Bounds buttonBounds = Direction.NORTH.align(new Bounds(largeButton.getWidth() + smallButton.getWidth(), 20), new Point(width / 2, height / 16 + 78));
 
 		for(HudElement element : paginator.getPage()) {
 			ButtonRow row = getRow(element);
@@ -77,8 +77,8 @@ public class GuiHudMenu extends GuiScreen {
 			row.options.enabled = row.toggle.enabled && row.toggle.get() && !element.settings.isEmpty();
 			buttonList.add(row.options);
 
-			Direction.WEST.anchor(arrowButtons, buttonBounds);
-			arrowButtons.x(arrowButtons.x() - SPACER - arrowButtons.width());
+			arrowButtons = Direction.WEST.anchor(arrowButtons, buttonBounds);
+			arrowButtons = arrowButtons.withX(arrowButtons.getX() - SPACER - arrowButtons.getWidth());
 
 			row.moveUp.setBounds(Direction.NORTH_WEST.anchor(new Bounds(20, 10), arrowButtons));
 			buttonList.add(row.moveUp);
@@ -86,14 +86,14 @@ public class GuiHudMenu extends GuiScreen {
 			row.moveDown.setBounds(Direction.SOUTH_WEST.anchor(new Bounds(20, 10), arrowButtons));
 			buttonList.add(row.moveDown);
 
-			buttonBounds.y(buttonBounds.bottom() + 4);
+			buttonBounds = buttonBounds.withY(buttonBounds.getBottom() + 4);
 		}
 	}
 
 	private void addDefaultButtons() {
 		Bounds buttons = Direction.NORTH.align(new Bounds(300, 42), new Point(width / 2, height / 16 + 20));
-		Bounds halfWidth = new Bounds((buttons.width() - 2) / 2, 20);
-		Bounds thirdWidth = new Bounds((buttons.width() - 4) / 3, 20);
+		Bounds halfWidth = new Bounds((buttons.getWidth() - 2) / 2, 20);
+		Bounds thirdWidth = new Bounds((buttons.getWidth() - 4) / 3, 20);
 
 		moveButton(returnToGame,   Direction.NORTH_WEST.anchor(halfWidth, buttons));
 		moveButton(globalSettings, Direction.NORTH_EAST.anchor(halfWidth, buttons));
@@ -126,16 +126,16 @@ public class GuiHudMenu extends GuiScreen {
 
 		for(GuiActionButton button : indexerControls) {
 			button.setBounds(bounds);
-			bounds.x(bounds.right() + SPACER);
+			bounds = bounds.withX(bounds.getRight() + SPACER);
 		}
 		buttonList.addAll(indexerControls);
 	}
 
 	private void moveButton(GuiButton button, Bounds bounds) {
-		button.x = bounds.x();
-		button.y = bounds.y();
-		button.width = bounds.width();
-		button.height = bounds.height();
+		button.x = bounds.getX();
+		button.y = bounds.getY();
+		button.width = bounds.getWidth();
+		button.height = bounds.getHeight();
 	}
 
 	@Override
@@ -231,7 +231,7 @@ public class GuiHudMenu extends GuiScreen {
 				} else {
 					arrowTexture = new Bounds(114, 5, 11, 7);
 				}
-				Point position = Direction.EAST.anchor(new Bounds(arrowTexture), getBounds()).position.add(-2, 0);
+				Point position = Direction.EAST.anchor(new Bounds(arrowTexture), getBounds()).getPosition().add(-2, 0);
 
 				MC.getTextureManager().bindTexture(new ResourceLocation("textures/gui/resource_packs.png"));
 				GlUtil.drawTexturedModalRect(position, arrowTexture);

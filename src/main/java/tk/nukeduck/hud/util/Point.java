@@ -1,14 +1,16 @@
 package tk.nukeduck.hud.util;
 
+import java.io.Serializable;
 import java.util.Objects;
 
 import net.minecraft.client.gui.ScaledResolution;
-import tk.nukeduck.hud.util.ISaveLoad.IGetSet;
 
-public class Point implements IGetSet<Point> {
+public final class Point implements Serializable {
+	private static final long serialVersionUID = 1L;
+
 	public static final Point ZERO = new Point(0, 0);
 
-	public int x, y;
+	private final int x, y;
 
 	public Point() {
 		this(0, 0);
@@ -20,73 +22,72 @@ public class Point implements IGetSet<Point> {
 	}
 
 	public Point(Point point) {
-		this(point.x, point.y);
+		this(point.getX(), point.getY());
 	}
 
 	public Point(ScaledResolution resolution) {
 		this(resolution.getScaledWidth(), resolution.getScaledHeight());
 	}
 
+	public int getX() {
+		return x;
+	}
+
+	public int getY() {
+		return y;
+	}
+
+	public Point withX(int x) {
+		return new Point(x, getY());
+	}
+
+	public Point withY(int y) {
+		return new Point(getX(), y);
+	}
+
 	public Point add(Point point) {
-		return new Point(x + point.x, y + point.y);
+		return new Point(getX() + point.getX(), getY() + point.getY());
 	}
 
 	public Point add(int x, int y) {
-		return new Point(this.x + x, this.y + y);
+		return new Point(this.getX() + x, this.getY() + y);
 	}
 
 	public Point sub(Point point) {
-		return new Point(x - point.x, y - point.y);
+		return new Point(getX() - point.getX(), getY() - point.getY());
 	}
 
 	public Point sub(int x, int y) {
-		return new Point(this.x - x, this.y - y);
+		return new Point(this.getX() - x, this.getY() - y);
 	}
 
 	public Point scale(float x, float y) {
-		return new Point((int)(this.x * x), (int)(this.y * y));
+		return new Point((int)(this.getX() * x), (int)(this.getY() * y));
 	}
 
 	public Point invert() {
-		return new Point(-x, -y);
+		return new Point(-getX(), -getY());
 	}
 
 	@Override
 	public boolean equals(Object other) {
-		return other instanceof Point && x == ((Point)other).x && y == ((Point)other).y;
+		return other instanceof Point && getX() == ((Point)other).getX() && getY() == ((Point)other).getY();
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(x, y);
+		return Objects.hash(getX(), getY());
 	}
 
 	@Override
 	public String toString() {
-		return String.format("(%d, %d)", x, y);
+		return String.format("(%d, %d)", getX(), getY());
 	}
 
-	@Override
-	public Point get() {
-		return this;
-	}
+	public static Point fromString(String s) {
+		int comma = s.indexOf(',');
 
-	@Override
-	public void set(Point value) {
-		this.x = value.x;
-		this.y = value.y;
-	}
-
-	@Override
-	public String save() {
-		return x + "," + y;
-	}
-
-	@Override
-	public void load(String save) {
-		int comma = save.indexOf(',');
-
-		x = Integer.parseInt(save.substring(0, comma));
-		y = Integer.parseInt(save.substring(comma + 1));
+		return new Point(Integer.parseInt(s.substring(0, comma)),
+			Integer.parseInt(s.substring(comma + 1)));
 	}
 }

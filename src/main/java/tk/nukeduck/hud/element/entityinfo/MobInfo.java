@@ -14,7 +14,6 @@ import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
-import tk.nukeduck.hud.util.PaddedBounds;
 import tk.nukeduck.hud.util.Point;
 
 public class MobInfo extends EntityInfo {
@@ -100,7 +99,7 @@ public class MobInfo extends EntityInfo {
 			if(health == 0) return;
 			if(maxHealth > 20) maxHealth = 20;
 
-			position.y += 9;
+			position = position.add(0, 9);
 		} else if(maxHealth > compressLimit) {
 			maxHealth = compressLimit;
 		}
@@ -121,35 +120,36 @@ public class MobInfo extends EntityInfo {
 
 		Point healthSize = getHealthSize(health, maxHealth, compressLimit);
 
-		if(healthSize.x > textSize.x) {
-			textSize.x = healthSize.x;
+		if(healthSize.getX() > textSize.getX()) {
+			textSize = textSize.withX(healthSize.getX());
 		}
 
-		PaddedBounds bounds = new PaddedBounds(new Bounds(textSize), new Bounds(0, healthSize.y), Bounds.PADDING);
-		MANAGER.position(Direction.SOUTH, bounds);
+		Bounds padding = Bounds.createPadding(SPACER, SPACER, SPACER, SPACER + healthSize.getY());
+		Bounds bounds = MANAGER.position(Direction.SOUTH, new Bounds(textSize).withPadding(padding));
 
 		GlUtil.drawRect(bounds, Colors.TRANSLUCENT);
-		GlUtil.drawString(text, bounds.contentBounds().position, Direction.NORTH_WEST, Colors.WHITE);
+		GlUtil.drawString(text, bounds.withInset(padding).getPosition(), Direction.NORTH_WEST, Colors.WHITE);
 
-		renderHealth(health, maxHealth, compressLimit, Direction.SOUTH_WEST.getAnchor(bounds.contentBounds()));
+		renderHealth(health, maxHealth, compressLimit, Direction.SOUTH_WEST.getAnchor(bounds.withInset(padding)));
 	}
 
 	/** Renders a graphic representing a total of {@code rows} compressed rows */
 	private static void renderCompressedRows(int rows, Point position) {
 		Bounds emptyTexture = new Bounds(16, 0, 9, 9);
 		Bounds heartTexture = new Bounds(52, 0, 9, 9);
-	
-		position = new Point(position);
+
+		int x = position.getX();
 	
 		MC.getTextureManager().bindTexture(ICONS);
 		GlUtil.color(Colors.WHITE);
-	
-		for(int i = 0; i < 10; i++, position.x += 4) {
-			GlUtil.drawTexturedModalRect(position, emptyTexture);
-			GlUtil.drawTexturedModalRect(position, heartTexture);
+
+		for(int i = 0; i < 10; i++, x += 4) {
+			Point icon = position.withX(x);
+			GlUtil.drawTexturedModalRect(icon, emptyTexture);
+			GlUtil.drawTexturedModalRect(icon, heartTexture);
 		}
-		position.x += SPACER;
+		x += SPACER;
 	
-		MC.fontRenderer.drawString(getCompressString(rows), position.x, position.y, Colors.WHITE);
+		MC.fontRenderer.drawString(getCompressString(rows), x, position.getY(), Colors.WHITE);
 	}
 }

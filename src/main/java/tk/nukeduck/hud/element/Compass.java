@@ -3,6 +3,7 @@ package tk.nukeduck.hud.element;
 import static tk.nukeduck.hud.BetterHud.MC;
 import static tk.nukeduck.hud.BetterHud.SPACER;
 
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.settings.Legend;
@@ -55,34 +56,36 @@ public class Compass extends HudElement {
 
 	private void drawBackground(Bounds bounds) {
 		GlUtil.drawRect(bounds, Colors.fromARGB(170, 0, 0, 0));
-		GlUtil.drawRect(bounds.inset(50, 0, 50, 0), Colors.fromARGB(85, 85, 85, 85));
+		GlUtil.drawRect(bounds.withInset(50, 0, 50, 0), Colors.fromARGB(85, 85, 85, 85));
 
 		if(showNotches.get()) {
-			Bounds notch = new Bounds(0, bounds.y() - 2, 1, 6);
+			int baseX = bounds.getX();
+
+			int x;
+			int y = bounds.getY() - 2;
 
 			for(int loc : notchX) {
-				notch.x(bounds.x() + loc - 1);
-				GlUtil.drawRect(notch, Colors.WHITE);
-				notch.x(bounds.x() - loc + 180);
-				GlUtil.drawRect(notch, Colors.WHITE);
+				x = baseX + loc;
+				Gui.drawRect(x, y, x + 1, y + 6, Colors.WHITE);
+				x = baseX + 180 - loc;
+				Gui.drawRect(x - 1, y, x, y + 6, Colors.WHITE);
 			}
 		}
 
-		Bounds notches = bounds.pad(0, 3, 0, 0);
+		Bounds notches = bounds.withPadding(0, 3, 0, 0);
 		Bounds largeNotch = new Bounds(1, 7);
 
 		GlUtil.drawRect(Direction.NORTH_WEST.anchor(largeNotch, notches), Colors.RED);
-		GlUtil.drawRect(Direction.NORTH     .anchor(largeNotch, notches), Colors.RED);
+		GlUtil.drawRect(Direction.NORTH.anchor(largeNotch, notches), Colors.RED);
 		GlUtil.drawRect(Direction.NORTH_EAST.anchor(largeNotch, notches), Colors.RED);
 	}
 
 	private void drawDirections(Bounds bounds) {
 		float angle = (float)Math.toRadians(MC.player.rotationYaw);
 
-		Point origin = Direction.NORTH.getAnchor(bounds);
-		origin.y += 2;
+		Point origin = Direction.NORTH.getAnchor(bounds).add(0, 2);
 
-		float radius = bounds.width() / 2 + SPACER;
+		float radius = bounds.getWidth() / 2 + SPACER;
 
 		for(int i = 0; i < 4; i++, angle += Math.PI / 2) {
 			double cos = Math.cos(angle);
@@ -94,7 +97,7 @@ public class Compass extends HudElement {
 
 			GlStateManager.pushMatrix();
 
-			GlStateManager.translate(letter.x, letter.y, 0);
+			GlStateManager.translate(letter.getX(), letter.getY(), 0);
 			GlUtil.scale((float)scale);
 
 			int color = i == 0 ? Colors.BLUE : i == 2 ? Colors.RED : Colors.WHITE;

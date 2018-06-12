@@ -12,7 +12,6 @@ import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.FormatUtil;
 import tk.nukeduck.hud.util.GlUtil;
-import tk.nukeduck.hud.util.PaddedBounds;
 import tk.nukeduck.hud.util.StringGroup;
 
 public class HorseInfo extends EntityInfo {
@@ -46,11 +45,12 @@ public class HorseInfo extends EntityInfo {
 		}
 
 		StringGroup group = new StringGroup(infoParts);
-		PaddedBounds bounds = new PaddedBounds(new Bounds(group.getSize()), Bounds.PADDING, Bounds.EMPTY);
-		BetterHud.MANAGER.position(Direction.SOUTH, bounds);
+
+		Bounds bounds = new Bounds(group.getSize().add(Bounds.PADDING.getSize()));
+		bounds = BetterHud.MANAGER.position(Direction.SOUTH, bounds);
 
 		GlUtil.drawRect(bounds, Colors.TRANSLUCENT);
-		group.draw(bounds.contentBounds());
+		group.draw(bounds.withInset(Bounds.PADDING));
 	}
 
 	/** Calculates horse jump height using a derived polynomial

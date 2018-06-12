@@ -1,6 +1,7 @@
 package tk.nukeduck.hud.element.entityinfo;
 
 import static tk.nukeduck.hud.BetterHud.MANAGER;
+import static tk.nukeduck.hud.BetterHud.SPACER;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,7 +21,6 @@ import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
-import tk.nukeduck.hud.util.PaddedBounds;
 import tk.nukeduck.hud.util.Point;
 import tk.nukeduck.hud.util.StringGroup;
 
@@ -65,14 +65,16 @@ public class PlayerInfo extends EntityInfo {
 
 		StringGroup group = new StringGroup(tooltip);
 		Point size = group.getSize();
-		if(size.x < 81) size.x = 81;
+		if(size.getX() < 81) size = size.withX(81);
 
-		PaddedBounds bounds = new PaddedBounds(new Bounds(size), new Bounds(0, 9), Bounds.PADDING);
+		Bounds padding = Bounds.createPadding(SPACER, SPACER, SPACER + 9, SPACER);
+		Bounds bounds = new Bounds(size).withPadding(padding);
 		MANAGER.position(Direction.SOUTH, bounds);
+		Bounds contentBounds = bounds.withInset(padding);
 
 		GlUtil.drawRect(bounds, Colors.TRANSLUCENT);
-		group.draw(bounds.contentBounds());
-		GlUtil.renderArmorBar(entity.getTotalArmorValue(), 20, Direction.SOUTH_WEST.getAnchor(bounds.contentBounds()));
+		group.draw(contentBounds);
+		GlUtil.renderArmorBar(entity.getTotalArmorValue(), 20, Direction.SOUTH_WEST.getAnchor(contentBounds));
 	}
 
 	/** @see ItemStack#getTooltip(EntityPlayer, net.minecraft.client.util.ITooltipFlag) */

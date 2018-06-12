@@ -25,7 +25,7 @@ public class WaterDrops extends ParticleOverlay {
 				int count = getParticleCount();
 
 				for(int i = 0; i < count; i++) {
-					particles.add(ParticleWater.random(resolution.x, resolution.y));
+					particles.add(ParticleWater.random(resolution.getX(), resolution.getY()));
 				}
 			} else {
 				particles.clear();
@@ -36,7 +36,7 @@ public class WaterDrops extends ParticleOverlay {
 		BlockPos camera = new BlockPos(MC.player.getPositionEyes(1));
 
 		if(MC.world.isRainingAt(camera) && RANDOM.nextFloat() < getParticleChance()) {
-			particles.add(ParticleWater.random(resolution.x, resolution.y));
+			particles.add(ParticleWater.random(resolution.getX(), resolution.getY()));
 		}
 	}
 

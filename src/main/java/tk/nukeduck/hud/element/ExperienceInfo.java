@@ -53,11 +53,11 @@ public class ExperienceInfo extends TextElement {
 
 		Bounds bar = EXPERIENCE.getLastBounds();
 
-		Point text = Direction.WEST.anchor(new Bounds(GlUtil.getStringSize(hasDisplay).sub(0, 2)), bar).position;
-		GlUtil.drawBorderedString(hasDisplay, text.x, text.y, Colors.WHITE);
+		Point text = Direction.WEST.anchor(new Bounds(GlUtil.getStringSize(hasDisplay).sub(0, 2)), bar).getPosition();
+		GlUtil.drawBorderedString(hasDisplay, text.getX(), text.getY(), Colors.WHITE);
 
-		text = Direction.EAST.anchor(new Bounds(GlUtil.getStringSize(neededDisplay).sub(0, 2)), bar).position;
-		GlUtil.drawBorderedString(neededDisplay, text.x, text.y, Colors.WHITE);
+		text = Direction.EAST.anchor(new Bounds(GlUtil.getStringSize(neededDisplay).sub(0, 2)), bar).getPosition();
+		GlUtil.drawBorderedString(neededDisplay, text.getX(), text.getY(), Colors.WHITE);
 
 		return super.render(event);
 	}

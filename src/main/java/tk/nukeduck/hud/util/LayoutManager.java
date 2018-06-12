@@ -21,7 +21,7 @@ public class LayoutManager {
 
 	public void reset(Point resolution) {
 		this.resolution = resolution;
-		screen = new Bounds(this.resolution).inset(SPACER);
+		screen = new Bounds(this.resolution).withInset(SPACER);
 		corners.clear();
 
 		// Compatibility with bars from other mods
@@ -40,7 +40,7 @@ public class LayoutManager {
 		return screen;
 	}
 
-	public <T extends Bounds> T positionBar(T bounds, Direction alignment, int postSpacer) {
+	public Bounds positionBar(Bounds bounds, Direction alignment, int postSpacer) {
 		int offset;
 
 		if(alignment.in(Direction.LEFT)) {
@@ -52,10 +52,10 @@ public class LayoutManager {
 		}
 		offset -= 9 + SPACER;
 
-		Bounds wideBounds = Direction.SOUTH.anchor(new Bounds(182, bounds.height()), screen.inset(offset));
-		alignment.anchor(bounds, wideBounds);
+		Bounds wideBounds = Direction.SOUTH.anchor(bounds.withWidth(182), screen.withInset(offset));
+		bounds = alignment.anchor(bounds, wideBounds);
 
-		int newHeight = offset + bounds.height() + postSpacer + SPACER + 9;
+		int newHeight = offset + bounds.getHeight() + postSpacer + SPACER + 9;
 		if(!alignment.in(Direction.LEFT)) {
 			GuiIngameForge.right_height = newHeight;
 		}
@@ -67,18 +67,18 @@ public class LayoutManager {
 		return bounds;
 	}
 
-	public <T extends Bounds> T position(Direction corner, T bounds) {
+	public Bounds position(Direction corner, Bounds bounds) {
 		return position(corner, bounds, false, SPACER);
 	}
 
-	public <T extends Bounds> T position(Direction corner, T bounds, boolean edge, int postSpacer) {
+	public Bounds position(Direction corner, Bounds bounds, boolean edge, int postSpacer) {
 		if(corner.in(Direction.HORIZONTAL)) {
 			throw new IllegalArgumentException("Vertical centering is not allowed");
 		}
-		int offset = corners.containsKey(corner) ? corners.get(corner) : edge ? -SPACER : 0;
+		int offset = corners.getOrDefault(corner, edge ? -SPACER : 0);
 
-		corner.anchor(bounds, screen.inset(0, offset, 0, offset));
-		int newOffset = offset + bounds.height() + postSpacer;
+		bounds = corner.anchor(bounds, screen.withInset(0, offset, 0, offset));
+		int newOffset = offset + bounds.getHeight() + postSpacer;
 		corners.put(corner, newOffset);
 
 		if(corner == Direction.SOUTH) {

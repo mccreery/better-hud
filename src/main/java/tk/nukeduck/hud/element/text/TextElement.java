@@ -11,7 +11,6 @@ import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
-import tk.nukeduck.hud.util.PaddedBounds;
 import tk.nukeduck.hud.util.StringGroup;
 
 public abstract class TextElement extends HudElement {
@@ -55,7 +54,7 @@ public abstract class TextElement extends HudElement {
 		return Bounds.EMPTY;
 	}
 
-	protected PaddedBounds moveBounds(PaddedBounds bounds) {
+	protected Bounds moveBounds(Bounds bounds) {
 		return position.applyTo(bounds);
 	}
 
@@ -70,19 +69,22 @@ public abstract class TextElement extends HudElement {
 		group.setColor(color.get());
 		group.setAlignment(position.getAlignment());
 
-		PaddedBounds bounds = moveBounds(new PaddedBounds(new Bounds(group.getSize()), getPadding(), getMargin()));
+		Bounds padding = getPadding();
+		Bounds margin = getMargin();
 
-		drawBorder(bounds);
-		group.draw(bounds.contentBounds());
+		Bounds bounds = moveBounds(new Bounds(group.getSize().add(padding.getSize()).add(margin.getSize())));
+
+		drawBorder(bounds, padding, margin);
+		group.draw(bounds.withInset(margin).withInset(padding));
 		drawExtras(bounds);
 
 		return bounds;
 	}
 
-	protected void drawBorder(PaddedBounds bounds) {
-		if(border) GlUtil.drawRect(bounds.paddingBounds(), Colors.TRANSLUCENT);
+	protected void drawBorder(Bounds bounds, Bounds padding, Bounds margin) {
+		if(border) GlUtil.drawRect(bounds.withInset(margin), Colors.TRANSLUCENT);
 	}
 
 	protected abstract List<String> getText();
-	protected void drawExtras(PaddedBounds bounds) {}
+	protected void drawExtras(Bounds bounds) {}
 }

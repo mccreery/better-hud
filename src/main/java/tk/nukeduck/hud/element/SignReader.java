@@ -50,16 +50,16 @@ public class SignReader extends HudElement {
 		Bounds bounds = position.applyTo(new Bounds(96, 48));
 
 		MC.getTextureManager().bindTexture(SIGN_TEXTURE);
-		Gui.drawScaledCustomSizeModalRect(bounds.x(), bounds.y(), 2, 2, 24, 12, 96, 48, 64, 32);
+		Gui.drawScaledCustomSizeModalRect(bounds.getX(), bounds.getY(), 2, 2, 24, 12, 96, 48, 64, 32);
 
-		int y = bounds.y() + 3;
+		int y = bounds.getY() + 3;
 
 		for(ITextComponent line : sign.signText) {
 			if(line != null) {
 				String text = line.getFormattedText();
 				int textWidth = MC.fontRenderer.getStringWidth(text);
 
-				MC.fontRenderer.drawString(text, bounds.x() + (bounds.width() - textWidth) / 2, y, Colors.BLACK);
+				MC.fontRenderer.drawString(text, bounds.getX() + (bounds.getWidth() - textWidth) / 2, y, Colors.BLACK);
 				//MC.ingameGUI.drawCenteredString(MC.fontRenderer, text, bounds.x() + bounds.width() / 2, y, Colors.BLACK);
 			}
 			y += MC.fontRenderer.FONT_HEIGHT + 2;

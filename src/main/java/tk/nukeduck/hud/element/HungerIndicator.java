@@ -50,9 +50,9 @@ public class HungerIndicator extends HudElement {
 		Bounds bounds;
 		if(position.getDirection() != null) {
 			if(position.getDirection() == Direction.CENTER) {
-				bounds = new Bounds(MANAGER.getResolution().x / 2 + 5, MANAGER.getResolution().y / 2 + 5, 16, 16);
+				bounds = new Bounds(MANAGER.getResolution().getX() / 2 + 5, MANAGER.getResolution().getY() / 2 + 5, 16, 16);
 			} else {
-				bounds = new Bounds(MANAGER.getResolution().x / 2 + 75, MANAGER.getResolution().y - 56, 16, 16);
+				bounds = new Bounds(MANAGER.getResolution().getX() / 2 + 75, MANAGER.getResolution().getY() - 56, 16, 16);
 			}
 		} else {
 			bounds = position.applyTo(new Bounds(16, 16));
@@ -66,7 +66,7 @@ public class HungerIndicator extends HudElement {
 		GlStateManager.color(1, 1, 1, alpha);
 
 		MC.getTextureManager().bindTexture(HUD_ICONS);
-		MC.ingameGUI.drawTexturedModalRect(bounds.x(), bounds.y(), 0, 64, 16, 16);
+		MC.ingameGUI.drawTexturedModalRect(bounds.getX(), bounds.getY(), 0, 64, 16, 16);
 
 		return bounds;
 	}

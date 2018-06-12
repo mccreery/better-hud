@@ -35,7 +35,7 @@ public class ParticleWater extends Particle {
 		GlStateManager.pushMatrix();
 
 		GlStateManager.color(1.0F, 1.0F, 1.0F, opacity);
-		GlStateManager.translate(position.x, position.y - opacity * speed, 0.0F);
+		GlStateManager.translate(position.getX(), position.getY() - opacity * speed, 0.0F);
 		GlStateManager.scale(size, size, 1.0F);
 		MC.ingameGUI.drawTexturedModalRect(0, 0, u * 16, 96, 16, 16);
 

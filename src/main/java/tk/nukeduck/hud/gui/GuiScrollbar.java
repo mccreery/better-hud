@@ -11,7 +11,7 @@ import tk.nukeduck.hud.util.GlUtil;
 
 public class GuiScrollbar extends Gui {
 	private final Bounds bounds;
-	private final Bounds grabber;
+	private Bounds grabber;
 	private final float scaleFactor;
 	private final int background, foreground, highlight;
 
@@ -33,7 +33,7 @@ public class GuiScrollbar extends Gui {
 	 *
 	 * @see #GuiScrollbar(Bounds, int, int, int, int, int) */
 	public GuiScrollbar(Bounds viewport, int content) {
-		this(Direction.NORTH_EAST.anchor(new Bounds(8, viewport.height()), viewport), viewport.height(), content);
+		this(Direction.NORTH_EAST.anchor(new Bounds(8, viewport.getHeight()), viewport), viewport.getHeight(), content);
 	}
 
 	/** The colors used are defaults
@@ -51,7 +51,7 @@ public class GuiScrollbar extends Gui {
 		this.bounds = bounds;
 
 		scaleFactor = (float)viewport / content;
-		grabber = new Bounds(bounds.x(), bounds.y(), bounds.width(), (int)(scaleFactor * bounds.height()));
+		grabber = new Bounds(bounds.getX(), bounds.getY(), bounds.getWidth(), (int)(scaleFactor * bounds.getHeight()));
 
 		this.background = background;
 		this.foreground = foreground;
@@ -60,7 +60,7 @@ public class GuiScrollbar extends Gui {
 
 	public void scrollTo(int scroll) {
 		this.scroll = MathHelper.clamp(scroll, 0, maxScroll());
-		grabber.y(bounds.y() + (int)(this.scroll * scaleFactor));
+		grabber = grabber.withY(grabber.getY() + (int)(this.scroll * scaleFactor));
 	}
 
 	public void drawScrollbar(int mouseX, int mouseY) {
@@ -85,9 +85,9 @@ public class GuiScrollbar extends Gui {
 	protected void mouseClicked(int mouseX, int mouseY, int button) {
 		if(canScroll() && !isScrolling() && bounds.contains(mouseX, mouseY)) {
 			if(grabber.contains(mouseX, mouseY)) {
-				clickOffset = mouseY - grabber.top();
+				clickOffset = mouseY - grabber.getTop();
 			} else {
-				clickOffset = grabber.height() / 2;
+				clickOffset = grabber.getHeight() / 2;
 			}
 
 			mouseClickMove(mouseX, mouseY, button, 0);
@@ -96,7 +96,7 @@ public class GuiScrollbar extends Gui {
 
 	protected void mouseClickMove(int mouseX, int mouseY, int button, long heldTime) {
 		if(isScrolling()) {
-			scrollTo((int)((mouseY - bounds.y() - clickOffset) / scaleFactor));
+			scrollTo((int)((mouseY - bounds.getY() - clickOffset) / scaleFactor));
 		}
 	}
 

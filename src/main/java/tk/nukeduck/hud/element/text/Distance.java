@@ -1,6 +1,5 @@
 package tk.nukeduck.hud.element.text;
 
-import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
 import static tk.nukeduck.hud.BetterHud.SPACER;
 
@@ -14,7 +13,6 @@ import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingChoose;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.PaddedBounds;
 import tk.nukeduck.hud.util.Point;
 
 public class Distance extends TextElement {
@@ -35,10 +33,9 @@ public class Distance extends TextElement {
 	}
 
 	@Override
-	protected PaddedBounds moveBounds(PaddedBounds bounds) {
+	protected Bounds moveBounds(Bounds bounds) {
 		if(position.getDirection() == Direction.CENTER) {
-			bounds.position = new Point(MANAGER.getResolution().x / 2 - SPACER, MANAGER.getResolution().y / 2 - SPACER);
-			return Direction.SOUTH_EAST.align(bounds);
+			return bounds.position(Direction.CENTER, new Point(-SPACER, -SPACER), Direction.SOUTH_EAST);
 		} else {
 			return super.moveBounds(bounds);
 		}
@@ -46,7 +43,7 @@ public class Distance extends TextElement {
 
 	@Override
 	protected Bounds getPadding() {
-		return Bounds.getPadding(border ? 2 : 0);
+		return Bounds.createPadding(border ? 2 : 0);
 	}
 
 	@Override

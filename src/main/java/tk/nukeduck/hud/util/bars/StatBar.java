@@ -56,25 +56,27 @@ public abstract class StatBar<T> {
 		GlUtil.color(Colors.WHITE);
 
 		final int max = getMaximum(), rowPoints = getRowPoints();
-		int resetX = position.x;
+		int resetX = position.getX();
 
 		int iconSpacing = 8;
 		if(alignment.in(Direction.RIGHT)) {
 			resetX += iconSpacing * (MathUtil.ceilDiv(rowPoints, 2) - 1);
 			iconSpacing = -iconSpacing;
 		}
-		Point icon = new Point(resetX, position.y);
 
-		for(int i = 0; i < max; icon.x = resetX, icon.y += getRowSpacing()) {
-			for(int j = 0; j < rowPoints && i < max; i += 2, j += 2, icon.x += iconSpacing) {
+		int x = resetX;
+		int y = position.getY();
+
+		for(int i = 0; i < max; x = resetX, y += getRowSpacing()) {
+			for(int j = 0; j < rowPoints && i < max; i += 2, j += 2, x += iconSpacing) {
 				int iconBounce = getIconBounce(i);
 
 				for(Bounds texture : getIcons(alignment, i)) {
 					if(texture != null) {
 						texture = ensureNative(texture, alignment);
 
-						GlUtil.drawTexturedModalRect(icon.x, icon.y + iconBounce,
-							texture.x(), texture.y(), texture.width(), texture.height());
+						GlUtil.drawTexturedModalRect(x, y + iconBounce,
+							texture.getX(), texture.getY(), texture.getWidth(), texture.getHeight());
 					}
 				}
 			}
@@ -82,7 +84,7 @@ public abstract class StatBar<T> {
 	}
 
 	public Bounds ensureNative(Bounds texture, Direction alignment) {
-		return alignment == getNativeAlignment() ? texture : texture.flipX();
+		return alignment == getNativeAlignment() ? texture : texture.flippedHorizontal();
 	}
 
 	public Point getSize() {

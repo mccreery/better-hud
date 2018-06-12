@@ -1,6 +1,5 @@
 package tk.nukeduck.hud.element;
 
-import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
 
 import net.minecraft.client.renderer.RenderHelper;
@@ -16,7 +15,7 @@ import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
-import tk.nukeduck.hud.util.PaddedBounds;
+import tk.nukeduck.hud.util.Point;
 import tk.nukeduck.hud.util.Tickable.Ticker;
 
 public class PickupCount extends HudElement {
@@ -63,7 +62,7 @@ public class PickupCount extends HudElement {
 		Bounds bounds = new Bounds(64, 16);
 
 		if(position.getDirection() == Direction.CENTER) {
-			bounds.position = MANAGER.getResolution().scale(.5f, .5f).add(5, 5);
+			bounds = bounds.position(Direction.CENTER, new Point(5, 5), Direction.NORTH_WEST);
 		} else {
 			position.applyTo(bounds);
 		}
@@ -72,16 +71,16 @@ public class PickupCount extends HudElement {
 			String text = String.format("%dx %s", node.stack.getCount(), node.stack.getDisplayName());
 
 			Bounds margin = position.getAnchor().align(new Bounds(-21, 0, 21, 0));
-			PaddedBounds lineBounds = position.getAnchor().anchor(new PaddedBounds(new Bounds(bounds.width(), 16), Bounds.EMPTY, margin), bounds);
+			Bounds lineBounds = position.getAnchor().anchor(bounds.withHeight(16), bounds);
 
-			GlUtil.drawString(text, position.getAnchor().align(lineBounds.contentBounds()).position, position.getAnchor(), Colors.WHITE);
+			GlUtil.drawString(text, position.getAnchor().align(lineBounds.withInset(margin)).getPosition(), position.getAnchor(), Colors.WHITE);
 
 			// Draw item
 			RenderHelper.enableGUIStandardItemLighting();
 			Bounds itemBounds = position.getAnchor().anchor(new Bounds(16, 16), lineBounds);
 
 			//GlStateManager.pushMatrix();
-			MC.getRenderItem().renderItemAndEffectIntoGUI(node.stack, itemBounds.x(), itemBounds.y());
+			MC.getRenderItem().renderItemAndEffectIntoGUI(node.stack, itemBounds.getX(), itemBounds.getY());
 			//GlStateManager.popMatrix();
 		}
 		return bounds;

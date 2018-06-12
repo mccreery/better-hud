@@ -16,7 +16,6 @@ import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
-import tk.nukeduck.hud.util.PaddedBounds;
 
 public class GameClock extends Clock {
 	private static final ItemStack BED = new ItemStack(Items.BED);
@@ -43,13 +42,13 @@ public class GameClock extends Clock {
 
 	@Override
 	public Bounds render(Event event) {
-		PaddedBounds bounds = (PaddedBounds)super.render(event);
+		Bounds bounds = super.render(event);
 
 		if(!MC.world.isDaytime()) {
 			Direction bedAnchor = position.getAnchor().in(Direction.RIGHT) ? Direction.WEST : Direction.EAST;
 			Bounds bed = bedAnchor.anchor(new Bounds(16, 16), bounds);
 
-			GlUtil.renderSingleItem(BED, bed.position);
+			GlUtil.renderSingleItem(BED, bed.getPosition());
 		}
 		return bounds;
 	}

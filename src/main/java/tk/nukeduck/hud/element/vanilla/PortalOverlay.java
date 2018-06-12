@@ -50,7 +50,7 @@ public class PortalOverlay extends OverrideElement {
 
 		TextureAtlasSprite texture = MC.getBlockRendererDispatcher().getBlockModelShapes().getTexture(Blocks.PORTAL.getDefaultState());
 		Point resolution = MANAGER.getResolution();
-		MC.ingameGUI.drawTexturedModalRect(0, 0, texture, resolution.x, resolution.y);
+		MC.ingameGUI.drawTexturedModalRect(0, 0, texture, resolution.getX(), resolution.getY());
 
 		GlUtil.color(Colors.WHITE);
 		return null;

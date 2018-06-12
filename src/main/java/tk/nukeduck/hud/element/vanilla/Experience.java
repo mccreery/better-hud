@@ -51,15 +51,13 @@ public class Experience extends OverrideElement {
 		Bounds fgTexture = new Bounds(0, 69, 182, 5);
 
 		Bounds barBounds = MANAGER.position(Direction.SOUTH, new Bounds(bgTexture), false, 1);
-		GlUtil.drawTexturedProgressBar(barBounds.position, bgTexture, fgTexture, MC.player.experience, Direction.EAST);
+		GlUtil.drawTexturedProgressBar(barBounds.getPosition(), bgTexture, fgTexture, MC.player.experience, Direction.EAST);
 
 		if(MC.player.experienceLevel > 0) {
 			String numberText = String.valueOf(MC.player.experienceLevel);
+			Point numberPosition = Direction.NORTH.anchor(new Bounds(GlUtil.getStringSize(numberText)), barBounds).getPosition().sub(0, 6);
 
-			Point numberPosition = Direction.NORTH.anchor(new Bounds(GlUtil.getStringSize(numberText)), barBounds).position;
-			numberPosition.y -= 6;
-
-			GlUtil.drawBorderedString(numberText, numberPosition.x, numberPosition.y, Colors.fromRGB(128, 255, 32));
+			GlUtil.drawBorderedString(numberText, numberPosition.getX(), numberPosition.getY(), Colors.fromRGB(128, 255, 32));
 		}
 
 		GlStateManager.enableBlend();

@@ -21,8 +21,12 @@ public class SettingAbsolutePosition extends Setting<Point> {
 	public GuiButton pick;
 	private GuiButton xUp, xDown, yUp, yDown;
 
-	protected Point position = new Point();
-	protected Point cancelPosition = null;
+	protected int x, y, cancelX, cancelY;
+	protected boolean isPicking = false;
+
+	public boolean isPicking() {
+		return isPicking;
+	}
 
 	public SettingAbsolutePosition(String name) {
 		super(name);
@@ -31,9 +35,9 @@ public class SettingAbsolutePosition extends Setting<Point> {
 	@Override
 	public int getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, int width, int y) {
 		parts.add(xBox = new GuiTextField(0, Minecraft.getMinecraft().fontRenderer, width / 2 - 106, y + 1, 80, 18));
-		xBox.setText(String.valueOf(position.x));
+		xBox.setText(String.valueOf(x));
 		parts.add(yBox = new GuiTextField(0, Minecraft.getMinecraft().fontRenderer, width / 2 + 2, y + 1, 80, 18));
-		yBox.setText(String.valueOf(position.y));
+		yBox.setText(String.valueOf(y));
 		parts.add(xUp = new GuiUpDownButton(0, width / 2 - 22, y, 0));
 		parts.add(xDown = new GuiUpDownButton(1, width / 2 - 22, y + 10, 1));
 		parts.add(yUp = new GuiUpDownButton(2, width / 2 + 86, y, 0));
@@ -54,36 +58,27 @@ public class SettingAbsolutePosition extends Setting<Point> {
 
 	public void updateText() {
 		if(xBox != null && yBox != null) {
-			xBox.setText(String.valueOf(position.x));
-			yBox.setText(String.valueOf(position.y));
+			xBox.setText(String.valueOf(x));
+			yBox.setText(String.valueOf(y));
 		}
-	}
-
-	public boolean isPicking() {
-		return cancelPosition != null;
 	}
 
 	@Override
 	public void actionPerformed(GuiElementSettings gui, GuiButton button) {
 		switch(button.id) {
-			case 0:
-				xBox.setText(String.valueOf(++position.x));
-				break;
-			case 1:
-				xBox.setText(String.valueOf(--position.x));
-				break;
-			case 2:
-				yBox.setText(String.valueOf(++position.y));
-				break;
-			case 3:
-				yBox.setText(String.valueOf(--position.y));
-				break;
+			case 0: xBox.setText(String.valueOf(++x)); break;
+			case 1: xBox.setText(String.valueOf(--x)); break;
+			case 2: yBox.setText(String.valueOf(++y)); break;
+			case 3: yBox.setText(String.valueOf(--y)); break;
 			case 4:
-				if(isPicking()) {
-					position = cancelPosition;
+				if(isPicking) {
+					x = cancelX;
+					y = cancelY;
 					finishPicking();
 				} else {
-					cancelPosition = new Point(position);
+					cancelX = x;
+					cancelY = y;
+					isPicking = true;
 					button.displayString = I18n.format("betterHud.menu.picking");
 				}
 				updateText();
@@ -99,29 +94,30 @@ public class SettingAbsolutePosition extends Setting<Point> {
 
 	/** Forgets the original position and keeps the current picked position */
 	public void finishPicking() {
-		cancelPosition = null;
+		isPicking = false;
 		pick.displayString = I18n.format("betterHud.menu.pick");
 	}
 
 	@Override
 	public void set(Point value) {
-		position = value;
+		x = value.getX();
+		y = value.getY();
 		updateText();
 	}
 
 	@Override
 	public Point get() {
-		return position;
+		return new Point(x, y);
 	}
 
 	@Override
 	public String save() {
-		return get().save();
+		return get().toString();
 	}
 
 	@Override
 	public void load(String val) {
-		position.load(val);
+		set(Point.fromString(val));
 	}
 
 	@Override
@@ -134,18 +130,18 @@ public class SettingAbsolutePosition extends Setting<Point> {
 
 		if(enabled) {
 			try {
-				position.x = Integer.parseInt(xBox.getText());
+				x = Integer.parseInt(xBox.getText());
 				xUp.enabled = xDown.enabled = true;
 			} catch(NumberFormatException e) {
-				position.x = 0;
+				x = 0;
 				xUp.enabled = xDown.enabled = false;
 			}
 
 			try {
-				position.y = Integer.parseInt(yBox.getText());
+				y = Integer.parseInt(yBox.getText());
 				yUp.enabled = yDown.enabled = true;
 			} catch(NumberFormatException e) {
-				position.y = 0;
+				y = 0;
 				yUp.enabled = yDown.enabled = false;
 			}
 		} else {

@@ -55,15 +55,15 @@ public class Hotbar extends OverrideElement {
 
 		GlUtil.enableBlendTranslucent();
 
-		GlUtil.drawTexturedModalRect(bar.position, barTexture);
-		GlUtil.drawTexturedModalRect(bar.position.add(-1 + player.inventory.currentItem * 20, -1), selected);
+		GlUtil.drawTexturedModalRect(bar.getPosition(), barTexture);
+		GlUtil.drawTexturedModalRect(bar.getPosition().add(-1 + player.inventory.currentItem * 20, -1), selected);
 
 		GlUtil.enableBlendTranslucent();
 		GlStateManager.enableRescaleNormal();
 		RenderHelper.enableGUIStandardItemLighting();
 
 		for (int i = 0; i < 9; i++) {
-			renderHotbarItem(bar.position.add(3 + i*20, 3), getPartialTicks(event), player, player.inventory.mainInventory.get(i));
+			renderHotbarItem(bar.getPosition().add(3 + i*20, 3), getPartialTicks(event), player, player.inventory.mainInventory.get(i));
 		}
 
 		RenderHelper.disableStandardItemLighting();
@@ -80,18 +80,18 @@ public class Hotbar extends OverrideElement {
 				float factor = 1 + animationTicks / 5;
 
 				GlStateManager.pushMatrix();
-				GlStateManager.translate(position.x + 8, position.y + 12, 0);
+				GlStateManager.translate(position.getX() + 8, position.getY() + 12, 0);
 				GlStateManager.scale(1 / factor, (factor + 1) / 2, 1);
-				GlStateManager.translate(-(position.x + 8), -(position.y + 12), 0.0F);
+				GlStateManager.translate(-(position.getX() + 8), -(position.getY() + 12), 0.0F);
 			}
 
-			MC.getRenderItem().renderItemAndEffectIntoGUI(player, stack, position.x, position.y);
+			MC.getRenderItem().renderItemAndEffectIntoGUI(player, stack, position.getX(), position.getY());
 
 			if(animationTicks > 0.0F) {
 				GlStateManager.popMatrix();
 			}
 
-			MC.getRenderItem().renderItemOverlays(MC.fontRenderer, stack, position.x, position.y);
+			MC.getRenderItem().renderItemOverlays(MC.fontRenderer, stack, position.getX(), position.getY());
 		}
 	}
 }

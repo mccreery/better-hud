@@ -1,6 +1,5 @@
 package tk.nukeduck.hud.element;
 
-import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
 
 import net.minecraft.item.ItemStack;
@@ -12,7 +11,6 @@ import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
-import tk.nukeduck.hud.util.Point;
 
 public class HandBar extends EquipmentDisplay {
 	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS | Direction.SOUTH.flag());
@@ -28,6 +26,7 @@ public class HandBar extends EquipmentDisplay {
 		showItem.set(true);
 		showBars.set(true);
 		offHand.set(false);
+		settings.priority.set(100);
 	}
 
 	public HandBar() {
@@ -39,7 +38,7 @@ public class HandBar extends EquipmentDisplay {
 		settings.add(showBars);
 		settings.add(offHand);
 	}
-	
+
 	public void renderBar(ItemStack stack, int x, int y) {
 		String text = getText(stack);
 
@@ -71,26 +70,18 @@ public class HandBar extends EquipmentDisplay {
 
 	@Override
 	public Bounds render(Event event) {
-		Bounds bounds = new Bounds(180, offHand.get() ? 41 : 18);
-
-		if(position.getDirection() == Direction.SOUTH) {
-			bounds.position = new Point(MANAGER.getResolution().x / 2, MANAGER.getResolution().y - 64);
-			Direction.SOUTH.align(bounds);
-		} else {
-			position.applyTo(bounds);
-		}
-
+		Bounds bounds = position.applyTo(new Bounds(180, offHand.get() ? 41 : 18));
 		ItemStack stack = MC.player.getHeldItemMainhand();
 
 		if(stack != null && stack.getMaxDamage() > 0) {
-			renderBar(stack, bounds.x(), bounds.bottom() - 18);
+			renderBar(stack, bounds.getX(), bounds.getBottom() - 18);
 		}
 
 		if(offHand.get()) {
 			stack = MC.player.getHeldItemOffhand();
 
 			if(stack != null && stack.getMaxDamage() > 0) {
-				renderBar(stack, bounds.x(), bounds.y());
+				renderBar(stack, bounds.getX(), bounds.getY());
 			}
 		}
 		return bounds;

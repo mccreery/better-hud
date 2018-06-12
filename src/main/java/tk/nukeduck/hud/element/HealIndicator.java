@@ -1,7 +1,6 @@
 package tk.nukeduck.hud.element;
 
 import static tk.nukeduck.hud.BetterHud.HUD_ICONS;
-import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
 
 import net.minecraft.client.resources.I18n;
@@ -40,18 +39,19 @@ public class HealIndicator extends HudElement {
 			Bounds bounds = mode.getIndex() == 0 ? new Bounds(MC.fontRenderer.getStringWidth(healIndicator), MC.fontRenderer.FONT_HEIGHT) : new Bounds(9, 9);
 
 			if(position.isAbsolute()) {
-				position.applyTo(bounds);
+				bounds = position.applyTo(bounds);
 			} else {
-				bounds.position = MANAGER.getResolution().scale(.5f, 1).sub(90, 50);
+				// TODO
+				//bounds.position = MANAGER.getResolution().scale(.5f, 1).sub(90, 50);
 			}
 
 			GlUtil.color(Colors.WHITE);
 
 			if(mode.getIndex() == 0) {
-				MC.ingameGUI.drawString(MC.fontRenderer, healIndicator, bounds.x(), bounds.y(), Colors.GREEN);
+				MC.ingameGUI.drawString(MC.fontRenderer, healIndicator, bounds.getX(), bounds.getY(), Colors.GREEN);
 			} else {
 				MC.getTextureManager().bindTexture(HUD_ICONS);
-				MC.ingameGUI.drawTexturedModalRect(bounds.x(), bounds.y(), 0, 80, 9, 9);
+				MC.ingameGUI.drawTexturedModalRect(bounds.getX(), bounds.getY(), 0, 80, 9, 9);
 			}
 
 			GlUtil.color(Colors.WHITE);

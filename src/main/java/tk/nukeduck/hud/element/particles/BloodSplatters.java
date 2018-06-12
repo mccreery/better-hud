@@ -39,7 +39,7 @@ public class BloodSplatters extends ParticleOverlay {
 		int count = spawnMultiplier * (int)event.getAmount();
 
 		for (int i = 0; i < count; i++) {
-			particles.add(ParticleBlood.random(resolution.x, resolution.y));
+			particles.add(ParticleBlood.random(resolution.getX(), resolution.getY()));
 		}
 	}
 }

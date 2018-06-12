@@ -50,7 +50,6 @@ public class GuiElementSettings extends GuiScreen {
 
 	private int clickTimer = 0;
 	private GuiButton clickedUpDown = null;
-	//public static final Map<HudElement, Bounds> boundsCache = new HashMap<HudElement, Bounds>();
 
 	public GuiElementSettings(HudElement element, GuiScreen prev) {
 		this.element = element;
@@ -79,8 +78,7 @@ public class GuiElementSettings extends GuiScreen {
 			}
 		}
 
-		viewport = new Bounds(width / 2 - 200, height / 16 + 40 + SPACER, 400, 0);
-		viewport.bottom(height - 20);
+		viewport = new Bounds(width / 2 - 200, height / 16 + 40 + SPACER, 400, 0).withBottom(height - 20);
 		scrollbar = new GuiScrollbar(viewport, content);
 
 		for(Setting<?> setting : callbacks.values()) {
@@ -188,7 +186,7 @@ public class GuiElementSettings extends GuiScreen {
 	protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
 		boolean wasPicking = picker != null;
 
-		if(mouseY >= viewport.top() && mouseY < viewport.bottom()) {
+		if(mouseY >= viewport.getTop() && mouseY < viewport.getBottom()) {
 			super.mouseClicked(mouseX, mouseY + getMouseOffset(), button);
 
 			for(GuiTextField field : this.textboxList) {
@@ -243,7 +241,7 @@ public class GuiElementSettings extends GuiScreen {
 		GL11.glPushAttrib(GL11.GL_SCISSOR_BIT);
 
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
-		GL11.glScissor(viewport.x() * resolution.getScaleFactor(), (height - viewport.y() - viewport.height()) * resolution.getScaleFactor(), viewport.width() * resolution.getScaleFactor(), viewport.height() * resolution.getScaleFactor());
+		GL11.glScissor(viewport.getX() * resolution.getScaleFactor(), (height - viewport.getY() - viewport.getHeight()) * resolution.getScaleFactor(), viewport.getWidth() * resolution.getScaleFactor(), viewport.getHeight() * resolution.getScaleFactor());
 
 		GL11.glTranslatef(0, -getMouseOffset(), 0);
 
@@ -269,7 +267,7 @@ public class GuiElementSettings extends GuiScreen {
 
 	/** Add to {@code mouseY} to get the effective {@code mouseY} taking into account scroll */
 	@Deprecated private int getMouseOffset() {
-		return scrollbar.getScroll() - viewport.top();
+		return scrollbar.getScroll() - viewport.getTop();
 	}
 
 	/** Draws bounds for all elements on the screen */
@@ -286,16 +284,16 @@ public class GuiElementSettings extends GuiScreen {
 	}
 
 	private void drawBounds(Bounds bounds, int color) {
-		drawHorizontalLine(bounds.left(), bounds.right(), bounds.top(), color);
-		drawHorizontalLine(bounds.left(), bounds.right(), bounds.bottom(), color);
+		drawHorizontalLine(bounds.getLeft(), bounds.getRight(), bounds.getTop(), color);
+		drawHorizontalLine(bounds.getLeft(), bounds.getRight(), bounds.getBottom(), color);
 
-		drawVerticalLine(bounds.left(), bounds.top(), bounds.bottom(), color);
-		drawVerticalLine(bounds.right(), bounds.top(), bounds.bottom(), color);
+		drawVerticalLine(bounds.getLeft(), bounds.getTop(), bounds.getBottom(), color);
+		drawVerticalLine(bounds.getRight(), bounds.getTop(), bounds.getBottom(), color);
 	}
 
 	private void drawCrosshair(Point center, int color) {
-		drawHorizontalLine(center.x - 10, center.x + 10, center.y, color);
-		drawVerticalLine(center.x, center.y - 10, center.y + 10, color);
+		drawHorizontalLine(center.getX() - 10, center.getX() + 10, center.getY(), color);
+		drawVerticalLine(center.getX(), center.getY() - 10, center.getY() + 10, color);
 	}
 
 	/** Draws a diagram of the size of the HUD */

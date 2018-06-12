@@ -48,7 +48,7 @@ public class HelmetOverlay extends OverrideElement {
 			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
 
 			MC.getTextureManager().bindTexture(PUMPKIN_BLUR_TEX_PATH);
-			Gui.drawModalRectWithCustomSizedTexture(0, 0, 0, 0, MANAGER.getResolution().x, MANAGER.getResolution().y, MANAGER.getResolution().x, MANAGER.getResolution().y);
+			Gui.drawModalRectWithCustomSizedTexture(0, 0, 0, 0, MANAGER.getResolution().getX(), MANAGER.getResolution().getY(), MANAGER.getResolution().getX(), MANAGER.getResolution().getY());
 		} else {
 			item.renderHelmetOverlay(stack, MC.player, MANAGER.getScaledResolution(), getPartialTicks(event));
 		}

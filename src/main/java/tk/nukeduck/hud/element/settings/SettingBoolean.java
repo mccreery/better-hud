@@ -58,7 +58,7 @@ public class SettingBoolean extends SettingAlignable<Boolean> {
 		toggler = (GuiToggleButton)new GuiSettingToggle(getUnlocalizedName(), this).setUnlocalizedValue(unlocalizedValue).setBounds(bounds);
 		parts.add(toggler);
 		callbacks.put(toggler, this);
-		return bounds.bottom() + SPACER;
+		return bounds.getBottom() + SPACER;
 	}
 
 	@Override

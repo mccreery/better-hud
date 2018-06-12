@@ -38,12 +38,12 @@ public class JumpBar extends OverrideElement {
 
 		float charge = MC.player.getHorseJumpPower();
 		Bounds bounds = MANAGER.position(Direction.SOUTH, new Bounds(182, 5), false, 1);
-		int filled = (int)(charge * bounds.width());
+		int filled = (int)(charge * bounds.getWidth());
 
-		GlUtil.drawTexturedModalRect(bounds.position, new Bounds(0, 84, bounds.width(), bounds.height()));
+		GlUtil.drawTexturedModalRect(bounds.getPosition(), new Bounds(0, 84, bounds.getWidth(), bounds.getHeight()));
 
 		if(filled > 0) {
-			GlUtil.drawTexturedModalRect(bounds.position, new Bounds(0, 89, filled, bounds.height()));
+			GlUtil.drawTexturedModalRect(bounds.getPosition(), new Bounds(0, 89, filled, bounds.getHeight()));
 		}
 
 		GlStateManager.enableBlend();

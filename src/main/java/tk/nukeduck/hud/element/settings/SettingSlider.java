@@ -77,11 +77,11 @@ public class SettingSlider extends SettingAlignable<Double> implements ISlider {
 
 	@Override
 	public int getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Bounds bounds) {
-		slider = new GuiSlider(0, bounds.x(), bounds.y(), bounds.width(), bounds.height(), this);
+		slider = new GuiSlider(0, bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), this);
 
 		parts.add(slider);
 		callbacks.put(slider, this);
-		return bounds.bottom() + SPACER;
+		return bounds.getBottom() + SPACER;
 	}
 
 	@Override public void actionPerformed(GuiElementSettings gui, GuiButton button) {}

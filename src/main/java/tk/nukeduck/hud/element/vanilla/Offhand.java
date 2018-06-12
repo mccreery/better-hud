@@ -51,7 +51,7 @@ public class Offhand extends OverrideElement {
 		Bounds texture = new Bounds(24, 23, 22, 22);
 
 		if(position.getDirection() == Direction.SOUTH) {
-			offhand.mirrorColumn().align(bounds, offhand.getAnchor(HudElement.HOTBAR.getLastBounds().pad(SPACER)));
+			offhand.mirrorColumn().align(bounds, offhand.getAnchor(HudElement.HOTBAR.getLastBounds().withPadding(SPACER)));
 		} else {
 			position.applyTo(bounds);
 		}
@@ -63,7 +63,7 @@ public class Offhand extends OverrideElement {
 		GlUtil.drawTexturedModalRect(bounds, texture);
 
 		RenderHelper.enableGUIStandardItemLighting();
-		Hotbar.renderHotbarItem(bounds.position.add(3, 3), getPartialTicks(event), MC.player, offhandStack);
+		Hotbar.renderHotbarItem(bounds.getPosition().add(3, 3), getPartialTicks(event), MC.player, offhandStack);
 		RenderHelper.disableStandardItemLighting();
 
 		return bounds;

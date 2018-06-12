@@ -1,6 +1,5 @@
 package tk.nukeduck.hud.element;
 
-import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
 import static tk.nukeduck.hud.BetterHud.SPACER;
 
@@ -40,7 +39,7 @@ import tk.nukeduck.hud.network.Version;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
-import tk.nukeduck.hud.util.PaddedBounds;
+import tk.nukeduck.hud.util.Point;
 
 public class BlockViewer extends TextElement {
 	private final SettingBoolean showBlock = new SettingBoolean("showItem").setUnlocalizedValue(SettingBoolean.VISIBLE);
@@ -108,33 +107,32 @@ public class BlockViewer extends TextElement {
 	protected Bounds getPadding() {
 		int vPad = 20 - MC.fontRenderer.FONT_HEIGHT;
 		int bottom = vPad / 2;
-		Bounds bounds = Bounds.getPadding(5, vPad - bottom, 5, bottom);
+		Bounds bounds = Bounds.createPadding(5, vPad - bottom, 5, bottom);
 
 		if(stack != null && showBlock.get()) {
-			bounds.left(bounds.left() - 21);
+			bounds = bounds.withLeft(bounds.getLeft() - 21);
 		}
 		return bounds;
 	}
 
 	@Override
-	protected void drawBorder(PaddedBounds bounds) {
-		GlUtil.drawTooltipBox(bounds.x(), bounds.y(), bounds.width(), bounds.height());
+	protected void drawBorder(Bounds bounds, Bounds padding, Bounds margin) {
+		GlUtil.drawTooltipBox(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight());
 	}
 
 	@Override
-	protected void drawExtras(PaddedBounds bounds) {
+	protected void drawExtras(Bounds bounds) {
 		if(stack != null && showBlock.get()) {
 			RenderHelper.enableGUIStandardItemLighting();
-			MC.getRenderItem().renderItemAndEffectIntoGUI(stack, bounds.x() + 5, bounds.y() + 2);
+			MC.getRenderItem().renderItemAndEffectIntoGUI(stack, bounds.getX() + 5, bounds.getY() + 2);
 			RenderHelper.disableStandardItemLighting();
 		}
 	}
 
 	@Override
-	protected PaddedBounds moveBounds(PaddedBounds bounds) {
+	protected Bounds moveBounds(Bounds bounds) {
 		if(position.getDirection() == Direction.CENTER) {
-			bounds.position = MANAGER.getResolution().scale(.5f, .5f).sub(0, SPACER);
-			return Direction.SOUTH.align(bounds);
+			return bounds.position(Direction.CENTER, new Point(0, -SPACER), Direction.SOUTH);
 		} else {
 			return super.moveBounds(bounds);
 		}

@@ -37,7 +37,7 @@ public class ParticleBlood extends Particle {
 		GlStateManager.pushMatrix();
 
 		GlStateManager.color(1, 1, 1, opacity);
-		GlStateManager.translate(position.x, position.y, 0.0F);
+		GlStateManager.translate(position.getX(), position.getY(), 0.0F);
 		GlStateManager.rotate(rotation, 0, 0, 1);
 		GlStateManager.scale(this.size, this.size, 1.0F);
 		MC.ingameGUI.drawTexturedModalRect(0, 0, this.u * 16, this.v * 16, 16, 16);

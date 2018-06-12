@@ -60,7 +60,7 @@ public abstract class Bar extends OverrideElement {
 			alignment = position.getAlignment();
 		}
 
-		bar.render(bounds.position, alignment);
+		bar.render(bounds.getPosition(), alignment);
 		return bounds;
 	}
 }

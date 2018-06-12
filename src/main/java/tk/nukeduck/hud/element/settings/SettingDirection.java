@@ -45,11 +45,11 @@ public class SettingDirection extends Setting<Direction> {
 
 		for(int row = 0; row < 3; row++) {
 			if((options & Direction.getRowFlags(row)) != 0) {
-				bounds.bottom(bounds.bottom() + 22);
+				bounds = bounds.withBottom(bounds.getBottom() + 22);
 
 				for(int col = 0; col < 3; col++) {
 					Direction direction = Direction.get(row, col);
-					direction.toRow(2).anchor(radio, bounds);
+					radio = direction.toRow(2).anchor(radio, bounds);
 
 					GuiToggleButton button = (GuiToggleButton)new GuiToggleButton("").setStaticText().setId(direction.ordinal()).setBounds(radio);
 					parts.add(button);
@@ -59,7 +59,7 @@ public class SettingDirection extends Setting<Direction> {
 				}
 			}
 		}
-		return bounds.height() == -2 ? -1 : bounds.bottom() + SPACER;
+		return bounds.getHeight() == -2 ? -1 : bounds.getBottom() + SPACER;
 	}
 
 	@Override
