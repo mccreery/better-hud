@@ -1,0 +1,237 @@
+#tile.null.name=Unknown Block
+#tile.endPortal.name=End Portal
+
+#key.betterHud.open=Open Better HUD Menu
+#key.betterHud.disable=Toggle Better HUD
+
+# Generic Formatters
+#betterHud.hud.meters=%sm
+#betterHud.hud.seconds=%ss
+
+# Menu buttons
+#betterHud.menu.hudSettings=HUD Settings
+#betterHud.menu.settings=%s Settings
+#betterHud.menu.enableAll=Enable All
+#betterHud.menu.disableAll=Disable All
+#betterHud.menu.resetDefaults=Reset Defaults
+#betterHud.menu.lastPage=Last Page
+#betterHud.menu.nextPage=Next Page
+#betterHud.menu.page=Page %s
+#betterHud.menu.picking=Picking (Cancel)
+#betterHud.menu.pick=Pick
+#betterHud.menu.options=Options
+
+#betterHud.menu.alphabetical=A-Z
+#betterHud.menu.enabled=Enabled
+#betterHud.menu.priority=Priority
+
+# Menu text
+#betterHud.menu.arrowCountNotice=Position will only have effect if the mode is set to Side.
+#betterHud.menu.fhNotice=Food and health values will always be beside the hotbar. These settings are for saturation.
+#betterHud.menu.expInfoNotice=These settings are only for total experience count.
+#betterHud.menu.invNames=For inventories, such as chests, which have been named via anvil.
+#betterHud.menu.unsnap=Hold %s to disable snapping
+#betterHud.menu.unsupported=This element is not supported by the server
+
+# Element names
+#betterHud.element.global=Better HUD
+
+#betterHud.element.armorBars=Armor Bars
+#betterHud.element.arrowCount=Arrow Count
+#betterHud.element.biome=Biome
+#betterHud.element.blockViewer=Block Viewer
+#betterHud.element.bloodSplatters=Blood Splatters
+#betterHud.element.breedIndicator=Breed Indicator
+#betterHud.element.compass=Compass
+#betterHud.element.connection=Connection
+#betterHud.element.coordinates=Coordinates
+#betterHud.element.cps=CPS
+#betterHud.element.distance=Distance
+#betterHud.element.enchantIndicator=Enchantment Indicator
+#betterHud.element.experienceInfo=XP Info
+#betterHud.element.foodIndicator=Hunger Indicator
+#betterHud.element.fpsCount=FPS
+#betterHud.element.fullInvIndicator=Full Inv. Indicator
+#betterHud.element.gameClock=Game Clock
+#betterHud.element.handBar=Holding Bar
+#betterHud.element.healIndicator=Heal Indicator
+#betterHud.element.hidePlayers=Hide Players
+#betterHud.element.horseInfo=Horse Info
+#betterHud.element.itemPickup=Item Pickup
+#betterHud.element.lightLevel=Light Level
+#betterHud.element.mobInfo=Mob Info
+#betterHud.element.playerInfo=Player Info
+#betterHud.element.potionBar=Potion Display
+#betterHud.element.saturation=Saturation
+#betterHud.element.signReader=Sign Reader
+#betterHud.element.systemClock=System Clock
+#betterHud.element.waterDrops=Water Drops
+
+# Vanilla elements
+#betterHud.element.airBar=Air Bar
+#betterHud.element.armor=Armor Bar
+#betterHud.element.crosshair=Crosshair
+#betterHud.element.experience=Experience Bar
+#betterHud.element.food=Hunger Bar
+#betterHud.element.health=Health Bar
+#betterHud.element.helmetOverlay=Helmet Overlay
+#betterHud.element.hotbar=Hotbar
+#betterHud.element.jumpBar=Jump Bar
+#betterHud.element.mountHealth=Mount Health
+#betterHud.element.offhand=Off-Hand
+#betterHud.element.portal=Portal Overlay
+#betterHud.element.scoreboard=Scoreboard
+#betterHud.element.vignette=Vignette
+
+# Setting Groups
+#betterHud.group.position=Position
+#betterHud.group.misc=Misc.
+#betterHud.group.damageWarning=Damage Warnings
+
+# Generic Settings
+#betterHud.value.visible.on=Visible
+#betterHud.value.visible.off=Hidden
+
+#betterHud.setting.mode=Mode
+#betterHud.value.mode=Type %s
+
+#betterHud.setting.position=Position
+#betterHud.value.preset=Preset
+#betterHud.value.custom=Custom
+
+#betterHud.setting.positionType=Position Type
+#betterHud.value.hotbar=Hotbar
+
+#betterHud.setting.direction=Direction
+#betterHud.setting.anchor=Anchor
+#betterHud.setting.alignment=Alignment
+#betterHud.value.northWest=Northwest
+#betterHud.value.north=North
+#betterHud.value.northEast=Northeast
+#betterHud.value.west=West
+#betterHud.value.center=Center
+#betterHud.value.east=East
+#betterHud.value.southWest=Southwest
+#betterHud.value.south=South
+#betterHud.value.southEast=Southeast
+
+#betterHud.value.percent=%s%%
+#betterHud.setting.precision=Precision
+#betterHud.value.places=%s places
+#betterHud.setting.distance=Distance
+#betterHud.setting.red=Â§cRed
+#betterHud.setting.green=Â§aGreen
+#betterHud.setting.blue=Â§1Blue
+
+# Particles
+#betterHud.setting.density=Density
+#betterHud.value.sparse=Sparse
+#betterHud.value.normal=Normal
+#betterHud.value.dense=Dense
+#betterHud.value.denser=Denser
+
+# Equipment
+#betterHud.setting.showItem=Item
+#betterHud.setting.showName=Name
+#betterHud.setting.showDurability=Durability
+#betterHud.setting.offhand=Off-Hand
+
+#betterHud.setting.bars=Bars
+#betterHud.value.smallBars=Small Bars
+#betterHud.value.largeBars=Large Bars
+
+#betterHud.setting.durabilityFormat=Format
+#betterHud.value.points=Damage Points
+#betterHud.value.percentage=Percentage
+
+#betterHud.setting.warning.1=Â§c!Â§r
+#betterHud.setting.warning.2=Â§c! !Â§r
+#betterHud.setting.warning.3=Â§c! ! !Â§r
+#betterHud.value.disabled=Disabled
+
+# Block Viewer
+#betterHud.setting.invNames=Inventory Names
+#betterHud.setting.showIds=IDs
+#betterHud.setting.chunks=%s Chunks
+
+# Compass
+#betterHud.setting.letterScale=Perspective
+#betterHud.setting.showNotches=Notches
+#betterHud.setting.scale=Scale
+
+# Clocks
+#betterHud.setting.24hr=24 Hour
+#betterHud.setting.showSeconds=Seconds
+#betterHud.setting.showDays=Days
+#betterHud.setting.fullYear=Full Year
+
+#betterHud.setting.dateType=Format
+#betterHud.value.dmy=D/M/Y (UK)
+#betterHud.value.mdy=M/D/Y (US)
+#betterHud.value.ymd=Y/M/D
+#betterHud.hud.day=Day %s
+
+# Connection
+#betterHud.setting.playerCount=Player Count
+#betterHud.setting.showIp=IP Address
+#betterHud.setting.latency=Latency (Ping)
+
+#betterHud.hud.player=1 player
+#betterHud.hud.players=%s players
+#betterHud.hud.localServer=Local Server
+#betterHud.hud.ip=IP: %s
+#betterHud.hud.ping=Ping: %sms
+
+# Coordinates
+#betterHud.hud.x=X: %s
+#betterHud.hud.y=Y: %s
+#betterHud.hud.z=Z: %s
+#betterHud.hud.xyz=X: %s, Y: %s, Z: %s
+
+# Hunger Indicator
+#betterHud.setting.maxLimit=Start Flashing At
+#betterHud.setting.speed=Flash Speed
+#betterHud.value.slowest=Slowest
+#betterHud.value.fastest=Fastest
+
+# Mob Info
+#betterHud.setting.billboardScale=Billboard Scale
+#betterHud.setting.jump=Jump Height
+#betterHud.setting.speed=Speed
+#betterHud.setting.players=Players
+#betterHud.setting.mobs=Mobs
+
+#betterHud.setting.compress=Compress Above
+#betterHud.value.never=Never
+#betterHud.value.unlimited=Unlimited
+
+# CPS Counter
+#betterHud.setting.timeout=Timeout
+#betterHud.setting.showBurst=Show Burst
+#betterHud.setting.remember=Remember Burst
+
+# Others
+#betterHud.setting.alwaysVisible=Always Visible
+#betterHud.setting.disableDefault=Disable Default
+#betterHud.setting.hideMount=Hide While Riding
+#betterHud.setting.includeMe=Include Me
+#betterHud.setting.numberOnly=Number Only
+#betterHud.setting.overlay=Overlay
+#betterHud.setting.showLifetimeExp=XP Since Death
+#betterHud.setting.showTotalExp=Total XP
+#betterHud.setting.spaced=Spaced
+#betterHud.setting.text=Text
+#betterHud.setting.tooltipLines=Tooltip Lines
+#betterHud.setting.visual=Visual
+#betterHud.setting.warnings=Warnings
+
+#betterHud.hud.biome=Biome: %s
+#betterHud.hud.burst=Burst: %s clicks over %ss
+#betterHud.hud.day=Day %s
+#betterHud.hud.distance.0=Â§a[Â§r%sÂ§a]
+#betterHud.hud.distance.1=%sm away
+#betterHud.hud.fullInv=Inventory Full
+#betterHud.hud.healIndicator=+
+#betterHud.hud.holding=Holding: %s
+#betterHud.hud.saturation=Saturation: %s
+#betterHud.hud.unknownBlock=Unknown Block
