@@ -81,7 +81,7 @@ public final class Point implements Serializable {
 
 	@Override
 	public String toString() {
-		return String.format("(%d, %d)", getX(), getY());
+		return String.format("%d,%d", getX(), getY());
 	}
 
 	public static Point fromString(String s) {
