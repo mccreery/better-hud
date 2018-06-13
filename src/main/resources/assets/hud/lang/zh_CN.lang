@@ -1,3 +1,14 @@
+#tile.null.name=Unknown Block
+#tile.endPortal.name=End Portal
+
+key.betterHud.open=打开Better HUD菜单
+#key.betterHud.disable=Toggle Better HUD
+
+# Generic Formatters
+#betterHud.hud.meters=%sm
+#betterHud.hud.seconds=%ss
+
+# Menu buttons
 betterHud.menu.hudSettings=HUD 配置
 betterHud.menu.settings=%s 配置
 betterHud.menu.enableAll=启用全部
@@ -10,118 +21,217 @@ betterHud.menu.picking=选择位置 (取消)
 betterHud.menu.pick=选择位置
 betterHud.menu.options=选项
 
-betterHud.unsupported=此元素不受服务器支持。
+#betterHud.menu.alphabetical=A-Z
+#betterHud.menu.enabled=Enabled
+#betterHud.menu.priority=Priority
 
-betterHud.element.bloodSplatters=溅血
+# Menu text
+betterHud.menu.arrowCountNotice=位置只会在模式设置为边缘时有效。
+#betterHud.menu.fhNotice=Food and health values will always be beside the hotbar. These settings are for saturation.
+betterHud.menu.expInfoNotice=这些设定只对总经验计数有效。
+betterHud.menu.invNames=对于被铁砧命名过的容器，比如箱子。
+#betterHud.menu.unsnap=Hold %s to disable snapping
+betterHud.menu.unsupported=此元素不受服务器支持。
+
+# Element names
+#betterHud.element.global=Better HUD
+
+betterHud.element.armorBars=护甲耐久条
 betterHud.element.arrowCount=背包箭数量
+betterHud.element.biome=生物群系
 betterHud.element.blockViewer=方块显示
-betterHud.element.clock=时钟
+betterHud.element.bloodSplatters=溅血
+betterHud.element.breedIndicator=饲养繁殖指示器
 betterHud.element.compass=指南针
 betterHud.element.connection=服务器连接情况
 betterHud.element.coordinates=坐标
+#betterHud.element.cps=CPS
+betterHud.element.distance=方块距离
 betterHud.element.enchantIndicator=附魔指示器
-betterHud.element.armorBars=护甲耐久条
-betterHud.element.handBar=手持物品条
 betterHud.element.experienceInfo=经验信息
-betterHud.element.foodHealthStats=饥饿与健康状态
 betterHud.element.foodIndicator=饥饿指示器
 betterHud.element.fpsCount=FPS帧数
-betterHud.element.healIndicator=治疗指示器
-betterHud.element.lightLevel=光照等级
-betterHud.element.potionBar=药水显示
-betterHud.element.signReader=告示牌放大
-betterHud.element.mobInfo=动物信息
-betterHud.element.horseInfo=马信息
-betterHud.element.distance=方块距离
-betterHud.element.hidePlayers=隐藏其他玩家
-betterHud.element.biome=生物群系
-betterHud.element.breedIndicator=饲养繁殖指示器
 betterHud.element.fullInvIndicator=背包已满指示器
-betterHud.element.waterDrops=水滴
+betterHud.element.gameClock=时钟
+betterHud.element.handBar=手持物品条
+betterHud.element.healIndicator=治疗指示器
+betterHud.element.hidePlayers=隐藏其他玩家
+betterHud.element.horseInfo=马信息
 betterHud.element.itemPickup=捡拾物品指示
+betterHud.element.lightLevel=光照等级
+betterHud.element.mobInfo=动物信息
+#betterHud.element.playerInfo=Player Info
+betterHud.element.potionBar=药水显示
+#betterHud.element.saturation=Saturation
+betterHud.element.signReader=告示牌放大
 betterHud.element.systemClock=系统时钟（现实时间）
+betterHud.element.waterDrops=水滴
 
-key.betterHud.open=打开Better HUD菜单
+# Vanilla elements
+#betterHud.element.airBar=Air Bar
+#betterHud.element.armor=Armor Bar
+#betterHud.element.crosshair=Crosshair
+#betterHud.element.experience=Experience Bar
+#betterHud.element.food=Hunger Bar
+#betterHud.element.health=Health Bar
+#betterHud.element.helmetOverlay=Helmet Overlay
+#betterHud.element.hotbar=Hotbar
+#betterHud.element.jumpBar=Jump Bar
+#betterHud.element.mountHealth=Mount Health
+#betterHud.element.offhand=Off-Hand
+#betterHud.element.portal=Portal Overlay
+#betterHud.element.scoreboard=Scoreboard
+#betterHud.element.vignette=Vignette
 
-betterHud.setting.topLeft=左上
-betterHud.setting.topCenter=上
-betterHud.setting.topRight=右上
-betterHud.setting.middleLeft=左
-betterHud.setting.middleCenter=中
-betterHud.setting.middleRight=右
-betterHud.setting.bottomLeft=左下
-betterHud.setting.bottomCenter=下
-betterHud.setting.bottomRight=右下
-betterHud.setting.setPos=相对位置
-betterHud.setting.absolute=绝对位置
+# Setting Groups
+betterHud.group.position=位置
+#betterHud.group.misc=Misc.
+betterHud.group.damageWarning=损毁警告
 
-betterHud.setting.numberOnly=仅数字
+# Generic Settings
+betterHud.value.visible.on=可见
+betterHud.value.visible.off=隐藏
+
 betterHud.setting.mode=模式
-betterHud.setting.24hr=24小时计时法
+betterHud.value.mode=类型
+
 betterHud.setting.position=位置
+betterHud.value.preset=相对位置
+betterHud.value.custom=绝对位置
+
+#betterHud.setting.positionType=Position Type
+#betterHud.value.hotbar=Hotbar
+
+#betterHud.setting.direction=Direction
+#betterHud.setting.anchor=Anchor
 betterHud.setting.alignment=对齐
-betterHud.setting.showName=显示名称
-betterHud.setting.showDurability=显示耐久
-betterHud.setting.visible=可见
-betterHud.setting.hidden=隐藏
-betterHud.setting.smallBars=小条
-betterHud.setting.largeBars=大条
-betterHud.setting.durabilityMode=耐久模式
-betterHud.setting.values=值
-betterHud.setting.percent=百分比
-betterHud.setting.side=边缘
-betterHud.setting.overlay=覆盖
-betterHud.setting.blood.sparse=稀疏
-betterHud.setting.blood.normal=常规
-betterHud.setting.blood.dense=密集
-betterHud.setting.blood.denser=更密集
-betterHud.setting.scaledDirections=Scaled Directions
-betterHud.setting.showNotches=Show Notches
-betterHud.setting.dmy=日/月/年 (英式)
-betterHud.setting.mdy=月/日/年 (美式)
-betterHud.setting.ymd=年/月/日 (中式)
-betterHud.setting.showSeconds=显示秒数
-betterHud.setting.fullYear=年全称
-betterHud.setting.includeMe=包含我
-betterHud.setting.playerCount=玩家数量
-betterHud.setting.showIp=IP地址
-betterHud.setting.latency=延迟 (Ping)
-betterHud.setting.spaced=分组
-betterHud.setting.1=类型 1
-betterHud.setting.2=类型 2
-betterHud.setting.showItem=显示物品
-betterHud.setting.jump=跳跃高度
-betterHud.setting.speed=速度
-betterHud.setting.players=玩家
-betterHud.setting.mobs=动物
-betterHud.setting.sign.text=文本
-betterHud.setting.sign.visual=可视化
-betterHud.setting.total=总共
-betterHud.setting.showBlock=显示鼠标所指方块
-betterHud.setting.invNames=容器名称
+betterHud.value.northWest=左上
+betterHud.value.north=上
+betterHud.value.northEast=右上
+betterHud.value.west=左
+betterHud.value.center=中
+betterHud.value.east=右
+betterHud.value.southWest=左下
+betterHud.value.south=下
+betterHud.value.southEast=右下
+
+#betterHud.value.percent=%s%%
+betterHud.setting.precision=小数点精度
+#betterHud.value.places=%s places
 betterHud.setting.distance=距离
-betterHud.setting.showIds=显示ID
-betterHud.setting.scale=缩放
 betterHud.setting.red=§c红色
 betterHud.setting.green=§a绿色
 betterHud.setting.blue=§1蓝色
-betterHud.setting.decimals=小数点精度
 
-betterHud.group.position=位置
-betterHud.group.damageWarning=损毁警告
-betterHud.text.arrowCountNotice=位置只会在模式设置为边缘时有效。
-betterHud.text.expInfoNotice=这些设定只对总经验计数有效。
-betterHud.text.invNames=对于被铁砧命名过的容器，比如箱子。
-betterHud.text.potionsUseless=这在1.9中基本上是没用的，但我把它留在。你可以禁用默认的，如果你喜欢。
+# Particles
+#betterHud.setting.density=Density
+betterHud.value.sparse=稀疏
+betterHud.value.normal=常规
+betterHud.value.dense=密集
+betterHud.value.denser=更密集
 
-betterHud.strings.lightLevel=光照等级: %s
-betterHud.strings.player=1 玩家
-betterHud.strings.players=%s 玩家
-betterHud.strings.localServer=本地服务器
-betterHud.strings.fullInv=背包已满
-betterHud.strings.biome=生物群系: %s
-betterHud.strings.distance.2=%sm 外
-betterHud.strings.chunk=1 区块
-betterHud.strings.chunks=%s 区块
-betterHud.strings.total=经验: %s
-betterHud.strings.unknownBlock=未知方块
+# Equipment
+betterHud.setting.showItem=显示鼠标所指方块
+betterHud.setting.showName=显示名称
+betterHud.setting.showDurability=显示耐久
+#betterHud.setting.offhand=Off-Hand
+
+#betterHud.setting.bars=Bars
+betterHud.value.smallBars=小条
+betterHud.value.largeBars=大条
+
+betterHud.setting.durabilityFormat=耐久模式
+#betterHud.value.points=Damage Points
+betterHud.value.percentage=百分比
+
+#betterHud.setting.warning.1=Â§c!Â§r
+#betterHud.setting.warning.2=Â§c! !Â§r
+#betterHud.setting.warning.3=Â§c! ! !Â§r
+#betterHud.value.disabled=Disabled
+
+# Block Viewer
+betterHud.setting.invNames=容器名称
+betterHud.setting.showIds=显示ID
+betterHud.setting.chunks=%s 区块
+
+# Compass
+betterHud.setting.letterScale=Scaled Directions
+betterHud.setting.showNotches=Show Notches
+betterHud.setting.scale=缩放
+
+# Clocks
+betterHud.setting.24hr=24小时计时法
+betterHud.setting.showSeconds=显示秒数
+#betterHud.setting.showDays=Days
+betterHud.setting.fullYear=年全称
+
+#betterHud.setting.dateType=Format
+betterHud.value.dmy=日/月/年 (英式)
+betterHud.value.mdy=月/日/年 (美式)
+betterHud.value.ymd=年/月/日 (中式)
+#betterHud.hud.day=Day %s
+
+# Connection
+betterHud.setting.playerCount=玩家数量
+betterHud.setting.showIp=IP地址
+betterHud.setting.latency=延迟 (Ping)
+
+betterHud.hud.player=1 玩家
+betterHud.hud.players=%s 玩家
+betterHud.hud.localServer=本地服务器
+#betterHud.hud.ip=IP: %s
+#betterHud.hud.ping=Ping: %sms
+
+# Coordinates
+#betterHud.hud.x=X: %s
+#betterHud.hud.y=Y: %s
+#betterHud.hud.z=Z: %s
+#betterHud.hud.xyz=X: %s, Y: %s, Z: %s
+
+# Hunger Indicator
+#betterHud.setting.maxLimit=Start Flashing At
+betterHud.setting.speed=速度
+#betterHud.value.slowest=Slowest
+#betterHud.value.fastest=Fastest
+
+# Mob Info
+#betterHud.setting.billboardScale=Billboard Scale
+betterHud.setting.jump=跳跃高度
+#betterHud.setting.speed=Speed
+betterHud.setting.players=玩家
+betterHud.setting.mobs=动物
+
+#betterHud.setting.compress=Compress Above
+#betterHud.value.never=Never
+#betterHud.value.unlimited=Unlimited
+
+# CPS Counter
+#betterHud.setting.timeout=Timeout
+#betterHud.setting.showBurst=Show Burst
+#betterHud.setting.remember=Remember Burst
+
+# Others
+#betterHud.setting.alwaysVisible=Always Visible
+#betterHud.setting.disableDefault=Disable Default
+#betterHud.setting.hideMount=Hide While Riding
+betterHud.setting.includeMe=包含我
+betterHud.setting.numberOnly=仅数字
+betterHud.setting.overlay=覆盖
+#betterHud.setting.showLifetimeExp=XP Since Death
+betterHud.setting.showTotalExp=总共
+betterHud.setting.spaced=分组
+#betterHud.setting.text=Text
+#betterHud.setting.tooltipLines=Tooltip Lines
+#betterHud.setting.visual=Visual
+#betterHud.setting.warnings=Warnings
+
+betterHud.hud.biome=生物群系: %s
+#betterHud.hud.burst=Burst: %s clicks over %ss
+#betterHud.hud.day=Day %s
+#betterHud.hud.distance.0=Â§a[Â§r%sÂ§a]
+betterHud.hud.distance.1=%sm 外
+betterHud.hud.fullInv=背包已满
+#betterHud.hud.healIndicator=+
+#betterHud.hud.holding=Holding: %s
+#betterHud.hud.saturation=Saturation: %s
+betterHud.hud.unknownBlock=未知方块

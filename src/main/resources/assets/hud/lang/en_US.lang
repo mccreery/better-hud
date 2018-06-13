@@ -31,7 +31,6 @@ betterHud.menu.fhNotice=Food and health values will always be beside the hotbar.
 betterHud.menu.expInfoNotice=These settings are only for total experience count.
 betterHud.menu.invNames=For inventories, such as chests, which have been named via anvil.
 betterHud.menu.unsnap=Hold %s to disable snapping
-betterHud.menu.potionsUseless=This is basically useless in 1.9, but I'm leaving it in. You can disable the default one, if you like.
 betterHud.menu.unsupported=This element is not supported by the server
 
 # Element names
