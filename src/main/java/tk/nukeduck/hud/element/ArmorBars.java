@@ -104,7 +104,7 @@ public class ArmorBars extends EquipmentDisplay {
 
 		for(int i = 3; i >= 0; i--, row = row.withY(row.getY() + 18)) {
 			ItemStack stack = MC.player.inventory.armorItemInSlot(i);
-			Bounds item = alignment.anchor(new Bounds(18, 16), row);
+			Bounds item = alignment.anchor(new Bounds(16, 16), row);
 
 			if(stack == null || stack.isEmpty()) {
 				drawEmptySlot(item.getPosition(), i);
@@ -131,7 +131,7 @@ public class ArmorBars extends EquipmentDisplay {
 						Bounds bar = Direction.SOUTH.anchor(new Bounds(content.getWidth(), 2), content);
 						GlUtil.drawDamageBar(bar, stack, false);
 					} else {
-						Bounds bar = alignment.mirrorColumn().anchor(new Bounds(2, item.getHeight()), item);
+						Bounds bar = alignment.mirrorColumn().anchor(new Bounds(2, item.getHeight()), item.withPadding(2, 0, 2, 0));
 						GlUtil.drawDamageBar(bar, stack, true);
 					}
 

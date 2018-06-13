@@ -95,8 +95,11 @@ public final class GlUtil {
 	 * @see net.minecraft.client.renderer.RenderItem#renderItemAndEffectIntoGUI(ItemStack, int, int)
 	 * @see RenderHelper#disableStandardItemLighting() */
 	public static void renderSingleItem(ItemStack stack, int x, int y) {
+		GlStateManager.enableDepth();
 		RenderHelper.enableGUIStandardItemLighting();
+
 		MC.getRenderItem().renderItemAndEffectIntoGUI(stack, x, y);
+
 		RenderHelper.disableStandardItemLighting();
 	}
 
