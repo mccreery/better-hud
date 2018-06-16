@@ -7,6 +7,7 @@ import java.util.Random;
 import net.minecraft.entity.player.EntityPlayer;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.MathUtil;
 import tk.nukeduck.hud.util.Point;
 
 public class StatBarFood extends StatBarBasic<EntityPlayer> {
@@ -35,7 +36,7 @@ public class StatBarFood extends StatBarBasic<EntityPlayer> {
 	@Override
 	protected int getIconBounce(int pointsIndex) {
 		if(host.getFoodStats().getSaturationLevel() <= 0 && MC.ingameGUI.getUpdateCounter() % (getCurrent() * 3 + 1) == 0) {
-			return random.nextInt(3) - 1;
+			return MathUtil.randomRange(-1, 2, random);
 		} else {
 			return 0;
 		}
