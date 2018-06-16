@@ -51,9 +51,9 @@ public class Offhand extends OverrideElement {
 		Bounds texture = new Bounds(24, 23, 22, 22);
 
 		if(position.getDirection() == Direction.SOUTH) {
-			offhand.mirrorColumn().align(bounds, offhand.getAnchor(HudElement.HOTBAR.getLastBounds().withPadding(SPACER)));
+			bounds = offhand.mirrorColumn().align(bounds, offhand.getAnchor(HudElement.HOTBAR.getLastBounds().withPadding(SPACER)));
 		} else {
-			position.applyTo(bounds);
+			bounds = position.applyTo(bounds);
 		}
 
 		GlStateManager.enableBlend();

@@ -47,7 +47,6 @@ public class PotionBar extends OverrideElement {
 	public void loadDefaults() {
 		super.loadDefaults();
 
-		setEnabled(false);
 		position.set(Direction.NORTH_WEST);
 	}
 
@@ -126,11 +125,10 @@ public class PotionBar extends OverrideElement {
 		Bounds bounds = new Bounds(helpful * 25 - 1, harmful > 0 ? 50 : 24);
 
 		if(position.getDirection() == Direction.CENTER) {
-			bounds.position(Direction.CENTER, new Point(SPACER, SPACER), Direction.NORTH_WEST);
+			return bounds.position(Direction.CENTER, new Point(SPACER, SPACER), Direction.NORTH_WEST);
 		} else {
-			bounds = position.applyTo(bounds);
+			return position.applyTo(bounds);
 		}
-		return bounds;
 	}
 
 	private void drawIcon(Point position, PotionEffect effect) {
