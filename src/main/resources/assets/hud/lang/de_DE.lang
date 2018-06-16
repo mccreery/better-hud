@@ -158,6 +158,7 @@ betterHud.setting.showIds=Zeige IDs
 betterHud.setting.letterScale=Skalierte Richtungen
 betterHud.setting.showNotches=Zeige Kerben
 betterHud.setting.scale=Skala
+#betterHud.setting.requireItem=Require Item
 
 # Clocks
 betterHud.setting.24hr=24 Stunden

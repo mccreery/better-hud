@@ -5,9 +5,12 @@ import static tk.nukeduck.hud.BetterHud.SPACER;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
+import tk.nukeduck.hud.element.settings.SettingChoose;
 import tk.nukeduck.hud.element.settings.SettingPercentage;
 import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.element.settings.SettingPositionAligned;
@@ -24,6 +27,7 @@ public class Compass extends HudElement {
 	private final SettingPosition position = new SettingPositionAligned("position", Direction.TOP | Direction.CORNERS, Direction.getFlags(Direction.NORTH, Direction.SOUTH));
 	private final SettingSlider directionScaling = new SettingPercentage("letterScale", 0.01);
 	private final SettingBoolean showNotches = new SettingBoolean("showNotches").setUnlocalizedValue(SettingBoolean.VISIBLE);
+	private final SettingChoose requireItem = new SettingChoose("requireItem", "disabled", "inventory", "hand");
 
 	@Override
 	public void loadDefaults() {
@@ -32,6 +36,7 @@ public class Compass extends HudElement {
 		position.set(Direction.NORTH);
 		directionScaling.set(0.5);
 		showNotches.set(true);
+		requireItem.setIndex(0);
 		settings.priority.set(-3);
 	}
 
@@ -52,6 +57,7 @@ public class Compass extends HudElement {
 		settings.add(new Legend("misc"));
 		settings.add(directionScaling);
 		settings.add(showNotches);
+		settings.add(requireItem);
 	}
 
 	private void drawBackground(Bounds bounds) {
@@ -109,6 +115,20 @@ public class Compass extends HudElement {
 
 			GlStateManager.popMatrix();
 		}
+	}
+
+	@Override
+	public boolean shouldRender(Event event) {
+		if(!super.shouldRender(event)) return false;
+
+		switch(requireItem.getIndex()) {
+			case 1:
+				return MC.player.inventory.hasItemStack(new ItemStack(Items.COMPASS));
+			case 2:
+				return MC.player.getHeldItemMainhand().getItem() == Items.COMPASS
+					|| MC.player.getHeldItemOffhand().getItem() == Items.COMPASS;
+		}
+		return true;
 	}
 
 	// TODO implement alignment

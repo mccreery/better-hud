@@ -158,6 +158,7 @@
 #betterHud.setting.letterScale=Perspective
 #betterHud.setting.showNotches=Notches
 #betterHud.setting.scale=Scale
+#betterHud.setting.requireItem=Require Item
 
 # Clocks
 #betterHud.setting.24hr=24 Hour

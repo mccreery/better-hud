@@ -158,6 +158,9 @@ betterHud.setting.chunks=%s Chunks
 betterHud.setting.letterScale=Perspective
 betterHud.setting.showNotches=Notches
 betterHud.setting.scale=Scale
+betterHud.setting.requireItem=Require Item
+betterHud.value.inventory=In Inventory
+betterHud.value.hand=In Hand
 
 # Clocks
 betterHud.setting.24hr=24 Hour
