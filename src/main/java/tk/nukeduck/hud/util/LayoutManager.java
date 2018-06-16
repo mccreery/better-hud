@@ -21,7 +21,7 @@ public class LayoutManager {
 
 	public void reset(Point resolution) {
 		this.resolution = resolution;
-		screen = new Bounds(this.resolution).withInset(SPACER);
+		screen = new Bounds(this.resolution).withInset(SPACER); // TODO move inset
 		corners.clear();
 
 		// Compatibility with bars from other mods

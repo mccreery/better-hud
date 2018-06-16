@@ -1,7 +1,5 @@
 package tk.nukeduck.hud;
 
-import java.util.Random;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.EntityLivingBase;
@@ -52,7 +50,6 @@ public class BetterHud {
 	public static EntityLivingBase pointedEntity;
 
 	public static final int SPACER = 5;
-	public static final Random RANDOM = new Random();
 
 	public static Version serverVersion = Version.ZERO;
 

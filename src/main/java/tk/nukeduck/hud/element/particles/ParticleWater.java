@@ -1,49 +1,43 @@
 package tk.nukeduck.hud.element.particles;
 
+import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
-import static tk.nukeduck.hud.BetterHud.RANDOM;
+import static tk.nukeduck.hud.BetterHud.PARTICLES;
 
 import net.minecraft.client.renderer.GlStateManager;
+import tk.nukeduck.hud.util.GlUtil;
+import tk.nukeduck.hud.util.MathUtil;
 import tk.nukeduck.hud.util.Point;
 
-public class ParticleWater extends Particle {
-	float opacity;
-	float size;
-	int u;
-	float speed;
+public class ParticleWater extends ParticleBase {
+	private float speed;
 
-	public ParticleWater(int x, int y, float opacity, float size, int u, float speed) {
-		super(new Point(x, y));
-		this.opacity = opacity;
-		this.size = size;
-		this.u = u;
+	protected ParticleWater(Point position, int iconIndex, float opacity, float size, float speed) {
+		super(position, 96 + iconIndex, opacity, size, 0);
 		this.speed = speed;
 	}
 
-	public static ParticleWater random(int width, int height) {
-		int x = RANDOM.nextInt(width);
-		int y = RANDOM.nextInt(height);
-		float opacity = RANDOM.nextFloat() / 2;
-		float size = 2f + RANDOM.nextFloat() * 4.5f;
-		int u = RANDOM.nextInt(2);
-		float speed = 100f + RANDOM.nextFloat() * 250f;
-		return new ParticleWater(x, y, opacity, size, u, speed);
+	public static ParticleWater createRandom() {
+		Point position = Point.createRandom(MANAGER.getResolution());
+
+		float opacity = MathUtil.randomRange(0f, 0.5f);
+		float size = MathUtil.randomRange(2f, 6.5f);
+		float speed = MathUtil.randomRange(100f, 350f);
+
+		int iconIndex = MathUtil.randomRange(2);
+		return new ParticleWater(position, iconIndex, opacity, size, speed);
 	}
 
 	@Override
-	public void render() {
+	public void render(float partialTicks) {
+		MC.getTextureManager().bindTexture(PARTICLES);
 		GlStateManager.pushMatrix();
 
-		GlStateManager.color(1.0F, 1.0F, 1.0F, opacity);
-		GlStateManager.translate(position.getX(), position.getY() - opacity * speed, 0.0F);
-		GlStateManager.scale(size, size, 1.0F);
-		MC.ingameGUI.drawTexturedModalRect(0, 0, u * 16, 96, 16, 16);
+		GlStateManager.translate(position.getX(), position.getY() - opacity * speed, 0);
+		GlStateManager.scale(size, size, 1);
+		GlStateManager.color(1, 1, 1, opacity);
+		GlUtil.drawTexturedModalRect(Point.ZERO, texture);
 
 		GlStateManager.popMatrix();
-	}
-
-	@Override
-	public boolean update() {
-		return (this.opacity -= 0.003) <= 0;
 	}
 }

@@ -1,12 +1,13 @@
 package tk.nukeduck.hud.element.particles;
 
 import static tk.nukeduck.hud.BetterHud.MC;
-import static tk.nukeduck.hud.BetterHud.RANDOM;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 import net.minecraft.block.material.Material;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.util.math.BlockPos;
-import tk.nukeduck.hud.util.Point;
+import tk.nukeduck.hud.util.MathUtil;
 
 public class WaterDrops extends ParticleOverlay {
 	public WaterDrops() {
@@ -16,28 +17,28 @@ public class WaterDrops extends ParticleOverlay {
 	private boolean wasUnderwaterLastTick = false;
 
 	@Override
-	protected void spawnTick() {
-		Point resolution = new Point(new ScaledResolution(MC));
+	protected void updateParticles() {
 		boolean isUnderwater = MC.player.isInsideOfMaterial(Material.WATER);
 
-		if(wasUnderwaterLastTick != isUnderwater) {
-			if(wasUnderwaterLastTick) {
-				int count = getParticleCount();
+		if(isUnderwater) {
+			particles.clear();
+		} else {
+			super.updateParticles();
+			Collection<Particle> toSpawn = new ArrayList<Particle>();
 
-				for(int i = 0; i < count; i++) {
-					particles.add(ParticleWater.random(resolution.getX(), resolution.getY()));
-				}
-			} else {
-				particles.clear();
+			if(wasUnderwaterLastTick) {
+				MathUtil.addRepeat(toSpawn, getParticleCount(), ParticleWater::createRandom);
 			}
+
+			BlockPos camera = new BlockPos(MC.player.getPositionEyes(1));
+			if(MC.world.isRainingAt(camera) && MathUtil.randomChance(getParticleChance())) {
+				toSpawn.add(ParticleWater.createRandom());
+			}
+
+			// Atomic operation means underlying CopyOnWriteArrayList only copies once
+			particles.addAll(toSpawn);
 		}
 		wasUnderwaterLastTick = isUnderwater;
-
-		BlockPos camera = new BlockPos(MC.player.getPositionEyes(1));
-
-		if(MC.world.isRainingAt(camera) && RANDOM.nextFloat() < getParticleChance()) {
-			particles.add(ParticleWater.random(resolution.getX(), resolution.getY()));
-		}
 	}
 
 	private float getParticleChance() {
@@ -45,6 +46,6 @@ public class WaterDrops extends ParticleOverlay {
 	}
 
 	private int getParticleCount() {
-		return RANDOM.nextInt(20 * (density.getIndex() + 1));
+		return MathUtil.randomRange((density.getIndex() + 1) * 20);
 	}
 }

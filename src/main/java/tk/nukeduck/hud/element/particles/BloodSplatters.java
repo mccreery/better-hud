@@ -1,25 +1,17 @@
 package tk.nukeduck.hud.element.particles;
 
-import static tk.nukeduck.hud.BetterHud.HUD_ICONS;
 import static tk.nukeduck.hud.BetterHud.MC;
 
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import tk.nukeduck.hud.util.Point;
+import tk.nukeduck.hud.util.MathUtil;
 
 public class BloodSplatters extends ParticleOverlay {
 	public BloodSplatters() {
 		super("bloodSplatters");
-	}
-
-	@Override
-	protected ResourceLocation getTexture() {
-		return HUD_ICONS;
 	}
 
 	@Override
@@ -33,13 +25,16 @@ public class BloodSplatters extends ParticleOverlay {
 		if(event.isCanceled() || !event.getEntity().equals(MC.player)) {
 			return;
 		}
-		Point resolution = new Point(new ScaledResolution(MC));
 
 		int spawnMultiplier = (density.getIndex() + 1) * 4;
 		int count = spawnMultiplier * (int)event.getAmount();
 
-		for (int i = 0; i < count; i++) {
-			particles.add(ParticleBlood.random(resolution.getX(), resolution.getY()));
+		Particle[] toSpawn = new Particle[count];
+		for(int i = 0; i < toSpawn.length; i++) {
+			toSpawn[i] = ParticleBase.createRandom();
 		}
+
+		// Atomic operation means underlying CopyOnWriteArrayList only copies once
+		particles.addAll(MathUtil.createRepeat(count, ParticleBase::createRandom));
 	}
 }

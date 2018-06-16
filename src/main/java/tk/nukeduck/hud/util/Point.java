@@ -29,6 +29,16 @@ public final class Point implements Serializable {
 		this(resolution.getScaledWidth(), resolution.getScaledHeight());
 	}
 
+	public static Point createRandom(Point point) {
+		return createRandom(0, 0, point.x, point.y);
+	}
+	public static Point createRandom(Bounds bounds) {
+		return createRandom(bounds.getLeft(), bounds.getTop(), bounds.getRight(), bounds.getBottom());
+	}
+	public static Point createRandom(int left, int top, int right, int bottom) {
+		return new Point(MathUtil.randomRange(left, right), MathUtil.randomRange(top, bottom));
+	}
+
 	public int getX() {
 		return x;
 	}
