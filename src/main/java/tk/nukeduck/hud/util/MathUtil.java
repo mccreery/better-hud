@@ -140,4 +140,12 @@ public final class MathUtil {
 	public static <T, C extends Collection<T>> C addRepeat(C collection, int n, IntFunction<T> mapper) {
 		return IntStream.range(0, n).mapToObj(mapper).collect(Collectors.toCollection(() -> collection));
 	}
+
+	/** Maps values from 0 to 1 to a specified range
+	 * @param x The value to map
+	 * @param min The value mapped to 0
+	 * @param max The value mapped to 1 */
+	public static float mapToRange(float x, float min, float max) {
+		return min + (max - min) * x;
+	}
 }
