@@ -159,6 +159,8 @@ betterHud.setting.letterScale=Ângulo
 betterHud.setting.showNotches=Posições
 betterHud.setting.scale=Escala
 #betterHud.setting.requireItem=Require Item
+#betterHud.value.inventory=In Inventory
+#betterHud.value.hand=In Hand
 
 # Clocks
 betterHud.setting.24hr=24 horas
@@ -225,6 +227,7 @@ betterHud.setting.text=Texto
 betterHud.setting.tooltipLines=Série de dicas
 betterHud.setting.visual=Visual
 #betterHud.setting.warnings=Warnings
+#betterHud.setting.maxStacks=Maximum Stacks
 
 betterHud.hud.biome=Bioma: %s
 betterHud.hud.burst=Combo: %s cliques em %ss

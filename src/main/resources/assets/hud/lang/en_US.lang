@@ -227,6 +227,7 @@ betterHud.setting.text=Text
 betterHud.setting.tooltipLines=Tooltip Lines
 betterHud.setting.visual=Visual
 betterHud.setting.warnings=Warnings
+betterHud.setting.maxStacks=Maximum Stacks
 
 betterHud.hud.biome=Biome: %s
 betterHud.hud.burst=Burst: %s clicks over %ss

@@ -8,7 +8,7 @@ import tk.nukeduck.hud.element.HudElement;
 public class MessagePickupHandler implements IMessageHandler<MessagePickup, IMessage> {
 	@Override
 	public IMessage onMessage(MessagePickup message, MessageContext ctx) {
-		HudElement.PICKUP.handler.pickupItem(message.getStack());
+		HudElement.PICKUP.pickupItem(message.getStack());
 		return null;
 	}
 }

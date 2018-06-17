@@ -159,6 +159,8 @@
 #betterHud.setting.showNotches=Notches
 #betterHud.setting.scale=Scale
 #betterHud.setting.requireItem=Require Item
+#betterHud.value.inventory=In Inventory
+#betterHud.value.hand=In Hand
 
 # Clocks
 #betterHud.setting.24hr=24 Hour
@@ -225,6 +227,7 @@
 #betterHud.setting.tooltipLines=Tooltip Lines
 #betterHud.setting.visual=Visual
 #betterHud.setting.warnings=Warnings
+#betterHud.setting.maxStacks=Maximum Stacks
 
 #betterHud.hud.biome=Biome: %s
 #betterHud.hud.burst=Burst: %s clicks over %ss

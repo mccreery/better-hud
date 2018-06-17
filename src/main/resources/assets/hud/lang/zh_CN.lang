@@ -159,6 +159,8 @@ betterHud.setting.letterScale=Scaled Directions
 betterHud.setting.showNotches=Show Notches
 betterHud.setting.scale=缩放
 #betterHud.setting.requireItem=Require Item
+#betterHud.value.inventory=In Inventory
+#betterHud.value.hand=In Hand
 
 # Clocks
 betterHud.setting.24hr=24小时计时法
@@ -225,6 +227,7 @@ betterHud.setting.spaced=分组
 #betterHud.setting.tooltipLines=Tooltip Lines
 #betterHud.setting.visual=Visual
 #betterHud.setting.warnings=Warnings
+#betterHud.setting.maxStacks=Maximum Stacks
 
 betterHud.hud.biome=生物群系: %s
 #betterHud.hud.burst=Burst: %s clicks over %ss
