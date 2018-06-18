@@ -12,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.settings.SettingPercentage;
 import tk.nukeduck.hud.element.settings.SettingPosition;
+import tk.nukeduck.hud.element.settings.SettingPositionAligned;
 import tk.nukeduck.hud.element.settings.SettingSlider;
 import tk.nukeduck.hud.events.PickupNotifier;
 import tk.nukeduck.hud.network.Version;
@@ -23,7 +24,7 @@ import tk.nukeduck.hud.util.MathUtil;
 import tk.nukeduck.hud.util.Point;
 
 public class PickupCount extends HudElement {
-	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS | Direction.CENTER.flag());
+	private final SettingPosition position = new SettingPositionAligned("position", Direction.CORNERS | Direction.CENTER.flag(), Direction.CORNERS);
 
 	private final SettingSlider maxStacks = new SettingSlider("maxStacks", 1, 11, 1) {
 		@Override
@@ -85,18 +86,18 @@ public class PickupCount extends HudElement {
 
 	@Override
 	public synchronized Bounds render(Event event) {
-		Bounds bounds = new Bounds(64, 16);
+		Bounds bounds = getBounds();
+		Direction alignment = position.getAlignment();
+		if(alignment.in(Direction.VERTICAL)) alignment = alignment.toColumn(0);
+		if(alignment.in(Direction.HORIZONTAL)) alignment = alignment.toRow(0);
+		Direction rowAlignment = alignment.toRow(1);
 
-		if(position.getDirection() == Direction.CENTER) {
-			bounds = bounds.position(Direction.CENTER, new Point(5, 5), Direction.NORTH_WEST);
-		} else {
-			bounds = position.applyTo(bounds);
-		}
+		// The bounds to draw each item in
+		Bounds stackBounds = alignment.anchor(bounds.withSize(16, 16), bounds);
 
 		long updateCounter = MC.ingameGUI.getUpdateCounter();
 		long lifetime = getLifetime();
 
-		Bounds lineBounds = bounds.withSize(16, 16);
 		Iterator<StackNode> iterator = stacks.iterator();
 		StackNode node;
 
@@ -115,13 +116,22 @@ public class PickupCount extends HudElement {
 			}
 
 			float opacity = (lifetime - age) / (float)lifetime;
-			int color = Colors.setAlpha(Colors.WHITE, Math.max(4, Math.round(opacity * 255))); // Opacity lower than 4 defaults to 255
+
+			// Opacity lower than 4 defaults to 255
+			int color = Colors.setAlpha(Colors.WHITE, Math.max(4, Math.round(opacity * 255)));
 
 			//GlStateManager.color(1, 1, 1, opacity);
-			GlUtil.renderSingleItem(node.stack, lineBounds.getPosition());
+			GlUtil.renderSingleItem(node.stack, stackBounds.getPosition());
 
-			GlUtil.drawString(node.toString(), Direction.EAST.getAnchor(lineBounds.withPadding(SPACER)), Direction.WEST, color);
-			lineBounds = lineBounds.withY(lineBounds.getBottom() + SPACER);
+			GlUtil.drawString(node.toString(), rowAlignment.mirrorColumn().getAnchor(stackBounds.withPadding(SPACER)), rowAlignment, color);
+
+			int y;
+			if(alignment.in(Direction.BOTTOM)) {
+				y = stackBounds.getTop() - stackBounds.getHeight() - 2;
+			} else {
+				y = stackBounds.getBottom() + 2;
+			}
+			stackBounds = stackBounds.withY(y);
 		}
 
 		// Remove invisible stacks
@@ -130,6 +140,32 @@ public class PickupCount extends HudElement {
 			iterator.remove();
 		}
 		return bounds;
+	}
+
+	private Bounds getBounds() {
+		int maximum = maxStacks.getInt();
+
+		int i, width = 0;
+		for(i = 0; i < maximum && i < stacks.size(); i++) {
+			int lineWidth = MC.fontRenderer.getStringWidth(stacks.get(i).toString());
+
+			if(lineWidth > width) {
+				width = lineWidth;
+			}
+		}
+
+		Bounds bounds;
+		if(i > 0) {
+			bounds = new Bounds(16 + SPACER + width, (16 + 2) * i - 2);
+		} else {
+			bounds = Bounds.EMPTY;
+		}
+
+		if(position.getDirection() == Direction.CENTER) {
+			return bounds.position(Direction.CENTER, new Point(5, 5), Direction.NORTH_WEST);
+		} else {
+			return position.applyTo(bounds);
+		}
 	}
 
 	/** @return The lifetime in ticks for each item entry */
