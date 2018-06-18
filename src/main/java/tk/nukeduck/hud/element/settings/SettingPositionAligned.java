@@ -16,7 +16,7 @@ public class SettingPositionAligned extends SettingPosition {
 	public SettingPositionAligned(String name, int anchors, int alignments) {
 		super(name, anchors);
 
-		add(alignment = new SettingDirection("alignment") {
+		add(alignment = new SettingDirection("alignment", alignments) {
 			@Override
 			public boolean enabled() {
 				return isAbsolute();
