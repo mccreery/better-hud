@@ -64,19 +64,29 @@ public class ArrowCount extends HudElement {
 	public boolean shouldRender(Event event) {
 		if(!super.shouldRender(event)) return false;
 
-		if(MC.player.getHeldItemOffhand() != null && MC.player.getHeldItemOffhand().getItem() == Items.BOW) {
-			return true;
-		} else if(overlay.get()) {
-			for(int i = 0; i < 9; i++) {
-				ItemStack stack = MC.player.inventory.getStackInSlot(i);
+		ItemStack stack = MC.player.getHeldItemOffhand();
+		boolean offhandHeld = stack != null && stack.getItem() == Items.BOW;
 
-				if(stack != null && stack.getItem() == Items.BOW) {
-					return true;
+		if(overlay.get()) {
+			if(HudElement.OFFHAND.isEnabled() && offhandHeld) {
+				return true;
+			}
+
+			if(HudElement.HOTBAR.isEnabled()) {
+				for(int i = 0; i < 9; i++) {
+					stack = MC.player.inventory.getStackInSlot(i);
+
+					if(stack != null && stack.getItem() == Items.BOW) {
+						return true;
+					}
 				}
 			}
 			return false;
+		} else if(offhandHeld) {
+			return true;
 		} else {
-			return MC.player.getHeldItemMainhand() != null && MC.player.getHeldItemMainhand().getItem() == Items.BOW;
+			stack = MC.player.getHeldItemMainhand();
+			return stack != null && stack.getItem() == Items.BOW;
 		}
 	}
 
