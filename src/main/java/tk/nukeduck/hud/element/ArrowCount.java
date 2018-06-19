@@ -21,7 +21,7 @@ public class ArrowCount extends HudElement {
 
 	private final SettingBoolean overlay = new SettingBoolean("overlay");
 
-	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS) {
+	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS, 0) {
 		@Override
 		public boolean enabled() {
 			return !overlay.get();

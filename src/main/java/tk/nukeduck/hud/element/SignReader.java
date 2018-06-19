@@ -19,7 +19,7 @@ import tk.nukeduck.hud.util.Direction;
 public class SignReader extends HudElement {
 	private static final ResourceLocation SIGN_TEXTURE = new ResourceLocation("textures/entity/sign.png");
 
-	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS);
+	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS, 0);
 
 	@Override
 	public void loadDefaults() {

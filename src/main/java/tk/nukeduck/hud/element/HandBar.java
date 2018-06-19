@@ -13,7 +13,7 @@ import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
 
 public class HandBar extends EquipmentDisplay {
-	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS | Direction.SOUTH.flag());
+	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS | Direction.SOUTH.getFlag(), Direction.TOP | Direction.BOTTOM);
 	private final SettingBoolean showItem = new SettingBoolean("showItem").setUnlocalizedValue(SettingBoolean.VISIBLE);
 	private final SettingBoolean offHand = new SettingBoolean("offhand");
 	private final SettingBoolean showBars = new SettingBoolean("bars");

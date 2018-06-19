@@ -12,13 +12,12 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.element.settings.SettingPosition;
-import tk.nukeduck.hud.element.settings.SettingPositionAligned;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
 
 public class Offhand extends OverrideElement {
-	private final SettingPosition position = new SettingPositionAligned("position", Direction.CORNERS | Direction.SOUTH.flag(), Direction.ALL);
+	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS | Direction.SOUTH.getFlag(), Direction.ALL);
 
 	public Offhand() {
 		super("offhand");

@@ -6,7 +6,6 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.element.settings.SettingColor;
 import tk.nukeduck.hud.element.settings.SettingPosition;
-import tk.nukeduck.hud.element.settings.SettingPositionAligned;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
@@ -30,7 +29,7 @@ public abstract class TextElement extends HudElement {
 	public TextElement(String name, int directions) {
 		super(name);
 
-		settings.add(position = new SettingPositionAligned("position", directions, Direction.ALL));
+		settings.add(position = new SettingPosition("position", directions, Direction.ALL));
 		settings.add(color);
 	}
 
@@ -67,7 +66,7 @@ public abstract class TextElement extends HudElement {
 	protected Bounds render(Event event, List<String> text) {
 		StringGroup group = new StringGroup(text);
 		group.setColor(color.get());
-		group.setAlignment(position.getAlignment());
+		group.setAlignment(position.getContentAlignment());
 
 		Bounds padding = getPadding();
 		Bounds margin = getMargin();

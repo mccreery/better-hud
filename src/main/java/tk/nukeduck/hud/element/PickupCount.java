@@ -12,7 +12,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.settings.SettingPercentage;
 import tk.nukeduck.hud.element.settings.SettingPosition;
-import tk.nukeduck.hud.element.settings.SettingPositionAligned;
 import tk.nukeduck.hud.element.settings.SettingSlider;
 import tk.nukeduck.hud.events.PickupNotifier;
 import tk.nukeduck.hud.network.Version;
@@ -24,7 +23,7 @@ import tk.nukeduck.hud.util.MathUtil;
 import tk.nukeduck.hud.util.Point;
 
 public class PickupCount extends HudElement {
-	private final SettingPosition position = new SettingPositionAligned("position", Direction.CORNERS | Direction.CENTER.flag(), Direction.CORNERS);
+	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS | Direction.CENTER.getFlag(), Direction.CORNERS);
 
 	private final SettingSlider maxStacks = new SettingSlider("maxStacks", 1, 11, 1) {
 		@Override
@@ -88,9 +87,9 @@ public class PickupCount extends HudElement {
 	public synchronized Bounds render(Event event) {
 		Bounds bounds = getBounds();
 		Direction alignment = position.getAlignment();
-		if(alignment.in(Direction.VERTICAL)) alignment = alignment.toColumn(0);
-		if(alignment.in(Direction.HORIZONTAL)) alignment = alignment.toRow(0);
-		Direction rowAlignment = alignment.toRow(1);
+		if(alignment.in(Direction.VERTICAL)) alignment = alignment.withColumn(0);
+		if(alignment.in(Direction.HORIZONTAL)) alignment = alignment.withRow(0);
+		Direction rowAlignment = alignment.withRow(1);
 
 		// The bounds to draw each item in
 		Bounds stackBounds = alignment.anchor(bounds.withSize(16, 16), bounds);

@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingChoose;
-import tk.nukeduck.hud.element.settings.SettingPositionAligned;
+import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
@@ -18,7 +18,7 @@ import tk.nukeduck.hud.util.Point;
 import tk.nukeduck.hud.util.StringGroup;
 
 public class ArmorBars extends EquipmentDisplay {
-	private final SettingPositionAligned position = new SettingPositionAligned("position", Direction.CORNERS, Direction.getFlags(Direction.WEST, Direction.EAST));
+	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS, Direction.getFlags(Direction.WEST, Direction.EAST));
 	private final SettingChoose barType = new SettingChoose("bars", "visible.off", "smallBars", "largeBars");
 	private final SettingBoolean alwaysVisible = new SettingBoolean("alwaysVisible");
 

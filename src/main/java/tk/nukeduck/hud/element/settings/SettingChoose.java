@@ -1,7 +1,5 @@
 package tk.nukeduck.hud.element.settings;
 
-import static tk.nukeduck.hud.BetterHud.SPACER;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -90,7 +88,7 @@ public class SettingChoose extends SettingAlignable<String> {
 	@Override public void load(String save) {set(save);}
 
 	@Override
-	public int getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Bounds bounds) {
+	public void getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Bounds bounds) {
 		parts.add(backing = new GuiButton(2, bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), ""));
 		parts.add(last = new GuiButton(0, bounds.getLeft(), bounds.getY(), 20, bounds.getHeight(), "<"));
 		parts.add(next = new GuiButton(1, bounds.getRight() - 20, bounds.getY(), 20, bounds.getHeight(), ">"));
@@ -98,8 +96,6 @@ public class SettingChoose extends SettingAlignable<String> {
 
 		callbacks.put(last, this);
 		callbacks.put(next, this);
-
-		return bounds.getBottom() + SPACER;
 	}
 
 	protected String getUnlocalizedValue() {

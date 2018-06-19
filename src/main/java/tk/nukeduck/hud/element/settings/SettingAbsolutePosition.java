@@ -33,17 +33,18 @@ public class SettingAbsolutePosition extends Setting<Point> {
 	}
 
 	@Override
-	public int getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, int width, int y) {
-		parts.add(xBox = new GuiTextField(0, Minecraft.getMinecraft().fontRenderer, width / 2 - 106, y + 1, 80, 18));
+	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Point origin) {
+		parts.add(xBox = new GuiTextField(0, Minecraft.getMinecraft().fontRenderer, origin.getX() - 106, origin.getY() + 1, 80, 18));
 		xBox.setText(String.valueOf(x));
-		parts.add(yBox = new GuiTextField(0, Minecraft.getMinecraft().fontRenderer, width / 2 + 2, y + 1, 80, 18));
+		parts.add(yBox = new GuiTextField(0, Minecraft.getMinecraft().fontRenderer, origin.getX() + 2, origin.getY() + 1, 80, 18));
 		yBox.setText(String.valueOf(y));
-		parts.add(xUp = new GuiUpDownButton(0, width / 2 - 22, y, 0));
-		parts.add(xDown = new GuiUpDownButton(1, width / 2 - 22, y + 10, 1));
-		parts.add(yUp = new GuiUpDownButton(2, width / 2 + 86, y, 0));
-		parts.add(yDown = new GuiUpDownButton(3, width / 2 + 86, y + 10, 1));
 
-		parts.add(pick = new GuiButton(4, width / 2 - 75, y + 22, 150, 20, I18n.format("betterHud.menu.pick")));
+		parts.add(xUp = new GuiUpDownButton(0, origin.getX() - 22, origin.getY(), 0));
+		parts.add(xDown = new GuiUpDownButton(1, origin.getX() - 22, origin.getY() + 10, 1));
+		parts.add(yUp = new GuiUpDownButton(2, origin.getX() + 86, origin.getY(), 0));
+		parts.add(yDown = new GuiUpDownButton(3, origin.getX() + 86, origin.getY() + 10, 1));
+
+		parts.add(pick = new GuiButton(4, origin.getX() - 75, origin.getY() + 22, 150, 20, I18n.format("betterHud.menu.pick")));
 
 		callbacks.put(xBox, this);
 		callbacks.put(yBox, this);
@@ -53,7 +54,7 @@ public class SettingAbsolutePosition extends Setting<Point> {
 		callbacks.put(yDown, this);
 		callbacks.put(pick, this);
 
-		return y + 42 + SPACER;
+		return origin.add(0, 42 + SPACER);
 	}
 
 	public void updateText() {
@@ -122,6 +123,8 @@ public class SettingAbsolutePosition extends Setting<Point> {
 
 	@Override
 	public void updateGuiParts(Collection<Setting<?>> settings) {
+		super.updateGuiParts(settings);
+
 		boolean enabled = enabled();
 		xBox.setEnabled(enabled);
 		yBox.setEnabled(enabled);

@@ -13,7 +13,6 @@ import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingChoose;
 import tk.nukeduck.hud.element.settings.SettingPercentage;
 import tk.nukeduck.hud.element.settings.SettingPosition;
-import tk.nukeduck.hud.element.settings.SettingPositionAligned;
 import tk.nukeduck.hud.element.settings.SettingSlider;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
@@ -24,7 +23,7 @@ import tk.nukeduck.hud.util.Point;
 public class Compass extends HudElement {
 	private static final String[] DIRECTIONS = {"S", "E", "N", "W"};
 
-	private final SettingPosition position = new SettingPositionAligned("position", Direction.TOP | Direction.CORNERS, Direction.getFlags(Direction.NORTH, Direction.SOUTH));
+	private final SettingPosition position = new SettingPosition("position", Direction.TOP | Direction.CORNERS, Direction.getFlags(Direction.NORTH, Direction.SOUTH));
 	private final SettingSlider directionScaling = new SettingPercentage("letterScale", 0.01);
 	private final SettingBoolean showNotches = new SettingBoolean("showNotches").setUnlocalizedValue(SettingBoolean.VISIBLE);
 	private final SettingChoose requireItem = new SettingChoose("requireItem", "disabled", "inventory", "hand");

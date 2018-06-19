@@ -10,14 +10,13 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.settings.SettingPosition;
-import tk.nukeduck.hud.element.settings.SettingPositionAligned;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Point;
 
 public class Hotbar extends OverrideElement {
-	private SettingPosition position = new SettingPositionAligned("position", Direction.CORNERS | Direction.getFlags(Direction.NORTH, Direction.SOUTH), Direction.ALL)
+	private SettingPosition position = new SettingPosition("position", Direction.CORNERS | Direction.getFlags(Direction.NORTH, Direction.SOUTH), Direction.ALL)
 		.setEdge(true).setPostSpacer(2);
 
 	public Hotbar() {

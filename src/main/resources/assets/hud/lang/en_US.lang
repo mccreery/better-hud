@@ -105,6 +105,7 @@ betterHud.value.hotbar=Hotbar
 betterHud.setting.direction=Direction
 betterHud.setting.anchor=Anchor
 betterHud.setting.alignment=Alignment
+betterHud.setting.contentAlignment=Content Alignment
 betterHud.value.northWest=Northwest
 betterHud.value.north=North
 betterHud.value.northEast=Northeast

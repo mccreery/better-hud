@@ -16,7 +16,7 @@ import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 
 public class HungerIndicator extends HudElement {
-	private final SettingPosition position = new SettingPosition("position", Direction.CENTER, Direction.SOUTH);
+	private final SettingPosition position = new SettingPosition("position", Direction.CENTER.getFlag(), 0);
 	private final SettingSlider maxLimit = new SettingSlider("maxLimit", 0, 20, 1).setDisplayPlaces(1).setDisplayScale(.5);
 
 	@Override

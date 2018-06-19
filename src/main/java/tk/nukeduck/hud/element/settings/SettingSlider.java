@@ -1,8 +1,5 @@
 package tk.nukeduck.hud.element.settings;
 
-import static tk.nukeduck.hud.BetterHud.SPACER;
-
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
@@ -76,17 +73,14 @@ public class SettingSlider extends SettingAlignable<Double> implements ISlider {
 	}
 
 	@Override
-	public int getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Bounds bounds) {
+	public void getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Bounds bounds) {
 		slider = new GuiSlider(0, bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), this);
 
 		parts.add(slider);
 		callbacks.put(slider, this);
-		return bounds.getBottom() + SPACER;
 	}
 
 	@Override public void actionPerformed(GuiElementSettings gui, GuiButton button) {}
-	@Override public void updateGuiParts(Collection<Setting<?>> settings) {}
-
 	@Override public Double get() {return value;}
 
 	public int getInt() {

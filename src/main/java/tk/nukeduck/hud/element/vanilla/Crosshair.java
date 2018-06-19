@@ -67,7 +67,7 @@ public class Crosshair extends OverrideElement {
 		}
 	};
 
-	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS | Direction.VERTICAL) {
+	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS | Direction.VERTICAL, 0) {
 		@Override
 		public boolean enabled() {
 			return super.enabled() && indicatorType.enabled();

@@ -13,6 +13,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiLabel;
 import net.minecraft.client.resources.I18n;
 import tk.nukeduck.hud.util.Colors;
+import tk.nukeduck.hud.util.Point;
 
 public class Legend extends SettingStub<Object> {
 	public Legend(String name) {
@@ -25,12 +26,12 @@ public class Legend extends SettingStub<Object> {
 	}
 
 	@Override
-	public int getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, int width, int y) {
-		GuiLegendLabel label = new GuiLegendLabel(0, width / 2 - 150, y, 300, MC.fontRenderer.FONT_HEIGHT, Colors.WHITE);
+	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Point origin) {
+		GuiLegendLabel label = new GuiLegendLabel(0, origin.getX() - 150, origin.getY(), 300, MC.fontRenderer.FONT_HEIGHT, Colors.WHITE);
 		label.addLine("betterHud.group." + this.name);
 		parts.add(label);
 
-		return y + MC.fontRenderer.FONT_HEIGHT + SPACER;
+		return origin.add(0, MC.fontRenderer.FONT_HEIGHT + SPACER);
 	}
 
 	private static class GuiLegendLabel extends GuiLabel {

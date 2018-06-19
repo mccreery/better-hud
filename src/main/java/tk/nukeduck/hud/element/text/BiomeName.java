@@ -17,7 +17,7 @@ public class BiomeName extends TextElement {
 	}
 
 	public BiomeName() {
-		super("biome", Direction.CORNERS | Direction.NORTH.flag());
+		super("biome", Direction.CORNERS | Direction.NORTH.getFlag());
 	}
 
 	@Override

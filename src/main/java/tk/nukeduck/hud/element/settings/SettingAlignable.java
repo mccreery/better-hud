@@ -8,6 +8,7 @@ import java.util.Map;
 import net.minecraft.client.gui.Gui;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.Point;
 
 public abstract class SettingAlignable<T> extends Setting<T> {
 	protected Direction alignment;
@@ -23,20 +24,28 @@ public abstract class SettingAlignable<T> extends Setting<T> {
 	}
 
 	@Override
-	public int getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, int width, int y) {
-		y = super.getGuiParts(parts, callbacks, width, y);
-		Bounds bounds;
+	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Point origin) {
+		origin = super.getGuiParts(parts, callbacks, origin);
 
-		if(alignment == Direction.CENTER) {
-			bounds = new Bounds(width / 2 - 100, y, 200, 20);
-		} else {
-			bounds = alignment.anchor(new Bounds(0, 0, 150, 20), new Bounds(width / 2 - 150 - SPACER / 2, y, 300 + SPACER, 20));
-		}
+		Bounds bounds = new Bounds(getSize());
+		bounds = alignment.anchor(bounds, Direction.NORTH.align(new Bounds(getAlignmentWidth(), bounds.getHeight()), origin));
 
-		int bottom = getGuiParts(parts, callbacks, bounds);
-		return alignment != Direction.WEST ? bottom : -1;
+		getGuiParts(parts, callbacks, bounds);
+		return shouldBreak() ? origin.withY(bounds.getBottom() + SPACER) : null;
 	}
 
-	/** @see Setting#getGuiParts(List, Map, int, int) */
-	public abstract int getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Bounds bounds);
+	protected int getAlignmentWidth() {
+		return 300;
+	}
+
+	protected Point getSize() {
+		return new Point(alignment == Direction.CENTER ? 200 : 150, 20);
+	}
+
+	protected boolean shouldBreak() {
+		return alignment != Direction.WEST;
+	}
+
+	/** @see Setting#getGuiParts(List, Map, Point) */
+	public abstract void getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Bounds bounds);
 }

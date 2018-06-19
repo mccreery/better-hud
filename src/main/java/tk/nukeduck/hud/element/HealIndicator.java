@@ -14,7 +14,7 @@ import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
 
 public class HealIndicator extends HudElement {
-	private final SettingPosition position = new SettingPosition("position", 0);
+	private final SettingPosition position = new SettingPosition("position", 0, 0);
 	private final SettingChoose mode = new SettingChoose(2);
 
 	@Override

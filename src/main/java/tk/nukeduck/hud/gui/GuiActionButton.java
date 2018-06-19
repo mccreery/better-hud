@@ -8,12 +8,12 @@ public abstract class GuiActionButton extends GuiButton implements ActionCallbac
 		super(0, 0, 0, buttonText);
 	}
 
-	public final GuiActionButton setId(int id) {
+	public GuiActionButton setId(int id) {
 		this.id = id;
 		return this;
 	}
 
-	public final GuiActionButton setBounds(Bounds bounds) {
+	public GuiActionButton setBounds(Bounds bounds) {
 		this.x = bounds.getX();
 		this.y = bounds.getY();
 		this.width = bounds.getWidth();
@@ -22,7 +22,7 @@ public abstract class GuiActionButton extends GuiButton implements ActionCallbac
 		return this;
 	}
 
-	public final Bounds getBounds() {
+	public Bounds getBounds() {
 		return new Bounds(x, y, width, height);
 	}
 

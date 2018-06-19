@@ -8,13 +8,12 @@ import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.settings.SettingChoose;
 import tk.nukeduck.hud.element.settings.SettingPosition;
-import tk.nukeduck.hud.element.settings.SettingPositionAligned;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.bars.StatBar;
 
 public abstract class Bar extends OverrideElement {
-	protected final SettingPosition position = new SettingPositionAligned("position", Direction.CORNERS | Direction.SOUTH.flag(), Direction.getFlags(Direction.WEST, Direction.EAST));
+	protected final SettingPosition position = new SettingPosition("position", Direction.CORNERS | Direction.SOUTH.getFlag(), Direction.getFlags(Direction.WEST, Direction.EAST));
 
 	protected final SettingChoose side = new SettingChoose("side", Direction.WEST.name, Direction.EAST.name) {
 		@Override

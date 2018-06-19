@@ -15,6 +15,7 @@ import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.gui.GuiElementSettings;
 import tk.nukeduck.hud.util.HudConfig;
 import tk.nukeduck.hud.util.ISaveLoad.IGetSet;
+import tk.nukeduck.hud.util.Point;
 
 /** A setting for a {@link HudElement}. Child elements will be saved under
  * the namespace of the parent's name
@@ -31,7 +32,7 @@ public abstract class Setting<T> implements IGetSet<T> {
 	private Property property;
 
 	/** Set to {@code true} to hide the setting from the GUI
-	 * @see #getGuiParts(List, Map, int, int) */
+	 * @see #getGuiParts(List, Map, Point) */
 	private boolean hidden = false;
 
 	public Setting(String name) {
@@ -144,32 +145,35 @@ public abstract class Setting<T> implements IGetSet<T> {
 	/** Populates {@code parts} with {@link Gui}s which should be added to the settings screen.<br>
 	 * Also populates {@code callbacks} with {@link #keyTyped(char, int)} and {@link #actionPerformed(GuiElementSettings, GuiButton)} callbacks.
 	 *
-	 * <p>The minimum implementation (in {@link Setting#getGuiParts(List, Map, int, int)})
+	 * <p>The minimum implementation (in {@link Setting#getGuiParts(List, Map, Point)})
 	 * populates {@code parts} and {@code callbacks} with those of the element's children
+	 * @param origin TODO
 	 *
-	 * @param width The screen width
-	 * @param y The topmost Y coordinate of {@code Gui}s in this setting
 	 * @return The bottommost Y coordinate of {@code Gui}s in this setting */
-	public int getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, int width, int y) {
-		return getGuiParts(parts, callbacks, width, y, children);
+	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Point origin) {
+		return getGuiParts(parts, callbacks, origin, children);
 	}
 
 	/** Populates {@code parts} and {@code callbacks} by calling
-	 * {@link #getGuiParts(List, Map, int, int)} on the given {@code settings},
+	 * {@link #getGuiParts(List, Map, Point)} on the given {@code settings},
 	 * and maintaining {@code y} between them
+	 * @param origin TODO
 	 *
 	 * @return The bottommost Y coordinate of all {@code Gui}s across all {@code settings}
-	 * @see #getGuiParts(List, Map, int, int) */
-	public static int getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, int width, int y, List<Setting<?>> settings) {
+	 * @see #getGuiParts(List, Map, Point) */
+	public static Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Point origin, List<Setting<?>> settings) {
 		if(!settings.isEmpty()) {
 			for(Setting<?> setting : settings) {
 				if(!setting.hidden) {
-					int bottom = setting.getGuiParts(parts, callbacks, width, y); 
-					if(bottom != -1) y = bottom;
+					Point bottom = setting.getGuiParts(parts, callbacks, origin);
+
+					if(bottom != null) {
+						origin = bottom;
+					}
 				}
 			}
 		}
-		return y;
+		return origin;
 	}
 
 	/** Renders extra parts of this GUI */
@@ -185,5 +189,9 @@ public abstract class Setting<T> implements IGetSet<T> {
 
 	/** Updates the GUI elements based on the state of other settings.
 	 * This is called when any button tied to a setting callback is pressed */
-	public abstract void updateGuiParts(Collection<Setting<?>> settings);
+	public void updateGuiParts(Collection<Setting<?>> settings) {
+		for(Setting<?> setting : children) {
+			setting.updateGuiParts(settings);
+		}
+	}
 }

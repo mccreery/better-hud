@@ -27,7 +27,7 @@ public class Distance extends TextElement {
 	}
 
 	public Distance() {
-		super("distance", Direction.CORNERS | Direction.CENTER.flag());
+		super("distance", Direction.CORNERS | Direction.CENTER.getFlag());
 		this.settings.add(new Legend("misc"));
 		this.settings.add(mode);
 	}

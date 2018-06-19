@@ -1,7 +1,5 @@
 package tk.nukeduck.hud.element.settings;
 
-import java.util.Collection;
-
 import net.minecraft.client.gui.GuiButton;
 import tk.nukeduck.hud.gui.GuiElementSettings;
 
@@ -22,6 +20,5 @@ public class SettingStub<T> extends Setting<T> {
 	@Override public String save() {return null;}
 	@Override public void load(String save) {}
 	@Override public void actionPerformed(GuiElementSettings gui, GuiButton button) {}
-	@Override public void updateGuiParts(Collection<Setting<?>> settings) {}
 	@Override protected boolean hasValue() {return false;}
 }

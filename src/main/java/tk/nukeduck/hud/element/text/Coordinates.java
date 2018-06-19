@@ -40,8 +40,8 @@ public class Coordinates extends TextElement {
 
 	@Override
 	public Bounds render(Event event, List<String> text) {
-		if(!position.getAlignment().in(Direction.VERTICAL) || !spaced.get()) {
-			return super.render(event);
+		if(position.getDirection() != Direction.NORTH || !spaced.get()) {
+			return super.render(event, text);
 		}
 
 		StringGroup group = new StringGroup(text).setAlignment(Direction.NORTH).setSpacing(50).setRow();

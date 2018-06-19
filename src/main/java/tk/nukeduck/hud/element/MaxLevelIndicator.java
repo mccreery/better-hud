@@ -15,7 +15,7 @@ import tk.nukeduck.hud.util.GlUtil;
 public class MaxLevelIndicator extends HudElement {
 	private static final ItemStack BOOK = new ItemStack(Items.ENCHANTED_BOOK);
 
-	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS | Direction.SOUTH.flag());
+	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS | Direction.SOUTH.getFlag(), 0);
 
 	@Override
 	public void loadDefaults() {

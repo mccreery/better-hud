@@ -1,5 +1,6 @@
 package tk.nukeduck.hud.element.settings;
 
+import static tk.nukeduck.hud.BetterHud.MC;
 import static tk.nukeduck.hud.BetterHud.SPACER;
 
 import java.util.Collection;
@@ -13,78 +14,102 @@ import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
+import tk.nukeduck.hud.util.Point;
 
-public class SettingDirection extends Setting<Direction> {
+public class SettingDirection extends SettingAlignable<Direction> {
 	private GuiToggleButton[] toggles = new GuiToggleButton[9];
 	private Bounds bounds;
 
-	public SettingDirection(String name) {
-		this(name, Direction.ALL);
-	}
-
-	public SettingDirection(String name, Direction... options) {
-		this(name, Direction.getFlags(options));
-	}
-
-	public SettingDirection(String name, int options) {
-		super(name);
-		this.options = options;
-	}
+	private boolean horizontal = false;
 
 	private final int options;
 	private Direction value = Direction.NORTH_WEST;
 
-	public boolean isValid(Direction direction) {
-		return direction.in(options);
+	public SettingDirection(String name, Direction alignment) {
+		this(name, alignment, Direction.ALL);
+	}
+
+	public SettingDirection(String name, Direction alignment, Direction... options) {
+		this(name, alignment, Direction.getFlags(options));
+	}
+
+	public SettingDirection(String name, Direction alignment, int options) {
+		super(name, alignment);
+		this.options = options;
+	}
+
+	public SettingDirection setHorizontal() {
+		horizontal = true;
+		setAlignment(Direction.WEST);
+
+		return this;
 	}
 
 	@Override
-	public int getGuiParts(java.util.List<Gui> parts, Map<Gui,Setting<?>> callbacks, int width, int y) {
-		bounds = new Bounds(width / 2 - 100, y, 64, -2);
-		Bounds radio = new Bounds(0, 0, 20, 20);
+	protected int getAlignmentWidth() {
+		return horizontal ? 150 : 240;
+	}
 
-		for(int row = 0; row < 3; row++) {
-			if((options & Direction.getRowFlags(row)) != 0) {
-				bounds = bounds.withBottom(bounds.getBottom() + 22);
-
-				for(int col = 0; col < 3; col++) {
-					Direction direction = Direction.get(row, col);
-					radio = direction.toRow(2).anchor(radio, bounds);
-
-					GuiToggleButton button = (GuiToggleButton)new GuiToggleButton("").setStaticText().setId(direction.ordinal()).setBounds(radio);
-					parts.add(button);
-					callbacks.put(button, this);
-
-					toggles[direction.ordinal()] = button;
-				}
-			}
+	@Override
+	public SettingAlignable<Direction> setAlignment(Direction alignment) {
+		if(!horizontal) {
+			return super.setAlignment(alignment);
+		} else {
+			return this;
 		}
-		return bounds.getHeight() == -2 ? -1 : bounds.getBottom() + SPACER;
+	}
+
+	@Override
+	public void getGuiParts(java.util.List<Gui> parts, Map<Gui,Setting<?>> callbacks, Bounds bounds) {
+		this.bounds = bounds;
+
+		Bounds radios = (horizontal ? Direction.WEST : Direction.SOUTH).anchor(new Bounds(60, 60), bounds);
+		Bounds radio = new Bounds(20, 20);
+
+		for(Direction direction : Direction.values()) {
+			GuiToggleButton button = (GuiToggleButton)new GuiToggleButton("")
+				.setStaticText().setId(direction.ordinal())
+				.setBounds(direction.anchor(radio, radios));
+
+			parts.add(button);
+			callbacks.put(button, this);
+			toggles[direction.ordinal()] = button;
+		}
+	}
+
+	@Override
+	protected Point getSize() {
+		return horizontal ? new Point(150, 60) : new Point(60, 60 + SPACER + MC.fontRenderer.FONT_HEIGHT);
+	}
+
+	private String getText() {
+		return horizontal ? getLocalizedName() + ": " + value.getLocalizedName() : getLocalizedName();
 	}
 
 	@Override
 	public void actionPerformed(GuiElementSettings gui, GuiButton button) {
-		((GuiToggleButton)button).set(true);
 		value = Direction.get(button.id);
 	}
 
 	@Override
 	public void updateGuiParts(Collection<Setting<?>> settings) {
+		super.updateGuiParts(settings);
 		boolean enabled = enabled();
 
 		for(GuiToggleButton button : toggles) {
-			if(button != null) {
-				button.enabled = enabled && isValid(Direction.values()[button.id]);
-				button.set(button.id == value.ordinal());
-			}
+			button.set(button.id == value.ordinal());
+			button.enabled = button.get() || enabled && Direction.values()[button.id].in(options);
 		}
 	}
 
 	@Override
 	public void draw() {
-		if(options != 0) {
-			final String text = getLocalizedName() + ": " + value.getLocalizedName();
-			GlUtil.drawString(text, Direction.EAST.getAnchor(bounds).add(SPACER, 0), Direction.WEST, Colors.WHITE);
+		String text = getText();
+
+		if(horizontal) {
+			GlUtil.drawString(text, Direction.EAST.getAnchor(bounds.withWidth(60 + SPACER)), Direction.WEST, Colors.WHITE);
+		} else {
+			GlUtil.drawString(text, Direction.NORTH.getAnchor(bounds), Direction.NORTH, Colors.WHITE);
 		}
 	}
 
@@ -105,8 +130,13 @@ public class SettingDirection extends Setting<Direction> {
 
 	@Override
 	public void set(Direction value) {
-		if(isValid(value)) {
+		if(value.in(options)) {
 			this.value = value;
 		}
+	}
+
+	@Override
+	protected boolean shouldBreak() {
+		return horizontal || alignment == Direction.EAST;
 	}
 }

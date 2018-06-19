@@ -39,7 +39,7 @@ public class GuiUpDownButton extends GuiActionButton {
 			GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
 			GlStateManager.blendFunc(770, 771);
 
-			this.drawTexturedModalRect(this.x, this.y, index * 20, k * 10, this.width, this.height);
+			this.drawTexturedModalRect(this.x, this.y, 0, k * 20 + index * 10, this.width, this.height);
 			this.mouseDragged(mc, mouseX, mouseY);
 		}
 	}

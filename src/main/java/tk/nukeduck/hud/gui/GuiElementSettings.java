@@ -63,10 +63,10 @@ public class GuiElementSettings extends GuiScreen {
 		labelList.clear();
 
 		Keyboard.enableRepeatEvents(true);
-		done = new GuiButton(-1, this.width / 2 - 100, height / 16 + 20, I18n.format("gui.done"));
+		done = new GuiButton(-1, width / 2 - 100, height / 16 + 20, I18n.format("gui.done"));
 
 		List<Gui> parts = new ArrayList<Gui>();
-		int content = element.settings.getGuiParts(parts, callbacks, width, SPACER);
+		int contentHeight = element.settings.getGuiParts(parts, callbacks, new Point(width / 2, SPACER)).getY();
 
 		for(Gui gui : parts) {
 			if(gui instanceof GuiButton) {
@@ -79,7 +79,7 @@ public class GuiElementSettings extends GuiScreen {
 		}
 
 		viewport = new Bounds(width / 2 - 200, height / 16 + 40 + SPACER, 400, 0).withBottom(height - 20);
-		scrollbar = new GuiScrollbar(viewport, content);
+		scrollbar = new GuiScrollbar(viewport, contentHeight);
 
 		for(Setting<?> setting : callbacks.values()) {
 			setting.updateGuiParts(callbacks.values());
@@ -89,7 +89,6 @@ public class GuiElementSettings extends GuiScreen {
 	@Override
 	public void onGuiClosed() {
 		Keyboard.enableRepeatEvents(false);
-		
 	}
 
 	@Override
