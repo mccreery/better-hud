@@ -90,7 +90,7 @@ public class ArmorBars extends EquipmentDisplay {
 		}
 
 		Direction alignment;
-		if(position.getAlignment().in(Direction.RIGHT)) {
+		if(position.getContentAlignment().in(Direction.RIGHT)) {
 			alignment = Direction.EAST;
 		} else {
 			alignment = Direction.WEST;
