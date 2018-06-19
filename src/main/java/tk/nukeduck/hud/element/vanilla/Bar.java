@@ -56,7 +56,7 @@ public abstract class Bar extends OverrideElement {
 			bounds = MANAGER.positionBar(bounds, alignment, 1);
 		} else {
 			bounds = position.applyTo(bounds);
-			alignment = position.getAlignment();
+			alignment = position.getContentAlignment();
 		}
 
 		bar.render(bounds.getPosition(), alignment);

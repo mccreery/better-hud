@@ -63,7 +63,7 @@ public class SettingPosition extends SettingStub<Object> {
 				super.updateGuiParts(settings);
 			}
 		});
-		add(contentAlignment = new SettingDirection("contentAlignment", Direction.EAST) {
+		add(contentAlignment = new SettingDirection("contentAlignment", Direction.EAST, contentAlignments) {
 			@Override
 			public boolean enabled() {
 				return mode.getIndex() == 1 && !lockContent.get() && super.enabled();
