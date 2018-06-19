@@ -19,17 +19,17 @@ public abstract class TextElement extends HudElement {
 	protected boolean border = false;
 
 	public TextElement(String name) {
-		this(name, Direction.CORNERS);
-	}
-
-	public TextElement(String name, Direction... directions) {
-		this(name, Direction.getFlags(directions));
+		this(name, Direction.CORNERS, Direction.HORIZONTAL);
 	}
 
 	public TextElement(String name, int directions) {
+		this(name, directions, Direction.HORIZONTAL);
+	}
+
+	public TextElement(String name, int directions, int contentAlignments) {
 		super(name);
 
-		settings.add(position = new SettingPosition("position", directions, Direction.ALL));
+		settings.add(position = new SettingPosition("position", directions, contentAlignments));
 		settings.add(color);
 	}
 

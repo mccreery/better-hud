@@ -57,7 +57,7 @@ public class BlockViewer extends TextElement {
 	private ItemStack stack;
 
 	public BlockViewer() {
-		super("blockViewer", Direction.CORNERS | Direction.getFlags(Direction.CENTER, Direction.NORTH));
+		super("blockViewer", Direction.CORNERS | Direction.getFlags(Direction.CENTER, Direction.NORTH), Direction.WEST.getFlag() | Direction.EAST.getFlag());
 
 		settings.add(new Legend("misc"));
 		settings.add(showBlock);
@@ -110,7 +110,11 @@ public class BlockViewer extends TextElement {
 		Bounds bounds = Bounds.createPadding(5, vPad - bottom, 5, bottom);
 
 		if(stack != null && showBlock.get()) {
-			bounds = bounds.withLeft(bounds.getLeft() - 21);
+			if(position.getContentAlignment().in(Direction.RIGHT)) {
+				bounds = bounds.withRight(bounds.getRight() + 21);
+			} else {
+				bounds = bounds.withLeft(bounds.getLeft() - 21);
+			}
 		}
 		return bounds;
 	}
@@ -123,8 +127,16 @@ public class BlockViewer extends TextElement {
 	@Override
 	protected void drawExtras(Bounds bounds) {
 		if(stack != null && showBlock.get()) {
+			Direction alignment;
+			if(position.getContentAlignment().in(Direction.RIGHT)) {
+				alignment = Direction.EAST;
+			} else {
+				alignment = Direction.WEST;
+			}
+			Bounds stackBounds = alignment.anchor(new Bounds(16, 16), bounds.withInset(5, 2, 5, 2));
+
 			RenderHelper.enableGUIStandardItemLighting();
-			MC.getRenderItem().renderItemAndEffectIntoGUI(stack, bounds.getX() + 5, bounds.getY() + 2);
+			MC.getRenderItem().renderItemAndEffectIntoGUI(stack, stackBounds.getX(), stackBounds.getY());
 			RenderHelper.disableStandardItemLighting();
 		}
 	}
