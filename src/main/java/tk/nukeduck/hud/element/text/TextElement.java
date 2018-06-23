@@ -11,6 +11,7 @@ import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.StringGroup;
+import tk.nukeduck.hud.util.Direction.Options;
 
 public abstract class TextElement extends HudElement {
 	protected SettingPosition position;
@@ -19,14 +20,14 @@ public abstract class TextElement extends HudElement {
 	protected boolean border = false;
 
 	public TextElement(String name) {
-		this(name, Direction.CORNERS, Direction.HORIZONTAL);
+		this(name, Options.CORNERS, Options.HORIZONTAL);
 	}
 
-	public TextElement(String name, int directions) {
-		this(name, directions, Direction.HORIZONTAL);
+	public TextElement(String name, Options directions) {
+		this(name, directions, Options.HORIZONTAL);
 	}
 
-	public TextElement(String name, int directions, int contentAlignments) {
+	public TextElement(String name, Options directions, Options contentAlignments) {
 		super(name);
 
 		settings.add(position = new SettingPosition("position", directions, contentAlignments));
@@ -41,7 +42,7 @@ public abstract class TextElement extends HudElement {
 	public void loadDefaults() {
 		super.loadDefaults();
 
-		position.set(Direction.NORTH_EAST);
+		position.setPreset(Direction.NORTH_EAST);
 		color.set(Colors.WHITE);
 	}
 

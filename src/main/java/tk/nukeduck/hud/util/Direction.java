@@ -1,5 +1,7 @@
 package tk.nukeduck.hud.util;
 
+import java.util.function.Function;
+
 import net.minecraft.client.resources.I18n;
 
 /** One of 8 cardinal directions or {@link CENTER}, the null direction */
@@ -16,20 +18,107 @@ public enum Direction {
 	SOUTH("south"),
 	SOUTH_EAST("southEast");
 
-	public static final int CORNERS    = NORTH_WEST.getFlag() | NORTH_EAST.getFlag() | SOUTH_WEST.getFlag() | SOUTH_EAST.getFlag();
-	public static final int SIDES      = NORTH.getFlag() | EAST.getFlag() | SOUTH.getFlag() | WEST.getFlag();
+	public enum Options implements Function<Direction, Direction> {
+		ALL((1 << Direction.values().length) - 1) {
+			@Override
+			public Direction apply(Direction direction) {
+				return direction != null ? direction : NORTH_WEST;
+			}
+		},
+		CORNERS(NORTH_WEST, NORTH_EAST, SOUTH_WEST, SOUTH_EAST) {
+			@Override
+			public Direction apply(Direction direction) {
+				if(direction != null) {
+					return fromRowColumn(direction.getRow() > 1 ? 2 : 0, direction.getColumn() > 1 ? 2 : 0);
+				} else {
+					return NORTH_WEST;
+				}
+			}
+		},
+		WEST_EAST(WEST, EAST) {
+			@Override
+			public Direction apply(Direction direction) {
+				return direction != null && direction.getColumn() >= 2 ? EAST : WEST;
+			}
+		},
+		NORTH_SOUTH(NORTH, SOUTH) {
+			@Override
+			public Direction apply(Direction direction) {
+				return direction != null && direction.getRow() >= 2 ? SOUTH : NORTH;
+			}
+		},
+		HORIZONTAL(WEST, CENTER, EAST) {
+			@Override
+			public Direction apply(Direction direction) {
+				return direction != null ? direction.withRow(1) : WEST;
+			}
+		},
+		VERTICAL(NORTH, CENTER, SOUTH) {
+			@Override
+			public Direction apply(Direction direction) {
+				return direction != null ? direction.withColumn(1) : NORTH;
+			}
+		},
+		I(NORTH_WEST, NORTH, NORTH_EAST, CENTER, SOUTH_WEST, SOUTH, SOUTH_EAST) {
+			@Override
+			public Direction apply(Direction direction) {
+				switch(direction) {
+					case WEST: return NORTH_WEST;
+					case EAST: return NORTH_EAST;
+					default:   return direction != null ? direction : NORTH_WEST;
+				}
+			}
+		},
+		BAR(NORTH_WEST, NORTH_EAST, SOUTH_WEST, SOUTH, SOUTH_EAST) {
+			@Override
+			public Direction apply(Direction direction) {
+				if(direction == SOUTH) {
+					return direction;
+				} else {
+					return CORNERS.apply(direction);
+				}
+			}
+		},
+		X(NORTH_WEST, NORTH_EAST, CENTER, SOUTH_WEST, SOUTH_EAST) {
+			@Override
+			public Direction apply(Direction direction) {
+				return direction == CENTER ? direction : CORNERS.apply(direction);
+			}
+		},
+		TOP_BOTTOM(NORTH_WEST, NORTH, NORTH_EAST, SOUTH_WEST, SOUTH, SOUTH_EAST) {
+			@Override
+			public Direction apply(Direction direction) {
+				if(direction == null) {
+					return NORTH_WEST;
+				} else if(direction.getRow() == 1) {
+					return direction.withRow(0);
+				} else {
+					return direction;
+				}
+			}
+		},
+		NONE() {
+			@Override
+			public Direction apply(Direction direction) {
+				return null;
+			}
+		};
 
-	public static final int TOP = NORTH_WEST.getFlag() | NORTH.getFlag() | NORTH_EAST.getFlag();
-	public static final int HORIZONTAL = WEST.getFlag() | CENTER.getFlag() | EAST.getFlag();
-	public static final int BOTTOM = SOUTH_WEST.getFlag() | SOUTH.getFlag() | SOUTH_EAST.getFlag();
+		private final int flags;
 
-	public static final int LEFT = NORTH_WEST.getFlag() | WEST.getFlag() | SOUTH_WEST.getFlag();
-	public static final int VERTICAL = NORTH.getFlag() | CENTER.getFlag() | SOUTH.getFlag();
-	public static final int RIGHT = NORTH_EAST.getFlag() | EAST.getFlag() | SOUTH_EAST.getFlag();
+		Options(Direction... directions) {
+			this(getFlags(directions));
+		}
+		Options(int flags) {
+			this.flags = flags;
+		}
 
-	public static final int ALL = (1 << values().length) - 1;
+		public boolean isValid(Direction direction) {
+			return in(direction, flags);
+		}
+	}
 
-	public final String name;
+	private final String name;
 
 	Direction(String name) {
 		this.name = name;
@@ -43,37 +132,30 @@ public enum Direction {
 		return I18n.format(getUnlocalizedName());
 	}
 
-	public Direction roundedToCorners() {
-		int column = in(RIGHT) ? 2 : 0;
-		int row = in(BOTTOM) ? 2 : 0;
-
-		return get(row, column);
-	}
-
-	public int getColumn() {return ordinal() % 3;}
 	public int getRow() {return ordinal() / 3;}
+	public int getColumn() {return ordinal() % 3;}
 
-	public Direction withColumn(int column) {return get(getRow(), column);}
-	public Direction withRow(int row) {return get(row, getColumn());}
+	public Direction withColumn(int column) {return fromRowColumn(getRow(), column);}
+	public Direction withRow(int row) {return fromRowColumn(row, getColumn());}
 
-	public Direction mirrorRow() {return get(2 - getRow(), getColumn());}
-	public Direction mirrorColumn() {return get(getRow(), 2 - getColumn());}
-	public Direction mirror() {return get(2 - getRow(), 2 - getColumn());}
+	public Direction mirrorRow() {return fromRowColumn(2 - getRow(), getColumn());}
+	public Direction mirrorColumn() {return fromRowColumn(getRow(), 2 - getColumn());}
+	public Direction mirror() {return fromRowColumn(2 - getRow(), 2 - getColumn());}
 
 	/** @see #in(int) */
-	public static boolean in(Direction direction, int flags) {
+	private static boolean in(Direction direction, int flags) {
 		return direction != null && direction.in(flags);
 	}
 
-	public boolean in(int flags) {
+	private boolean in(int flags) {
 		return (flags & getFlag()) != 0;
 	}
 
-	public int getFlag() {
+	private int getFlag() {
 		return 1 << ordinal();
 	}
 
-	public static int getFlags(Direction... directions) {
+	private static int getFlags(Direction... directions) {
 		int flags = 0;
 
 		for(Direction direction : directions) {
@@ -111,18 +193,29 @@ public enum Direction {
 		return align(bounds, getAnchor(container));
 	}
 
-	public static Direction get(int row, int column) {
-		return get(row * 3 + column);
+	public Point getRowColumn() {
+		return new Point(getColumn(), getRow());
+	}
+	public static Direction fromRowColumn(Point rowColumn) {
+		return fromRowColumn(rowColumn.getY(), rowColumn.getX());
+	}
+	public static Direction fromRowColumn(int row, int column) {
+		return values()[row * 3 + column];
 	}
 
-	public static Direction get(int i) {
-		return values()[i];
+	public static String toString(Direction direction) {
+		return direction != null ? direction.toString() : "";
 	}
 
-	public static Direction get(String name) {
+	@Override
+	public String toString() {
+		return name;
+	}
+
+	public static Direction fromString(String name) {
 		for(Direction direction : values()) {
-			if(direction.name.equals(name)) return direction;
+			if(direction.name.equalsIgnoreCase(name)) return direction;
 		}
-		return Direction.NORTH_WEST;
+		return null;
 	}
 }

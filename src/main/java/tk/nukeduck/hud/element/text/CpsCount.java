@@ -45,7 +45,7 @@ public class CpsCount extends TextElement implements Tickable {
 	public void loadDefaults() {
 		super.loadDefaults();
 
-		position.set(Direction.SOUTH_WEST);
+		position.setPreset(Direction.SOUTH_WEST);
 		timeoutMax.set(3.0);
 		showBurst.set(true);
 		remember.set(false);

@@ -14,16 +14,17 @@ import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.element.settings.SettingSlider;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.Direction.Options;
 
 public class HungerIndicator extends HudElement {
-	private final SettingPosition position = new SettingPosition("position", Direction.CENTER.getFlag(), 0);
+	private final SettingPosition position = new SettingPosition("position", Options.NONE, Options.NONE);
 	private final SettingSlider maxLimit = new SettingSlider("maxLimit", 0, 20, 1).setDisplayPlaces(1).setDisplayScale(.5);
 
 	@Override
 	public void loadDefaults() {
 		super.loadDefaults();
 
-		position.set(Direction.SOUTH);
+		position.setPreset(Direction.SOUTH);
 		maxLimit.set(19);
 	}
 
@@ -48,8 +49,8 @@ public class HungerIndicator extends HudElement {
 		int foodMax = this.maxLimit.getInt() * 2;
 
 		Bounds bounds;
-		if(position.getDirection() != null) {
-			if(position.getDirection() == Direction.CENTER) {
+		if(!position.isCustom()) {
+			if(position.isDirection(Direction.CENTER)) {
 				bounds = new Bounds(MANAGER.getResolution().getX() / 2 + 5, MANAGER.getResolution().getY() / 2 + 5, 16, 16);
 			} else {
 				bounds = new Bounds(MANAGER.getResolution().getX() / 2 + 75, MANAGER.getResolution().getY() - 56, 16, 16);

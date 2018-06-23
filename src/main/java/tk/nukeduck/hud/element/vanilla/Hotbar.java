@@ -14,9 +14,10 @@ import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Point;
+import tk.nukeduck.hud.util.Direction.Options;
 
 public class Hotbar extends OverrideElement {
-	private SettingPosition position = new SettingPosition("position", Direction.CORNERS | Direction.getFlags(Direction.NORTH, Direction.SOUTH), Direction.ALL)
+	private SettingPosition position = new SettingPosition("position", Options.TOP_BOTTOM, Options.NONE)
 		.setEdge(true).setPostSpacer(2);
 
 	public Hotbar() {
@@ -27,7 +28,7 @@ public class Hotbar extends OverrideElement {
 	@Override
 	public void loadDefaults() {
 		super.loadDefaults();
-		position.set(Direction.SOUTH);
+		position.setPreset(Direction.SOUTH);
 	}
 
 	@Override

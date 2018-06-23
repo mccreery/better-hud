@@ -16,9 +16,10 @@ import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Point;
 import tk.nukeduck.hud.util.StringGroup;
+import tk.nukeduck.hud.util.Direction.Options;
 
 public class ArmorBars extends EquipmentDisplay {
-	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS, Direction.getFlags(Direction.WEST, Direction.EAST));
+	private final SettingPosition position = new SettingPosition("position", Options.CORNERS, Options.WEST_EAST);
 	private final SettingChoose barType = new SettingChoose("bars", "visible.off", "smallBars", "largeBars");
 	private final SettingBoolean alwaysVisible = new SettingBoolean("alwaysVisible");
 
@@ -27,7 +28,7 @@ public class ArmorBars extends EquipmentDisplay {
 		super.loadDefaults();
 
 		barType.setIndex(2);
-		position.set(Direction.NORTH_WEST);
+		position.setPreset(Direction.NORTH_WEST);
 		alwaysVisible.set(false);
 	}
 
@@ -89,12 +90,7 @@ public class ArmorBars extends EquipmentDisplay {
 			size = size.withX(80);
 		}
 
-		Direction alignment;
-		if(position.getContentAlignment().in(Direction.RIGHT)) {
-			alignment = Direction.EAST;
-		} else {
-			alignment = Direction.WEST;
-		}
+		Direction alignment = position.getContentAlignment();
 
 		Bounds bounds = position.applyTo(new Bounds(size.getX() + 20, 70));
 		Bounds padding = alignment == Direction.EAST ? Bounds.createPadding(0, 0, 20, 0) : Bounds.createPadding(20, 0, 0, 0);

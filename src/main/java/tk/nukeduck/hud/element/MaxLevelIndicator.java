@@ -10,17 +10,18 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.Direction.Options;
 import tk.nukeduck.hud.util.GlUtil;
 
 public class MaxLevelIndicator extends HudElement {
 	private static final ItemStack BOOK = new ItemStack(Items.ENCHANTED_BOOK);
 
-	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS | Direction.SOUTH.getFlag(), 0);
+	private final SettingPosition position = new SettingPosition("position", Options.BAR, Options.NONE);
 
 	@Override
 	public void loadDefaults() {
 		super.loadDefaults();
-		position.set(Direction.SOUTH);
+		position.setPreset(Direction.SOUTH);
 	}
 
 	public MaxLevelIndicator() {
@@ -30,8 +31,8 @@ public class MaxLevelIndicator extends HudElement {
 	@Override
 	public Bounds render(Event event) {
 		Bounds bounds;
-		if(position.getDirection() == Direction.SOUTH) {
-			bounds = new Bounds(MANAGER.getResolution().getX() / 2 - 8, MANAGER.getResolution().getY() - 50, 16, 16);
+		if(position.isDirection(Direction.SOUTH)) {
+			bounds = new Bounds(MANAGER.getResolution().getX() / 2 - 8, MANAGER.getResolution().getY() - 50, 16, 16); // TODO move
 		} else {
 			bounds = position.applyTo(new Bounds(16, 16));
 		}

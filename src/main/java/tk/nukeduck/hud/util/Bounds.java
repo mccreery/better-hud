@@ -113,6 +113,20 @@ public final class Bounds implements Serializable {
 	public Bounds withMost(Point most) {return withMost(most.getX(), most.getY());}
 	public Bounds withMost(int right, int bottom) {return new Bounds(x, y, right - x, bottom - y);}
 
+	public Bounds addPosition(Point offset) {
+		return addPosition(offset.getX(), offset.getY());
+	}
+	public Bounds addPosition(int x, int y) {
+		return withPosition(this.x + x, this.y + y);
+	}
+
+	public Bounds subPosition(Point offset) {
+		return addPosition(-offset.getX(), -offset.getY());
+	}
+	public Bounds subPosition(int x, int y) {
+		return withPosition(this.x - x, this.y - y);
+	}
+
 	/** @see #createPadding(int, int, int, int) */
 	public static Bounds createPadding(int padding) {
 		return createPadding(padding, padding, padding, padding);

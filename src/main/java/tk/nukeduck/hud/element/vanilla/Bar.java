@@ -10,15 +10,16 @@ import tk.nukeduck.hud.element.settings.SettingChoose;
 import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.Direction.Options;
 import tk.nukeduck.hud.util.bars.StatBar;
 
 public abstract class Bar extends OverrideElement {
-	protected final SettingPosition position = new SettingPosition("position", Direction.CORNERS | Direction.SOUTH.getFlag(), Direction.getFlags(Direction.WEST, Direction.EAST));
+	protected final SettingPosition position = new SettingPosition("position", Options.BAR, Options.WEST_EAST);
 
-	protected final SettingChoose side = new SettingChoose("side", Direction.WEST.name, Direction.EAST.name) {
+	protected final SettingChoose side = new SettingChoose("side", "west", "east") {
 		@Override
 		public boolean enabled() {
-			return position.getDirection() == Direction.SOUTH;
+			return position.isDirection(Direction.SOUTH);
 		}
 	};
 
@@ -35,7 +36,7 @@ public abstract class Bar extends OverrideElement {
 	@Override
 	public void loadDefaults() {
 		super.loadDefaults();
-		position.set(Direction.SOUTH);
+		position.setPreset(Direction.SOUTH);
 	}
 
 	@Override
@@ -51,12 +52,12 @@ public abstract class Bar extends OverrideElement {
 		Bounds bounds = new Bounds(bar.getSize());
 		Direction alignment;
 
-		if(position.getDirection() == Direction.SOUTH) {
+		if(position.isDirection(Direction.SOUTH)) {
 			alignment = side.getIndex() == 1 ? Direction.EAST : Direction.WEST;
 			bounds = MANAGER.positionBar(bounds, alignment, 1);
 		} else {
-			bounds = position.applyTo(bounds);
 			alignment = position.getContentAlignment();
+			bounds = position.applyTo(bounds);
 		}
 
 		bar.render(bounds.getPosition(), alignment);

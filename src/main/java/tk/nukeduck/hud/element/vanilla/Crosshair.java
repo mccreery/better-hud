@@ -28,6 +28,7 @@ import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Point;
+import tk.nukeduck.hud.util.Direction.Options;
 
 public class Crosshair extends OverrideElement {
 	private final SettingBoolean attackIndicator = (SettingBoolean)new SettingBoolean(null) {
@@ -67,7 +68,7 @@ public class Crosshair extends OverrideElement {
 		}
 	};
 
-	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS | Direction.VERTICAL, Direction.CENTER.getFlag()) {
+	private final SettingPosition position = new SettingPosition("position", Options.I, Options.NONE) {
 		@Override
 		public boolean enabled() {
 			return super.enabled() && indicatorType.enabled();
@@ -88,7 +89,7 @@ public class Crosshair extends OverrideElement {
 
 		attackIndicator.set(true);
 		indicatorType.setIndex(0);
-		position.set(Direction.CENTER);
+		position.setPreset(Direction.CENTER);
 	}
 
 	@Override
@@ -145,10 +146,10 @@ public class Crosshair extends OverrideElement {
 	private Bounds renderAttackIndicator() {
 		Bounds bounds = indicatorType.getIndex() == 0 ? new Bounds(16, 8) : new Bounds(18, 18);
 
-		if(position.getDirection() == Direction.SOUTH) {
+		if(position.isDirection(Direction.SOUTH)) {
 			Direction primary = MC.player.getPrimaryHand() == EnumHandSide.RIGHT ? Direction.EAST : Direction.WEST;
 			bounds = primary.mirrorColumn().align(bounds, primary.getAnchor(HudElement.HOTBAR.getLastBounds().withPadding(SPACER)));
-		} else if(position.getDirection() == Direction.CENTER) {
+		} else if(position.isDirection(Direction.CENTER)) {
 			bounds = bounds.position(Direction.CENTER, new Point(0, SPACER), Direction.NORTH);
 		} else {
 			bounds = position.applyTo(bounds);

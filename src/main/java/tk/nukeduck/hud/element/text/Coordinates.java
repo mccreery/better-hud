@@ -15,6 +15,7 @@ import tk.nukeduck.hud.element.settings.SettingSlider;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.StringGroup;
+import tk.nukeduck.hud.util.Direction.Options;
 
 public class Coordinates extends TextElement {
 	private final SettingBoolean spaced = new SettingBoolean("spaced");
@@ -24,14 +25,14 @@ public class Coordinates extends TextElement {
 	public void loadDefaults() {
 		super.loadDefaults();
 
-		position.set(Direction.NORTH);
+		position.setPreset(Direction.NORTH);
 		spaced.set(true);
 		decimalPlaces.set(0);
 		settings.priority.set(-2);
 	}
 
 	public Coordinates() {
-		super("coordinates", Direction.CORNERS | Direction.getFlags(Direction.NORTH));
+		super("coordinates", Options.I);
 
 		this.settings.add(new Legend("misc"));
 		this.settings.add(spaced);
@@ -40,7 +41,7 @@ public class Coordinates extends TextElement {
 
 	@Override
 	public Bounds render(Event event, List<String> text) {
-		if(position.getDirection() != Direction.NORTH || !spaced.get()) {
+		if(!spaced.get() || !position.isDirection(Direction.NORTH)) {
 			return super.render(event, text);
 		}
 

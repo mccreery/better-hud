@@ -30,11 +30,12 @@ import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.MathUtil;
 import tk.nukeduck.hud.util.Point;
+import tk.nukeduck.hud.util.Direction.Options;
 
 public class PotionBar extends OverrideElement {
 	public static final ResourceLocation INVENTORY = new ResourceLocation("textures/gui/container/inventory.png");
 
-	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS | Direction.CENTER.getFlag(), Direction.CORNERS);
+	private final SettingPosition position = new SettingPosition("position", Options.X, Options.CORNERS);
 
 	public PotionBar() {
 		super("potionBar");
@@ -46,7 +47,7 @@ public class PotionBar extends OverrideElement {
 	public void loadDefaults() {
 		super.loadDefaults();
 
-		position.set(Direction.NORTH_WEST);
+		position.setPreset(Direction.NORTH_WEST);
 	}
 
 	@Override
@@ -88,24 +89,15 @@ public class PotionBar extends OverrideElement {
 		GlUtil.enableBlendTranslucent();
 		GlStateManager.enableAlpha();
 
-		// TODO find better solution
 		Direction alignment = position.getAlignment();
-		if(alignment == Direction.NORTH) {
-			alignment = Direction.NORTH_WEST;
-		} else if(alignment == Direction.CENTER) {
-			alignment = Direction.NORTH_WEST;
-		} else if(alignment == Direction.SOUTH) {
-			alignment = Direction.SOUTH_WEST;
-		}
-
 		Point icon = alignment.anchor(new Bounds(24, 24), bounds).getPosition();
 
-		int deltaX = alignment.in(Direction.RIGHT) ? -25 : 25;
+		int deltaX = alignment.getColumn() == 2 ? -25 : 25;
 		for(int i = 0; i < helpful.size(); i++) {
 			drawIcon(icon.add(i * deltaX, 0), helpful.get(i));
 		}
 
-		icon = icon.add(0, alignment.in(Direction.BOTTOM) ? -25 : 25);
+		icon = icon.add(0, alignment.getRow() == 2 ? -25 : 25);
 		for(int i = 0; i < harmful.size(); i++) {
 			drawIcon(icon.add(i * deltaX, 0), harmful.get(i));
 		}
@@ -123,7 +115,7 @@ public class PotionBar extends OverrideElement {
 
 		Bounds bounds = new Bounds(helpful * 25 - 1, harmful > 0 ? 50 : 24);
 
-		if(position.getDirection() == Direction.CENTER) {
+		if(position.isDirection(Direction.CENTER)) {
 			return bounds.position(Direction.CENTER, new Point(SPACER, SPACER), Direction.NORTH_WEST);
 		} else {
 			return position.applyTo(bounds);

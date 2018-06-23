@@ -13,6 +13,7 @@ import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.Direction.Options;
 import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Point;
 
@@ -21,7 +22,7 @@ public class ArrowCount extends HudElement {
 
 	private final SettingBoolean overlay = new SettingBoolean("overlay");
 
-	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS, 0) {
+	private final SettingPosition position = new SettingPosition("position", Options.CORNERS, Options.NONE) {
 		@Override
 		public boolean enabled() {
 			return !overlay.get();
@@ -33,7 +34,7 @@ public class ArrowCount extends HudElement {
 		super.loadDefaults();
 
 		overlay.set(true);
-		position.set(Direction.SOUTH_EAST);
+		position.setPreset(Direction.SOUTH_EAST);
 		settings.priority.set(1);
 	}
 

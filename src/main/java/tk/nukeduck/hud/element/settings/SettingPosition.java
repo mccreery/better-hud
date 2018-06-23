@@ -14,6 +14,7 @@ import net.minecraft.client.gui.Gui;
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.Direction.Options;
 import tk.nukeduck.hud.util.Point;
 
 public class SettingPosition extends SettingStub<Object> {
@@ -29,16 +30,16 @@ public class SettingPosition extends SettingStub<Object> {
 	private final SettingLock lockAlignment, lockContent;
 
 	public SettingPosition(String name) {
-		this(name, Direction.ALL, Direction.ALL);
+		this(name, Options.ALL, Options.ALL);
 	}
 
-	public SettingPosition(String name, int directions, int contentAlignments) {
+	public SettingPosition(String name, Options directionOptions, Options contentOptions) {
 		super(name);
 
 		add(new Legend("position"));
 		add(mode = new SettingChoose("position", "preset", "custom"));
 
-		add(direction = new SettingDirection("direction", Direction.WEST, directions) {
+		add(direction = new SettingDirection("direction", Direction.WEST, directionOptions) {
 			@Override
 			public boolean enabled() {
 				return mode.getIndex() == 0 && super.enabled();
@@ -63,7 +64,7 @@ public class SettingPosition extends SettingStub<Object> {
 				super.updateGuiParts(settings);
 			}
 		});
-		add(contentAlignment = new SettingDirection("contentAlignment", Direction.EAST, contentAlignments) {
+		add(contentAlignment = new SettingDirection("contentAlignment", Direction.EAST, contentOptions) {
 			@Override
 			public boolean enabled() {
 				return mode.getIndex() == 1 && !lockContent.get() && super.enabled();
@@ -122,32 +123,36 @@ public class SettingPosition extends SettingStub<Object> {
 		});
 	}
 
-	protected Direction mapContentAlignment(Direction alignment) {
-		return alignment;
+	public boolean isDirection(Direction direction) {
+		return !isCustom() && this.direction.get() == direction;
 	}
 
-	public boolean isAbsolute() {
+	public boolean isCustom() {
 		return mode.getIndex() == 1;
 	}
 
 	public Direction getDirection() {
-		return !isAbsolute() ? direction.get() : null;
+		if(isCustom()) throw new IllegalStateException("Position is not preset");
+		return direction.get();
 	}
 
 	public Point getOffset() {
-		return isAbsolute() ? offset.get() : Point.ZERO;
+		if(!isCustom()) throw new IllegalStateException("Position is not custom");
+		return offset.get();
 	}
 
 	public Direction getAnchor() {
-		return isAbsolute() ? anchor.get() : direction.get();
+		if(!isCustom()) throw new IllegalStateException("Position is not custom");
+		return anchor.get();
 	}
 
 	public Direction getAlignment() {
-		return isAbsolute() ? alignment.get() : direction.get();
+		if(!isCustom()) throw new IllegalStateException("Position is not custom");
+		return alignment.get();
 	}
 
 	public Direction getContentAlignment() {
-		return isAbsolute() ? contentAlignment.get() : direction.get();
+		return isCustom() ? contentAlignment.get() : contentAlignment.getOptions().apply(direction.get());
 	}
 
 	public SettingPosition setEdge(boolean edge) {
@@ -162,24 +167,39 @@ public class SettingPosition extends SettingStub<Object> {
 
 	/** Moves the given bounds to the correct location and returns them */
 	public Bounds applyTo(Bounds bounds) {
-		if(isAbsolute()) {
+		if(isCustom()) {
 			return bounds.position(anchor.get(), offset.get(), alignment.get());
 		} else {
 			return MANAGER.position(direction.get(), bounds, edge, postSpacer);
 		}
 	}
 
-	public void set(Direction direction) {
+	public void setPreset(Direction direction) {
 		mode.setIndex(0);
 		this.direction.set(direction);
-		offset.set(Point.ZERO);
 
-		anchor.set(direction);
-		alignment.set(direction);
-		contentAlignment.set(direction);
+		// Reset custom
+		offset.set(Point.ZERO);
+		anchor.set(Direction.NORTH_WEST);
+		alignment.set(Direction.NORTH_WEST);
+		contentAlignment.set(Direction.NORTH_WEST);
 
 		lockAlignment.set(true);
 		lockContent.set(true);
+	}
+
+	public void setCustom(Direction anchor, Direction alignment, Direction contentAlignment, Point offset, boolean lockAlignment, boolean lockContent) {
+		// Reset preset
+		mode.setIndex(1);
+		direction.set(Direction.NORTH_WEST);
+
+		this.anchor.set(anchor);
+		this.alignment.set(alignment);
+		this.contentAlignment.set(contentAlignment);
+		this.offset.set(offset);
+
+		this.lockAlignment.set(lockAlignment);
+		this.lockContent.set(lockContent);
 	}
 
 	@Override

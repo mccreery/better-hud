@@ -15,6 +15,7 @@ import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Point;
+import tk.nukeduck.hud.util.Direction.Options;
 
 public class SettingDirection extends SettingAlignable<Direction> {
 	private GuiToggleButton[] toggles = new GuiToggleButton[9];
@@ -22,18 +23,14 @@ public class SettingDirection extends SettingAlignable<Direction> {
 
 	private boolean horizontal = false;
 
-	private final int options;
-	private Direction value = Direction.NORTH_WEST;
+	private final Options options;
+	private Direction value;
 
 	public SettingDirection(String name, Direction alignment) {
-		this(name, alignment, Direction.ALL);
+		this(name, alignment, Options.ALL);
 	}
 
-	public SettingDirection(String name, Direction alignment, Direction... options) {
-		this(name, alignment, Direction.getFlags(options));
-	}
-
-	public SettingDirection(String name, Direction alignment, int options) {
+	public SettingDirection(String name, Direction alignment, Options options) {
 		super(name, alignment);
 		this.options = options;
 	}
@@ -88,7 +85,7 @@ public class SettingDirection extends SettingAlignable<Direction> {
 
 	@Override
 	public void actionPerformed(GuiElementSettings gui, GuiButton button) {
-		value = Direction.get(button.id);
+		value = Direction.values()[button.id];
 	}
 
 	@Override
@@ -98,7 +95,7 @@ public class SettingDirection extends SettingAlignable<Direction> {
 
 		for(GuiToggleButton button : toggles) {
 			button.set(button.id == value.ordinal());
-			button.enabled = button.get() || enabled && Direction.values()[button.id].in(options);
+			button.enabled = button.get() || enabled && options.isValid(Direction.values()[button.id]);
 		}
 	}
 
@@ -115,12 +112,12 @@ public class SettingDirection extends SettingAlignable<Direction> {
 
 	@Override
 	public String save() {
-		return get().name;
+		return Direction.toString(get());
 	}
 
 	@Override
 	public void load(String save) {
-		set(Direction.get(save));
+		set(Direction.fromString(save));
 	}
 
 	@Override
@@ -130,7 +127,9 @@ public class SettingDirection extends SettingAlignable<Direction> {
 
 	@Override
 	public void set(Direction value) {
-		if(value.in(options)) {
+		value = options.apply(value);
+
+		if(options.isValid(value)) {
 			this.value = value;
 		}
 	}
@@ -138,5 +137,9 @@ public class SettingDirection extends SettingAlignable<Direction> {
 	@Override
 	protected boolean shouldBreak() {
 		return horizontal || alignment == Direction.EAST;
+	}
+
+	public Options getOptions() {
+		return options;
 	}
 }

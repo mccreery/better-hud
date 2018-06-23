@@ -40,6 +40,7 @@ import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Point;
+import tk.nukeduck.hud.util.Direction.Options;
 
 public class BlockViewer extends TextElement {
 	private final SettingBoolean showBlock = new SettingBoolean("showItem").setUnlocalizedValue(SettingBoolean.VISIBLE);
@@ -57,7 +58,7 @@ public class BlockViewer extends TextElement {
 	private ItemStack stack;
 
 	public BlockViewer() {
-		super("blockViewer", Direction.CORNERS | Direction.getFlags(Direction.CENTER, Direction.NORTH), Direction.WEST.getFlag() | Direction.EAST.getFlag());
+		super("blockViewer", Options.I, Options.WEST_EAST);
 
 		settings.add(new Legend("misc"));
 		settings.add(showBlock);
@@ -74,7 +75,7 @@ public class BlockViewer extends TextElement {
 	public void loadDefaults() {
 		super.loadDefaults();
 
-		position.set(Direction.NORTH);
+		position.setPreset(Direction.NORTH);
 		showBlock.set(true);
 		showIds.set(false);
 		invNames.set(true);
@@ -110,7 +111,7 @@ public class BlockViewer extends TextElement {
 		Bounds bounds = Bounds.createPadding(5, vPad - bottom, 5, bottom);
 
 		if(stack != null && showBlock.get()) {
-			if(position.getContentAlignment().in(Direction.RIGHT)) {
+			if(position.getContentAlignment() == Direction.EAST) {
 				bounds = bounds.withRight(bounds.getRight() + 21);
 			} else {
 				bounds = bounds.withLeft(bounds.getLeft() - 21);
@@ -127,13 +128,7 @@ public class BlockViewer extends TextElement {
 	@Override
 	protected void drawExtras(Bounds bounds) {
 		if(stack != null && showBlock.get()) {
-			Direction alignment;
-			if(position.getContentAlignment().in(Direction.RIGHT)) {
-				alignment = Direction.EAST;
-			} else {
-				alignment = Direction.WEST;
-			}
-			Bounds stackBounds = alignment.anchor(new Bounds(16, 16), bounds.withInset(5, 2, 5, 2));
+			Bounds stackBounds = position.getContentAlignment().anchor(new Bounds(16, 16), bounds.withInset(5, 2, 5, 2));
 
 			RenderHelper.enableGUIStandardItemLighting();
 			MC.getRenderItem().renderItemAndEffectIntoGUI(stack, stackBounds.getX(), stackBounds.getY());
@@ -143,7 +138,7 @@ public class BlockViewer extends TextElement {
 
 	@Override
 	protected Bounds moveBounds(Bounds bounds) {
-		if(position.getDirection() == Direction.CENTER) {
+		if(position.isDirection(Direction.CENTER)) {
 			return bounds.position(Direction.CENTER, new Point(0, -SPACER), Direction.SOUTH);
 		} else {
 			return super.moveBounds(bounds);

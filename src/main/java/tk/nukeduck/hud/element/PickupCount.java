@@ -21,9 +21,10 @@ import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.MathUtil;
 import tk.nukeduck.hud.util.Point;
+import tk.nukeduck.hud.util.Direction.Options;
 
 public class PickupCount extends HudElement {
-	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS | Direction.CENTER.getFlag(), Direction.CORNERS);
+	private final SettingPosition position = new SettingPosition("position", Options.X, Options.CORNERS);
 
 	private final SettingSlider maxStacks = new SettingSlider("maxStacks", 1, 11, 1) {
 		@Override
@@ -65,7 +66,7 @@ public class PickupCount extends HudElement {
 	public void loadDefaults() {
 		super.loadDefaults();
 
-		position.set(Direction.SOUTH_EAST);
+		position.setPreset(Direction.SOUTH_EAST);
 		fadeSpeed.set(.5);
 		maxStacks.set(11);
 	}
@@ -86,9 +87,7 @@ public class PickupCount extends HudElement {
 	@Override
 	public synchronized Bounds render(Event event) {
 		Bounds bounds = getBounds();
-		Direction alignment = position.getAlignment();
-		if(alignment.in(Direction.VERTICAL)) alignment = alignment.withColumn(0);
-		if(alignment.in(Direction.HORIZONTAL)) alignment = alignment.withRow(0);
+		Direction alignment = position.getContentAlignment();
 		Direction rowAlignment = alignment.withRow(1);
 
 		// The bounds to draw each item in
@@ -121,16 +120,9 @@ public class PickupCount extends HudElement {
 
 			//GlStateManager.color(1, 1, 1, opacity);
 			GlUtil.renderSingleItem(node.stack, stackBounds.getPosition());
-
 			GlUtil.drawString(node.toString(), rowAlignment.mirrorColumn().getAnchor(stackBounds.withPadding(SPACER)), rowAlignment, color);
 
-			int y;
-			if(alignment.in(Direction.BOTTOM)) {
-				y = stackBounds.getTop() - stackBounds.getHeight() - 2;
-			} else {
-				y = stackBounds.getBottom() + 2;
-			}
-			stackBounds = stackBounds.withY(y);
+			stackBounds = stackBounds.withY(alignment.mirrorRow().getAnchor(stackBounds.withPadding(2)).getY());
 		}
 
 		// Remove invisible stacks
@@ -160,7 +152,7 @@ public class PickupCount extends HudElement {
 			bounds = Bounds.EMPTY;
 		}
 
-		if(position.getDirection() == Direction.CENTER) {
+		if(position.isDirection(Direction.CENTER)) {
 			return bounds.position(Direction.CENTER, new Point(5, 5), Direction.NORTH_WEST);
 		} else {
 			return position.applyTo(bounds);

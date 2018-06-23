@@ -18,11 +18,12 @@ import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Point;
+import tk.nukeduck.hud.util.Direction.Options;
 
 public class Compass extends HudElement {
 	private static final String[] DIRECTIONS = {"S", "E", "N", "W"};
 
-	private final SettingPosition position = new SettingPosition("position", Direction.TOP | Direction.BOTTOM, Direction.getFlags(Direction.NORTH, Direction.SOUTH));
+	private final SettingPosition position = new SettingPosition("position", Options.TOP_BOTTOM, Options.NORTH_SOUTH);
 	private final SettingSlider directionScaling = new SettingPercentage("letterScale", 0.01);
 	private final SettingBoolean showNotches = new SettingBoolean("showNotches").setUnlocalizedValue(SettingBoolean.VISIBLE);
 	private final SettingChoose requireItem = new SettingChoose("requireItem", "disabled", "inventory", "hand");
@@ -31,7 +32,7 @@ public class Compass extends HudElement {
 	public void loadDefaults() {
 		super.loadDefaults();
 
-		position.set(Direction.NORTH);
+		position.setPreset(Direction.NORTH);
 		directionScaling.set(0.5);
 		showNotches.set(true);
 		requireItem.setIndex(0);
@@ -62,23 +63,22 @@ public class Compass extends HudElement {
 		GlUtil.drawRect(bounds, Colors.fromARGB(170, 0, 0, 0));
 		GlUtil.drawRect(bounds.withInset(50, 0, 50, 0), Colors.fromARGB(85, 85, 85, 85));
 
-		Direction alignment = position.getContentAlignment().withColumn(0);
+		Direction alignment = position.getContentAlignment();
 
-		Bounds smallBounds = bounds.withPadding(0, 2, 0, 2);
+		Bounds smallBounds = bounds.withPadding(2);
 		Bounds largeNotch = new Bounds(1, 7);
 
 		Bounds smallNotch = new Bounds(1, 6);
-		Bounds largeBounds = bounds.withPadding(0, 3, 0, 3);
+		Bounds largeBounds = bounds.withPadding(3);
 
 		if(showNotches.get()) {
 			for(int loc : notchX) {
-				GlUtil.drawRect(alignment.anchor(smallNotch, smallBounds).withX(bounds.getLeft() + loc), Colors.WHITE);
-				GlUtil.drawRect(alignment.anchor(smallNotch, smallBounds).withX(bounds.getRight() - loc), Colors.WHITE);
+				GlUtil.drawRect(alignment.anchor(smallNotch, smallBounds).addPosition(loc, 0), Colors.WHITE);
+				GlUtil.drawRect(alignment.anchor(smallNotch, smallBounds).subPosition(loc, 0), Colors.WHITE);
 			}
 		}
 
-		
-		GlUtil.drawRect(alignment.anchor(largeNotch, largeBounds), Colors.RED);
+		GlUtil.drawRect(alignment.withColumn(0).anchor(largeNotch, largeBounds), Colors.RED);
 		GlUtil.drawRect(alignment.withColumn(1).anchor(largeNotch, largeBounds), Colors.RED);
 		GlUtil.drawRect(alignment.withColumn(2).anchor(largeNotch, largeBounds), Colors.RED);
 	}

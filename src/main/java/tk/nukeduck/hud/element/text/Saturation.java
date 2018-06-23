@@ -18,7 +18,7 @@ public class Saturation extends TextElement {
 	@Override
 	public void loadDefaults() {
 		super.loadDefaults();
-		position.set(Direction.SOUTH_EAST);
+		position.setPreset(Direction.SOUTH_EAST);
 	}
 
 	@Override

@@ -15,9 +15,10 @@ import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
+import tk.nukeduck.hud.util.Direction.Options;
 
 public class Offhand extends OverrideElement {
-	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS | Direction.SOUTH.getFlag(), Direction.ALL);
+	private final SettingPosition position = new SettingPosition("position", Options.BAR, Options.NONE);
 
 	public Offhand() {
 		super("offhand");
@@ -27,7 +28,7 @@ public class Offhand extends OverrideElement {
 	@Override
 	public void loadDefaults() {
 		super.loadDefaults();
-		position.set(Direction.SOUTH);
+		position.setPreset(Direction.SOUTH);
 	}
 
 	@Override
@@ -49,7 +50,7 @@ public class Offhand extends OverrideElement {
 		Bounds bounds = new Bounds(22, 22);
 		Bounds texture = new Bounds(24, 23, 22, 22);
 
-		if(position.getDirection() == Direction.SOUTH) {
+		if(position.isDirection(Direction.SOUTH)) {
 			bounds = offhand.mirrorColumn().align(bounds, offhand.getAnchor(HudElement.HOTBAR.getLastBounds().withPadding(SPACER)));
 		} else {
 			bounds = position.applyTo(bounds);

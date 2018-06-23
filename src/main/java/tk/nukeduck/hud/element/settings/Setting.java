@@ -122,7 +122,7 @@ public abstract class Setting<T> implements IGetSet<T> {
 		ConfigCategory configCategory = config.getCategory(category);
 		Property property = null;
 		String save = save();
-	
+
 		if(configCategory.containsKey(path)) {
 			property = configCategory.get(path);
 		}

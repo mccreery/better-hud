@@ -15,7 +15,7 @@ public class FpsCount extends TextElement {
 	public void loadDefaults() {
 		super.loadDefaults();
 
-		position.set(Direction.SOUTH_WEST);
+		position.setPreset(Direction.SOUTH_WEST);
 		numberOnly.set(false);
 	}
 

@@ -7,17 +7,18 @@ import java.util.List;
 
 import net.minecraft.util.math.BlockPos;
 import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.Direction.Options;
 
 public class BiomeName extends TextElement {
 	@Override
 	public void loadDefaults() {
 		super.loadDefaults();
-		position.set(Direction.NORTH);
+		position.setPreset(Direction.NORTH);
 		settings.priority.set(-1);
 	}
 
 	public BiomeName() {
-		super("biome", Direction.CORNERS | Direction.NORTH.getFlag());
+		super("biome", Options.TOP_BOTTOM);
 	}
 
 	@Override

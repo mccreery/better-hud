@@ -15,16 +15,17 @@ import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.Direction.Options;
 
 public class SignReader extends HudElement {
 	private static final ResourceLocation SIGN_TEXTURE = new ResourceLocation("textures/entity/sign.png");
 
-	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS, 0);
+	private final SettingPosition position = new SettingPosition("position", Options.CORNERS, Options.NONE);
 
 	@Override
 	public void loadDefaults() {
 		super.loadDefaults();
-		position.set(Direction.NORTH_WEST);
+		position.setPreset(Direction.NORTH_WEST);
 	}
 
 	public SignReader() {

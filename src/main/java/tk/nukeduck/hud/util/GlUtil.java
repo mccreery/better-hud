@@ -16,6 +16,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.client.config.GuiUtils;
+import tk.nukeduck.hud.util.Direction.Options;
 
 public final class GlUtil {
 	private GlUtil() {}
@@ -243,7 +244,7 @@ public final class GlUtil {
 		Bounds partialBounds = new Bounds(bounds);
 		Bounds partialForeground = new Bounds(foreground);
 
-		if(!direction.in(Direction.VERTICAL)) {
+		if(!Options.VERTICAL.isValid(direction)) {
 			int partial = MathHelper.ceil(progress * partialBounds.getWidth());
 
 			partialBounds = partialBounds.withWidth(partial);

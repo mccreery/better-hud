@@ -59,7 +59,7 @@ public abstract class StatBar<T> {
 		int resetX = position.getX();
 
 		int iconSpacing = 8;
-		if(alignment.in(Direction.RIGHT)) {
+		if(alignment == Direction.EAST) {
 			resetX += iconSpacing * (MathUtil.ceilDiv(rowPoints, 2) - 1);
 			iconSpacing = -iconSpacing;
 		}

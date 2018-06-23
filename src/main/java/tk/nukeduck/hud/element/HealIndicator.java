@@ -12,16 +12,17 @@ import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
+import tk.nukeduck.hud.util.Direction.Options;
 
 public class HealIndicator extends HudElement {
-	private final SettingPosition position = new SettingPosition("position", 0, 0);
+	private final SettingPosition position = new SettingPosition("position", Options.NONE, Options.NONE);
 	private final SettingChoose mode = new SettingChoose(2);
 
 	@Override
 	public void loadDefaults() {
 		super.loadDefaults();
 
-		position.set(Direction.NORTH_WEST);
+		position.setPreset(Direction.NORTH_WEST);
 		mode.setIndex(1);
 	}
 
@@ -38,7 +39,7 @@ public class HealIndicator extends HudElement {
 			String healIndicator = I18n.format("betterHud.strings.healIndicator");
 			Bounds bounds = mode.getIndex() == 0 ? new Bounds(MC.fontRenderer.getStringWidth(healIndicator), MC.fontRenderer.FONT_HEIGHT) : new Bounds(9, 9);
 
-			if(position.isAbsolute()) {
+			if(position.isCustom()) {
 				bounds = position.applyTo(bounds);
 			} else {
 				// TODO

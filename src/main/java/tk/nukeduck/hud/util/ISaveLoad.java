@@ -5,7 +5,7 @@ import net.minecraft.util.math.MathHelper;
 /** generic interface for objects which can be saved and restored from a
  * string representation, for use in config files */
 public interface ISaveLoad {
-	/** @return A {@link #set(T)}-compatible
+	/** @return A {@link #setPreset(T)}-compatible
 	 * representation of this object */
 	public abstract String save();
 

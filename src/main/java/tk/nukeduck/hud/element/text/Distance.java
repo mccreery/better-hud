@@ -13,6 +13,7 @@ import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingChoose;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.Direction.Options;
 import tk.nukeduck.hud.util.Point;
 
 public class Distance extends TextElement {
@@ -22,19 +23,19 @@ public class Distance extends TextElement {
 	public void loadDefaults() {
 		super.loadDefaults();
 
-		position.set(Direction.CENTER);
+		position.setPreset(Direction.CENTER);
 		mode.setIndex(0);
 	}
 
 	public Distance() {
-		super("distance", Direction.CORNERS | Direction.CENTER.getFlag());
+		super("distance", Options.X);
 		this.settings.add(new Legend("misc"));
 		this.settings.add(mode);
 	}
 
 	@Override
 	protected Bounds moveBounds(Bounds bounds) {
-		if(position.getDirection() == Direction.CENTER) {
+		if(position.isDirection(Direction.CENTER)) {
 			return bounds.position(Direction.CENTER, new Point(-SPACER, -SPACER), Direction.SOUTH_EAST);
 		} else {
 			return super.moveBounds(bounds);

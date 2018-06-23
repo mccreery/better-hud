@@ -41,14 +41,13 @@ public class LayoutManager {
 	}
 
 	public Bounds positionBar(Bounds bounds, Direction alignment, int postSpacer) {
-		int offset;
+		int offset = 0;
+		int column = alignment.getColumn();
 
-		if(alignment.in(Direction.LEFT)) {
-			offset = GuiIngameForge.left_height;
-		} else if(alignment.in(Direction.RIGHT)) {
-			offset = GuiIngameForge.right_height;
-		} else {
-			offset = Math.max(GuiIngameForge.left_height, GuiIngameForge.right_height);
+		switch(column) {
+			case 0: offset = GuiIngameForge.left_height; break;
+			case 1: offset = Math.max(GuiIngameForge.left_height, GuiIngameForge.right_height); break;
+			case 2: offset = GuiIngameForge.right_height; break;
 		}
 		offset -= 9 + SPACER;
 
@@ -56,14 +55,11 @@ public class LayoutManager {
 		bounds = alignment.anchor(bounds, wideBounds);
 
 		int newHeight = offset + bounds.getHeight() + postSpacer + SPACER + 9;
-		if(!alignment.in(Direction.LEFT)) {
-			GuiIngameForge.right_height = newHeight;
-		}
-		if(!alignment.in(Direction.RIGHT)) {
-			GuiIngameForge.left_height = newHeight;
-		}
-		corners.put(Direction.SOUTH, Math.max(GuiIngameForge.left_height, GuiIngameForge.right_height) - 9 - SPACER);
 
+		if(column > 0) GuiIngameForge.right_height = newHeight;
+		if(column < 2) GuiIngameForge.left_height = newHeight;
+
+		corners.put(Direction.SOUTH, newHeight - SPACER - 9);
 		return bounds;
 	}
 
@@ -72,7 +68,7 @@ public class LayoutManager {
 	}
 
 	public Bounds position(Direction corner, Bounds bounds, boolean edge, int postSpacer) {
-		if(corner.in(Direction.HORIZONTAL)) {
+		if(corner.getRow() == 1) {
 			throw new IllegalArgumentException("Vertical centering is not allowed");
 		}
 		int offset = corners.getOrDefault(corner, edge ? -SPACER : 0);
