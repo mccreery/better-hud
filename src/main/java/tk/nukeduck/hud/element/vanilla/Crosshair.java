@@ -67,7 +67,7 @@ public class Crosshair extends OverrideElement {
 		}
 	};
 
-	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS | Direction.VERTICAL, 0) {
+	private final SettingPosition position = new SettingPosition("position", Direction.CORNERS | Direction.VERTICAL, Direction.CENTER.getFlag()) {
 		@Override
 		public boolean enabled() {
 			return super.enabled() && indicatorType.enabled();
@@ -157,9 +157,10 @@ public class Crosshair extends OverrideElement {
 		float attackStrength = MC.player.getCooledAttackStrength(0);
 		GlStateManager.enableBlend();
 		GlStateManager.enableAlpha();
-		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 
 		if(indicatorType.getIndex() == 0) {
+			GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+
 			if(attackStrength >= 1) {
 				if(MC.pointedEntity != null && MC.pointedEntity instanceof EntityLivingBase && MC.player.getCooldownPeriod() > 5 && ((EntityLivingBase)MC.pointedEntity).isEntityAlive()) {
 					MC.getTextureManager().bindTexture(ICONS);
@@ -169,11 +170,11 @@ public class Crosshair extends OverrideElement {
 				MC.getTextureManager().bindTexture(ICONS);
 				GlUtil.drawTexturedProgressBar(bounds.getPosition(), new Bounds(36, 94, 16, 8), new Bounds(52, 94, 16, 8), attackStrength, Direction.EAST);
 			}
+
+			GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 		} else if(attackStrength < 1) {
 			GlUtil.drawTexturedProgressBar(bounds.getPosition(), new Bounds(0, 94, 18, 18), new Bounds(18, 94, 18, 18), attackStrength, Direction.NORTH);
 		}
-
-		GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 		return bounds;
 	}
 

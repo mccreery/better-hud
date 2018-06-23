@@ -256,8 +256,8 @@ public final class GlUtil {
 		}
 
 		Direction anchor = direction.mirror();
-		anchor.anchor(partialBounds, bounds);
-		anchor.anchor(partialForeground, foreground);
+		partialBounds = anchor.anchor(partialBounds, bounds);
+		partialForeground = anchor.anchor(partialForeground, foreground);
 
 		drawTexturedModalRect(partialBounds.getPosition(), partialForeground);
 	}
