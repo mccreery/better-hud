@@ -3,7 +3,6 @@ package tk.nukeduck.hud.element;
 import static tk.nukeduck.hud.BetterHud.MC;
 import static tk.nukeduck.hud.BetterHud.SPACER;
 
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -23,7 +22,7 @@ import tk.nukeduck.hud.util.Point;
 public class Compass extends HudElement {
 	private static final String[] DIRECTIONS = {"S", "E", "N", "W"};
 
-	private final SettingPosition position = new SettingPosition("position", Direction.TOP | Direction.CORNERS, Direction.getFlags(Direction.NORTH, Direction.SOUTH));
+	private final SettingPosition position = new SettingPosition("position", Direction.TOP | Direction.BOTTOM, Direction.getFlags(Direction.NORTH, Direction.SOUTH));
 	private final SettingSlider directionScaling = new SettingPercentage("letterScale", 0.01);
 	private final SettingBoolean showNotches = new SettingBoolean("showNotches").setUnlocalizedValue(SettingBoolean.VISIBLE);
 	private final SettingChoose requireItem = new SettingChoose("requireItem", "disabled", "inventory", "hand");
@@ -63,35 +62,35 @@ public class Compass extends HudElement {
 		GlUtil.drawRect(bounds, Colors.fromARGB(170, 0, 0, 0));
 		GlUtil.drawRect(bounds.withInset(50, 0, 50, 0), Colors.fromARGB(85, 85, 85, 85));
 
+		Direction alignment = position.getContentAlignment().withColumn(0);
+
+		Bounds smallBounds = bounds.withPadding(0, 2, 0, 2);
+		Bounds largeNotch = new Bounds(1, 7);
+
+		Bounds smallNotch = new Bounds(1, 6);
+		Bounds largeBounds = bounds.withPadding(0, 3, 0, 3);
+
 		if(showNotches.get()) {
-			int baseX = bounds.getX();
-
-			int x;
-			int y = bounds.getY() - 2;
-
 			for(int loc : notchX) {
-				x = baseX + loc;
-				Gui.drawRect(x, y, x + 1, y + 6, Colors.WHITE);
-				x = baseX + 180 - loc;
-				Gui.drawRect(x - 1, y, x, y + 6, Colors.WHITE);
+				GlUtil.drawRect(alignment.anchor(smallNotch, smallBounds).withX(bounds.getLeft() + loc), Colors.WHITE);
+				GlUtil.drawRect(alignment.anchor(smallNotch, smallBounds).withX(bounds.getRight() - loc), Colors.WHITE);
 			}
 		}
 
-		Bounds notches = bounds.withPadding(0, 3, 0, 0);
-		Bounds largeNotch = new Bounds(1, 7);
-
-		GlUtil.drawRect(Direction.NORTH_WEST.anchor(largeNotch, notches), Colors.RED);
-		GlUtil.drawRect(Direction.NORTH.anchor(largeNotch, notches), Colors.RED);
-		GlUtil.drawRect(Direction.NORTH_EAST.anchor(largeNotch, notches), Colors.RED);
+		
+		GlUtil.drawRect(alignment.anchor(largeNotch, largeBounds), Colors.RED);
+		GlUtil.drawRect(alignment.withColumn(1).anchor(largeNotch, largeBounds), Colors.RED);
+		GlUtil.drawRect(alignment.withColumn(2).anchor(largeNotch, largeBounds), Colors.RED);
 	}
 
 	private void drawDirections(Bounds bounds) {
 		GlStateManager.enableBlend();
 		float angle = (float)Math.toRadians(MC.player.rotationYaw);
 
-		Point origin = Direction.NORTH.getAnchor(bounds).add(0, 2);
-
 		float radius = bounds.getWidth() / 2 + SPACER;
+		boolean bottom = position.getContentAlignment() == Direction.SOUTH;
+
+		Point origin = position.getContentAlignment().getAnchor(bounds.withInset(2));
 
 		for(int i = 0; i < 4; i++, angle += Math.PI / 2) {
 			double cos = Math.cos(angle);
@@ -109,7 +108,7 @@ public class Compass extends HudElement {
 
 			// Super low alphas can render opaque for some reason
 			if(Colors.alpha(color) > 3) {
-				MC.ingameGUI.drawCenteredString(MC.fontRenderer, DIRECTIONS[i], 0, 0, color);
+				MC.ingameGUI.drawCenteredString(MC.fontRenderer, DIRECTIONS[i], 0, bottom ? -MC.fontRenderer.FONT_HEIGHT : 0, color);
 			}
 
 			GlStateManager.popMatrix();
