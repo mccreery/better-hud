@@ -255,7 +255,7 @@ public class GuiElementSettings extends GuiScreen {
 
 		if(picker != null) {
 			String key = Keyboard.getKeyName(Keyboard.KEY_LCONTROL);
-			drawString(fontRenderer, I18n.format("betterHud.text.unsnap", key), SPACER, this.height - fontRenderer.FONT_HEIGHT - SPACER, Colors.WHITE);
+			drawString(fontRenderer, I18n.format("betterHud.menu.unsnap", key), SPACER, this.height - fontRenderer.FONT_HEIGHT - SPACER, Colors.WHITE);
 
 			drawBounds();
 		}
