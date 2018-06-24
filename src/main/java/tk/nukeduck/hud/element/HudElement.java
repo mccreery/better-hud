@@ -72,7 +72,6 @@ public abstract class HudElement {
 	public static final HealIndicator HEAL = new HealIndicator();
 	public static final HidePlayers HIDE_PLAYERS = new HidePlayers();
 	public static final HorseInfo HORSE_INFO = new HorseInfo();
-	public static final HungerIndicator HUNGER = new HungerIndicator();
 	public static final LightLevel LIGHT_LEVEL = new LightLevel();
 	public static final MaxLevelIndicator MAX_LEVEL = new MaxLevelIndicator();
 	public static final MobInfo MOB_INFO = new MobInfo();

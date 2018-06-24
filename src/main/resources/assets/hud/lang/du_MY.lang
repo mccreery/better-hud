@@ -49,7 +49,6 @@
 #betterHud.element.distance=Distance
 #betterHud.element.enchantIndicator=Enchantment Indicator
 #betterHud.element.experienceInfo=XP Info
-#betterHud.element.foodIndicator=Hunger Indicator
 #betterHud.element.fpsCount=FPS
 #betterHud.element.fullInvIndicator=Full Inv. Indicator
 #betterHud.element.gameClock=Game Clock
@@ -105,6 +104,7 @@
 #betterHud.setting.direction=Direction
 #betterHud.setting.anchor=Anchor
 #betterHud.setting.alignment=Alignment
+#betterHud.setting.contentAlignment=Content Alignment
 #betterHud.value.northWest=Northwest
 #betterHud.value.north=North
 #betterHud.value.northEast=Northeast

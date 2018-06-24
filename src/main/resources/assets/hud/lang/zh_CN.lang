@@ -49,7 +49,6 @@ betterHud.element.coordinates=坐标
 betterHud.element.distance=方块距离
 betterHud.element.enchantIndicator=附魔指示器
 betterHud.element.experienceInfo=经验信息
-betterHud.element.foodIndicator=饥饿指示器
 betterHud.element.fpsCount=FPS帧数
 betterHud.element.fullInvIndicator=背包已满指示器
 betterHud.element.gameClock=时钟
@@ -105,6 +104,7 @@ betterHud.value.custom=绝对位置
 #betterHud.setting.direction=Direction
 #betterHud.setting.anchor=Anchor
 betterHud.setting.alignment=对齐
+#betterHud.setting.contentAlignment=Content Alignment
 betterHud.value.northWest=左上
 betterHud.value.north=上
 betterHud.value.northEast=右上
@@ -239,3 +239,6 @@ betterHud.hud.fullInv=背包已满
 #betterHud.hud.holding=Holding: %s
 #betterHud.hud.saturation=Saturation: %s
 betterHud.hud.unknownBlock=未知方块
+
+# Unmapped lines
+betterHud.element.foodIndicator=饥饿指示器
