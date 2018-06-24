@@ -88,6 +88,8 @@
 #betterHud.group.damageWarning=Damage Warnings
 
 # Generic Settings
+#betterHud.value.none=None
+
 #betterHud.value.visible.on=Visible
 #betterHud.value.visible.off=Hidden
 

@@ -88,6 +88,8 @@ betterHud.group.misc=Verschiedenes
 betterHud.group.damageWarning=Schadenswarnung
 
 # Generic Settings
+#betterHud.value.none=None
+
 betterHud.value.visible.on=Sichtbar
 betterHud.value.visible.off=Versteckt
 

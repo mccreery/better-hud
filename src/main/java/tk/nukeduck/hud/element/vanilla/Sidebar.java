@@ -77,7 +77,7 @@ public class Sidebar extends OverrideElement {
 		Bounds margin = Bounds.createPadding(1);
 		Bounds bounds = new Bounds(size).withPadding(padding).withPadding(margin);
 
-		Direction.EAST.anchor(bounds,MANAGER.getScreen());
+		bounds = Direction.EAST.anchor(bounds, MANAGER.getScreen());
 		Bounds paddingBounds = bounds.withInset(margin);
 		Bounds contentBounds = paddingBounds.withInset(padding);
 

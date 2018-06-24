@@ -88,6 +88,8 @@ betterHud.group.position=位置
 betterHud.group.damageWarning=损毁警告
 
 # Generic Settings
+#betterHud.value.none=None
+
 betterHud.value.visible.on=可见
 betterHud.value.visible.off=隐藏
 

@@ -8,6 +8,7 @@ import java.util.Map;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.resources.I18n;
 import tk.nukeduck.hud.gui.GuiElementSettings;
 import tk.nukeduck.hud.gui.GuiToggleButton;
 import tk.nukeduck.hud.util.Bounds;
@@ -80,7 +81,7 @@ public class SettingDirection extends SettingAlignable<Direction> {
 	}
 
 	private String getText() {
-		return horizontal ? getLocalizedName() + ": " + value.getLocalizedName() : getLocalizedName();
+		return horizontal ? getLocalizedName() + ": " + (value != null ? value.getLocalizedName() : I18n.format("betterHud.value.none")) : getLocalizedName();
 	}
 
 	@Override
@@ -94,7 +95,7 @@ public class SettingDirection extends SettingAlignable<Direction> {
 		boolean enabled = enabled();
 
 		for(GuiToggleButton button : toggles) {
-			button.set(button.id == value.ordinal());
+			button.set(value != null && button.id == value.ordinal());
 			button.enabled = button.get() || enabled && options.isValid(Direction.values()[button.id]);
 		}
 	}

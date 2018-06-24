@@ -88,6 +88,8 @@ betterHud.group.misc=Div.
 betterHud.group.damageWarning=Alertas de dano
 
 # Generic Settings
+#betterHud.value.none=None
+
 betterHud.value.visible.on=Visível
 betterHud.value.visible.off=Oculto
 

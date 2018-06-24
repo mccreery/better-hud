@@ -32,7 +32,7 @@ public class Coordinates extends TextElement {
 	}
 
 	public Coordinates() {
-		super("coordinates", Options.I);
+		super("coordinates", Options.TOP_BOTTOM);
 
 		this.settings.add(new Legend("misc"));
 		this.settings.add(spaced);
@@ -41,12 +41,12 @@ public class Coordinates extends TextElement {
 
 	@Override
 	public Bounds render(Event event, List<String> text) {
-		if(!spaced.get() || !position.isDirection(Direction.NORTH)) {
+		if(!spaced.get() || !position.isDirection(Direction.NORTH) && !position.isDirection(Direction.SOUTH)) {
 			return super.render(event, text);
 		}
 
-		StringGroup group = new StringGroup(text).setAlignment(Direction.NORTH).setSpacing(50).setRow();
-		Bounds bounds = MANAGER.position(Direction.NORTH, new Bounds(group.getSize()));
+		StringGroup group = new StringGroup(text).setAlignment(position.getDirection()).setSpacing(50).setRow();
+		Bounds bounds = MANAGER.position(position.getDirection(), new Bounds(group.getSize()));
 
 		return group.draw(bounds);
 	}
