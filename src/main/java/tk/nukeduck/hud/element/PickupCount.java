@@ -3,8 +3,8 @@ package tk.nukeduck.hud.element;
 import static tk.nukeduck.hud.BetterHud.MC;
 import static tk.nukeduck.hud.BetterHud.SPACER;
 
-import java.util.Iterator;
-import java.util.LinkedList;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
@@ -60,7 +60,7 @@ public class PickupCount extends HudElement {
 		}
 	}
 
-	public final LinkedList<StackNode> stacks = new LinkedList<>();
+	public final List<StackNode> stacks = new CopyOnWriteArrayList<>();
 
 	@Override
 	public void loadDefaults() {
@@ -85,7 +85,7 @@ public class PickupCount extends HudElement {
 	}
 
 	@Override
-	public synchronized Bounds render(Event event) {
+	public Bounds render(Event event) {
 		Bounds bounds = getBounds();
 		Direction alignment = position.getContentAlignment();
 		Direction rowAlignment = alignment.withRow(1);
@@ -96,22 +96,18 @@ public class PickupCount extends HudElement {
 		long updateCounter = MC.ingameGUI.getUpdateCounter();
 		long lifetime = getLifetime();
 
-		Iterator<StackNode> iterator = stacks.iterator();
-		StackNode node;
-
 		GlStateManager.enableBlend();
 		GlStateManager.enableAlpha();
 
-		int maximum = maxStacks.getInt();
-		for(int i = 0; iterator.hasNext() && i < maximum; i++) {
-			node = iterator.next();
+		int maximum = Math.min(stacks.size(), maxStacks.getInt());
+
+		int i;
+		for(i = 0; i < maximum; i++) {
+			StackNode node = stacks.get(i);
 
 			long age = updateCounter - node.updateCounter;
 			// All stacks past this point are dead
-			if(age >= lifetime) {
-				iterator.remove();
-				break;
-			}
+			if(age >= lifetime) break;
 
 			float opacity = (lifetime - age) / (float)lifetime;
 
@@ -126,30 +122,29 @@ public class PickupCount extends HudElement {
 		}
 
 		// Remove invisible stacks
-		while(iterator.hasNext()) {
-			iterator.next();
-			iterator.remove();
+		if(i != stacks.size()) {
+			stacks.subList(i, stacks.size()).clear();
 		}
 		return bounds;
 	}
 
 	private Bounds getBounds() {
-		int maximum = maxStacks.getInt();
-
-		int i, width = 0;
-		for(i = 0; i < maximum && i < stacks.size(); i++) {
-			int lineWidth = MC.fontRenderer.getStringWidth(stacks.get(i).toString());
-
-			if(lineWidth > width) {
-				width = lineWidth;
-			}
-		}
-
+		int maximum = Math.min(stacks.size(), maxStacks.getInt());
 		Bounds bounds;
-		if(i > 0) {
-			bounds = new Bounds(16 + SPACER + width, (16 + 2) * i - 2);
-		} else {
+
+		if(maximum == 0) {
 			bounds = Bounds.EMPTY;
+		} else {
+			int width = 0;
+
+			for(StackNode node : stacks) {
+				int lineWidth = MC.fontRenderer.getStringWidth(node.toString());
+	
+				if(lineWidth > width) {
+					width = lineWidth;
+				}
+			}
+			bounds = new Bounds(16 + SPACER + width, (16 + 2) * stacks.size() - 2);
 		}
 
 		if(position.isDirection(Direction.CENTER)) {
@@ -164,27 +159,24 @@ public class PickupCount extends HudElement {
 		return Math.round(MathUtil.mapToRange(HudElement.PICKUP.fadeSpeed.get().floatValue(), 400, 40));
 	}
 
-	public synchronized void pickupItem(ItemStack stack) {
-		Iterator<StackNode> iterator = stacks.iterator();
-		StackNode foundNode = null;
+	public void pickupItem(ItemStack stack) {
+		StackNode foundNode;
 
-		while(iterator.hasNext()) {
-			StackNode testNode = iterator.next();
-
-			if(PickupNotifier.stackEqualExact(testNode.stack, stack)) {
-				iterator.remove();
-				foundNode = testNode;
+		int i;
+		for(i = 0; i < stacks.size(); i++) {
+			if(PickupNotifier.stackEqualExact(stacks.get(i).stack, stack)) {
 				break;
 			}
 		}
 
-		if(foundNode == null) {
-			foundNode = new StackNode(stack);
-		} else {
+		if(i != stacks.size()) {
+			foundNode = stacks.remove(i);
 			foundNode.stack.grow(stack.getCount());
+		} else {
+			foundNode = new StackNode(stack);
 		}
 		foundNode.updateCounter = MC.ingameGUI.getUpdateCounter();
 
-		stacks.offerFirst(foundNode);
+		stacks.add(0, foundNode);
 	}
 }
