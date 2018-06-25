@@ -3,14 +3,18 @@ package tk.nukeduck.hud.util;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
+import java.util.Set;
 import java.util.function.IntFunction;
 import java.util.function.Predicate;
 import java.util.function.Supplier;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
+
+import com.google.common.graph.Graph;
 
 public final class MathUtil {
 	private MathUtil() {}
@@ -147,5 +151,34 @@ public final class MathUtil {
 	 * @param max The value mapped to 1 */
 	public static float mapToRange(float x, float min, float max) {
 		return min + (max - min) * x;
+	}
+
+	/** Sorts the nodes of {@code graph} such that for each edge {@code (n, m)},
+	 * node {@code n} comes before node {@code m}
+	 *
+	 * @see <a href="https://en.wikipedia.org/wiki/Topological_sorting">Topological sorting</a>
+	 * @return A list containing a topological sort of {@code graph} */
+	public static <T> List<T> topologicalSort(Graph<T> graph) {
+		List<T> sortedNodes = new ArrayList<>(graph.nodes().size());
+		Set<T> unmarked = new HashSet<>(graph.nodes());
+
+		while(!unmarked.isEmpty()) {
+			topologicalSortVisit(graph, unmarked, sortedNodes, unmarked.iterator().next());
+		}
+		// See below, after reversing predecessors come before successors
+		Collections.reverse(sortedNodes);
+
+		return sortedNodes;
+	}
+
+	private static <T> void topologicalSortVisit(Graph<T> graph, Set<T> unvisited, List<T> sortedNodes, T predecessor) {
+		// If remove returns false, the node is already visited
+		if(!unvisited.remove(predecessor)) return;
+
+		for(T successor : graph.successors(predecessor)) {
+			topologicalSortVisit(graph, unvisited, sortedNodes, successor);
+		}
+		// predecessor is now after all its successors (reverse topological order)
+		sortedNodes.add(predecessor);
 	}
 }
