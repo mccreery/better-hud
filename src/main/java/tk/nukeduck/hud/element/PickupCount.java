@@ -10,7 +10,6 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.Event;
-import tk.nukeduck.hud.element.settings.SettingPercentage;
 import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.element.settings.SettingSlider;
 import tk.nukeduck.hud.events.PickupNotifier;
@@ -18,10 +17,9 @@ import tk.nukeduck.hud.network.Version;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.GlUtil;
-import tk.nukeduck.hud.util.MathUtil;
-import tk.nukeduck.hud.util.Point;
 import tk.nukeduck.hud.util.Direction.Options;
+import tk.nukeduck.hud.util.GlUtil;
+import tk.nukeduck.hud.util.Point;
 
 public class PickupCount extends HudElement {
 	private final SettingPosition position = new SettingPosition("position", Options.X, Options.CORNERS);
@@ -33,18 +31,7 @@ public class PickupCount extends HudElement {
 		}
 	};
 
-	public final SettingSlider fadeSpeed = new SettingPercentage("speed", 0, 1) {
-		@Override
-		public String getDisplayValue(double value) {
-			if(value == 0) {
-				return I18n.format("betterHud.value.slowest");
-			} else if(value == 1) {
-				return I18n.format("betterHud.value.fastest");
-			} else {
-				return super.getDisplayValue(value);
-			}
-		}
-	};
+	public final SettingSlider fadeAfter = new SettingSlider("fadeAfter", 20, 600, 20).setDisplayScale(0.05).setUnlocalizedValue("betterHud.hud.seconds");
 
 	public static class StackNode {
 		public final ItemStack stack;
@@ -67,7 +54,7 @@ public class PickupCount extends HudElement {
 		super.loadDefaults();
 
 		position.setPreset(Direction.SOUTH_EAST);
-		fadeSpeed.set(.5);
+		fadeAfter.set(.5);
 		maxStacks.set(11);
 	}
 
@@ -75,7 +62,7 @@ public class PickupCount extends HudElement {
 		super("itemPickup");
 
 		settings.add(position);
-		settings.add(fadeSpeed);
+		settings.add(fadeAfter);
 		settings.add(maxStacks);
 	}
 
@@ -94,7 +81,7 @@ public class PickupCount extends HudElement {
 		Bounds stackBounds = alignment.anchor(bounds.withSize(16, 16), bounds);
 
 		long updateCounter = MC.ingameGUI.getUpdateCounter();
-		long lifetime = getLifetime();
+		long lifetime = fadeAfter.getInt();
 
 		GlStateManager.enableBlend();
 		GlStateManager.enableAlpha();
@@ -152,11 +139,6 @@ public class PickupCount extends HudElement {
 		} else {
 			return position.applyTo(bounds);
 		}
-	}
-
-	/** @return The lifetime in ticks for each item entry */
-	private long getLifetime() {
-		return Math.round(MathUtil.mapToRange(HudElement.PICKUP.fadeSpeed.get().floatValue(), 400, 40));
 	}
 
 	public void pickupItem(ItemStack stack) {

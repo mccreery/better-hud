@@ -121,6 +121,7 @@ betterHud.value.percent=%s%%
 betterHud.setting.precision=Precision
 betterHud.value.places=%s places
 betterHud.setting.distance=Distance
+betterHud.setting.rayDistance=Ray Trace Distance
 betterHud.setting.red=§cRed
 betterHud.setting.green=§aGreen
 betterHud.setting.blue=§1Blue
@@ -230,6 +231,7 @@ betterHud.setting.tooltipLines=Tooltip Lines
 betterHud.setting.visual=Visual
 betterHud.setting.warnings=Warnings
 betterHud.setting.maxStacks=Maximum Stacks
+betterHud.setting.fadeAfter=Fade After
 
 betterHud.hud.biome=Biome: %s
 betterHud.hud.burst=Burst: %s clicks over %ss

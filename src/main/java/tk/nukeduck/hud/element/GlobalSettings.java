@@ -8,7 +8,7 @@ import tk.nukeduck.hud.util.Bounds;
 
 public class GlobalSettings extends HudElement {
 	private final SettingPercentage billboardScale = new SettingPercentage("billboardScale");
-	private final SettingSlider billboardDistance = new SettingSlider("distance", 5, 200).setUnlocalizedValue("betterHud.hud.meters");
+	private final SettingSlider billboardDistance = new SettingSlider("rayDistance", 5, 200).setUnlocalizedValue("betterHud.hud.meters");
 
 	public GlobalSettings() {
 		super("global");

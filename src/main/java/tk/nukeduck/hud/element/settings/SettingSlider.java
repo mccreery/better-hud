@@ -34,8 +34,14 @@ public class SettingSlider extends SettingAlignable<Double> implements ISlider {
 		this.max = max;
 		this.interval = interval;
 
-		setDisplayPlaces(interval == (int)interval ? 0 : 1);
+		updateDisplayPlaces();
 		set(getMinimum());
+	}
+
+	private void updateDisplayPlaces() {
+		int places = interval != -1
+			&& interval * displayScale == (int)(interval * displayScale) ? 0 : 1;
+		setDisplayPlaces(places);
 	}
 
 	public SettingSlider setAlignment(Direction alignment) {
@@ -45,6 +51,8 @@ public class SettingSlider extends SettingAlignable<Double> implements ISlider {
 
 	public SettingSlider setDisplayScale(double displayScale) {
 		this.displayScale = displayScale;
+		updateDisplayPlaces();
+
 		return this;
 	}
 

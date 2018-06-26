@@ -16,15 +16,15 @@ import tk.nukeduck.hud.element.settings.SettingSlider;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.Direction.Options;
 import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Point;
-import tk.nukeduck.hud.util.Direction.Options;
 
 public class Compass extends HudElement {
 	private static final String[] DIRECTIONS = {"S", "E", "N", "W"};
 
 	private final SettingPosition position = new SettingPosition("position", Options.TOP_BOTTOM, Options.NORTH_SOUTH);
-	private final SettingSlider directionScaling = new SettingPercentage("letterScale", 0.01);
+	private final SettingSlider directionScaling = new SettingPercentage("letterScale");
 	private final SettingBoolean showNotches = new SettingBoolean("showNotches").setUnlocalizedValue(SettingBoolean.VISIBLE);
 	private final SettingChoose requireItem = new SettingChoose("requireItem", "disabled", "inventory", "hand");
 
