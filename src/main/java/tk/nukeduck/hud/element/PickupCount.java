@@ -86,7 +86,7 @@ public class PickupCount extends HudElement {
 		GlStateManager.enableBlend();
 		GlStateManager.enableAlpha();
 
-		int maximum = Math.min(stacks.size(), maxStacks.getInt());
+		int maximum = maxStacks.getInt() <= 10 ? Math.min(stacks.size(), maxStacks.getInt()) : stacks.size();
 
 		int i;
 		for(i = 0; i < maximum; i++) {
