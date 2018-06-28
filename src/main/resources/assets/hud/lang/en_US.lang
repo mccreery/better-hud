@@ -32,6 +32,7 @@ betterHud.menu.expInfoNotice=These settings are only for total experience count.
 betterHud.menu.invNames=For inventories, such as chests, which have been named via anvil.
 betterHud.menu.unsnap=Hold %s to disable snapping
 betterHud.menu.unsupported=This element is not supported by the server
+betterHud.menu.billboardScale=§lBillboards§r are overlays that are anchored to an entity and always point towards the screen, like player nameplates.
 
 # Element names
 betterHud.element.global=Better HUD

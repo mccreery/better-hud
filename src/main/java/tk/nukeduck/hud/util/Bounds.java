@@ -193,7 +193,7 @@ public final class Bounds implements Serializable {
 		return new Bounds(x + width, y, -width, height);
 	}
 
-	/** Switches the least and most horizontal coordinates
+	/** Switches the least and most vertical coordinates
 	 * @see #flipped() */
 	public Bounds flippedVertical() {
 		return new Bounds(x, y + height, width, -height);
@@ -235,6 +235,10 @@ public final class Bounds implements Serializable {
 			changed = true;
 		}
 		return changed ? new Bounds(x, y, width, height) : this;
+	}
+
+	public Bounds scaled(float scale) {
+		return fromLeastMost(Math.round(x * scale), Math.round(y * scale), Math.round((x + width) * scale), Math.round((y + height) * scale));
 	}
 
 	public boolean contains(Point point) {return contains(point.getX(), point.getY());}

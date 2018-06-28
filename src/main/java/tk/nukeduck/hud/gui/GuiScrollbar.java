@@ -12,19 +12,19 @@ import tk.nukeduck.hud.util.GlUtil;
 public class GuiScrollbar extends Gui {
 	private final Bounds bounds;
 	private Bounds grabber;
-	private final float scaleFactor;
+	private float scaleFactor;
 	private final int background, foreground, highlight;
 
 	/** The size of the visible part of the content */
-	private final int viewport;
+	private int viewportHeight;
 
 	/** The total size of the content */
-	private final int content;
+	private int contentHeight;
 
 	/** The offset of the mouse click from the least coordinate of the grabber */
 	private int clickOffset = -1;
 
-	/** The difference between the least coordinate of {@link #viewport} and that of of the content */
+	/** The difference between the least coordinate of {@link #viewportHeight} and that of of the content */
 	private int scroll;
 
 	/** {@code bounds} defaults to a bar anchored to {@code viewport},
@@ -46,21 +46,62 @@ public class GuiScrollbar extends Gui {
 	 * @param viewport The size of the viewport
 	 * @param content The size of the content */
 	public GuiScrollbar(Bounds bounds, int viewport, int content, int background, int foreground, int highlight) {
-		this.viewport = viewport;
-		this.content = content;
 		this.bounds = bounds;
 
-		scaleFactor = (float)viewport / content;
-		grabber = new Bounds(bounds.getX(), bounds.getY(), bounds.getWidth(), (int)(scaleFactor * bounds.getHeight()));
+		this.viewportHeight = viewport;
+		this.contentHeight = content;
+		updateGrabber();
 
 		this.background = background;
 		this.foreground = foreground;
 		this.highlight = highlight;
 	}
 
-	public void scrollTo(int scroll) {
-		this.scroll = MathHelper.clamp(scroll, 0, maxScroll());
-		grabber = grabber.withY(grabber.getY() + (int)(this.scroll * scaleFactor));
+	public int getScroll() {
+		return scroll;
+	}
+
+	public int getMaxScroll() {
+		return contentHeight - viewportHeight;
+	}
+
+	public boolean canScroll() {
+		return viewportHeight > 0 && contentHeight > viewportHeight;
+	}
+
+	public boolean isScrolling() {
+		return clickOffset != -1;
+	}
+
+	public void setContentHeight(int contentHeight) {
+		if(this.contentHeight != contentHeight) {
+			this.contentHeight = contentHeight;
+			updateGrabber();
+		}
+	}
+
+	public void setViewportHeight(int viewportHeight) {
+		if(this.viewportHeight != viewportHeight) {
+			this.viewportHeight = viewportHeight;
+			updateGrabber();
+		}
+	}
+
+	public void setScroll(int scroll) {
+		if(this.scroll != scroll) {
+			this.scroll = scroll;
+			updateGrabber();
+		}
+	}
+
+	private void updateGrabber() {
+		if(canScroll()) {
+			scaleFactor = (float)viewportHeight / contentHeight;
+			scroll = MathHelper.clamp(scroll, 0, contentHeight - viewportHeight);
+
+			grabber = new Bounds(bounds.getX(), bounds.getY() + (int)(scroll * scaleFactor),
+				bounds.getWidth(), (int)(scaleFactor * bounds.getHeight()));
+		}
 	}
 
 	public void drawScrollbar(int mouseX, int mouseY) {
@@ -73,12 +114,10 @@ public class GuiScrollbar extends Gui {
 	}
 
 	public void handleMouseInput() {
-		if(canScroll() && !isScrolling() && Mouse.getEventDWheel() != 0) {
-			int dScroll = Mouse.getEventDWheel() > 0 ? -20 : 20;
+		int scrollDelta = Mouse.getEventDWheel();
 
-			if(dScroll != 0) {
-				scrollTo(scroll + dScroll);
-			}
+		if(canScroll() && !isScrolling() && scrollDelta != 0) {
+			setScroll(scroll - (scrollDelta > 0 ? 20 : -20));
 		}
 	}
 
@@ -96,16 +135,11 @@ public class GuiScrollbar extends Gui {
 
 	protected void mouseClickMove(int mouseX, int mouseY, int button, long heldTime) {
 		if(isScrolling()) {
-			scrollTo((int)((mouseY - bounds.getY() - clickOffset) / scaleFactor));
+			setScroll((int)((mouseY - bounds.getY() - clickOffset) / scaleFactor));
 		}
 	}
 
 	public void mouseReleased(int mouseX, int mouseY, int button) {
 		clickOffset = -1;
 	}
-
-	public int getScroll() {return scroll;}
-	public int maxScroll() {return content - viewport;}
-	public boolean canScroll() {return maxScroll() > 0;}
-	public boolean isScrolling() {return clickOffset != -1;}
 }

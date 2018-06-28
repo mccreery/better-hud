@@ -20,6 +20,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.element.HudElement.SortType;
+import tk.nukeduck.hud.gui.GuiActionButton.GuiCallbackButton;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
@@ -27,7 +28,6 @@ import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Paginator;
 import tk.nukeduck.hud.util.Point;
 import tk.nukeduck.hud.util.SortField;
-import tk.nukeduck.hud.gui.GuiActionButton.GuiCallbackButton;
 
 @SideOnly(Side.CLIENT)
 public class GuiHudMenu extends GuiScreen {
@@ -45,7 +45,7 @@ public class GuiHudMenu extends GuiScreen {
 	});
 
 	private final GuiButton globalSettings = new GuiCallbackButton(I18n.format("betterHud.menu.settings", HudElement.GLOBAL.getLocalizedName()),
-		() -> MC.displayGuiScreen(new GuiElementSettings(HudElement.GLOBAL, GuiHudMenu.this)));
+		() -> MC.displayGuiScreen(new GuiConfigSaves(this)));//new GuiElementSettings(HudElement.GLOBAL, GuiHudMenu.this)));
 
 	private final GuiButton lastPage = new GuiCallbackButton(I18n.format("betterHud.menu.lastPage"), () -> {paginator.previousPage(); initGui();});
 	private final GuiButton nextPage = new GuiCallbackButton(I18n.format("betterHud.menu.nextPage"), () -> {paginator.nextPage(); initGui();});

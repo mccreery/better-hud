@@ -126,14 +126,14 @@ public abstract class Setting<T> implements IGetSet<T> {
 		if(configCategory.containsKey(path)) {
 			property = configCategory.get(path);
 		}
-	
+
 		if(property == null || property.getType() != getPropertyType()) {
 			property = new Property(path, save(), getPropertyType());
 			property.setValue(save);
-	
+
 			configCategory.put(path, property);
 		}
-	
+
 		property.setDefaultValue(save);
 		return property;
 	}

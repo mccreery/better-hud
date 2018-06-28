@@ -23,6 +23,7 @@ public class GlobalSettings extends HudElement {
 				return GlobalSettings.this.getUnlocalizedName();
 			}
 		});
+
 		settings.add(billboardScale);
 		settings.add(billboardDistance);
 	}
