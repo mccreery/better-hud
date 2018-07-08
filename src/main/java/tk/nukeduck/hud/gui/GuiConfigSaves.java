@@ -17,8 +17,6 @@ import java.util.stream.Collectors;
 
 import org.lwjgl.opengl.GL11;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
-
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -26,6 +24,7 @@ import net.minecraft.client.resources.I18n;
 import tk.nukeduck.hud.gui.GuiActionButton.GuiCallbackButton;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.HudConfig;
 import tk.nukeduck.hud.util.Point;
 import tk.nukeduck.hud.util.StringGroup;
@@ -58,7 +57,7 @@ public class GuiConfigSaves extends GuiScreen {
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
-		scrollbar.setContentHeight(MC.fontRenderer.FONT_HEIGHT * saves.size());
+		scrollbar.setContentHeight((MC.fontRenderer.FONT_HEIGHT + SPACER) * saves.size() + SPACER * 2);
 	}
 
 	private void save() {
@@ -138,7 +137,7 @@ public class GuiConfigSaves extends GuiScreen {
 
 		if(viewport.contains(mouseX, mouseY)) {
 			int i = mouseY - viewport.getY() + scrollbar.getScroll();
-			i /= MC.fontRenderer.FONT_HEIGHT + 2;
+			i /= MC.fontRenderer.FONT_HEIGHT + SPACER;
 
 			if(i >= 0 && i < saves.size()) {
 				String filename = saves.get(i).getFileName().toString();
@@ -182,15 +181,8 @@ public class GuiConfigSaves extends GuiScreen {
 
 		StringGroup displaySaves = new StringGroup(saves.stream().map(path -> {
 			String name = path.getFileName().toString();
-			name = name.substring(0, name.length() - 4);
-
-			if(name.equals(this.name.getText())) {
-				name = ChatFormatting.RED + name;
-			}
-			return name;
-		}).collect(Collectors.toList()));
-
-		displaySaves.setAlignment(Direction.NORTH);
+			return name.substring(0, name.length() - 4);
+		}).collect(Collectors.toList())).setAlignment(Direction.NORTH).setGutter(SPACER);
 
 		Bounds scissorBounds = viewport.withY(height - viewport.getBottom()).scaled(MANAGER.getScaledResolution().getScaleFactor());
 
@@ -198,7 +190,21 @@ public class GuiConfigSaves extends GuiScreen {
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
 		GL11.glScissor(scissorBounds.getX(), scissorBounds.getY(), scissorBounds.getWidth(), scissorBounds.getHeight());
 
-		displaySaves.draw(Direction.NORTH.getAnchor(viewport).sub(0, scrollbar.getScroll()));
+		Point origin = Direction.NORTH.getAnchor(viewport).sub(0, scrollbar.getScroll() - SPACER);
+
+		for(int i = 0; i < saves.size(); i++) {
+			String fileName = saves.get(i).getFileName().toString();
+
+			if(fileName.length() == name.getText().length() + 4 && fileName.regionMatches(0, name.getText(), 0, fileName.length() - 4)) {
+				Bounds bounds = Direction.NORTH.align(new Bounds(300, MC.fontRenderer.FONT_HEIGHT), origin.add(0, (MC.fontRenderer.FONT_HEIGHT + SPACER) * i)).withPadding(2);
+
+				GlUtil.drawRect(bounds, 0x30000000);
+				GlUtil.drawBorderRect(bounds, 0xA0909090);
+
+				break;
+			}
+		}
+		displaySaves.draw(origin);
 
 		GL11.glPopAttrib();
 	}

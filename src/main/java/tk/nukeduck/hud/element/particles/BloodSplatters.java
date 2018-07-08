@@ -29,12 +29,14 @@ public class BloodSplatters extends ParticleOverlay {
 		int spawnMultiplier = (density.getIndex() + 1) * 4;
 		int count = spawnMultiplier * (int)event.getAmount();
 
-		Particle[] toSpawn = new Particle[count];
-		for(int i = 0; i < toSpawn.length; i++) {
-			toSpawn[i] = ParticleBase.createRandom();
+		if(count > 0) {
+			Particle[] toSpawn = new Particle[count];
+			for(int i = 0; i < toSpawn.length; i++) {
+				toSpawn[i] = ParticleBase.createRandom();
+			}
+	
+			// Atomic operation means underlying CopyOnWriteArrayList only copies once
+			particles.addAll(MathUtil.createRepeat(count, ParticleBase::createRandom));
 		}
-
-		// Atomic operation means underlying CopyOnWriteArrayList only copies once
-		particles.addAll(MathUtil.createRepeat(count, ParticleBase::createRandom));
 	}
 }

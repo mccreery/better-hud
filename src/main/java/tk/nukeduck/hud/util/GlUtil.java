@@ -44,6 +44,14 @@ public final class GlUtil {
 		Gui.drawRect(bounds.getLeft(), bounds.getTop(), bounds.getRight(), bounds.getBottom(), color);
 	}
 
+	public static void drawBorderRect(Bounds bounds, int color) {
+		drawRect(bounds.withWidth(1).withInset(0, 1, 0, 1), color);
+		drawRect(bounds.withLeft(bounds.getRight() - 1).withInset(0, 1, 0, 1), color);
+
+		drawRect(bounds.withHeight(1), color);
+		drawRect(bounds.withTop(bounds.getBottom() - 1), color);
+	}
+
 	/** @see #drawTexturedModalRect(int, int, int, int, int, int) */
 	public static void drawTexturedModalRect(Point position, Bounds texture) {
 		drawTexturedModalRect(position.getX(), position.getY(), texture.getX(), texture.getY(), texture.getWidth(), texture.getHeight());
