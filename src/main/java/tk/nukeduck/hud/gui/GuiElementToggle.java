@@ -11,7 +11,7 @@ import tk.nukeduck.hud.element.HudElement.SortType;
 public class GuiElementToggle extends GuiSettingToggle {
 	private final GuiScreen callback;
 
-	public GuiElementToggle(HudElement element, GuiScreen callback) {
+	public GuiElementToggle(GuiScreen callback, HudElement element) {
 		super(element.getUnlocalizedName(), element.settings);
 		this.callback = callback;
 	}

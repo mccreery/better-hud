@@ -14,6 +14,7 @@ betterHud.menu.settings=%s Settings
 betterHud.menu.enableAll=Enable All
 betterHud.menu.disableAll=Disable All
 betterHud.menu.resetDefaults=Reset Defaults
+betterHud.menu.saveLoad=Save/Load...
 betterHud.menu.lastPage=Last Page
 betterHud.menu.nextPage=Next Page
 betterHud.menu.page=Page %s

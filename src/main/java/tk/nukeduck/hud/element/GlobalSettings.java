@@ -1,7 +1,6 @@
 package tk.nukeduck.hud.element;
 
 import net.minecraftforge.fml.common.eventhandler.Event;
-import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingPercentage;
 import tk.nukeduck.hud.element.settings.SettingSlider;
 import tk.nukeduck.hud.util.Bounds;
@@ -13,16 +12,6 @@ public class GlobalSettings extends HudElement {
 	public GlobalSettings() {
 		super("global");
 		ELEMENTS.remove(this);
-
-		settings.add(new SettingBoolean("enabled") {
-			@Override public void set(Boolean bool) {setEnabled(bool);}
-			@Override public Boolean get() {return isEnabled();}
-
-			@Override
-			public String getUnlocalizedName() {
-				return GlobalSettings.this.getUnlocalizedName();
-			}
-		});
 
 		settings.add(billboardScale);
 		settings.add(billboardDistance);

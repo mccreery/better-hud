@@ -38,14 +38,11 @@ public class GuiHudMenu extends GuiScreen {
 	private final GuiButton enableAll = new GuiCallbackButton(I18n.format("betterHud.menu.enableAll"), () -> setAll(true));
 	private final GuiButton disableAll = new GuiCallbackButton(I18n.format("betterHud.menu.disableAll"), () -> setAll(false));
 
-	private final GuiButton resetDefaults = new GuiCallbackButton(I18n.format("betterHud.menu.resetDefaults"), () -> {
-		HudElement.loadAllDefaults();
-		HudElement.SORTER.markDirty();
-		initGui();
-	});
+	private final GuiButton resetDefaults = new GuiCallbackButton(I18n.format("betterHud.menu.saveLoad"),
+		() -> MC.displayGuiScreen(new GuiConfigSaves(this)));
 
-	private final GuiButton globalSettings = new GuiCallbackButton(I18n.format("betterHud.menu.settings", HudElement.GLOBAL.getLocalizedName()),
-		() -> MC.displayGuiScreen(new GuiConfigSaves(this)));//new GuiElementSettings(HudElement.GLOBAL, GuiHudMenu.this)));
+	private final GuiToggleButton globalToggle = new GuiElementToggle(this, HudElement.GLOBAL);
+	private final GuiActionButton globalSettings = new GuiOptionButton(this, HudElement.GLOBAL);
 
 	private final GuiButton lastPage = new GuiCallbackButton(I18n.format("betterHud.menu.lastPage"), () -> {paginator.previousPage(); initGui();});
 	private final GuiButton nextPage = new GuiCallbackButton(I18n.format("betterHud.menu.nextPage"), () -> {paginator.nextPage(); initGui();});
@@ -96,7 +93,10 @@ public class GuiHudMenu extends GuiScreen {
 		Bounds thirdWidth = new Bounds((buttons.getWidth() - 4) / 3, 20);
 
 		moveButton(returnToGame,   Direction.NORTH_WEST.anchor(halfWidth, buttons));
-		moveButton(globalSettings, Direction.NORTH_EAST.anchor(halfWidth, buttons));
+
+		Bounds global = Direction.NORTH_EAST.anchor(halfWidth, buttons);
+		moveButton(globalToggle,   Direction.NORTH_WEST.anchor(halfWidth.withWidth(halfWidth.getWidth() - 20), global));
+		moveButton(globalSettings, Direction.NORTH_EAST.anchor(halfWidth.withWidth(20), global));
 
 		moveButton(enableAll,     Direction.SOUTH_WEST.anchor(thirdWidth, buttons));
 		moveButton(disableAll,    Direction.SOUTH.anchor(thirdWidth, buttons));
@@ -112,6 +112,8 @@ public class GuiHudMenu extends GuiScreen {
 		buttonList.clear();
 
 		buttonList.add(returnToGame);
+		buttonList.add(globalToggle);
+		globalToggle.updateText();
 		buttonList.add(globalSettings);
 
 		buttonList.add(enableAll);
@@ -239,6 +241,27 @@ public class GuiHudMenu extends GuiScreen {
 		}
 	}
 
+	private static class GuiOptionButton extends GuiCallbackButton {
+		GuiOptionButton(GuiScreen parent, HudElement element) {
+			super("", () -> MC.displayGuiScreen(new GuiElementSettings(element, parent)));
+		}
+
+		@Override
+		public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
+			mc.getTextureManager().bindTexture(SETTINGS);
+			GlUtil.color(Colors.WHITE);
+
+			this.hovered = getBounds().contains(mouseX, mouseY);
+			int k = this.getHoverState(this.hovered);
+
+			GlStateManager.enableBlend();
+			GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
+			GlStateManager.blendFunc(770, 771);
+
+			drawTexturedModalRect(this.x, this.y, 40, k * 20, this.width, this.height);
+		}
+	}
+
 	private class ButtonRow {
 		final HudElement element;
 		final GuiElementToggle toggle;
@@ -247,25 +270,9 @@ public class GuiHudMenu extends GuiScreen {
 
 		ButtonRow(HudElement element) {
 			this.element = element;
-			toggle = new GuiElementToggle(element, GuiHudMenu.this);
 
-			options = new GuiCallbackButton("", () -> MC.displayGuiScreen(new GuiElementSettings(element, GuiHudMenu.this))) {
-				@Override
-				public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
-					mc.getTextureManager().bindTexture(SETTINGS);
-					GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-
-					this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
-					int k = this.getHoverState(this.hovered);
-
-					GlStateManager.enableBlend();
-					GlStateManager.tryBlendFuncSeparate(770, 771, 1, 0);
-					GlStateManager.blendFunc(770, 771);
-
-					drawTexturedModalRect(this.x, this.y, 40, k * 20, this.width, this.height);
-				}
-			};
-
+			toggle = new GuiElementToggle(GuiHudMenu.this, element);
+			options = new GuiOptionButton(GuiHudMenu.this, element);
 			moveUp = new ArrowButton(true);
 			moveDown = new ArrowButton(false);
 		}

@@ -34,7 +34,7 @@ import tk.nukeduck.hud.util.Point;
 
 @SideOnly(Side.CLIENT)
 public class GuiElementSettings extends GuiScreen {
-	private static final int REPEAT_SPEED	  = 20; // Rate of speed-up to 20/s
+	private static final int REPEAT_SPEED	   = 20; // Rate of speed-up to 20/s
 	private static final int REPEAT_SPEED_FAST = 10; // Rate of speed-up beyond 20/s
 
 	public HudElement element;

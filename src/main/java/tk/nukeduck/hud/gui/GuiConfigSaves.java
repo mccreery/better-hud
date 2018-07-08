@@ -26,6 +26,7 @@ import net.minecraft.client.resources.I18n;
 import tk.nukeduck.hud.gui.GuiActionButton.GuiCallbackButton;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.HudConfig;
 import tk.nukeduck.hud.util.Point;
 import tk.nukeduck.hud.util.StringGroup;
 
@@ -74,6 +75,17 @@ public class GuiConfigSaves extends GuiScreen {
 		reloadSaves();
 	}
 
+	private void load() {
+		try {
+			Path source = Paths.get(getDirectory().toString(), name.getText() + ".cfg");
+			Files.copy(source, CONFIG.getConfigFile().toPath(), StandardCopyOption.REPLACE_EXISTING);
+
+			CONFIG = new HudConfig(CONFIG.getConfigFile());
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+	}
+
 	@Override
 	public void initGui() {
 		super.initGui();
@@ -94,7 +106,7 @@ public class GuiConfigSaves extends GuiScreen {
 		name.setCanLoseFocus(false);
 
 		smallButton = smallButton.withPosition(Direction.NORTH_EAST.getAnchor(textField).add(SPACER, 0));
-		buttonList.add(new GuiCallbackButton("Load", () -> System.out.println("bum")).setBounds(smallButton));
+		buttonList.add(new GuiCallbackButton("Load", this::load).setBounds(smallButton));
 
 		smallButton = smallButton.withPosition(Direction.NORTH_EAST.getAnchor(smallButton).add(SPACER, 0));
 		buttonList.add(new GuiCallbackButton("Save", this::save).setBounds(smallButton));
