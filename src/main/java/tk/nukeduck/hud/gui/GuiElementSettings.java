@@ -48,8 +48,7 @@ public class GuiElementSettings extends GuiScreen {
 	private GuiButton done;
 	private GuiScrollbar scrollbar;
 
-	private int clickTimer = 0;
-	private GuiButton clickedUpDown = null;
+	private int repeatTimer = 0;
 
 	public GuiElementSettings(HudElement element, GuiScreen prev) {
 		this.element = element;
@@ -132,29 +131,18 @@ public class GuiElementSettings extends GuiScreen {
 			picker.pickMouse(mousePosition, resolution, element);
 		}
 
-		if(Mouse.isButtonDown(0)) {
-			if(clickedUpDown == null) {
-				for(Object obj : this.buttonList) {
-					GuiButton button = (GuiButton) obj;
-					if(button instanceof GuiUpDownButton && button.isMouseOver()) {
-						clickedUpDown = button;
-						break;
-					}
-				}
-			}
-		} else {
-			clickedUpDown = null;
-		}
+		if(selectedButton instanceof GuiActionButton && ((GuiActionButton)selectedButton).getRepeat()) {
+			// Slowly build up speed until 1/tick after REPEAT_SPEED ticks
+			if(++repeatTimer % Math.max(1, Math.round(REPEAT_SPEED / repeatTimer)) == 0) {
+				// When above REPEAT_SPEED, repeat multiple times per tick
+				int c = Math.max(1, (repeatTimer - REPEAT_SPEED) / REPEAT_SPEED_FAST);
 
-		if(clickedUpDown != null) {
-			if(++clickTimer % Math.max(1, Math.round(REPEAT_SPEED / clickTimer)) == 0) {
-				int c = Math.max(1, (clickTimer - REPEAT_SPEED) / REPEAT_SPEED_FAST);
 				for(int i = 0; i < c; i++) {
-					this.actionPerformed(clickedUpDown);
+					actionPerformed(selectedButton);
 				}
 			}
 		} else {
-			clickTimer = 0;
+			repeatTimer = 0;
 		}
 	}
 

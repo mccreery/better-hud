@@ -17,6 +17,7 @@ public class GuiToggleButton extends GuiActionButton implements IGetSet<Boolean>
 
 	public GuiToggleButton(String buttonText) {
 		super(buttonText);
+
 		unlocalizedName = buttonText;
 		updateText();
 	}

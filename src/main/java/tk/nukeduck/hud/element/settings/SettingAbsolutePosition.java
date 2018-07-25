@@ -14,6 +14,7 @@ import net.minecraft.client.resources.I18n;
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.gui.GuiElementSettings;
 import tk.nukeduck.hud.gui.GuiUpDownButton;
+import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Point;
 
 public class SettingAbsolutePosition extends Setting<Point> {
@@ -39,10 +40,10 @@ public class SettingAbsolutePosition extends Setting<Point> {
 		parts.add(yBox = new GuiTextField(0, Minecraft.getMinecraft().fontRenderer, origin.getX() + 2, origin.getY() + 1, 80, 18));
 		yBox.setText(String.valueOf(y));
 
-		parts.add(xUp = new GuiUpDownButton(0, origin.getX() - 22, origin.getY(), 0));
-		parts.add(xDown = new GuiUpDownButton(1, origin.getX() - 22, origin.getY() + 10, 1));
-		parts.add(yUp = new GuiUpDownButton(2, origin.getX() + 86, origin.getY(), 0));
-		parts.add(yDown = new GuiUpDownButton(3, origin.getX() + 86, origin.getY() + 10, 1));
+		parts.add(xUp   = new GuiUpDownButton(true ).setBounds(new Bounds(origin.getX() - 22, origin.getY(),      0, 0)).setId(0).setRepeat());
+		parts.add(xDown = new GuiUpDownButton(false).setBounds(new Bounds(origin.getX() - 22, origin.getY() + 10, 0, 0)).setId(1).setRepeat());
+		parts.add(yUp   = new GuiUpDownButton(true ).setBounds(new Bounds(origin.getX() + 86, origin.getY(),      0, 0)).setId(2).setRepeat());
+		parts.add(yDown = new GuiUpDownButton(false).setBounds(new Bounds(origin.getX() + 86, origin.getY() + 10, 0, 0)).setId(3).setRepeat());
 
 		parts.add(pick = new GuiButton(4, origin.getX() - 75, origin.getY() + 22, 150, 20, I18n.format("betterHud.menu.pick")));
 

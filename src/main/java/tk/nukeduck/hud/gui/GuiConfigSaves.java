@@ -21,7 +21,6 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
-import tk.nukeduck.hud.gui.GuiActionButton.GuiCallbackButton;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
@@ -91,7 +90,8 @@ public class GuiConfigSaves extends GuiScreen {
 
 		Point origin = new Point(width / 2, height / 16 + 20);
 
-		buttonList.add(new GuiCallbackButton(I18n.format("gui.done"), () -> MC.displayGuiScreen(previous))
+		buttonList.add(new GuiActionButton(I18n.format("gui.done"))
+			.setCallback(() -> MC.displayGuiScreen(previous))
 			.setBounds(Direction.NORTH.align(new Bounds(200, 20), origin)));
 
 		Bounds textField = new Bounds(150, 20);
@@ -105,10 +105,10 @@ public class GuiConfigSaves extends GuiScreen {
 		name.setCanLoseFocus(false);
 
 		smallButton = smallButton.withPosition(Direction.NORTH_EAST.getAnchor(textField).add(SPACER, 0));
-		buttonList.add(new GuiCallbackButton("Load", this::load).setBounds(smallButton));
+		buttonList.add(new GuiActionButton("Load").setCallback(this::load).setBounds(smallButton));
 
 		smallButton = smallButton.withPosition(Direction.NORTH_EAST.getAnchor(smallButton).add(SPACER, 0));
-		buttonList.add(new GuiCallbackButton("Save", this::save).setBounds(smallButton));
+		buttonList.add(new GuiActionButton("Save").setCallback(this::save).setBounds(smallButton));
 
 		viewport = Direction.NORTH.align(new Bounds(400, 0), Direction.SOUTH.getAnchor(fieldLine).add(0, SPACER)).withBottom(height - 20);
 		scrollbar = new GuiScrollbar(viewport, 0);
