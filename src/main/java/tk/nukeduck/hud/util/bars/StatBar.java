@@ -20,7 +20,7 @@ public abstract class StatBar<T> {
 		this.host = host;
 	}
 
-	protected abstract List<Bounds> getIcons(Direction alignment, int pointsIndex);
+	protected abstract List<Bounds> getIcons(int pointsIndex);
 
 	protected int getIconBounce(int pointsIndex) {
 		return 0;
@@ -71,7 +71,7 @@ public abstract class StatBar<T> {
 			for(int j = 0; j < rowPoints && i < max; i += 2, j += 2, x += iconSpacing) {
 				int iconBounce = getIconBounce(i);
 
-				for(Bounds texture : getIcons(alignment, i)) {
+				for(Bounds texture : getIcons(i)) {
 					if(texture != null) {
 						texture = ensureNative(texture, alignment);
 

@@ -46,7 +46,7 @@ public class StatBarHealth extends StatBar<EntityLivingBase> {
 	}
 
 	@Override
-	protected List<Bounds> getIcons(Direction alignment, int pointsIndex) {
+	protected List<Bounds> getIcons(int pointsIndex) {
 		List<Bounds> icons = new ArrayList<>(3);
 
 		int fullX;
