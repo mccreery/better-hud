@@ -21,7 +21,7 @@ public class LayoutManager {
 
 	public void reset(Point resolution) {
 		this.resolution = resolution;
-		screen = new Bounds(this.resolution).withInset(SPACER); // TODO move inset
+		screen = new Bounds(this.resolution);
 		corners.clear();
 
 		// Compatibility with bars from other mods
@@ -49,17 +49,17 @@ public class LayoutManager {
 			case 1: offset = Math.max(GuiIngameForge.left_height, GuiIngameForge.right_height); break;
 			case 2: offset = GuiIngameForge.right_height; break;
 		}
-		offset -= 9 + SPACER;
+		offset -= 9;
 
 		Bounds wideBounds = Direction.SOUTH.anchor(bounds.withWidth(182), screen.withInset(offset));
 		bounds = alignment.anchor(bounds, wideBounds);
 
-		int newHeight = offset + bounds.getHeight() + postSpacer + SPACER + 9;
+		int newHeight = offset + bounds.getHeight() + postSpacer + 9;
 
 		if(column > 0) GuiIngameForge.right_height = newHeight;
 		if(column < 2) GuiIngameForge.left_height = newHeight;
 
-		corners.put(Direction.SOUTH, newHeight - SPACER - 9);
+		corners.put(Direction.SOUTH, newHeight - 9);
 		return bounds;
 	}
 
@@ -71,14 +71,14 @@ public class LayoutManager {
 		if(corner.getRow() == 1) {
 			throw new IllegalArgumentException("Vertical centering is not allowed");
 		}
-		int offset = corners.getOrDefault(corner, edge ? -SPACER : 0);
+		int offset = corners.getOrDefault(corner, edge ? 0 : SPACER);
 
-		bounds = corner.anchor(bounds, screen.withInset(0, offset, 0, offset));
+		bounds = corner.anchor(bounds, screen.withInset(SPACER, offset, SPACER, offset));
 		int newOffset = offset + bounds.getHeight() + postSpacer;
 		corners.put(corner, newOffset);
 
 		if(corner == Direction.SOUTH) {
-			GuiIngameForge.left_height = GuiIngameForge.right_height = newOffset + SPACER + 9;
+			GuiIngameForge.left_height = GuiIngameForge.right_height = newOffset + 9;
 		}
 		return bounds;
 	}
