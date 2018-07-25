@@ -38,9 +38,9 @@ import tk.nukeduck.hud.network.InventoryNameQuery;
 import tk.nukeduck.hud.network.Version;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.Direction.Options;
 import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Point;
-import tk.nukeduck.hud.util.Direction.Options;
 
 public class BlockViewer extends TextElement {
 	private final SettingBoolean showBlock = new SettingBoolean("showItem").setUnlocalizedValue(SettingBoolean.VISIBLE);
@@ -128,7 +128,7 @@ public class BlockViewer extends TextElement {
 	@Override
 	protected void drawExtras(Bounds bounds) {
 		if(stack != null && showBlock.get()) {
-			Bounds stackBounds = position.getContentAlignment().anchor(new Bounds(16, 16), bounds.withInset(5, 2, 5, 2));
+			Bounds stackBounds = new Bounds(16, 16).anchoredTo(bounds.withInset(5, 2, 5, 2), position.getContentAlignment());
 
 			RenderHelper.enableGUIStandardItemLighting();
 			MC.getRenderItem().renderItemAndEffectIntoGUI(stack, stackBounds.getX(), stackBounds.getY());
@@ -139,7 +139,7 @@ public class BlockViewer extends TextElement {
 	@Override
 	protected Bounds moveBounds(Bounds bounds) {
 		if(position.isDirection(Direction.CENTER)) {
-			return bounds.position(Direction.CENTER, new Point(0, -SPACER), Direction.SOUTH);
+			return bounds.positioned(Direction.CENTER, new Point(0, -SPACER), Direction.SOUTH);
 		} else {
 			return super.moveBounds(bounds);
 		}

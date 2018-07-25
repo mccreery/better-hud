@@ -164,29 +164,6 @@ public enum Direction {
 		return flags;
 	}
 
-	/** @return The anchor point within {@code bounds}
-	 * corresponding to this direction */
-	public Point getAnchor(Bounds bounds) {
-		return bounds.getPosition().add(bounds.getSize().scale(getColumn() / 2f, getRow() / 2f));
-	}
-
-	/** {@code point} defaults to the north-west corner of {@code bounds}
-	 * @see #align(Bounds, Point) */
-	public Bounds align(Bounds bounds) {
-		return align(bounds, bounds.getPosition());
-	}
-
-	/** Aligns the side(s) of {@code bounds} around {@code point},
-	 * for example {@link EAST} aligns the east edge of {@code bounds} to {@code point} */
-	public Bounds align(Bounds bounds, Point point) {
-		return bounds.withPosition(point.sub(getAnchor(bounds.withPosition(Point.ZERO))));
-	}
-
-	/** Aligns the side(s) of {@code bounds} to the side(s) of {@code container} */
-	public Bounds anchor(Bounds bounds, Bounds container) {
-		return align(bounds, getAnchor(container));
-	}
-
 	public Point getRowColumn() {
 		return new Point(getColumn(), getRow());
 	}

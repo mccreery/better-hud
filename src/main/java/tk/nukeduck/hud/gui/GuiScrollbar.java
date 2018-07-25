@@ -33,7 +33,7 @@ public class GuiScrollbar extends Gui {
 	 *
 	 * @see #GuiScrollbar(Bounds, int, int, int, int, int) */
 	public GuiScrollbar(Bounds viewport, int content) {
-		this(Direction.NORTH_EAST.anchor(new Bounds(8, viewport.getHeight()), viewport), viewport.getHeight(), content);
+		this(new Bounds(8, viewport.getHeight()).anchoredTo(viewport, Direction.NORTH_EAST), viewport.getHeight(), content);
 	}
 
 	/** The colors used are defaults

@@ -78,7 +78,7 @@ public class PickupCount extends HudElement {
 		Direction rowAlignment = alignment.withRow(1);
 
 		// The bounds to draw each item in
-		Bounds stackBounds = alignment.anchor(bounds.withSize(16, 16), bounds);
+		Bounds stackBounds = bounds.withSize(16, 16).anchoredTo(bounds, alignment);
 
 		long updateCounter = MC.ingameGUI.getUpdateCounter();
 		long lifetime = fadeAfter.getInt();
@@ -103,9 +103,9 @@ public class PickupCount extends HudElement {
 
 			//GlStateManager.color(1, 1, 1, opacity);
 			GlUtil.renderSingleItem(node.stack, stackBounds.getPosition());
-			GlUtil.drawString(node.toString(), rowAlignment.mirrorColumn().getAnchor(stackBounds.withPadding(SPACER)), rowAlignment, color);
+			GlUtil.drawString(node.toString(), stackBounds.withPadding(SPACER).getAnchor(rowAlignment.mirrorColumn()), rowAlignment, color);
 
-			stackBounds = stackBounds.withY(alignment.mirrorRow().getAnchor(stackBounds.withPadding(2)).getY());
+			stackBounds = stackBounds.withY(stackBounds.withPadding(2).getAnchor(alignment.mirrorRow()).getY());
 		}
 
 		// Remove invisible stacks
@@ -135,7 +135,7 @@ public class PickupCount extends HudElement {
 		}
 
 		if(position.isDirection(Direction.CENTER)) {
-			return bounds.position(Direction.CENTER, new Point(5, 5), Direction.NORTH_WEST);
+			return bounds.positioned(Direction.CENTER, new Point(5, 5), Direction.NORTH_WEST);
 		} else {
 			return position.applyTo(bounds);
 		}

@@ -96,7 +96,7 @@ public class StringGroup {
 	}
 
 	public Bounds draw(Bounds container) {
-		return draw(alignment.getAnchor(container));
+		return draw(container.getAnchor(alignment));
 	}
 
 	/** Draws lines of text in a row or column
@@ -117,12 +117,12 @@ public class StringGroup {
 		} else {
 			bounds = lineBounds.withWidth((lineBounds.getWidth() + gutter) * source.size() - gutter);
 		}
-		bounds = alignment.align(bounds, origin);
+		bounds = bounds.alignedAround(origin, alignment);
 
 		lineBounds = lineBounds.withPosition(bounds.getPosition());
 
 		for(String line : source) {
-			GlUtil.drawString(line, alignment.getAnchor(lineBounds), alignment, color);
+			GlUtil.drawString(line, lineBounds.getAnchor(alignment), alignment, color);
 
 			if(vertical) {
 				lineBounds = lineBounds.withY(lineBounds.getBottom() + gutter);

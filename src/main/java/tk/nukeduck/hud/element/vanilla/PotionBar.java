@@ -27,10 +27,10 @@ import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.Direction.Options;
 import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.MathUtil;
 import tk.nukeduck.hud.util.Point;
-import tk.nukeduck.hud.util.Direction.Options;
 
 public class PotionBar extends OverrideElement {
 	public static final ResourceLocation INVENTORY = new ResourceLocation("textures/gui/container/inventory.png");
@@ -90,7 +90,7 @@ public class PotionBar extends OverrideElement {
 		GlStateManager.enableAlpha();
 
 		Direction alignment = position.getContentAlignment();
-		Point icon = alignment.anchor(new Bounds(24, 24), bounds).getPosition();
+		Point icon = new Bounds(24, 24).anchoredTo(bounds, alignment).getPosition();
 
 		int deltaX = alignment.getColumn() == 2 ? -25 : 25;
 		for(int i = 0; i < helpful.size(); i++) {
@@ -116,7 +116,7 @@ public class PotionBar extends OverrideElement {
 		Bounds bounds = new Bounds(helpful * 25 - 1, harmful > 0 ? 50 : 24);
 
 		if(position.isDirection(Direction.CENTER)) {
-			return bounds.position(Direction.CENTER, new Point(SPACER, SPACER), Direction.NORTH_WEST);
+			return bounds.positioned(Direction.CENTER, new Point(SPACER, SPACER), Direction.NORTH_WEST);
 		} else {
 			return position.applyTo(bounds);
 		}

@@ -36,7 +36,7 @@ public class Distance extends TextElement {
 	@Override
 	protected Bounds moveBounds(Bounds bounds) {
 		if(position.isDirection(Direction.CENTER)) {
-			return bounds.position(Direction.CENTER, new Point(-SPACER, -SPACER), Direction.SOUTH_EAST);
+			return bounds.positioned(Direction.CENTER, new Point(-SPACER, -SPACER), Direction.SOUTH_EAST);
 		} else {
 			return super.moveBounds(bounds);
 		}

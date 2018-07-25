@@ -98,7 +98,7 @@ public class SettingPosition extends SettingStub<Object> {
 
 			@Override
 			public void pickMouse(Point mousePosition, HudElement element) {
-				Bounds sourceBounds = Direction.CENTER.align(element.getLastBounds(), mousePosition);
+				Bounds sourceBounds = element.getLastBounds().alignedAround(mousePosition, Direction.CENTER);
 
 				if(!Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
 					List<Bounds> targetBounds = new ArrayList<Bounds>();
@@ -113,12 +113,12 @@ public class SettingPosition extends SettingStub<Object> {
 					}
 					sourceBounds = sourceBounds.snapped(targetBounds);
 				}
-				offset.set(getAlignment().getAnchor(sourceBounds).sub(getAnchor().getAnchor(MANAGER.getScreen())));
+				offset.set(sourceBounds.getAnchor(getAlignment()).sub(MANAGER.getScreen().getAnchor(getAnchor())));
 			}
 
 			@Override
 			public Point getAbsolute() {
-				return anchor.get().getAnchor(MANAGER.getScreen()).add(offset.get());
+				return MANAGER.getScreen().getAnchor(anchor.get()).add(offset.get());
 			}
 		});
 	}
@@ -168,7 +168,7 @@ public class SettingPosition extends SettingStub<Object> {
 	/** Moves the given bounds to the correct location and returns them */
 	public Bounds applyTo(Bounds bounds) {
 		if(isCustom()) {
-			return bounds.position(anchor.get(), offset.get(), alignment.get());
+			return bounds.positioned(anchor.get(), offset.get(), alignment.get());
 		} else {
 			return MANAGER.position(direction.get(), bounds, edge, postSpacer);
 		}
@@ -206,8 +206,8 @@ public class SettingPosition extends SettingStub<Object> {
 	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Point origin) {
 		Point lockOffset = new Point(30 + SPACER, 148);
 
-		lockAlignment.setBounds(Direction.EAST.align(new Bounds(20, 10), origin.add(lockOffset.withX(-lockOffset.getX()))));
-		lockContent.setBounds(Direction.WEST.align(new Bounds(20, 10), origin.add(lockOffset)));
+		lockAlignment.setBounds(new Bounds(20, 10).alignedAround(origin.add(lockOffset.withX(-lockOffset.getX())), Direction.EAST));
+		lockContent.setBounds(new Bounds(20, 10).alignedAround(origin.add(lockOffset), Direction.WEST));
 
 		return super.getGuiParts(parts, callbacks, origin);
 	}

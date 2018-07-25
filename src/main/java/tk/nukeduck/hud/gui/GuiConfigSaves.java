@@ -92,25 +92,25 @@ public class GuiConfigSaves extends GuiScreen {
 
 		buttonList.add(new GuiActionButton(I18n.format("gui.done"))
 			.setCallback(() -> MC.displayGuiScreen(previous))
-			.setBounds(Direction.NORTH.align(new Bounds(200, 20), origin)));
+			.setBounds(new Bounds(200, 20).alignedAround(origin, Direction.NORTH)));
 
 		Bounds textField = new Bounds(150, 20);
 		Bounds smallButton = new Bounds(50, 20);
 
-		Bounds fieldLine = Direction.NORTH.align(new Bounds(textField.getWidth() + (SPACER + smallButton.getWidth()) * 2, 20), origin.add(0, 20 + SPACER));
-		textField = Direction.NORTH_WEST.anchor(textField, fieldLine);
+		Bounds fieldLine = new Bounds(textField.getWidth() + (SPACER + smallButton.getWidth()) * 2, 20).alignedAround(origin.add(0, 20 + SPACER), Direction.NORTH);
+		textField = textField.anchoredTo(fieldLine, Direction.NORTH_WEST);
 
 		name = new GuiTextField(0, fontRenderer, textField.getX(), textField.getY(), textField.getWidth(), textField.getHeight());
 		name.setFocused(true);
 		name.setCanLoseFocus(false);
 
-		smallButton = smallButton.withPosition(Direction.NORTH_EAST.getAnchor(textField).add(SPACER, 0));
+		smallButton = smallButton.withPosition(textField.getAnchor(Direction.NORTH_EAST).add(SPACER, 0));
 		buttonList.add(new GuiActionButton("Load").setCallback(this::load).setBounds(smallButton));
 
-		smallButton = smallButton.withPosition(Direction.NORTH_EAST.getAnchor(smallButton).add(SPACER, 0));
+		smallButton = smallButton.withPosition(smallButton.getAnchor(Direction.NORTH_EAST).add(SPACER, 0));
 		buttonList.add(new GuiActionButton("Save").setCallback(this::save).setBounds(smallButton));
 
-		viewport = Direction.NORTH.align(new Bounds(400, 0), Direction.SOUTH.getAnchor(fieldLine).add(0, SPACER)).withBottom(height - 20);
+		viewport = new Bounds(400, 0).alignedAround(fieldLine.getAnchor(Direction.SOUTH).add(0, SPACER), Direction.NORTH).withBottom(height - 20);
 		scrollbar = new GuiScrollbar(viewport, 0);
 
 		reloadSaves();
@@ -190,13 +190,13 @@ public class GuiConfigSaves extends GuiScreen {
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
 		GL11.glScissor(scissorBounds.getX(), scissorBounds.getY(), scissorBounds.getWidth(), scissorBounds.getHeight());
 
-		Point origin = Direction.NORTH.getAnchor(viewport).sub(0, scrollbar.getScroll() - SPACER);
+		Point origin = viewport.getAnchor(Direction.NORTH).sub(0, scrollbar.getScroll() - SPACER);
 
 		for(int i = 0; i < saves.size(); i++) {
 			String fileName = saves.get(i).getFileName().toString();
 
 			if(fileName.length() == name.getText().length() + 4 && fileName.regionMatches(0, name.getText(), 0, fileName.length() - 4)) {
-				Bounds bounds = Direction.NORTH.align(new Bounds(300, MC.fontRenderer.FONT_HEIGHT), origin.add(0, (MC.fontRenderer.FONT_HEIGHT + SPACER) * i)).withPadding(2);
+				Bounds bounds = new Bounds(300, MC.fontRenderer.FONT_HEIGHT).alignedAround(origin.add(0, (MC.fontRenderer.FONT_HEIGHT + SPACER) * i), Direction.NORTH).withPadding(2);
 
 				GlUtil.drawRect(bounds, 0x30000000);
 				GlUtil.drawBorderRect(bounds, 0xA0909090);

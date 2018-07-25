@@ -77,7 +77,7 @@ public class Sidebar extends OverrideElement {
 		Bounds margin = Bounds.createPadding(1);
 		Bounds bounds = new Bounds(size).withPadding(padding).withPadding(margin);
 
-		bounds = Direction.EAST.anchor(bounds, MANAGER.getScreen());
+		bounds = bounds.anchoredTo(MANAGER.getScreen(), Direction.EAST);
 		Bounds paddingBounds = bounds.withInset(margin);
 		Bounds contentBounds = paddingBounds.withInset(padding);
 
@@ -88,7 +88,7 @@ public class Sidebar extends OverrideElement {
 		background = background.withTop(background.getBottom()).withBottom(bounds.getBottom());
 		GlUtil.drawRect(background, 0x50000000);
 
-		GlUtil.drawString(title, Direction.NORTH.getAnchor(paddingBounds), Direction.NORTH, Colors.WHITE);
+		GlUtil.drawString(title, paddingBounds.getAnchor(Direction.NORTH), Direction.NORTH, Colors.WHITE);
 		namesGroup.draw(contentBounds);
 		valuesGroup.draw(contentBounds);
 

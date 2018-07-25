@@ -121,13 +121,13 @@ public class Crosshair extends OverrideElement {
 	@Override
 	protected Bounds render(Event event) {
 		if(MC.gameSettings.showDebugInfo && !MC.gameSettings.reducedDebugInfo && !MC.player.hasReducedDebug()) {
-			renderAxes(Direction.CENTER.getAnchor(MANAGER.getScreen()).scale(0.5f, 0.5f), getPartialTicks(event));
+			renderAxes(MANAGER.getScreen().getAnchor(Direction.CENTER).scale(0.5f, 0.5f), getPartialTicks(event));
 		} else {
 			GlStateManager.enableAlpha();
 			GlStateManager.tryBlendFuncSeparate(SourceFactor.ONE_MINUS_DST_COLOR, DestFactor.ONE_MINUS_SRC_COLOR, SourceFactor.ONE, DestFactor.ZERO);
 
 			Bounds texture = new Bounds(16, 16);
-			Point position = Direction.CENTER.anchor(new Bounds(texture), MANAGER.getScreen()).getPosition();
+			Point position = new Bounds(texture).anchoredTo(MANAGER.getScreen(), Direction.CENTER).getPosition();
 
 			MC.getTextureManager().bindTexture(BetterHud.ICONS);
 			GlUtil.drawTexturedModalRect(position, texture);
@@ -146,9 +146,9 @@ public class Crosshair extends OverrideElement {
 
 		if(position.isDirection(Direction.SOUTH)) {
 			Direction primary = MC.player.getPrimaryHand() == EnumHandSide.RIGHT ? Direction.EAST : Direction.WEST;
-			bounds = primary.mirrorColumn().align(bounds, primary.getAnchor(HudElement.HOTBAR.getLastBounds().withPadding(SPACER)));
+			bounds = bounds.alignedAround(HudElement.HOTBAR.getLastBounds().withPadding(SPACER).getAnchor(primary), primary.mirrorColumn());
 		} else if(position.isDirection(Direction.CENTER)) {
-			bounds = bounds.position(Direction.CENTER, new Point(0, SPACER), Direction.NORTH);
+			bounds = bounds.positioned(Direction.CENTER, new Point(0, SPACER), Direction.NORTH);
 		} else {
 			bounds = position.applyTo(bounds);
 		}

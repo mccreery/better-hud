@@ -13,10 +13,10 @@ import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.Direction.Options;
 import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Point;
 import tk.nukeduck.hud.util.StringGroup;
-import tk.nukeduck.hud.util.Direction.Options;
 
 public class ArmorBars extends EquipmentDisplay {
 	private final SettingPosition position = new SettingPosition("position", Options.CORNERS, Options.WEST_EAST);
@@ -96,11 +96,11 @@ public class ArmorBars extends EquipmentDisplay {
 		Bounds padding = alignment == Direction.EAST ? Bounds.createPadding(0, 0, 20, 0) : Bounds.createPadding(20, 0, 0, 0);
 
 		Bounds row = new Bounds(size).withPadding(padding);
-		row = Direction.NORTH.anchor(row, bounds);
+		row = row.anchoredTo(bounds, Direction.NORTH);
 
 		for(int i = 3; i >= 0; i--, row = row.withY(row.getY() + 18)) {
 			ItemStack stack = MC.player.inventory.armorItemInSlot(i);
-			Bounds item = alignment.anchor(new Bounds(16, 16), row);
+			Bounds item = new Bounds(16, 16).anchoredTo(row, alignment);
 
 			if(stack == null || stack.isEmpty()) {
 				drawEmptySlot(item.getPosition(), i);
@@ -111,7 +111,7 @@ public class ArmorBars extends EquipmentDisplay {
 				if(hasText() && text[i] != null) {
 					MC.mcProfiler.startSection("text");
 
-					Bounds textBounds = alignment.anchor(new Bounds(GlUtil.getStringSize(text[i])), content);
+					Bounds textBounds = new Bounds(GlUtil.getStringSize(text[i])).anchoredTo(content, alignment);
 					if(largeBars()) {
 						textBounds = textBounds.withY(textBounds.getY() - 1);
 					}
@@ -124,10 +124,10 @@ public class ArmorBars extends EquipmentDisplay {
 					MC.mcProfiler.startSection("bars");
 
 					if(largeBars()) {
-						Bounds bar = Direction.SOUTH.anchor(new Bounds(content.getWidth(), 2), content);
+						Bounds bar = new Bounds(content.getWidth(), 2).anchoredTo(content, Direction.SOUTH);
 						GlUtil.drawDamageBar(bar, stack, false);
 					} else {
-						Bounds bar = alignment.mirrorColumn().anchor(new Bounds(2, item.getHeight()), item.withPadding(2, 0, 2, 0));
+						Bounds bar = new Bounds(2, item.getHeight()).anchoredTo(item.withPadding(2, 0, 2, 0), alignment.mirrorColumn());
 						GlUtil.drawDamageBar(bar, stack, true);
 					}
 

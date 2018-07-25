@@ -130,7 +130,7 @@ public class MobInfo extends EntityInfo {
 		GlUtil.drawRect(bounds, Colors.TRANSLUCENT);
 		GlUtil.drawString(text, bounds.withInset(padding).getPosition(), Direction.NORTH_WEST, Colors.WHITE);
 
-		renderHealth(health, maxHealth, compressLimit, Direction.SOUTH_WEST.getAnchor(bounds.withInset(padding)));
+		renderHealth(health, maxHealth, compressLimit, bounds.withInset(padding).getAnchor(Direction.SOUTH_WEST));
 	}
 
 	/** Renders a graphic representing a total of {@code rows} compressed rows */

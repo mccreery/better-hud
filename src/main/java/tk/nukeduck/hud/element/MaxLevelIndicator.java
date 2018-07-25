@@ -33,7 +33,7 @@ public class MaxLevelIndicator extends HudElement {
 		Bounds bounds = new Bounds(16, 16);
 
 		if(position.isDirection(Direction.SOUTH)) {
-			bounds = bounds.withPosition(Direction.CENTER.getAnchor(MANAGER.getScreen()).sub(8, 50)); // TODO move
+			bounds = bounds.withPosition(MANAGER.getScreen().getAnchor(Direction.SOUTH).sub(8, 50)); // TODO move
 		} else {
 			bounds = position.applyTo(bounds);
 		}

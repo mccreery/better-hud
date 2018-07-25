@@ -28,7 +28,7 @@ public abstract class SettingAlignable<T> extends Setting<T> {
 		origin = super.getGuiParts(parts, callbacks, origin);
 
 		Bounds bounds = new Bounds(getSize());
-		bounds = alignment.anchor(bounds, Direction.NORTH.align(new Bounds(getAlignmentWidth(), bounds.getHeight()), origin));
+		bounds = bounds.anchoredTo(new Bounds(getAlignmentWidth(), bounds.getHeight()).alignedAround(origin, Direction.NORTH), alignment);
 
 		getGuiParts(parts, callbacks, bounds);
 		return shouldBreak() ? origin.withY(bounds.getBottom() + SPACER) : null;

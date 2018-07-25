@@ -74,7 +74,7 @@ public class PlayerInfo extends EntityInfo {
 
 		GlUtil.drawRect(bounds, Colors.TRANSLUCENT);
 		group.draw(contentBounds);
-		GlUtil.renderArmorBar(entity.getTotalArmorValue(), 20, Direction.SOUTH_WEST.getAnchor(contentBounds));
+		GlUtil.renderArmorBar(entity.getTotalArmorValue(), 20, contentBounds.getAnchor(Direction.SOUTH_WEST));
 	}
 
 	/** @see ItemStack#getTooltip(EntityPlayer, net.minecraft.client.util.ITooltipFlag) */

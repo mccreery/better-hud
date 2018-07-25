@@ -73,14 +73,14 @@ public class Compass extends HudElement {
 
 		if(showNotches.get()) {
 			for(int loc : notchX) {
-				GlUtil.drawRect(alignment.anchor(smallNotch, smallBounds).addPosition(loc, 0), Colors.WHITE);
-				GlUtil.drawRect(alignment.anchor(smallNotch, smallBounds).subPosition(loc, 0), Colors.WHITE);
+				GlUtil.drawRect(smallNotch.anchoredTo(smallBounds, alignment).addPosition(loc, 0), Colors.WHITE);
+				GlUtil.drawRect(smallNotch.anchoredTo(smallBounds, alignment).subPosition(loc, 0), Colors.WHITE);
 			}
 		}
 
-		GlUtil.drawRect(alignment.withColumn(0).anchor(largeNotch, largeBounds), Colors.RED);
-		GlUtil.drawRect(alignment.withColumn(1).anchor(largeNotch, largeBounds), Colors.RED);
-		GlUtil.drawRect(alignment.withColumn(2).anchor(largeNotch, largeBounds), Colors.RED);
+		GlUtil.drawRect(largeNotch.anchoredTo(largeBounds, alignment.withColumn(0)), Colors.RED);
+		GlUtil.drawRect(largeNotch.anchoredTo(largeBounds, alignment.withColumn(1)), Colors.RED);
+		GlUtil.drawRect(largeNotch.anchoredTo(largeBounds, alignment.withColumn(2)), Colors.RED);
 	}
 
 	private void drawDirections(Bounds bounds) {
@@ -90,7 +90,7 @@ public class Compass extends HudElement {
 		float radius = bounds.getWidth() / 2 + SPACER;
 		boolean bottom = position.getContentAlignment() == Direction.SOUTH;
 
-		Point origin = position.getContentAlignment().getAnchor(bounds.withInset(2));
+		Point origin = bounds.withInset(2).getAnchor(position.getContentAlignment());
 
 		for(int i = 0; i < 4; i++, angle += Math.PI / 2) {
 			double cos = Math.cos(angle);

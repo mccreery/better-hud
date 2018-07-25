@@ -14,9 +14,9 @@ import tk.nukeduck.hud.gui.GuiToggleButton;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.Direction.Options;
 import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Point;
-import tk.nukeduck.hud.util.Direction.Options;
 
 public class SettingDirection extends SettingAlignable<Direction> {
 	private GuiToggleButton[] toggles = new GuiToggleButton[9];
@@ -61,13 +61,13 @@ public class SettingDirection extends SettingAlignable<Direction> {
 	public void getGuiParts(java.util.List<Gui> parts, Map<Gui,Setting<?>> callbacks, Bounds bounds) {
 		this.bounds = bounds;
 
-		Bounds radios = (horizontal ? Direction.WEST : Direction.SOUTH).anchor(new Bounds(60, 60), bounds);
+		Bounds radios = new Bounds(60, 60).anchoredTo(bounds, horizontal ? Direction.WEST : Direction.SOUTH);
 		Bounds radio = new Bounds(20, 20);
 
 		for(Direction direction : Direction.values()) {
 			GuiToggleButton button = (GuiToggleButton)new GuiToggleButton("")
 				.setStaticText().setId(direction.ordinal())
-				.setBounds(direction.anchor(radio, radios));
+				.setBounds(radio.anchoredTo(radios, direction));
 
 			parts.add(button);
 			callbacks.put(button, this);
@@ -105,9 +105,9 @@ public class SettingDirection extends SettingAlignable<Direction> {
 		String text = getText();
 
 		if(horizontal) {
-			GlUtil.drawString(text, Direction.EAST.getAnchor(bounds.withWidth(60 + SPACER)), Direction.WEST, Colors.WHITE);
+			GlUtil.drawString(text, bounds.withWidth(60 + SPACER).getAnchor(Direction.EAST), Direction.WEST, Colors.WHITE);
 		} else {
-			GlUtil.drawString(text, Direction.NORTH.getAnchor(bounds), Direction.NORTH, Colors.WHITE);
+			GlUtil.drawString(text, bounds.getAnchor(Direction.NORTH), Direction.NORTH, Colors.WHITE);
 		}
 	}
 

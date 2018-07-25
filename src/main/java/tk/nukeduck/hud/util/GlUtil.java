@@ -234,10 +234,10 @@ public final class GlUtil {
 		Bounds bar;
 		if(vertical) {
 			bar = new Bounds(bounds.getWidth() - 1, (int)(progress * bounds.getHeight()));
-			bar = Direction.SOUTH_WEST.anchor(bar, bounds);
+			bar = bar.anchoredTo(bounds, Direction.SOUTH_WEST);
 		} else {
 			bar = new Bounds((int)(progress * bounds.getWidth()), bounds.getHeight() - 1);
-			bar = Direction.NORTH_WEST.anchor(bar, bounds);
+			bar = bar.anchoredTo(bounds, Direction.NORTH_WEST);
 		}
 		drawRect(bar, color);
 	}
@@ -265,8 +265,8 @@ public final class GlUtil {
 		}
 
 		Direction anchor = direction.mirror();
-		partialBounds = anchor.anchor(partialBounds, bounds);
-		partialForeground = anchor.anchor(partialForeground, foreground);
+		partialBounds = partialBounds.anchoredTo(bounds, anchor);
+		partialForeground = partialForeground.anchoredTo(foreground, anchor);
 
 		drawTexturedModalRect(partialBounds.getPosition(), partialForeground);
 	}
@@ -280,7 +280,7 @@ public final class GlUtil {
 	 * @param alignment The alignment around {@code origin}
 	 * @see net.minecraft.client.gui.FontRenderer#drawStringWithShadow(String, float, float, int) */
 	public static Bounds drawString(String string, Point origin, Direction alignment, int color) {
-		Bounds bounds = alignment.align(new Bounds(getStringSize(string)), origin);
+		Bounds bounds = new Bounds(getStringSize(string)).alignedAround(origin, alignment);
 		MC.fontRenderer.drawStringWithShadow(string, bounds.getX(), bounds.getY(), color);
 
 		return bounds;

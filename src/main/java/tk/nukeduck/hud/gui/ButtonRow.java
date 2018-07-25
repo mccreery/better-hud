@@ -30,12 +30,12 @@ class ButtonRow {
 	public ButtonRow setBounds(Bounds bounds) {
 		this.bounds = bounds;
 
-		toggle.setBounds(Direction.NORTH_WEST.anchor(bounds.withWidth(bounds.getWidth() - 20), bounds));
-		options.setBounds(Direction.NORTH_EAST.anchor(bounds.withWidth(20), bounds));
+		toggle.setBounds(bounds.withWidth(bounds.getWidth() - 20).anchoredTo(bounds, Direction.NORTH_WEST));
+		options.setBounds(bounds.withWidth(20).anchoredTo(bounds, Direction.NORTH_EAST));
 
-		Bounds arrows = Direction.WEST.anchor(new Bounds(20, 20), bounds.withPadding(20 + SPACER));
-		moveUp.setBounds(Direction.NORTH_WEST.anchor(new Bounds(20, 10), arrows));
-		moveDown.setBounds(Direction.SOUTH_WEST.anchor(new Bounds(20, 10), arrows));
+		Bounds arrows = new Bounds(20, 20).anchoredTo(bounds.withPadding(20 + SPACER), Direction.WEST);
+		moveUp.setBounds(new Bounds(20, 10).anchoredTo(arrows, Direction.NORTH_WEST));
+		moveDown.setBounds(new Bounds(20, 10).anchoredTo(arrows, Direction.SOUTH_WEST));
 
 		return this;
 	}

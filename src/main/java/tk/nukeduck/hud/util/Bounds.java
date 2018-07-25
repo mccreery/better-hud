@@ -273,8 +273,42 @@ public final class Bounds implements Serializable {
 			Math.max(this.x + this.width, x + width), Math.max(this.y + this.height, y + height));
 	}
 
-	public Bounds position(Direction anchor, Point offset, Direction alignment) {
-		return alignment.align(this, anchor.getAnchor(MANAGER.getScreen()).add(offset));
+	/** Applies common positioning transformations at once
+	 *
+	 * @param anchor The screen direction to anchor to
+	 * @param offset The offset from the anchor
+	 * @param alignment The alignment of the bounds around the transformed origin
+	 * @return A new bounds with all the transformations applied
+	 *
+	 * @see #getAnchor(Direction)
+	 * @see #alignedAround(Point, Direction) */
+	public Bounds positioned(Direction anchor, Point offset, Direction alignment) {
+		return alignedAround(MANAGER.getScreen().getAnchor(anchor).add(offset), alignment);
+	}
+
+	/** @param direction The anchor direction
+	 * @return The given anchor point in this bounds */
+	public Point getAnchor(Direction direction) {
+		return getPosition().add(getSize().scale(direction.getColumn() / 2f, direction.getRow() / 2f));
+	}
+
+	/** Aligns this bounds around the anchor with the given alignment
+	 * @param anchor The anchor
+	 * @param alignment The alignment around the anchor
+	 * 
+	 * @return A new bounds with the alignment applied */
+	public Bounds alignedAround(Point anchor, Direction alignment) {
+		return withPosition(anchor.sub(withPosition(Point.ZERO).getAnchor(alignment)));
+	}
+
+	/** Anchors this bounds to the anchor for the given direction on the container.
+	 * <p>The final position will touch the inside edge of the container
+	 * @param container The container to anchor to the edge of
+	 * @param alignment The anchor direction
+	 *
+	 * @return A new bounds with the anchor applied */
+	public Bounds anchoredTo(Bounds container, Direction alignment) {
+		return alignedAround(container.getAnchor(alignment), alignment);
 	}
 
 	private static final int SNAP_RADIUS = 10;
