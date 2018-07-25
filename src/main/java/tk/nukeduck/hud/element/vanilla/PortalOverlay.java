@@ -12,7 +12,6 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.GlUtil;
-import tk.nukeduck.hud.util.Point;
 
 public class PortalOverlay extends OverrideElement {
 	public PortalOverlay() {
@@ -49,8 +48,8 @@ public class PortalOverlay extends OverrideElement {
 		MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
 		TextureAtlasSprite texture = MC.getBlockRendererDispatcher().getBlockModelShapes().getTexture(Blocks.PORTAL.getDefaultState());
-		Point resolution = MANAGER.getResolution();
-		MC.ingameGUI.drawTexturedModalRect(0, 0, texture, resolution.getX(), resolution.getY());
+		Bounds screen = MANAGER.getScreen();
+		MC.ingameGUI.drawTexturedModalRect(0, 0, texture, screen.getWidth(), screen.getHeight());
 
 		GlUtil.color(Colors.WHITE);
 		return null;

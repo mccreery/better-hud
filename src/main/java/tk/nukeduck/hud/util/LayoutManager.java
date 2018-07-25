@@ -28,10 +28,6 @@ public class LayoutManager {
 		GuiIngameForge.left_height = GuiIngameForge.right_height = SPACER + 9;
 	}
 
-	public Point getResolution() {
-		return resolution;
-	}
-
 	public ScaledResolution getScaledResolution() {
 		return scaledResolution;
 	}

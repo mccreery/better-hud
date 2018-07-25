@@ -18,7 +18,7 @@ public class ParticleWater extends ParticleBase {
 	}
 
 	public static ParticleWater createRandom() {
-		Point position = Point.createRandom(MANAGER.getResolution());
+		Point position = Point.createRandom(MANAGER.getScreen());
 
 		float opacity = MathUtil.randomRange(0f, 0.5f);
 		float size = MathUtil.randomRange(2f, 6.5f);

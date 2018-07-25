@@ -126,9 +126,8 @@ public class GuiElementSettings extends GuiScreen {
 				Mouse.getEventX() * width / MC.displayWidth,
 				height - Mouse.getEventY() * height / MC.displayHeight - 1
 			);
-			Point resolution = new Point(width, height);
 
-			picker.pickMouse(mousePosition, resolution, element);
+			picker.pickMouse(mousePosition, element);
 		}
 
 		if(selectedButton instanceof GuiActionButton && ((GuiActionButton)selectedButton).getRepeat()) {

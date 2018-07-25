@@ -90,7 +90,7 @@ public class SettingAbsolutePosition extends Setting<Point> {
 
 	/** Sets the picked value based on {@code mousePosition}
 	 * @param element The element being positioned */
-	public void pickMouse(Point mousePosition, Point resolution, HudElement element) {
+	public void pickMouse(Point mousePosition, HudElement element) {
 		set(mousePosition);
 	}
 

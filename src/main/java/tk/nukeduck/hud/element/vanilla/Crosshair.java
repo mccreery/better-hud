@@ -26,9 +26,9 @@ import tk.nukeduck.hud.element.settings.SettingChoose;
 import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.Direction.Options;
 import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Point;
-import tk.nukeduck.hud.util.Direction.Options;
 
 public class Crosshair extends OverrideElement {
 	private final SettingBoolean attackIndicator = (SettingBoolean)new SettingBoolean(null) {
@@ -120,10 +120,8 @@ public class Crosshair extends OverrideElement {
 
 	@Override
 	protected Bounds render(Event event) {
-		Point resolution = MANAGER.getResolution();
-
 		if(MC.gameSettings.showDebugInfo && !MC.gameSettings.reducedDebugInfo && !MC.player.hasReducedDebug()) {
-			renderAxes(resolution.scale(0.5f, 0.5f), getPartialTicks(event));
+			renderAxes(Direction.CENTER.getAnchor(MANAGER.getScreen()).scale(0.5f, 0.5f), getPartialTicks(event));
 		} else {
 			GlStateManager.enableAlpha();
 			GlStateManager.tryBlendFuncSeparate(SourceFactor.ONE_MINUS_DST_COLOR, DestFactor.ONE_MINUS_SRC_COLOR, SourceFactor.ONE, DestFactor.ZERO);

@@ -97,7 +97,7 @@ public class SettingPosition extends SettingStub<Object> {
 			}
 
 			@Override
-			public void pickMouse(Point mousePosition, Point resolution, HudElement element) {
+			public void pickMouse(Point mousePosition, HudElement element) {
 				Bounds sourceBounds = Direction.CENTER.align(element.getLastBounds(), mousePosition);
 
 				if(!Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
@@ -113,12 +113,12 @@ public class SettingPosition extends SettingStub<Object> {
 					}
 					sourceBounds = sourceBounds.snapped(targetBounds);
 				}
-				offset.set(getAlignment().getAnchor(sourceBounds).sub(getAnchor().getAnchor(resolution)));
+				offset.set(getAlignment().getAnchor(sourceBounds).sub(getAnchor().getAnchor(MANAGER.getScreen())));
 			}
 
 			@Override
 			public Point getAbsolute() {
-				return anchor.get().getAnchor(MANAGER.getResolution()).add(offset.get());
+				return anchor.get().getAnchor(MANAGER.getScreen()).add(offset.get());
 			}
 		});
 	}

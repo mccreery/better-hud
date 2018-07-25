@@ -274,7 +274,7 @@ public final class Bounds implements Serializable {
 	}
 
 	public Bounds position(Direction anchor, Point offset, Direction alignment) {
-		return alignment.align(this, anchor.getAnchor(MANAGER.getResolution()).add(offset));
+		return alignment.align(this, anchor.getAnchor(MANAGER.getScreen()).add(offset));
 	}
 
 	private static final int SNAP_RADIUS = 10;
