@@ -2,6 +2,7 @@ package tk.nukeduck.hud.element;
 
 import static tk.nukeduck.hud.BetterHud.HUD_ICONS;
 import static tk.nukeduck.hud.BetterHud.MC;
+import static tk.nukeduck.hud.BetterHud.SPACER;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.common.eventhandler.Event;
@@ -11,8 +12,8 @@ import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Direction.Options;
+import tk.nukeduck.hud.util.GlUtil;
 
 public class HealIndicator extends HudElement {
 	private final SettingPosition position = new SettingPosition("position", Options.NONE, Options.NONE);
@@ -42,8 +43,9 @@ public class HealIndicator extends HudElement {
 			if(position.isCustom()) {
 				bounds = position.applyTo(bounds);
 			} else {
-				// TODO
-				//bounds.position = MANAGER.getResolution().scale(.5f, 1).sub(90, 50);
+				bounds = bounds.anchoredTo(HudElement.HEALTH.getLastBounds()
+					.withPadding(bounds.getWidth() + SPACER, 0, bounds.getWidth() + SPACER, 0),
+					HudElement.HEALTH.getIndicatorSide());
 			}
 
 			GlUtil.color(Colors.WHITE);

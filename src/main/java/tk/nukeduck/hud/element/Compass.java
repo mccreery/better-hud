@@ -129,8 +129,6 @@ public class Compass extends HudElement {
 		return true;
 	}
 
-	// TODO implement alignment
-
 	@Override
 	public Bounds render(Event event) {
 		GlUtil.enableBlendTranslucent();

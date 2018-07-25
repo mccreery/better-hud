@@ -182,14 +182,20 @@ public class GuiHudMenu extends GuiScreen {
 		return sortCriteria == SortType.PRIORITY;
 	}
 
-	// TODO check we're in priority mode
-
 	public void swapPriority(HudElement element, int delta) {
+		if(sortCriteria != SortType.PRIORITY) {
+			throw new IllegalStateException("Must be sorting by priority");
+		}
+
 		List<HudElement> data = paginator.getData();
 		swapPriority(element, data.get(data.indexOf(element) + delta));
 	}
 
 	public void swapPriority(int first, int second) {
+		if(sortCriteria != SortType.PRIORITY) {
+			throw new IllegalStateException("Must be sorting by priority");
+		}
+
 		List<HudElement> data = paginator.getData();
 		swapPriority(data.get(first), data.get(second));
 	}

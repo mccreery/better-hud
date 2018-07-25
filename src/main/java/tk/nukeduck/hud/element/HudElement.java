@@ -23,11 +23,11 @@ import tk.nukeduck.hud.element.text.Connection;
 import tk.nukeduck.hud.element.text.Coordinates;
 import tk.nukeduck.hud.element.text.CpsCount;
 import tk.nukeduck.hud.element.text.Distance;
-import tk.nukeduck.hud.element.text.Saturation;
 import tk.nukeduck.hud.element.text.FpsCount;
 import tk.nukeduck.hud.element.text.FullInvIndicator;
 import tk.nukeduck.hud.element.text.GameClock;
 import tk.nukeduck.hud.element.text.LightLevel;
+import tk.nukeduck.hud.element.text.Saturation;
 import tk.nukeduck.hud.element.text.SystemClock;
 import tk.nukeduck.hud.element.vanilla.AirBar;
 import tk.nukeduck.hud.element.vanilla.ArmorBar;
@@ -46,8 +46,8 @@ import tk.nukeduck.hud.element.vanilla.Sidebar;
 import tk.nukeduck.hud.element.vanilla.Vignette;
 import tk.nukeduck.hud.network.Version;
 import tk.nukeduck.hud.util.Bounds;
-import tk.nukeduck.hud.util.Sorter;
 import tk.nukeduck.hud.util.SortField;
+import tk.nukeduck.hud.util.Sorter;
 
 public abstract class HudElement {
 	/** A list of all the registered elements */
@@ -73,7 +73,6 @@ public abstract class HudElement {
 	public static final HidePlayers HIDE_PLAYERS = new HidePlayers();
 	public static final HorseInfo HORSE_INFO = new HorseInfo();
 	public static final LightLevel LIGHT_LEVEL = new LightLevel();
-	public static final MaxLevelIndicator MAX_LEVEL = new MaxLevelIndicator();
 	public static final MobInfo MOB_INFO = new MobInfo();
 	public static final PickupCount PICKUP = new PickupCount();
 	public static final PlayerInfo PLAYER_INFO = new PlayerInfo();

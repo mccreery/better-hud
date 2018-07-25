@@ -45,18 +45,25 @@ public abstract class Bar extends OverrideElement {
 		return bar.shouldRender() && super.shouldRender(event);
 	}
 
+	/** @return {@link Direction#WEST} or {@link Direction#EAST} */
+	protected Direction getSide() {
+		if(position.isDirection(Direction.SOUTH)) {
+			return side.getIndex() == 1 ? Direction.EAST : Direction.WEST;
+		} else {
+			return position.getContentAlignment();
+		}
+	}
+
 	@Override
 	protected Bounds render(Event event) {
 		MC.getTextureManager().bindTexture(ICONS);
 
 		Bounds bounds = new Bounds(bar.getSize());
-		Direction alignment;
+		Direction alignment = getSide();
 
 		if(position.isDirection(Direction.SOUTH)) {
-			alignment = side.getIndex() == 1 ? Direction.EAST : Direction.WEST;
 			bounds = MANAGER.positionBar(bounds, alignment, 1);
 		} else {
-			alignment = position.getContentAlignment();
 			bounds = position.applyTo(bounds);
 		}
 

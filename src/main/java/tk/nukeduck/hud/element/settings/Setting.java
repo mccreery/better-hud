@@ -147,9 +147,9 @@ public abstract class Setting<T> implements IGetSet<T> {
 	 *
 	 * <p>The minimum implementation (in {@link Setting#getGuiParts(List, Map, Point)})
 	 * populates {@code parts} and {@code callbacks} with those of the element's children
-	 * @param origin TODO
 	 *
-	 * @return The bottommost Y coordinate of {@code Gui}s in this setting */
+	 * @param origin The top center point for GUI parts being added
+	 * @return The new origin directly below this setting's parts */
 	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Point origin) {
 		return getGuiParts(parts, callbacks, origin, children);
 	}
@@ -157,9 +157,9 @@ public abstract class Setting<T> implements IGetSet<T> {
 	/** Populates {@code parts} and {@code callbacks} by calling
 	 * {@link #getGuiParts(List, Map, Point)} on the given {@code settings},
 	 * and maintaining {@code y} between them
-	 * @param origin TODO
 	 *
-	 * @return The bottommost Y coordinate of all {@code Gui}s across all {@code settings}
+	 * @param origin The top center point for GUI parts being added
+	 * @return The bottom center point of all {@code settings}
 	 * @see #getGuiParts(List, Map, Point) */
 	public static Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Point origin, List<Setting<?>> settings) {
 		if(!settings.isEmpty()) {

@@ -4,6 +4,9 @@ import static tk.nukeduck.hud.BetterHud.MC;
 
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
+import tk.nukeduck.hud.element.HealIndicator;
+import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.Direction.Options;
 import tk.nukeduck.hud.util.bars.StatBarHealth;
 
 public class HealthBar extends Bar {
@@ -21,6 +24,15 @@ public class HealthBar extends Bar {
 	@Override
 	protected ElementType getType() {
 		return ElementType.HEALTH;
+	}
+
+	/** Used by {@link HealIndicator} */
+	public Direction getIndicatorSide() {
+		if(!position.isCustom() && Options.CORNERS.isValid(position.getDirection())) {
+			return super.getSide().mirrorColumn();
+		} else {
+			return super.getSide();
+		}
 	}
 
 	@Override
