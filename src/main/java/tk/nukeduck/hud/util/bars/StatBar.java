@@ -84,7 +84,13 @@ public abstract class StatBar<T> {
 	}
 
 	public Bounds ensureNative(Bounds texture, Direction alignment) {
-		return alignment == getNativeAlignment() ? texture : texture.flippedHorizontal();
+		Direction nativeAlignment = getNativeAlignment();
+
+		if(nativeAlignment != null && nativeAlignment != alignment) {
+			return texture.flippedHorizontal();
+		} else {
+			return texture;
+		}
 	}
 
 	public Point getSize() {
