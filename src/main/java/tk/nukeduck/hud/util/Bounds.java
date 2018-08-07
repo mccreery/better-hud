@@ -301,14 +301,20 @@ public final class Bounds implements Serializable {
 		return withPosition(anchor.sub(withPosition(Point.ZERO).getAnchor(alignment)));
 	}
 
+	/** {@code outside} defaults to {@code false}
+	 * @see #anchoredTo(Bounds, Direction, boolean) */
+	public Bounds anchoredTo(Bounds container, Direction alignment) {
+		return anchoredTo(container, alignment, false);
+	}
+
 	/** Anchors this bounds to the anchor for the given direction on the container.
 	 * <p>The final position will touch the inside edge of the container
 	 * @param container The container to anchor to the edge of
 	 * @param alignment The anchor direction
 	 *
 	 * @return A new bounds with the anchor applied */
-	public Bounds anchoredTo(Bounds container, Direction alignment) {
-		return alignedAround(container.getAnchor(alignment), alignment);
+	public Bounds anchoredTo(Bounds container, Direction alignment, boolean outside) {
+		return alignedAround(container.getAnchor(alignment), (outside ? alignment.mirror() : alignment));
 	}
 
 	private static final int SNAP_RADIUS = 10;

@@ -12,7 +12,6 @@ import net.minecraft.util.math.MathHelper;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.MathUtil;
-import tk.nukeduck.hud.util.Point;
 
 public class StatBarHealth extends StatBar<EntityLivingBase> {
 	private final Random random = new Random();
@@ -81,7 +80,7 @@ public class StatBarHealth extends StatBar<EntityLivingBase> {
 	}
 
 	@Override
-	public void render(Point position, Direction alignment) {
+	public void render(Bounds bounds, Direction contentAlignment) {
 		int newUpdateCounter = MC.ingameGUI.getUpdateCounter();
 		int updateDelta = newUpdateCounter - currentUpdateCounter;
 
@@ -120,6 +119,6 @@ public class StatBarHealth extends StatBar<EntityLivingBase> {
 		currentHealth = newHealth;
 		currentUpdateCounter = newUpdateCounter;
 
-		super.render(position, alignment);
+		super.render(bounds, contentAlignment);
 	}
 }

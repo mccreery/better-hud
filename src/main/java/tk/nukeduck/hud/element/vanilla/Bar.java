@@ -14,7 +14,7 @@ import tk.nukeduck.hud.util.Direction.Options;
 import tk.nukeduck.hud.util.bars.StatBar;
 
 public abstract class Bar extends OverrideElement {
-	protected final SettingPosition position = new SettingPosition("position", Options.BAR, Options.WEST_EAST);
+	protected final SettingPosition position = new SettingPosition("position", Options.BAR, Options.CORNERS);
 
 	protected final SettingChoose side = new SettingChoose("side", "west", "east") {
 		@Override
@@ -46,9 +46,9 @@ public abstract class Bar extends OverrideElement {
 	}
 
 	/** @return {@link Direction#WEST} or {@link Direction#EAST} */
-	protected Direction getSide() {
+	protected Direction getContentAlignment() {
 		if(position.isDirection(Direction.SOUTH)) {
-			return side.getIndex() == 1 ? Direction.EAST : Direction.WEST;
+			return side.getIndex() == 1 ? Direction.SOUTH_EAST : Direction.SOUTH_WEST;
 		} else {
 			return position.getContentAlignment();
 		}
@@ -57,17 +57,17 @@ public abstract class Bar extends OverrideElement {
 	@Override
 	protected Bounds render(Event event) {
 		MC.getTextureManager().bindTexture(ICONS);
+		Direction contentAlignment = getContentAlignment();
 
 		Bounds bounds = new Bounds(bar.getSize());
-		Direction alignment = getSide();
 
 		if(position.isDirection(Direction.SOUTH)) {
-			bounds = MANAGER.positionBar(bounds, alignment, 1);
+			bounds = MANAGER.positionBar(bounds, contentAlignment.withRow(1), 1);
 		} else {
 			bounds = position.applyTo(bounds);
 		}
 
-		bar.render(bounds.getPosition(), alignment);
+		bar.render(bounds.getPosition(), Direction.NORTH_WEST, contentAlignment);
 		return bounds;
 	}
 }

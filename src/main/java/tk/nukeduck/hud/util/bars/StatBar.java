@@ -5,6 +5,7 @@ import java.util.List;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.Direction.Options;
 import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.MathUtil;
 import tk.nukeduck.hud.util.Point;
@@ -51,32 +52,37 @@ public abstract class StatBar<T> {
 		return true;
 	}
 
-	public void render(Point position, Direction alignment) {
+	public Bounds render(Point anchor, Direction alignment, Direction contentAlignment) {
+		Bounds bounds = new Bounds(getSize()).alignedAround(anchor, alignment);
+		render(bounds, contentAlignment);
+		return bounds;
+	}
+
+	public void render(Bounds bounds, Direction contentAlignment) {
+		if(!Options.CORNERS.isValid(contentAlignment)) {
+			throw new IllegalArgumentException("Bar must start in a corner");
+		}
+
 		GlUtil.enableBlendTranslucent();
 		GlUtil.color(Colors.WHITE);
 
+		Direction rowWise       = contentAlignment.withColumn(1).mirrorRow();
+		Direction columnWise    = contentAlignment.withRow(1).mirrorColumn();
+		Direction iconAlignment = contentAlignment.withRow(1);
+
+		Bounds icon = new Bounds(getIconSize(), getIconSize()).anchoredTo(bounds, contentAlignment);
+		Bounds rowReturn = new Bounds(icon);
+
 		final int max = getMaximum(), rowPoints = getRowPoints();
-		int resetX = position.getX();
 
-		int iconSpacing = 8;
-		if(alignment == Direction.EAST) {
-			resetX += iconSpacing * (MathUtil.ceilDiv(rowPoints, 2) - 1);
-			iconSpacing = -iconSpacing;
-		}
-
-		int x = resetX;
-		int y = position.getY();
-
-		for(int i = 0; i < max; x = resetX, y += getRowSpacing()) {
-			for(int j = 0; j < rowPoints && i < max; i += 2, j += 2, x += iconSpacing) {
-				int iconBounce = getIconBounce(i);
+		for(int i = 0; i < max; rowReturn = rowReturn.anchoredTo(rowReturn, rowWise, true), icon = rowReturn) {
+			for(int x = 0; x < rowPoints && i < max; i += 2, x += 2, icon = icon.anchoredTo(icon.withInset(1), columnWise, true)) {
+				Bounds bounced = icon.addPosition(0, getIconBounce(i));
 
 				for(Bounds texture : getIcons(i)) {
 					if(texture != null) {
-						texture = ensureNative(texture, alignment);
-
-						GlUtil.drawTexturedModalRect(x, y + iconBounce,
-							texture.getX(), texture.getY(), texture.getWidth(), texture.getHeight());
+						texture = ensureNative(texture, iconAlignment);
+						GlUtil.drawTexturedModalRect(bounced, texture);
 					}
 				}
 			}

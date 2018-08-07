@@ -8,7 +8,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.MathUtil;
-import tk.nukeduck.hud.util.Point;
 
 public class StatBarFood extends StatBarBasic<EntityPlayer> {
 	private final Random random = new Random();
@@ -43,8 +42,8 @@ public class StatBarFood extends StatBarBasic<EntityPlayer> {
 	}
 
 	@Override
-	public void render(Point position, Direction alignment) {
+	public void render(Bounds bounds, Direction contentAlignment) {
 		random.setSeed(MC.ingameGUI.getUpdateCounter());
-		super.render(position, alignment);
+		super.render(bounds, contentAlignment);
 	}
 }

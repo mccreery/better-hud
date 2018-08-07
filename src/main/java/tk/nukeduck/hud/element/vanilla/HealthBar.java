@@ -29,9 +29,9 @@ public class HealthBar extends Bar {
 	/** Used by {@link HealIndicator} */
 	public Direction getIndicatorSide() {
 		if(!position.isCustom() && Options.CORNERS.isValid(position.getDirection())) {
-			return super.getSide().mirrorColumn();
+			return super.getContentAlignment().mirrorColumn();
 		} else {
-			return super.getSide();
+			return super.getContentAlignment();
 		}
 	}
 
