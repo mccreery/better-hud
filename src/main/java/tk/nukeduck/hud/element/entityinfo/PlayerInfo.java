@@ -1,6 +1,8 @@
 package tk.nukeduck.hud.element.entityinfo;
 
+import static tk.nukeduck.hud.BetterHud.ICONS;
 import static tk.nukeduck.hud.BetterHud.MANAGER;
+import static tk.nukeduck.hud.BetterHud.MC;
 import static tk.nukeduck.hud.BetterHud.SPACER;
 
 import java.util.ArrayList;
@@ -23,8 +25,12 @@ import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Point;
 import tk.nukeduck.hud.util.StringGroup;
+import tk.nukeduck.hud.util.bars.StatBar;
+import tk.nukeduck.hud.util.bars.StatBarArmor;
 
 public class PlayerInfo extends EntityInfo {
+	private StatBar<? super EntityLivingBase> bar = new StatBarArmor();
+
 	private final SettingSlider tooltipLines = new SettingSlider("tooltipLines", -1, 10, 1) {
 		@Override
 		public String getDisplayValue(double scaledValue) {
@@ -49,6 +55,7 @@ public class PlayerInfo extends EntityInfo {
 
 	@Override
 	public void render(EntityLivingBase entity) {
+		bar.setHost(entity);
 		List<String> tooltip = new ArrayList<String>();
 
 		ItemStack held = entity.getHeldItemMainhand();
@@ -67,14 +74,16 @@ public class PlayerInfo extends EntityInfo {
 		Point size = group.getSize();
 		if(size.getX() < 81) size = size.withX(81);
 
-		Bounds padding = Bounds.createPadding(SPACER, SPACER, SPACER + 9, SPACER);
+		Bounds padding = Bounds.createPadding(SPACER, SPACER, SPACER, SPACER + bar.getSize().getY());
 		Bounds bounds = new Bounds(size).withPadding(padding);
-		MANAGER.position(Direction.SOUTH, bounds);
+		bounds = MANAGER.position(Direction.SOUTH, bounds);
 		Bounds contentBounds = bounds.withInset(padding);
 
 		GlUtil.drawRect(bounds, Colors.TRANSLUCENT);
 		group.draw(contentBounds);
-		GlUtil.renderArmorBar(entity.getTotalArmorValue(), 20, contentBounds.getAnchor(Direction.SOUTH_WEST));
+
+		MC.getTextureManager().bindTexture(ICONS);
+		bar.render(contentBounds.getAnchor(Direction.SOUTH_WEST), Direction.NORTH_WEST, Direction.NORTH_WEST);
 	}
 
 	/** @see ItemStack#getTooltip(EntityPlayer, net.minecraft.client.util.ITooltipFlag) */

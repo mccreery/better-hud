@@ -21,6 +21,10 @@ public abstract class StatBar<T> {
 		this.host = host;
 	}
 
+	protected boolean shouldCompress() {
+		return false;
+	}
+
 	protected abstract List<Bounds> getIcons(int pointsIndex);
 
 	protected int getIconBounce(int pointsIndex) {
@@ -66,30 +70,55 @@ public abstract class StatBar<T> {
 		GlUtil.enableBlendTranslucent();
 		GlUtil.color(Colors.WHITE);
 
-		Direction rowWise       = contentAlignment.withColumn(1).mirrorRow();
-		Direction columnWise    = contentAlignment.withRow(1).mirrorColumn();
-		Direction iconAlignment = contentAlignment.withRow(1);
-
+		Direction columnWise = contentAlignment.withRow(1).mirrorColumn();
 		Bounds icon = new Bounds(getIconSize(), getIconSize()).anchoredTo(bounds, contentAlignment);
 		Bounds rowReturn = new Bounds(icon);
 
 		final int max = getMaximum(), rowPoints = getRowPoints();
+		int rowSpacing = getRowSpacing();
+		if(contentAlignment.getRow() == 2) rowSpacing = -rowSpacing;
+		int i = 0;
 
-		for(int i = 0; i < max; rowReturn = rowReturn.anchoredTo(rowReturn, rowWise, true), icon = rowReturn) {
+		Point textPosition = null;
+		String text = null;
+
+		if(shouldCompress()) {
+			int rows = (max - 1) / rowPoints;
+			i = rows * rowPoints;
+
+			for(int x = 0; x < rowPoints; x += 2, icon = icon.alignedAround(icon.getAnchor(Direction.CENTER), columnWise.mirrorColumn())) {
+				drawIcon(x, icon, contentAlignment);
+			}
+			textPosition = icon.getAnchor(columnWise);
+			text = "x" + rows;
+
+			rowReturn = rowReturn.addPosition(0, rowSpacing);
+			icon = rowReturn;
+		}
+
+		for(; i < max; rowReturn = rowReturn.addPosition(0, rowSpacing), icon = rowReturn) {
 			for(int x = 0; x < rowPoints && i < max; i += 2, x += 2, icon = icon.anchoredTo(icon.withInset(1), columnWise, true)) {
-				Bounds bounced = icon.addPosition(0, getIconBounce(i));
+				drawIcon(i, icon, contentAlignment);
+			}
+		}
 
-				for(Bounds texture : getIcons(i)) {
-					if(texture != null) {
-						texture = ensureNative(texture, iconAlignment);
-						GlUtil.drawTexturedModalRect(bounced, texture);
-					}
-				}
+		if(text != null) {
+			GlUtil.drawString(text, textPosition, columnWise.mirrorColumn(), Colors.WHITE);
+		}
+	}
+
+	protected void drawIcon(int i, Bounds bounds, Direction contentAlignment) {
+		bounds = bounds.addPosition(0, getIconBounce(i));
+
+		for(Bounds texture : getIcons(i)) {
+			if(texture != null) {
+				texture = ensureNative(texture, contentAlignment.withRow(1));
+				GlUtil.drawTexturedModalRect(bounds, texture);
 			}
 		}
 	}
 
-	public Bounds ensureNative(Bounds texture, Direction alignment) {
+	protected Bounds ensureNative(Bounds texture, Direction alignment) {
 		Direction nativeAlignment = getNativeAlignment();
 
 		if(nativeAlignment != null && nativeAlignment != alignment) {
@@ -101,10 +130,15 @@ public abstract class StatBar<T> {
 
 	public Point getSize() {
 		int rowPoints = getRowPoints();
-		int rows = MathUtil.ceilDiv(getMaximum(), rowPoints);
+		Point rowSize = new Point((getIconSize() - 1) * MathUtil.ceilDiv(rowPoints, 2) + 1, getIconSize());
 
-		return new Point(
-			8 * MathUtil.ceilDiv(rowPoints, 2) + 1,
-			getRowSpacing() * (rows - 1) + getIconSize());
+		int rows;
+		if(shouldCompress()) {
+			rows = 2;
+		} else {
+			rows = MathUtil.ceilDiv(getMaximum(), rowPoints);
+		}
+
+		return rowSize.add(0, (rows - 1) * getRowSpacing());
 	}
 }

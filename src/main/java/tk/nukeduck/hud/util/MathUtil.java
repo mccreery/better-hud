@@ -16,6 +16,8 @@ import java.util.stream.IntStream;
 
 import com.google.common.graph.Graph;
 
+import net.minecraft.util.math.MathHelper;
+
 public final class MathUtil {
 	private MathUtil() {}
 
@@ -180,5 +182,11 @@ public final class MathUtil {
 		}
 		// predecessor is now after all its successors (reverse topological order)
 		sortedNodes.add(predecessor);
+	}
+
+	/** @return an {@code int} version of {@code health}
+	 * for use in health bars */
+	public static int getHealthForDisplay(float health) {
+		return MathHelper.ceil(health);
 	}
 }

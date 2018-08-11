@@ -1,6 +1,5 @@
 package tk.nukeduck.hud.util;
 
-import static tk.nukeduck.hud.BetterHud.ICONS;
 import static tk.nukeduck.hud.BetterHud.MC;
 
 import java.util.List;
@@ -160,59 +159,6 @@ public final class GlUtil {
 		GlStateManager.rotate(-MC.player.rotationYaw,  0, 1, 0);
 		GlStateManager.rotate(MC.player.rotationPitch, 1, 0, 0);
 		GlStateManager.rotate(180, 0, 0, 1);
-	}
-
-	/** The icons used are those for the health bar
-	 * @see #renderBar(int, int, Point, Bounds, Bounds, Bounds) */
-	public static void renderHealthBar(int health, int maxHealth, Point position) {
-		MC.getTextureManager().bindTexture(ICONS);
-
-		renderBar(health, maxHealth, position,
-			new Bounds(16, 0, 9, 9), new Bounds(61, 0, 9, 9), new Bounds(52, 0, 9, 9));
-	}
-
-	/** The icons used are those for the armor bar
-	 * @see #renderBar(int, int, Point, Bounds, Bounds, Bounds) */
-	public static void renderArmorBar(int armor, int maxArmor, Point position) {
-		MC.getTextureManager().bindTexture(ICONS);
-
-		renderBar(armor, maxArmor, position,
-			new Bounds(16, 9, 9, 9), new Bounds(25, 9, 9, 9), new Bounds(34, 9, 9, 9));
-	}
-
-	/** @return The size of the bar drawn by {@link #renderBar(int, int, Point, Bounds, Bounds, Bounds)}
-	 * @see #renderBar(int, int, Point, Bounds, Bounds, Bounds) */
-	public static Point getBarSize(int max) {
-		return new Point(81, MathUtil.ceilDiv(max, 20) * 9);
-	}
-
-	// TODO remove
-	/** Renders a multi-row health bar with {@code health} full hearts
-	 * and {@code maxHealth} total hearts
-	 *
-	 * @param background The texture coordinates for the background icon
-	 * @param half The texture coordinates for the half unit icon
-	 * @param full The texture coordinates for a full unit icon */
-	public static void renderBar(int current, int max, Point position, Bounds background, Bounds half, Bounds full) {
-		int x = position.getX();
-		int y = position.getY();
-		color(Colors.WHITE);
-
-		for(int i = 0; i < max; x = position.getX(), y += 9) {
-			for(int j = 0; j < 20 && i < max; i += 2, j += 2, x += 8) {
-				Point icon = new Point(x, y);
-
-				if(background != null) {
-					drawTexturedModalRect(icon, background);
-				}
-
-				if(i + 1 < current) {
-					drawTexturedModalRect(icon, full);
-				} else if(i < current) {
-					drawTexturedModalRect(icon, half);
-				}
-			}
-		}
 	}
 
 	/** {@code progress} defaults to the durability of {@code stack}

@@ -1,5 +1,6 @@
 package tk.nukeduck.hud.util.bars;
 
+import static tk.nukeduck.hud.BetterHud.ICONS;
 import static tk.nukeduck.hud.BetterHud.MC;
 
 import java.util.ArrayList;
@@ -8,7 +9,6 @@ import java.util.Random;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.MobEffects;
-import net.minecraft.util.math.MathHelper;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.MathUtil;
@@ -22,6 +22,14 @@ public class StatBarHealth extends StatBar<EntityLivingBase> {
 	private int regenCounter;
 
 	@Override
+	public void setHost(EntityLivingBase host) {
+		if(this.host != host) {
+			currentHealth = 0;
+		}
+		super.setHost(host);
+	}
+
+	@Override
 	public Direction getNativeAlignment() {
 		return Direction.WEST;
 	}
@@ -30,7 +38,7 @@ public class StatBarHealth extends StatBar<EntityLivingBase> {
 	protected int getIconBounce(int pointsIndex) {
 		int bounce = 0;
 
-		if(currentHealth <= 4) {
+		if(currentHealth <= MathUtil.ceilDiv(maxHealth, 5)) {
 			bounce += random.nextInt(2);
 		}
 		if(regenCounter == pointsIndex) {
@@ -39,9 +47,34 @@ public class StatBarHealth extends StatBar<EntityLivingBase> {
 		return bounce;
 	}
 
+	private int compressThreshold = -1;
+
+	public void setCompressThreshold(int compressThreshold) {
+		this.compressThreshold = compressThreshold;
+	}
+
+	@Override
+	protected boolean shouldCompress() {
+		return compressThreshold > 0 && currentHealth > compressThreshold;
+	}
+
 	@Override
 	protected int getMaximum() {
-		return MathUtil.ceil(maxHealth, 2) + absorptionHealth;
+		int maximum = MathUtil.ceil(maxHealth, 2) + absorptionHealth;
+
+		if(shouldCompress()) {
+			return Math.min(MathUtil.ceil(currentHealth, getRowPoints()), maximum);
+		} else if(compressThreshold > 0) {
+			return Math.min(maximum, compressThreshold);
+		} else {
+			return maximum;
+		}
+	}
+
+	@Override
+	protected int getRowSpacing() {
+		return shouldCompress() ? super.getRowSpacing() :
+			Math.max(10 - (MathUtil.ceilDiv(getMaximum(), 20) - 2), 3);
 	}
 
 	@Override
@@ -86,10 +119,10 @@ public class StatBarHealth extends StatBar<EntityLivingBase> {
 
 		random.setSeed(newUpdateCounter);
 
-		maxHealth = MathHelper.ceil(host.getMaxHealth());
-		absorptionHealth = MathHelper.ceil(host.getAbsorptionAmount());
+		maxHealth = MathUtil.getHealthForDisplay(host.getMaxHealth());
+		absorptionHealth = MathUtil.getHealthForDisplay(host.getAbsorptionAmount());
 
-		int newHealth = MathHelper.ceil(host.getHealth());
+		int newHealth = MathUtil.getHealthForDisplay(host.getHealth());
 
 		if(currentHealth <= 0 && newHealth > 0) {
 			displayHealth = newHealth;
@@ -119,6 +152,7 @@ public class StatBarHealth extends StatBar<EntityLivingBase> {
 		currentHealth = newHealth;
 		currentUpdateCounter = newUpdateCounter;
 
+		MC.getTextureManager().bindTexture(ICONS);
 		super.render(bounds, contentAlignment);
 	}
 }
