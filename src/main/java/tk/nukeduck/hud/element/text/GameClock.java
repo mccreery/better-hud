@@ -66,7 +66,7 @@ public class GameClock extends Clock {
 		Bounds bounds = super.render(event);
 
 		if(!MC.world.isDaytime()) {
-			Direction bedAnchor = Options.WEST_EAST.apply(position.getAlignment());
+			Direction bedAnchor = Options.WEST_EAST.apply(position.getContentAlignment());
 			Bounds bed = new Bounds(16, 16).anchoredTo(bounds, bedAnchor);
 
 			GlUtil.renderSingleItem(BED, bed.getPosition());
