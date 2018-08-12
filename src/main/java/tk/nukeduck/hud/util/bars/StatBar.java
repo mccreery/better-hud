@@ -9,8 +9,9 @@ import tk.nukeduck.hud.util.Direction.Options;
 import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.MathUtil;
 import tk.nukeduck.hud.util.Point;
+import tk.nukeduck.hud.util.Renderable;
 
-public abstract class StatBar<T> {
+public abstract class StatBar<T> extends Renderable {
 	protected int getMaximum() {
 		return 20;
 	}
@@ -52,17 +53,14 @@ public abstract class StatBar<T> {
 		return null;
 	}
 
-	public boolean shouldRender() {
-		return true;
-	}
-
 	public Bounds render(Point anchor, Direction alignment, Direction contentAlignment) {
 		Bounds bounds = new Bounds(getSize()).alignedAround(anchor, alignment);
 		render(bounds, contentAlignment);
 		return bounds;
 	}
 
-	public void render(Bounds bounds, Direction contentAlignment) {
+	@Override
+	public void renderUnsafe(Bounds bounds, Direction contentAlignment) {
 		if(!Options.CORNERS.isValid(contentAlignment)) {
 			throw new IllegalArgumentException("Bar must start in a corner");
 		}
@@ -128,6 +126,7 @@ public abstract class StatBar<T> {
 		}
 	}
 
+	@Override
 	public Point getSize() {
 		int rowPoints = getRowPoints();
 		Point rowSize = new Point((getIconSize() - 1) * MathUtil.ceilDiv(rowPoints, 2) + 1, getIconSize());

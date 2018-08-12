@@ -111,6 +111,29 @@ public final class GlUtil {
 		RenderHelper.disableStandardItemLighting();
 	}
 
+	/** Renders the item with hotbar animations */
+	public static void renderHotbarItem(Bounds bounds, ItemStack stack, float partialTicks) {
+		if(stack.isEmpty()) return;
+		float animationTicks = stack.getAnimationsToGo() - partialTicks;
+
+		if(animationTicks > 0) {
+			float factor = 1 + animationTicks / 5;
+	
+			GlStateManager.pushMatrix();
+			GlStateManager.translate(bounds.getX() + 8, bounds.getY() + 12, 0);
+			GlStateManager.scale(1 / factor, (factor + 1) / 2, 1);
+			GlStateManager.translate(-(bounds.getX() + 8), -(bounds.getY() + 12), 0.0F);
+	
+			MC.getRenderItem().renderItemAndEffectIntoGUI(MC.player, stack, bounds.getX(), bounds.getY());
+	
+			GlStateManager.popMatrix();
+		} else {
+			MC.getRenderItem().renderItemAndEffectIntoGUI(MC.player, stack, bounds.getX(), bounds.getY());
+		}
+	
+		MC.getRenderItem().renderItemOverlays(MC.fontRenderer, stack, bounds.getX(), bounds.getY());
+	}
+
 	/** @see GuiUtils#drawHoveringText(ItemStack, List, int, int, int, int, int, net.minecraft.client.gui.FontRenderer) */
 	public static void drawTooltipBox(int x, int y, int w, int h) {
 		enableBlendTranslucent();
