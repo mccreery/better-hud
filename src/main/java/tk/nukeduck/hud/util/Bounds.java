@@ -286,6 +286,10 @@ public final class Bounds implements Serializable {
 		return alignedAround(MANAGER.getScreen().getAnchor(anchor).add(offset), alignment);
 	}
 
+	public Bounds shiftedBy(Direction direction, int x) {
+		return withPosition(getPosition().shiftedBy(direction, x));
+	}
+
 	/** @param direction The anchor direction
 	 * @return The given anchor point in this bounds */
 	public Point getAnchor(Direction direction) {

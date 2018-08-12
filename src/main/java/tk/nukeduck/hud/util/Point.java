@@ -72,6 +72,10 @@ public final class Point implements Serializable {
 		return new Point((int)(this.getX() * x), (int)(this.getY() * y));
 	}
 
+	public Point shiftedBy(Direction direction, int x) {
+		return add((direction.getColumn() - 1) * x, (direction.getRow() - 1) * x);
+	}
+
 	public Point invert() {
 		return new Point(-getX(), -getY());
 	}
