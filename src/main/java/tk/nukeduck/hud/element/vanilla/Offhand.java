@@ -63,7 +63,7 @@ public class Offhand extends OverrideElement {
 		GlUtil.drawTexturedModalRect(bounds, texture);
 
 		RenderHelper.enableGUIStandardItemLighting();
-		Hotbar.renderHotbarItem(bounds.getPosition().add(3, 3), getPartialTicks(event), MC.player, offhandStack);
+		GlUtil.renderHotbarItem(bounds.addPosition(3, 3), offhandStack, getPartialTicks(event));
 		RenderHelper.disableStandardItemLighting();
 
 		return bounds;
