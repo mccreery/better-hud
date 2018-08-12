@@ -1,11 +1,22 @@
 package tk.nukeduck.hud.events;
 
+import static net.minecraftforge.client.GuiIngameForge.renderAir;
+import static net.minecraftforge.client.GuiIngameForge.renderArmor;
+import static net.minecraftforge.client.GuiIngameForge.renderCrosshairs;
+import static net.minecraftforge.client.GuiIngameForge.renderExperiance;
+import static net.minecraftforge.client.GuiIngameForge.renderFood;
+import static net.minecraftforge.client.GuiIngameForge.renderHealth;
+import static net.minecraftforge.client.GuiIngameForge.renderHealthMount;
+import static net.minecraftforge.client.GuiIngameForge.renderHelmet;
+import static net.minecraftforge.client.GuiIngameForge.renderHotbar;
+import static net.minecraftforge.client.GuiIngameForge.renderJumpBar;
+import static net.minecraftforge.client.GuiIngameForge.renderObjective;
+import static net.minecraftforge.client.GuiIngameForge.renderPortal;
+import static net.minecraftforge.client.GuiIngameForge.renderVignette;
 import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
 import static tk.nukeduck.hud.BetterHud.MODID;
 import static tk.nukeduck.hud.BetterHud.pointedEntity;
-
-import static net.minecraftforge.client.GuiIngameForge.*;
 
 import java.util.List;
 
@@ -42,7 +53,7 @@ public final class RenderEvents {
 	public void onRenderTick(RenderGameOverlayEvent.Pre event) {
 		final boolean disabled = !BetterHud.isEnabled();
 
-		renderHotbar      = disabled; // TODO spectator mode hotbar
+		renderHotbar      = disabled || MC.player.isSpectator();
 		renderExperiance  = disabled;
 		renderHealth      = disabled;
 		renderArmor       = disabled;
