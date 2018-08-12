@@ -44,6 +44,6 @@ public class StatBarFood extends StatBarBasic<EntityPlayer> {
 	@Override
 	public void renderUnsafe(Bounds bounds, Direction contentAlignment) {
 		random.setSeed(MC.ingameGUI.getUpdateCounter());
-		super.render(bounds, contentAlignment);
+		super.renderUnsafe(bounds, contentAlignment);
 	}
 }

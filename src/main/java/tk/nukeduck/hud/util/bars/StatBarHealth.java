@@ -153,6 +153,6 @@ public class StatBarHealth extends StatBar<EntityLivingBase> {
 		currentUpdateCounter = newUpdateCounter;
 
 		MC.getTextureManager().bindTexture(ICONS);
-		super.render(bounds, contentAlignment);
+		super.renderUnsafe(bounds, contentAlignment);
 	}
 }
