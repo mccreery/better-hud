@@ -26,6 +26,7 @@ public class SettingPosition extends SettingStub<Object> {
 	private final SettingDirection direction;
 	private final SettingAbsolutePosition offset;
 
+	private final SettingElement parent;
 	private final SettingDirection anchor, alignment, contentAlignment;
 	private final SettingLock lockAlignment, lockContent;
 
@@ -45,6 +46,13 @@ public class SettingPosition extends SettingStub<Object> {
 				return mode.getIndex() == 0 && super.enabled();
 			}
 		}.setHorizontal());
+
+		add(parent = new SettingElement("parent", Direction.CENTER) {
+			@Override
+			public boolean enabled() {
+				return mode.getIndex() == 1 && super.enabled();
+			}
+		});
 
 		add(anchor = new SettingDirection("anchor", Direction.WEST) {
 			@Override
@@ -158,7 +166,8 @@ public class SettingPosition extends SettingStub<Object> {
 	/** Moves the given bounds to the correct location and returns them */
 	public Bounds applyTo(Bounds bounds) {
 		if(isCustom()) {
-			return bounds.positioned(anchor.get(), offset.get(), alignment.get());
+			Bounds parent = this.parent.get() != null ? this.parent.get().getLastBounds() : MANAGER.getScreen();
+			return bounds.align(parent.getAnchor(anchor.get()).add(offset.get()), alignment.get());
 		} else {
 			return MANAGER.position(direction.get(), bounds, edge, postSpacer);
 		}
@@ -194,7 +203,7 @@ public class SettingPosition extends SettingStub<Object> {
 
 	@Override
 	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Point origin) {
-		Point lockOffset = new Point(30 + SPACER, 148);
+		Point lockOffset = new Point(30 + SPACER, 173);
 
 		lockAlignment.setBounds(new Bounds(20, 10).align(origin.add(lockOffset.withX(-lockOffset.getX())), Direction.EAST));
 		lockContent.setBounds(new Bounds(20, 10).align(origin.add(lockOffset), Direction.WEST));

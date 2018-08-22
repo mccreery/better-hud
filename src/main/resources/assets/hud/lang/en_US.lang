@@ -19,6 +19,7 @@ betterHud.menu.lastPage=Last Page
 betterHud.menu.nextPage=Next Page
 betterHud.menu.page=Page %s
 betterHud.menu.picking=Picking (Cancel)
+betterHud.menu.cancel=Cancel
 betterHud.menu.pick=Pick
 betterHud.menu.options=Options
 
@@ -106,6 +107,7 @@ betterHud.setting.positionType=Position Type
 betterHud.value.hotbar=Hotbar
 
 betterHud.setting.direction=Direction
+betterHud.setting.parent=Parent
 betterHud.setting.anchor=Anchor
 betterHud.setting.alignment=Alignment
 betterHud.setting.contentAlignment=Content Alignment

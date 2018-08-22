@@ -14,10 +14,12 @@ betterHud.menu.settings=Configurações de %s
 betterHud.menu.enableAll=Ativar tudo
 betterHud.menu.disableAll=Desativar tudo
 betterHud.menu.resetDefaults=Restaurar padrões
+#betterHud.menu.saveLoad=Save/Load...
 betterHud.menu.lastPage=Página anterior
 betterHud.menu.nextPage=Próxima página
 betterHud.menu.page=Página %s
 betterHud.menu.picking=Selecionando (Cancelar)
+#betterHud.menu.cancel=Cancel
 betterHud.menu.pick=Selecionar
 betterHud.menu.options=Opções
 
@@ -32,6 +34,7 @@ betterHud.menu.expInfoNotice=Estas configurações são apenas do módulo de exp
 betterHud.menu.invNames=Para armazenamento, como em baús, nomeados com uma bigorna.
 betterHud.menu.unsnap=Pressione %s para desativar o snapping.
 betterHud.menu.unsupported=Este recurso não está disponível neste servidor.
+#betterHud.menu.billboardScale=Â§lBillboardsÂ§r are overlays that are anchored to an entity and always point towards the screen, like player nameplates.
 
 # Element names
 betterHud.element.global=Better HUD
@@ -104,6 +107,7 @@ betterHud.value.custom=Personalizado
 #betterHud.value.hotbar=Hotbar
 
 betterHud.setting.direction=Direção
+#betterHud.setting.parent=Parent
 betterHud.setting.anchor=Fixar
 betterHud.setting.alignment=Alinhamento
 #betterHud.setting.contentAlignment=Content Alignment
@@ -121,6 +125,7 @@ betterHud.value.percent=%s%%
 betterHud.setting.precision=Precisão
 betterHud.value.places=%s locais
 betterHud.setting.distance=Distância
+#betterHud.setting.rayDistance=Ray Trace Distance
 betterHud.setting.red=§cRed
 betterHud.setting.green=§aGreen
 betterHud.setting.blue=§1Blue
@@ -230,6 +235,7 @@ betterHud.setting.tooltipLines=Série de dicas
 betterHud.setting.visual=Visual
 #betterHud.setting.warnings=Warnings
 #betterHud.setting.maxStacks=Maximum Stacks
+#betterHud.setting.fadeAfter=Fade After
 
 betterHud.hud.biome=Bioma: %s
 betterHud.hud.burst=Combo: %s cliques em %ss

@@ -14,10 +14,12 @@ betterHud.menu.settings=%s 配置
 betterHud.menu.enableAll=启用全部
 betterHud.menu.disableAll=禁用全部
 betterHud.menu.resetDefaults=恢复默认值
+#betterHud.menu.saveLoad=Save/Load...
 betterHud.menu.lastPage=上一页
 betterHud.menu.nextPage=下一页
 betterHud.menu.page=%s 页
 betterHud.menu.picking=选择位置 (取消)
+#betterHud.menu.cancel=Cancel
 betterHud.menu.pick=选择位置
 betterHud.menu.options=选项
 
@@ -32,6 +34,7 @@ betterHud.menu.expInfoNotice=这些设定只对总经验计数有效。
 betterHud.menu.invNames=对于被铁砧命名过的容器，比如箱子。
 #betterHud.menu.unsnap=Hold %s to disable snapping
 betterHud.menu.unsupported=此元素不受服务器支持。
+#betterHud.menu.billboardScale=Â§lBillboardsÂ§r are overlays that are anchored to an entity and always point towards the screen, like player nameplates.
 
 # Element names
 #betterHud.element.global=Better HUD
@@ -104,6 +107,7 @@ betterHud.value.custom=绝对位置
 #betterHud.value.hotbar=Hotbar
 
 #betterHud.setting.direction=Direction
+#betterHud.setting.parent=Parent
 #betterHud.setting.anchor=Anchor
 betterHud.setting.alignment=对齐
 #betterHud.setting.contentAlignment=Content Alignment
@@ -121,6 +125,7 @@ betterHud.value.southEast=右下
 betterHud.setting.precision=小数点精度
 #betterHud.value.places=%s places
 betterHud.setting.distance=距离
+#betterHud.setting.rayDistance=Ray Trace Distance
 betterHud.setting.red=§c红色
 betterHud.setting.green=§a绿色
 betterHud.setting.blue=§1蓝色
@@ -230,6 +235,7 @@ betterHud.setting.spaced=分组
 #betterHud.setting.visual=Visual
 #betterHud.setting.warnings=Warnings
 #betterHud.setting.maxStacks=Maximum Stacks
+#betterHud.setting.fadeAfter=Fade After
 
 betterHud.hud.biome=生物群系: %s
 #betterHud.hud.burst=Burst: %s clicks over %ss
