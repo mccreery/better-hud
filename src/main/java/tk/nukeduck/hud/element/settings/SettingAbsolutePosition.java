@@ -1,5 +1,6 @@
 package tk.nukeduck.hud.element.settings;
 
+import static tk.nukeduck.hud.BetterHud.MC;
 import static tk.nukeduck.hud.BetterHud.SPACER;
 
 import java.util.Collection;
@@ -11,8 +12,8 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
-import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.gui.GuiElementSettings;
+import tk.nukeduck.hud.gui.GuiOffsetChooser;
 import tk.nukeduck.hud.gui.GuiUpDownButton;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Point;
@@ -22,6 +23,8 @@ public class SettingAbsolutePosition extends Setting<Point> {
 	public GuiButton pick;
 	private GuiButton xUp, xDown, yUp, yDown;
 
+	private final SettingPosition position;
+
 	protected int x, y, cancelX, cancelY;
 	protected boolean isPicking = false;
 
@@ -30,7 +33,12 @@ public class SettingAbsolutePosition extends Setting<Point> {
 	}
 
 	public SettingAbsolutePosition(String name) {
+		this(name, null);
+	}
+
+	public SettingAbsolutePosition(String name, SettingPosition position) {
 		super(name);
+		this.position = position;
 	}
 
 	@Override
@@ -45,7 +53,10 @@ public class SettingAbsolutePosition extends Setting<Point> {
 		parts.add(yUp   = new GuiUpDownButton(true ).setBounds(new Bounds(origin.getX() + 86, origin.getY(),      0, 0)).setId(2).setRepeat());
 		parts.add(yDown = new GuiUpDownButton(false).setBounds(new Bounds(origin.getX() + 86, origin.getY() + 10, 0, 0)).setId(3).setRepeat());
 
-		parts.add(pick = new GuiButton(4, origin.getX() - 75, origin.getY() + 22, 150, 20, I18n.format("betterHud.menu.pick")));
+		if(position != null) {
+			parts.add(pick = new GuiButton(4, origin.getX() - 100, origin.getY() + 22, 200, 20, I18n.format("betterHud.menu.pick")));
+			callbacks.put(pick, this);
+		}
 
 		callbacks.put(xBox, this);
 		callbacks.put(yBox, this);
@@ -53,7 +64,6 @@ public class SettingAbsolutePosition extends Setting<Point> {
 		callbacks.put(xDown, this);
 		callbacks.put(yUp, this);
 		callbacks.put(yDown, this);
-		callbacks.put(pick, this);
 
 		return origin.add(0, 42 + SPACER);
 	}
@@ -72,32 +82,14 @@ public class SettingAbsolutePosition extends Setting<Point> {
 			case 1: xBox.setText(String.valueOf(--x)); break;
 			case 2: yBox.setText(String.valueOf(++y)); break;
 			case 3: yBox.setText(String.valueOf(--y)); break;
-			case 4:
-				if(isPicking) {
-					x = cancelX;
-					y = cancelY;
-					finishPicking();
-				} else {
-					cancelX = x;
-					cancelY = y;
-					isPicking = true;
-					button.displayString = I18n.format("betterHud.menu.picking");
-				}
-				updateText();
-				break;
+			case 4: MC.displayGuiScreen(new GuiOffsetChooser(gui, position)); break;
 		}
-	}
-
-	/** Sets the picked value based on {@code mousePosition}
-	 * @param element The element being positioned */
-	public void pickMouse(Point mousePosition, HudElement element) {
-		set(mousePosition);
 	}
 
 	/** Forgets the original position and keeps the current picked position */
 	public void finishPicking() {
 		isPicking = false;
-		pick.displayString = I18n.format("betterHud.menu.pick");
+		//pick.displayString = I18n.format("betterHud.menu.pick");
 	}
 
 	@Override
@@ -130,7 +122,7 @@ public class SettingAbsolutePosition extends Setting<Point> {
 		xBox.setEnabled(enabled);
 		yBox.setEnabled(enabled);
 
-		pick.enabled = enabled;
+		if(pick != null) pick.enabled = enabled;
 
 		if(enabled) {
 			try {
@@ -151,9 +143,5 @@ public class SettingAbsolutePosition extends Setting<Point> {
 		} else {
 			xUp.enabled = xDown.enabled = yUp.enabled = yDown.enabled = false;
 		}
-	}
-
-	public Point getAbsolute() {
-		return get();
 	}
 }

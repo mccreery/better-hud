@@ -6,12 +6,8 @@ import static tk.nukeduck.hud.BetterHud.SPACER;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.Map.Entry;
-
-import org.lwjgl.input.Keyboard;
 
 import net.minecraft.client.gui.Gui;
-import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.Direction.Options;
@@ -98,25 +94,10 @@ public class SettingPosition extends SettingStub<Object> {
 			}
 		});
 
-		add(offset = new SettingAbsolutePosition("origin") {
+		add(offset = new SettingAbsolutePosition("origin", this) {
 			@Override
 			public boolean enabled() {
 				return mode.getIndex() == 1 && super.enabled();
-			}
-
-			@Override
-			public void pickMouse(Point mousePosition, HudElement element) {
-				Bounds sourceBounds = element.getLastBounds().align(mousePosition, Direction.CENTER);
-
-				if(!Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
-					sourceBounds = snap(element, sourceBounds);
-				}
-				offset.set(sourceBounds.getAnchor(getAlignment()).sub(MANAGER.getScreen().getAnchor(getAnchor())));
-			}
-
-			@Override
-			public Point getAbsolute() {
-				return MANAGER.getScreen().getAnchor(anchor.get()).add(offset.get());
 			}
 		});
 	}
@@ -134,9 +115,18 @@ public class SettingPosition extends SettingStub<Object> {
 		return direction.get();
 	}
 
+	public Bounds getParent() {
+		if(!isCustom()) throw new IllegalStateException("Position is not custom");
+		return parent.get() != null ? parent.get().getLastBounds() : MANAGER.getScreen();
+	}
+
 	public Point getOffset() {
 		if(!isCustom()) throw new IllegalStateException("Position is not custom");
 		return offset.get();
+	}
+
+	public void setOffset(Point offset) {
+		this.offset.set(offset);
 	}
 
 	public Direction getAnchor() {
@@ -166,8 +156,7 @@ public class SettingPosition extends SettingStub<Object> {
 	/** Moves the given bounds to the correct location and returns them */
 	public Bounds applyTo(Bounds bounds) {
 		if(isCustom()) {
-			Bounds parent = this.parent.get() != null ? this.parent.get().getLastBounds() : MANAGER.getScreen();
-			return bounds.align(parent.getAnchor(anchor.get()).add(offset.get()), alignment.get());
+			return bounds.align(getParent().getAnchor(anchor.get()).add(offset.get()), alignment.get());
 		} else {
 			return MANAGER.position(direction.get(), bounds, edge, postSpacer);
 		}
@@ -209,93 +198,5 @@ public class SettingPosition extends SettingStub<Object> {
 		lockContent.setBounds(new Bounds(20, 10).align(origin.add(lockOffset), Direction.WEST));
 
 		return super.getGuiParts(parts, callbacks, origin);
-	}
-
-	private static final int SNAP_RADIUS = 10;
-
-	/** Aligns this bounds to the closest edge in {@code bounds}
-	 * if any is less than {@link #SNAP_RADIUS} away */
-	private static Bounds snap(HudElement element, Bounds source) {
-		int snapX = source.getX(), snapY = source.getY(),
-			snapRadiusX = SNAP_RADIUS, snapRadiusY = SNAP_RADIUS;
-
-		for(Entry<HudElement, Bounds> entry : HudElement.getActiveBounds().entrySet()) {
-			if(entry.getKey() == element) continue;
-
-			Bounds bounds = entry.getValue();
-			Bounds outer = bounds.grow(SPACER);
-			int testRadius;
-
-			// Snap outside Y
-			if(linesOverlap(source.getLeft(), source.getRight(), outer.getLeft(), outer.getRight())) {
-				testRadius = Math.abs(source.getBottom() - bounds.getY());
-
-				if(testRadius < snapRadiusY) {
-					snapY = outer.getY() - source.getHeight();
-					snapRadiusY = testRadius;
-				} else {
-					testRadius = Math.abs(source.getY() - bounds.getBottom());
-
-					if(testRadius < snapRadiusY) {
-						snapY = outer.getBottom();
-						snapRadiusY = testRadius;
-					}
-				}
-			}
-
-			// Snap inside Y
-			testRadius = Math.abs(source.getBottom() - bounds.getBottom());
-
-			if(testRadius < snapRadiusY) {
-				snapY = bounds.getBottom() - source.getHeight();
-				snapRadiusY = testRadius;
-			} else {
-				testRadius = Math.abs(source.getY() - bounds.getY());
-
-				if(testRadius < snapRadiusY) {
-					snapY = bounds.getY();
-					snapRadiusY = testRadius;
-				}
-			}
-
-			// Snap outside X
-			if(linesOverlap(source.getTop(), source.getBottom(), outer.getTop(), outer.getBottom())) {
-				testRadius = Math.abs(source.getRight() - outer.getX());
-
-				if(testRadius < snapRadiusX) {
-					snapX = outer.getX() - source.getWidth();
-					snapRadiusX = testRadius;
-				} else {
-					testRadius = Math.abs(source.getX() - outer.getRight());
-
-					if(testRadius < snapRadiusX) {
-						snapX = outer.getRight();
-						snapRadiusX = testRadius;
-					}
-				}
-			}
-
-			// Snap inside X
-			testRadius = Math.abs(source.getRight() - bounds.getRight());
-
-			if(testRadius < snapRadiusX) {
-				snapX = bounds.getRight() - source.getWidth();
-				snapRadiusX = testRadius;
-			} else {
-				testRadius = Math.abs(source.getX() - bounds.getX());
-
-				if(testRadius < snapRadiusX) {
-					snapX = bounds.getX();
-					snapRadiusX = testRadius;
-				}
-			}
-		}
-
-		return snapX != source.getX() || snapY != source.getY() ?
-			source.withPosition(snapX, snapY) : source;
-	}
-
-	private static boolean linesOverlap(int minX, int maxX, int minY, int maxY) {
-		return minX < maxY && minY < maxX;
 	}
 }

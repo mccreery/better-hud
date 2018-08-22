@@ -7,10 +7,8 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map.Entry;
 
 import org.lwjgl.input.Keyboard;
-import org.lwjgl.input.Mouse;
 import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.gui.Gui;
@@ -28,7 +26,6 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.element.settings.Setting;
-import tk.nukeduck.hud.element.settings.SettingAbsolutePosition;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Point;
@@ -41,7 +38,6 @@ public class GuiElementSettings extends GuiScreen {
 	public HudElement element;
 	private ArrayList<GuiTextField> textboxList = new ArrayList<GuiTextField>();
 	public HashMap<Gui, Setting<?>> callbacks = new HashMap<Gui, Setting<?>>();
-	private SettingAbsolutePosition picker = null;
 
 	private Bounds viewport;
 
@@ -100,17 +96,9 @@ public class GuiElementSettings extends GuiScreen {
 				callbacks.get(button).actionPerformed(this, button);
 			}
 
-			picker = null;
-
 			// Notify the rest of the elements that a button has been pressed
 			for(Setting<?> setting : callbacks.values()) {
 				setting.updateGuiParts(callbacks.values());
-
-				if(setting instanceof SettingAbsolutePosition) {
-					if(((SettingAbsolutePosition)setting).isPicking()) {
-						picker = (SettingAbsolutePosition)setting;
-					}
-				}
 			}
 		}
 	}
@@ -120,15 +108,6 @@ public class GuiElementSettings extends GuiScreen {
 	public void updateScreen() {
 		for(GuiTextField field : this.textboxList) {
 			field.updateCursorCounter();
-		}
-
-		if(picker != null && (Mouse.getEventDX() != 0 || Mouse.getEventDY() != 0)) {
-			Point mousePosition = new Point(
-				Mouse.getEventX() * width / MC.displayWidth,
-				height - Mouse.getEventY() * height / MC.displayHeight - 1
-			);
-
-			picker.pickMouse(mousePosition, element);
 		}
 
 		if(selectedButton instanceof GuiActionButton && ((GuiActionButton)selectedButton).getRepeat()) {
@@ -171,20 +150,12 @@ public class GuiElementSettings extends GuiScreen {
 
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
-		boolean wasPicking = picker != null;
-
 		if(mouseY >= viewport.getTop() && mouseY < viewport.getBottom()) {
 			super.mouseClicked(mouseX, mouseY + getMouseOffset(), button);
 
 			for(GuiTextField field : this.textboxList) {
 				field.mouseClicked(mouseX, mouseY + getMouseOffset(), button);
 			}
-		}
-
-		if(wasPicking && picker != null) {
-			picker.finishPicking();
-			picker = null;
-			return;
 		}
 
 		// Done button isn't in buttonList, have to handle it manually
@@ -241,13 +212,6 @@ public class GuiElementSettings extends GuiScreen {
 		GL11.glPopAttrib();
 		GlStateManager.popMatrix();
 
-		if(picker != null) {
-			String key = Keyboard.getKeyName(Keyboard.KEY_LCONTROL);
-			drawString(fontRenderer, I18n.format("betterHud.menu.unsnap", key), SPACER, this.height - fontRenderer.FONT_HEIGHT - SPACER, Colors.WHITE);
-
-			drawBounds();
-		}
-
 		scrollbar.drawScrollbar(mouseX, mouseY);
 		drawResolution(10, 10, 100);
 	}
@@ -255,33 +219,6 @@ public class GuiElementSettings extends GuiScreen {
 	/** Add to {@code mouseY} to get the effective {@code mouseY} taking into account scroll */
 	@Deprecated private int getMouseOffset() {
 		return scrollbar.getScroll() - viewport.getTop();
-	}
-
-	/** Draws bounds for all elements on the screen */
-	private void drawBounds() {
-		for(Entry<HudElement, Bounds> entry : HudElement.getActiveBounds().entrySet()) {
-			if(entry.getKey() == element) continue;
-			drawBounds(entry.getValue(), Colors.setAlpha(Colors.RED, 63));
-		}
-
-		Bounds bounds = element.getLastBounds();
-		if(bounds.isEmpty()) {
-			bounds = bounds.withPosition(picker.getAbsolute());
-		}
-		drawBounds(bounds, Colors.RED);
-	}
-
-	private void drawBounds(Bounds bounds, int color) {
-		if(!bounds.isEmpty()) {
-			drawHorizontalLine(bounds.getLeft(), bounds.getRight(), bounds.getTop(), color);
-			drawHorizontalLine(bounds.getLeft(), bounds.getRight(), bounds.getBottom(), color);
-	
-			drawVerticalLine(bounds.getLeft(), bounds.getTop(), bounds.getBottom(), color);
-			drawVerticalLine(bounds.getRight(), bounds.getTop(), bounds.getBottom(), color);
-		} else {
-			drawHorizontalLine(bounds.getX() - SPACER, bounds.getX() + SPACER, bounds.getY(), color);
-			drawVerticalLine(bounds.getX(), bounds.getY() - SPACER - 1, bounds.getY() + SPACER + 1, color);
-		}
 	}
 
 	/** Draws a diagram of the size of the HUD */
