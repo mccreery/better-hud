@@ -61,13 +61,13 @@ public class SettingDirection extends SettingAlignable<Direction> {
 	public void getGuiParts(java.util.List<Gui> parts, Map<Gui,Setting<?>> callbacks, Bounds bounds) {
 		this.bounds = bounds;
 
-		Bounds radios = new Bounds(60, 60).anchoredTo(bounds, horizontal ? Direction.WEST : Direction.SOUTH);
+		Bounds radios = new Bounds(60, 60).anchor(bounds, horizontal ? Direction.WEST : Direction.SOUTH);
 		Bounds radio = new Bounds(20, 20);
 
 		for(Direction direction : Direction.values()) {
 			GuiToggleButton button = (GuiToggleButton)new GuiToggleButton("")
 				.setStaticText().setId(direction.ordinal())
-				.setBounds(radio.anchoredTo(radios, direction));
+				.setBounds(radio.anchor(radios, direction));
 
 			parts.add(button);
 			callbacks.put(button, this);

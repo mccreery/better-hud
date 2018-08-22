@@ -44,7 +44,7 @@ public class GameClock extends Clock {
 
 	@Override
 	protected Bounds getMargin() {
-		return new Bounds(0, 0, 21, 0).alignedAround(Point.ZERO, position.getContentAlignment());
+		return new Bounds(0, 0, 21, 0).align(Point.ZERO, position.getContentAlignment());
 	}
 
 	@Override
@@ -67,7 +67,7 @@ public class GameClock extends Clock {
 
 		if(!MC.world.isDaytime()) {
 			Direction bedAnchor = Options.WEST_EAST.apply(position.getContentAlignment());
-			Bounds bed = new Bounds(16, 16).anchoredTo(bounds, bedAnchor);
+			Bounds bed = new Bounds(16, 16).anchor(bounds, bedAnchor);
 
 			GlUtil.renderSingleItem(BED, bed.getPosition());
 		}

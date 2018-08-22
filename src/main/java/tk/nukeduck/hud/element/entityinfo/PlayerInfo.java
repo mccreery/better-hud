@@ -75,9 +75,9 @@ public class PlayerInfo extends EntityInfo {
 		if(size.getX() < 81) size = size.withX(81);
 
 		Bounds padding = Bounds.createPadding(SPACER, SPACER, SPACER, SPACER + bar.getSize().getY());
-		Bounds bounds = new Bounds(size).withPadding(padding);
+		Bounds bounds = new Bounds(size).grow(padding);
 		bounds = MANAGER.position(Direction.SOUTH, bounds);
-		Bounds contentBounds = bounds.withInset(padding);
+		Bounds contentBounds = bounds.grow(padding.scale(-1));
 
 		GlUtil.drawRect(bounds, Colors.TRANSLUCENT);
 		group.draw(contentBounds);

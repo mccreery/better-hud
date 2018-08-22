@@ -43,8 +43,8 @@ public class HealIndicator extends HudElement {
 			if(position.isCustom()) {
 				bounds = position.applyTo(bounds);
 			} else {
-				bounds = bounds.anchoredTo(HudElement.HEALTH.getLastBounds()
-					.withPadding(bounds.getWidth() + SPACER, 0, bounds.getWidth() + SPACER, 0),
+				bounds = bounds.anchor(HudElement.HEALTH.getLastBounds()
+					.grow(bounds.getWidth() + SPACER, 0, bounds.getWidth() + SPACER, 0),
 					HudElement.HEALTH.getIndicatorSide());
 			}
 

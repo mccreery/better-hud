@@ -55,7 +55,7 @@ public class Experience extends OverrideElement {
 
 		if(MC.player.experienceLevel > 0) {
 			String numberText = String.valueOf(MC.player.experienceLevel);
-			Point numberPosition = new Bounds(GlUtil.getStringSize(numberText)).anchoredTo(barBounds, Direction.NORTH).getPosition().sub(0, 6);
+			Point numberPosition = new Bounds(GlUtil.getStringSize(numberText)).anchor(barBounds, Direction.NORTH).getPosition().sub(0, 6);
 
 			GlUtil.drawBorderedString(numberText, numberPosition.getX(), numberPosition.getY(), Colors.fromRGB(128, 255, 32));
 		}

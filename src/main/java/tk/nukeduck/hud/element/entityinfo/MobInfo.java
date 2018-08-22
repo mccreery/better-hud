@@ -63,12 +63,12 @@ public class MobInfo extends EntityInfo {
 			size = size.add(0, barSize.getY());
 		}
 
-		Bounds bounds = MANAGER.position(Direction.SOUTH, new Bounds(size).withPadding(SPACER));
+		Bounds bounds = MANAGER.position(Direction.SOUTH, new Bounds(size).grow(SPACER));
 		GlUtil.drawRect(bounds, Colors.TRANSLUCENT);
-		bounds = bounds.withInset(SPACER);
+		bounds = bounds.grow(-SPACER);
 
 		GlUtil.drawString(text, bounds.getPosition(), Direction.NORTH_WEST, Colors.WHITE);
-		Bounds barBounds = new Bounds(barSize).anchoredTo(bounds, Direction.SOUTH_WEST);
+		Bounds barBounds = new Bounds(barSize).anchor(bounds, Direction.SOUTH_WEST);
 
 		MC.getTextureManager().bindTexture(ICONS);
 		bar.render(barBounds, Direction.NORTH_WEST);

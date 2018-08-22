@@ -52,6 +52,6 @@ public class HelmetOverlay extends OverrideElement {
 		} else {
 			item.renderHelmetOverlay(stack, MC.player, MANAGER.getScaledResolution(), getPartialTicks(event));
 		}
-		return null;
+		return MANAGER.getScreen();
 	}
 }

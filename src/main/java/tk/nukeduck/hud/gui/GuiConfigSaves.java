@@ -92,13 +92,13 @@ public class GuiConfigSaves extends GuiScreen {
 
 		buttonList.add(new GuiActionButton(I18n.format("gui.done"))
 			.setCallback(() -> MC.displayGuiScreen(previous))
-			.setBounds(new Bounds(200, 20).alignedAround(origin, Direction.NORTH)));
+			.setBounds(new Bounds(200, 20).align(origin, Direction.NORTH)));
 
 		Bounds textField = new Bounds(150, 20);
 		Bounds smallButton = new Bounds(50, 20);
 
-		Bounds fieldLine = new Bounds(textField.getWidth() + (SPACER + smallButton.getWidth()) * 2, 20).alignedAround(origin.add(0, 20 + SPACER), Direction.NORTH);
-		textField = textField.anchoredTo(fieldLine, Direction.NORTH_WEST);
+		Bounds fieldLine = new Bounds(textField.getWidth() + (SPACER + smallButton.getWidth()) * 2, 20).align(origin.add(0, 20 + SPACER), Direction.NORTH);
+		textField = textField.anchor(fieldLine, Direction.NORTH_WEST);
 
 		name = new GuiTextField(0, fontRenderer, textField.getX(), textField.getY(), textField.getWidth(), textField.getHeight());
 		name.setFocused(true);
@@ -110,7 +110,7 @@ public class GuiConfigSaves extends GuiScreen {
 		smallButton = smallButton.withPosition(smallButton.getAnchor(Direction.NORTH_EAST).add(SPACER, 0));
 		buttonList.add(new GuiActionButton("Save").setCallback(this::save).setBounds(smallButton));
 
-		viewport = new Bounds(400, 0).alignedAround(fieldLine.getAnchor(Direction.SOUTH).add(0, SPACER), Direction.NORTH).withBottom(height - 20);
+		viewport = new Bounds(400, 0).align(fieldLine.getAnchor(Direction.SOUTH).add(0, SPACER), Direction.NORTH).withBottom(height - 20);
 		scrollbar = new GuiScrollbar(viewport, 0);
 
 		reloadSaves();
@@ -184,7 +184,7 @@ public class GuiConfigSaves extends GuiScreen {
 			return name.substring(0, name.length() - 4);
 		}).collect(Collectors.toList())).setAlignment(Direction.NORTH).setGutter(SPACER);
 
-		Bounds scissorBounds = viewport.withY(height - viewport.getBottom()).scaled(MANAGER.getScaledResolution().getScaleFactor());
+		Bounds scissorBounds = viewport.withY(height - viewport.getBottom()).scale(MANAGER.getScaledResolution().getScaleFactor());
 
 		GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_SCISSOR_BIT);
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
@@ -196,7 +196,7 @@ public class GuiConfigSaves extends GuiScreen {
 			String fileName = saves.get(i).getFileName().toString();
 
 			if(fileName.length() == name.getText().length() + 4 && fileName.regionMatches(0, name.getText(), 0, fileName.length() - 4)) {
-				Bounds bounds = new Bounds(300, MC.fontRenderer.FONT_HEIGHT).alignedAround(origin.add(0, (MC.fontRenderer.FONT_HEIGHT + SPACER) * i), Direction.NORTH).withPadding(2);
+				Bounds bounds = new Bounds(300, MC.fontRenderer.FONT_HEIGHT).align(origin.add(0, (MC.fontRenderer.FONT_HEIGHT + SPACER) * i), Direction.NORTH).grow(2);
 
 				GlUtil.drawRect(bounds, 0x30000000);
 				GlUtil.drawBorderRect(bounds, 0xA0909090);

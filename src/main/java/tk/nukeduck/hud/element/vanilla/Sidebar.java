@@ -75,11 +75,11 @@ public class Sidebar extends OverrideElement {
 
 		Bounds padding = Bounds.createPadding(0, MC.fontRenderer.FONT_HEIGHT + 1, 0, 0);
 		Bounds margin = Bounds.createPadding(1);
-		Bounds bounds = new Bounds(size).withPadding(padding).withPadding(margin);
+		Bounds bounds = new Bounds(size).grow(padding).grow(margin);
 
-		bounds = bounds.anchoredTo(MANAGER.getScreen(), Direction.EAST);
-		Bounds paddingBounds = bounds.withInset(margin);
-		Bounds contentBounds = paddingBounds.withInset(padding);
+		bounds = bounds.anchor(MANAGER.getScreen(), Direction.EAST);
+		Bounds paddingBounds = bounds.grow(margin.scale(-1));
+		Bounds contentBounds = paddingBounds.grow(padding.scale(-1));
 
 		// Translucent background
 		Bounds background = new Bounds(bounds).withBottom(contentBounds.getTop() - 1);

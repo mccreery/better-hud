@@ -9,9 +9,9 @@ import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.Direction.Options;
 import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.StringGroup;
-import tk.nukeduck.hud.util.Direction.Options;
 
 public abstract class TextElement extends HudElement {
 	protected SettingPosition position;
@@ -75,14 +75,14 @@ public abstract class TextElement extends HudElement {
 		Bounds bounds = moveBounds(new Bounds(group.getSize().add(padding.getSize()).add(margin.getSize())));
 
 		drawBorder(bounds, padding, margin);
-		group.draw(bounds.withInset(margin).withInset(padding));
+		group.draw(bounds.grow(margin.grow(padding).scale(-1)));
 		drawExtras(bounds);
 
 		return bounds;
 	}
 
 	protected void drawBorder(Bounds bounds, Bounds padding, Bounds margin) {
-		if(border) GlUtil.drawRect(bounds.withInset(margin), Colors.TRANSLUCENT);
+		if(border) GlUtil.drawRect(bounds.grow(margin.scale(-1)), Colors.TRANSLUCENT);
 	}
 
 	protected abstract List<String> getText();

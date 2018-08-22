@@ -1,5 +1,6 @@
 package tk.nukeduck.hud.element.particles;
 
+import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
 
 import java.util.ArrayList;
@@ -63,7 +64,7 @@ public abstract class ParticleOverlay extends HudElement implements Tickable {
 		}
 
 		GlUtil.color(Colors.WHITE);
-		return null;
+		return MANAGER.getScreen();
 	}
 
 	@Override

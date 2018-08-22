@@ -95,23 +95,23 @@ public class ArmorBars extends EquipmentDisplay {
 		Bounds bounds = position.applyTo(new Bounds(size.getX() + 20, 70));
 		Bounds padding = alignment == Direction.EAST ? Bounds.createPadding(0, 0, 20, 0) : Bounds.createPadding(20, 0, 0, 0);
 
-		Bounds row = new Bounds(size).withPadding(padding);
-		row = row.anchoredTo(bounds, Direction.NORTH);
+		Bounds row = new Bounds(size).grow(padding);
+		row = row.anchor(bounds, Direction.NORTH);
 
 		for(int i = 3; i >= 0; i--, row = row.withY(row.getY() + 18)) {
 			ItemStack stack = MC.player.inventory.armorItemInSlot(i);
-			Bounds item = new Bounds(16, 16).anchoredTo(row, alignment);
+			Bounds item = new Bounds(16, 16).anchor(row, alignment);
 
 			if(stack == null || stack.isEmpty()) {
 				drawEmptySlot(item.getPosition(), i);
 			} else {
 				GlUtil.renderSingleItem(stack, item.getPosition());
-				Bounds content = row.withInset(padding);
+				Bounds content = row.grow(padding.scale(-1));
 
 				if(hasText() && text[i] != null) {
 					MC.mcProfiler.startSection("text");
 
-					Bounds textBounds = new Bounds(GlUtil.getStringSize(text[i])).anchoredTo(content, alignment);
+					Bounds textBounds = new Bounds(GlUtil.getStringSize(text[i])).anchor(content, alignment);
 					if(largeBars()) {
 						textBounds = textBounds.withY(textBounds.getY() - 1);
 					}
@@ -124,10 +124,10 @@ public class ArmorBars extends EquipmentDisplay {
 					MC.mcProfiler.startSection("bars");
 
 					if(largeBars()) {
-						Bounds bar = new Bounds(content.getWidth(), 2).anchoredTo(content, Direction.SOUTH);
+						Bounds bar = new Bounds(content.getWidth(), 2).anchor(content, Direction.SOUTH);
 						GlUtil.drawDamageBar(bar, stack, false);
 					} else {
-						Bounds bar = new Bounds(2, item.getHeight()).anchoredTo(item.withPadding(2, 0, 2, 0), alignment.mirrorColumn());
+						Bounds bar = new Bounds(2, item.getHeight()).anchor(item.grow(2, 0, 2, 0), alignment.mirrorColumn());
 						GlUtil.drawDamageBar(bar, stack, true);
 					}
 

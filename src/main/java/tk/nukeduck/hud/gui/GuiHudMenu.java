@@ -61,7 +61,7 @@ public class GuiHudMenu extends GuiScreen {
 		paginator.setPageSize(Math.max(1, (int) Math.floor((height / 8 * 7 - 110) / 24)));
 
 		addDefaultButtons();
-		Bounds buttonBounds = new Bounds(170, 20).alignedAround(new Point(width / 2, height / 16 + 78), Direction.NORTH);
+		Bounds buttonBounds = new Bounds(170, 20).align(new Point(width / 2, height / 16 + 78), Direction.NORTH);
 
 		for(HudElement element : paginator.getPage()) {
 			ButtonRow row = getRow(element);
@@ -75,26 +75,26 @@ public class GuiHudMenu extends GuiScreen {
 	}
 
 	private void addDefaultButtons() {
-		Bounds buttons = new Bounds(300, 42).alignedAround(new Point(width / 2, height / 16 + 20), Direction.NORTH);
+		Bounds buttons = new Bounds(300, 42).align(new Point(width / 2, height / 16 + 20), Direction.NORTH);
 		Bounds halfWidth = new Bounds((buttons.getWidth() - 2) / 2, 20);
 		Bounds thirdWidth = new Bounds((buttons.getWidth() - 4) / 3, 20);
 
-		moveButton(returnToGame,   halfWidth.anchoredTo(buttons, Direction.NORTH_WEST));
+		moveButton(returnToGame,   halfWidth.anchor(buttons, Direction.NORTH_WEST));
 
-		Bounds global = halfWidth.anchoredTo(buttons, Direction.NORTH_EAST);
-		moveButton(globalToggle,   halfWidth.withWidth(halfWidth.getWidth() - 20).anchoredTo(global, Direction.NORTH_WEST));
-		moveButton(globalSettings, halfWidth.withWidth(20).anchoredTo(global, Direction.NORTH_EAST));
+		Bounds global = halfWidth.anchor(buttons, Direction.NORTH_EAST);
+		moveButton(globalToggle,   halfWidth.withWidth(halfWidth.getWidth() - 20).anchor(global, Direction.NORTH_WEST));
+		moveButton(globalSettings, halfWidth.withWidth(20).anchor(global, Direction.NORTH_EAST));
 
-		moveButton(enableAll,     thirdWidth.anchoredTo(buttons, Direction.SOUTH_WEST));
-		moveButton(disableAll,    thirdWidth.anchoredTo(buttons,      Direction.SOUTH));
-		moveButton(resetDefaults, thirdWidth.anchoredTo(buttons, Direction.SOUTH_EAST));
+		moveButton(enableAll,     thirdWidth.anchor(buttons, Direction.SOUTH_WEST));
+		moveButton(disableAll,    thirdWidth.anchor(buttons,      Direction.SOUTH));
+		moveButton(resetDefaults, thirdWidth.anchor(buttons, Direction.SOUTH_EAST));
 
 		lastPage.enabled = paginator.hasPrevious();
 		nextPage.enabled = paginator.hasNext();
 
-		buttons = buttons.alignedAround(new Point(width / 2, height - 20 - height / 16), Direction.NORTH);
-		moveButton(lastPage, thirdWidth.anchoredTo(buttons, Direction.NORTH_WEST));
-		moveButton(nextPage, thirdWidth.anchoredTo(buttons, Direction.NORTH_EAST));
+		buttons = buttons.align(new Point(width / 2, height - 20 - height / 16), Direction.NORTH);
+		moveButton(lastPage, thirdWidth.anchor(buttons, Direction.NORTH_WEST));
+		moveButton(nextPage, thirdWidth.anchor(buttons, Direction.NORTH_EAST));
 
 		buttonList.clear();
 

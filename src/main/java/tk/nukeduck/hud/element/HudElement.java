@@ -3,7 +3,10 @@ package tk.nukeduck.hud.element;
 import static tk.nukeduck.hud.BetterHud.MC;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Map;
+import java.util.TreeMap;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -196,15 +199,25 @@ public abstract class HudElement {
 	/** Calls {@link #render(Event)} if the element
 	 * should be rendered and caches the bounds so they are available from {@link #getLastBounds()} */
 	public void tryRender(Event event) {
+		Bounds bounds = null;
+
 		if(isEnabled() && shouldRender(event)) {
 			MC.mcProfiler.startSection(name);
 
-			Bounds bounds = render(event);
-			lastBounds = Bounds.isEmpty(bounds) ? Bounds.EMPTY : bounds;
+			bounds = render(event);
+			postRender(event);
 
 			MC.mcProfiler.endSection();
 		}
+
+		if(bounds != null && !bounds.isEmpty()) {
+			activeBounds.put(this, bounds);
+		} else {
+			activeBounds.remove(this);
+		}
 	}
+
+	protected void postRender(Event event) {}
 
 	/** Renders all elements for the current render event
 	 * @param event The current render event */
@@ -214,13 +227,16 @@ public abstract class HudElement {
 		}
 	}
 
-	/** The previous bounds within which the element was rendered */
-	protected Bounds lastBounds = Bounds.EMPTY;
+	private static final Map<HudElement, Bounds> activeBounds = new TreeMap<>(SortType.ALPHABETICAL);
 
 	/** @return The last or appropriate bounds for this element.<br>
 	 * {@link Bounds#EMPTY} if the element has no appropriate bounds */
 	public Bounds getLastBounds() {
-		return lastBounds;
+		return activeBounds.getOrDefault(this, Bounds.EMPTY);
+	}
+
+	public static Map<HudElement, Bounds> getActiveBounds() {
+		return Collections.unmodifiableMap(activeBounds);
 	}
 
 	/** Calls {@link #init(FMLInitializationEvent)} on all elements

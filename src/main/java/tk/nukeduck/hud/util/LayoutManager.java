@@ -47,8 +47,8 @@ public class LayoutManager {
 		}
 		offset -= 9;
 
-		Bounds wideBounds = bounds.withWidth(182).anchoredTo(screen.withInset(offset), Direction.SOUTH);
-		bounds = bounds.anchoredTo(wideBounds, alignment);
+		Bounds wideBounds = bounds.withWidth(182).anchor(screen.grow(-offset), Direction.SOUTH);
+		bounds = bounds.anchor(wideBounds, alignment);
 
 		int newHeight = offset + bounds.getHeight() + postSpacer + 9;
 
@@ -69,7 +69,7 @@ public class LayoutManager {
 		}
 		int offset = corners.getOrDefault(corner, edge ? 0 : SPACER);
 
-		bounds = bounds.anchoredTo(screen.withInset(SPACER, offset, SPACER, offset), corner);
+		bounds = bounds.anchor(screen.grow(-SPACER, -offset, -SPACER, -offset), corner);
 		int newOffset = offset + bounds.getHeight() + postSpacer;
 		corners.put(corner, newOffset);
 

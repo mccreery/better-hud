@@ -128,7 +128,7 @@ public class BlockViewer extends TextElement {
 	@Override
 	protected void drawExtras(Bounds bounds) {
 		if(stack != null && showBlock.get()) {
-			Bounds stackBounds = new Bounds(16, 16).anchoredTo(bounds.withInset(5, 2, 5, 2), position.getContentAlignment());
+			Bounds stackBounds = new Bounds(16, 16).anchor(bounds.grow(-5, -2, -5, -2), position.getContentAlignment());
 
 			RenderHelper.enableGUIStandardItemLighting();
 			MC.getRenderItem().renderItemAndEffectIntoGUI(stack, stackBounds.getX(), stackBounds.getY());

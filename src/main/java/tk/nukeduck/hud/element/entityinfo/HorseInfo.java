@@ -1,5 +1,7 @@
 package tk.nukeduck.hud.element.entityinfo;
 
+import static tk.nukeduck.hud.BetterHud.SPACER;
+
 import java.util.ArrayList;
 
 import net.minecraft.entity.EntityLivingBase;
@@ -50,7 +52,7 @@ public class HorseInfo extends EntityInfo {
 		bounds = BetterHud.MANAGER.position(Direction.SOUTH, bounds);
 
 		GlUtil.drawRect(bounds, Colors.TRANSLUCENT);
-		group.draw(bounds.withInset(Bounds.PADDING));
+		group.draw(bounds.grow(-SPACER));
 	}
 
 	/** Calculates horse jump height using a derived polynomial

@@ -61,26 +61,27 @@ public class Compass extends HudElement {
 
 	private void drawBackground(Bounds bounds) {
 		GlUtil.drawRect(bounds, Colors.fromARGB(170, 0, 0, 0));
-		GlUtil.drawRect(bounds.withInset(50, 0, 50, 0), Colors.fromARGB(85, 85, 85, 85));
+		GlUtil.drawRect(bounds.grow(-50, 0, -50, 0), Colors.fromARGB(85, 85, 85, 85));
 
 		Direction alignment = position.getContentAlignment();
 
-		Bounds smallBounds = bounds.withPadding(2);
+		Bounds smallBounds = bounds.grow(2);
 		Bounds largeNotch = new Bounds(1, 7);
 
 		Bounds smallNotch = new Bounds(1, 6);
-		Bounds largeBounds = bounds.withPadding(3);
+		Bounds largeBounds = bounds.grow(3);
 
 		if(showNotches.get()) {
 			for(int loc : notchX) {
-				GlUtil.drawRect(smallNotch.anchoredTo(smallBounds, alignment).addPosition(loc, 0), Colors.WHITE);
-				GlUtil.drawRect(smallNotch.anchoredTo(smallBounds, alignment).subPosition(loc, 0), Colors.WHITE);
+				Bounds notchTemp = smallNotch.anchor(smallBounds, alignment);
+				GlUtil.drawRect(notchTemp.translate(loc, 0), Colors.WHITE);
+				GlUtil.drawRect(notchTemp.translate(-loc, 0), Colors.WHITE);
 			}
 		}
 
-		GlUtil.drawRect(largeNotch.anchoredTo(largeBounds, alignment.withColumn(0)), Colors.RED);
-		GlUtil.drawRect(largeNotch.anchoredTo(largeBounds, alignment.withColumn(1)), Colors.RED);
-		GlUtil.drawRect(largeNotch.anchoredTo(largeBounds, alignment.withColumn(2)), Colors.RED);
+		GlUtil.drawRect(largeNotch.anchor(largeBounds, alignment.withColumn(0)), Colors.RED);
+		GlUtil.drawRect(largeNotch.anchor(largeBounds, alignment.withColumn(1)), Colors.RED);
+		GlUtil.drawRect(largeNotch.anchor(largeBounds, alignment.withColumn(2)), Colors.RED);
 	}
 
 	private void drawDirections(Bounds bounds) {
@@ -90,7 +91,7 @@ public class Compass extends HudElement {
 		float radius = bounds.getWidth() / 2 + SPACER;
 		boolean bottom = position.getContentAlignment() == Direction.SOUTH;
 
-		Point origin = bounds.withInset(2).getAnchor(position.getContentAlignment());
+		Point origin = bounds.grow(-2).getAnchor(position.getContentAlignment());
 
 		for(int i = 0; i < 4; i++, angle += Math.PI / 2) {
 			double cos = Math.cos(angle);

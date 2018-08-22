@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map.Entry;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.input.Mouse;
@@ -258,28 +259,29 @@ public class GuiElementSettings extends GuiScreen {
 
 	/** Draws bounds for all elements on the screen */
 	private void drawBounds() {
-		for(HudElement element : HudElement.ELEMENTS) {
-			Bounds bounds = element.getLastBounds();
-
-			if(!bounds.isEmpty()) {
-				drawBounds(bounds, Colors.setAlpha(Colors.RED, element == this.element ? 255 : 63));
-			} else if(element == this.element && picker != null) {
-				drawCrosshair(picker.getAbsolute(), Colors.RED);
-			}
+		for(Entry<HudElement, Bounds> entry : HudElement.getActiveBounds().entrySet()) {
+			if(entry.getKey() == element) continue;
+			drawBounds(entry.getValue(), Colors.setAlpha(Colors.RED, 63));
 		}
+
+		Bounds bounds = element.getLastBounds();
+		if(bounds.isEmpty()) {
+			bounds = bounds.withPosition(picker.getAbsolute());
+		}
+		drawBounds(bounds, Colors.RED);
 	}
 
 	private void drawBounds(Bounds bounds, int color) {
-		drawHorizontalLine(bounds.getLeft(), bounds.getRight(), bounds.getTop(), color);
-		drawHorizontalLine(bounds.getLeft(), bounds.getRight(), bounds.getBottom(), color);
-
-		drawVerticalLine(bounds.getLeft(), bounds.getTop(), bounds.getBottom(), color);
-		drawVerticalLine(bounds.getRight(), bounds.getTop(), bounds.getBottom(), color);
-	}
-
-	private void drawCrosshair(Point center, int color) {
-		drawHorizontalLine(center.getX() - 10, center.getX() + 10, center.getY(), color);
-		drawVerticalLine(center.getX(), center.getY() - 10, center.getY() + 10, color);
+		if(!bounds.isEmpty()) {
+			drawHorizontalLine(bounds.getLeft(), bounds.getRight(), bounds.getTop(), color);
+			drawHorizontalLine(bounds.getLeft(), bounds.getRight(), bounds.getBottom(), color);
+	
+			drawVerticalLine(bounds.getLeft(), bounds.getTop(), bounds.getBottom(), color);
+			drawVerticalLine(bounds.getRight(), bounds.getTop(), bounds.getBottom(), color);
+		} else {
+			drawHorizontalLine(bounds.getX() - SPACER, bounds.getX() + SPACER, bounds.getY(), color);
+			drawVerticalLine(bounds.getX(), bounds.getY() - SPACER - 1, bounds.getY() + SPACER + 1, color);
+		}
 	}
 
 	/** Draws a diagram of the size of the HUD */

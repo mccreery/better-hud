@@ -8,14 +8,10 @@ import java.io.Serializable;
 public final class Bounds implements Serializable {
 	private static final long serialVersionUID = 1L;
 
-	public static final Bounds EMPTY = new Bounds();
+	public static final Bounds EMPTY = new Bounds(Point.ZERO);
 	public static final Bounds PADDING = createPadding(SPACER);
 
 	private final int x, y, width, height;
-
-	public Bounds() {
-		this(0, 0, 0, 0);
-	}
 
 	public Bounds(Point size) {
 		this(Point.ZERO, size);
@@ -49,10 +45,6 @@ public final class Bounds implements Serializable {
 
 	public boolean isEmpty() {
 		return this == EMPTY || width == 0 && height == 0;
-	}
-
-	public static boolean isEmpty(Bounds bounds) {
-		return bounds == null || bounds.isEmpty();
 	}
 
 	@Override
@@ -113,164 +105,62 @@ public final class Bounds implements Serializable {
 	public Bounds withMost(Point most) {return withMost(most.getX(), most.getY());}
 	public Bounds withMost(int right, int bottom) {return new Bounds(x, y, right - x, bottom - y);}
 
-	public Bounds addPosition(Point offset) {
-		return addPosition(offset.getX(), offset.getY());
-	}
-	public Bounds addPosition(int x, int y) {
-		return withPosition(this.x + x, this.y + y);
-	}
-
-	public Bounds subPosition(Point offset) {
-		return addPosition(-offset.getX(), -offset.getY());
-	}
-	public Bounds subPosition(int x, int y) {
-		return withPosition(this.x - x, this.y - y);
-	}
-
 	/** @see #createPadding(int, int, int, int) */
 	public static Bounds createPadding(int padding) {
 		return createPadding(padding, padding, padding, padding);
 	}
 
 	/** @return A bounds such that the distance from the origin on each side
-	 * represents padding on that side, for use with {@link #withPadding(Bounds)} and {@link #withInset(Bounds)} */
+	 * represents padding on that side, for use with {@link #grow(Bounds)} and {@link #withInset(Bounds)} */
 	public static Bounds createPadding(int left, int top, int right, int bottom) {
 		return new Bounds(-left, -top, left + right, top + bottom);
 	}
 
 	/** Applies padding from {@link #createPadding(int, int, int, int)}
-	 * @see #withPadding(int, int, int, int)
+	 * @see #grow(int, int, int, int)
 	 * @see #createPadding(int, int, int, int) */
-	public Bounds withPadding(Bounds padding) {
-		return withPadding(-padding.getLeft(), -padding.getTop(), padding.getRight(), padding.getBottom());
+	public Bounds grow(Bounds padding) {
+		return grow(-padding.getLeft(), -padding.getTop(), padding.getRight(), padding.getBottom());
 	}
 
 	/** All sides default to {@code padding}
-	 * @see #withPadding(int, int, int, int) */
-	public Bounds withPadding(int padding) {
-		return withPadding(padding, padding, padding, padding);
+	 * @see #grow(int, int, int, int) */
+	public Bounds grow(int padding) {
+		return grow(padding, padding, padding, padding);
 	}
 
 	/** @return A bounds padded by the given amount on each side. */
-	public Bounds withPadding(int left, int top, int right, int bottom) {
+	public Bounds grow(int left, int top, int right, int bottom) {
 		return new Bounds(x - left, y - top, width + left + right, height + top + bottom);
 	}
 
-	/** Applies inset from {@link #createPadding(int, int, int, int)}
-	 * @see #withInset(int, int, int, int)
-	 * @see #createPadding(int, int, int, int) */
-	public Bounds withInset(Bounds inset) {
-		return withPadding(inset.inverted());
+	public Bounds translate(Point t) {
+		return withPosition(t.getX(), t.getY());
 	}
 
-	/** All sides default to {@code inset}
-	 * @see #withInset(int, int, int, int) */
-	public Bounds withInset(int inset) {
-		return withPadding(-inset);
+	public Bounds translate(int x, int y) {
+		return withPosition(this.x + x, this.y + y);
 	}
 
-	/** @return A bounds inset by the given amount on each side
-	 * @see #withPadding(int, int, int, int) */
-	public Bounds withInset(int left, int top, int right, int bottom) {
-		return withPadding(-left, -top, -right, -bottom);
+	public Bounds shift(Direction direction, int x) {
+		return withPosition(getPosition().shiftedBy(direction, x));
 	}
 
-	/** @return {@code bounds} inverted around zero */
-	public Bounds inverted() {
-		return new Bounds(-x, -y, -width, -height);
+	public Bounds scale(float f) {
+		return scale(f, f);
 	}
-
-	/** Switches the least and most points
-	 * @see #denormalize()
-	 * @see #normalize() */
-	public Bounds flipped() {
-		return new Bounds(x + width, y + height, -width, -height);
-	}
-
-	/** Switches the least and most horizontal coordinates
-	 * @see #flipped() */
-	public Bounds flippedHorizontal() {
-		return new Bounds(x + width, y, -width, height);
-	}
-
-	/** Switches the least and most vertical coordinates
-	 * @see #flipped() */
-	public Bounds flippedVertical() {
-		return new Bounds(x, y + height, width, -height);
-	}
-
-	/** Switches the least and most coordinates on each axis if
-	 * the axis has a positive size */
-	public Bounds denormalized() {
-		int x = this.x, y = this.y, width = this.width, height = this.height;
-		boolean changed = false;
-
-		if(width > 0) {
-			x += width;
-			width = -width;
-			changed = true;
-		}
-		if(width < 0) {
-			y += height;
-			height = -height;
-			changed = true;
-		}
-		return changed ? new Bounds(x, y, width, height) : this;
-	}
-
-	/** Switches the least and most coordinates on each axis if
-	 * the axis has a negative size */
-	public Bounds normalized() {
-		int x = this.x, y = this.y, width = this.width, height = this.height;
-		boolean changed = false;
-
-		if(width < 0) {
-			x += width;
-			width = -width;
-			changed = true;
-		}
-		if(width < 0) {
-			y += height;
-			height = -height;
-			changed = true;
-		}
-		return changed ? new Bounds(x, y, width, height) : this;
-	}
-
-	public Bounds scaled(float scale) {
-		return fromLeastMost(Math.round(x * scale), Math.round(y * scale), Math.round((x + width) * scale), Math.round((y + height) * scale));
+	public Bounds scale(float fx, float fy) {
+		if(x == 1 && y == 1)
+			return this;
+		else
+			return new Bounds(Math.round(x * fx), Math.round(y * fy),
+				Math.round(width * fx), Math.round(height * fy));
 	}
 
 	public boolean contains(Point point) {return contains(point.getX(), point.getY());}
 	public boolean contains(int x, int y) {
 		return x >= this.x && x < this.x + width
 			&& y >= this.y && y < this.y + height;
-	}
-
-	public boolean contains(Bounds bounds) {return contains(bounds.x, bounds.y, bounds.width, bounds.height);}
-	public boolean contains(int x, int y, int width, int height) {
-		return x >= this.x && y >= this.y
-			&& x + width < this.x + this.width && y + height < this.y + this.height;
-	}
-
-	public Bounds union(Point point) {return union(point.getX(), point.getY());}
-	/** Moves any necessary corners such that {@link #contains(Point)} returns true for {@code point}
-	 *
-	 * If {@code false}, points to the right or below the original bounds will still return {@code false} from {@link #contains(Point)}
-	 * @see #contains(Point) */
-	public Bounds union(int x, int y) {
-		return contains(x, y) || x == this.x + width && y == this.y + height ? this : fromLeastMost(
-			Math.min(this.x, x), Math.min(this.y, y),
-			Math.max(this.x + width, x), Math.max(this.y + height, y));
-	}
-
-	public Bounds union(Bounds bounds) {return union(bounds.x, bounds.y, bounds.width, bounds.height);}
-	/** Creates a new {@link Bounds} such that any point within {@code a} or {@code b} is also within the union.<br>
-	 * The inverse is not guaranteed */
-	public Bounds union(int x, int y, int width, int height) {
-		return contains(x, y, width, height) ? this : fromLeastMost(
-			Math.min(this.x, x), Math.min(this.y, y),
-			Math.max(this.x + this.width, x + width), Math.max(this.y + this.height, y + height));
 	}
 
 	/** Applies common positioning transformations at once
@@ -281,13 +171,9 @@ public final class Bounds implements Serializable {
 	 * @return A new bounds with all the transformations applied
 	 *
 	 * @see #getAnchor(Direction)
-	 * @see #alignedAround(Point, Direction) */
+	 * @see #align(Point, Direction) */
 	public Bounds positioned(Direction anchor, Point offset, Direction alignment) {
-		return alignedAround(MANAGER.getScreen().getAnchor(anchor).add(offset), alignment);
-	}
-
-	public Bounds shiftedBy(Direction direction, int x) {
-		return withPosition(getPosition().shiftedBy(direction, x));
+		return align(MANAGER.getScreen().getAnchor(anchor).add(offset), alignment);
 	}
 
 	/** @param direction The anchor direction
@@ -301,14 +187,14 @@ public final class Bounds implements Serializable {
 	 * @param alignment The alignment around the anchor
 	 * 
 	 * @return A new bounds with the alignment applied */
-	public Bounds alignedAround(Point anchor, Direction alignment) {
+	public Bounds align(Point anchor, Direction alignment) {
 		return withPosition(anchor.sub(withPosition(Point.ZERO).getAnchor(alignment)));
 	}
 
 	/** {@code outside} defaults to {@code false}
-	 * @see #anchoredTo(Bounds, Direction, boolean) */
-	public Bounds anchoredTo(Bounds container, Direction alignment) {
-		return anchoredTo(container, alignment, false);
+	 * @see #anchor(Bounds, Direction, boolean) */
+	public Bounds anchor(Bounds container, Direction alignment) {
+		return anchor(container, alignment, false);
 	}
 
 	/** Anchors this bounds to the anchor for the given direction on the container.
@@ -317,76 +203,7 @@ public final class Bounds implements Serializable {
 	 * @param alignment The anchor direction
 	 *
 	 * @return A new bounds with the anchor applied */
-	public Bounds anchoredTo(Bounds container, Direction alignment, boolean outside) {
-		return alignedAround(container.getAnchor(alignment), (outside ? alignment.mirror() : alignment));
-	}
-
-	private static final int SNAP_RADIUS = 10;
-
-	/** Aligns this bounds to the closest edge in {@code bounds}
-	 * if any is less than {@link #SNAP_RADIUS} away */
-	public Bounds snapped(Iterable<Bounds> targets) {
-		int snapX = x, snapY = y, snapRadiusX = SNAP_RADIUS, snapRadiusY = SNAP_RADIUS;
-
-		for(Bounds bounds : targets) {
-			Bounds outer = bounds.withPadding(SPACER);
-			int testRadius;
-
-			if(overlapsHorizontal(outer)) {
-				if((testRadius = difference(y + height, outer.y)) < snapRadiusY) {
-					snapY = outer.y - height;
-					snapRadiusY = testRadius;
-				} else if((testRadius = difference(y, bounds.y + bounds.height)) < snapRadiusY) {
-					snapY = outer.y + outer.height;
-					snapRadiusY = testRadius;
-				}
-			}
-
-			if((testRadius = difference(y + height, bounds.y + bounds.height)) < snapRadiusY) {
-				snapY = bounds.y + bounds.height - height;
-				snapRadiusY = testRadius;
-			} else if((testRadius = difference(y, bounds.y)) < snapRadiusY) {
-				snapY = bounds.y;
-				snapRadiusY = testRadius;
-			}
-
-			if(overlapsVertical(outer)) {
-				if((testRadius = difference(x + width, outer.x)) < snapRadiusX) {
-					snapX = outer.x - width;
-					snapRadiusX = testRadius;
-				} else if((testRadius = difference(x, outer.x + outer.width)) < snapRadiusX) {
-					snapX = outer.x + outer.width;
-					snapRadiusX = testRadius;
-				}
-			}
-
-			if((testRadius = difference(x + width, bounds.x + bounds.width)) < snapRadiusX) {
-				snapX = bounds.x + bounds.width - width;
-				snapRadiusX = testRadius;
-			} else if((testRadius = difference(x, bounds.x)) < snapRadiusX) {
-				snapX = bounds.x;
-				snapRadiusX = testRadius;
-			}
-		}
-
-		return snapX != x || snapY != y ? new Bounds(snapX, snapY, width, height) : this;
-	}
-
-	// Snap helper methods
-
-	private boolean overlapsHorizontal(Bounds bounds) {
-		return linesOverlap(x, x + width, bounds.x, bounds.x + bounds.width);
-	}
-
-	private boolean overlapsVertical(Bounds bounds) {
-		return linesOverlap(y, y + height, bounds.y, bounds.y + bounds.height);
-	}
-
-	private static boolean linesOverlap(int minX, int maxX, int minY, int maxY) {
-		return minX < maxY && minY < maxX;
-	}
-
-	private static int difference(int x, int y) {
-		return Math.abs(x - y);
+	public Bounds anchor(Bounds container, Direction alignment, boolean outside) {
+		return align(container.getAnchor(alignment), (outside ? alignment.mirror() : alignment));
 	}
 }

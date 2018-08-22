@@ -90,7 +90,7 @@ public class PotionBar extends OverrideElement {
 		GlStateManager.enableAlpha();
 
 		Direction alignment = position.getContentAlignment();
-		Point icon = new Bounds(24, 24).anchoredTo(bounds, alignment).getPosition();
+		Point icon = new Bounds(24, 24).anchor(bounds, alignment).getPosition();
 
 		int deltaX = alignment.getColumn() == 2 ? -25 : 25;
 		for(int i = 0; i < helpful.size(); i++) {

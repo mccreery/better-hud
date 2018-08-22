@@ -54,7 +54,7 @@ public abstract class StatBar<T> extends Renderable {
 	}
 
 	public Bounds render(Point anchor, Direction alignment, Direction contentAlignment) {
-		Bounds bounds = new Bounds(getSize()).alignedAround(anchor, alignment);
+		Bounds bounds = new Bounds(getSize()).align(anchor, alignment);
 		render(bounds, contentAlignment);
 		return bounds;
 	}
@@ -69,7 +69,7 @@ public abstract class StatBar<T> extends Renderable {
 		GlUtil.color(Colors.WHITE);
 
 		Direction columnWise = contentAlignment.withRow(1).mirrorColumn();
-		Bounds icon = new Bounds(getIconSize(), getIconSize()).anchoredTo(bounds, contentAlignment);
+		Bounds icon = new Bounds(getIconSize(), getIconSize()).anchor(bounds, contentAlignment);
 		Bounds rowReturn = new Bounds(icon);
 
 		final int max = getMaximum(), rowPoints = getRowPoints();
@@ -84,18 +84,18 @@ public abstract class StatBar<T> extends Renderable {
 			int rows = (max - 1) / rowPoints;
 			i = rows * rowPoints;
 
-			for(int x = 0; x < rowPoints; x += 2, icon = icon.alignedAround(icon.getAnchor(Direction.CENTER), columnWise.mirrorColumn())) {
+			for(int x = 0; x < rowPoints; x += 2, icon = icon.align(icon.getAnchor(Direction.CENTER), columnWise.mirrorColumn())) {
 				drawIcon(x, icon, contentAlignment);
 			}
 			textPosition = icon.getAnchor(columnWise);
 			text = "x" + rows;
 
-			rowReturn = rowReturn.addPosition(0, rowSpacing);
+			rowReturn = rowReturn.translate(0, rowSpacing);
 			icon = rowReturn;
 		}
 
-		for(; i < max; rowReturn = rowReturn.addPosition(0, rowSpacing), icon = rowReturn) {
-			for(int x = 0; x < rowPoints && i < max; i += 2, x += 2, icon = icon.anchoredTo(icon.withInset(1), columnWise, true)) {
+		for(; i < max; rowReturn = rowReturn.translate(0, rowSpacing), icon = rowReturn) {
+			for(int x = 0; x < rowPoints && i < max; i += 2, x += 2, icon = icon.anchor(icon.grow(-1), columnWise, true)) {
 				drawIcon(i, icon, contentAlignment);
 			}
 		}
@@ -106,7 +106,7 @@ public abstract class StatBar<T> extends Renderable {
 	}
 
 	protected void drawIcon(int i, Bounds bounds, Direction contentAlignment) {
-		bounds = bounds.addPosition(0, getIconBounce(i));
+		bounds = bounds.translate(0, getIconBounce(i));
 
 		for(Bounds texture : getIcons(i)) {
 			if(texture != null) {
@@ -120,7 +120,7 @@ public abstract class StatBar<T> extends Renderable {
 		Direction nativeAlignment = getNativeAlignment();
 
 		if(nativeAlignment != null && nativeAlignment != alignment) {
-			return texture.flippedHorizontal();
+			return texture.scale(-1, 1).withX(texture.getRight());
 		} else {
 			return texture;
 		}

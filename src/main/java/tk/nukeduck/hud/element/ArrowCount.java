@@ -96,7 +96,7 @@ public class ArrowCount extends HudElement {
 		int totalArrows = arrowCount(MC.player);
 
 		if(overlay.get()) {
-			Bounds stackBounds = new Bounds(16, 16).anchoredTo(HOTBAR.getLastBounds().withInset(3), Direction.WEST);
+			Bounds stackBounds = new Bounds(16, 16).anchor(HOTBAR.getLastBounds().grow(-3), Direction.WEST);
 
 			for(int i = 0; i < 9; i++) {
 				ItemStack stack = MC.player.inventory.getStackInSlot(i);
@@ -123,21 +123,11 @@ public class ArrowCount extends HudElement {
 		}
 	}
 
-	@Override
-	public Bounds getLastBounds() {
-		Bounds bounds = super.getLastBounds();
-
-		if(!overlay.get() && bounds.equals(Bounds.EMPTY)) {
-			bounds = position.applyTo(new Bounds(16, 16));
-		}
-		return bounds;
-	}
-
 	private static void drawCounter(Bounds stackBounds, int count) {
 		GlStateManager.disableDepth();
 		String countDisplay = String.valueOf(count);
 
-		Bounds text = new Bounds(GlUtil.getStringSize(countDisplay)).alignedAround(stackBounds.withPadding(1, 1, 1, 2).getAnchor(Direction.NORTH_EAST), Direction.NORTH_EAST);
+		Bounds text = new Bounds(GlUtil.getStringSize(countDisplay)).align(stackBounds.grow(1, 1, 1, 2).getAnchor(Direction.NORTH_EAST), Direction.NORTH_EAST);
 
 		MC.ingameGUI.drawString(MC.fontRenderer, countDisplay, text.getX(), text.getY(), Colors.WHITE);
 		GlStateManager.enableDepth();

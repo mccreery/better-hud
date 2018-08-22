@@ -47,7 +47,7 @@ class SortButton extends GuiActionButton {
 
 		if(isTargeted()) {
 			Bounds texture = callback.isDescending() ? DOWN_TEXTURE : UP_TEXTURE;
-			Point position = new Bounds(texture).anchoredTo(getBounds(), Direction.EAST).getPosition().add(-2, 0);
+			Point position = new Bounds(texture).anchor(getBounds(), Direction.EAST).getPosition().add(-2, 0);
 
 			MC.getTextureManager().bindTexture(ARROW_TEXTURE);
 			GlUtil.drawTexturedModalRect(position, texture);

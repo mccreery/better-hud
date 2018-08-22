@@ -117,7 +117,7 @@ public class StringGroup {
 		} else {
 			bounds = lineBounds.withWidth((lineBounds.getWidth() + gutter) * source.size() - gutter);
 		}
-		bounds = bounds.alignedAround(origin, alignment);
+		bounds = bounds.align(origin, alignment);
 
 		lineBounds = lineBounds.withPosition(bounds.getPosition());
 

@@ -54,15 +54,15 @@ public class Hotbar extends OverrideElement {
 		GlStateManager.enableRescaleNormal();
 		RenderHelper.enableGUIStandardItemLighting();
 
-		Bounds slot = bounds.withInset(3).withWidth(16);
+		Bounds slot = bounds.grow(-3).withWidth(16);
 
 		float partialTicks = getPartialTicks(event);
-		for(int i = 0; i < 9; i++, slot = slot.shiftedBy(Direction.EAST, 20)) {
+		for(int i = 0; i < 9; i++, slot = slot.shift(Direction.EAST, 20)) {
 			GlUtil.renderHotbarItem(slot, MC.player.inventory.mainInventory.get(i), partialTicks);
 
 			if(i == MC.player.inventory.currentItem) {
 				MC.getTextureManager().bindTexture(WIDGETS);
-				GlUtil.drawTexturedModalRect(slot.withPadding(4), new Bounds(0, 22, 24, 24));
+				GlUtil.drawTexturedModalRect(slot.grow(4), new Bounds(0, 22, 24, 24));
 			}
 		}
 

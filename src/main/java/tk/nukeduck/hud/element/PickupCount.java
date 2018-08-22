@@ -78,7 +78,7 @@ public class PickupCount extends HudElement {
 		Direction rowAlignment = alignment.withRow(1);
 
 		// The bounds to draw each item in
-		Bounds stackBounds = bounds.withSize(16, 16).anchoredTo(bounds, alignment);
+		Bounds stackBounds = bounds.withSize(16, 16).anchor(bounds, alignment);
 
 		long updateCounter = MC.ingameGUI.getUpdateCounter();
 		long lifetime = fadeAfter.getInt();
@@ -103,9 +103,9 @@ public class PickupCount extends HudElement {
 
 			//GlStateManager.color(1, 1, 1, opacity);
 			GlUtil.renderSingleItem(node.stack, stackBounds.getPosition());
-			GlUtil.drawString(node.toString(), stackBounds.withPadding(SPACER).getAnchor(rowAlignment.mirrorColumn()), rowAlignment, color);
+			GlUtil.drawString(node.toString(), stackBounds.grow(SPACER).getAnchor(rowAlignment.mirrorColumn()), rowAlignment, color);
 
-			stackBounds = stackBounds.withY(stackBounds.withPadding(2).getAnchor(alignment.mirrorRow()).getY());
+			stackBounds = stackBounds.withY(stackBounds.grow(2).getAnchor(alignment.mirrorRow()).getY());
 		}
 
 		// Remove invisible stacks
