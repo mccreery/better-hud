@@ -40,9 +40,7 @@ public class GuiOffsetChooser extends GuiScreen {
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		Point anchor = setting.getParent().getAnchor(setting.getAnchor());
-
-		Point mouse = new Point(mouseX, mouseY);
-		Point offset = mouse.sub(anchor);
+		Point offset = new Point(mouseX, mouseY).sub(anchor);
 
 		if(!Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
 			int x = (offset.getX() + SPACER * 3 / 2) / SPACER - 1;
@@ -63,6 +61,7 @@ public class GuiOffsetChooser extends GuiScreen {
 		if(!elementBounds.isEmpty()) {
 			GlUtil.drawBorderRect(parent.element.getLastBounds(), Colors.RED);
 		} else {
+			Point mouse = offset.add(anchor);
 			drawHorizontalLine(mouse.getX() - SPACER, mouse.getX() + SPACER, mouse.getY(), Colors.RED);
 			drawVerticalLine(mouse.getX(), mouse.getY() - SPACER, mouse.getY() + SPACER, Colors.RED);
 		}
