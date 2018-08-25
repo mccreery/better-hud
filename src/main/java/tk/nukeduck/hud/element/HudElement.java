@@ -49,6 +49,8 @@ import tk.nukeduck.hud.element.vanilla.Sidebar;
 import tk.nukeduck.hud.element.vanilla.Vignette;
 import tk.nukeduck.hud.network.Version;
 import tk.nukeduck.hud.util.Bounds;
+import tk.nukeduck.hud.util.GlUtil;
+import tk.nukeduck.hud.util.GlUtil.GlMode;
 import tk.nukeduck.hud.util.SortField;
 import tk.nukeduck.hud.util.Sorter;
 
@@ -189,6 +191,11 @@ public abstract class HudElement {
 		return event instanceof RenderGameOverlayEvent;
 	}
 
+	/** @Return The mode to apply before rendering this element */
+	protected GlMode getMode() {
+		return GlMode.DEFAULT;
+	}
+
 	/** Renders this element to the screen.<br>
 	 * Should only be called if {@link #shouldRender(Event)} returns {@code true}
 	 *
@@ -198,12 +205,13 @@ public abstract class HudElement {
 
 	/** Calls {@link #render(Event)} if the element
 	 * should be rendered and caches the bounds so they are available from {@link #getLastBounds()} */
-	public void tryRender(Event event) {
+	public final void tryRender(Event event) {
 		Bounds bounds = null;
 
 		if(isEnabled() && shouldRender(event)) {
 			MC.mcProfiler.startSection(name);
 
+			GlUtil.setMode(getMode());
 			bounds = render(event);
 			postRender(event);
 
@@ -222,6 +230,8 @@ public abstract class HudElement {
 	/** Renders all elements for the current render event
 	 * @param event The current render event */
 	public static void renderAll(Event event) {
+		GlUtil.clearMode();
+
 		for(HudElement element : SORTER.getSortedData(SortType.PRIORITY)) {
 			element.tryRender(event);
 		}

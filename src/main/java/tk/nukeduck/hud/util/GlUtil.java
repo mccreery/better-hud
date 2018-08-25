@@ -1,13 +1,18 @@
 package tk.nukeduck.hud.util;
 
+import static tk.nukeduck.hud.BetterHud.ICONS;
 import static tk.nukeduck.hud.BetterHud.MC;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.List;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.Profile;
+import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -103,12 +108,9 @@ public final class GlUtil {
 	 * @see net.minecraft.client.renderer.RenderItem#renderItemAndEffectIntoGUI(ItemStack, int, int)
 	 * @see RenderHelper#disableStandardItemLighting() */
 	public static void renderSingleItem(ItemStack stack, int x, int y) {
-		GlStateManager.enableDepth();
-		RenderHelper.enableGUIStandardItemLighting();
-
+		pushMode(GlMode.ITEM);
 		MC.getRenderItem().renderItemAndEffectIntoGUI(stack, x, y);
-
-		RenderHelper.disableStandardItemLighting();
+		popMode();
 	}
 
 	/** Renders the item with hotbar animations */
@@ -253,5 +255,80 @@ public final class GlUtil {
 		MC.fontRenderer.drawStringWithShadow(string, bounds.getX(), bounds.getY(), color);
 
 		return bounds;
+	}
+
+	private static final Deque<GlMode> MODE_STACK = new ArrayDeque<>();
+
+	public enum GlMode {
+		DEFAULT() {
+			@Override
+			protected void begin() {
+				GlUtil.color(Colors.WHITE);
+				GlStateManager.enableAlpha();
+				GlStateManager.enableBlend();
+				GlStateManager.enableDepth();
+				GlStateManager.tryBlendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO);
+				MC.getTextureManager().bindTexture(ICONS);
+			}
+
+			@Override
+			protected void end() {}
+		},
+		ITEM() {
+			@Override
+			protected void begin() {
+				RenderHelper.enableGUIStandardItemLighting();
+			}
+
+			@Override
+			protected void end() {
+				RenderHelper.disableStandardItemLighting();
+			}
+		},
+		CROSSHAIR() {
+			@Override
+			protected void begin() {
+				MC.getTextureManager().bindTexture(ICONS);
+				GlStateManager.tryBlendFuncSeparate(SourceFactor.ONE_MINUS_DST_COLOR, DestFactor.ONE_MINUS_SRC_COLOR, SourceFactor.ONE, DestFactor.ZERO);
+			}
+
+			@Override
+			protected void end() {
+				GlStateManager.tryBlendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO);
+			}
+		};
+
+		protected abstract void begin();
+		protected abstract void end();
+	}
+
+	private static void changeMode(GlMode from, GlMode to) {
+		if(from != null && from != to) {
+			from.end();
+		}
+
+		if(to == null) {
+			to = GlMode.DEFAULT;
+		}
+		to.begin();
+	}
+
+	public static void pushMode(GlMode mode) {
+		changeMode(MODE_STACK.peek(), mode);
+		MODE_STACK.push(mode);
+	}
+
+	public static void popMode() {
+		changeMode(MODE_STACK.poll(), MODE_STACK.peek());
+	}
+
+	public static void clearMode() {
+		changeMode(MODE_STACK.peek(), null);
+		MODE_STACK.clear();
+	}
+
+	public static void setMode(GlMode mode) {
+		changeMode(MODE_STACK.poll(), mode);
+		MODE_STACK.push(mode);
 	}
 }

@@ -1,14 +1,11 @@
 package tk.nukeduck.hud.element.vanilla;
 
-import static tk.nukeduck.hud.BetterHud.ICONS;
 import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
 import static tk.nukeduck.hud.BetterHud.SPACER;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.GlStateManager.DestFactor;
-import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -19,7 +16,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
-import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingChoose;
@@ -28,6 +24,7 @@ import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.Direction.Options;
 import tk.nukeduck.hud.util.GlUtil;
+import tk.nukeduck.hud.util.GlUtil.GlMode;
 import tk.nukeduck.hud.util.Point;
 
 public class Crosshair extends OverrideElement {
@@ -119,20 +116,19 @@ public class Crosshair extends OverrideElement {
 	}
 
 	@Override
+	protected GlMode getMode() {
+		return GlMode.CROSSHAIR;
+	}
+
+	@Override
 	protected Bounds render(Event event) {
 		if(MC.gameSettings.showDebugInfo && !MC.gameSettings.reducedDebugInfo && !MC.player.hasReducedDebug()) {
-			renderAxes(MANAGER.getScreen().getAnchor(Direction.CENTER).scale(0.5f, 0.5f), getPartialTicks(event));
+			renderAxes(MANAGER.getScreen().getAnchor(Direction.CENTER), getPartialTicks(event));
 		} else {
-			GlStateManager.enableAlpha();
-			GlStateManager.tryBlendFuncSeparate(SourceFactor.ONE_MINUS_DST_COLOR, DestFactor.ONE_MINUS_SRC_COLOR, SourceFactor.ONE, DestFactor.ZERO);
-
 			Bounds texture = new Bounds(16, 16);
 			Point position = new Bounds(texture).anchor(MANAGER.getScreen(), Direction.CENTER).getPosition();
 
-			MC.getTextureManager().bindTexture(BetterHud.ICONS);
 			GlUtil.drawTexturedModalRect(position, texture);
-
-			GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 
 			if(attackIndicator.get()) {
 				return renderAttackIndicator();
@@ -154,23 +150,15 @@ public class Crosshair extends OverrideElement {
 		}
 
 		float attackStrength = MC.player.getCooledAttackStrength(0);
-		GlStateManager.enableBlend();
-		GlStateManager.enableAlpha();
 
 		if(indicatorType.getIndex() == 0) {
-			GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.ONE_MINUS_DST_COLOR, GlStateManager.DestFactor.ONE_MINUS_SRC_COLOR, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-
 			if(attackStrength >= 1) {
 				if(MC.pointedEntity != null && MC.pointedEntity instanceof EntityLivingBase && MC.player.getCooldownPeriod() > 5 && ((EntityLivingBase)MC.pointedEntity).isEntityAlive()) {
-					MC.getTextureManager().bindTexture(ICONS);
 					GlUtil.drawTexturedModalRect(bounds.getPosition(), new Bounds(68, 94, 16, 8));
 				}
 			} else {
-				MC.getTextureManager().bindTexture(ICONS);
 				GlUtil.drawTexturedProgressBar(bounds.getPosition(), new Bounds(36, 94, 16, 8), new Bounds(52, 94, 16, 8), attackStrength, Direction.EAST);
 			}
-
-			GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
 		} else if(attackStrength < 1) {
 			GlUtil.drawTexturedProgressBar(bounds.getPosition(), new Bounds(0, 94, 18, 18), new Bounds(18, 94, 18, 18), attackStrength, Direction.NORTH);
 		}
@@ -178,6 +166,7 @@ public class Crosshair extends OverrideElement {
 	}
 
 	private void renderAxes(Point center, float partialTicks) {
+		GlUtil.pushMode(GlMode.DEFAULT);
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(center.getX(), center.getY(), 0);
 
@@ -188,5 +177,6 @@ public class Crosshair extends OverrideElement {
 		OpenGlHelper.renderDirections(10);
 
 		GlStateManager.popMatrix();
+		GlUtil.popMode();
 	}
 }
