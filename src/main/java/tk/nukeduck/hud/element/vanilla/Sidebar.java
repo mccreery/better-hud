@@ -15,16 +15,21 @@ import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
+import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.Direction.Options;
 import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Point;
 import tk.nukeduck.hud.util.StringGroup;
 
 public class Sidebar extends OverrideElement {
+	private final SettingPosition position = new SettingPosition("position", Options.LEFT_RIGHT, Options.WEST_EAST);
+
 	public Sidebar() {
 		super("scoreboard");
+		settings.add(position);
 	}
 
 	@Override
@@ -66,8 +71,8 @@ public class Sidebar extends OverrideElement {
 			values.add(String.valueOf(score.getScorePoints()));
 		}
 
-		StringGroup namesGroup = new StringGroup(names);
-		StringGroup valuesGroup = new StringGroup(values).setColor(0xffff5555).setAlignment(Direction.EAST);
+		StringGroup namesGroup = new StringGroup(names).setAlignment(position.getContentAlignment().mirrorColumn());
+		StringGroup valuesGroup = new StringGroup(values).setColor(0xffff5555).setAlignment(position.getContentAlignment());
 		Point valuesSize = valuesGroup.getSize();
 
 		Point size = namesGroup.getSize().add(MC.fontRenderer.getCharWidth(' ') * 2 + valuesSize.getX(), 0);
@@ -77,7 +82,11 @@ public class Sidebar extends OverrideElement {
 		Bounds margin = Bounds.createPadding(1);
 		Bounds bounds = new Bounds(size).grow(padding).grow(margin);
 
-		bounds = bounds.anchor(MANAGER.getScreen(), Direction.EAST);
+		if(!position.isCustom() && position.getDirection().getRow() == 1) {
+			bounds = bounds.anchor(MANAGER.getScreen(), position.getDirection());
+		} else {
+			bounds = position.applyTo(bounds);
+		}
 		Bounds paddingBounds = bounds.grow(margin.scale(-1));
 		Bounds contentBounds = paddingBounds.grow(padding.scale(-1));
 

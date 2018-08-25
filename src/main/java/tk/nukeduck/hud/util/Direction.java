@@ -97,6 +97,18 @@ public enum Direction {
 				}
 			}
 		},
+		LEFT_RIGHT(NORTH_WEST, WEST, SOUTH_WEST, NORTH_EAST, EAST, SOUTH_EAST) {
+			@Override
+			public Direction apply(Direction direction) {
+				if(direction == null) {
+					return NORTH_WEST;
+				} else if(direction.getColumn() == 1) {
+					return direction.withColumn(0);
+				} else {
+					return direction;
+				}
+			}
+		},
 		NONE() {
 			@Override
 			public Direction apply(Direction direction) {
