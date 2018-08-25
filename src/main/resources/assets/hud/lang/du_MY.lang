@@ -57,7 +57,6 @@
 #betterHud.element.gameClock=Game Clock
 #betterHud.element.handBar=Holding Bar
 #betterHud.element.healIndicator=Heal Indicator
-#betterHud.element.hidePlayers=Hide Players
 #betterHud.element.horseInfo=Horse Info
 #betterHud.element.itemPickup=Item Pickup
 #betterHud.element.lightLevel=Light Level
@@ -222,7 +221,6 @@
 #betterHud.setting.alwaysVisible=Always Visible
 #betterHud.setting.disableDefault=Disable Default
 #betterHud.setting.hideMount=Hide While Riding
-#betterHud.setting.includeMe=Include Me
 #betterHud.setting.numberOnly=Number Only
 #betterHud.setting.overlay=Overlay
 #betterHud.setting.showLifetimeExp=XP Since Death

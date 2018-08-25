@@ -75,7 +75,6 @@ public abstract class HudElement {
 	public static final GlobalSettings GLOBAL = new GlobalSettings();
 	public static final HandBar HOLDING = new HandBar();
 	public static final HealIndicator HEAL = new HealIndicator();
-	public static final HidePlayers HIDE_PLAYERS = new HidePlayers();
 	public static final HorseInfo HORSE_INFO = new HorseInfo();
 	public static final LightLevel LIGHT_LEVEL = new LightLevel();
 	public static final MobInfo MOB_INFO = new MobInfo();
