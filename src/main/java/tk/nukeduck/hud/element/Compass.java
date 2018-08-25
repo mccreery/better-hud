@@ -69,7 +69,7 @@ public class Compass extends HudElement {
 		Bounds largeNotch = new Bounds(1, 7);
 
 		Bounds smallNotch = new Bounds(1, 6);
-		Bounds largeBounds = bounds.grow(3);
+		Bounds largeBounds = bounds.grow(0, 3, 0, 3);
 
 		if(showNotches.get()) {
 			for(int loc : notchX) {
