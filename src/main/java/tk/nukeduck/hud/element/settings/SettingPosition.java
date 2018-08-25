@@ -117,7 +117,12 @@ public class SettingPosition extends SettingStub<Object> {
 
 	public Bounds getParent() {
 		if(!isCustom()) throw new IllegalStateException("Position is not custom");
-		return parent.get() != null ? parent.get().getLastBounds() : MANAGER.getScreen();
+
+		if(parent.get() != null) {
+			Bounds bounds = parent.get().getLastBounds();
+			if(!bounds.isEmpty()) return bounds;
+		}
+		return MANAGER.getScreen();
 	}
 
 	public Point getOffset() {
