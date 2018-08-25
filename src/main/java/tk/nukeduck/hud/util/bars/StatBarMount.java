@@ -4,6 +4,7 @@ import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.MathUtil;
 
 public class StatBarMount extends StatBarBasic<Entity> {
 	@Override
@@ -23,12 +24,12 @@ public class StatBarMount extends StatBarBasic<Entity> {
 
 	@Override
 	protected int getCurrent() {
-		return (int)((EntityLivingBase)host.getRidingEntity()).getHealth();
+		return MathUtil.getHealthForDisplay(((EntityLivingBase)host.getRidingEntity()).getHealth());
 	}
 
 	@Override
 	protected int getMaximum() {
-		return (int)((EntityLivingBase)host.getRidingEntity()).getMaxHealth();
+		return MathUtil.getHealthForDisplay(((EntityLivingBase)host.getRidingEntity()).getMaxHealth());
 	}
 
 	@Override
