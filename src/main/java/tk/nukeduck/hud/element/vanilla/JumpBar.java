@@ -9,13 +9,18 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
+import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.Direction.Options;
 import tk.nukeduck.hud.util.GlUtil;
 
 public class JumpBar extends OverrideElement {
+	private final SettingPosition position = new SettingPosition("position", Options.BAR, Options.NORTH_SOUTH);
+
 	public JumpBar() {
 		super("jumpBar");
+		settings.add(position);
 	}
 
 	@Override
@@ -36,8 +41,14 @@ public class JumpBar extends OverrideElement {
 		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
 		GlStateManager.disableBlend();
 
+		Bounds bounds = new Bounds(182, 5);
+		if(!position.isCustom() && position.getDirection() == Direction.SOUTH) {
+			bounds = MANAGER.position(Direction.SOUTH, bounds, false, 1);
+		} else {
+			bounds = position.applyTo(bounds);
+		}
+
 		float charge = MC.player.getHorseJumpPower();
-		Bounds bounds = MANAGER.position(Direction.SOUTH, new Bounds(182, 5), false, 1);
 		int filled = (int)(charge * bounds.getWidth());
 
 		GlUtil.drawTexturedModalRect(bounds.getPosition(), new Bounds(0, 84, bounds.getWidth(), bounds.getHeight()));
