@@ -10,14 +10,15 @@ import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Direction.Options;
+import tk.nukeduck.hud.util.GlUtil;
 
 public class HandBar extends EquipmentDisplay {
 	private final SettingPosition position = new SettingPosition("position", Options.BAR, Options.NORTH_SOUTH);
 	private final SettingBoolean showItem = new SettingBoolean("showItem").setUnlocalizedValue(SettingBoolean.VISIBLE);
 	private final SettingBoolean offHand = new SettingBoolean("offhand");
 	private final SettingBoolean showBars = new SettingBoolean("bars");
+	private final SettingBoolean showNonTools = new SettingBoolean("showNonTools").setUnlocalizedValue("betterHud.value.nonTools");
 
 	@Override
 	public void loadDefaults() {
@@ -38,9 +39,13 @@ public class HandBar extends EquipmentDisplay {
 		settings.add(showItem);
 		settings.add(showBars);
 		settings.add(offHand);
+		settings.add(showNonTools);
 	}
 
 	public void renderBar(ItemStack stack, int x, int y) {
+		boolean isTool = stack.isItemStackDamageable();
+		if(stack == null || !showNonTools.get() && !isTool) return;
+
 		String text = getText(stack);
 
 		int width = 0;
@@ -62,7 +67,7 @@ public class HandBar extends EquipmentDisplay {
 			MC.mcProfiler.endSection();
 		}
 
-		if(showBars.get()) {
+		if(isTool && showBars.get()) {
 			MC.mcProfiler.startSection("bars");
 			GlUtil.drawDamageBar(new Bounds(x, y + 16, 180, 2), stack, false);
 			MC.mcProfiler.endSection();
@@ -72,18 +77,10 @@ public class HandBar extends EquipmentDisplay {
 	@Override
 	public Bounds render(Event event) {
 		Bounds bounds = position.applyTo(new Bounds(180, offHand.get() ? 41 : 18));
-		ItemStack stack = MC.player.getHeldItemMainhand();
-
-		if(stack != null && stack.getMaxDamage() > 0) {
-			renderBar(stack, bounds.getX(), bounds.getBottom() - 18);
-		}
+		renderBar(MC.player.getHeldItemMainhand(), bounds.getX(), bounds.getBottom() - 18);
 
 		if(offHand.get()) {
-			stack = MC.player.getHeldItemOffhand();
-
-			if(stack != null && stack.getMaxDamage() > 0) {
-				renderBar(stack, bounds.getX(), bounds.getY());
-			}
+			renderBar(MC.player.getHeldItemOffhand(), bounds.getX(), bounds.getY());
 		}
 		return bounds;
 	}

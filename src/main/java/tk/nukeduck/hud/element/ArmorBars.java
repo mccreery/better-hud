@@ -112,7 +112,7 @@ public class ArmorBars extends EquipmentDisplay {
 					MC.mcProfiler.startSection("text");
 
 					Bounds textBounds = new Bounds(GlUtil.getStringSize(text[i])).anchor(content, alignment);
-					if(largeBars()) {
+					if(stack.isItemStackDamageable() && largeBars()) {
 						textBounds = textBounds.withY(textBounds.getY() - 1);
 					}
 
@@ -120,7 +120,7 @@ public class ArmorBars extends EquipmentDisplay {
 					MC.mcProfiler.endSection();
 				}
 
-				if(showBars()) {
+				if(stack.isItemStackDamageable() && showBars()) {
 					MC.mcProfiler.startSection("bars");
 
 					if(largeBars()) {
