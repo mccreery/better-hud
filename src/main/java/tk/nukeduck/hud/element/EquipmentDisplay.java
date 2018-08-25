@@ -70,11 +70,14 @@ public abstract class EquipmentDisplay extends HudElement {
 		StringBuilder builder = new StringBuilder();
 
 		FormatUtil.join(" - ", parts, builder);
-		int count = warnings.getWarning(value);
+		
+		if(stack.isItemStackDamageable()) {
+			int count = warnings.getWarning(value);
 
-		if(count > 0) {
-			builder.append(' ');
-			builder.append(I18n.format("betterHud.setting.warning." + count));
+			if(count > 0) {
+				builder.append(' ');
+				builder.append(I18n.format("betterHud.setting.warning." + count));
+			}
 		}
 		return builder.toString();
 	}
