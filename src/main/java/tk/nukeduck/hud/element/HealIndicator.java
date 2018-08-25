@@ -14,6 +14,7 @@ import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.Direction.Options;
 import tk.nukeduck.hud.util.GlUtil;
+import tk.nukeduck.hud.util.Point;
 
 public class HealIndicator extends HudElement {
 	private final SettingPosition position = new SettingPosition("position", Options.NONE, Options.NONE);
@@ -43,9 +44,8 @@ public class HealIndicator extends HudElement {
 			if(position.isCustom()) {
 				bounds = position.applyTo(bounds);
 			} else {
-				bounds = bounds.anchor(HudElement.HEALTH.getLastBounds()
-					.grow(bounds.getWidth() + SPACER, 0, bounds.getWidth() + SPACER, 0),
-					HudElement.HEALTH.getIndicatorSide());
+				Direction side = HudElement.HEALTH.getIndicatorSide();
+				bounds = bounds.position(HudElement.HEALTH.getLastBounds().grow(SPACER, 0, SPACER, 0), side, Point.ZERO, side.mirrorColumn());
 			}
 
 			GlUtil.color(Colors.WHITE);

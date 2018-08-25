@@ -163,17 +163,24 @@ public final class Bounds implements Serializable {
 			&& y >= this.y && y < this.y + height;
 	}
 
-	/** Applies common positioning transformations at once
-	 *
-	 * @param anchor The screen direction to anchor to
-	 * @param offset The offset from the anchor
-	 * @param alignment The alignment of the bounds around the transformed origin
-	 * @return A new bounds with all the transformations applied
-	 *
-	 * @see #getAnchor(Direction)
-	 * @see #align(Point, Direction) */
+	/** {@code container} defaults to {@code MANAGER.getScreen()}
+	 * @see #position(Bounds, Direction, Point, Direction) */
 	public Bounds positioned(Direction anchor, Point offset, Direction alignment) {
 		return align(MANAGER.getScreen().getAnchor(anchor).add(offset), alignment);
+	}
+
+	/** Applies anchor, offset and alignment within a container
+	 *
+	 * @param container The container to anchor to
+	 * @param anchor The anchor direction
+	 * @param offset The offset from the anchor
+	 * @param alignment The alignment around the resultant point
+	 *
+	 * @see #getAnchor(Direction)
+	 * @see Point#add(Point)
+	 * @see #align(Point, Direction) */
+	public Bounds position(Bounds container, Direction anchor, Point offset, Direction alignment) {
+		return align(container.getAnchor(anchor).add(offset), alignment);
 	}
 
 	/** @param direction The anchor direction
