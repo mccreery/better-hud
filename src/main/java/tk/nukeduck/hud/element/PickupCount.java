@@ -105,7 +105,7 @@ public class PickupCount extends HudElement {
 			GlUtil.renderSingleItem(node.stack, stackBounds.getPosition());
 			GlUtil.drawString(node.toString(), stackBounds.grow(SPACER).getAnchor(rowAlignment.mirrorColumn()), rowAlignment, color);
 
-			stackBounds = stackBounds.withY(stackBounds.grow(2).getAnchor(alignment.mirrorRow()).getY());
+			stackBounds = stackBounds.align(stackBounds.grow(2).getAnchor(alignment.mirrorRow()), alignment);
 		}
 
 		// Remove invisible stacks
