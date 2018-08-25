@@ -138,10 +138,14 @@ betterHud.value.dense=Densa
 betterHud.value.denser=Mais densa
 
 # Equipment
-betterHud.setting.showItem=Item
-betterHud.setting.showName=Nome
+#betterHud.setting.showItem=Item
+#betterHud.setting.showName=Name
 betterHud.setting.showDurability=Duração
 betterHud.setting.offhand=Mão secundária
+
+#betterHud.setting.showNonTools=Show For
+#betterHud.value.nonTools.off=Tools Only
+#betterHud.value.nonTools.on=All Items
 
 betterHud.setting.bars=Barras
 betterHud.value.smallBars=Barras curtas
@@ -179,7 +183,7 @@ betterHud.setting.dateType=Formato
 betterHud.value.dmy=D/M/A (GB)
 betterHud.value.mdy=M/D/A (EUA)
 betterHud.value.ymd=A/M/D
-betterHud.hud.day=Day %s
+betterHud.hud.day=Dia %s
 
 # Connection
 betterHud.setting.playerCount=Jogadores
@@ -198,18 +202,12 @@ betterHud.hud.y=Y: %s
 betterHud.hud.z=Z: %s
 betterHud.hud.xyz=X: %s, Y: %s, Z: %s
 
-# Hunger Indicator
-betterHud.setting.maxLimit=Start flashing at
-betterHud.setting.speed=Velocidade
-betterHud.value.slowest=Lento
-betterHud.value.fastest=Rápido
-
 # Mob Info
 betterHud.setting.billboardScale=Escala do quadro
 betterHud.setting.jump=Altura do salto
-#betterHud.setting.speed=Speed
+betterHud.setting.speed=Velocidade
 betterHud.setting.players=Jogadores
-betterHud.setting.mobs=Mobs
+#betterHud.setting.mobs=Mobs
 
 betterHud.setting.compress=Comprimir acima de
 betterHud.value.never=Nunca
@@ -239,7 +237,6 @@ betterHud.setting.visual=Visual
 
 betterHud.hud.biome=Bioma: %s
 betterHud.hud.burst=Combo: %s cliques em %ss
-#betterHud.hud.day=Day %s
 betterHud.hud.distance.0=§a[§r%s§a]
 betterHud.hud.distance.1=%sm de distância
 betterHud.hud.fullInv=Inventário cheio
@@ -247,6 +244,3 @@ betterHud.hud.healIndicator=+
 betterHud.hud.holding=Segurando: %s
 betterHud.hud.saturation=Saturação: %s
 betterHud.hud.unknownBlock=Bloco desconhecido
-
-# Unmapped lines
-betterHud.element.foodIndicator=Ind. de fome

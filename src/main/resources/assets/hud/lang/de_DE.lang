@@ -5,8 +5,8 @@ key.betterHud.open=Öffne Better HUD Menü
 #key.betterHud.disable=Toggle Better HUD
 
 # Generic Formatters
-#betterHud.hud.meters=%sm
-#betterHud.hud.seconds=%ss
+betterHud.hud.meters=%sm
+betterHud.hud.seconds=%ss
 
 # Menu buttons
 betterHud.menu.hudSettings=HUD Optionen
@@ -23,7 +23,7 @@ betterHud.menu.picking=Auswählen (Abbrechen)
 betterHud.menu.pick=Auswahl
 betterHud.menu.options=Optionen
 
-#betterHud.menu.alphabetical=A-Z
+betterHud.menu.alphabetical=A-Z
 #betterHud.menu.enabled=Enabled
 #betterHud.menu.priority=Priority
 
@@ -37,7 +37,7 @@ betterHud.menu.unsupported=Dieses Element wird nicht vom Server unterstützt
 #betterHud.menu.billboardScale=Â§lBillboardsÂ§r are overlays that are anchored to an entity and always point towards the screen, like player nameplates.
 
 # Element names
-#betterHud.element.global=Better HUD
+betterHud.element.global=Better HUD
 
 betterHud.element.armorBars=Rüstungsleiste
 betterHud.element.arrowCount=Anzahl Pfeile
@@ -48,7 +48,7 @@ betterHud.element.breedIndicator=Zuchtanzeige
 betterHud.element.compass=Kompass
 betterHud.element.connection=Verbindung
 betterHud.element.coordinates=Koordinaten
-#betterHud.element.cps=CPS
+betterHud.element.cps=CPS
 betterHud.element.distance=Distanz
 betterHud.element.enchantIndicator=Verzauberungsanzeige
 betterHud.element.experienceInfo=Erfahrungs-Info
@@ -86,7 +86,7 @@ betterHud.element.waterDrops=Wassertropfen
 #betterHud.element.vignette=Vignette
 
 # Setting Groups
-betterHud.group.position=Position
+#betterHud.group.position=Position
 betterHud.group.misc=Verschiedenes
 betterHud.group.damageWarning=Schadenswarnung
 
@@ -99,7 +99,7 @@ betterHud.value.visible.off=Versteckt
 betterHud.setting.mode=Modus
 betterHud.value.mode=Typ %s
 
-betterHud.setting.position=Position
+#betterHud.setting.position=Position
 betterHud.value.preset=Position setzen
 betterHud.value.custom=Genaue Position
 
@@ -143,6 +143,10 @@ betterHud.setting.showName=Zeige Name
 betterHud.setting.showDurability=Zeige Haltbarkeit
 #betterHud.setting.offhand=Off-Hand
 
+#betterHud.setting.showNonTools=Show For
+#betterHud.value.nonTools.off=Tools Only
+#betterHud.value.nonTools.on=All Items
+
 #betterHud.setting.bars=Bars
 betterHud.value.smallBars=kleine vertikale Leisten
 betterHud.value.largeBars=Lange horizontale Leisten
@@ -151,9 +155,9 @@ betterHud.setting.durabilityFormat=Haltbarkeitsmodus
 #betterHud.value.points=Damage Points
 #betterHud.value.percentage=Percentage
 
-#betterHud.setting.warning.1=Â§c!Â§r
-#betterHud.setting.warning.2=Â§c! !Â§r
-#betterHud.setting.warning.3=Â§c! ! !Â§r
+betterHud.setting.warning.1=Â§c!Â§r
+betterHud.setting.warning.2=Â§c! !Â§r
+betterHud.setting.warning.3=Â§c! ! !Â§r
 #betterHud.value.disabled=Disabled
 
 # Block Viewer
@@ -189,25 +193,19 @@ betterHud.setting.latency=Latenz (Ping)
 betterHud.hud.player=1 Spieler
 betterHud.hud.players=%s Spieler
 betterHud.hud.localServer=Lokal Server
-#betterHud.hud.ip=IP: %s
+betterHud.hud.ip=IP: %s
 #betterHud.hud.ping=Ping: %sms
 
 # Coordinates
-#betterHud.hud.x=X: %s
-#betterHud.hud.y=Y: %s
-#betterHud.hud.z=Z: %s
-#betterHud.hud.xyz=X: %s, Y: %s, Z: %s
-
-# Hunger Indicator
-betterHud.setting.maxLimit=Blinken bei
-betterHud.setting.speed=Geschwindigkeit
-#betterHud.value.slowest=Slowest
-#betterHud.value.fastest=Fastest
+betterHud.hud.x=X: %s
+betterHud.hud.y=Y: %s
+betterHud.hud.z=Z: %s
+betterHud.hud.xyz=X: %s, Y: %s, Z: %s
 
 # Mob Info
 #betterHud.setting.billboardScale=Billboard Scale
 betterHud.setting.jump=Sprunghöhe
-#betterHud.setting.speed=Speed
+betterHud.setting.speed=Geschwindigkeit
 betterHud.setting.players=Spieler
 betterHud.setting.mobs=Gegner
 
@@ -239,14 +237,10 @@ betterHud.setting.visual=Visuell
 
 betterHud.hud.biome=Biom: %s
 #betterHud.hud.burst=Burst: %s clicks over %ss
-#betterHud.hud.day=Day %s
-#betterHud.hud.distance.0=Â§a[Â§r%sÂ§a]
+betterHud.hud.distance.0=Â§a[Â§r%sÂ§a]
 betterHud.hud.distance.1=%sm entfernt
 betterHud.hud.fullInv=Inventar Voll
-#betterHud.hud.healIndicator=+
+betterHud.hud.healIndicator=+
 #betterHud.hud.holding=Holding: %s
 betterHud.hud.saturation=Sättigung: %s
 betterHud.hud.unknownBlock=Unbekannter Block
-
-# Unmapped lines
-betterHud.element.foodIndicator=Hunger-Anzeige

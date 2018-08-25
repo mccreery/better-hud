@@ -143,6 +143,10 @@ betterHud.setting.showName=Name
 betterHud.setting.showDurability=Durability
 betterHud.setting.offhand=Off-Hand
 
+betterHud.setting.showNonTools=Show For
+betterHud.value.nonTools.off=Tools Only
+betterHud.value.nonTools.on=All Items
+
 betterHud.setting.bars=Bars
 betterHud.value.smallBars=Small Bars
 betterHud.value.largeBars=Large Bars
@@ -198,12 +202,6 @@ betterHud.hud.y=Y: %s
 betterHud.hud.z=Z: %s
 betterHud.hud.xyz=X: %s, Y: %s, Z: %s
 
-# Hunger Indicator
-betterHud.setting.maxLimit=Start Flashing At
-betterHud.setting.speed=Flash Speed
-betterHud.value.slowest=Slowest
-betterHud.value.fastest=Fastest
-
 # Mob Info
 betterHud.setting.billboardScale=Billboard Scale
 betterHud.setting.jump=Jump Height
@@ -239,7 +237,6 @@ betterHud.setting.fadeAfter=Fade After
 
 betterHud.hud.biome=Biome: %s
 betterHud.hud.burst=Burst: %s clicks over %ss
-betterHud.hud.day=Day %s
 betterHud.hud.distance.0=§a[§r%s§a]
 betterHud.hud.distance.1=%sm away
 betterHud.hud.fullInv=Inventory Full

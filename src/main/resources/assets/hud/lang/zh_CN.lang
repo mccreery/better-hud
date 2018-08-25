@@ -143,6 +143,10 @@ betterHud.setting.showName=显示名称
 betterHud.setting.showDurability=显示耐久
 #betterHud.setting.offhand=Off-Hand
 
+#betterHud.setting.showNonTools=Show For
+#betterHud.value.nonTools.off=Tools Only
+#betterHud.value.nonTools.on=All Items
+
 #betterHud.setting.bars=Bars
 betterHud.value.smallBars=小条
 betterHud.value.largeBars=大条
@@ -198,16 +202,10 @@ betterHud.hud.localServer=本地服务器
 #betterHud.hud.z=Z: %s
 #betterHud.hud.xyz=X: %s, Y: %s, Z: %s
 
-# Hunger Indicator
-#betterHud.setting.maxLimit=Start Flashing At
-betterHud.setting.speed=速度
-#betterHud.value.slowest=Slowest
-#betterHud.value.fastest=Fastest
-
 # Mob Info
 #betterHud.setting.billboardScale=Billboard Scale
 betterHud.setting.jump=跳跃高度
-#betterHud.setting.speed=Speed
+betterHud.setting.speed=速度
 betterHud.setting.players=玩家
 betterHud.setting.mobs=动物
 
@@ -239,7 +237,6 @@ betterHud.setting.spaced=分组
 
 betterHud.hud.biome=生物群系: %s
 #betterHud.hud.burst=Burst: %s clicks over %ss
-#betterHud.hud.day=Day %s
 #betterHud.hud.distance.0=Â§a[Â§r%sÂ§a]
 betterHud.hud.distance.1=%sm 外
 betterHud.hud.fullInv=背包已满
@@ -247,6 +244,3 @@ betterHud.hud.fullInv=背包已满
 #betterHud.hud.holding=Holding: %s
 #betterHud.hud.saturation=Saturation: %s
 betterHud.hud.unknownBlock=未知方块
-
-# Unmapped lines
-betterHud.element.foodIndicator=饥饿指示器
