@@ -4,7 +4,6 @@ import static tk.nukeduck.hud.BetterHud.MC;
 import static tk.nukeduck.hud.BetterHud.WIDGETS;
 
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
@@ -50,10 +49,6 @@ public class Hotbar extends OverrideElement {
 
 		GlUtil.drawTexturedModalRect(bounds.getPosition(), barTexture);
 
-		GlUtil.enableBlendTranslucent();
-		GlStateManager.enableRescaleNormal();
-		RenderHelper.enableGUIStandardItemLighting();
-
 		Bounds slot = bounds.grow(-3).withWidth(16);
 
 		float partialTicks = getPartialTicks(event);
@@ -65,10 +60,6 @@ public class Hotbar extends OverrideElement {
 				GlUtil.drawTexturedModalRect(slot.grow(4), new Bounds(0, 22, 24, 24));
 			}
 		}
-
-		RenderHelper.disableStandardItemLighting();
-		GlStateManager.disableRescaleNormal();
-		GlStateManager.disableBlend();
 
 		return bounds;
 	}

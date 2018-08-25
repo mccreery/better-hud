@@ -118,6 +118,7 @@ public final class GlUtil {
 		if(stack.isEmpty()) return;
 		float animationTicks = stack.getAnimationsToGo() - partialTicks;
 
+		pushMode(GlMode.ITEM);
 		if(animationTicks > 0) {
 			float factor = 1 + animationTicks / 5;
 	
@@ -132,8 +133,9 @@ public final class GlUtil {
 		} else {
 			MC.getRenderItem().renderItemAndEffectIntoGUI(MC.player, stack, bounds.getX(), bounds.getY());
 		}
-	
+
 		MC.getRenderItem().renderItemOverlays(MC.fontRenderer, stack, bounds.getX(), bounds.getY());
+		popMode();
 	}
 
 	/** @see GuiUtils#drawHoveringText(ItemStack, List, int, int, int, int, int, net.minecraft.client.gui.FontRenderer) */
@@ -266,7 +268,7 @@ public final class GlUtil {
 				GlUtil.color(Colors.WHITE);
 				GlStateManager.enableAlpha();
 				GlStateManager.enableBlend();
-				GlStateManager.enableDepth();
+				GlStateManager.disableDepth();
 				GlStateManager.tryBlendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO);
 				MC.getTextureManager().bindTexture(ICONS);
 			}
@@ -277,11 +279,13 @@ public final class GlUtil {
 		ITEM() {
 			@Override
 			protected void begin() {
+				GlStateManager.enableDepth();
 				RenderHelper.enableGUIStandardItemLighting();
 			}
 
 			@Override
 			protected void end() {
+				GlStateManager.disableDepth();
 				RenderHelper.disableStandardItemLighting();
 			}
 		},
