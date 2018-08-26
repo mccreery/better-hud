@@ -15,7 +15,7 @@ def get(line):
     else:
         return None
 
-with open(os.path.join(ROOT_DIR, CANONICAL)) as f:
+with open(os.path.join(ROOT_DIR, CANONICAL), encoding="utf-8") as f:
     lines = f.readlines()
 
 print_row("file", "", "changed", "unchanged", "missing", "extra")

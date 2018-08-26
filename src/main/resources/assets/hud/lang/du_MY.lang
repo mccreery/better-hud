@@ -34,7 +34,7 @@
 #betterHud.menu.invNames=For inventories, such as chests, which have been named via anvil.
 #betterHud.menu.unsnap=Hold %s to disable snapping
 #betterHud.menu.unsupported=This element is not supported by the server
-#betterHud.menu.billboardScale=Â§lBillboardsÂ§r are overlays that are anchored to an entity and always point towards the screen, like player nameplates.
+#betterHud.menu.billboardScale=§lBillboards§r are overlays that are anchored to an entity and always point towards the screen, like player nameplates.
 
 # Element names
 #betterHud.element.global=Better HUD
@@ -125,9 +125,9 @@
 #betterHud.value.places=%s places
 #betterHud.setting.distance=Distance
 #betterHud.setting.rayDistance=Ray Trace Distance
-#betterHud.setting.red=Â§cRed
-#betterHud.setting.green=Â§aGreen
-#betterHud.setting.blue=Â§1Blue
+#betterHud.setting.red=§cRed
+#betterHud.setting.green=§aGreen
+#betterHud.setting.blue=§1Blue
 
 # Particles
 #betterHud.setting.density=Density
@@ -154,9 +154,9 @@
 #betterHud.value.points=Damage Points
 #betterHud.value.percentage=Percentage
 
-#betterHud.setting.warning.1=Â§c!Â§r
-#betterHud.setting.warning.2=Â§c! !Â§r
-#betterHud.setting.warning.3=Â§c! ! !Â§r
+#betterHud.setting.warning.1=§c!§r
+#betterHud.setting.warning.2=§c! !§r
+#betterHud.setting.warning.3=§c! ! !§r
 #betterHud.value.disabled=Disabled
 
 # Block Viewer
@@ -235,7 +235,7 @@
 
 #betterHud.hud.biome=Biome: %s
 #betterHud.hud.burst=Burst: %s clicks over %ss
-#betterHud.hud.distance.0=Â§a[Â§r%sÂ§a]
+#betterHud.hud.distance.0=§a[§r%s§a]
 #betterHud.hud.distance.1=%sm away
 #betterHud.hud.fullInv=Inventory Full
 #betterHud.hud.healIndicator=+

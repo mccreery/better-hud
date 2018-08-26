@@ -34,7 +34,7 @@ betterHud.menu.expInfoNotice=Estas configurações são apenas do módulo de exp
 betterHud.menu.invNames=Para armazenamento, como em baús, nomeados com uma bigorna.
 betterHud.menu.unsnap=Pressione %s para desativar o snapping.
 betterHud.menu.unsupported=Este recurso não está disponível neste servidor.
-#betterHud.menu.billboardScale=Â§lBillboardsÂ§r are overlays that are anchored to an entity and always point towards the screen, like player nameplates.
+#betterHud.menu.billboardScale=§lBillboards§r are overlays that are anchored to an entity and always point towards the screen, like player nameplates.
 
 # Element names
 betterHud.element.global=Better HUD
