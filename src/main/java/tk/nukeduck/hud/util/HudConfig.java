@@ -4,6 +4,7 @@ import java.io.File;
 
 import net.minecraftforge.common.config.Configuration;
 import tk.nukeduck.hud.element.HudElement;
+import tk.nukeduck.hud.element.HudElement.SortType;
 
 public class HudConfig extends Configuration {
 	public HudConfig(File file) {
@@ -18,6 +19,7 @@ public class HudConfig extends Configuration {
 			element.settings.bindConfig(this);
 			element.settings.loadConfig();
 		}
+		HudElement.SORTER.markDirty(SortType.ENABLED);
 		HudElement.normalizePriority();
 
 		if(hasChanged()) save();
