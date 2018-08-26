@@ -2,12 +2,14 @@ package tk.nukeduck.hud.element.particles;
 
 import static tk.nukeduck.hud.BetterHud.MC;
 
+import java.util.ArrayList;
+import java.util.Collection;
+
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import tk.nukeduck.hud.util.MathUtil;
 
 public class BloodSplatters extends ParticleOverlay {
 	public BloodSplatters() {
@@ -30,13 +32,13 @@ public class BloodSplatters extends ParticleOverlay {
 		int count = spawnMultiplier * (int)event.getAmount();
 
 		if(count > 0) {
-			Particle[] toSpawn = new Particle[count];
-			for(int i = 0; i < toSpawn.length; i++) {
-				toSpawn[i] = ParticleBase.createRandom();
+			Collection<Particle> toSpawn = new ArrayList<>(count);
+			for(int i = 0; i < count; i++) {
+				toSpawn.add(ParticleBase.createRandom());
 			}
-	
+
 			// Atomic operation means underlying CopyOnWriteArrayList only copies once
-			particles.addAll(MathUtil.createRepeat(count, ParticleBase::createRandom));
+			particles.addAll(toSpawn);
 		}
 	}
 }

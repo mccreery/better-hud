@@ -24,10 +24,14 @@ public class WaterDrops extends ParticleOverlay {
 			particles.clear();
 		} else {
 			super.updateParticles();
-			Collection<Particle> toSpawn = new ArrayList<Particle>();
+			Collection<Particle> toSpawn = new ArrayList<>();
 
 			if(wasUnderwaterLastTick) {
-				MathUtil.addRepeat(toSpawn, getParticleCount(), ParticleWater::createRandom);
+				int count = getParticleCount();
+
+				for(int i = 0; i < count; i++) {
+					toSpawn.add(ParticleWater.createRandom());
+				}
 			}
 
 			BlockPos camera = new BlockPos(MC.player.getPositionEyes(1));
@@ -46,6 +50,6 @@ public class WaterDrops extends ParticleOverlay {
 	}
 
 	private int getParticleCount() {
-		return MathUtil.randomRange((density.getIndex() + 1) * 20);
+		return MathUtil.randomRange(0, (density.getIndex() + 1) * 20);
 	}
 }

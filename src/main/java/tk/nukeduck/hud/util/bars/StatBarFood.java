@@ -39,7 +39,7 @@ public class StatBarFood extends StatBarBasic<EntityPlayer> {
 	@Override
 	protected int getIconBounce(int pointsIndex) {
 		if(host.getFoodStats().getSaturationLevel() <= 0 && MC.ingameGUI.getUpdateCounter() % (getCurrent() * 3 + 1) == 0) {
-			return MathUtil.randomRange(-1, 2, random);
+			return MathUtil.randomRange(-1, 2);
 		} else {
 			return 0;
 		}
@@ -48,6 +48,10 @@ public class StatBarFood extends StatBarBasic<EntityPlayer> {
 	@Override
 	public void renderUnsafe(Bounds bounds, Direction contentAlignment) {
 		random.setSeed(MC.ingameGUI.getUpdateCounter());
+		MathUtil.setRandom(random);
+
 		super.renderUnsafe(bounds, contentAlignment);
+
+		MathUtil.setRandom(null);
 	}
 }

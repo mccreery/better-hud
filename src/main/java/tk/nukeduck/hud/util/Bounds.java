@@ -53,7 +53,6 @@ public final class Bounds implements Serializable {
 			return true;
 		} else if(other instanceof Bounds) {
 			Bounds otherBounds = (Bounds)other;
-
 			return x == otherBounds.x && y == otherBounds.y && width == otherBounds.width && height == otherBounds.height;
 		} else {
 			return false;

@@ -1,18 +1,13 @@
 package tk.nukeduck.hud.util;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
-import java.util.function.IntFunction;
 import java.util.function.Predicate;
-import java.util.function.Supplier;
-import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 import com.google.common.graph.Graph;
 
@@ -38,41 +33,6 @@ public final class MathUtil {
 		return ceilDiv(x, multiple) * multiple;
 	}
 
-	/** @see Math#min(int, int) */
-	public static int min(int... values) {
-		int min = values[0];
-
-		for(int i = 1; i < values.length; i++) {
-			if(values[i] < min) min = values[i];
-		}
-		return min;
-	}
-
-	/** Partitions {@code items} such that all elements that satisfy {@code condition}
-	 * are guaranteed to be placed further right than the rightmost element that does not.
-	 * <p>This operation is not stable, i.e. the order of 
-	 *
-	 * @param items The list to partition. Is modified in place
-	 * @param condition The condition for elements to be placed to the right
-	 * @return The lowest index {@code i} such that {@code condition.test(i) == true} */
-	public static <T> int partition(List<? extends T> items, Predicate<T> condition) {
-		int i = 0;
-		int j = items.size();
-
-		while(i != j) {
-			while(!condition.test(items.get(i))) {
-				if(++i == j) return i;
-			}
-			do {
-				if(i == --j) return i;
-			} while(condition.test(items.get(j)));
-
-			Collections.swap(items, i, j);
-			++i;
-		}
-		return i;
-	}
-
 	/** Avoids autoboxing to {@link Integer}
 	 * @see Objects#hash(Object...) */
 	public static int hash(int... values) {
@@ -85,74 +45,50 @@ public final class MathUtil {
 	}
 
 	private static final Random RANDOM = new Random();
+	private static Random currentRandom = RANDOM;
 
-	/** {@code min} defaults to 0, {@code random} defaults to {@link #RANDOM}
-	 * @see #randomRange(int, int, Random) */
-	public static int randomRange(int max) {return randomRange(0, max, RANDOM);}
-
-	/** {@code random} defaults to {@link #RANDOM}
-	 * @see #randomRange(int, int, Random) */
-	public static int randomRange(int min, int max) {return randomRange(min, max, RANDOM);}
-
-	/** @param min The low end of the range (inclusive)
-	 * @param max The high end of the range (exclusive)
-	 * @param random The randomiser
-	 * @return A random integer between the specified values */
-	public static int randomRange(int min, int max, Random random) {
-		return min + random.nextInt(max - min);
-	}
-
-	/** {@code min} defaults to 0, {@code random} defaults to {@link #RANDOM}
-	 * @see #randomRange(float, float, Random) */
-	public static float randomRange(float max) {return randomRange(0, max, RANDOM);}
-
-	/** {@code random} defaults to {@link #RANDOM}
-	 * @see #randomRange(float, float, Random) */
-	public static float randomRange(float min, float max) {return randomRange(min, max, RANDOM);}
-
-	/** @param min The low end of the range (inclusive)
-	 * @param max The high end of the range (exclusive)
-	 * @param random The randomiser
-	 * @return A random float between the specified values */
-	public static float randomRange(float min, float max, Random random) {
-		return min + random.nextFloat() * (max - min);
-	}
-
-	/** {@code random} defaults to {@link #RANDOM}
+	/** Changes the random instance for random functions
+	 * @param random The random instance, or {@code null} to reset
+	 *
+	 * @see #randomRange(float, float)
+	 * @see #randomRange(int, int)
+	 * @see #randomPoint(Bounds)
 	 * @see #randomChance(float, Random) */
-	public static boolean randomChance(float probability) {
-		return randomChance(probability, RANDOM);
+	public static void setRandom(Random random) {
+		currentRandom = random != null ? random : RANDOM;
 	}
 
-	/** @param probability The chance to return {@code true}.
-	 * Passing {@code probability <= 0} will always return {@code false},
-	 * and passing {@code probability >= 1} will always return {@code true}
-	 * @param random The randomiser
+	/** @param min The low end of the range (inclusive)
+	 * @param max The high end of the range (exclusive)
+	 * @return A random integer between the specified values */
+	public static int randomRange(int min, int max) {
+		return min + currentRandom.nextInt(max - min);
+	}
+
+	/** @param min The low end of the range (inclusive)
+	 * @param max The high end of the range (exclusive)
+	 * @return A random float between the specified values */
+	public static float randomRange(float min, float max) {
+		return min + currentRandom.nextFloat() * (max - min);
+	}
+
+	/** @param bounds The range
+	 * @return A random point within the bounds */
+	public static Point randomPoint(Bounds bounds) {
+		return new Point(randomRange(bounds.getLeft(), bounds.getRight()),
+			randomRange(bounds.getTop(), bounds.getBottom()));
+	}
+
+	/** @param probability The chance to return {@code true}. Clamped to [0,1]
 	 * @return {@code true} with a {@code probability} chance */
-	public static boolean randomChance(float probability, Random random) {
-		return random.nextFloat() < probability;
+	public static boolean randomChance(float probability) {
+		return currentRandom.nextFloat() < probability;
 	}
 
-	public static <T> Collection<T> createRepeat(int n, Supplier<T> supplier) {
-		return addRepeat(new ArrayList<>(n), n, supplier);
-	}
-	public static <T> Collection<T> createRepeat(int n, IntFunction<T> mapper) {
-		return addRepeat(new ArrayList<>(n), n, mapper);
-	}
-
-	public static <T, C extends Collection<T>> C addRepeat(C collection, int n, Supplier<T> supplier) {
-		return addRepeat(collection, n, i -> supplier.get());
-	}
-	public static <T, C extends Collection<T>> C addRepeat(C collection, int n, IntFunction<T> mapper) {
-		return IntStream.range(0, n).mapToObj(mapper).collect(Collectors.toCollection(() -> collection));
-	}
-
-	/** Maps values from 0 to 1 to a specified range
-	 * @param x The value to map
-	 * @param min The value mapped to 0
-	 * @param max The value mapped to 1 */
-	public static float mapToRange(float x, float min, float max) {
-		return min + (max - min) * x;
+	/** @return an {@code int} version of {@code health}
+	 * for use in health bars */
+	public static int getHealthForDisplay(float health) {
+		return MathHelper.ceil(health);
 	}
 
 	/** Sorts the nodes of {@code graph} such that for each edge {@code (n, m)},
@@ -184,9 +120,28 @@ public final class MathUtil {
 		sortedNodes.add(predecessor);
 	}
 
-	/** @return an {@code int} version of {@code health}
-	 * for use in health bars */
-	public static int getHealthForDisplay(float health) {
-		return MathHelper.ceil(health);
+	/** Partitions {@code items} such that all elements that satisfy {@code condition}
+	 * are guaranteed to be placed further right than the rightmost element that does not.
+	 * <p>This operation is not stable, i.e. the order of 
+	 *
+	 * @param items The list to partition. Is modified in place
+	 * @param condition The condition for elements to be placed to the right
+	 * @return The lowest index {@code i} such that {@code condition.test(i) == true} */
+	public static <T> int partition(List<? extends T> items, Predicate<T> condition) {
+		int i = 0;
+		int j = items.size();
+	
+		while(i != j) {
+			while(!condition.test(items.get(i))) {
+				if(++i == j) return i;
+			}
+			do {
+				if(i == --j) return i;
+			} while(condition.test(items.get(j)));
+	
+			Collections.swap(items, i, j);
+			++i;
+		}
+		return i;
 	}
 }

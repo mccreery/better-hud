@@ -30,13 +30,13 @@ public class ParticleBase implements Particle {
 	}
 
 	public static ParticleBase createRandom() {
-		Point position = Point.createRandom(MANAGER.getScreen());
+		Point position = MathUtil.randomPoint(MANAGER.getScreen());
 
-		float opacity = MathUtil.randomRange(0.5f);
-		float size = MathUtil.randomRange(2, 6);
-		float rotation = MathUtil.randomRange(360);
+		float opacity = MathUtil.randomRange(0f, 0.5f);
+		float size = MathUtil.randomRange(2f, 6f);
+		float rotation = MathUtil.randomRange(0f, 360f);
 
-		int iconIndex = MathUtil.randomRange(16);
+		int iconIndex = MathUtil.randomRange(0, 16);
 		return new ParticleBase(position, iconIndex, opacity, size, rotation);
 	}
 

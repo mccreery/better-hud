@@ -1,7 +1,6 @@
 package tk.nukeduck.hud.util;
 
 import java.io.Serializable;
-import java.util.Objects;
 
 import net.minecraft.client.gui.ScaledResolution;
 
@@ -27,13 +26,6 @@ public final class Point implements Serializable {
 
 	public Point(ScaledResolution resolution) {
 		this(resolution.getScaledWidth(), resolution.getScaledHeight());
-	}
-
-	public static Point createRandom(Bounds bounds) {
-		return createRandom(bounds.getLeft(), bounds.getTop(), bounds.getRight(), bounds.getBottom());
-	}
-	public static Point createRandom(int left, int top, int right, int bottom) {
-		return new Point(MathUtil.randomRange(left, right), MathUtil.randomRange(top, bottom));
 	}
 
 	public int getX() {
@@ -82,12 +74,19 @@ public final class Point implements Serializable {
 
 	@Override
 	public boolean equals(Object other) {
-		return other instanceof Point && getX() == ((Point)other).getX() && getY() == ((Point)other).getY();
+		if(super.equals(other)) {
+			return true;
+		} else if(other instanceof Point) {
+			Point otherPoint = (Point)other;
+			return x == otherPoint.x && y == otherPoint.y;
+		} else {
+			return false;
+		}
 	}
 
 	@Override
 	public int hashCode() {
-		return Objects.hash(getX(), getY());
+		return MathUtil.hash(x, y);
 	}
 
 	@Override
