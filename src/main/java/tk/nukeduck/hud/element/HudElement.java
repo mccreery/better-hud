@@ -1,5 +1,6 @@
 package tk.nukeduck.hud.element;
 
+import static tk.nukeduck.hud.BetterHud.ALL;
 import static tk.nukeduck.hud.BetterHud.MC;
 
 import java.util.ArrayList;
@@ -14,6 +15,8 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.fml.common.versioning.InvalidVersionSpecificationException;
+import net.minecraftforge.fml.common.versioning.VersionRange;
 import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.element.entityinfo.HorseInfo;
 import tk.nukeduck.hud.element.entityinfo.MobInfo;
@@ -47,7 +50,6 @@ import tk.nukeduck.hud.element.vanilla.PotionBar;
 import tk.nukeduck.hud.element.vanilla.RidingHealth;
 import tk.nukeduck.hud.element.vanilla.Sidebar;
 import tk.nukeduck.hud.element.vanilla.Vignette;
-import tk.nukeduck.hud.network.Version;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.GlUtil.GlMode;
@@ -162,15 +164,19 @@ public abstract class HudElement {
 
 	/** @return The minimum server version that supports this element
 	 * @see #isSupportedByServer() */
-	public Version getMinimumServerVersion() {
-		return Version.ZERO;
+	public VersionRange getServerDependency() throws InvalidVersionSpecificationException {
+		return ALL;
 	}
 
 	/** @return {@code true} if the current connected server supports the element.
 	 * If the server version is too low, some communications may not be supported
 	 * @see #getMinimumServerVersion() */
 	public boolean isSupportedByServer() {
-		return BetterHud.serverVersion.compareTo(getMinimumServerVersion()) >= 0;
+		try {
+			return BetterHud.serverSupports(getServerDependency());
+		} catch (InvalidVersionSpecificationException e) {
+			return false;
+		}
 	}
 
 	/** @return The localized name of the element

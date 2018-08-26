@@ -28,6 +28,8 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
+import net.minecraftforge.fml.common.versioning.InvalidVersionSpecificationException;
+import net.minecraftforge.fml.common.versioning.VersionRange;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import tk.nukeduck.hud.BetterHud;
@@ -35,7 +37,6 @@ import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.text.TextElement;
 import tk.nukeduck.hud.network.InventoryNameQuery;
-import tk.nukeduck.hud.network.Version;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.Direction.Options;
@@ -49,7 +50,11 @@ public class BlockViewer extends TextElement {
 	private final SettingBoolean invNames = new SettingBoolean("invNames") {
 		@Override
 		public boolean enabled() {
-			return super.enabled() && BetterHud.serverVersion.compareTo(new Version(1, 4)) >= 0;
+			try {
+				return super.enabled() && BetterHud.serverSupports(VersionRange.createFromVersionSpec("[1.4,)"));
+			} catch (InvalidVersionSpecificationException e) {
+				return false;
+			}
 		}
 	};
 

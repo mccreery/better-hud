@@ -10,10 +10,11 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.fml.common.versioning.InvalidVersionSpecificationException;
+import net.minecraftforge.fml.common.versioning.VersionRange;
 import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.element.settings.SettingSlider;
 import tk.nukeduck.hud.events.PickupNotifier;
-import tk.nukeduck.hud.network.Version;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
@@ -67,8 +68,8 @@ public class PickupCount extends HudElement {
 	}
 
 	@Override
-	public Version getMinimumServerVersion() {
-		return new Version(1, 3, 9);
+	public VersionRange getServerDependency() throws InvalidVersionSpecificationException {
+		return VersionRange.createFromVersionSpec("[1.4,)");
 	}
 
 	@Override

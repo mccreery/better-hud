@@ -1,5 +1,7 @@
 package tk.nukeduck.hud;
 
+import java.util.Arrays;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.EntityLivingBase;
@@ -15,6 +17,10 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.common.versioning.ArtifactVersion;
+import net.minecraftforge.fml.common.versioning.DefaultArtifactVersion;
+import net.minecraftforge.fml.common.versioning.Restriction;
+import net.minecraftforge.fml.common.versioning.VersionRange;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import tk.nukeduck.hud.element.HudElement;
@@ -25,15 +31,26 @@ import tk.nukeduck.hud.network.InventoryNameQuery;
 import tk.nukeduck.hud.network.MessageNotifyClientHandler;
 import tk.nukeduck.hud.network.MessagePickup;
 import tk.nukeduck.hud.network.MessagePickupHandler;
-import tk.nukeduck.hud.network.Version;
+import tk.nukeduck.hud.network.MessageVersion;
 import tk.nukeduck.hud.util.HudConfig;
 import tk.nukeduck.hud.util.LayoutManager;
 import tk.nukeduck.hud.util.Tickable.Ticker;
 
-@Mod(modid = BetterHud.MODID, name = "Better HUD", version = "1.4")
+@Mod(modid = BetterHud.MODID, name = "Better HUD", version = BetterHud.VERSION_STRING)
 public class BetterHud {
 	public static final String MODID = "hud";
-	public static final Version VERSION = new Version(1, 4);
+
+	public static final VersionRange ALL = VersionRange.newRange(null, Arrays.asList(Restriction.EVERYTHING));
+	public static final ArtifactVersion ZERO = new DefaultArtifactVersion("0.0");
+
+	protected static final String VERSION_STRING = "1.4";
+	public static final ArtifactVersion VERSION = new DefaultArtifactVersion(VERSION_STRING);
+
+	public static ArtifactVersion serverVersion = ZERO;
+
+	public static boolean serverSupports(VersionRange range) {
+		return range.containsVersion(serverVersion);
+	}
 
 	@SideOnly(Side.CLIENT) public static Minecraft MC;
 
@@ -50,8 +67,6 @@ public class BetterHud {
 	public static EntityLivingBase pointedEntity;
 
 	public static final int SPACER = 5;
-
-	public static Version serverVersion = Version.ZERO;
 
 	public static boolean isEnabled() {
 		return HudElement.GLOBAL.isEnabled();
@@ -89,7 +104,7 @@ public class BetterHud {
 
 		// Message ID 0 reserved for ignored server presence message from [,1.4)
 		NET_WRAPPER.registerMessage(MessagePickupHandler.class, MessagePickup.class, 1, Side.CLIENT);
-		NET_WRAPPER.registerMessage(MessageNotifyClientHandler.class, Version.class, 2, Side.CLIENT);
+		NET_WRAPPER.registerMessage(MessageNotifyClientHandler.class, MessageVersion.class, 2, Side.CLIENT);
 
 		// Used to update inventory names
 		NET_WRAPPER.registerMessage(InventoryNameQuery.ServerHandler.class, InventoryNameQuery.Request.class, 3, Side.SERVER);
@@ -102,13 +117,13 @@ public class BetterHud {
 	@SubscribeEvent
 	public void onPlayerConnected(PlayerLoggedInEvent e) {
 		if(e.player instanceof EntityPlayerMP) {
-			NET_WRAPPER.sendTo(VERSION, (EntityPlayerMP)e.player);
+			NET_WRAPPER.sendTo(new MessageVersion(VERSION), (EntityPlayerMP)e.player);
 		}
 	}
 
 	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void onPlayerDisconnected(ClientDisconnectionFromServerEvent e) {
-		serverVersion = Version.ZERO;
+		serverVersion = ZERO;
 	}
 }
