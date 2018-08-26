@@ -13,28 +13,19 @@ betterHud.menu.hudSettings=Configurações do HUD
 betterHud.menu.settings=Configurações de %s
 betterHud.menu.enableAll=Ativar tudo
 betterHud.menu.disableAll=Desativar tudo
-betterHud.menu.resetDefaults=Restaurar padrões
 #betterHud.menu.saveLoad=Save/Load...
 betterHud.menu.lastPage=Página anterior
 betterHud.menu.nextPage=Próxima página
 betterHud.menu.page=Página %s
-betterHud.menu.picking=Selecionando (Cancelar)
-#betterHud.menu.cancel=Cancel
 betterHud.menu.pick=Selecionar
-betterHud.menu.options=Opções
 
 betterHud.menu.alphabetical=A-Z
 betterHud.menu.enabled=Ativada
 betterHud.menu.priority=Prioridade
 
 # Menu text
-betterHud.menu.arrowCountNotice=A posição somente tomará efeito se o modo começar ao Side.
-betterHud.menu.fhNotice=Valores de fome e saúde sempre estarão acima da barra rápida. Estas configurações são de saturação.
-betterHud.menu.expInfoNotice=Estas configurações são apenas do módulo de experiência.
-betterHud.menu.invNames=Para armazenamento, como em baús, nomeados com uma bigorna.
 betterHud.menu.unsnap=Pressione %s para desativar o snapping.
 betterHud.menu.unsupported=Este recurso não está disponível neste servidor.
-#betterHud.menu.billboardScale=§lBillboards§r are overlays that are anchored to an entity and always point towards the screen, like player nameplates.
 
 # Element names
 betterHud.element.global=Better HUD
@@ -226,10 +217,10 @@ betterHud.setting.overlay=Sobreposição
 betterHud.setting.showLifetimeExp=XP desde a morte
 betterHud.setting.showTotalExp=Total de XP
 betterHud.setting.spaced=Espaçado
-betterHud.setting.text=Texto
 betterHud.setting.tooltipLines=Série de dicas
-betterHud.setting.visual=Visual
-#betterHud.setting.warnings=Warnings
+#betterHud.value.text=Text
+#betterHud.value.visual=Visual
+
 #betterHud.setting.maxStacks=Maximum Stacks
 #betterHud.setting.fadeAfter=Fade After
 
@@ -242,3 +233,4 @@ betterHud.hud.healIndicator=+
 betterHud.hud.holding=Segurando: %s
 betterHud.hud.saturation=Saturação: %s
 betterHud.hud.unknownBlock=Bloco desconhecido
+#betterHud.hud.facing=Facing: %s

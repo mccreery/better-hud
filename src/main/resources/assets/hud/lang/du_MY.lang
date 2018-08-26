@@ -13,28 +13,19 @@
 #betterHud.menu.settings=%s Settings
 #betterHud.menu.enableAll=Enable All
 #betterHud.menu.disableAll=Disable All
-#betterHud.menu.resetDefaults=Reset Defaults
 #betterHud.menu.saveLoad=Save/Load...
 #betterHud.menu.lastPage=Last Page
 #betterHud.menu.nextPage=Next Page
 #betterHud.menu.page=Page %s
-#betterHud.menu.picking=Picking (Cancel)
-#betterHud.menu.cancel=Cancel
 #betterHud.menu.pick=Pick
-#betterHud.menu.options=Options
 
 #betterHud.menu.alphabetical=A-Z
 #betterHud.menu.enabled=Enabled
 #betterHud.menu.priority=Priority
 
 # Menu text
-#betterHud.menu.arrowCountNotice=Position will only have effect if the mode is set to Side.
-#betterHud.menu.fhNotice=Food and health values will always be beside the hotbar. These settings are for saturation.
-#betterHud.menu.expInfoNotice=These settings are only for total experience count.
-#betterHud.menu.invNames=For inventories, such as chests, which have been named via anvil.
 #betterHud.menu.unsnap=Hold %s to disable snapping
 #betterHud.menu.unsupported=This element is not supported by the server
-#betterHud.menu.billboardScale=§lBillboards§r are overlays that are anchored to an entity and always point towards the screen, like player nameplates.
 
 # Element names
 #betterHud.element.global=Better HUD
@@ -226,10 +217,10 @@
 #betterHud.setting.showLifetimeExp=XP Since Death
 #betterHud.setting.showTotalExp=Total XP
 #betterHud.setting.spaced=Spaced
-#betterHud.setting.text=Text
 #betterHud.setting.tooltipLines=Tooltip Lines
-#betterHud.setting.visual=Visual
-#betterHud.setting.warnings=Warnings
+#betterHud.value.text=Text
+#betterHud.value.visual=Visual
+
 #betterHud.setting.maxStacks=Maximum Stacks
 #betterHud.setting.fadeAfter=Fade After
 
@@ -242,3 +233,4 @@
 #betterHud.hud.holding=Holding: %s
 #betterHud.hud.saturation=Saturation: %s
 #betterHud.hud.unknownBlock=Unknown Block
+#betterHud.hud.facing=Facing: %s

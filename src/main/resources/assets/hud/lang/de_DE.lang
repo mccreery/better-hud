@@ -13,28 +13,19 @@ betterHud.menu.hudSettings=HUD Optionen
 betterHud.menu.settings=%s Optionen
 betterHud.menu.enableAll=Alle aktivieren
 betterHud.menu.disableAll=Alle deaktivieren
-betterHud.menu.resetDefaults=Werkseinstellung
 #betterHud.menu.saveLoad=Save/Load...
 betterHud.menu.lastPage=Letzte Seite
 betterHud.menu.nextPage=Nächste Seite
 betterHud.menu.page=Seite %s
-betterHud.menu.picking=Auswählen (Abbrechen)
-#betterHud.menu.cancel=Cancel
 betterHud.menu.pick=Auswahl
-betterHud.menu.options=Optionen
 
 betterHud.menu.alphabetical=A-Z
 #betterHud.menu.enabled=Enabled
 #betterHud.menu.priority=Priority
 
 # Menu text
-betterHud.menu.arrowCountNotice=Position wird erst wirksam, wenn der Modus eingestellt ist nach Seite.
-betterHud.menu.fhNotice=Nahrung und Lebens-Werte werden immer neben der Schnellleiste sein. Diese Optionen sind für die Sättigung.
-betterHud.menu.expInfoNotice=Diese Optionen sind nur für die gesamte Erfahrungs-Zahl.
-betterHud.menu.invNames=Für Inventare, wie Truhen, welche durch den Amboss benannt wurden.
 betterHud.menu.unsnap=Halten %s um schnappen zu deaktivieren
 betterHud.menu.unsupported=Dieses Element wird nicht vom Server unterstützt
-#betterHud.menu.billboardScale=§lBillboards§r are overlays that are anchored to an entity and always point towards the screen, like player nameplates.
 
 # Element names
 betterHud.element.global=Better HUD
@@ -154,9 +145,9 @@ betterHud.setting.durabilityFormat=Haltbarkeitsmodus
 #betterHud.value.points=Damage Points
 #betterHud.value.percentage=Percentage
 
-betterHud.setting.warning.1=Â§c!Â§r
-betterHud.setting.warning.2=Â§c! !Â§r
-betterHud.setting.warning.3=Â§c! ! !Â§r
+#betterHud.setting.warning.1=§c!§r
+#betterHud.setting.warning.2=§c! !§r
+#betterHud.setting.warning.3=§c! ! !§r
 #betterHud.value.disabled=Disabled
 
 # Block Viewer
@@ -226,19 +217,20 @@ betterHud.setting.overlay=Einblendung
 #betterHud.setting.showLifetimeExp=XP Since Death
 betterHud.setting.showTotalExp=Gesamt
 betterHud.setting.spaced=Abstand
-#betterHud.setting.text=Text
 #betterHud.setting.tooltipLines=Tooltip Lines
-betterHud.setting.visual=Visuell
-#betterHud.setting.warnings=Warnings
+#betterHud.value.text=Text
+#betterHud.value.visual=Visual
+
 #betterHud.setting.maxStacks=Maximum Stacks
 #betterHud.setting.fadeAfter=Fade After
 
 betterHud.hud.biome=Biom: %s
 #betterHud.hud.burst=Burst: %s clicks over %ss
-betterHud.hud.distance.0=Â§a[Â§r%sÂ§a]
+#betterHud.hud.distance.0=§a[§r%s§a]
 betterHud.hud.distance.1=%sm entfernt
 betterHud.hud.fullInv=Inventar Voll
 betterHud.hud.healIndicator=+
 #betterHud.hud.holding=Holding: %s
 betterHud.hud.saturation=Sättigung: %s
 betterHud.hud.unknownBlock=Unbekannter Block
+#betterHud.hud.facing=Facing: %s
