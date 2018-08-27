@@ -233,4 +233,4 @@ betterHud.hud.healIndicator=+
 betterHud.hud.holding=Segurando: %s
 betterHud.hud.saturation=Saturação: %s
 betterHud.hud.unknownBlock=Bloco desconhecido
-#betterHud.hud.facing=Facing: %s
+#betterHud.hud.facing=Facing: %s (%s)

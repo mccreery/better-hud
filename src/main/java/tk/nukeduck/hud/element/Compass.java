@@ -4,8 +4,10 @@ import static tk.nukeduck.hud.BetterHud.MC;
 import static tk.nukeduck.hud.BetterHud.SPACER;
 
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
@@ -16,14 +18,14 @@ import tk.nukeduck.hud.element.settings.SettingSlider;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.Direction.Options;
 import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Point;
 
 public class Compass extends HudElement {
 	private static final String[] DIRECTIONS = {"S", "E", "N", "W"};
 
-	private final SettingPosition position = new SettingPosition("position", Options.TOP_BOTTOM, Options.NORTH_SOUTH);
+	private final SettingPosition position = new SettingPosition("position", Direction.Options.TOP_BOTTOM, Direction.Options.NORTH_SOUTH);
+	private final SettingChoose mode = new SettingChoose("mode", "visual", "text");
 	private final SettingSlider directionScaling = new SettingPercentage("letterScale");
 	private final SettingBoolean showNotches = new SettingBoolean("showNotches").setUnlocalizedValue(SettingBoolean.VISIBLE);
 	private final SettingChoose requireItem = new SettingChoose("requireItem", "disabled", "inventory", "hand");
@@ -52,6 +54,7 @@ public class Compass extends HudElement {
 	public Compass() {
 		super("compass");
 
+		settings.add(mode);
 		settings.add(position);
 		settings.add(new Legend("misc"));
 		settings.add(directionScaling);
@@ -130,16 +133,43 @@ public class Compass extends HudElement {
 		return true;
 	}
 
+	public String getText() {
+		EnumFacing enumfacing = MC.player.getHorizontalFacing();
+
+		String coord;
+		Direction direction;
+
+		switch(enumfacing) {
+			case NORTH: coord = "-Z"; direction = Direction.NORTH; break;
+			case SOUTH: coord = "+Z"; direction = Direction.SOUTH; break;
+			case WEST: coord = "-X"; direction = Direction.WEST; break;
+			case EAST: coord = "+X"; direction = Direction.EAST; break;
+			default: return "?";
+		}
+		return I18n.format("betterHud.hud.facing", direction.getLocalizedName(), coord);
+	}
+
 	@Override
 	public Bounds render(Event event) {
 		GlUtil.enableBlendTranslucent();
-		Bounds bounds = position.applyTo(new Bounds(180, 12));
+		Bounds bounds;
 
-		MC.mcProfiler.startSection("background");
-		drawBackground(bounds);
-		MC.mcProfiler.endStartSection("text");
-		drawDirections(bounds);
-		MC.mcProfiler.endSection();
+		if(mode.getIndex() == 0) {
+			bounds = position.applyTo(new Bounds(180, 12));
+
+			MC.mcProfiler.startSection("background");
+			drawBackground(bounds);
+			MC.mcProfiler.endStartSection("text");
+			drawDirections(bounds);
+			MC.mcProfiler.endSection();
+		} else {
+			String text = getText();
+			bounds = position.applyTo(new Bounds(GlUtil.getStringSize(text)));
+
+			MC.mcProfiler.startSection("text");
+			GlUtil.drawString(text, bounds.getPosition(), Direction.NORTH_WEST, Colors.WHITE);
+			MC.mcProfiler.endSection();
+		}
 
 		return bounds;
 	}

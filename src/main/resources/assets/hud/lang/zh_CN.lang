@@ -233,4 +233,4 @@ betterHud.hud.fullInv=背包已满
 #betterHud.hud.holding=Holding: %s
 #betterHud.hud.saturation=Saturation: %s
 betterHud.hud.unknownBlock=未知方块
-#betterHud.hud.facing=Facing: %s
+#betterHud.hud.facing=Facing: %s (%s)

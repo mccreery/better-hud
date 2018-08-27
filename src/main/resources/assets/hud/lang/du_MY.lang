@@ -233,4 +233,4 @@
 #betterHud.hud.holding=Holding: %s
 #betterHud.hud.saturation=Saturation: %s
 #betterHud.hud.unknownBlock=Unknown Block
-#betterHud.hud.facing=Facing: %s
+#betterHud.hud.facing=Facing: %s (%s)
