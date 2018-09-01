@@ -2,13 +2,11 @@ package tk.nukeduck.hud.gui;
 
 import static tk.nukeduck.hud.BetterHud.SETTINGS;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.GlStateManager.DestFactor;
-import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import tk.nukeduck.hud.util.Bounds;
-import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.GlUtil;
+import tk.nukeduck.hud.util.Point;
+import tk.nukeduck.hud.util.mode.GlMode;
+import tk.nukeduck.hud.util.mode.TextureMode;
 
 public class GuiTexturedButton extends GuiActionButton {
 	private final Bounds disabled, inactive, active;
@@ -36,11 +34,8 @@ public class GuiTexturedButton extends GuiActionButton {
 		return super.setBounds(bounds.withSize(disabled.getSize()));
 	}
 
-	protected Bounds getTexture(int mouseX, int mouseY) {
-		this.hovered = mouseX >= this.x && mouseY >= this.y && mouseX < this.x + this.width && mouseY < this.y + this.height;
-		int hoverState = this.getHoverState(this.hovered);
-
-		switch(hoverState) {
+	protected Bounds getTexture() {
+		switch(getHoverState(this.hovered)) {
 			case 0:  return disabled;
 			case 2:  return active;
 			case 1:
@@ -49,15 +44,9 @@ public class GuiTexturedButton extends GuiActionButton {
 	}
 
 	@Override
-	public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
-		if(this.visible) {
-			mc.getTextureManager().bindTexture(SETTINGS);
-
-			GlStateManager.enableBlend();
-			GlStateManager.tryBlendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO);
-			GlUtil.color(Colors.WHITE);
-
-			GlUtil.drawTexturedModalRect(getBounds(), getTexture(mouseX, mouseY));
-		}
+	protected void drawButton(Bounds bounds, Point mousePosition, float partialTicks) {
+		GlMode.push(new TextureMode(SETTINGS));
+		GlUtil.drawTexturedModalRect(bounds, getTexture());
+		GlMode.pop();
 	}
 }

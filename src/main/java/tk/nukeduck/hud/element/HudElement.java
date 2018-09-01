@@ -51,10 +51,9 @@ import tk.nukeduck.hud.element.vanilla.RidingHealth;
 import tk.nukeduck.hud.element.vanilla.Sidebar;
 import tk.nukeduck.hud.element.vanilla.Vignette;
 import tk.nukeduck.hud.util.Bounds;
-import tk.nukeduck.hud.util.GlUtil;
-import tk.nukeduck.hud.util.GlUtil.GlMode;
 import tk.nukeduck.hud.util.SortField;
 import tk.nukeduck.hud.util.Sorter;
+import tk.nukeduck.hud.util.mode.GlMode;
 
 public abstract class HudElement {
 	/** A list of all the registered elements */
@@ -216,7 +215,7 @@ public abstract class HudElement {
 		if(isEnabled() && shouldRender(event)) {
 			MC.mcProfiler.startSection(name);
 
-			GlUtil.setMode(getMode());
+			GlMode.set(getMode());
 			bounds = render(event);
 			postRender(event);
 
@@ -235,7 +234,7 @@ public abstract class HudElement {
 	/** Renders all elements for the current render event
 	 * @param event The current render event */
 	public static void renderAll(Event event) {
-		GlUtil.clearMode();
+		GlMode.clear();
 
 		for(HudElement element : SORTER.getSortedData(SortType.PRIORITY)) {
 			element.tryRender(event);

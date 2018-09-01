@@ -2,7 +2,6 @@ package tk.nukeduck.hud.gui;
 
 import static tk.nukeduck.hud.BetterHud.MC;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import tk.nukeduck.hud.element.HudElement;
@@ -42,15 +41,16 @@ class SortButton extends GuiActionButton {
 	}
 
 	@Override
-	public void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
-		super.drawButton(mc, mouseX, mouseY, partialTicks);
+	protected void drawButton(Bounds bounds, Point mousePosition, float partialTicks) {
+		super.drawButton(bounds, mousePosition, partialTicks);
 
 		if(isTargeted()) {
 			Bounds texture = callback.isDescending() ? DOWN_TEXTURE : UP_TEXTURE;
-			Point position = new Bounds(texture).anchor(getBounds(), Direction.EAST).getPosition().add(-2, 0);
+			Point position = new Bounds(texture).anchor(bounds, Direction.EAST).getPosition().add(-2, 0);
 
 			MC.getTextureManager().bindTexture(ARROW_TEXTURE);
 			GlUtil.drawTexturedModalRect(position, texture);
+			MC.getTextureManager().bindTexture(ICONS);
 		}
 	}
 }

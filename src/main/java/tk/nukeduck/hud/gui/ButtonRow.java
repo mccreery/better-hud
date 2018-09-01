@@ -53,6 +53,8 @@ class ButtonRow {
 
 		toggle.enabled = supported;
 		toggle.updateText();
+		toggle.setTooltip(toggle.enabled ? null : I18n.format("betterHud.menu.unsupported"));
+
 		options.enabled = supported && toggle.get() && !element.settings.isEmpty();
 
 		return this;

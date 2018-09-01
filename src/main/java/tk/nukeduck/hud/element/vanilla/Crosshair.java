@@ -3,6 +3,8 @@ package tk.nukeduck.hud.element.vanilla;
 import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
 import static tk.nukeduck.hud.BetterHud.SPACER;
+import static tk.nukeduck.hud.util.mode.GlMode.DEFAULT;
+import static tk.nukeduck.hud.util.mode.GlMode.INVERT;
 
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
@@ -24,8 +26,8 @@ import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.Direction.Options;
 import tk.nukeduck.hud.util.GlUtil;
-import tk.nukeduck.hud.util.GlUtil.GlMode;
 import tk.nukeduck.hud.util.Point;
+import tk.nukeduck.hud.util.mode.GlMode;
 
 public class Crosshair extends OverrideElement {
 	private final SettingBoolean attackIndicator = (SettingBoolean)new SettingBoolean(null) {
@@ -117,7 +119,7 @@ public class Crosshair extends OverrideElement {
 
 	@Override
 	protected GlMode getMode() {
-		return GlMode.CROSSHAIR;
+		return INVERT;
 	}
 
 	@Override
@@ -166,7 +168,7 @@ public class Crosshair extends OverrideElement {
 	}
 
 	private void renderAxes(Point center, float partialTicks) {
-		GlUtil.pushMode(GlMode.DEFAULT);
+		GlMode.push(DEFAULT);
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(center.getX(), center.getY(), 0);
 
@@ -177,6 +179,6 @@ public class Crosshair extends OverrideElement {
 		OpenGlHelper.renderDirections(10);
 
 		GlStateManager.popMatrix();
-		GlUtil.popMode();
+		GlMode.pop();
 	}
 }

@@ -1,14 +1,28 @@
 package tk.nukeduck.hud.gui;
 
+import static tk.nukeduck.hud.BetterHud.MC;
+
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.renderer.GlStateManager;
+import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.util.Bounds;
+import tk.nukeduck.hud.util.Point;
+import tk.nukeduck.hud.util.mode.GlMode;
 
 public class GuiActionButton extends GuiButton implements ActionCallback {
 	private ActionCallback callback;
 	private boolean repeat;
 
+	private String tooltip;
+
 	public GuiActionButton(String buttonText) {
 		super(0, 0, 0, buttonText);
+	}
+
+	public GuiActionButton setTooltip(String tooltip) {
+		this.tooltip = tooltip;
+		return this;
 	}
 
 	public GuiActionButton setCallback(ActionCallback callback) {
@@ -45,6 +59,32 @@ public class GuiActionButton extends GuiButton implements ActionCallback {
 
 	@Override
 	public void actionPerformed() {
-		callback.actionPerformed();
+		if(callback != null) callback.actionPerformed();
+	}
+
+	protected void drawButton(Bounds bounds, Point mousePosition, float partialTicks) {
+		super.drawButton(BetterHud.MC, mousePosition.getX(), mousePosition.getY(), partialTicks);
+	}
+
+	@Override
+	public final void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
+		if(!visible) return;
+
+		GlMode.set(GlMode.DEFAULT);
+		Bounds bounds = getBounds();
+		hovered = bounds.contains(mouseX, mouseY);
+
+		drawButton(bounds, new Point(mouseX, mouseY), partialTicks);
+
+		if(tooltip != null && hovered) {
+			GlMode.push(new GlMode(GlStateManager::enableDepth, GlStateManager::disableDepth));
+			GlStateManager.pushMatrix();
+
+			GlStateManager.translate(0, 0, 1);
+			MC.currentScreen.drawHoveringText(tooltip, mouseX, mouseY);
+
+			GlStateManager.popMatrix();
+			GlMode.pop();
+		}
 	}
 }
