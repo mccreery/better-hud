@@ -24,6 +24,11 @@ betterHud.menu.alphabetical=A-Z
 #betterHud.menu.enabled=Enabled
 #betterHud.menu.priority=Draw Order
 
+#betterHud.menu.moveTop=Move to Top
+#betterHud.menu.moveUp=Move Up
+#betterHud.menu.moveDown=Move Down
+#betterHud.menu.moveBottom=Move to Bottom
+
 # Menu text
 betterHud.menu.unsnap=Halten %s um schnappen zu deaktivieren
 betterHud.menu.unsupported=Dieses Element wird nicht vom Server unterstützt

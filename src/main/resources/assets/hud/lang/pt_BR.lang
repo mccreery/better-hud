@@ -24,6 +24,11 @@ betterHud.menu.alphabetical=A-Z
 betterHud.menu.enabled=Ativada
 #betterHud.menu.priority=Draw Order
 
+#betterHud.menu.moveTop=Move to Top
+#betterHud.menu.moveUp=Move Up
+#betterHud.menu.moveDown=Move Down
+#betterHud.menu.moveBottom=Move to Bottom
+
 # Menu text
 betterHud.menu.unsnap=Pressione %s para desativar o snapping.
 betterHud.menu.unsupported=Este recurso não está disponível neste servidor.
