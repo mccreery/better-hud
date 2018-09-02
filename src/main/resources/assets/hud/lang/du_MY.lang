@@ -13,6 +13,7 @@
 #betterHud.menu.settings=%s Settings
 #betterHud.menu.enableAll=Enable All
 #betterHud.menu.disableAll=Disable All
+#betterHud.menu.reorder=Reorder...
 #betterHud.menu.saveLoad=Save/Load...
 #betterHud.menu.lastPage=Last Page
 #betterHud.menu.nextPage=Next Page
@@ -21,7 +22,7 @@
 
 #betterHud.menu.alphabetical=A-Z
 #betterHud.menu.enabled=Enabled
-#betterHud.menu.priority=Priority
+#betterHud.menu.priority=Draw Order
 
 # Menu text
 #betterHud.menu.unsnap=Hold %s to disable snapping

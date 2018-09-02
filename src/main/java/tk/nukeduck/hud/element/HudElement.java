@@ -111,10 +111,10 @@ public abstract class HudElement {
 		}, ENABLED("enabled", false) {
 			@Override
 			public int compare(HudElement a, HudElement b) {
-				int compare = a.settings.get().compareTo(b.settings.get());
+				int compare = b.settings.get().compareTo(a.settings.get());
 				return compare != 0 ? compare : ALPHABETICAL.compare(a, b);
 			}
-		}, PRIORITY("priority", true) {
+		}, PRIORITY("priority", false) {
 			@Override
 			public int compare(HudElement a, HudElement b) {
 				int compare = a.settings.priority.get().compareTo(b.settings.priority.get());
@@ -169,7 +169,7 @@ public abstract class HudElement {
 
 	/** @return {@code true} if the current connected server supports the element.
 	 * If the server version is too low, some communications may not be supported
-	 * @see #getMinimumServerVersion() */
+	 * @see #getServerDependency()  */
 	public boolean isSupportedByServer() {
 		try {
 			return BetterHud.serverSupports(getServerDependency());
@@ -263,7 +263,7 @@ public abstract class HudElement {
 	}
 
 	/** Called for all elements during {@link FMLPreInitializationEvent}
-	 * @see BetterHud#init(FMLPreInitializationEvent) */
+	 * @see BetterHud#preInit(FMLPreInitializationEvent) */
 	public void init(FMLInitializationEvent event) {}
 
 	/** Calls {@link #loadDefaults()} on all elements

@@ -3,16 +3,14 @@ package tk.nukeduck.hud.gui;
 import static tk.nukeduck.hud.BetterHud.MC;
 
 import java.io.IOException;
-import java.util.Map.Entry;
+import java.util.Map;
 
 import net.minecraft.client.gui.GuiScreen;
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.element.settings.Setting;
 import tk.nukeduck.hud.util.Bounds;
-import tk.nukeduck.hud.util.Colors;
-import tk.nukeduck.hud.util.GlUtil;
 
-public class GuiElementChooser extends GuiScreen {
+public class GuiElementChooser extends GuiElements {
 	private final GuiScreen parent;
 	private final HudElement element;
 
@@ -39,32 +37,13 @@ public class GuiElementChooser extends GuiScreen {
 
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		Entry<HudElement, Bounds> result = null;
-		int faded = Colors.setAlpha(Colors.RED, 63);
+		HudElement selected = getHoveredElement(mouseX, mouseY, (HudElement element) -> {
+			return element != this.element;
+		});
+		setting.set(selected);
 
-		for(Entry<HudElement, Bounds> entry : HudElement.getActiveBounds().entrySet()) {
-			if(entry.getKey() == element) continue;
-			Bounds bounds = entry.getValue();
-
-			if(!bounds.contains(mouseX, mouseY)) {
-				GlUtil.drawBorderRect(bounds, faded);
-			} else if(result == null) {
-				result = entry;
-			} else if(bounds.getWidth() < result.getValue().getWidth() &&
-					bounds.getHeight() < result.getValue().getHeight()) {
-				// Swap out previous best candidate
-				GlUtil.drawBorderRect(result.getValue(), faded);
-				result = entry;
-			}
-		}
-
-		if(result != null) {
-			setting.set(result.getKey());
-
-			GlUtil.drawBorderRect(result.getValue(), Colors.RED);
-			drawHoveringText(result.getKey().getLocalizedName(), mouseX, mouseY);
-		} else {
-			setting.set(null);
+		for(Map.Entry<HudElement, Bounds> entry : HudElement.getActiveBounds().entrySet()) {
+			drawBounds(entry.getValue(), entry.getKey() == selected);
 		}
 	}
 }

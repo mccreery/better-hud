@@ -13,6 +13,7 @@ betterHud.menu.hudSettings=HUD Optionen
 betterHud.menu.settings=%s Optionen
 betterHud.menu.enableAll=Alle aktivieren
 betterHud.menu.disableAll=Alle deaktivieren
+#betterHud.menu.reorder=Reorder...
 #betterHud.menu.saveLoad=Save/Load...
 betterHud.menu.lastPage=Letzte Seite
 betterHud.menu.nextPage=Nächste Seite
@@ -21,7 +22,7 @@ betterHud.menu.pick=Auswahl
 
 betterHud.menu.alphabetical=A-Z
 #betterHud.menu.enabled=Enabled
-#betterHud.menu.priority=Priority
+#betterHud.menu.priority=Draw Order
 
 # Menu text
 betterHud.menu.unsnap=Halten %s um schnappen zu deaktivieren

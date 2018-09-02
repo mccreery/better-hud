@@ -30,8 +30,8 @@ public class GuiHudMenu extends GuiScreen {
 	final Paginator<HudElement> paginator = new Paginator<HudElement>();
 
 	private final GuiButton returnToGame = new GuiActionButton(I18n.format("menu.returnToGame")).setCallback(() -> MC.displayGuiScreen(null));
-	private final GuiButton enableAll = new GuiActionButton(I18n.format("betterHud.menu.enableAll")).setCallback(() -> setAll(true));
-	private final GuiButton disableAll = new GuiActionButton(I18n.format("betterHud.menu.disableAll")).setCallback(() -> setAll(false));
+	private final GuiButton toggleAll = new GuiActionButton("").setCallback(() -> setAll(!allEnabled()));
+	private final GuiButton reorder = new GuiActionButton(I18n.format("betterHud.menu.reorder")).setCallback(() -> MC.displayGuiScreen(new GuiReorder(this)));
 
 	private final GuiButton resetDefaults = new GuiActionButton(I18n.format("betterHud.menu.saveLoad"))
 		.setCallback(() -> MC.displayGuiScreen(new GuiConfigSaves(this)));
@@ -56,12 +56,16 @@ public class GuiHudMenu extends GuiScreen {
 		return descending;
 	}
 
+	private boolean allEnabled() {
+		return HudElement.ELEMENTS.stream().allMatch(e -> e.settings.get());
+	}
+
 	public void initGui() {
 		paginator.setData(HudElement.SORTER.getSortedData(sortCriteria, descending ^ sortCriteria.isInverted()));
-		paginator.setPageSize(Math.max(1, (int) Math.floor((height / 8 * 7 - 110) / 24)));
+		paginator.setPageSize(Math.max(1, (int) Math.floor((height / 8 * 7 - 134) / 24)));
 
 		addDefaultButtons();
-		Bounds buttonBounds = new Bounds(170, 20).align(new Point(width / 2, height / 16 + 78), Direction.NORTH);
+		Bounds buttonBounds = new Bounds(170, 20).align(new Point(width / 2, height / 16 + 102), Direction.NORTH);
 
 		for(HudElement element : paginator.getPage()) {
 			ButtonRow row = getRow(element);
@@ -85,9 +89,10 @@ public class GuiHudMenu extends GuiScreen {
 		moveButton(globalToggle,   halfWidth.withWidth(halfWidth.getWidth() - 20).anchor(global, Direction.NORTH_WEST));
 		moveButton(globalSettings, halfWidth.withWidth(20).anchor(global, Direction.NORTH_EAST));
 
-		moveButton(enableAll,     thirdWidth.anchor(buttons, Direction.SOUTH_WEST));
-		moveButton(disableAll,    thirdWidth.anchor(buttons,      Direction.SOUTH));
+		moveButton(toggleAll,     thirdWidth.anchor(buttons, Direction.SOUTH_WEST));
+		moveButton(reorder,    thirdWidth.anchor(buttons,      Direction.SOUTH));
 		moveButton(resetDefaults, thirdWidth.anchor(buttons, Direction.SOUTH_EAST));
+		toggleAll.displayString = I18n.format(allEnabled() ? "betterHud.menu.disableAll" : "betterHud.menu.enableAll");
 
 		lastPage.enabled = paginator.hasPrevious();
 		nextPage.enabled = paginator.hasNext();
@@ -103,19 +108,21 @@ public class GuiHudMenu extends GuiScreen {
 		globalToggle.updateText();
 		buttonList.add(globalSettings);
 
-		buttonList.add(enableAll);
-		buttonList.add(disableAll);
+		buttonList.add(toggleAll);
+		buttonList.add(reorder);
 		buttonList.add(resetDefaults);
 
 		buttonList.add(lastPage);
 		buttonList.add(nextPage);
 
 		List<GuiActionButton> indexerControls = getIndexControls(SortType.values());
-		Bounds bounds = new Bounds(5, height - 25, 50, 20);
+		Bounds sortButton = new Bounds(75, 20);
+		Bounds bounds = sortButton.withWidth((sortButton.getWidth() + SPACER) * indexerControls.size() - SPACER).align(new Point(width / 2, height / 16 + 78), Direction.NORTH);
+		sortButton = sortButton.withPosition(bounds.getPosition());
 
 		for(GuiActionButton button : indexerControls) {
-			button.setBounds(bounds);
-			bounds = bounds.withX(bounds.getRight() + SPACER);
+			button.setBounds(sortButton);
+			sortButton = sortButton.withX(sortButton.getRight() + SPACER);
 		}
 		buttonList.addAll(indexerControls);
 	}

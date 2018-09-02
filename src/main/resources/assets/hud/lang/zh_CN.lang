@@ -13,6 +13,7 @@ betterHud.menu.hudSettings=HUD 配置
 betterHud.menu.settings=%s 配置
 betterHud.menu.enableAll=启用全部
 betterHud.menu.disableAll=禁用全部
+#betterHud.menu.reorder=Reorder...
 #betterHud.menu.saveLoad=Save/Load...
 betterHud.menu.lastPage=上一页
 betterHud.menu.nextPage=下一页
@@ -21,7 +22,7 @@ betterHud.menu.pick=选择位置
 
 #betterHud.menu.alphabetical=A-Z
 #betterHud.menu.enabled=Enabled
-#betterHud.menu.priority=Priority
+#betterHud.menu.priority=Draw Order
 
 # Menu text
 #betterHud.menu.unsnap=Hold %s to disable snapping
