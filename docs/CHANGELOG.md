@@ -7,7 +7,17 @@
 - Block viewer recognises custom inventory names
 - Block viewer is smarter with special blocks
 - New positioning system which accepts an anchor, an offset and an alignment
+- Elements can be anchored to a parent element instead of the whole screen
 - XP viewer can show both total XP and XP since death
+- Sorting on the main HUD menu
+- Manually change element draw order with a new GUI
+- Vanilla elements can now be moved, configured and disabled
+- Better support for adding and changing translations
+- Some Brazilian Portuguese support
+- Option to disable compass and clock without corresponding item
+- Configs can be saved and loaded from files
+- Option to show undamageable items in Holding Bar
+- Text mode for compass
 ### Changed
 - Code refactoring, easier to work with
 - Much smaller code
@@ -15,12 +25,27 @@
 - Config uses Forge's system
 - Some settings show different text
 - Language file made easier to view
+- Entity info scale can now be configured globally
+- Player info moved to its own element
+- Improved ping performance, no packet spam
+- Hide survival mode specific elements while in creative mode
+- Mob info now shows shaking hearts when a mob's health is low
 ### Removed
 - Text mode for sign viewer
+- Hunger indicator
 ### Fixed
 - Absolute positions are correctly anchored
 - No longer corrupts the game's OpenGL state manager, so most render bugs should be fixed
 - Arrow count works correctly if the player is left-handed and has a bow in their offhand
+- Armor bars showing wrong warning
+- Mob Info showing incorrect health bar
+- Configuration not saving some values
+- Player hider not turning off
+- Incorrect default config
+- Compass directions disappearing with 0% perspective
+- ConcurrentModificationException crashes
+- Unsnap prompt not localized
+- Health bar incorrect rounding
 
 ## [1.3.9] - 2017-07-06
 ### Added
