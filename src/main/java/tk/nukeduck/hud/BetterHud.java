@@ -85,8 +85,6 @@ public class BetterHud {
 		if(event.getSide() == Side.CLIENT) {
 			MC = Minecraft.getMinecraft();
 
-			System.out.println(MC.player);
-
 			HudElement.loadAllDefaults();
 			CONFIG = new HudConfig(event.getSuggestedConfigurationFile());
 		}
