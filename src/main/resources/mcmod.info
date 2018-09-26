@@ -2,7 +2,7 @@
 	"modid": "hud",
 	"name": "Better HUD",
 	"description": "Better HUD adds 28 new elements to the ingame HUD. New elements can be customized in many different ways, moved around and enabled/disabled as you choose.\n\nNew elements include a sign reader, player/mob info, raindrops and blood effects, armor and held item info, clock and many more.",
-	"version": "1.4",
+	"version": "1.4-beta",
 	"mcversion": "1.12.2",
 	"url": "https://minecraft.curseforge.com/projects/better-hud",
 	"authorList": ["jobicade"],

@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [1.4]
 ### Added
 - Server compatibility checks for future elements
 - CPS counter
@@ -18,6 +18,7 @@
 - Configs can be saved and loaded from files
 - Option to show undamageable items in Holding Bar
 - Text mode for compass
+- Support for Forge's update check
 ### Changed
 - Code refactoring, easier to work with
 - Much smaller code
