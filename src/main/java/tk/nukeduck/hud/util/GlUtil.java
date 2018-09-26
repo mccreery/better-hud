@@ -43,6 +43,7 @@ public final class GlUtil {
 	/** @see Gui#drawRect(int, int, int, int, int) */
 	public static void drawRect(Bounds bounds, int color) {
 		Gui.drawRect(bounds.getLeft(), bounds.getTop(), bounds.getRight(), bounds.getBottom(), color);
+		GlStateManager.enableBlend();
 	}
 
 	public static void drawBorderRect(Bounds bounds, int color) {
