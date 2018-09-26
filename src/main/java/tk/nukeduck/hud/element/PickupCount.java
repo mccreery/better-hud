@@ -127,7 +127,7 @@ public class PickupCount extends HudElement {
 
 			for(StackNode node : stacks) {
 				int lineWidth = MC.fontRenderer.getStringWidth(node.toString());
-	
+
 				if(lineWidth > width) {
 					width = lineWidth;
 				}

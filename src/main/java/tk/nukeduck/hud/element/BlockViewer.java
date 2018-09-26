@@ -174,7 +174,7 @@ public class BlockViewer extends TextElement {
 				MC.storeTEInStack(stack, tileEntity);
 			}
 		}
-		
+
 		return stack;
 	}
 
@@ -200,7 +200,7 @@ public class BlockViewer extends TextElement {
 				}
 			}
 		}
-		
+
 		return isStackEmpty(stack) ? state.getBlock().getLocalizedName() : stack.getDisplayName();
 	}
 

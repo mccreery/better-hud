@@ -70,7 +70,7 @@ public abstract class EquipmentDisplay extends HudElement {
 		StringBuilder builder = new StringBuilder();
 
 		FormatUtil.join(" - ", parts, builder);
-		
+
 		if(stack.isItemStackDamageable()) {
 			int count = warnings.getWarning(value);
 
