@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BooleanSupplier;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
@@ -35,9 +36,16 @@ public abstract class Setting<T> implements IGetSet<T> {
 	 * @see #getGuiParts(List, Map, Point) */
 	private boolean hidden = false;
 
+	private BooleanSupplier enableOn = () -> true;
+
 	public Setting(String name) {
 		this.name = name;
 		if(name != null) this.unlocalizedName = "betterHud.setting." + name;
+	}
+
+	public Setting<T> setEnableOn(BooleanSupplier enableOn) {
+		this.enableOn = enableOn;
+		return this;
 	}
 
 	public Setting<T> setHidden() {
@@ -72,7 +80,7 @@ public abstract class Setting<T> implements IGetSet<T> {
 
 	/** @return {@code true} if this element and its ancestors are enabled */
 	public boolean enabled() {
-		return parent == null || parent.enabled();
+		return (parent == null || parent.enabled()) && enableOn.getAsBoolean();
 	}
 
 	/** Binds properties to elements for loading and saving */

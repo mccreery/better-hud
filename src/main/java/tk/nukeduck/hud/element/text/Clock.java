@@ -9,6 +9,7 @@ import java.util.List;
 import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingChoose;
+import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.Direction.Options;
 
@@ -20,7 +21,7 @@ public abstract class Clock extends TextElement {
 	private final SettingBoolean fullYear = new SettingBoolean("fullYear").setUnlocalizedValue(SettingBoolean.VISIBLE);
 
 	public Clock(String name) {
-		super(name, Options.CORNERS);
+		super(name, new SettingPosition(Options.CORNERS, Options.WEST_EAST));
 		border = true;
 
 		settings.add(new Legend("misc"));

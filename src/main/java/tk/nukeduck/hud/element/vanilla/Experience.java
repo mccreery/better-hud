@@ -16,13 +16,10 @@ import tk.nukeduck.hud.util.Point;
 
 public class Experience extends OverrideElement {
 	private final SettingBoolean hideMount = new SettingBoolean("hideMount");
-	private final SettingPosition position = new SettingPosition("position", Options.BAR, Options.NORTH_SOUTH);
 
 	public Experience() {
-		super("experience");
-
+		super("experience", new SettingPosition(Options.BAR, Options.NORTH_SOUTH));
 		settings.add(hideMount);
-		settings.add(position);
 	}
 
 	@Override

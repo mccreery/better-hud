@@ -14,12 +14,9 @@ import tk.nukeduck.hud.util.Direction.Options;
 import tk.nukeduck.hud.util.GlUtil;
 
 public class Hotbar extends OverrideElement {
-	private SettingPosition position = new SettingPosition("position", Options.TOP_BOTTOM, Options.NONE)
-		.setEdge(true).setPostSpacer(2);
-
 	public Hotbar() {
-		super("hotbar");
-		settings.add(position);
+		super("hotbar", new SettingPosition(Options.TOP_BOTTOM, Options.NONE));
+		position.setEdge(true).setPostSpacer(2);
 	}
 
 	@Override

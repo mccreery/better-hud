@@ -23,8 +23,6 @@ import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Point;
 
 public class PickupCount extends HudElement {
-	private final SettingPosition position = new SettingPosition("position", Options.X, Options.CORNERS);
-
 	private final SettingSlider maxStacks = new SettingSlider("maxStacks", 1, 11, 1) {
 		@Override
 		public String getDisplayValue(double scaledValue) {
@@ -60,9 +58,8 @@ public class PickupCount extends HudElement {
 	}
 
 	public PickupCount() {
-		super("itemPickup");
+		super("itemPickup", new SettingPosition(Options.X, Options.CORNERS));
 
-		settings.add(position);
 		settings.add(fadeAfter);
 		settings.add(maxStacks);
 	}

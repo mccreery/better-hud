@@ -11,6 +11,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
+import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.element.settings.SettingSlider;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
@@ -32,7 +33,7 @@ public class Coordinates extends TextElement {
 	}
 
 	public Coordinates() {
-		super("coordinates", Options.TOP_BOTTOM);
+		super("coordinates", new SettingPosition(Options.TOP_BOTTOM, Options.NONE));
 
 		this.settings.add(new Legend("misc"));
 		this.settings.add(spaced);

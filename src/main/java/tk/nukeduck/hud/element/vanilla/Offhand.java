@@ -18,11 +18,8 @@ import tk.nukeduck.hud.util.Direction.Options;
 import tk.nukeduck.hud.util.GlUtil;
 
 public class Offhand extends OverrideElement {
-	private final SettingPosition position = new SettingPosition("position", Options.BAR, Options.NONE);
-
 	public Offhand() {
-		super("offhand");
-		settings.add(position);
+		super("offhand", new SettingPosition("position", Options.BAR, Options.NONE));
 	}
 
 	@Override

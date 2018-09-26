@@ -11,6 +11,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingChoose;
+import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.Direction.Options;
@@ -28,7 +29,7 @@ public class Distance extends TextElement {
 	}
 
 	public Distance() {
-		super("distance", Options.X);
+		super("distance", new SettingPosition(Options.X, Options.WEST_EAST));
 		this.settings.add(new Legend("misc"));
 		this.settings.add(mode);
 	}

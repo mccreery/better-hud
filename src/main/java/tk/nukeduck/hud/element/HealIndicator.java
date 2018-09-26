@@ -8,16 +8,13 @@ import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingChoose;
-import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.Direction.Options;
 import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Point;
 
 public class HealIndicator extends HudElement {
-	private final SettingPosition position = new SettingPosition("position", Options.NONE, Options.NONE);
 	private final SettingChoose mode = new SettingChoose(2);
 
 	@Override
@@ -31,7 +28,6 @@ public class HealIndicator extends HudElement {
 	public HealIndicator() {
 		super("healIndicator");
 
-		settings.add(position);
 		this.settings.add(new Legend("misc"));
 		this.settings.add(mode);
 	}

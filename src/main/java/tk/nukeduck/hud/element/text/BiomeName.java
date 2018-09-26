@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.util.math.BlockPos;
+import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.Direction.Options;
 
@@ -18,7 +19,7 @@ public class BiomeName extends TextElement {
 	}
 
 	public BiomeName() {
-		super("biome", Options.TOP_BOTTOM);
+		super("biome", new SettingPosition(Options.TOP_BOTTOM, Options.NONE));
 	}
 
 	@Override

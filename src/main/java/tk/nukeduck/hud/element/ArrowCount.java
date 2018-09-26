@@ -19,15 +19,7 @@ import tk.nukeduck.hud.util.Point;
 
 public class ArrowCount extends HudElement {
 	private static final ItemStack ARROW = new ItemStack(Items.ARROW, 1);
-
 	private final SettingBoolean overlay = new SettingBoolean("overlay");
-
-	private final SettingPosition position = new SettingPosition("position", Options.CORNERS, Options.NONE) {
-		@Override
-		public boolean enabled() {
-			return !overlay.get();
-		}
-	};
 
 	@Override
 	public void loadDefaults() {
@@ -39,10 +31,10 @@ public class ArrowCount extends HudElement {
 	}
 
 	public ArrowCount() {
-		super("arrowCount");
+		super("arrowCount", new SettingPosition(Options.CORNERS, Options.NONE));
+		position.setEnableOn(() -> !overlay.get());
 
 		settings.add(overlay);
-		settings.add(position);
 	}
 
 	/** Note this method only cares about arrows which can be shot by a vanilla bow

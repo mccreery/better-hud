@@ -67,19 +67,12 @@ public class Crosshair extends OverrideElement {
 		}
 	};
 
-	private final SettingPosition position = new SettingPosition("position", Options.I, Options.NONE) {
-		@Override
-		public boolean enabled() {
-			return super.enabled() && indicatorType.enabled();
-		}
-	};
-
 	public Crosshair() {
-		super("crosshair");
+		super("crosshair", new SettingPosition(Options.I, Options.NONE));
 
+		position.setEnableOn(() -> attackIndicator.get());
 		settings.add(attackIndicator);
 		settings.add(indicatorType);
-		settings.add(position);
 	}
 
 	@Override

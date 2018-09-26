@@ -14,23 +14,16 @@ import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.StringGroup;
 
 public abstract class TextElement extends HudElement {
-	protected SettingPosition position;
 	protected SettingColor color = new SettingColor("color");
 
 	protected boolean border = false;
 
 	public TextElement(String name) {
-		this(name, Options.CORNERS, Options.HORIZONTAL);
+		this(name, new SettingPosition(Options.CORNERS, Options.CORNERS));
 	}
 
-	public TextElement(String name, Options directions) {
-		this(name, directions, Options.HORIZONTAL);
-	}
-
-	public TextElement(String name, Options directions, Options contentAlignments) {
-		super(name);
-
-		settings.add(position = new SettingPosition("position", directions, contentAlignments));
+	public TextElement(String name, SettingPosition position) {
+		super(name, position);
 		settings.add(color);
 	}
 
@@ -67,7 +60,9 @@ public abstract class TextElement extends HudElement {
 	protected Bounds render(Event event, List<String> text) {
 		StringGroup group = new StringGroup(text);
 		group.setColor(color.get());
-		group.setAlignment(position.getContentAlignment());
+
+		Direction contentAlignment = position.getContentAlignment();
+		if(contentAlignment != null) group.setAlignment(contentAlignment);
 
 		Bounds padding = getPadding();
 		Bounds margin = getMargin();

@@ -16,11 +16,8 @@ import tk.nukeduck.hud.util.Direction.Options;
 import tk.nukeduck.hud.util.GlUtil;
 
 public class JumpBar extends OverrideElement {
-	private final SettingPosition position = new SettingPosition("position", Options.BAR, Options.NORTH_SOUTH);
-
 	public JumpBar() {
-		super("jumpBar");
-		settings.add(position);
+		super("jumpBar", new SettingPosition("position", Options.BAR, Options.NORTH_SOUTH));
 	}
 
 	@Override

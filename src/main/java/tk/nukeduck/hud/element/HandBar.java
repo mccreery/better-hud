@@ -14,7 +14,6 @@ import tk.nukeduck.hud.util.Direction.Options;
 import tk.nukeduck.hud.util.GlUtil;
 
 public class HandBar extends EquipmentDisplay {
-	private final SettingPosition position = new SettingPosition("position", Options.BAR, Options.NORTH_SOUTH);
 	private final SettingBoolean showItem = new SettingBoolean("showItem").setUnlocalizedValue(SettingBoolean.VISIBLE);
 	private final SettingBoolean offHand = new SettingBoolean("offhand");
 	private final SettingBoolean showBars = new SettingBoolean("bars");
@@ -32,9 +31,8 @@ public class HandBar extends EquipmentDisplay {
 	}
 
 	public HandBar() {
-		super("handBar");
+		super("handBar", new SettingPosition(Options.BAR, Options.NORTH_SOUTH));
 
-		settings.add(position);
 		settings.add(new Legend("misc"));
 		settings.add(showItem);
 		settings.add(showBars);

@@ -24,6 +24,7 @@ import tk.nukeduck.hud.element.entityinfo.PlayerInfo;
 import tk.nukeduck.hud.element.particles.BloodSplatters;
 import tk.nukeduck.hud.element.particles.WaterDrops;
 import tk.nukeduck.hud.element.settings.RootSetting;
+import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.element.text.BiomeName;
 import tk.nukeduck.hud.element.text.Connection;
 import tk.nukeduck.hud.element.text.Coordinates;
@@ -53,6 +54,7 @@ import tk.nukeduck.hud.element.vanilla.Vignette;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.SortField;
 import tk.nukeduck.hud.util.Sorter;
+import tk.nukeduck.hud.util.Direction.Options;
 import tk.nukeduck.hud.util.mode.GlMode;
 
 public abstract class HudElement {
@@ -142,6 +144,7 @@ public abstract class HudElement {
 
 	/** The settings saved to the config file for this element */
 	public final RootSetting settings = new RootSetting(this);
+	protected final SettingPosition position;
 
 	public void setEnabled(boolean value) {
 		settings.set(value);
@@ -155,7 +158,16 @@ public abstract class HudElement {
 	public final String name;
 
 	protected HudElement(String name) {
+		this(name, new SettingPosition(Options.NONE, Options.NONE));
+	}
+
+	protected HudElement(String name, SettingPosition position) {
 		this.name = name;
+		this.position = position;
+
+		if(position.getDirectionOptions() != Options.NONE || position.getContentOptions() != Options.NONE) {
+			settings.add(position);
+		}
 
 		id = ELEMENTS.size();
 		ELEMENTS.add(this);

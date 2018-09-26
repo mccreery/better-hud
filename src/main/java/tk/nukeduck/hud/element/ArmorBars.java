@@ -19,7 +19,6 @@ import tk.nukeduck.hud.util.Point;
 import tk.nukeduck.hud.util.StringGroup;
 
 public class ArmorBars extends EquipmentDisplay {
-	private final SettingPosition position = new SettingPosition("position", Options.CORNERS, Options.WEST_EAST);
 	private final SettingChoose barType = new SettingChoose("bars", "visible.off", "smallBars", "largeBars");
 	private final SettingBoolean alwaysVisible = new SettingBoolean("alwaysVisible");
 
@@ -33,11 +32,10 @@ public class ArmorBars extends EquipmentDisplay {
 	}
 
 	public ArmorBars() {
-		super("armorBars");
+		super("armorBars", new SettingPosition(Options.CORNERS, Options.WEST_EAST));
 
 		settings.add(barType);
 		settings.add(alwaysVisible);
-		settings.add(position);
 	}
 
 	private boolean showBars() {

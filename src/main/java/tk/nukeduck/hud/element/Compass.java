@@ -24,7 +24,6 @@ import tk.nukeduck.hud.util.Point;
 public class Compass extends HudElement {
 	private static final String[] DIRECTIONS = {"S", "E", "N", "W"};
 
-	private final SettingPosition position = new SettingPosition("position", Direction.Options.TOP_BOTTOM, Direction.Options.NORTH_SOUTH);
 	private final SettingChoose mode = new SettingChoose("mode", "visual", "text");
 	private final SettingSlider directionScaling = new SettingPercentage("letterScale");
 	private final SettingBoolean showNotches = new SettingBoolean("showNotches").setUnlocalizedValue(SettingBoolean.VISIBLE);
@@ -52,10 +51,9 @@ public class Compass extends HudElement {
 	}
 
 	public Compass() {
-		super("compass");
+		super("compass", new SettingPosition(Direction.Options.TOP_BOTTOM, Direction.Options.NORTH_SOUTH));
 
 		settings.add(mode);
-		settings.add(position);
 		settings.add(new Legend("misc"));
 		settings.add(directionScaling);
 		settings.add(showNotches);

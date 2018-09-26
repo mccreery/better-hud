@@ -35,6 +35,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
+import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.element.text.TextElement;
 import tk.nukeduck.hud.network.InventoryNameQuery;
 import tk.nukeduck.hud.util.Bounds;
@@ -63,7 +64,7 @@ public class BlockViewer extends TextElement {
 	private ItemStack stack;
 
 	public BlockViewer() {
-		super("blockViewer", Options.I, Options.WEST_EAST);
+		super("blockViewer", new SettingPosition(Options.I, Options.WEST_EAST));
 
 		settings.add(new Legend("misc"));
 		settings.add(showBlock);

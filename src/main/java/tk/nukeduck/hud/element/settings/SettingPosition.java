@@ -26,6 +26,18 @@ public class SettingPosition extends SettingStub<Object> {
 	private final SettingDirection anchor, alignment, contentAlignment;
 	private final SettingLock lockAlignment, lockContent;
 
+	public Options getDirectionOptions() {
+		return direction.getOptions();
+	}
+
+	public Options getContentOptions() {
+		return contentAlignment.getOptions();
+	}
+
+	public SettingPosition(Options directionOptions, Options contentOptions) {
+		this("position", directionOptions, contentOptions);
+	}
+
 	public SettingPosition(String name) {
 		this(name, Options.ALL, Options.ALL);
 	}

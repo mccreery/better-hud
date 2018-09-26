@@ -14,8 +14,6 @@ import tk.nukeduck.hud.util.Direction.Options;
 import tk.nukeduck.hud.util.bars.StatBar;
 
 public abstract class Bar extends OverrideElement {
-	protected final SettingPosition position = new SettingPosition("position", Options.BAR, Options.CORNERS);
-
 	protected final SettingChoose side = new SettingChoose("side", "west", "east") {
 		@Override
 		public boolean enabled() {
@@ -26,10 +24,8 @@ public abstract class Bar extends OverrideElement {
 	private StatBar<? super EntityPlayerSP> bar;
 
 	public Bar(String name, StatBar<? super EntityPlayerSP> bar) {
-		super(name);
+		super(name, new SettingPosition(Options.BAR, Options.CORNERS));
 		this.bar = bar;
-
-		settings.add(position);
 		settings.add(side);
 	}
 

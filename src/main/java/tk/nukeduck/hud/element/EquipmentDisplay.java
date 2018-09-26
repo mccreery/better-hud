@@ -6,6 +6,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingChoose;
+import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.element.settings.SettingWarnings;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.FormatUtil;
@@ -22,8 +23,8 @@ public abstract class EquipmentDisplay extends HudElement {
 		}
 	};
 
-	protected EquipmentDisplay(String name) {
-		super(name);
+	protected EquipmentDisplay(String name, SettingPosition position) {
+		super(name, position);
 
 		settings.add(showName);
 		settings.add(showDurability);
