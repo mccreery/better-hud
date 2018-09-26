@@ -224,6 +224,7 @@ betterHud.setting.overlay=Einblendung
 betterHud.setting.showTotalExp=Gesamt
 betterHud.setting.spaced=Abstand
 #betterHud.setting.tooltipLines=Tooltip Lines
+#betterHud.setting.warnings=Warnings
 #betterHud.value.text=Text
 #betterHud.value.visual=Visual
 
