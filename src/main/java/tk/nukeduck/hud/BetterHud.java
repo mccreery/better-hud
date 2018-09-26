@@ -36,7 +36,7 @@ import tk.nukeduck.hud.util.HudConfig;
 import tk.nukeduck.hud.util.LayoutManager;
 import tk.nukeduck.hud.util.Tickable.Ticker;
 
-@Mod(modid = BetterHud.MODID, name = "Better HUD", version = BetterHud.VERSION_STRING)
+@Mod(modid = BetterHud.MODID, name = "Better HUD", version = BetterHud.VERSION_STRING, updateJSON = "https://raw.githubusercontent.com/mccreery/better-hud/master/update.json")
 public class BetterHud {
 	public static final String MODID = "hud";
 
