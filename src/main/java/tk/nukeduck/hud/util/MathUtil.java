@@ -62,6 +62,11 @@ public final class MathUtil {
 	 * @param max The high end of the range (exclusive)
 	 * @return A random integer between the specified values */
 	public static int randomRange(int min, int max) {
+		if(max < min) {
+			int temp = min;
+			min = max;
+			max = temp;
+		}
 		return min + currentRandom.nextInt(max - min);
 	}
 
