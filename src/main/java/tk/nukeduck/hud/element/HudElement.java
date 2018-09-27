@@ -108,7 +108,7 @@ public abstract class HudElement {
 		ALPHABETICAL("alphabetical", false) {
 			@Override
 			public int compare(HudElement a, HudElement b) {
-				return a.name.compareTo(b.name);
+				return a.getLocalizedName().compareTo(b.getLocalizedName());
 			}
 		}, ENABLED("enabled", false) {
 			@Override

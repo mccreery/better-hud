@@ -2,8 +2,12 @@ package tk.nukeduck.hud;
 
 import java.util.Arrays;
 
+import org.apache.logging.log4j.Logger;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.resources.IReloadableResourceManager;
+import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ResourceLocation;
@@ -24,6 +28,7 @@ import net.minecraftforge.fml.common.versioning.VersionRange;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import tk.nukeduck.hud.element.HudElement;
+import tk.nukeduck.hud.element.HudElement.SortType;
 import tk.nukeduck.hud.events.KeyEvents;
 import tk.nukeduck.hud.events.PickupNotifier;
 import tk.nukeduck.hud.events.RenderEvents;
@@ -50,6 +55,11 @@ public class BetterHud {
 
 	public static boolean serverSupports(VersionRange range) {
 		return range.containsVersion(serverVersion);
+	}
+
+	private static Logger logger;
+	public static Logger getLogger() {
+		return logger;
 	}
 
 	@SideOnly(Side.CLIENT) public static Minecraft MC;
@@ -82,6 +92,8 @@ public class BetterHud {
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
+		logger = event.getModLog();
+
 		if(event.getSide() == Side.CLIENT) {
 			MC = Minecraft.getMinecraft();
 
@@ -110,6 +122,13 @@ public class BetterHud {
 
 		MinecraftForge.EVENT_BUS.register(pickupNotifier = new PickupNotifier());
 		MinecraftForge.EVENT_BUS.register(this);
+
+		IResourceManager manager = MC.getResourceManager();
+		if(manager instanceof IReloadableResourceManager) {
+			((IReloadableResourceManager)manager).registerReloadListener(m -> HudElement.SORTER.markDirty(SortType.ALPHABETICAL));
+		} else {
+			logger.warn("Unable to register alphabetical sort update on language change");
+		}
 	}
 
 	@SubscribeEvent
