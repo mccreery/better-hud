@@ -191,7 +191,7 @@ public final class Bounds implements Serializable {
 	/** Aligns this bounds around the anchor with the given alignment
 	 * @param anchor The anchor
 	 * @param alignment The alignment around the anchor
-	 * 
+	 *
 	 * @return A new bounds with the alignment applied */
 	public Bounds align(Point anchor, Direction alignment) {
 		return withPosition(anchor.sub(withPosition(Point.ZERO).getAnchor(alignment)));

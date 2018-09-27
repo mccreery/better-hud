@@ -12,7 +12,7 @@ public class RootSetting extends SettingStub<Boolean> {
 	public final Setting<Integer> priority = new SettingStub<Integer>("priority") {
 		@Override public void set(Integer value) {priorityRank = value;}
 		@Override public Integer get() {return priorityRank;}
-		
+
 		@Override public String save() {return String.valueOf(priorityRank);}
 		@Override public void load(String save) {priorityRank = Integer.parseInt(save);}
 

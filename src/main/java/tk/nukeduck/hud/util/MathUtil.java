@@ -127,7 +127,7 @@ public final class MathUtil {
 
 	/** Partitions {@code items} such that all elements that satisfy {@code condition}
 	 * are guaranteed to be placed further right than the rightmost element that does not.
-	 * <p>This operation is not stable, i.e. the order of 
+	 * <p>This operation is not stable
 	 *
 	 * @param items The list to partition. Is modified in place
 	 * @param condition The condition for elements to be placed to the right
@@ -135,7 +135,7 @@ public final class MathUtil {
 	public static <T> int partition(List<? extends T> items, Predicate<T> condition) {
 		int i = 0;
 		int j = items.size();
-	
+
 		while(i != j) {
 			while(!condition.test(items.get(i))) {
 				if(++i == j) return i;
@@ -143,7 +143,7 @@ public final class MathUtil {
 			do {
 				if(i == --j) return i;
 			} while(condition.test(items.get(j)));
-	
+
 			Collections.swap(items, i, j);
 			++i;
 		}

@@ -73,7 +73,7 @@ public class PickupNotifier {
 		 * (if these slots are checked, the other slots will also be checked) */
 		if(start <= -2 && canMergeStacks(inventory, inventory.getStackInSlot(inventory.currentItem), stack)) return inventory.currentItem;
 		if(start <= -1 && canMergeStacks(inventory, inventory.getStackInSlot(40), stack)) return 40;
-		
+
 		if(start < 0) start = 0;
 		for(int i = start; i < 36; i++) {
 			// Must ignore current item here

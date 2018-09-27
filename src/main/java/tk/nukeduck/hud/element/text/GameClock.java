@@ -117,7 +117,7 @@ public class GameClock extends Clock {
 		} else {
 			DateFormat format = super.getDateFormat();
 			format.setTimeZone(UTC);
-	
+
 			return format;
 		}
 	}

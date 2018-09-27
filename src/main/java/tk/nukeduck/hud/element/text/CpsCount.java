@@ -68,7 +68,7 @@ public class CpsCount extends TextElement implements Tickable {
 	@Override
 	public void tick() {
 		// Tracker should start or is running
-		if(timeout < timeoutMax.get() || clickHistory[i] > 0) { 
+		if(timeout < timeoutMax.get() || clickHistory[i] > 0) {
 			//System.out.println(clickHistory[i] + " clicks this second");
 
 			if(clickHistory[i] > 0) {

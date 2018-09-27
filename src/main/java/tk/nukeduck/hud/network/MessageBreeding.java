@@ -5,13 +5,13 @@ import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 
 public class MessageBreeding implements IMessage {
 	public int entityId, inLove;
-	
+
 	public MessageBreeding() {}
 	public MessageBreeding(int entityId, int inLove) {
 		this.entityId = entityId;
 		this.inLove = inLove;
 	}
-	
+
 	@Override
 	public void fromBytes(ByteBuf buf) {
 		this.entityId = buf.readInt();

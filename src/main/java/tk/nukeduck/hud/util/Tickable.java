@@ -65,7 +65,7 @@ public interface Tickable {
 				for(Tickable element : children) {
 					element.tick();
 				}
-	
+
 				counter = 0;
 				if(next != null) next.tick();
 			}

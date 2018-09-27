@@ -53,7 +53,7 @@ public class GuiToggleButton extends GuiActionButton implements IGetSet<Boolean>
 	public void updateText() {
 		if(!staticText) {
 			String valueDisplay;
-	
+
 			if(get()) {
 				valueDisplay = ChatFormatting.GREEN + I18n.format(unlocalizedValue + ".on");
 			} else {

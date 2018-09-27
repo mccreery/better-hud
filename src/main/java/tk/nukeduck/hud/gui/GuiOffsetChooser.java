@@ -47,7 +47,7 @@ public class GuiOffsetChooser extends GuiScreen {
 			if(x >= -1 && x <= 1) {
 				offset = offset.withX(x * SPACER);
 			}
-			
+
 			int y = (offset.getY() + SPACER * 3 / 2) / SPACER - 1;
 			if(y >= -1 && y <= 1) {
 				offset = offset.withY(y * SPACER);
