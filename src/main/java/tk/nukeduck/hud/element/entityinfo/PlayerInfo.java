@@ -107,7 +107,9 @@ public class PlayerInfo extends EntityInfo {
 		Map<Enchantment, Integer> enchantments = EnchantmentHelper.getEnchantments(stack);
 
 		for(Map.Entry<Enchantment, Integer> enchantment : enchantments.entrySet()) {
-			dest.add(ChatFormatting.GRAY + enchantment.getKey().getTranslatedName(enchantment.getValue()));
+			if(enchantment.getKey() != null && enchantment.getValue() > 0) {
+				dest.add(ChatFormatting.GRAY + enchantment.getKey().getTranslatedName(enchantment.getValue()));
+			}
 		}
 	}
 
