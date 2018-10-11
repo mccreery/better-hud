@@ -3,7 +3,6 @@ package tk.nukeduck.hud.element.vanilla;
 import static tk.nukeduck.hud.BetterHud.MC;
 import static tk.nukeduck.hud.BetterHud.WIDGETS;
 
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
@@ -11,6 +10,8 @@ import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.Direction.Options;
+import tk.nukeduck.hud.util.mode.GlMode;
+import tk.nukeduck.hud.util.mode.TextureMode;
 import tk.nukeduck.hud.util.GlUtil;
 
 public class Hotbar extends OverrideElement {
@@ -37,10 +38,7 @@ public class Hotbar extends OverrideElement {
 
 	@Override
 	protected Bounds render(Event event) {
-		GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-		GlUtil.enableBlendTranslucent();
-		MC.getTextureManager().bindTexture(WIDGETS);
-
+		GlMode.push(new TextureMode(WIDGETS));
 		Bounds barTexture = new Bounds(182, 22);
 		Bounds bounds = position.applyTo(new Bounds(barTexture));
 
@@ -58,6 +56,7 @@ public class Hotbar extends OverrideElement {
 			}
 		}
 
+		GlMode.pop();
 		return bounds;
 	}
 }

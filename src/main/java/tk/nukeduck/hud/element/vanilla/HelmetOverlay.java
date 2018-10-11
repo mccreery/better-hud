@@ -3,7 +3,6 @@ package tk.nukeduck.hud.element.vanilla;
 import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
 
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -12,6 +11,8 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.GlUtil;
+import tk.nukeduck.hud.util.mode.GlMode;
+import tk.nukeduck.hud.util.mode.TextureMode;
 
 public class HelmetOverlay extends OverrideElement {
 	private static final ResourceLocation PUMPKIN_BLUR_TEX_PATH = new ResourceLocation("textures/misc/pumpkinblur.png");
@@ -42,13 +43,9 @@ public class HelmetOverlay extends OverrideElement {
 		Item item = stack.getItem();
 
 		if(item == Item.getItemFromBlock(Blocks.PUMPKIN)) {
-			GlStateManager.disableAlpha();
-			GlStateManager.enableBlend();
-			GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
-
-			MC.getTextureManager().bindTexture(PUMPKIN_BLUR_TEX_PATH);
+			GlMode.push(new TextureMode(PUMPKIN_BLUR_TEX_PATH));
 			GlUtil.drawTexturedModalRect(MANAGER.getScreen(), new Bounds(256, 256));
+			GlMode.pop();
 		} else {
 			item.renderHelmetOverlay(stack, MC.player, MANAGER.getScaledResolution(), getPartialTicks(event));
 		}

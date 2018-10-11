@@ -2,20 +2,21 @@ package tk.nukeduck.hud.element.vanilla;
 
 import static tk.nukeduck.hud.BetterHud.MC;
 import static tk.nukeduck.hud.BetterHud.SPACER;
+import static tk.nukeduck.hud.BetterHud.WIDGETS;
 
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHandSide;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
-import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.Direction.Options;
 import tk.nukeduck.hud.util.GlUtil;
+import tk.nukeduck.hud.util.mode.GlMode;
+import tk.nukeduck.hud.util.mode.TextureMode;
 
 public class Offhand extends OverrideElement {
 	public Offhand() {
@@ -53,11 +54,9 @@ public class Offhand extends OverrideElement {
 			bounds = position.applyTo(bounds);
 		}
 
-		GlStateManager.enableBlend();
-		GlStateManager.enableDepth();
-
-		MC.getTextureManager().bindTexture(BetterHud.WIDGETS);
+		GlMode.push(new TextureMode(WIDGETS));
 		GlUtil.drawTexturedModalRect(bounds, texture);
+		GlMode.pop();
 
 		RenderHelper.enableGUIStandardItemLighting();
 		GlUtil.renderHotbarItem(bounds.translate(3, 3), offhandStack, getPartialTicks(event));

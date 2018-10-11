@@ -1,13 +1,14 @@
 package tk.nukeduck.hud.element.particles;
 
 import static tk.nukeduck.hud.BetterHud.MANAGER;
-import static tk.nukeduck.hud.BetterHud.MC;
 import static tk.nukeduck.hud.BetterHud.PARTICLES;
 
 import net.minecraft.client.renderer.GlStateManager;
 import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.MathUtil;
 import tk.nukeduck.hud.util.Point;
+import tk.nukeduck.hud.util.mode.GlMode;
+import tk.nukeduck.hud.util.mode.TextureMode;
 
 public class ParticleWater extends ParticleBase {
 	private float speed;
@@ -30,14 +31,14 @@ public class ParticleWater extends ParticleBase {
 
 	@Override
 	public void render(float partialTicks) {
-		MC.getTextureManager().bindTexture(PARTICLES);
+		GlMode.push(new TextureMode(PARTICLES));
 		GlStateManager.pushMatrix();
 
 		GlStateManager.translate(position.getX(), position.getY() - opacity * speed, 0);
 		GlStateManager.scale(size, size, 1);
-		GlStateManager.color(1, 1, 1, opacity);
 		GlUtil.drawTexturedModalRect(Point.ZERO, texture);
 
 		GlStateManager.popMatrix();
+		GlMode.pop();
 	}
 }

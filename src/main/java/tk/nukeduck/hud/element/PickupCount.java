@@ -6,7 +6,6 @@ import static tk.nukeduck.hud.BetterHud.SPACER;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.Event;
@@ -81,9 +80,6 @@ public class PickupCount extends HudElement {
 		long updateCounter = MC.ingameGUI.getUpdateCounter();
 		long lifetime = fadeAfter.getInt();
 
-		GlStateManager.enableBlend();
-		GlStateManager.enableAlpha();
-
 		int maximum = maxStacks.getInt() <= 10 ? Math.min(stacks.size(), maxStacks.getInt()) : stacks.size();
 
 		int i;
@@ -99,7 +95,6 @@ public class PickupCount extends HudElement {
 			// Opacity lower than 4 defaults to 255
 			int color = Colors.setAlpha(Colors.WHITE, Math.max(4, Math.round(opacity * 255)));
 
-			//GlStateManager.color(1, 1, 1, opacity);
 			GlUtil.renderSingleItem(node.stack, stackBounds.getPosition());
 			GlUtil.drawString(node.toString(), stackBounds.grow(SPACER).getAnchor(rowAlignment.mirrorColumn()), rowAlignment, color);
 

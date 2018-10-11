@@ -2,13 +2,14 @@ package tk.nukeduck.hud.element.particles;
 
 import static tk.nukeduck.hud.BetterHud.HUD_ICONS;
 import static tk.nukeduck.hud.BetterHud.MANAGER;
-import static tk.nukeduck.hud.BetterHud.MC;
 
 import net.minecraft.client.renderer.GlStateManager;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.MathUtil;
 import tk.nukeduck.hud.util.Point;
+import tk.nukeduck.hud.util.mode.GlMode;
+import tk.nukeduck.hud.util.mode.TextureMode;
 
 public class ParticleBase implements Particle {
 	protected Point position;
@@ -47,16 +48,16 @@ public class ParticleBase implements Particle {
 
 	@Override
 	public void render(float partialTicks) {
-		MC.getTextureManager().bindTexture(HUD_ICONS);
+		GlMode.push(new TextureMode(HUD_ICONS));
 		GlStateManager.pushMatrix();
 
-		GlStateManager.color(1, 1, 1, opacity);
 		GlStateManager.translate(position.getX(), position.getY(), 0.0F);
 		GlStateManager.rotate(rotation, 0, 0, 1);
 		GlStateManager.scale(this.size, this.size, 1.0F);
 		GlUtil.drawTexturedModalRect(Point.ZERO, texture);
 
 		GlStateManager.popMatrix();
+		GlMode.pop();
 	}
 
 	@Override

@@ -10,7 +10,6 @@ import java.util.List;
 import com.google.common.collect.Ordering;
 
 import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
@@ -28,6 +27,9 @@ import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.Direction.Options;
+import tk.nukeduck.hud.util.mode.ColorMode;
+import tk.nukeduck.hud.util.mode.GlMode;
+import tk.nukeduck.hud.util.mode.TextureMode;
 import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.MathUtil;
 import tk.nukeduck.hud.util.Point;
@@ -86,9 +88,6 @@ public class PotionBar extends OverrideElement {
 
 		Bounds bounds = getBounds(harmful.size(), helpful.size());
 
-		GlUtil.enableBlendTranslucent();
-		GlStateManager.enableAlpha();
-
 		Direction alignment = position.getContentAlignment();
 		Point icon = new Bounds(24, 24).anchor(bounds, alignment).getPosition();
 
@@ -129,8 +128,6 @@ public class PotionBar extends OverrideElement {
 			return;
 		}
 
-		MC.getTextureManager().bindTexture(GuiContainer.INVENTORY_BACKGROUND);
-
 		float opacity = 1;
 		Bounds background;
 
@@ -146,10 +143,10 @@ public class PotionBar extends OverrideElement {
 			}
 		}
 
-		GlUtil.color(Colors.WHITE);
+		GlMode.push(new TextureMode(GuiContainer.INVENTORY_BACKGROUND));
 		GlUtil.drawTexturedModalRect(position, background);
 
-		GlStateManager.color(1.0F, 1.0F, 1.0F, opacity);
+		GlMode.set(new ColorMode(Colors.setAlpha(Colors.WHITE, Math.round(opacity * 255))));
 
 		if(potion.hasStatusIcon()) {
 			int index = potion.getStatusIconIndex();
@@ -158,6 +155,8 @@ public class PotionBar extends OverrideElement {
 			GlUtil.drawTexturedModalRect(position.add(3, 3), icon);
 		}
 		potion.renderHUDEffect(position.getX(), position.getY(), effect, MC, opacity);
+
+		GlMode.pop();
 
 		String potionLevel = getPotionLevel(effect);
 		if(!potionLevel.isEmpty()) {

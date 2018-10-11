@@ -35,7 +35,7 @@ public class GlMode {
 		public void begin() {
 			GlUtil.color(Colors.WHITE);
 			GlStateManager.disableLighting();
-			GlStateManager.enableAlpha();
+			GlStateManager.disableAlpha();
 			GlStateManager.enableBlend();
 			GlStateManager.disableDepth();
 			GlStateManager.tryBlendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO);

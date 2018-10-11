@@ -2,10 +2,11 @@ package tk.nukeduck.hud.gui;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import tk.nukeduck.hud.util.ISaveLoad.ISlider;
+import tk.nukeduck.hud.util.mode.GlMode;
+import tk.nukeduck.hud.util.mode.TextureMode;
 
 @SideOnly(Side.CLIENT)
 public class GuiSlider extends GuiButton {
@@ -45,10 +46,10 @@ public class GuiSlider extends GuiButton {
 			}
 			int sliderOffset = (int)((slider.get() - slider.getMinimum()) / (slider.getMaximum() - slider.getMinimum()) * (width - 8));
 
-			mc.getTextureManager().bindTexture(BUTTON_TEXTURES);
-			GlStateManager.color(1.0F, 1.0F, 1.0F, 1.0F);
+			GlMode.push(new TextureMode(BUTTON_TEXTURES));
 			this.drawTexturedModalRect(x + sliderOffset,     y,   0, 66, 4, 20);
 			this.drawTexturedModalRect(x + sliderOffset + 4, y, 196, 66, 4, 20);
+			GlMode.pop();
 		}
 	}
 

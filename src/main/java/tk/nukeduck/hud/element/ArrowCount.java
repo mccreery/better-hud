@@ -2,7 +2,6 @@ package tk.nukeduck.hud.element;
 
 import static tk.nukeduck.hud.BetterHud.MC;
 
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemArrow;
@@ -116,12 +115,10 @@ public class ArrowCount extends HudElement {
 	}
 
 	private static void drawCounter(Bounds stackBounds, int count) {
-		GlStateManager.disableDepth();
 		String countDisplay = String.valueOf(count);
 
 		Bounds text = new Bounds(GlUtil.getStringSize(countDisplay)).align(stackBounds.grow(1, 1, 1, 2).getAnchor(Direction.NORTH_EAST), Direction.NORTH_EAST);
 
 		MC.ingameGUI.drawString(MC.fontRenderer, countDisplay, text.getX(), text.getY(), Colors.WHITE);
-		GlStateManager.enableDepth();
 	}
 }

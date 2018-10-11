@@ -86,7 +86,6 @@ public class Compass extends HudElement {
 	}
 
 	private void drawDirections(Bounds bounds) {
-		GlStateManager.enableBlend();
 		float angle = (float)Math.toRadians(MC.player.rotationYaw);
 
 		float radius = bounds.getWidth() / 2 + SPACER;

@@ -4,9 +4,6 @@ import static tk.nukeduck.hud.BetterHud.ICONS;
 import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
 
-import org.lwjgl.opengl.GL11;
-
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.settings.SettingPosition;
@@ -35,9 +32,6 @@ public class JumpBar extends OverrideElement {
 	protected Bounds render(Event event) {
 		MC.getTextureManager().bindTexture(ICONS);
 
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-		GlStateManager.disableBlend();
-
 		Bounds bounds = new Bounds(182, 5);
 		if(!position.isCustom() && position.getDirection() == Direction.SOUTH) {
 			bounds = MANAGER.position(Direction.SOUTH, bounds, false, 1);
@@ -53,10 +47,6 @@ public class JumpBar extends OverrideElement {
 		if(filled > 0) {
 			GlUtil.drawTexturedModalRect(bounds.getPosition(), new Bounds(0, 89, filled, bounds.getHeight()));
 		}
-
-		GlStateManager.enableBlend();
-		GL11.glColor4f(1.0F, 1.0F, 1.0F, 1.0F);
-
 		return bounds;
 	}
 

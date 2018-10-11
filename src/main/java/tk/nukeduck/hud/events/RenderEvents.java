@@ -96,14 +96,7 @@ public final class RenderEvents {
 
 			GlStateManager.pushMatrix();
 			GlUtil.setupBillboard(pointedEntity, event.getPartialTicks(), HudElement.GLOBAL.getBillboardScale());
-
-			GlStateManager.disableDepth();
-			GlUtil.color(Colors.WHITE);
-			GlUtil.enableBlendTranslucent();
-
 			HudElement.renderAll(event);
-
-			GlStateManager.enableDepth();
 			GlStateManager.popMatrix();
 		} else {
 			pointedEntity = null;
