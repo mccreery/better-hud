@@ -38,7 +38,7 @@ public class GuiElementChooser extends GuiElements {
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		HudElement selected = getHoveredElement(mouseX, mouseY, (HudElement element) -> {
-			return element != this.element;
+			return element == this.element;
 		});
 		setting.set(selected);
 
