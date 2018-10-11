@@ -104,4 +104,9 @@ public class GlMode {
 		changeMode(MODE_STACK.poll(), mode);
 		MODE_STACK.push(mode);
 	}
+
+	public static void clean() {
+		DEFAULT.begin();
+		changeMode(null, MODE_STACK.peek());
+	}
 }

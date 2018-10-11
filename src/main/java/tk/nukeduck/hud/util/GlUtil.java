@@ -43,7 +43,7 @@ public final class GlUtil {
 	/** @see Gui#drawRect(int, int, int, int, int) */
 	public static void drawRect(Bounds bounds, int color) {
 		Gui.drawRect(bounds.getLeft(), bounds.getTop(), bounds.getRight(), bounds.getBottom(), color);
-		GlStateManager.enableBlend();
+		GlMode.clean();
 	}
 
 	public static void drawBorderRect(Bounds bounds, int color) {
@@ -93,6 +93,8 @@ public final class GlUtil {
 		MC.fontRenderer.drawString(text, x, y - 1, Colors.BLACK, false);
 
 		MC.fontRenderer.drawString(text, x, y, color, false);
+
+		GlMode.clean();
 	}
 
 	/** @see #renderSingleItem(ItemStack, int, int) */
@@ -254,6 +256,7 @@ public final class GlUtil {
 		Bounds bounds = new Bounds(getStringSize(string)).align(origin, alignment);
 		MC.fontRenderer.drawStringWithShadow(string, bounds.getX(), bounds.getY(), color);
 
+		GlMode.clean();
 		return bounds;
 	}
 }

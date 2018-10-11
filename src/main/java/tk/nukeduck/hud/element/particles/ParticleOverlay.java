@@ -12,8 +12,6 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.element.settings.SettingChoose;
 import tk.nukeduck.hud.util.Bounds;
-import tk.nukeduck.hud.util.Colors;
-import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Tickable;
 
 public abstract class ParticleOverlay extends HudElement implements Tickable {
@@ -57,13 +55,9 @@ public abstract class ParticleOverlay extends HudElement implements Tickable {
 
 	@Override
 	public Bounds render(Event event) {
-		GlUtil.enableBlendTranslucent();
-
 		for(Particle particle : particles) {
 			particle.render(getPartialTicks(event));
 		}
-
-		GlUtil.color(Colors.WHITE);
 		return MANAGER.getScreen();
 	}
 

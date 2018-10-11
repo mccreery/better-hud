@@ -61,6 +61,7 @@ public class Vignette extends OverrideElement {
 		// Animate brightness
 		brightness = brightness + (MathHelper.clamp(1 - MC.player.getBrightness(), 0, 1) - brightness) / 100;
 
+		// TODO put into GlMode
 		GlStateManager.enableBlend();
 		GlStateManager.disableDepth();
 		GlStateManager.depthMask(false);

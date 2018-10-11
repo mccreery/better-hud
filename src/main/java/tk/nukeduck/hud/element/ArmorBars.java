@@ -14,6 +14,8 @@ import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.Direction.Options;
+import tk.nukeduck.hud.util.mode.GlMode;
+import tk.nukeduck.hud.util.mode.TextureMode;
 import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Point;
 import tk.nukeduck.hud.util.StringGroup;
@@ -46,11 +48,10 @@ public class ArmorBars extends EquipmentDisplay {
 	}
 
 	private static void drawEmptySlot(Point position, int slot) {
-		GlUtil.enableBlendTranslucent();
-		MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-
+		GlMode.push(new TextureMode(TextureMap.LOCATION_BLOCKS_TEXTURE));
 		TextureAtlasSprite empty = MC.getTextureMapBlocks().getAtlasSprite(ItemArmor.EMPTY_SLOT_NAMES[slot]);
 		MC.ingameGUI.drawTexturedModalRect(position.getX(), position.getY(), empty, 16, 16);
+		GlMode.pop();
 	}
 
 	@Override
