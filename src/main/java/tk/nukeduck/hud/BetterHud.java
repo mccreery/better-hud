@@ -79,7 +79,7 @@ public class BetterHud {
 	public static final int SPACER = 5;
 
 	public static boolean isEnabled() {
-		return HudElement.GLOBAL.isEnabled();
+		return HudElement.GLOBAL.isEnabled() && !(HudElement.GLOBAL.hideOnDebug() && MC.gameSettings.showDebugInfo);
 	}
 
 	public static void toggleEnabled() {

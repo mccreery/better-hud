@@ -122,6 +122,7 @@
 #betterHud.value.places=%s places
 #betterHud.setting.distance=Distance
 #betterHud.setting.rayDistance=Ray Trace Distance
+#betterHud.setting.hideOnDebug=Hide While Debug Screen is Open
 #betterHud.setting.red=§cRed
 #betterHud.setting.green=§aGreen
 #betterHud.setting.blue=§1Blue

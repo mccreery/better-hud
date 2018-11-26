@@ -122,6 +122,7 @@ betterHud.setting.precision=Kommastellen
 #betterHud.value.places=%s places
 betterHud.setting.distance=Distanz
 #betterHud.setting.rayDistance=Ray Trace Distance
+#betterHud.setting.hideOnDebug=Hide While Debug Screen is Open
 betterHud.setting.red=§cRot
 betterHud.setting.green=§aGrün
 betterHud.setting.blue=§1Blau

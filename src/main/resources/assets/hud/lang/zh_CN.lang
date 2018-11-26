@@ -122,6 +122,7 @@ betterHud.setting.precision=小数点精度
 #betterHud.value.places=%s places
 betterHud.setting.distance=距离
 #betterHud.setting.rayDistance=Ray Trace Distance
+#betterHud.setting.hideOnDebug=Hide While Debug Screen is Open
 betterHud.setting.red=§c红色
 betterHud.setting.green=§a绿色
 betterHud.setting.blue=§1蓝色

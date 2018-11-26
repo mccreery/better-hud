@@ -11,19 +11,16 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.gui.GuiHudMenu;
 
 @SideOnly(Side.CLIENT)
 public final class KeyEvents {
 	private static final KeyBinding MENU_KEY = new KeyBinding("key.betterHud.open", Keyboard.KEY_U, "key.categories.misc");
-	private static final KeyBinding TOGGLE_KEY = new KeyBinding("key.betterHud.disable", Keyboard.KEY_F3, "key.categories.misc");
 
 	private KeyEvents() {}
 
 	public static void registerEvents() {
 		ClientRegistry.registerKeyBinding(MENU_KEY);
-		ClientRegistry.registerKeyBinding(TOGGLE_KEY);
 
 		MinecraftForge.EVENT_BUS.register(new KeyEvents());
 	}
@@ -32,8 +29,6 @@ public final class KeyEvents {
 	public void onKey(KeyInputEvent event) {
 		if(MC.inGameHasFocus && MENU_KEY.isPressed()) {
 			MC.displayGuiScreen(new GuiHudMenu());
-		} else if(TOGGLE_KEY.isPressed()) {
-			BetterHud.toggleEnabled();
 		}
 	}
 }
