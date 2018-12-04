@@ -68,7 +68,7 @@ public class GuiActionButton extends GuiButton {
 		return new Bounds(x, y, width, height);
 	}
 
-	public void actionPerformed() {
+	public final void actionPerformed() {
 		if(callback != null) callback.actionPerformed(this);
 	}
 
@@ -89,6 +89,7 @@ public class GuiActionButton extends GuiButton {
 			valueDisplay = ChatFormatting.RED + I18n.format(valuePrefix + ".off");
 		}
 		updateText(I18n.format(unlocalizedName), valueDisplay);
+		glowing = value;
 	}
 
 	@Override

@@ -9,8 +9,8 @@ import java.util.Map;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
+import tk.nukeduck.hud.gui.GuiActionButton;
 import tk.nukeduck.hud.gui.GuiElementSettings;
-import tk.nukeduck.hud.gui.GuiToggleButton;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
@@ -19,7 +19,7 @@ import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Point;
 
 public class SettingDirection extends SettingAlignable<Direction> {
-	private GuiToggleButton[] toggles = new GuiToggleButton[9];
+	private GuiActionButton[] toggles = new GuiActionButton[9];
 	private Bounds bounds;
 
 	private boolean horizontal = false;
@@ -65,8 +65,8 @@ public class SettingDirection extends SettingAlignable<Direction> {
 		Bounds radio = new Bounds(20, 20);
 
 		for(Direction direction : Direction.values()) {
-			GuiToggleButton button = (GuiToggleButton)new GuiToggleButton("")
-				.setStaticText().setId(direction.ordinal())
+			GuiActionButton button = new GuiActionButton("")
+				.setId(direction.ordinal())
 				.setBounds(radio.anchor(radios, direction));
 
 			parts.add(button);
@@ -94,9 +94,9 @@ public class SettingDirection extends SettingAlignable<Direction> {
 		super.updateGuiParts(settings);
 		boolean enabled = enabled();
 
-		for(GuiToggleButton button : toggles) {
-			button.set(value != null && button.id == value.ordinal());
-			button.enabled = button.get() || enabled && options.isValid(Direction.values()[button.id]);
+		for(GuiActionButton button : toggles) {
+			button.glowing = value != null && button.id == value.ordinal();
+			button.enabled = button.glowing || enabled && options.isValid(Direction.values()[button.id]);
 		}
 	}
 

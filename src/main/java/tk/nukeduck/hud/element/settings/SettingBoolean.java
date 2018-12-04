@@ -7,9 +7,8 @@ import java.util.Map;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraftforge.common.config.Property.Type;
+import tk.nukeduck.hud.gui.GuiActionButton;
 import tk.nukeduck.hud.gui.GuiElementSettings;
-import tk.nukeduck.hud.gui.GuiSettingToggle;
-import tk.nukeduck.hud.gui.GuiToggleButton;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.IGetSet.IBoolean;
@@ -17,7 +16,7 @@ import tk.nukeduck.hud.util.IGetSet.IBoolean;
 public class SettingBoolean extends SettingAlignable<Boolean> implements IBoolean {
 	public static final String VISIBLE = "betterHud.value.visible";
 
-	protected GuiToggleButton toggler;
+	protected GuiActionButton toggler;
 	protected boolean value = false;
 
 	private String unlocalizedValue = "options";
@@ -32,10 +31,6 @@ public class SettingBoolean extends SettingAlignable<Boolean> implements IBoolea
 
 	public SettingBoolean setValuePrefix(String value) {
 		this.unlocalizedValue = value;
-
-		if(toggler != null) {
-			toggler.setUnlocalizedValue(value);
-		}
 		return this;
 	}
 
@@ -49,7 +44,7 @@ public class SettingBoolean extends SettingAlignable<Boolean> implements IBoolea
 
 	@Override
 	public void getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Bounds bounds) {
-		toggler = (GuiToggleButton)new GuiSettingToggle(getUnlocalizedName(), this).setUnlocalizedValue(unlocalizedValue).setBounds(bounds);
+		toggler = new GuiActionButton("").setBounds(bounds).setCallback(b -> toggle());
 		parts.add(toggler);
 		callbacks.put(toggler, this);
 	}
@@ -73,5 +68,6 @@ public class SettingBoolean extends SettingAlignable<Boolean> implements IBoolea
 	public void updateGuiParts(Collection<Setting<?>> settings) {
 		super.updateGuiParts(settings);
 		toggler.enabled = enabled();
+		toggler.updateText(getUnlocalizedName(), unlocalizedValue, get());
 	}
 }

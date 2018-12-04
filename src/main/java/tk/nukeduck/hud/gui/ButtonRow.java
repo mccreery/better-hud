@@ -30,7 +30,8 @@ class ButtonRow {
 				MC.currentScreen.initGui();
 			}
 		});
-		options = new GuiOptionButton(callback, element);
+		options = new GuiTexturedButton(new Bounds(40, 0, 20, 20)).setCallback(b ->
+			MC.displayGuiScreen(new GuiElementSettings(element, callback)));
 	}
 
 	public ButtonRow setBounds(Bounds bounds) {

@@ -24,11 +24,8 @@ class SortButton extends GuiActionButton {
 
 		this.callback = callback;
 		this.sortValue = sortValue;
-	}
 
-	@Override
-	public void actionPerformed() {
-		callback.changeSort(sortValue);
+		setCallback(b -> callback.changeSort(sortValue));
 	}
 
 	private boolean isTargeted() {
