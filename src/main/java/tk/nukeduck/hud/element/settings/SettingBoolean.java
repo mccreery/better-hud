@@ -29,7 +29,7 @@ public class SettingBoolean extends SettingAlignable<Boolean> {
 		super(name, alignment);
 	}
 
-	public SettingBoolean setUnlocalizedValue(String value) {
+	public SettingBoolean setValuePrefix(String value) {
 		this.unlocalizedValue = value;
 
 		if(toggler != null) {

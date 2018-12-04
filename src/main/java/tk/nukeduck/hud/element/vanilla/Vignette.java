@@ -20,7 +20,7 @@ import tk.nukeduck.hud.util.GlUtil;
 public class Vignette extends OverrideElement {
 	private static final ResourceLocation VIGNETTE_TEX_PATH = new ResourceLocation("textures/misc/vignette.png");
 
-	private final SettingBoolean warnings = new SettingBoolean("warnings").setUnlocalizedValue(SettingBoolean.VISIBLE);
+	private final SettingBoolean warnings = new SettingBoolean("warnings").setValuePrefix(SettingBoolean.VISIBLE);
 	private float brightness = 1;
 
 	public Vignette() {

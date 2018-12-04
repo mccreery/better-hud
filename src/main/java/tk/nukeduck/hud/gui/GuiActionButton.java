@@ -66,6 +66,10 @@ public class GuiActionButton extends GuiButton implements ActionCallback {
 		super.drawButton(BetterHud.MC, mousePosition.getX(), mousePosition.getY(), partialTicks);
 	}
 
+	public void updateText(String name, String value) {
+		this.displayString = name + ": " + value;
+	}
+
 	@Override
 	public final void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
 		if(!visible) return;

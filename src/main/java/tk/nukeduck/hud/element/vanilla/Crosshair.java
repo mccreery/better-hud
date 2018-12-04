@@ -41,7 +41,7 @@ public class Crosshair extends OverrideElement {
 			MC.gameSettings.attackIndicator = value ? indicatorType.getIndex() + 1 : 0;
 			MC.gameSettings.saveOptions();
 		}
-	}.setUnlocalizedValue(SettingBoolean.VISIBLE).setUnlocalizedName("options.attackIndicator");
+	}.setValuePrefix(SettingBoolean.VISIBLE).setUnlocalizedName("options.attackIndicator");
 
 	private final SettingChoose indicatorType = (SettingChoose)new SettingChoose(null, 2) {
 		@Override

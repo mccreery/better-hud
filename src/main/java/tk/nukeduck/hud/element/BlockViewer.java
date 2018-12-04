@@ -45,8 +45,8 @@ import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Point;
 
 public class BlockViewer extends TextElement {
-	private final SettingBoolean showBlock = new SettingBoolean("showItem").setUnlocalizedValue(SettingBoolean.VISIBLE);
-	private final SettingBoolean showIds = new SettingBoolean("showIds").setUnlocalizedValue(SettingBoolean.VISIBLE);
+	private final SettingBoolean showBlock = new SettingBoolean("showItem").setValuePrefix(SettingBoolean.VISIBLE);
+	private final SettingBoolean showIds = new SettingBoolean("showIds").setValuePrefix(SettingBoolean.VISIBLE);
 
 	private final SettingBoolean invNames = new SettingBoolean("invNames") {
 		@Override

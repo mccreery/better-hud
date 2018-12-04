@@ -16,8 +16,8 @@ import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Point;
 
 public class ExperienceInfo extends TextElement {
-	private final SettingBoolean total = new SettingBoolean("showTotalExp").setUnlocalizedValue(SettingBoolean.VISIBLE);
-	private final SettingBoolean lifetime = new SettingBoolean("showLifetimeExp").setUnlocalizedValue(SettingBoolean.VISIBLE);
+	private final SettingBoolean total = new SettingBoolean("showTotalExp").setValuePrefix(SettingBoolean.VISIBLE);
+	private final SettingBoolean lifetime = new SettingBoolean("showLifetimeExp").setValuePrefix(SettingBoolean.VISIBLE);
 
 	@Override
 	public void loadDefaults() {

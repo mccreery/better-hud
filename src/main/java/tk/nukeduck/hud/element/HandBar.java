@@ -14,10 +14,10 @@ import tk.nukeduck.hud.util.Direction.Options;
 import tk.nukeduck.hud.util.GlUtil;
 
 public class HandBar extends EquipmentDisplay {
-	private final SettingBoolean showItem = new SettingBoolean("showItem").setUnlocalizedValue(SettingBoolean.VISIBLE);
+	private final SettingBoolean showItem = new SettingBoolean("showItem").setValuePrefix(SettingBoolean.VISIBLE);
 	private final SettingBoolean offHand = new SettingBoolean("offhand");
 	private final SettingBoolean showBars = new SettingBoolean("bars");
-	private final SettingBoolean showNonTools = new SettingBoolean("showNonTools").setUnlocalizedValue("betterHud.value.nonTools");
+	private final SettingBoolean showNonTools = new SettingBoolean("showNonTools").setValuePrefix("betterHud.value.nonTools");
 
 	@Override
 	public void loadDefaults() {

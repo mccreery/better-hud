@@ -15,10 +15,10 @@ import tk.nukeduck.hud.util.Direction.Options;
 
 public abstract class Clock extends TextElement {
 	private final SettingBoolean twentyFour = new SettingBoolean("24hr");
-	private final SettingBoolean showSeconds = new SettingBoolean("showSeconds").setUnlocalizedValue(SettingBoolean.VISIBLE);
+	private final SettingBoolean showSeconds = new SettingBoolean("showSeconds").setValuePrefix(SettingBoolean.VISIBLE);
 
 	private final SettingChoose dateType = new SettingChoose("dateType", "dmy", "mdy", "ymd");
-	private final SettingBoolean fullYear = new SettingBoolean("fullYear").setUnlocalizedValue(SettingBoolean.VISIBLE);
+	private final SettingBoolean fullYear = new SettingBoolean("fullYear").setValuePrefix(SettingBoolean.VISIBLE);
 
 	public Clock(String name) {
 		super(name, new SettingPosition(Options.CORNERS, Options.WEST_EAST));

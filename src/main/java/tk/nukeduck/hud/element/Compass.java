@@ -26,7 +26,7 @@ public class Compass extends HudElement {
 
 	private final SettingChoose mode = new SettingChoose("mode", "visual", "text");
 	private final SettingSlider directionScaling = new SettingPercentage("letterScale");
-	private final SettingBoolean showNotches = new SettingBoolean("showNotches").setUnlocalizedValue(SettingBoolean.VISIBLE);
+	private final SettingBoolean showNotches = new SettingBoolean("showNotches").setValuePrefix(SettingBoolean.VISIBLE);
 	private final SettingChoose requireItem = new SettingChoose("requireItem", "disabled", "inventory", "hand");
 
 	@Override

@@ -23,7 +23,7 @@ import tk.nukeduck.hud.util.Point;
 public class GameClock extends Clock {
 	private static final ItemStack BED = new ItemStack(Items.BED);
 
-	private final SettingBoolean showDays = new SettingBoolean("showDays").setUnlocalizedValue(SettingBoolean.VISIBLE);
+	private final SettingBoolean showDays = new SettingBoolean("showDays").setValuePrefix(SettingBoolean.VISIBLE);
 	private final SettingChoose requireItem = new SettingChoose("requireItem", "disabled", "inventory", "hand");
 
 	public GameClock() {

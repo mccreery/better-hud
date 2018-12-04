@@ -15,7 +15,7 @@ import tk.nukeduck.hud.element.settings.Legend;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 
 public class Connection extends TextElement {
-	private final SettingBoolean playerCount = new SettingBoolean("playerCount").setUnlocalizedValue(SettingBoolean.VISIBLE);
+	private final SettingBoolean playerCount = new SettingBoolean("playerCount").setValuePrefix(SettingBoolean.VISIBLE);
 	private final SettingBoolean showIp = new SettingBoolean("showIp");
 	private final SettingBoolean latency = new SettingBoolean("latency");
 
