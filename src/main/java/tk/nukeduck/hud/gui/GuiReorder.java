@@ -53,7 +53,7 @@ public class GuiReorder extends GuiElements {
 		}
 
 		@Override
-		public void actionPerformed() {
+		public void actionPerformed(GuiActionButton button) {
 			if(relative) {
 				List<HudElement> elements = HudElement.SORTER.getSortedData(HudElement.SortType.PRIORITY);
 				int i = elements.indexOf(selected) + offset;

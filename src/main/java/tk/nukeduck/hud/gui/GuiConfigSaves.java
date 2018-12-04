@@ -91,7 +91,7 @@ public class GuiConfigSaves extends GuiScreen {
 		Point origin = new Point(width / 2, height / 16 + 20);
 
 		buttonList.add(new GuiActionButton(I18n.format("gui.done"))
-			.setCallback(() -> MC.displayGuiScreen(previous))
+			.setCallback(b -> MC.displayGuiScreen(previous))
 			.setBounds(new Bounds(200, 20).align(origin, Direction.NORTH)));
 
 		Bounds textField = new Bounds(150, 20);
@@ -105,10 +105,10 @@ public class GuiConfigSaves extends GuiScreen {
 		name.setCanLoseFocus(false);
 
 		smallButton = smallButton.withPosition(textField.getAnchor(Direction.NORTH_EAST).add(SPACER, 0));
-		buttonList.add(new GuiActionButton("Load").setCallback(this::load).setBounds(smallButton));
+		buttonList.add(new GuiActionButton("Load").setCallback(b -> load()).setBounds(smallButton));
 
 		smallButton = smallButton.withPosition(smallButton.getAnchor(Direction.NORTH_EAST).add(SPACER, 0));
-		buttonList.add(new GuiActionButton("Save").setCallback(this::save).setBounds(smallButton));
+		buttonList.add(new GuiActionButton("Save").setCallback(b -> save()).setBounds(smallButton));
 
 		viewport = new Bounds(400, 0).align(fieldLine.getAnchor(Direction.SOUTH).add(0, SPACER), Direction.NORTH).withBottom(height - 20);
 		scrollbar = new GuiScrollbar(viewport, 0);

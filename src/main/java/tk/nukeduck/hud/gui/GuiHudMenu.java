@@ -29,21 +29,21 @@ public class GuiHudMenu extends GuiScreen {
 	private final Map<HudElement, ButtonRow> rows = new HashMap<HudElement, ButtonRow>(HudElement.ELEMENTS.size());
 	final Paginator<HudElement> paginator = new Paginator<HudElement>();
 
-	private final GuiButton returnToGame = new GuiActionButton(I18n.format("menu.returnToGame")).setCallback(() -> MC.displayGuiScreen(null));
-	private final GuiButton toggleAll = new GuiActionButton("").setCallback(() -> setAll(!allEnabled()));
-	private final GuiButton reorder = new GuiActionButton(I18n.format("betterHud.menu.reorder")).setCallback(() -> MC.displayGuiScreen(new GuiReorder(this)));
+	private final GuiButton returnToGame = new GuiActionButton(I18n.format("menu.returnToGame")).setCallback(b -> MC.displayGuiScreen(null));
+	private final GuiButton toggleAll = new GuiActionButton("").setCallback(b -> setAll(!allEnabled()));
+	private final GuiButton reorder = new GuiActionButton(I18n.format("betterHud.menu.reorder")).setCallback(b -> MC.displayGuiScreen(new GuiReorder(this)));
 
 	private final GuiButton resetDefaults = new GuiActionButton(I18n.format("betterHud.menu.saveLoad"))
-		.setCallback(() -> MC.displayGuiScreen(new GuiConfigSaves(this)));
+		.setCallback(b -> MC.displayGuiScreen(new GuiConfigSaves(this)));
 
 	private final GuiToggleButton globalToggle   = new GuiElementToggle(this, HudElement.GLOBAL);
 	private final GuiActionButton globalSettings = new GuiOptionButton(this, HudElement.GLOBAL);
 
 	private final GuiButton lastPage = new GuiActionButton(I18n.format("betterHud.menu.lastPage"))
-		.setCallback(() -> {paginator.previousPage(); initGui();});
+		.setCallback(b -> {paginator.previousPage(); initGui();});
 
 	private final GuiButton nextPage = new GuiActionButton(I18n.format("betterHud.menu.nextPage"))
-		.setCallback(() -> {paginator.nextPage(); initGui();});
+		.setCallback(b -> {paginator.nextPage(); initGui();});
 
 	private SortField<HudElement> sortCriteria = SortType.ALPHABETICAL;
 	private boolean descending;

@@ -10,7 +10,7 @@ import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Point;
 import tk.nukeduck.hud.util.mode.GlMode;
 
-public class GuiActionButton extends GuiButton implements ActionCallback {
+public class GuiActionButton extends GuiButton {
 	private ActionCallback callback;
 	private boolean repeat;
 
@@ -57,9 +57,8 @@ public class GuiActionButton extends GuiButton implements ActionCallback {
 		return new Bounds(x, y, width, height);
 	}
 
-	@Override
 	public void actionPerformed() {
-		if(callback != null) callback.actionPerformed();
+		if(callback != null) callback.actionPerformed(this);
 	}
 
 	protected void drawButton(Bounds bounds, Point mousePosition, float partialTicks) {
