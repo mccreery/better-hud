@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent.MouseInputEvent;
 import tk.nukeduck.hud.element.settings.Legend;
+import tk.nukeduck.hud.element.settings.Setting;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingSlider;
 import tk.nukeduck.hud.util.Tickable;
@@ -18,9 +19,8 @@ import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.FormatUtil;
 
 public class CpsCount extends TextElement implements Tickable {
-	private final SettingSlider timeoutMax = new SettingSlider("timeout", 1, 10, 1).setUnlocalizedValue("betterHud.hud.seconds");
-	private final SettingBoolean showBurst = new SettingBoolean("showBurst");
-	private final SettingBoolean remember = new SettingBoolean("remember");
+	private SettingSlider timeoutMax;
+	private SettingBoolean showBurst, remember;
 
 	private int[] clickHistory = new int[10];
 	private int i = 0;
@@ -34,11 +34,15 @@ public class CpsCount extends TextElement implements Tickable {
 
 	public CpsCount() {
 		super("cps");
+	}
 
+	@Override
+	protected void addSettings(List<Setting<?>> settings) {
+		super.addSettings(settings);
 		settings.add(new Legend("misc"));
-		settings.add(timeoutMax);
-		settings.add(showBurst);
-		settings.add(remember);
+		settings.add(timeoutMax = new SettingSlider("timeout", 1, 10, 1).setUnlocalizedValue("betterHud.hud.seconds"));
+		settings.add(showBurst = new SettingBoolean("showBurst"));
+		settings.add(remember = new SettingBoolean("remember"));
 	}
 
 	@Override

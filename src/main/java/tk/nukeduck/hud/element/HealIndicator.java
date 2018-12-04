@@ -4,9 +4,12 @@ import static tk.nukeduck.hud.BetterHud.HUD_ICONS;
 import static tk.nukeduck.hud.BetterHud.MC;
 import static tk.nukeduck.hud.BetterHud.SPACER;
 
+import java.util.List;
+
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.settings.Legend;
+import tk.nukeduck.hud.element.settings.Setting;
 import tk.nukeduck.hud.element.settings.SettingChoose;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
@@ -14,7 +17,7 @@ import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.Point;
 
 public class HealIndicator extends HudElement {
-	private final SettingChoose mode = new SettingChoose(2);
+	private SettingChoose mode;
 
 	@Override
 	public void loadDefaults() {
@@ -26,9 +29,13 @@ public class HealIndicator extends HudElement {
 
 	public HealIndicator() {
 		super("healIndicator");
+	}
 
-		this.settings.add(new Legend("misc"));
-		this.settings.add(mode);
+	@Override
+	protected void addSettings(List<Setting<?>> settings) {
+		super.addSettings(settings);
+		settings.add(new Legend("misc"));
+		settings.add(mode = new SettingChoose(2));
 	}
 
 	@Override

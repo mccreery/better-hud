@@ -5,10 +5,13 @@ import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
 import static tk.nukeduck.hud.BetterHud.SPACER;
 
+import java.util.List;
+
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
+import tk.nukeduck.hud.element.settings.Setting;
 import tk.nukeduck.hud.element.settings.SettingSlider;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
@@ -20,21 +23,25 @@ import tk.nukeduck.hud.util.bars.StatBarHealth;
 
 public class MobInfo extends EntityInfo {
 	private final StatBarHealth bar = new StatBarHealth();
-
-	private final SettingSlider compress = new SettingSlider("compress", 0, 200, 20) {
-		@Override
-		public String getDisplayValue(double value) {
-			if(value == 0) {
-				return I18n.format("betterHud.value.never");
-			} else {
-				return super.getDisplayValue(value);
-			}
-		}
-	};
+	private SettingSlider compress;
 
 	public MobInfo() {
 		super("mobInfo");
-		settings.add(compress);
+	}
+
+	@Override
+	protected void addSettings(List<Setting<?>> settings) {
+		super.addSettings(settings);
+		settings.add(compress = new SettingSlider("compress", 0, 200, 20) {
+			@Override
+			public String getDisplayValue(double value) {
+				if(value == 0) {
+					return I18n.format("betterHud.value.never");
+				} else {
+					return super.getDisplayValue(value);
+				}
+			}
+		});
 	}
 
 	@Override

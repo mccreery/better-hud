@@ -10,6 +10,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.settings.Legend;
+import tk.nukeduck.hud.element.settings.Setting;
 import tk.nukeduck.hud.element.settings.SettingChoose;
 import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
@@ -18,7 +19,7 @@ import tk.nukeduck.hud.util.Direction.Options;
 import tk.nukeduck.hud.util.Point;
 
 public class Distance extends TextElement {
-	private final SettingChoose mode = new SettingChoose(3);
+	private SettingChoose mode;
 
 	@Override
 	public void loadDefaults() {
@@ -30,8 +31,13 @@ public class Distance extends TextElement {
 
 	public Distance() {
 		super("distance", new SettingPosition(Options.X, Options.WEST_EAST));
-		this.settings.add(new Legend("misc"));
-		this.settings.add(mode);
+	}
+
+	@Override
+	protected void addSettings(List<Setting<?>> settings) {
+		super.addSettings(settings);
+		settings.add(new Legend("misc"));
+		settings.add(mode = new SettingChoose(3));
 	}
 
 	@Override

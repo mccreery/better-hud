@@ -6,6 +6,8 @@ import static tk.nukeduck.hud.BetterHud.SPACER;
 import static tk.nukeduck.hud.util.mode.GlMode.DEFAULT;
 import static tk.nukeduck.hud.util.mode.GlMode.INVERT;
 
+import java.util.List;
+
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.OpenGlHelper;
@@ -19,6 +21,7 @@ import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.HudElement;
+import tk.nukeduck.hud.element.settings.Setting;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingChoose;
 import tk.nukeduck.hud.element.settings.SettingPosition;
@@ -30,49 +33,56 @@ import tk.nukeduck.hud.util.Point;
 import tk.nukeduck.hud.util.mode.GlMode;
 
 public class Crosshair extends OverrideElement {
-	private final SettingBoolean attackIndicator = (SettingBoolean)new SettingBoolean(null) {
-		@Override
-		public Boolean get() {
-			return MC.gameSettings.attackIndicator != 0;
-		}
-
-		@Override
-		public void set(Boolean value) {
-			MC.gameSettings.attackIndicator = value ? indicatorType.getIndex() + 1 : 0;
-			MC.gameSettings.saveOptions();
-		}
-	}.setValuePrefix(SettingBoolean.VISIBLE).setUnlocalizedName("options.attackIndicator");
-
-	private final SettingChoose indicatorType = (SettingChoose)new SettingChoose(null, 2) {
-		@Override
-		public boolean enabled() {
-			return super.enabled() && attackIndicator.get();
-		}
-
-		@Override
-		public int getIndex() {
-			return Math.max(MC.gameSettings.attackIndicator - 1, 0);
-		}
-
-		@Override
-		public void setIndex(int index) {
-			if(index >= 0 && index < 2) {
-				MC.gameSettings.attackIndicator = attackIndicator.get() ? index + 1 : 0;
-			}
-		}
-
-		@Override
-		protected String getUnlocalizedValue() {
-			return "options.attack." + modes[getIndex()];
-		}
-	};
+	private SettingBoolean attackIndicator;
+	private SettingChoose indicatorType;
 
 	public Crosshair() {
 		super("crosshair", new SettingPosition(Options.I, Options.NONE));
 
 		position.setEnableOn(() -> attackIndicator.get());
-		settings.add(attackIndicator);
-		settings.add(indicatorType);
+	}
+
+	@Override
+	protected void addSettings(List<Setting<?>> settings) {
+		super.addSettings(settings);
+
+		settings.add(attackIndicator = new SettingBoolean(null) {
+			@Override
+			public Boolean get() {
+				return MC.gameSettings.attackIndicator != 0;
+			}
+
+			@Override
+			public void set(Boolean value) {
+				MC.gameSettings.attackIndicator = value ? indicatorType.getIndex() + 1 : 0;
+				MC.gameSettings.saveOptions();
+			}
+		});
+		attackIndicator.setValuePrefix(SettingBoolean.VISIBLE).setUnlocalizedName("options.attackIndicator");
+
+		settings.add(indicatorType = new SettingChoose(null, 2) {
+			@Override
+			public boolean enabled() {
+				return super.enabled() && attackIndicator.get();
+			}
+
+			@Override
+			public int getIndex() {
+				return Math.max(MC.gameSettings.attackIndicator - 1, 0);
+			}
+
+			@Override
+			public void setIndex(int index) {
+				if(index >= 0 && index < 2) {
+					MC.gameSettings.attackIndicator = attackIndicator.get() ? index + 1 : 0;
+				}
+			}
+
+			@Override
+			protected String getUnlocalizedValue() {
+				return "options.attack." + modes[getIndex()];
+			}
+		});
 	}
 
 	@Override

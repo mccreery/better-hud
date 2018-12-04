@@ -10,17 +10,23 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.HudElement;
+import tk.nukeduck.hud.element.settings.Setting;
 import tk.nukeduck.hud.element.settings.SettingChoose;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Tickable;
 
 public abstract class ParticleOverlay extends HudElement implements Tickable {
-	protected final SettingChoose density = new SettingChoose("density", "sparse", "normal", "dense", "denser");
+	protected SettingChoose density;
 	protected final List<Particle> particles = new CopyOnWriteArrayList<Particle>();
 
 	protected ParticleOverlay(String name) {
 		super(name);
-		settings.add(density);
+	}
+
+	@Override
+	protected void addSettings(List<Setting<?>> settings) {
+		super.addSettings(settings);
+		settings.add(density = new SettingChoose("density", "sparse", "normal", "dense", "denser"));
 	}
 
 	/** Called each tick while enabled to spawn new particles.

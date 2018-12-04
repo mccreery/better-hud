@@ -2,11 +2,14 @@ package tk.nukeduck.hud.element;
 
 import static tk.nukeduck.hud.BetterHud.MC;
 
+import java.util.List;
+
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.Event;
+import tk.nukeduck.hud.element.settings.Setting;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingChoose;
 import tk.nukeduck.hud.element.settings.SettingPosition;
@@ -21,8 +24,8 @@ import tk.nukeduck.hud.util.Point;
 import tk.nukeduck.hud.util.StringGroup;
 
 public class ArmorBars extends EquipmentDisplay {
-	private final SettingChoose barType = new SettingChoose("bars", "visible.off", "smallBars", "largeBars");
-	private final SettingBoolean alwaysVisible = new SettingBoolean("alwaysVisible");
+	private SettingChoose barType;
+	private SettingBoolean alwaysVisible;
 
 	@Override
 	public void loadDefaults() {
@@ -35,9 +38,13 @@ public class ArmorBars extends EquipmentDisplay {
 
 	public ArmorBars() {
 		super("armorBars", new SettingPosition(Options.CORNERS, Options.WEST_EAST));
+	}
 
-		settings.add(barType);
-		settings.add(alwaysVisible);
+	@Override
+	protected void addSettings(List<Setting<?>> settings) {
+		super.addSettings(settings);
+		settings.add(barType = new SettingChoose("bars", "visible.off", "smallBars", "largeBars"));
+		settings.add(alwaysVisible = new SettingBoolean("alwaysVisible"));
 	}
 
 	private boolean showBars() {

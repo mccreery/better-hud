@@ -1,5 +1,7 @@
 package tk.nukeduck.hud.element.settings;
 
+import java.util.List;
+
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.util.HudConfig;
 
@@ -23,12 +25,13 @@ public class RootSetting extends SettingStub<Boolean> {
 		bindConfig(config, element.name, new StringBuilder());
 	}
 
-	public RootSetting(HudElement element) {
+	public RootSetting(HudElement element, List<Setting<?>> settings) {
 		super();
 		this.element = element;
 
 		add(enabled);
 		add(priority);
+		addAll(settings);
 	}
 
 	@Override

@@ -10,6 +10,7 @@ import java.util.List;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.settings.Legend;
+import tk.nukeduck.hud.element.settings.Setting;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.element.settings.SettingSlider;
@@ -19,8 +20,8 @@ import tk.nukeduck.hud.util.StringGroup;
 import tk.nukeduck.hud.util.Direction.Options;
 
 public class Coordinates extends TextElement {
-	private final SettingBoolean spaced = new SettingBoolean("spaced");
-	private final SettingSlider decimalPlaces = new SettingSlider("precision", 0, 5, 1).setUnlocalizedValue("betterHud.value.places");
+	private SettingBoolean spaced;
+	private SettingSlider decimalPlaces;
 
 	@Override
 	public void loadDefaults() {
@@ -34,10 +35,14 @@ public class Coordinates extends TextElement {
 
 	public Coordinates() {
 		super("coordinates", new SettingPosition(Options.TOP_BOTTOM, Options.NONE));
+	}
 
-		this.settings.add(new Legend("misc"));
-		this.settings.add(spaced);
-		this.settings.add(decimalPlaces);
+	@Override
+	protected void addSettings(List<Setting<?>> settings) {
+		super.addSettings(settings);
+		settings.add(new Legend("misc"));
+		settings.add(spaced = new SettingBoolean("spaced"));
+		settings.add(decimalPlaces = new SettingSlider("precision", 0, 5, 1).setUnlocalizedValue("betterHud.value.places"));
 	}
 
 	@Override

@@ -34,6 +34,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.element.settings.Legend;
+import tk.nukeduck.hud.element.settings.Setting;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.element.text.TextElement;
@@ -45,31 +46,32 @@ import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Point;
 
 public class BlockViewer extends TextElement {
-	private final SettingBoolean showBlock = new SettingBoolean("showItem").setValuePrefix(SettingBoolean.VISIBLE);
-	private final SettingBoolean showIds = new SettingBoolean("showIds").setValuePrefix(SettingBoolean.VISIBLE);
-
-	private final SettingBoolean invNames = new SettingBoolean("invNames") {
-		@Override
-		public boolean enabled() {
-			try {
-				return super.enabled() && BetterHud.serverSupports(VersionRange.createFromVersionSpec("[1.4,)"));
-			} catch (InvalidVersionSpecificationException e) {
-				return false;
-			}
-		}
-	};
-
+	private SettingBoolean showBlock, showIds, invNames;
 	private RayTraceResult trace;
 	private IBlockState state;
 	private ItemStack stack;
 
 	public BlockViewer() {
 		super("blockViewer", new SettingPosition(Options.I, Options.WEST_EAST));
+	}
+
+	@Override
+	protected void addSettings(List<Setting<?>> settings) {
+		super.addSettings(settings);
 
 		settings.add(new Legend("misc"));
-		settings.add(showBlock);
-		settings.add(invNames);
-		settings.add(showIds);
+		settings.add(showBlock = new SettingBoolean("showItem").setValuePrefix(SettingBoolean.VISIBLE));
+		settings.add(showIds = new SettingBoolean("showIds").setValuePrefix(SettingBoolean.VISIBLE));
+		settings.add(invNames = new SettingBoolean("invNames") {
+			@Override
+			public boolean enabled() {
+				try {
+					return super.enabled() && BetterHud.serverSupports(VersionRange.createFromVersionSpec("[1.4,)"));
+				} catch (InvalidVersionSpecificationException e) {
+					return false;
+				}
+			}
+		});
 	}
 
 	@Override

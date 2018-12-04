@@ -3,11 +3,13 @@ package tk.nukeduck.hud.element.entityinfo;
 import static tk.nukeduck.hud.BetterHud.SPACER;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.passive.EntityHorse;
 import tk.nukeduck.hud.BetterHud;
+import tk.nukeduck.hud.element.settings.Setting;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
@@ -17,8 +19,7 @@ import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.StringGroup;
 
 public class HorseInfo extends EntityInfo {
-	private final SettingBoolean jump = new SettingBoolean("jump");
-	private final SettingBoolean speed = new SettingBoolean("speed");
+	private SettingBoolean jump, speed;
 
 	@Override
 	public void loadDefaults() {
@@ -30,9 +31,14 @@ public class HorseInfo extends EntityInfo {
 
 	public HorseInfo() {
 		super("horseInfo");
+	}
 
-		settings.add(jump);
-		settings.add(speed);
+	@Override
+	protected void addSettings(List<Setting<?>> settings) {
+		super.addSettings(settings);
+
+		settings.add(jump = new SettingBoolean("jump"));
+		settings.add(speed = new SettingBoolean("speed"));
 	}
 
 	@Override

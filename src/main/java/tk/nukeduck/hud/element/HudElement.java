@@ -144,7 +144,7 @@ public abstract class HudElement {
 	public static final Sorter<HudElement> SORTER = new Sorter<HudElement>(ELEMENTS);
 
 	/** The settings saved to the config file for this element */
-	public final RootSetting settings = new RootSetting(this);
+	public final RootSetting settings;
 	protected final SettingPosition position;
 
 	public void setEnabled(boolean value) {
@@ -166,17 +166,27 @@ public abstract class HudElement {
 		this.name = name;
 		this.position = position;
 
-		if(position.getDirectionOptions() != Options.NONE || position.getContentOptions() != Options.NONE) {
-			settings.add(position);
-		}
-		settings.addAll(getRootSettings());
+		List<Setting<?>> rootSettings = new ArrayList<>();
+		addSettings(rootSettings);
+		this.settings = new RootSetting(this, rootSettings);
 
 		id = ELEMENTS.size();
 		ELEMENTS.add(this);
 	}
 
-	protected List<Setting<?>> getRootSettings() {
-		return Collections.emptyList();
+	/**
+	 * Adds all the element-specific settings to the settings window.
+	 * Include {@code super.addSettings()} for all child classes.
+	 *
+	 * <p>Note that this method is called before instance initializers for the
+	 * child class, including member initializers, so look out for {@code null}s.
+	 *
+	 * @param settings The list of settings to add new settings to.
+	 */
+	protected void addSettings(List<Setting<?>> settings) {
+		if(position.getDirectionOptions() != Options.NONE || position.getContentOptions() != Options.NONE) {
+			settings.add(position);
+		}
 	}
 
 	/** @return The minimum server version that supports this element

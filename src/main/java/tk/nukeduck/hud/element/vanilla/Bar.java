@@ -4,8 +4,11 @@ import static tk.nukeduck.hud.BetterHud.ICONS;
 import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
 
+import java.util.List;
+
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.fml.common.eventhandler.Event;
+import tk.nukeduck.hud.element.settings.Setting;
 import tk.nukeduck.hud.element.settings.SettingChoose;
 import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
@@ -14,19 +17,24 @@ import tk.nukeduck.hud.util.Direction.Options;
 import tk.nukeduck.hud.util.bars.StatBar;
 
 public abstract class Bar extends OverrideElement {
-	protected final SettingChoose side = new SettingChoose("side", "west", "east") {
-		@Override
-		public boolean enabled() {
-			return position.isDirection(Direction.SOUTH);
-		}
-	};
+	protected SettingChoose side;
 
 	private StatBar<? super EntityPlayerSP> bar;
 
 	public Bar(String name, StatBar<? super EntityPlayerSP> bar) {
 		super(name, new SettingPosition(Options.BAR, Options.CORNERS));
 		this.bar = bar;
-		settings.add(side);
+	}
+
+	@Override
+	protected void addSettings(List<Setting<?>> settings) {
+		super.addSettings(settings);
+		settings.add(side = new SettingChoose("side", "west", "east") {
+			@Override
+			public boolean enabled() {
+				return position.isDirection(Direction.SOUTH);
+			}
+		});
 	}
 
 	@Override

@@ -5,11 +5,12 @@ import static tk.nukeduck.hud.BetterHud.MC;
 import java.util.Arrays;
 import java.util.List;
 
+import tk.nukeduck.hud.element.settings.Setting;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.util.Direction;
 
 public class FpsCount extends TextElement {
-	private final SettingBoolean numberOnly;
+	private SettingBoolean numberOnly;
 
 	@Override
 	public void loadDefaults() {
@@ -21,7 +22,12 @@ public class FpsCount extends TextElement {
 
 	public FpsCount() {
 		super("fpsCount");
-		this.settings.add(numberOnly = new SettingBoolean("numberOnly"));
+	}
+
+	@Override
+	protected void addSettings(List<Setting<?>> settings) {
+		super.addSettings(settings);
+		settings.add(numberOnly = new SettingBoolean("numberOnly"));
 	}
 
 	@Override

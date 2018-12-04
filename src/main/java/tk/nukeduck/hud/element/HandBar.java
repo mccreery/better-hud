@@ -2,9 +2,12 @@ package tk.nukeduck.hud.element;
 
 import static tk.nukeduck.hud.BetterHud.MC;
 
+import java.util.List;
+
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.settings.Legend;
+import tk.nukeduck.hud.element.settings.Setting;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
@@ -14,10 +17,7 @@ import tk.nukeduck.hud.util.Direction.Options;
 import tk.nukeduck.hud.util.GlUtil;
 
 public class HandBar extends EquipmentDisplay {
-	private final SettingBoolean showItem = new SettingBoolean("showItem").setValuePrefix(SettingBoolean.VISIBLE);
-	private final SettingBoolean offHand = new SettingBoolean("offhand");
-	private final SettingBoolean showBars = new SettingBoolean("bars");
-	private final SettingBoolean showNonTools = new SettingBoolean("showNonTools").setValuePrefix("betterHud.value.nonTools");
+	private SettingBoolean showItem, offHand, showBars, showNonTools;
 
 	@Override
 	public void loadDefaults() {
@@ -32,12 +32,16 @@ public class HandBar extends EquipmentDisplay {
 
 	public HandBar() {
 		super("handBar", new SettingPosition(Options.BAR, Options.NORTH_SOUTH));
+	}
 
+	@Override
+	protected void addSettings(List<Setting<?>> settings) {
+		super.addSettings(settings);
 		settings.add(new Legend("misc"));
-		settings.add(showItem);
-		settings.add(showBars);
-		settings.add(offHand);
-		settings.add(showNonTools);
+		settings.add(showItem = new SettingBoolean("showItem").setValuePrefix(SettingBoolean.VISIBLE));
+		settings.add(showBars = new SettingBoolean("bars"));
+		settings.add(offHand = new SettingBoolean("offhand"));
+		settings.add(showNonTools = new SettingBoolean("showNonTools").setValuePrefix("betterHud.value.nonTools"));
 	}
 
 	public void renderBar(ItemStack stack, int x, int y) {

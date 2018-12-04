@@ -7,6 +7,7 @@ import java.util.List;
 
 import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.settings.Legend;
+import tk.nukeduck.hud.element.settings.Setting;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.text.TextElement;
 import tk.nukeduck.hud.util.Bounds;
@@ -16,8 +17,8 @@ import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Point;
 
 public class ExperienceInfo extends TextElement {
-	private final SettingBoolean total = new SettingBoolean("showTotalExp").setValuePrefix(SettingBoolean.VISIBLE);
-	private final SettingBoolean lifetime = new SettingBoolean("showLifetimeExp").setValuePrefix(SettingBoolean.VISIBLE);
+	private SettingBoolean total;
+	private SettingBoolean lifetime;
 
 	@Override
 	public void loadDefaults() {
@@ -30,10 +31,14 @@ public class ExperienceInfo extends TextElement {
 
 	public ExperienceInfo() {
 		super("experienceInfo");
+	}
 
+	@Override
+	protected void addSettings(List<Setting<?>> settings) {
+		super.addSettings(settings);
 		settings.add(new Legend("misc"));
-		settings.add(total);
-		settings.add(lifetime);
+		settings.add(total = new SettingBoolean("showTotalExp").setValuePrefix(SettingBoolean.VISIBLE));
+		settings.add(lifetime = new SettingBoolean("showLifetimeExp").setValuePrefix(SettingBoolean.VISIBLE));
 	}
 
 	@Override

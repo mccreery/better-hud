@@ -12,12 +12,11 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 import tk.nukeduck.hud.element.settings.Legend;
+import tk.nukeduck.hud.element.settings.Setting;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 
 public class Connection extends TextElement {
-	private final SettingBoolean playerCount = new SettingBoolean("playerCount").setValuePrefix(SettingBoolean.VISIBLE);
-	private final SettingBoolean showIp = new SettingBoolean("showIp");
-	private final SettingBoolean latency = new SettingBoolean("latency");
+	private SettingBoolean playerCount, showIp, latency;
 
 	private String ip = "localServer";
 
@@ -38,13 +37,16 @@ public class Connection extends TextElement {
 
 	public Connection() {
 		super("connection");
-
-		settings.add(new Legend("misc"));
-		settings.add(playerCount);
-		settings.add(showIp);
-		settings.add(latency);
 	}
 
+	@Override
+	protected void addSettings(List<Setting<?>> settings) {
+		super.addSettings(settings);
+		settings.add(new Legend("misc"));
+		settings.add(playerCount = new SettingBoolean("playerCount").setValuePrefix(SettingBoolean.VISIBLE));
+		settings.add(showIp = new SettingBoolean("showIp"));
+		settings.add(latency = new SettingBoolean("latency"));
+	}
 
 	@SubscribeEvent
 	public void onConnect(ClientConnectedToServerEvent event) {

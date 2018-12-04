@@ -18,6 +18,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
+import tk.nukeduck.hud.element.settings.Setting;
 import tk.nukeduck.hud.element.settings.SettingSlider;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
@@ -31,21 +32,25 @@ import tk.nukeduck.hud.util.bars.StatBarArmor;
 public class PlayerInfo extends EntityInfo {
 	private StatBar<? super EntityLivingBase> bar = new StatBarArmor();
 
-	private final SettingSlider tooltipLines = new SettingSlider("tooltipLines", -1, 10, 1) {
-		@Override
-		public String getDisplayValue(double scaledValue) {
-			if(scaledValue == -1) {
-				return I18n.format("betterHud.value.unlimited");
-			} else {
-				return super.getDisplayValue(scaledValue);
-			}
-		}
-	};
+	private SettingSlider tooltipLines;
 
 	public PlayerInfo() {
 		super("playerInfo");
+	}
 
-		settings.add(tooltipLines);
+	@Override
+	protected void addSettings(List<Setting<?>> settings) {
+		super.addSettings(settings);
+		settings.add(tooltipLines = new SettingSlider("tooltipLines", -1, 10, 1) {
+			@Override
+			public String getDisplayValue(double scaledValue) {
+				if(scaledValue == -1) {
+					return I18n.format("betterHud.value.unlimited");
+				} else {
+					return super.getDisplayValue(scaledValue);
+				}
+			}
+		});
 	}
 
 	@Override

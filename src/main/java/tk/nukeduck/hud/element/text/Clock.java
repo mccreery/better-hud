@@ -7,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 
 import tk.nukeduck.hud.element.settings.Legend;
+import tk.nukeduck.hud.element.settings.Setting;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingChoose;
 import tk.nukeduck.hud.element.settings.SettingPosition;
@@ -14,22 +15,24 @@ import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.Direction.Options;
 
 public abstract class Clock extends TextElement {
-	private final SettingBoolean twentyFour = new SettingBoolean("24hr");
-	private final SettingBoolean showSeconds = new SettingBoolean("showSeconds").setValuePrefix(SettingBoolean.VISIBLE);
-
-	private final SettingChoose dateType = new SettingChoose("dateType", "dmy", "mdy", "ymd");
-	private final SettingBoolean fullYear = new SettingBoolean("fullYear").setValuePrefix(SettingBoolean.VISIBLE);
+	private SettingBoolean twentyFour, showSeconds, fullYear;
+	private SettingChoose dateType;
 
 	public Clock(String name) {
 		super(name, new SettingPosition(Options.CORNERS, Options.WEST_EAST));
 		border = true;
+	}
+
+	@Override
+	protected void addSettings(List<Setting<?>> settings) {
+		super.addSettings(settings);
 
 		settings.add(new Legend("misc"));
-		settings.add(twentyFour);
-		settings.add(showSeconds);
+		settings.add(twentyFour = new SettingBoolean("24hr"));
+		settings.add(showSeconds = new SettingBoolean("showSeconds").setValuePrefix(SettingBoolean.VISIBLE));
 
-		settings.add(dateType);
-		settings.add(fullYear);
+		settings.add(dateType = new SettingChoose("dateType", "dmy", "mdy", "ymd"));
+		settings.add(fullYear = new SettingBoolean("fullYear").setValuePrefix(SettingBoolean.VISIBLE));
 	}
 
 	@Override

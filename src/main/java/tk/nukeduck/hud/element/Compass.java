@@ -3,6 +3,8 @@ package tk.nukeduck.hud.element;
 import static tk.nukeduck.hud.BetterHud.MC;
 import static tk.nukeduck.hud.BetterHud.SPACER;
 
+import java.util.List;
+
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Items;
@@ -10,6 +12,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.settings.Legend;
+import tk.nukeduck.hud.element.settings.Setting;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingChoose;
 import tk.nukeduck.hud.element.settings.SettingPercentage;
@@ -24,10 +27,9 @@ import tk.nukeduck.hud.util.Point;
 public class Compass extends HudElement {
 	private static final String[] DIRECTIONS = {"S", "E", "N", "W"};
 
-	private final SettingChoose mode = new SettingChoose("mode", "visual", "text");
-	private final SettingSlider directionScaling = new SettingPercentage("letterScale");
-	private final SettingBoolean showNotches = new SettingBoolean("showNotches").setValuePrefix(SettingBoolean.VISIBLE);
-	private final SettingChoose requireItem = new SettingChoose("requireItem", "disabled", "inventory", "hand");
+	private SettingChoose mode, requireItem;
+	private SettingSlider directionScaling;
+	private SettingBoolean showNotches;
 
 	@Override
 	public void loadDefaults() {
@@ -52,12 +54,16 @@ public class Compass extends HudElement {
 
 	public Compass() {
 		super("compass", new SettingPosition(Direction.Options.TOP_BOTTOM, Direction.Options.NORTH_SOUTH));
+	}
 
-		settings.add(mode);
+	@Override
+	protected void addSettings(List<Setting<?>> settings) {
+		super.addSettings(settings);
+		settings.add(mode = new SettingChoose("mode", "visual", "text"));
 		settings.add(new Legend("misc"));
-		settings.add(directionScaling);
-		settings.add(showNotches);
-		settings.add(requireItem);
+		settings.add(directionScaling = new SettingPercentage("letterScale"));
+		settings.add(showNotches = new SettingBoolean("showNotches").setValuePrefix(SettingBoolean.VISIBLE));
+		settings.add(requireItem = new SettingChoose("requireItem", "disabled", "inventory", "hand"));
 	}
 
 	private void drawBackground(Bounds bounds) {

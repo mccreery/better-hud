@@ -27,6 +27,8 @@ public abstract class Setting<T> implements IGetSet<T> {
 	protected final List<Setting<?>> children = new ArrayList<Setting<?>>();
 	public final String name;
 
+	private Category category = Category.MISC;
+
 	private String unlocalizedName;
 
 	/** The config property associated with this setting */
@@ -43,6 +45,15 @@ public abstract class Setting<T> implements IGetSet<T> {
 		if(name != null) this.unlocalizedName = "betterHud.setting." + name;
 	}
 
+	public Setting<T> setCategory(Category category) {
+		this.category = category;
+		return this;
+	}
+
+	public Category getCategory() {
+		return category;
+	}
+
 	public Setting<T> setEnableOn(BooleanSupplier enableOn) {
 		this.enableOn = enableOn;
 		return this;
@@ -53,12 +64,12 @@ public abstract class Setting<T> implements IGetSet<T> {
 		return this;
 	}
 
-	public void add(Setting<?> element) {
+	protected void add(Setting<?> element) {
 		children.add(element);
 		element.parent = this;
 	}
 
-	public void addAll(Iterable<Setting<?>> children) {
+	protected void addAll(Iterable<Setting<?>> children) {
 		for(Setting<?> child : children) {
 			add(child);
 		}
@@ -206,6 +217,20 @@ public abstract class Setting<T> implements IGetSet<T> {
 	public void updateGuiParts(Collection<Setting<?>> settings) {
 		for(Setting<?> setting : children) {
 			setting.updateGuiParts(settings);
+		}
+	}
+
+	public enum Category {
+		MISC("misc"), POSITION("position");
+
+		private final String unlocalizedName;
+
+		Category(String unlocalizedName) {
+			this.unlocalizedName = unlocalizedName;
+		}
+
+		public String getUnlocalizedName() {
+			return "betterHud.group." + unlocalizedName;
 		}
 	}
 }

@@ -1,9 +1,11 @@
 package tk.nukeduck.hud.element;
 
 import java.util.ArrayList;
+import java.util.List;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
+import tk.nukeduck.hud.element.settings.Setting;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingChoose;
 import tk.nukeduck.hud.element.settings.SettingPosition;
@@ -12,24 +14,27 @@ import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.FormatUtil;
 
 public abstract class EquipmentDisplay extends HudElement {
-	private final SettingBoolean showName = new SettingBoolean("showName");
-	private final SettingBoolean showDurability = new SettingBoolean("showDurability", Direction.WEST);
-	private final SettingWarnings warnings = new SettingWarnings("damageWarning");
-
-	private final SettingChoose durabilityMode = new SettingChoose("durabilityMode", Direction.EAST, "points", "percentage") {
-		@Override
-		public boolean enabled() {
-			return showDurability.get();
-		}
-	};
+	private SettingBoolean showName;
+	private SettingBoolean showDurability;
+	private SettingWarnings warnings;
+	private SettingChoose durabilityMode;
 
 	protected EquipmentDisplay(String name, SettingPosition position) {
 		super(name, position);
+	}
 
-		settings.add(showName);
-		settings.add(showDurability);
-		settings.add(durabilityMode);
-		settings.add(warnings);
+	@Override
+	protected void addSettings(List<Setting<?>> settings) {
+		super.addSettings(settings);
+		settings.add(showName = new SettingBoolean("showName"));
+		settings.add(showDurability = new SettingBoolean("showDurability", Direction.WEST));
+		settings.add(durabilityMode = new SettingChoose("durabilityMode", Direction.EAST, "points", "percentage") {
+			@Override
+			public boolean enabled() {
+				return showDurability.get();
+			}
+		});
+		settings.add(warnings = new SettingWarnings("damageWarning"));
 	}
 
 	@Override

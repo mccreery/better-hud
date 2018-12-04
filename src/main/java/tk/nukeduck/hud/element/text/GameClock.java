@@ -6,12 +6,14 @@ import java.text.DateFormat;
 import java.text.FieldPosition;
 import java.text.ParsePosition;
 import java.util.Date;
+import java.util.List;
 import java.util.TimeZone;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.Event;
+import tk.nukeduck.hud.element.settings.Setting;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingChoose;
 import tk.nukeduck.hud.util.Bounds;
@@ -23,15 +25,19 @@ import tk.nukeduck.hud.util.Point;
 public class GameClock extends Clock {
 	private static final ItemStack BED = new ItemStack(Items.BED);
 
-	private final SettingBoolean showDays = new SettingBoolean("showDays").setValuePrefix(SettingBoolean.VISIBLE);
-	private final SettingChoose requireItem = new SettingChoose("requireItem", "disabled", "inventory", "hand");
+	private SettingBoolean showDays;
+	private SettingChoose requireItem;
 
 	public GameClock() {
 		super("gameClock");
 		border = true;
+	}
 
-		settings.add(showDays);
-		settings.add(requireItem);
+	@Override
+	protected void addSettings(List<Setting<?>> settings) {
+		super.addSettings(settings);
+		settings.add(showDays = new SettingBoolean("showDays").setValuePrefix(SettingBoolean.VISIBLE));
+		settings.add(requireItem = new SettingChoose("requireItem", "disabled", "inventory", "hand"));
 	}
 
 	@Override

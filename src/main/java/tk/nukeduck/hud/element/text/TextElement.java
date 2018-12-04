@@ -4,6 +4,7 @@ import java.util.List;
 
 import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.HudElement;
+import tk.nukeduck.hud.element.settings.Setting;
 import tk.nukeduck.hud.element.settings.SettingColor;
 import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
@@ -14,7 +15,7 @@ import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.StringGroup;
 
 public abstract class TextElement extends HudElement {
-	protected SettingColor color = new SettingColor("color");
+	private SettingColor color;
 
 	protected boolean border = false;
 
@@ -24,7 +25,12 @@ public abstract class TextElement extends HudElement {
 
 	public TextElement(String name, SettingPosition position) {
 		super(name, position);
-		settings.add(color);
+	}
+
+	@Override
+	protected void addSettings(List<Setting<?>> settings) {
+		super.addSettings(settings);
+		settings.add(color = new SettingColor("color"));
 	}
 
 	public int getColor() {

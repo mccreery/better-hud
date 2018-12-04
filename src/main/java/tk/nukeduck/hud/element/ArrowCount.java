@@ -2,11 +2,14 @@ package tk.nukeduck.hud.element;
 
 import static tk.nukeduck.hud.BetterHud.MC;
 
+import java.util.List;
+
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemArrow;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.Event;
+import tk.nukeduck.hud.element.settings.Setting;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
@@ -18,7 +21,7 @@ import tk.nukeduck.hud.util.Point;
 
 public class ArrowCount extends HudElement {
 	private static final ItemStack ARROW = new ItemStack(Items.ARROW, 1);
-	private final SettingBoolean overlay = new SettingBoolean("overlay");
+	private SettingBoolean overlay;
 
 	@Override
 	public void loadDefaults() {
@@ -32,8 +35,12 @@ public class ArrowCount extends HudElement {
 	public ArrowCount() {
 		super("arrowCount", new SettingPosition(Options.CORNERS, Options.NONE));
 		position.setEnableOn(() -> !overlay.get());
+	}
 
-		settings.add(overlay);
+	@Override
+	protected void addSettings(List<Setting<?>> settings) {
+		super.addSettings(settings);
+		settings.add(overlay = new SettingBoolean("overlay"));
 	}
 
 	/** Note this method only cares about arrows which can be shot by a vanilla bow

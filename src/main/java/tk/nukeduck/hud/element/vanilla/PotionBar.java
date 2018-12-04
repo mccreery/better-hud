@@ -22,6 +22,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import tk.nukeduck.hud.BetterHud;
+import tk.nukeduck.hud.element.settings.Setting;
 import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
@@ -36,13 +37,16 @@ import tk.nukeduck.hud.util.Point;
 
 public class PotionBar extends OverrideElement {
 	public static final ResourceLocation INVENTORY = new ResourceLocation("textures/gui/container/inventory.png");
-
-	private final SettingPosition position = new SettingPosition("position", Options.X, Options.CORNERS);
+	private SettingPosition position;
 
 	public PotionBar() {
 		super("potionBar");
+	}
 
-		settings.add(position);
+	@Override
+	protected void addSettings(List<Setting<?>> settings) {
+		super.addSettings(settings);
+		settings.add(position = new SettingPosition("position", Options.X, Options.CORNERS));
 	}
 
 	@Override

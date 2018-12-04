@@ -2,17 +2,25 @@ package tk.nukeduck.hud.element.vanilla;
 
 import static tk.nukeduck.hud.BetterHud.MC;
 
+import java.util.List;
+
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
+import tk.nukeduck.hud.element.settings.Setting;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.util.bars.StatBarFood;
 
 public class FoodBar extends Bar {
-	private final SettingBoolean hideMount = new SettingBoolean("hideMount");
+	private SettingBoolean hideMount;
 
 	public FoodBar() {
 		super("food", new StatBarFood());
-		settings.add(hideMount);
+	}
+
+	@Override
+	protected void addSettings(List<Setting<?>> settings) {
+		super.addSettings(settings);
+		settings.add(hideMount = new SettingBoolean("hideMount"));
 	}
 
 	@Override

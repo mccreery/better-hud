@@ -11,6 +11,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.versioning.InvalidVersionSpecificationException;
 import net.minecraftforge.fml.common.versioning.VersionRange;
+import tk.nukeduck.hud.element.settings.Setting;
 import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.element.settings.SettingSlider;
 import tk.nukeduck.hud.events.PickupNotifier;
@@ -22,29 +23,7 @@ import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Point;
 
 public class PickupCount extends HudElement {
-	private final SettingSlider maxStacks = new SettingSlider("maxStacks", 1, 11, 1) {
-		@Override
-		public String getDisplayValue(double scaledValue) {
-			return scaledValue == getMaximum() ? I18n.format("betterHud.value.unlimited") : super.getDisplayValue(scaledValue);
-		}
-	};
-
-	public final SettingSlider fadeAfter = new SettingSlider("fadeAfter", 20, 600, 20).setDisplayScale(0.05).setUnlocalizedValue("betterHud.hud.seconds");
-
-	public static class StackNode {
-		public final ItemStack stack;
-		public long updateCounter;
-
-		private StackNode(ItemStack stack) {
-			this.stack = stack;
-		}
-
-		@Override
-		public String toString() {
-			return String.format("%dx %s", stack.getCount(), stack.getDisplayName());
-		}
-	}
-
+	private SettingSlider maxStacks, fadeAfter;
 	public final List<StackNode> stacks = new CopyOnWriteArrayList<>();
 
 	@Override
@@ -58,9 +37,18 @@ public class PickupCount extends HudElement {
 
 	public PickupCount() {
 		super("itemPickup", new SettingPosition(Options.X, Options.CORNERS));
+	}
 
-		settings.add(fadeAfter);
-		settings.add(maxStacks);
+	@Override
+	protected void addSettings(List<Setting<?>> settings) {
+		super.addSettings(settings);
+		settings.add(fadeAfter = new SettingSlider("fadeAfter", 20, 600, 20).setDisplayScale(0.05).setUnlocalizedValue("betterHud.hud.seconds"));
+		settings.add(maxStacks = new SettingSlider("maxStacks", 1, 11, 1) {
+			@Override
+			public String getDisplayValue(double scaledValue) {
+				return scaledValue == getMaximum() ? I18n.format("betterHud.value.unlimited") : super.getDisplayValue(scaledValue);
+			}
+		});
 	}
 
 	@Override
@@ -153,5 +141,19 @@ public class PickupCount extends HudElement {
 		foundNode.updateCounter = MC.ingameGUI.getUpdateCounter();
 
 		stacks.add(0, foundNode);
+	}
+
+	public static class StackNode {
+		public final ItemStack stack;
+		public long updateCounter;
+
+		private StackNode(ItemStack stack) {
+			this.stack = stack;
+		}
+
+		@Override
+		public String toString() {
+			return String.format("%dx %s", stack.getCount(), stack.getDisplayName());
+		}
 	}
 }

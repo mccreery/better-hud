@@ -8,11 +8,12 @@ import java.util.List;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.settings.Legend;
+import tk.nukeduck.hud.element.settings.Setting;
 import tk.nukeduck.hud.element.settings.SettingBoolean;
 import tk.nukeduck.hud.util.Direction;
 
 public class FullInvIndicator extends TextElement {
-	private final SettingBoolean offHand = new SettingBoolean("offhand");
+	private SettingBoolean offHand;
 
 	@Override
 	public void loadDefaults() {
@@ -24,9 +25,13 @@ public class FullInvIndicator extends TextElement {
 
 	public FullInvIndicator() {
 		super("fullInvIndicator");
+	}
 
+	@Override
+	protected void addSettings(List<Setting<?>> settings) {
+		super.addSettings(settings);
 		settings.add(new Legend("misc"));
-		settings.add(offHand);
+		settings.add(offHand = new SettingBoolean("offhand"));
 	}
 
 	@Override
