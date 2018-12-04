@@ -2,9 +2,12 @@ package tk.nukeduck.hud.gui;
 
 import static tk.nukeduck.hud.BetterHud.MC;
 
+import com.mojang.realmsclient.gui.ChatFormatting;
+
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
 import tk.nukeduck.hud.BetterHud;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Point;
@@ -14,10 +17,18 @@ public class GuiActionButton extends GuiButton {
 	private ActionCallback callback;
 	private boolean repeat;
 
+	public boolean glowing;
+
 	private String tooltip;
 
 	public GuiActionButton(String buttonText) {
 		super(0, 0, 0, buttonText);
+	}
+
+	@Override
+	protected int getHoverState(boolean mouseOver) {
+		int state = super.getHoverState(mouseOver);
+		return glowing && state == 1 ? 2 : state;
 	}
 
 	public GuiActionButton setTooltip(String tooltip) {
@@ -67,6 +78,17 @@ public class GuiActionButton extends GuiButton {
 
 	public void updateText(String name, String value) {
 		this.displayString = name + ": " + value;
+	}
+
+	public void updateText(String unlocalizedName, String valuePrefix, boolean value) {
+		String valueDisplay;
+
+		if(value) {
+			valueDisplay = ChatFormatting.GREEN + I18n.format(valuePrefix + ".on");
+		} else {
+			valueDisplay = ChatFormatting.RED + I18n.format(valuePrefix + ".off");
+		}
+		updateText(I18n.format(unlocalizedName), valueDisplay);
 	}
 
 	@Override

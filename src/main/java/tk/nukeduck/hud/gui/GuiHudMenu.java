@@ -36,8 +36,7 @@ public class GuiHudMenu extends GuiScreen {
 	private final GuiButton resetDefaults = new GuiActionButton(I18n.format("betterHud.menu.saveLoad"))
 		.setCallback(b -> MC.displayGuiScreen(new GuiConfigSaves(this)));
 
-	private final GuiToggleButton globalToggle   = new GuiElementToggle(this, HudElement.GLOBAL);
-	private final GuiActionButton globalSettings = new GuiOptionButton(this, HudElement.GLOBAL);
+	private final ButtonRow globalRow = new ButtonRow(this, HudElement.GLOBAL);
 
 	private final GuiButton lastPage = new GuiActionButton(I18n.format("betterHud.menu.lastPage"))
 		.setCallback(b -> {paginator.previousPage(); initGui();});
@@ -85,9 +84,7 @@ public class GuiHudMenu extends GuiScreen {
 
 		moveButton(returnToGame,   halfWidth.anchor(buttons, Direction.NORTH_WEST));
 
-		Bounds global = halfWidth.anchor(buttons, Direction.NORTH_EAST);
-		moveButton(globalToggle,   halfWidth.withWidth(halfWidth.getWidth() - 20).anchor(global, Direction.NORTH_WEST));
-		moveButton(globalSettings, halfWidth.withWidth(20).anchor(global, Direction.NORTH_EAST));
+		globalRow.setBounds(halfWidth.anchor(buttons, Direction.NORTH_EAST));
 
 		moveButton(toggleAll,     thirdWidth.anchor(buttons, Direction.SOUTH_WEST));
 		moveButton(reorder,    thirdWidth.anchor(buttons,      Direction.SOUTH));
@@ -104,9 +101,8 @@ public class GuiHudMenu extends GuiScreen {
 		buttonList.clear();
 
 		buttonList.add(returnToGame);
-		buttonList.add(globalToggle);
-		globalToggle.updateText();
-		buttonList.add(globalSettings);
+		buttonList.addAll(globalRow.getButtons());
+		globalRow.update();
 
 		buttonList.add(toggleAll);
 		buttonList.add(reorder);

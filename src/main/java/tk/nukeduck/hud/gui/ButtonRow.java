@@ -1,17 +1,20 @@
 package tk.nukeduck.hud.gui;
 
+import static tk.nukeduck.hud.BetterHud.MC;
+
 import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import tk.nukeduck.hud.element.HudElement;
+import tk.nukeduck.hud.element.HudElement.SortType;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 
 class ButtonRow {
 	private final HudElement element;
-	private final GuiElementToggle toggle;
+	private final GuiActionButton toggle;
 	private final GuiActionButton options;
 
 	private Bounds bounds;
@@ -19,7 +22,14 @@ class ButtonRow {
 	public ButtonRow(GuiHudMenu callback, HudElement element) {
 		this.element = element;
 
-		toggle = new GuiElementToggle(callback, element);
+		toggle = new GuiActionButton("").setCallback(b -> {
+			element.toggle();
+			HudElement.SORTER.markDirty(SortType.ENABLED);
+
+			if(MC.currentScreen != null) {
+				MC.currentScreen.initGui();
+			}
+		});
 		options = new GuiOptionButton(callback, element);
 	}
 
@@ -42,10 +52,11 @@ class ButtonRow {
 		boolean supported = element.isSupportedByServer();
 
 		toggle.enabled = supported;
-		toggle.updateText();
+		toggle.glowing = element.get();
+		toggle.updateText(element.getUnlocalizedName(), "options", element.get());
 		toggle.setTooltip(toggle.enabled ? null : I18n.format("betterHud.menu.unsupported"));
 
-		options.enabled = supported && toggle.get() && !element.settings.isEmpty();
+		options.enabled = supported && element.get() && !element.settings.isEmpty();
 
 		return this;
 	}
