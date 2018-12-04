@@ -172,6 +172,11 @@ public abstract class HudElement implements IBoolean {
 		settings.set(value);
 	}
 
+	/**
+	 * Checks whether the element can be rendered before deciding.
+	 * @see #shouldRender(Event)
+	 * @return {@code true} if the element can be rendered.
+	 */
 	public boolean isEnabledAndSupported() {
 		return settings.get() && isSupportedByServer();
 	}
@@ -238,8 +243,15 @@ public abstract class HudElement implements IBoolean {
 		return "betterHud.element." + name;
 	}
 
-	/** @return {@code true} if the element should render in the current world and event context
-	 * @param event The current render event */
+	/**
+	 * Checks whether the element should render, in the current event context.
+	 * Note that this neither checks that the element is enabled, nor that
+	 * it is supported by the server. For that, use {@link #isEnabledAndSupported()}.
+	 *
+	 * @return {@code true} if the element should render.
+	 * @param event The current render event
+	 * @see #isEnabledAndSupported()
+	 */
 	public boolean shouldRender(Event event) {
 		return event instanceof RenderGameOverlayEvent;
 	}
