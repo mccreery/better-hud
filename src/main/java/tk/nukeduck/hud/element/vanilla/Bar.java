@@ -46,7 +46,7 @@ public abstract class Bar extends OverrideElement {
 	@Override
 	public boolean shouldRender(Event event) {
 		bar.setHost(MC.player);
-		return bar.shouldRender() && super.shouldRender(event);
+		return super.shouldRender(event) && bar.shouldRender();
 	}
 
 	/** @return {@link Direction#WEST} or {@link Direction#EAST} */

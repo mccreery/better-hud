@@ -22,6 +22,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import tk.nukeduck.hud.BetterHud;
+import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.element.settings.Setting;
 import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
@@ -35,7 +36,7 @@ import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.MathUtil;
 import tk.nukeduck.hud.util.Point;
 
-public class PotionBar extends OverrideElement {
+public class PotionBar extends HudElement {
 	public static final ResourceLocation INVENTORY = new ResourceLocation("textures/gui/container/inventory.png");
 	private SettingPosition position;
 
@@ -66,11 +67,6 @@ public class PotionBar extends OverrideElement {
 		if(BetterHud.isEnabled() && event.getType() == ElementType.POTION_ICONS) {
 			event.setCanceled(true);
 		}
-	}
-
-	@Override
-	protected ElementType getType() {
-		return null;
 	}
 
 	@Override

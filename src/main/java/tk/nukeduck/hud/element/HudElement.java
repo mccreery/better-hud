@@ -273,7 +273,7 @@ public abstract class HudElement implements IBoolean {
 	public final void tryRender(Event event) {
 		Bounds bounds = null;
 
-		if(isEnabledAndSupported() && shouldRender(event)) {
+		if(shouldRender(event) && isEnabledAndSupported()) {
 			MC.mcProfiler.startSection(name);
 
 			GlMode.set(getMode());

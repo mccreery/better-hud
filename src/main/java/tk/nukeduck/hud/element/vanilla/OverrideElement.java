@@ -20,11 +20,13 @@ public abstract class OverrideElement extends HudElement {
 
 	@Override
 	public boolean shouldRender(Event event) {
-		if(!super.shouldRender(event)) return false;
+		if(!(event instanceof RenderGameOverlayEvent)) {
+			return false;
+		}
+		RenderGameOverlayEvent parent = (RenderGameOverlayEvent)event;
+		Event child = new RenderGameOverlayEvent.Pre(parent, getType());
 
-		ElementType type = getType();
-		return type == null || !MinecraftForge.EVENT_BUS.post(
-			new RenderGameOverlayEvent.Pre((RenderGameOverlayEvent)event, getType()));
+		return !MinecraftForge.EVENT_BUS.post(child);
 	}
 
 	@Override

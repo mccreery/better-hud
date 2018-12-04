@@ -13,8 +13,8 @@ import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Scoreboard;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
+import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.element.settings.Setting;
 import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.util.Bounds;
@@ -25,7 +25,7 @@ import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.Point;
 import tk.nukeduck.hud.util.StringGroup;
 
-public class Sidebar extends OverrideElement {
+public class Sidebar extends HudElement {
 	private SettingPosition position;
 
 	public Sidebar() {
@@ -36,11 +36,6 @@ public class Sidebar extends OverrideElement {
 	protected void addSettings(List<Setting<?>> settings) {
 		super.addSettings(settings);
 		settings.add(position = new SettingPosition("position", Options.LEFT_RIGHT, Options.WEST_EAST));
-	}
-
-	@Override
-	protected ElementType getType() {
-		return null;
 	}
 
 	@Override

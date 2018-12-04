@@ -7,7 +7,6 @@ import static tk.nukeduck.hud.BetterHud.WIDGETS;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHandSide;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.element.settings.SettingPosition;
@@ -18,7 +17,7 @@ import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.mode.GlMode;
 import tk.nukeduck.hud.util.mode.TextureMode;
 
-public class Offhand extends OverrideElement {
+public class Offhand extends HudElement {
 	public Offhand() {
 		super("offhand", new SettingPosition("position", Options.BAR, Options.NONE));
 	}
@@ -27,11 +26,6 @@ public class Offhand extends OverrideElement {
 	public void loadDefaults() {
 		super.loadDefaults();
 		position.setPreset(Direction.SOUTH);
-	}
-
-	@Override
-	protected ElementType getType() {
-		return null;
 	}
 
 	@Override
