@@ -14,7 +14,7 @@ import net.minecraft.util.math.MathHelper;
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.ISaveLoad;
+import tk.nukeduck.hud.util.IGetSet;
 import tk.nukeduck.hud.util.Point;
 
 public class GuiReorder extends GuiElements {
@@ -59,7 +59,7 @@ public class GuiReorder extends GuiElements {
 				int i = elements.indexOf(selected) + offset;
 
 				if(i >= 0 && i < elements.size()) {
-					ISaveLoad.IGetSet.swap(selected.settings.priority, elements.get(i).settings.priority);
+					IGetSet.swap(selected.settings.priority, elements.get(i).settings.priority);
 					HudElement.SORTER.markDirty(HudElement.SortType.PRIORITY);
 				}
 			} else {

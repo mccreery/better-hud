@@ -53,12 +53,13 @@ import tk.nukeduck.hud.element.vanilla.RidingHealth;
 import tk.nukeduck.hud.element.vanilla.Sidebar;
 import tk.nukeduck.hud.element.vanilla.Vignette;
 import tk.nukeduck.hud.util.Bounds;
+import tk.nukeduck.hud.util.Direction.Options;
+import tk.nukeduck.hud.util.IGetSet.IBoolean;
 import tk.nukeduck.hud.util.SortField;
 import tk.nukeduck.hud.util.Sorter;
-import tk.nukeduck.hud.util.Direction.Options;
 import tk.nukeduck.hud.util.mode.GlMode;
 
-public abstract class HudElement {
+public abstract class HudElement implements IBoolean {
 	/** A list of all the registered elements */
 	public static final List<HudElement> ELEMENTS = new ArrayList<HudElement>();
 
@@ -147,7 +148,21 @@ public abstract class HudElement {
 	public final RootSetting settings;
 	protected final SettingPosition position;
 
-	public void setEnabled(boolean value) {
+	/**
+	 * {@inheritDoc}
+	 * <p>For {@link HudElement}, gets whether the element is enabled.
+	 */
+	@Override
+	public Boolean get() {
+		return settings.get();
+	}
+
+	/**
+	 * {@inheritDoc}
+	 * <p>For {@link HudElement}, enables or disables the element.
+	 */
+	@Override
+	public void set(Boolean value) {
 		settings.set(value);
 	}
 
@@ -319,7 +334,7 @@ public abstract class HudElement {
 	 * You should always call the {@code super} implementation to handle the default enabled value of {@code true}
 	 * and to allow for future expansion */
 	protected void loadDefaults() {
-		setEnabled(true);
+		set(true);
 		settings.priority.set(0);
 	}
 

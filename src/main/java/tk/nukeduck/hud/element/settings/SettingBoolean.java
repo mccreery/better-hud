@@ -12,8 +12,9 @@ import tk.nukeduck.hud.gui.GuiSettingToggle;
 import tk.nukeduck.hud.gui.GuiToggleButton;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
+import tk.nukeduck.hud.util.IGetSet.IBoolean;
 
-public class SettingBoolean extends SettingAlignable<Boolean> {
+public class SettingBoolean extends SettingAlignable<Boolean> implements IBoolean {
 	public static final String VISIBLE = "betterHud.value.visible";
 
 	protected GuiToggleButton toggler;
@@ -45,11 +46,6 @@ public class SettingBoolean extends SettingAlignable<Boolean> {
 
 	public Boolean get() {return enabled() && value;}
 	public void set(Boolean value) {this.value = value;}
-
-	public Boolean toggle() {
-		set(!get());
-		return get();
-	}
 
 	@Override
 	public void getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Bounds bounds) {

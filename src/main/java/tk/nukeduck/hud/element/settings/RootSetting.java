@@ -4,8 +4,9 @@ import java.util.List;
 
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.util.HudConfig;
+import tk.nukeduck.hud.util.IGetSet.IBoolean;
 
-public class RootSetting extends SettingStub<Boolean> {
+public class RootSetting extends SettingStub<Boolean> implements IBoolean {
 	private final HudElement element;
 	private int priorityRank = 0;
 
@@ -47,9 +48,5 @@ public class RootSetting extends SettingStub<Boolean> {
 	@Override
 	public boolean isEmpty() {
 		return children.size() <= 2;
-	}
-
-	public void toggle() {
-		set(!get());
 	}
 }

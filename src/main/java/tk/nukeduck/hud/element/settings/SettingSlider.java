@@ -12,7 +12,7 @@ import tk.nukeduck.hud.gui.GuiSlider;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.FormatUtil;
-import tk.nukeduck.hud.util.ISaveLoad.ISlider;
+import tk.nukeduck.hud.util.ISlider;
 
 public class SettingSlider extends SettingAlignable<Double> implements ISlider {
 	protected GuiSlider slider;
@@ -97,7 +97,7 @@ public class SettingSlider extends SettingAlignable<Double> implements ISlider {
 
 	@Override
 	public void set(Double value) {
-		this.value = ISlider.normalize(this, value);
+		this.value = normalize(value);
 		if(slider != null) slider.updateDisplayString();
 	}
 

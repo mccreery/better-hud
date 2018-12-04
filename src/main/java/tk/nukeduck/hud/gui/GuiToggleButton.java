@@ -5,10 +5,11 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import tk.nukeduck.hud.util.ISaveLoad.IGetSet;
+import tk.nukeduck.hud.util.IGetSet;
+import tk.nukeduck.hud.util.ISaveLoad;
 
 @SideOnly(Side.CLIENT)
-public class GuiToggleButton extends GuiActionButton implements IGetSet<Boolean> {
+public class GuiToggleButton extends GuiActionButton implements IGetSet<Boolean>, ISaveLoad {
 	public String unlocalizedName;
 	private String unlocalizedValue = "options";
 

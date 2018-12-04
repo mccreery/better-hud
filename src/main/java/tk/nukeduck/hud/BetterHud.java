@@ -82,10 +82,6 @@ public class BetterHud {
 		return HudElement.GLOBAL.isEnabled() && !(HudElement.GLOBAL.hideOnDebug() && MC.gameSettings.showDebugInfo);
 	}
 
-	public static void toggleEnabled() {
-		HudElement.GLOBAL.settings.toggle();
-	}
-
 	public static final SimpleNetworkWrapper NET_WRAPPER = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
 
 	public static PickupNotifier pickupNotifier;

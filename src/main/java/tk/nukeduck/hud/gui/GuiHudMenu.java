@@ -19,7 +19,7 @@ import tk.nukeduck.hud.element.HudElement.SortType;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Colors;
 import tk.nukeduck.hud.util.Direction;
-import tk.nukeduck.hud.util.ISaveLoad.IGetSet;
+import tk.nukeduck.hud.util.IGetSet;
 import tk.nukeduck.hud.util.Paginator;
 import tk.nukeduck.hud.util.Point;
 import tk.nukeduck.hud.util.SortField;
@@ -57,7 +57,7 @@ public class GuiHudMenu extends GuiScreen {
 	}
 
 	private boolean allEnabled() {
-		return HudElement.ELEMENTS.stream().allMatch(e -> e.settings.get());
+		return HudElement.ELEMENTS.stream().allMatch(e -> e.get());
 	}
 
 	public void initGui() {
@@ -148,7 +148,7 @@ public class GuiHudMenu extends GuiScreen {
 
 	private void setAll(boolean enabled) {
 		for(HudElement element : HudElement.ELEMENTS) {
-			element.setEnabled(enabled);
+			element.set(enabled);
 		}
 
 		HudElement.SORTER.markDirty(SortType.ENABLED);
@@ -160,10 +160,7 @@ public class GuiHudMenu extends GuiScreen {
 		this.drawDefaultBackground();
 		super.drawScreen(mouseX, mouseY, p_73863_3_);
 
-		int enabled = 0;
-		for(HudElement element : HudElement.ELEMENTS) {
-			if(element.settings.get()) ++enabled;
-		}
+		int enabled = (int)HudElement.ELEMENTS.stream().filter(HudElement::get).count();
 
 		drawCenteredString(fontRenderer, I18n.format("betterHud.menu.hudSettings"), width / 2, height / 16 + 5, Colors.WHITE);
 		drawString(fontRenderer, enabled + "/" + HudElement.ELEMENTS.size() + " enabled", 5, 5, Colors.WHITE);

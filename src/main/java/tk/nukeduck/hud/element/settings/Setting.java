@@ -15,14 +15,15 @@ import net.minecraftforge.common.config.Property.Type;
 import tk.nukeduck.hud.element.HudElement;
 import tk.nukeduck.hud.gui.GuiElementSettings;
 import tk.nukeduck.hud.util.HudConfig;
-import tk.nukeduck.hud.util.ISaveLoad.IGetSet;
+import tk.nukeduck.hud.util.IGetSet;
+import tk.nukeduck.hud.util.ISaveLoad;
 import tk.nukeduck.hud.util.Point;
 
 /** A setting for a {@link HudElement}. Child elements will be saved under
  * the namespace of the parent's name
  *
  * @see IGetSet */
-public abstract class Setting<T> implements IGetSet<T> {
+public abstract class Setting<T> implements IGetSet<T>, ISaveLoad {
 	private Setting<?> parent = null;
 	protected final List<Setting<?>> children = new ArrayList<Setting<?>>();
 	public final String name;
