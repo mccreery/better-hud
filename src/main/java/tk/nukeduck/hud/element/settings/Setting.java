@@ -58,6 +58,12 @@ public abstract class Setting<T> implements IGetSet<T> {
 		element.parent = this;
 	}
 
+	public void addAll(Iterable<Setting<?>> children) {
+		for(Setting<?> child : children) {
+			add(child);
+		}
+	}
+
 	public boolean isEmpty() {
 		return children.isEmpty();
 	}

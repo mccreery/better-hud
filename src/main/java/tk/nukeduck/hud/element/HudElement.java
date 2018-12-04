@@ -24,6 +24,7 @@ import tk.nukeduck.hud.element.entityinfo.PlayerInfo;
 import tk.nukeduck.hud.element.particles.BloodSplatters;
 import tk.nukeduck.hud.element.particles.WaterDrops;
 import tk.nukeduck.hud.element.settings.RootSetting;
+import tk.nukeduck.hud.element.settings.Setting;
 import tk.nukeduck.hud.element.settings.SettingPosition;
 import tk.nukeduck.hud.element.text.BiomeName;
 import tk.nukeduck.hud.element.text.Connection;
@@ -168,9 +169,14 @@ public abstract class HudElement {
 		if(position.getDirectionOptions() != Options.NONE || position.getContentOptions() != Options.NONE) {
 			settings.add(position);
 		}
+		settings.addAll(getRootSettings());
 
 		id = ELEMENTS.size();
 		ELEMENTS.add(this);
+	}
+
+	protected List<Setting<?>> getRootSettings() {
+		return Collections.emptyList();
 	}
 
 	/** @return The minimum server version that supports this element
