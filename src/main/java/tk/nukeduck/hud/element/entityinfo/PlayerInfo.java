@@ -30,7 +30,7 @@ import tk.nukeduck.hud.util.bars.StatBar;
 import tk.nukeduck.hud.util.bars.StatBarArmor;
 
 public class PlayerInfo extends EntityInfo {
-	private StatBar<? super EntityLivingBase> bar = new StatBarArmor();
+	private StatBar<? super EntityPlayer> bar = new StatBarArmor();
 
 	private SettingSlider tooltipLines;
 
@@ -60,7 +60,7 @@ public class PlayerInfo extends EntityInfo {
 
 	@Override
 	public void render(EntityLivingBase entity) {
-		bar.setHost(entity);
+		bar.setHost((EntityPlayer)entity);
 		List<String> tooltip = new ArrayList<String>();
 
 		ItemStack held = entity.getHeldItemMainhand();

@@ -1,13 +1,14 @@
 package tk.nukeduck.hud.util.bars;
 
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraftforge.common.ForgeHooks;
 import tk.nukeduck.hud.util.Bounds;
 import tk.nukeduck.hud.util.Direction;
 
-public class StatBarArmor extends StatBarBasic<EntityLivingBase> {
+public class StatBarArmor extends StatBarBasic<EntityPlayer> {
 	@Override
 	protected int getCurrent() {
-		return host.getTotalArmorValue();
+		return ForgeHooks.getTotalArmorValue(host);
 	}
 
 	@Override
