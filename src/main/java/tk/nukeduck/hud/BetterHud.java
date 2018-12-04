@@ -79,7 +79,7 @@ public class BetterHud {
 	public static final int SPACER = 5;
 
 	public static boolean isEnabled() {
-		return HudElement.GLOBAL.isEnabled() && !(HudElement.GLOBAL.hideOnDebug() && MC.gameSettings.showDebugInfo);
+		return HudElement.GLOBAL.isEnabledAndSupported() && !(HudElement.GLOBAL.hideOnDebug() && MC.gameSettings.showDebugInfo);
 	}
 
 	public static final SimpleNetworkWrapper NET_WRAPPER = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);

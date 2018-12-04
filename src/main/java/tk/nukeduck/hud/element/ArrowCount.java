@@ -67,11 +67,11 @@ public class ArrowCount extends HudElement {
 		boolean offhandHeld = stack != null && stack.getItem() == Items.BOW;
 
 		if(overlay.get()) {
-			if(HudElement.OFFHAND.isEnabled() && offhandHeld) {
+			if(HudElement.OFFHAND.isEnabledAndSupported() && offhandHeld) {
 				return true;
 			}
 
-			if(HudElement.HOTBAR.isEnabled()) {
+			if(HudElement.HOTBAR.isEnabledAndSupported()) {
 				for(int i = 0; i < 9; i++) {
 					stack = MC.player.inventory.getStackInSlot(i);
 

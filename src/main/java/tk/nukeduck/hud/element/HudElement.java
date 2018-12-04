@@ -150,7 +150,10 @@ public abstract class HudElement implements IBoolean {
 
 	/**
 	 * {@inheritDoc}
-	 * <p>For {@link HudElement}, gets whether the element is enabled.
+	 * <p>For {@link HudElement}, gets whether the element is enabled, ignoring
+	 * support. Rather use {@link #isEnabledAndSupported()} to check for support.
+	 *
+	 * @see #isEnabledAndSupported()
 	 */
 	@Override
 	public Boolean get() {
@@ -159,14 +162,17 @@ public abstract class HudElement implements IBoolean {
 
 	/**
 	 * {@inheritDoc}
-	 * <p>For {@link HudElement}, enables or disables the element.
+	 * <p>For {@link HudElement}, enables or disables the element. The element
+	 * will still not be rendered if it is not supported.
+	 *
+	 * @see #isSupportedByServer()
 	 */
 	@Override
 	public void set(Boolean value) {
 		settings.set(value);
 	}
 
-	public boolean isEnabled() {
+	public boolean isEnabledAndSupported() {
 		return settings.get() && isSupportedByServer();
 	}
 
@@ -255,7 +261,7 @@ public abstract class HudElement implements IBoolean {
 	public final void tryRender(Event event) {
 		Bounds bounds = null;
 
-		if(isEnabled() && shouldRender(event)) {
+		if(isEnabledAndSupported() && shouldRender(event)) {
 			MC.mcProfiler.startSection(name);
 
 			GlMode.set(getMode());

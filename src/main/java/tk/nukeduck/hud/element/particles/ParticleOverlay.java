@@ -47,7 +47,7 @@ public abstract class ParticleOverlay extends HudElement implements Tickable {
 
 	@Override
 	public void tick() {
-		if(!isEnabled() || MC.player == null || MC.world == null) return;
+		if(!isEnabledAndSupported() || MC.player == null || MC.world == null) return;
 
 		particles.forEach(Particle::tick);
 		updateParticles();
