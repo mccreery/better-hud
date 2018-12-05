@@ -1,10 +1,11 @@
 package tk.nukeduck.hud.element.particles;
 
 import static tk.nukeduck.hud.BetterHud.HUD_ICONS;
-import static tk.nukeduck.hud.BetterHud.MANAGER;
 
 import net.minecraft.client.renderer.GlStateManager;
 import tk.nukeduck.hud.util.Bounds;
+import tk.nukeduck.hud.util.Colors;
+import tk.nukeduck.hud.util.Direction;
 import tk.nukeduck.hud.util.GlUtil;
 import tk.nukeduck.hud.util.MathUtil;
 import tk.nukeduck.hud.util.Point;
@@ -31,7 +32,7 @@ public class ParticleBase implements Particle {
 	}
 
 	public static ParticleBase createRandom() {
-		Point position = MathUtil.randomPoint(MANAGER.getScreen());
+		Point position = MathUtil.randomPoint(Particle.getScreen());
 
 		float opacity = MathUtil.randomRange(0f, 0.5f);
 		float size = MathUtil.randomRange(2f, 6f);
