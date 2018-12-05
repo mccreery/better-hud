@@ -101,9 +101,9 @@ public class Crosshair extends OverrideElement {
 
 	@Override
 	public boolean shouldRender(Event event) {
-		return MC.gameSettings.thirdPersonView == 0
-			&& (!MC.playerController.isSpectator() || canInteract())
-			&& super.shouldRender(event);
+		return super.shouldRender(event)
+			&& MC.gameSettings.thirdPersonView == 0
+			&& (!MC.playerController.isSpectator() || canInteract());
 	}
 
 	/** @return {@code true} if the player is looking at something that can be interacted with in spectator mode */

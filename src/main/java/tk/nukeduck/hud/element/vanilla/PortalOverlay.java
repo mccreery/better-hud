@@ -25,7 +25,7 @@ public class PortalOverlay extends OverrideElement {
 
 	@Override
 	public boolean shouldRender(Event event) {
-		return getTimeInPortal(event) > 0 && super.shouldRender(event);
+		return super.shouldRender(event) && getTimeInPortal(event) > 0;
 	}
 
 	private float getTimeInPortal(Event event) {

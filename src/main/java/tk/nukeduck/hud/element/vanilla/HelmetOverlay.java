@@ -34,7 +34,7 @@ public class HelmetOverlay extends OverrideElement {
 
 	@Override
 	public boolean shouldRender(Event event) {
-		return MC.gameSettings.thirdPersonView == 0 && !MC.player.inventory.armorItemInSlot(3).isEmpty() && super.shouldRender(event);
+		return super.shouldRender(event) && MC.gameSettings.thirdPersonView == 0 && !MC.player.inventory.armorItemInSlot(3).isEmpty();
 	}
 
 	@Override

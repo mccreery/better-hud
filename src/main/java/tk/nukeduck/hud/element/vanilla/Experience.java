@@ -37,9 +37,9 @@ public class Experience extends OverrideElement {
 
 	@Override
 	public boolean shouldRender(Event event) {
-		return MC.playerController.shouldDrawHUD()
-			&& (!hideMount.get() || !MC.player.isRidingHorse())
-			&& super.shouldRender(event);
+		return super.shouldRender(event)
+			&& MC.playerController.shouldDrawHUD()
+			&& (!hideMount.get() || !MC.player.isRidingHorse());
 	}
 
 	@Override
