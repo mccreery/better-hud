@@ -3,7 +3,6 @@ package tk.nukeduck.hud.element.particles;
 import static tk.nukeduck.hud.BetterHud.MANAGER;
 import static tk.nukeduck.hud.BetterHud.MC;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
@@ -32,12 +31,7 @@ public abstract class ParticleOverlay extends HudElement implements Tickable {
 	/** Called each tick while enabled to spawn new particles.
 	 * Default implementation kills dead particles */
 	protected void updateParticles() {
-		List<Particle> dead = new ArrayList<>(particles.size());
-
-		for(Particle particle : particles) {
-			if(particle.isDead()) dead.add(particle);
-		}
-		particles.removeAll(dead);
+		particles.removeIf(Particle::isDead);
 	}
 
 	@Override
