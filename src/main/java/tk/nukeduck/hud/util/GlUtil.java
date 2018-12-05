@@ -84,6 +84,22 @@ public final class GlUtil {
 		tessellator.draw();
 	}
 
+	// TODO replace hacky rectangle stuff
+	public static void drawTexturedColoredModalRect(int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight, int color) {
+		Tessellator tessellator = Tessellator.getInstance();
+		BufferBuilder builder = tessellator.getBuffer();
+		builder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
+
+		int r = Colors.red(color), g = Colors.green(color), b = Colors.blue(color), a = Colors.alpha(color);
+
+		builder.pos(x,         y + height, 0).tex( u                 * TEXTURE_NORMALIZE, (v + textureHeight) * TEXTURE_NORMALIZE).color(r, g, b, a).endVertex();
+		builder.pos(x + width, y + height, 0).tex((u + textureWidth) * TEXTURE_NORMALIZE, (v + textureHeight) * TEXTURE_NORMALIZE).color(r, g, b, a).endVertex();
+		builder.pos(x + width, y,          0).tex((u + textureWidth) * TEXTURE_NORMALIZE,  v                  * TEXTURE_NORMALIZE).color(r, g, b, a).endVertex();
+		builder.pos(x,         y,          0).tex( u                 * TEXTURE_NORMALIZE,  v                  * TEXTURE_NORMALIZE).color(r, g, b, a).endVertex();
+
+		tessellator.draw();
+	}
+
 	/** Draws text with black borders on all sides */
 	public static void drawBorderedString(String text, int x, int y, int color) {
 		// Borders

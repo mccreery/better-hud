@@ -55,7 +55,10 @@ public class ParticleBase implements Particle {
 		GlStateManager.translate(position.getX(), position.getY(), 0.0F);
 		GlStateManager.rotate(rotation, 0, 0, 1);
 		GlStateManager.scale(this.size, this.size, 1.0F);
-		GlUtil.drawTexturedModalRect(Point.ZERO, texture);
+
+		int color = Colors.setAlpha(Colors.WHITE, Math.round(opacity * 255));
+		Bounds bounds = texture.align(Point.ZERO, Direction.CENTER);
+		GlUtil.drawTexturedColoredModalRect(bounds.getX(), bounds.getY(), texture.getX(), texture.getY(), bounds.getWidth(), bounds.getHeight(), texture.getWidth(), texture.getHeight(), color);
 
 		GlStateManager.popMatrix();
 		GlMode.pop();

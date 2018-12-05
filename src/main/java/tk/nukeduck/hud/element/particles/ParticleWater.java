@@ -38,7 +38,10 @@ public class ParticleWater extends ParticleBase {
 
 		GlStateManager.translate(position.getX(), position.getY() - opacity * speed, 0);
 		GlStateManager.scale(size, size, 1);
-		GlUtil.drawTexturedModalRect(Point.ZERO, texture);
+
+		int color = Colors.setAlpha(Colors.WHITE, Math.round(opacity * 255));
+		Bounds bounds = texture.align(Point.ZERO, Direction.CENTER);
+		GlUtil.drawTexturedColoredModalRect(bounds.getX(), bounds.getY(), texture.getX(), texture.getY(), bounds.getWidth(), bounds.getHeight(), texture.getWidth(), texture.getHeight(), color);
 
 		GlStateManager.popMatrix();
 		GlMode.pop();
