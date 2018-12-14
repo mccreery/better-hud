@@ -3,6 +3,7 @@ package jobicade.betterhud.element.vanilla;
 import static jobicade.betterhud.BetterHud.MANAGER;
 import static jobicade.betterhud.BetterHud.MC;
 
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
@@ -47,7 +48,7 @@ public class HelmetOverlay extends OverrideElement {
 			GlUtil.drawTexturedModalRect(MANAGER.getScreen(), new Rect(256, 256));
 			GlMode.pop();
 		} else {
-			item.renderHelmetOverlay(stack, MC.player, MANAGER.getScaledResolution(), getPartialTicks(event));
+			item.renderHelmetOverlay(stack, MC.player, new ScaledResolution(MC), getPartialTicks(event));
 		}
 		return MANAGER.getScreen();
 	}

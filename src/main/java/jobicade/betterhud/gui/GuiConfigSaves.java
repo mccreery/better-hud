@@ -1,7 +1,6 @@
 package jobicade.betterhud.gui;
 
 import static jobicade.betterhud.BetterHud.CONFIG;
-import static jobicade.betterhud.BetterHud.MANAGER;
 import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.MODID;
 import static jobicade.betterhud.BetterHud.SPACER;
@@ -20,6 +19,7 @@ import org.lwjgl.opengl.GL11;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.I18n;
 import jobicade.betterhud.util.geom.Rect;
 import jobicade.betterhud.util.geom.Direction;
@@ -184,7 +184,7 @@ public class GuiConfigSaves extends GuiScreen {
 			return name.substring(0, name.length() - 4);
 		}).collect(Collectors.toList())).setAlignment(Direction.NORTH).setGutter(SPACER);
 
-		Rect scissorRect = viewport.withY(height - viewport.getBottom()).scale(MANAGER.getScaledResolution().getScaleFactor());
+		Rect scissorRect = viewport.withY(height - viewport.getBottom()).scale(new ScaledResolution(MC).getScaleFactor());
 
 		GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_SCISSOR_BIT);
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
