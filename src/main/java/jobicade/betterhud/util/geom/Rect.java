@@ -628,4 +628,11 @@ public final class Rect implements Serializable {
     public Rect anchor(Rect container, Direction direction, boolean outside) {
         return align(container.getAnchor(direction), outside ? direction.mirror() : direction);
     }
+
+    /**
+     * @see #anchor(Rect, Direction, boolean)
+     */
+    public Rect anchor(Rect container, Direction direction) {
+        return anchor(container, direction, false);
+    }
 }
