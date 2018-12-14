@@ -2,13 +2,13 @@ package jobicade.betterhud.util.bars;
 
 import java.util.List;
 
-import jobicade.betterhud.util.Bounds;
+import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.util.Colors;
-import jobicade.betterhud.util.Direction;
-import jobicade.betterhud.util.Direction.Options;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.MathUtil;
-import jobicade.betterhud.util.Point;
+import jobicade.betterhud.util.geom.Direction;
+import jobicade.betterhud.util.geom.Point;
 import jobicade.betterhud.util.Renderable;
 
 public abstract class StatBar<T> extends Renderable {
@@ -26,7 +26,7 @@ public abstract class StatBar<T> extends Renderable {
 		return false;
 	}
 
-	protected abstract List<Bounds> getIcons(int pointsIndex);
+	protected abstract List<Rect> getIcons(int pointsIndex);
 
 	protected int getIconBounce(int pointsIndex) {
 		return 0;
@@ -53,24 +53,24 @@ public abstract class StatBar<T> extends Renderable {
 		return null;
 	}
 
-	public Bounds render(Point anchor, Direction alignment, Direction contentAlignment) {
-		Bounds bounds = new Bounds(getSize()).align(anchor, alignment);
+	public Rect render(Point anchor, Direction alignment, Direction contentAlignment) {
+		Rect bounds = new Rect(getSize()).align(anchor, alignment);
 		render(bounds, contentAlignment);
 		return bounds;
 	}
 
 	@Override
-	public void renderUnsafe(Bounds bounds, Direction contentAlignment) {
-		if(!Options.CORNERS.isValid(contentAlignment)) {
+	public void renderUnsafe(Rect bounds, Direction contentAlignment) {
+		if(!DirectionOptions.CORNERS.isValid(contentAlignment)) {
 			throw new IllegalArgumentException("Bar must start in a corner");
 		}
 
 		GlUtil.enableBlendTranslucent();
 		GlUtil.color(Colors.WHITE);
 
-		Direction columnWise = contentAlignment.withRow(1).mirrorColumn();
-		Bounds icon = new Bounds(getIconSize(), getIconSize()).anchor(bounds, contentAlignment);
-		Bounds rowReturn = new Bounds(icon);
+		Direction columnWise = contentAlignment.withRow(1).mirrorCol();
+		Rect icon = new Rect(getIconSize(), getIconSize()).anchor(bounds, contentAlignment);
+		Rect rowReturn = new Rect(icon);
 
 		final int max = getMaximum(), rowPoints = getRowPoints();
 		int rowSpacing = getRowSpacing();
@@ -84,7 +84,7 @@ public abstract class StatBar<T> extends Renderable {
 			int rows = (max - 1) / rowPoints;
 			i = rows * rowPoints;
 
-			for(int x = 0; x < rowPoints; x += 2, icon = icon.align(icon.getAnchor(Direction.CENTER), columnWise.mirrorColumn())) {
+			for(int x = 0; x < rowPoints; x += 2, icon = icon.align(icon.getAnchor(Direction.CENTER), columnWise.mirrorCol())) {
 				drawIcon(x, icon, contentAlignment);
 			}
 			textPosition = icon.getAnchor(columnWise);
@@ -101,14 +101,14 @@ public abstract class StatBar<T> extends Renderable {
 		}
 
 		if(text != null) {
-			GlUtil.drawString(text, textPosition, columnWise.mirrorColumn(), Colors.WHITE);
+			GlUtil.drawString(text, textPosition, columnWise.mirrorCol(), Colors.WHITE);
 		}
 	}
 
-	protected void drawIcon(int i, Bounds bounds, Direction contentAlignment) {
+	protected void drawIcon(int i, Rect bounds, Direction contentAlignment) {
 		bounds = bounds.translate(0, getIconBounce(i));
 
-		for(Bounds texture : getIcons(i)) {
+		for(Rect texture : getIcons(i)) {
 			if(texture != null) {
 				texture = ensureNative(texture, contentAlignment.withRow(1));
 				GlUtil.drawTexturedModalRect(bounds, texture);
@@ -116,7 +116,7 @@ public abstract class StatBar<T> extends Renderable {
 		}
 	}
 
-	protected Bounds ensureNative(Bounds texture, Direction alignment) {
+	protected Rect ensureNative(Rect texture, Direction alignment) {
 		Direction nativeAlignment = getNativeAlignment();
 
 		if(nativeAlignment != null && nativeAlignment != alignment) {

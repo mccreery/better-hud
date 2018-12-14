@@ -7,7 +7,7 @@ import java.util.List;
 
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.EnumSkyBlock;
-import jobicade.betterhud.util.Direction;
+import jobicade.betterhud.util.geom.Direction;
 
 public class LightLevel extends TextElement {
 	@Override

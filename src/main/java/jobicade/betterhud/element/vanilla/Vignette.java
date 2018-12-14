@@ -16,7 +16,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
-import jobicade.betterhud.util.Bounds;
+import jobicade.betterhud.util.geom.Rect;
 import jobicade.betterhud.util.Colors;
 import jobicade.betterhud.util.GlUtil;
 
@@ -53,7 +53,7 @@ public class Vignette extends OverrideElement {
 	}
 
 	@Override
-	protected Bounds render(Event event) {
+	protected Rect render(Event event) {
 		WorldBorder border = MC.world.getWorldBorder();
 
 		float distance = (float)border.getClosestDistance(MC.player);
@@ -82,7 +82,7 @@ public class Vignette extends OverrideElement {
 		}
 
 		MC.getTextureManager().bindTexture(VIGNETTE_TEX_PATH);
-		GlUtil.drawTexturedModalRect(MANAGER.getScreen(), new Bounds(256, 256));
+		GlUtil.drawTexturedModalRect(MANAGER.getScreen(), new Rect(256, 256));
 
 		GlStateManager.depthMask(true);
 		GlStateManager.enableDepth();

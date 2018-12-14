@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
-import jobicade.betterhud.util.Direction;
+import jobicade.betterhud.util.geom.Direction;
 
 public class FullInvIndicator extends TextElement {
 	private SettingBoolean offHand;

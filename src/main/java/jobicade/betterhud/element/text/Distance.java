@@ -9,14 +9,14 @@ import java.util.List;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fml.common.eventhandler.Event;
+import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.util.Bounds;
-import jobicade.betterhud.util.Direction;
-import jobicade.betterhud.util.Direction.Options;
-import jobicade.betterhud.util.Point;
+import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.util.geom.Direction;
+import jobicade.betterhud.util.geom.Point;
 
 public class Distance extends TextElement {
 	private SettingChoose mode;
@@ -30,7 +30,7 @@ public class Distance extends TextElement {
 	}
 
 	public Distance() {
-		super("distance", new SettingPosition(Options.X, Options.WEST_EAST));
+		super("distance", new SettingPosition(DirectionOptions.X, DirectionOptions.WEST_EAST));
 	}
 
 	@Override
@@ -41,21 +41,21 @@ public class Distance extends TextElement {
 	}
 
 	@Override
-	protected Bounds moveBounds(Bounds bounds) {
+	protected Rect moveRect(Rect bounds) {
 		if(position.isDirection(Direction.CENTER)) {
 			return bounds.positioned(Direction.CENTER, new Point(-SPACER, -SPACER), Direction.SOUTH_EAST);
 		} else {
-			return super.moveBounds(bounds);
+			return super.moveRect(bounds);
 		}
 	}
 
 	@Override
-	protected Bounds getPadding() {
-		return Bounds.createPadding(border ? 2 : 0);
+	protected Rect getPadding() {
+		return Rect.createPadding(border ? 2 : 0);
 	}
 
 	@Override
-	protected Bounds render(Event event, List<String> text) {
+	protected Rect render(Event event, List<String> text) {
 		border = mode.getIndex() == 2;
 		return super.render(event, text);
 	}

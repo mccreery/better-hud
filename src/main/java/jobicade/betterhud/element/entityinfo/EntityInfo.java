@@ -9,7 +9,7 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.util.Bounds;
+import jobicade.betterhud.util.geom.Rect;
 
 public abstract class EntityInfo extends HudElement {
 	public static final List<EntityInfo> ENTITY_INFO = new ArrayList<EntityInfo>();
@@ -25,7 +25,7 @@ public abstract class EntityInfo extends HudElement {
 	}
 
 	@Override
-	public Bounds render(Event event) {
+	public Rect render(Event event) {
 		render(pointedEntity);
 		return null;
 	}

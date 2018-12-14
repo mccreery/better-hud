@@ -11,10 +11,10 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingChoose;
-import jobicade.betterhud.util.Bounds;
+import jobicade.betterhud.util.geom.Rect;
 import jobicade.betterhud.util.Colors;
-import jobicade.betterhud.util.Direction;
-import jobicade.betterhud.util.Point;
+import jobicade.betterhud.util.geom.Direction;
+import jobicade.betterhud.util.geom.Point;
 
 public class HealIndicator extends HudElement {
 	private SettingChoose mode;
@@ -39,15 +39,15 @@ public class HealIndicator extends HudElement {
 	}
 
 	@Override
-	public Bounds render(Event event) {
+	public Rect render(Event event) {
 			String healIndicator = I18n.format("betterHud.strings.healIndicator");
-			Bounds bounds = mode.getIndex() == 0 ? new Bounds(MC.fontRenderer.getStringWidth(healIndicator), MC.fontRenderer.FONT_HEIGHT) : new Bounds(9, 9);
+			Rect bounds = mode.getIndex() == 0 ? new Rect(MC.fontRenderer.getStringWidth(healIndicator), MC.fontRenderer.FONT_HEIGHT) : new Rect(9, 9);
 
 			if(position.isCustom()) {
 				bounds = position.applyTo(bounds);
 			} else {
 				Direction side = HudElement.HEALTH.getIndicatorSide();
-				bounds = bounds.position(HudElement.HEALTH.getLastBounds().grow(SPACER, 0, SPACER, 0), side, Point.ZERO, side.mirrorColumn());
+				bounds = bounds.position(HudElement.HEALTH.getLastRect().grow(SPACER, 0, SPACER, 0), side, Point.zero(), side.mirrorCol());
 			}
 
 			if(mode.getIndex() == 0) {

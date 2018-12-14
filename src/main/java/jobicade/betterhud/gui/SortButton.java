@@ -5,16 +5,16 @@ import static jobicade.betterhud.BetterHud.MC;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.util.Bounds;
-import jobicade.betterhud.util.Direction;
+import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.util.Point;
+import jobicade.betterhud.util.geom.Point;
 import jobicade.betterhud.util.SortField;
 
 class SortButton extends GuiActionButton {
 	private static final ResourceLocation ARROW_TEXTURE = new ResourceLocation("textures/gui/resource_packs.png");
-	private static final Bounds UP_TEXTURE   = new Bounds(114, 5, 11, 7);
-	private static final Bounds DOWN_TEXTURE = new Bounds(82, 20, 11, 7);
+	private static final Rect UP_TEXTURE   = new Rect(114, 5, 11, 7);
+	private static final Rect DOWN_TEXTURE = new Rect(82, 20, 11, 7);
 
 	private final GuiHudMenu callback;
 	SortField<HudElement> sortValue;
@@ -38,12 +38,12 @@ class SortButton extends GuiActionButton {
 	}
 
 	@Override
-	protected void drawButton(Bounds bounds, Point mousePosition, float partialTicks) {
+	protected void drawButton(Rect bounds, Point mousePosition, float partialTicks) {
 		super.drawButton(bounds, mousePosition, partialTicks);
 
 		if(isTargeted()) {
-			Bounds texture = callback.isDescending() ? DOWN_TEXTURE : UP_TEXTURE;
-			Point position = new Bounds(texture).anchor(bounds, Direction.EAST).getPosition().add(-2, 0);
+			Rect texture = callback.isDescending() ? DOWN_TEXTURE : UP_TEXTURE;
+			Point position = new Rect(texture).anchor(bounds, Direction.EAST).getPosition().add(-2, 0);
 
 			MC.getTextureManager().bindTexture(ARROW_TEXTURE);
 			GlUtil.drawTexturedModalRect(position, texture);

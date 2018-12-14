@@ -11,11 +11,11 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.common.eventhandler.Event;
+import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.util.Bounds;
+import jobicade.betterhud.util.geom.Rect;
 import jobicade.betterhud.util.Colors;
-import jobicade.betterhud.util.Direction;
-import jobicade.betterhud.util.Direction.Options;
+import jobicade.betterhud.util.geom.Direction;
 
 public class SignReader extends HudElement {
 	private static final ResourceLocation SIGN_TEXTURE = new ResourceLocation("textures/entity/sign.png");
@@ -27,11 +27,11 @@ public class SignReader extends HudElement {
 	}
 
 	public SignReader() {
-		super("signReader", new SettingPosition(Options.CORNERS, Options.NONE));
+		super("signReader", new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.NONE));
 	}
 
 	@Override
-	public Bounds render(Event event) {
+	public Rect render(Event event) {
 		RayTraceResult trace = MC.getRenderViewEntity().rayTrace(200, 1.0F);
 
 		IBlockState state = MC.world.getBlockState(trace.getBlockPos());
@@ -45,7 +45,7 @@ public class SignReader extends HudElement {
 		}
 		TileEntitySign sign = (TileEntitySign)tileEntity;
 
-		Bounds bounds = position.applyTo(new Bounds(96, 48));
+		Rect bounds = position.applyTo(new Rect(96, 48));
 
 		MC.getTextureManager().bindTexture(SIGN_TEXTURE);
 		Gui.drawScaledCustomSizeModalRect(bounds.getX(), bounds.getY(), 2, 2, 24, 12, 96, 48, 64, 32);

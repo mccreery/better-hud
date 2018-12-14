@@ -3,26 +3,26 @@ package jobicade.betterhud.element.particles;
 import static jobicade.betterhud.BetterHud.HUD_ICONS;
 
 import net.minecraft.client.renderer.GlStateManager;
-import jobicade.betterhud.util.Bounds;
+import jobicade.betterhud.util.geom.Rect;
 import jobicade.betterhud.util.Colors;
-import jobicade.betterhud.util.Direction;
+import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.MathUtil;
-import jobicade.betterhud.util.Point;
+import jobicade.betterhud.util.geom.Point;
 import jobicade.betterhud.util.mode.GlMode;
 import jobicade.betterhud.util.mode.TextureMode;
 
 public class ParticleBase implements Particle {
 	protected Point position;
-	protected Bounds texture;
+	protected Rect texture;
 
 	protected float opacity, size, rotation;
 
 	protected ParticleBase(Point position, int iconIndex, float opacity, float size, float rotation) {
-		this(position, new Bounds((iconIndex % 16) * 16, (iconIndex / 16) * 16, 16, 16), opacity, size, rotation);
+		this(position, new Rect((iconIndex % 16) * 16, (iconIndex / 16) * 16, 16, 16), opacity, size, rotation);
 	}
 
-	protected ParticleBase(Point position, Bounds texture, float opacity, float size, float rotation) {
+	protected ParticleBase(Point position, Rect texture, float opacity, float size, float rotation) {
 		this.position = position;
 		this.texture = texture;
 
@@ -57,7 +57,7 @@ public class ParticleBase implements Particle {
 		GlStateManager.scale(this.size, this.size, 1.0F);
 
 		int color = Colors.setAlpha(Colors.WHITE, Math.round(opacity * 255));
-		Bounds bounds = texture.align(Point.ZERO, Direction.CENTER);
+		Rect bounds = texture.align(Point.zero(), Direction.CENTER);
 		GlUtil.drawTexturedColoredModalRect(bounds.getX(), bounds.getY(), texture.getX(), texture.getY(), bounds.getWidth(), bounds.getHeight(), texture.getWidth(), texture.getHeight(), color);
 
 		GlStateManager.popMatrix();

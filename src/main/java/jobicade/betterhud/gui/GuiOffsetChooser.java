@@ -10,10 +10,10 @@ import org.lwjgl.input.Keyboard;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.util.Bounds;
+import jobicade.betterhud.util.geom.Rect;
 import jobicade.betterhud.util.Colors;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.util.Point;
+import jobicade.betterhud.util.geom.Point;
 
 public class GuiOffsetChooser extends GuiScreen {
 	private final GuiElementSettings parent;
@@ -57,9 +57,9 @@ public class GuiOffsetChooser extends GuiScreen {
 
 		GlUtil.drawBorderRect(setting.getParent(), Colors.setAlpha(Colors.RED, 63));
 
-		Bounds elementBounds = parent.element.getLastBounds();
-		if(!elementBounds.isEmpty()) {
-			GlUtil.drawBorderRect(parent.element.getLastBounds(), Colors.RED);
+		Rect elementRect = parent.element.getLastRect();
+		if(!elementRect.isEmpty()) {
+			GlUtil.drawBorderRect(parent.element.getLastRect(), Colors.RED);
 		} else {
 			Point mouse = offset.add(anchor);
 			drawHorizontalLine(mouse.getX() - SPACER, mouse.getX() + SPACER, mouse.getY(), Colors.RED);

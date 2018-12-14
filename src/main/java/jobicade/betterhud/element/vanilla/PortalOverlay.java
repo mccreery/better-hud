@@ -8,7 +8,7 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.init.Blocks;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
-import jobicade.betterhud.util.Bounds;
+import jobicade.betterhud.util.geom.Rect;
 import jobicade.betterhud.util.Colors;
 import jobicade.betterhud.util.mode.ColorMode;
 import jobicade.betterhud.util.mode.GlMode;
@@ -33,7 +33,7 @@ public class PortalOverlay extends OverrideElement {
 	}
 
 	@Override
-	protected Bounds render(Event event) {
+	protected Rect render(Event event) {
 		float timeInPortal = getTimeInPortal(event);
 
 		if(timeInPortal < 1) {
@@ -47,7 +47,7 @@ public class PortalOverlay extends OverrideElement {
 		MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
 		TextureAtlasSprite texture = MC.getBlockRendererDispatcher().getBlockModelShapes().getTexture(Blocks.PORTAL.getDefaultState());
-		Bounds screen = MANAGER.getScreen();
+		Rect screen = MANAGER.getScreen();
 		MC.ingameGUI.drawTexturedModalRect(0, 0, texture, screen.getWidth(), screen.getHeight());
 
 		GlMode.pop();

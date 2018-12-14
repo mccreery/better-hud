@@ -10,11 +10,11 @@ import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.text.TextElement;
-import jobicade.betterhud.util.Bounds;
+import jobicade.betterhud.util.geom.Rect;
 import jobicade.betterhud.util.Colors;
-import jobicade.betterhud.util.Direction;
+import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.util.Point;
+import jobicade.betterhud.util.geom.Point;
 
 public class ExperienceInfo extends TextElement {
 	private SettingBoolean total;
@@ -47,7 +47,7 @@ public class ExperienceInfo extends TextElement {
 	}
 
 	@Override
-	public Bounds render(Event event) {
+	public Rect render(Event event) {
 		int fullBar = getExperienceWithinLevel(MC.player.experienceLevel);
 
 		int has = (int)(MC.player.experience * fullBar);
@@ -56,12 +56,12 @@ public class ExperienceInfo extends TextElement {
 		String hasDisplay = String.valueOf(has);
 		String neededDisplay = String.valueOf(needed);
 
-		Bounds bar = EXPERIENCE.getLastBounds();
+		Rect bar = EXPERIENCE.getLastRect();
 
-		Point text = new Bounds(GlUtil.getStringSize(hasDisplay).sub(0, 2)).anchor(bar, Direction.WEST).getPosition();
+		Point text = new Rect(GlUtil.getStringSize(hasDisplay).sub(0, 2)).anchor(bar, Direction.WEST).getPosition();
 		GlUtil.drawBorderedString(hasDisplay, text.getX(), text.getY(), Colors.WHITE);
 
-		text = new Bounds(GlUtil.getStringSize(neededDisplay).sub(0, 2)).anchor(bar, Direction.EAST).getPosition();
+		text = new Rect(GlUtil.getStringSize(neededDisplay).sub(0, 2)).anchor(bar, Direction.EAST).getPosition();
 		GlUtil.drawBorderedString(neededDisplay, text.getX(), text.getY(), Colors.WHITE);
 
 		return super.render(event);

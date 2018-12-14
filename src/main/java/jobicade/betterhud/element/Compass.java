@@ -5,12 +5,7 @@ import static jobicade.betterhud.BetterHud.SPACER;
 
 import java.util.List;
 
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
@@ -18,14 +13,20 @@ import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingPercentage;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.settings.SettingSlider;
-import jobicade.betterhud.util.Bounds;
 import jobicade.betterhud.util.Colors;
-import jobicade.betterhud.util.Direction;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.util.Point;
+import jobicade.betterhud.util.geom.Direction;
+import jobicade.betterhud.util.geom.Point;
+import jobicade.betterhud.util.geom.Rect;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumFacing;
+import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class Compass extends HudElement {
-	private static final String[] DIRECTIONS = {"S", "E", "N", "W"};
+	private static final String[] DIRECTIONS = { "S", "E", "N", "W" };
 
 	private SettingChoose mode, requireItem;
 	private SettingSlider directionScaling;
@@ -53,7 +54,7 @@ public class Compass extends HudElement {
 	}
 
 	public Compass() {
-		super("compass", new SettingPosition(Direction.Options.TOP_BOTTOM, Direction.Options.NORTH_SOUTH));
+		super("compass", new SettingPosition(DirectionOptions.TOP_BOTTOM, DirectionOptions.NORTH_SOUTH));
 	}
 
 	@Override
@@ -66,32 +67,32 @@ public class Compass extends HudElement {
 		settings.add(requireItem = new SettingChoose("requireItem", "disabled", "inventory", "hand"));
 	}
 
-	private void drawBackground(Bounds bounds) {
+	private void drawBackground(Rect bounds) {
 		GlUtil.drawRect(bounds, Colors.fromARGB(170, 0, 0, 0));
 		GlUtil.drawRect(bounds.grow(-50, 0, -50, 0), Colors.fromARGB(85, 85, 85, 85));
 
 		Direction alignment = position.getContentAlignment();
 
-		Bounds smallBounds = bounds.grow(2);
-		Bounds largeNotch = new Bounds(1, 7);
+		Rect smallRect = bounds.grow(2);
+		Rect largeNotch = new Rect(1, 7);
 
-		Bounds smallNotch = new Bounds(1, 6);
-		Bounds largeBounds = bounds.grow(0, 3, 0, 3);
+		Rect smallNotch = new Rect(1, 6);
+		Rect largeRect = bounds.grow(0, 3, 0, 3);
 
 		if(showNotches.get()) {
 			for(int loc : notchX) {
-				Bounds notchTemp = smallNotch.anchor(smallBounds, alignment);
+				Rect notchTemp = smallNotch.anchor(smallRect, alignment);
 				GlUtil.drawRect(notchTemp.translate(loc, 0), Colors.WHITE);
 				GlUtil.drawRect(notchTemp.translate(-loc, 0), Colors.WHITE);
 			}
 		}
 
-		GlUtil.drawRect(largeNotch.anchor(largeBounds, alignment.withColumn(0)), Colors.RED);
-		GlUtil.drawRect(largeNotch.anchor(largeBounds, alignment.withColumn(1)), Colors.RED);
-		GlUtil.drawRect(largeNotch.anchor(largeBounds, alignment.withColumn(2)), Colors.RED);
+		GlUtil.drawRect(largeNotch.anchor(largeRect, alignment.withCol(0)), Colors.RED);
+		GlUtil.drawRect(largeNotch.anchor(largeRect, alignment.withCol(1)), Colors.RED);
+		GlUtil.drawRect(largeNotch.anchor(largeRect, alignment.withCol(2)), Colors.RED);
 	}
 
-	private void drawDirections(Bounds bounds) {
+	private void drawDirections(Rect bounds) {
 		float angle = (float)Math.toRadians(MC.player.rotationYaw);
 
 		float radius = bounds.getWidth() / 2 + SPACER;
@@ -153,12 +154,12 @@ public class Compass extends HudElement {
 	}
 
 	@Override
-	public Bounds render(Event event) {
+	public Rect render(Event event) {
 		GlUtil.enableBlendTranslucent();
-		Bounds bounds;
+		Rect bounds;
 
 		if(mode.getIndex() == 0) {
-			bounds = position.applyTo(new Bounds(180, 12));
+			bounds = position.applyTo(new Rect(180, 12));
 
 			MC.mcProfiler.startSection("background");
 			drawBackground(bounds);
@@ -167,7 +168,7 @@ public class Compass extends HudElement {
 			MC.mcProfiler.endSection();
 		} else {
 			String text = getText();
-			bounds = position.applyTo(new Bounds(GlUtil.getStringSize(text)));
+			bounds = position.applyTo(new Rect(GlUtil.getStringSize(text)));
 
 			MC.mcProfiler.startSection("text");
 			GlUtil.drawString(text, bounds.getPosition(), Direction.NORTH_WEST, Colors.WHITE);

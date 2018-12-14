@@ -161,6 +161,15 @@ public class Point implements Serializable {
     public Point invert() { return new Point(-x, -y); }
 
     /**
+     * Scales the point by a factor.
+     * @param factor The factor.
+     * @return A point scaled by the given factor.
+     */
+    public Point scale(float factor) {
+        return new Point(Math.round(x * factor), Math.round(y * factor));
+    }
+
+    /**
      * Scales the point by a factor in X and Y.
      * @param xf The factor in the X axis.
      * @param yf The factor in the Y axis.

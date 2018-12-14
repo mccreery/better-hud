@@ -21,15 +21,15 @@ import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.HudElement;
+import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.util.Bounds;
-import jobicade.betterhud.util.Direction;
-import jobicade.betterhud.util.Direction.Options;
+import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.util.Point;
+import jobicade.betterhud.util.geom.Point;
 import jobicade.betterhud.util.mode.GlMode;
 
 public class Crosshair extends OverrideElement {
@@ -37,7 +37,7 @@ public class Crosshair extends OverrideElement {
 	private SettingChoose indicatorType;
 
 	public Crosshair() {
-		super("crosshair", new SettingPosition(Options.I, Options.NONE));
+		super("crosshair", new SettingPosition(DirectionOptions.I, DirectionOptions.NONE));
 
 		position.setEnableOn(() -> attackIndicator.get());
 	}
@@ -126,12 +126,12 @@ public class Crosshair extends OverrideElement {
 	}
 
 	@Override
-	protected Bounds render(Event event) {
+	protected Rect render(Event event) {
 		if(MC.gameSettings.showDebugInfo && !MC.gameSettings.reducedDebugInfo && !MC.player.hasReducedDebug()) {
 			renderAxes(MANAGER.getScreen().getAnchor(Direction.CENTER), getPartialTicks(event));
 		} else {
-			Bounds texture = new Bounds(16, 16);
-			Point position = new Bounds(texture).anchor(MANAGER.getScreen(), Direction.CENTER).getPosition();
+			Rect texture = new Rect(16, 16);
+			Point position = new Rect(texture).anchor(MANAGER.getScreen(), Direction.CENTER).getPosition();
 
 			GlUtil.drawTexturedModalRect(position, texture);
 
@@ -142,12 +142,12 @@ public class Crosshair extends OverrideElement {
 		return null;
 	}
 
-	private Bounds renderAttackIndicator() {
-		Bounds bounds = indicatorType.getIndex() == 0 ? new Bounds(16, 8) : new Bounds(18, 18);
+	private Rect renderAttackIndicator() {
+		Rect bounds = indicatorType.getIndex() == 0 ? new Rect(16, 8) : new Rect(18, 18);
 
 		if(position.isDirection(Direction.SOUTH)) {
 			Direction primary = MC.player.getPrimaryHand() == EnumHandSide.RIGHT ? Direction.EAST : Direction.WEST;
-			bounds = bounds.align(HudElement.HOTBAR.getLastBounds().grow(SPACER).getAnchor(primary), primary.mirrorColumn());
+			bounds = bounds.align(HudElement.HOTBAR.getLastRect().grow(SPACER).getAnchor(primary), primary.mirrorCol());
 		} else if(position.isDirection(Direction.CENTER)) {
 			bounds = bounds.positioned(Direction.CENTER, new Point(0, SPACER), Direction.NORTH);
 		} else {
@@ -159,13 +159,13 @@ public class Crosshair extends OverrideElement {
 		if(indicatorType.getIndex() == 0) {
 			if(attackStrength >= 1) {
 				if(MC.pointedEntity != null && MC.pointedEntity instanceof EntityLivingBase && MC.player.getCooldownPeriod() > 5 && ((EntityLivingBase)MC.pointedEntity).isEntityAlive()) {
-					GlUtil.drawTexturedModalRect(bounds.getPosition(), new Bounds(68, 94, 16, 8));
+					GlUtil.drawTexturedModalRect(bounds.getPosition(), new Rect(68, 94, 16, 8));
 				}
 			} else {
-				GlUtil.drawTexturedProgressBar(bounds.getPosition(), new Bounds(36, 94, 16, 8), new Bounds(52, 94, 16, 8), attackStrength, Direction.EAST);
+				GlUtil.drawTexturedProgressBar(bounds.getPosition(), new Rect(36, 94, 16, 8), new Rect(52, 94, 16, 8), attackStrength, Direction.EAST);
 			}
 		} else if(attackStrength < 1) {
-			GlUtil.drawTexturedProgressBar(bounds.getPosition(), new Bounds(0, 94, 18, 18), new Bounds(18, 94, 18, 18), attackStrength, Direction.NORTH);
+			GlUtil.drawTexturedProgressBar(bounds.getPosition(), new Rect(0, 94, 18, 18), new Rect(18, 94, 18, 18), attackStrength, Direction.NORTH);
 		}
 		return bounds;
 	}

@@ -11,6 +11,8 @@ import java.util.function.Predicate;
 
 import com.google.common.graph.Graph;
 
+import jobicade.betterhud.util.geom.Point;
+import jobicade.betterhud.util.geom.Rect;
 import net.minecraft.util.math.MathHelper;
 
 public final class MathUtil {
@@ -52,7 +54,7 @@ public final class MathUtil {
 	 *
 	 * @see #randomRange(float, float)
 	 * @see #randomRange(int, int)
-	 * @see #randomPoint(Bounds)
+	 * @see #randomPoint(Rect)
 	 * @see #randomChance(float, Random) */
 	public static void setRandom(Random random) {
 		currentRandom = random != null ? random : RANDOM;
@@ -79,7 +81,7 @@ public final class MathUtil {
 
 	/** @param bounds The range
 	 * @return A random point within the bounds */
-	public static Point randomPoint(Bounds bounds) {
+	public static Point randomPoint(Rect bounds) {
 		return new Point(randomRange(bounds.getLeft(), bounds.getRight()),
 			randomRange(bounds.getTop(), bounds.getBottom()));
 	}

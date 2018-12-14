@@ -8,10 +8,9 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.client.gui.Gui;
-import jobicade.betterhud.util.Bounds;
-import jobicade.betterhud.util.Direction;
-import jobicade.betterhud.util.Direction.Options;
-import jobicade.betterhud.util.Point;
+import jobicade.betterhud.util.geom.Direction;
+import jobicade.betterhud.util.geom.Point;
+import jobicade.betterhud.util.geom.Rect;
 
 public class SettingPosition extends SettingStub<Object> {
 	private boolean edge = false;
@@ -26,23 +25,23 @@ public class SettingPosition extends SettingStub<Object> {
 	private final SettingDirection anchor, alignment, contentAlignment;
 	private final SettingLock lockAlignment, lockContent;
 
-	public Options getDirectionOptions() {
+	public DirectionOptions getDirectionOptions() {
 		return direction.getOptions();
 	}
 
-	public Options getContentOptions() {
+	public DirectionOptions getContentOptions() {
 		return contentAlignment.getOptions();
 	}
 
-	public SettingPosition(Options directionOptions, Options contentOptions) {
+	public SettingPosition(DirectionOptions directionOptions, DirectionOptions contentOptions) {
 		this("position", directionOptions, contentOptions);
 	}
 
 	public SettingPosition(String name) {
-		this(name, Options.ALL, Options.ALL);
+		this(name, DirectionOptions.ALL, DirectionOptions.ALL);
 	}
 
-	public SettingPosition(String name, Options directionOptions, Options contentOptions) {
+	public SettingPosition(String name, DirectionOptions directionOptions, DirectionOptions contentOptions) {
 		super(name);
 
 		add(new Legend("position"));
@@ -127,11 +126,11 @@ public class SettingPosition extends SettingStub<Object> {
 		return direction.get();
 	}
 
-	public Bounds getParent() {
+	public Rect getParent() {
 		if(!isCustom()) throw new IllegalStateException("Position is not custom");
 
 		if(parent.get() != null) {
-			Bounds bounds = parent.get().getLastBounds();
+			Rect bounds = parent.get().getLastRect();
 			if(!bounds.isEmpty()) return bounds;
 		}
 		return MANAGER.getScreen();
@@ -171,7 +170,7 @@ public class SettingPosition extends SettingStub<Object> {
 	}
 
 	/** Moves the given bounds to the correct location and returns them */
-	public Bounds applyTo(Bounds bounds) {
+	public Rect applyTo(Rect bounds) {
 		if(isCustom()) {
 			return bounds.align(getParent().getAnchor(anchor.get()).add(offset.get()), alignment.get());
 		} else {
@@ -184,7 +183,7 @@ public class SettingPosition extends SettingStub<Object> {
 		this.direction.set(direction);
 
 		// Reset custom
-		offset.set(Point.ZERO);
+		offset.set(Point.zero());
 		anchor.set(Direction.NORTH_WEST);
 		alignment.set(Direction.NORTH_WEST);
 		contentAlignment.set(Direction.NORTH_WEST);
@@ -211,8 +210,8 @@ public class SettingPosition extends SettingStub<Object> {
 	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Point origin) {
 		Point lockOffset = new Point(30 + SPACER, 173);
 
-		lockAlignment.setBounds(new Bounds(20, 10).align(origin.add(lockOffset.withX(-lockOffset.getX())), Direction.EAST));
-		lockContent.setBounds(new Bounds(20, 10).align(origin.add(lockOffset), Direction.WEST));
+		lockAlignment.setRect(new Rect(20, 10).align(origin.add(lockOffset.withX(-lockOffset.getX())), Direction.EAST));
+		lockContent.setRect(new Rect(20, 10).align(origin.add(lockOffset), Direction.WEST));
 
 		return super.getGuiParts(parts, callbacks, origin);
 	}

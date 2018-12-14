@@ -16,12 +16,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.HudElement.SortType;
-import jobicade.betterhud.util.Bounds;
+import jobicade.betterhud.util.geom.Rect;
 import jobicade.betterhud.util.Colors;
-import jobicade.betterhud.util.Direction;
+import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.IGetSet;
 import jobicade.betterhud.util.Paginator;
-import jobicade.betterhud.util.Point;
+import jobicade.betterhud.util.geom.Point;
 import jobicade.betterhud.util.SortField;
 
 @SideOnly(Side.CLIENT)
@@ -64,27 +64,27 @@ public class GuiHudMenu extends GuiScreen {
 		paginator.setPageSize(Math.max(1, (int) Math.floor((height / 8 * 7 - 134) / 24)));
 
 		addDefaultButtons();
-		Bounds buttonBounds = new Bounds(170, 20).align(new Point(width / 2, height / 16 + 102), Direction.NORTH);
+		Rect buttonRect = new Rect(170, 20).align(new Point(width / 2, height / 16 + 102), Direction.NORTH);
 
 		for(HudElement element : paginator.getPage()) {
 			ButtonRow row = getRow(element);
 			buttonList.addAll(row.getButtons());
 
-			row.setBounds(buttonBounds);
+			row.setRect(buttonRect);
 			row.update();
 
-			buttonBounds = buttonBounds.withY(buttonBounds.getBottom() + 4);
+			buttonRect = buttonRect.withY(buttonRect.getBottom() + 4);
 		}
 	}
 
 	private void addDefaultButtons() {
-		Bounds buttons = new Bounds(300, 42).align(new Point(width / 2, height / 16 + 20), Direction.NORTH);
-		Bounds halfWidth = new Bounds((buttons.getWidth() - 2) / 2, 20);
-		Bounds thirdWidth = new Bounds((buttons.getWidth() - 4) / 3, 20);
+		Rect buttons = new Rect(300, 42).align(new Point(width / 2, height / 16 + 20), Direction.NORTH);
+		Rect halfWidth = new Rect((buttons.getWidth() - 2) / 2, 20);
+		Rect thirdWidth = new Rect((buttons.getWidth() - 4) / 3, 20);
 
 		moveButton(returnToGame,   halfWidth.anchor(buttons, Direction.NORTH_WEST));
 
-		globalRow.setBounds(halfWidth.anchor(buttons, Direction.NORTH_EAST));
+		globalRow.setRect(halfWidth.anchor(buttons, Direction.NORTH_EAST));
 
 		moveButton(toggleAll,     thirdWidth.anchor(buttons, Direction.SOUTH_WEST));
 		moveButton(reorder,    thirdWidth.anchor(buttons,      Direction.SOUTH));
@@ -112,18 +112,18 @@ public class GuiHudMenu extends GuiScreen {
 		buttonList.add(nextPage);
 
 		List<GuiActionButton> indexerControls = getIndexControls(SortType.values());
-		Bounds sortButton = new Bounds(75, 20);
-		Bounds bounds = sortButton.withWidth((sortButton.getWidth() + SPACER) * indexerControls.size() - SPACER).align(new Point(width / 2, height / 16 + 78), Direction.NORTH);
-		sortButton = sortButton.withPosition(bounds.getPosition());
+		Rect sortButton = new Rect(75, 20);
+		Rect bounds = sortButton.withWidth((sortButton.getWidth() + SPACER) * indexerControls.size() - SPACER).align(new Point(width / 2, height / 16 + 78), Direction.NORTH);
+		sortButton = sortButton.move(bounds.getPosition());
 
 		for(GuiActionButton button : indexerControls) {
-			button.setBounds(sortButton);
+			button.setRect(sortButton);
 			sortButton = sortButton.withX(sortButton.getRight() + SPACER);
 		}
 		buttonList.addAll(indexerControls);
 	}
 
-	private void moveButton(GuiButton button, Bounds bounds) {
+	private void moveButton(GuiButton button, Rect bounds) {
 		button.x = bounds.getX();
 		button.y = bounds.getY();
 		button.width = bounds.getWidth();

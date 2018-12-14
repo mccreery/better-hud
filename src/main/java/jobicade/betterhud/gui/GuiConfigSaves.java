@@ -21,17 +21,17 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
-import jobicade.betterhud.util.Bounds;
-import jobicade.betterhud.util.Direction;
+import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.HudConfig;
-import jobicade.betterhud.util.Point;
+import jobicade.betterhud.util.geom.Point;
 import jobicade.betterhud.util.StringGroup;
 
 public class GuiConfigSaves extends GuiScreen {
 	private GuiTextField name;
 	private GuiScrollbar scrollbar;
-	private Bounds viewport;
+	private Rect viewport;
 
 	private final GuiScreen previous;
 
@@ -92,25 +92,25 @@ public class GuiConfigSaves extends GuiScreen {
 
 		buttonList.add(new GuiActionButton(I18n.format("gui.done"))
 			.setCallback(b -> MC.displayGuiScreen(previous))
-			.setBounds(new Bounds(200, 20).align(origin, Direction.NORTH)));
+			.setRect(new Rect(200, 20).align(origin, Direction.NORTH)));
 
-		Bounds textField = new Bounds(150, 20);
-		Bounds smallButton = new Bounds(50, 20);
+		Rect textField = new Rect(150, 20);
+		Rect smallButton = new Rect(50, 20);
 
-		Bounds fieldLine = new Bounds(textField.getWidth() + (SPACER + smallButton.getWidth()) * 2, 20).align(origin.add(0, 20 + SPACER), Direction.NORTH);
+		Rect fieldLine = new Rect(textField.getWidth() + (SPACER + smallButton.getWidth()) * 2, 20).align(origin.add(0, 20 + SPACER), Direction.NORTH);
 		textField = textField.anchor(fieldLine, Direction.NORTH_WEST);
 
 		name = new GuiTextField(0, fontRenderer, textField.getX(), textField.getY(), textField.getWidth(), textField.getHeight());
 		name.setFocused(true);
 		name.setCanLoseFocus(false);
 
-		smallButton = smallButton.withPosition(textField.getAnchor(Direction.NORTH_EAST).add(SPACER, 0));
-		buttonList.add(new GuiActionButton("Load").setCallback(b -> load()).setBounds(smallButton));
+		smallButton = smallButton.move(textField.getAnchor(Direction.NORTH_EAST).add(SPACER, 0));
+		buttonList.add(new GuiActionButton("Load").setCallback(b -> load()).setRect(smallButton));
 
-		smallButton = smallButton.withPosition(smallButton.getAnchor(Direction.NORTH_EAST).add(SPACER, 0));
-		buttonList.add(new GuiActionButton("Save").setCallback(b -> save()).setBounds(smallButton));
+		smallButton = smallButton.move(smallButton.getAnchor(Direction.NORTH_EAST).add(SPACER, 0));
+		buttonList.add(new GuiActionButton("Save").setCallback(b -> save()).setRect(smallButton));
 
-		viewport = new Bounds(400, 0).align(fieldLine.getAnchor(Direction.SOUTH).add(0, SPACER), Direction.NORTH).withBottom(height - 20);
+		viewport = new Rect(400, 0).align(fieldLine.getAnchor(Direction.SOUTH).add(0, SPACER), Direction.NORTH).withBottom(height - 20);
 		scrollbar = new GuiScrollbar(viewport, 0);
 
 		reloadSaves();
@@ -184,11 +184,11 @@ public class GuiConfigSaves extends GuiScreen {
 			return name.substring(0, name.length() - 4);
 		}).collect(Collectors.toList())).setAlignment(Direction.NORTH).setGutter(SPACER);
 
-		Bounds scissorBounds = viewport.withY(height - viewport.getBottom()).scale(MANAGER.getScaledResolution().getScaleFactor());
+		Rect scissorRect = viewport.withY(height - viewport.getBottom()).scale(MANAGER.getScaledResolution().getScaleFactor());
 
 		GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_SCISSOR_BIT);
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
-		GL11.glScissor(scissorBounds.getX(), scissorBounds.getY(), scissorBounds.getWidth(), scissorBounds.getHeight());
+		GL11.glScissor(scissorRect.getX(), scissorRect.getY(), scissorRect.getWidth(), scissorRect.getHeight());
 
 		Point origin = viewport.getAnchor(Direction.NORTH).sub(0, scrollbar.getScroll() - SPACER);
 
@@ -196,7 +196,7 @@ public class GuiConfigSaves extends GuiScreen {
 			String fileName = saves.get(i).getFileName().toString();
 
 			if(fileName.length() == name.getText().length() + 4 && fileName.regionMatches(0, name.getText(), 0, fileName.length() - 4)) {
-				Bounds bounds = new Bounds(300, MC.fontRenderer.FONT_HEIGHT).align(origin.add(0, (MC.fontRenderer.FONT_HEIGHT + SPACER) * i), Direction.NORTH).grow(2);
+				Rect bounds = new Rect(300, MC.fontRenderer.FONT_HEIGHT).align(origin.add(0, (MC.fontRenderer.FONT_HEIGHT + SPACER) * i), Direction.NORTH).grow(2);
 
 				GlUtil.drawRect(bounds, 0x30000000);
 				GlUtil.drawBorderRect(bounds, 0xA0909090);

@@ -11,27 +11,26 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import jobicade.betterhud.gui.GuiActionButton;
 import jobicade.betterhud.gui.GuiElementSettings;
-import jobicade.betterhud.util.Bounds;
+import jobicade.betterhud.util.geom.Direction;
+import jobicade.betterhud.util.geom.Point;
+import jobicade.betterhud.util.geom.Rect;
 import jobicade.betterhud.util.Colors;
-import jobicade.betterhud.util.Direction;
-import jobicade.betterhud.util.Direction.Options;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.util.Point;
 
 public class SettingDirection extends SettingAlignable<Direction> {
 	private GuiActionButton[] toggles = new GuiActionButton[9];
-	private Bounds bounds;
+	private Rect bounds;
 
 	private boolean horizontal = false;
 
-	private final Options options;
+	private final DirectionOptions options;
 	private Direction value;
 
 	public SettingDirection(String name, Direction alignment) {
-		this(name, alignment, Options.ALL);
+		this(name, alignment, DirectionOptions.ALL);
 	}
 
-	public SettingDirection(String name, Direction alignment, Options options) {
+	public SettingDirection(String name, Direction alignment, DirectionOptions options) {
 		super(name, alignment);
 		this.options = options;
 	}
@@ -58,16 +57,16 @@ public class SettingDirection extends SettingAlignable<Direction> {
 	}
 
 	@Override
-	public void getGuiParts(java.util.List<Gui> parts, Map<Gui,Setting<?>> callbacks, Bounds bounds) {
+	public void getGuiParts(java.util.List<Gui> parts, Map<Gui,Setting<?>> callbacks, Rect bounds) {
 		this.bounds = bounds;
 
-		Bounds radios = new Bounds(60, 60).anchor(bounds, horizontal ? Direction.WEST : Direction.SOUTH);
-		Bounds radio = new Bounds(20, 20);
+		Rect radios = new Rect(60, 60).anchor(bounds, horizontal ? Direction.WEST : Direction.SOUTH);
+		Rect radio = new Rect(20, 20);
 
 		for(Direction direction : Direction.values()) {
 			GuiActionButton button = new GuiActionButton("")
 				.setId(direction.ordinal())
-				.setBounds(radio.anchor(radios, direction));
+				.setRect(radio.anchor(radios, direction));
 
 			parts.add(button);
 			callbacks.put(button, this);
@@ -81,7 +80,7 @@ public class SettingDirection extends SettingAlignable<Direction> {
 	}
 
 	private String getText() {
-		return horizontal ? getLocalizedName() + ": " + (value != null ? value.getLocalizedName() : I18n.format("betterHud.value.none")) : getLocalizedName();
+		return horizontal ? getLocalizedName() + ": " + localizeDirection(value) : getLocalizedName();
 	}
 
 	@Override
@@ -113,12 +112,12 @@ public class SettingDirection extends SettingAlignable<Direction> {
 
 	@Override
 	public String save() {
-		return Direction.toString(get());
+		return get().name();
 	}
 
 	@Override
 	public void load(String save) {
-		set(Direction.fromString(save));
+		set(Direction.valueOf(save));
 	}
 
 	@Override
@@ -140,7 +139,24 @@ public class SettingDirection extends SettingAlignable<Direction> {
 		return horizontal || alignment == Direction.EAST;
 	}
 
-	public Options getOptions() {
+	public DirectionOptions getOptions() {
 		return options;
+	}
+
+	public String localizeDirection(Direction direction) {
+		String name;
+		switch(direction) {
+			case NORTH_WEST: name = "northWest"; break;
+			case NORTH:      name = "north"; break;
+			case NORTH_EAST: name = "northEast"; break;
+			case WEST:       name = "west"; break;
+			case CENTER:     name = "center"; break;
+			case EAST:       name = "east"; break;
+			case SOUTH_WEST: name = "southWest"; break;
+			case SOUTH:      name = "south"; break;
+			case SOUTH_EAST: name = "southEast"; break;
+			default:         name = "none";
+		}
+		return I18n.format("betterHud.value." + name);
 	}
 }

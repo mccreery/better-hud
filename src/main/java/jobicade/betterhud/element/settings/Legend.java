@@ -13,7 +13,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiLabel;
 import net.minecraft.client.resources.I18n;
 import jobicade.betterhud.util.Colors;
-import jobicade.betterhud.util.Point;
+import jobicade.betterhud.util.geom.Point;
 
 public class Legend extends SettingStub<Object> {
 	public Legend(String name) {

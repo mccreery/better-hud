@@ -1,7 +1,7 @@
 package jobicade.betterhud.element.settings;
 
 import net.minecraft.client.resources.I18n;
-import jobicade.betterhud.util.Direction;
+import jobicade.betterhud.util.geom.Direction;
 
 public class SettingWarnings extends SettingStub<Double[]> {
 	private final SettingSlider[] sliders;

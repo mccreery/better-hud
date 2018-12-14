@@ -4,14 +4,14 @@ import org.lwjgl.input.Mouse;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.util.math.MathHelper;
-import jobicade.betterhud.util.Bounds;
+import jobicade.betterhud.util.geom.Rect;
 import jobicade.betterhud.util.Colors;
-import jobicade.betterhud.util.Direction;
+import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
 
 public class GuiScrollbar extends Gui {
-	private final Bounds bounds;
-	private Bounds grabber;
+	private final Rect bounds;
+	private Rect grabber;
 	private float scaleFactor;
 	private final int background, foreground, highlight;
 
@@ -31,21 +31,21 @@ public class GuiScrollbar extends Gui {
 	 * {@code viewport} defaults to the height of {@code viewport},
 	 * the colors used are defaults
 	 *
-	 * @see #GuiScrollbar(Bounds, int, int, int, int, int) */
-	public GuiScrollbar(Bounds viewport, int content) {
-		this(new Bounds(8, viewport.getHeight()).anchor(viewport, Direction.NORTH_EAST), viewport.getHeight(), content);
+	 * @see #GuiScrollbar(Rect, int, int, int, int, int) */
+	public GuiScrollbar(Rect viewport, int content) {
+		this(new Rect(8, viewport.getHeight()).anchor(viewport, Direction.NORTH_EAST), viewport.getHeight(), content);
 	}
 
 	/** The colors used are defaults
-	 * @see #GuiScrollbar(Bounds, int, int, int, int, int) */
-	public GuiScrollbar(Bounds bounds, int viewport, int content) {
+	 * @see #GuiScrollbar(Rect, int, int, int, int, int) */
+	public GuiScrollbar(Rect bounds, int viewport, int content) {
 		this(bounds, viewport, content, Colors.TRANSLUCENT, Colors.FOREGROUND, Colors.HIGHLIGHT);
 	}
 
 	/** @param bounds The rendering bounds for the scrollbar
 	 * @param viewport The size of the viewport
 	 * @param content The size of the content */
-	public GuiScrollbar(Bounds bounds, int viewport, int content, int background, int foreground, int highlight) {
+	public GuiScrollbar(Rect bounds, int viewport, int content, int background, int foreground, int highlight) {
 		this.bounds = bounds;
 
 		this.viewportHeight = viewport;
@@ -99,7 +99,7 @@ public class GuiScrollbar extends Gui {
 			scaleFactor = (float)viewportHeight / contentHeight;
 			scroll = MathHelper.clamp(scroll, 0, contentHeight - viewportHeight);
 
-			grabber = new Bounds(bounds.getX(), bounds.getY() + (int)(scroll * scaleFactor),
+			grabber = new Rect(bounds.getX(), bounds.getY() + (int)(scroll * scaleFactor),
 				bounds.getWidth(), (int)(scaleFactor * bounds.getHeight()));
 		}
 	}

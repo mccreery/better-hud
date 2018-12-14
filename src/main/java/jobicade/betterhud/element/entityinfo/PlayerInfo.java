@@ -20,11 +20,11 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingSlider;
-import jobicade.betterhud.util.Bounds;
+import jobicade.betterhud.util.geom.Rect;
 import jobicade.betterhud.util.Colors;
-import jobicade.betterhud.util.Direction;
+import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.util.Point;
+import jobicade.betterhud.util.geom.Point;
 import jobicade.betterhud.util.StringGroup;
 import jobicade.betterhud.util.bars.StatBar;
 import jobicade.betterhud.util.bars.StatBarArmor;
@@ -79,16 +79,16 @@ public class PlayerInfo extends EntityInfo {
 		Point size = group.getSize();
 		if(size.getX() < 81) size = size.withX(81);
 
-		Bounds padding = Bounds.createPadding(SPACER, SPACER, SPACER, SPACER + bar.getSize().getY());
-		Bounds bounds = new Bounds(size).grow(padding);
+		Rect padding = Rect.createPadding(SPACER, SPACER, SPACER, SPACER + bar.getSize().getY());
+		Rect bounds = new Rect(size).grow(padding);
 		bounds = MANAGER.position(Direction.SOUTH, bounds);
-		Bounds contentBounds = bounds.grow(padding.scale(-1));
+		Rect contentRect = bounds.grow(padding.invert());
 
 		GlUtil.drawRect(bounds, Colors.TRANSLUCENT);
-		group.draw(contentBounds);
+		group.draw(contentRect);
 
 		MC.getTextureManager().bindTexture(ICONS);
-		bar.render(contentBounds.getAnchor(Direction.SOUTH_WEST), Direction.NORTH_WEST, Direction.NORTH_WEST);
+		bar.render(contentRect.getAnchor(Direction.SOUTH_WEST), Direction.NORTH_WEST, Direction.NORTH_WEST);
 	}
 
 	/** @see ItemStack#getTooltip(EntityPlayer, net.minecraft.client.util.ITooltipFlag) */

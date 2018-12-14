@@ -6,15 +6,15 @@ import static jobicade.betterhud.BetterHud.MC;
 
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
+import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.util.Bounds;
-import jobicade.betterhud.util.Direction;
-import jobicade.betterhud.util.Direction.Options;
+import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
 
 public class JumpBar extends OverrideElement {
 	public JumpBar() {
-		super("jumpBar", new SettingPosition("position", Options.BAR, Options.NORTH_SOUTH));
+		super("jumpBar", new SettingPosition("position", DirectionOptions.BAR, DirectionOptions.NORTH_SOUTH));
 	}
 
 	@Override
@@ -29,10 +29,10 @@ public class JumpBar extends OverrideElement {
 	}
 
 	@Override
-	protected Bounds render(Event event) {
+	protected Rect render(Event event) {
 		MC.getTextureManager().bindTexture(ICONS);
 
-		Bounds bounds = new Bounds(182, 5);
+		Rect bounds = new Rect(182, 5);
 		if(!position.isCustom() && position.getDirection() == Direction.SOUTH) {
 			bounds = MANAGER.position(Direction.SOUTH, bounds, false, 1);
 		} else {
@@ -42,10 +42,10 @@ public class JumpBar extends OverrideElement {
 		float charge = MC.player.getHorseJumpPower();
 		int filled = (int)(charge * bounds.getWidth());
 
-		GlUtil.drawTexturedModalRect(bounds.getPosition(), new Bounds(0, 84, bounds.getWidth(), bounds.getHeight()));
+		GlUtil.drawTexturedModalRect(bounds.getPosition(), new Rect(0, 84, bounds.getWidth(), bounds.getHeight()));
 
 		if(filled > 0) {
-			GlUtil.drawTexturedModalRect(bounds.getPosition(), new Bounds(0, 89, filled, bounds.getHeight()));
+			GlUtil.drawTexturedModalRect(bounds.getPosition(), new Rect(0, 89, filled, bounds.getHeight()));
 		}
 		return bounds;
 	}

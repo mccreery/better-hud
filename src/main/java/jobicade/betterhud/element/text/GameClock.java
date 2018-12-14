@@ -13,14 +13,14 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.Event;
+import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingChoose;
-import jobicade.betterhud.util.Bounds;
-import jobicade.betterhud.util.Direction;
-import jobicade.betterhud.util.Direction.Options;
+import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.util.Point;
+import jobicade.betterhud.util.geom.Point;
 
 public class GameClock extends Clock {
 	private static final ItemStack BED = new ItemStack(Items.BED);
@@ -49,8 +49,8 @@ public class GameClock extends Clock {
 	}
 
 	@Override
-	protected Bounds getMargin() {
-		return new Bounds(0, 0, 21, 0).align(Point.ZERO, position.getContentAlignment());
+	protected Rect getMargin() {
+		return new Rect(0, 0, 21, 0).align(Point.zero(), position.getContentAlignment());
 	}
 
 	@Override
@@ -68,12 +68,12 @@ public class GameClock extends Clock {
 	}
 
 	@Override
-	public Bounds render(Event event) {
-		Bounds bounds = super.render(event);
+	public Rect render(Event event) {
+		Rect bounds = super.render(event);
 
 		if(!MC.world.isDaytime()) {
-			Direction bedAnchor = Options.WEST_EAST.apply(position.getContentAlignment());
-			Bounds bed = new Bounds(16, 16).anchor(bounds, bedAnchor);
+			Direction bedAnchor = DirectionOptions.WEST_EAST.apply(position.getContentAlignment());
+			Rect bed = new Rect(16, 16).anchor(bounds, bedAnchor);
 
 			GlUtil.renderSingleItem(BED, bed.getPosition());
 		}

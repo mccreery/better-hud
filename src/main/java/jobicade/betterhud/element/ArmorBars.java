@@ -13,14 +13,14 @@ import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.util.Bounds;
+import jobicade.betterhud.util.geom.Rect;
 import jobicade.betterhud.util.Colors;
-import jobicade.betterhud.util.Direction;
-import jobicade.betterhud.util.Direction.Options;
+import jobicade.betterhud.util.geom.Direction;
+import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.util.mode.GlMode;
 import jobicade.betterhud.util.mode.TextureMode;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.util.Point;
+import jobicade.betterhud.util.geom.Point;
 import jobicade.betterhud.util.StringGroup;
 
 public class ArmorBars extends EquipmentDisplay {
@@ -37,7 +37,7 @@ public class ArmorBars extends EquipmentDisplay {
 	}
 
 	public ArmorBars() {
-		super("armorBars", new SettingPosition(Options.CORNERS, Options.WEST_EAST));
+		super("armorBars", new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.WEST_EAST));
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public class ArmorBars extends EquipmentDisplay {
 	}
 
 	@Override
-	public Bounds render(Event event) {
+	public Rect render(Event event) {
 		String[] text = null;
 		Point size;
 
@@ -98,31 +98,31 @@ public class ArmorBars extends EquipmentDisplay {
 
 		Direction alignment = position.getContentAlignment();
 
-		Bounds bounds = position.applyTo(new Bounds(size.getX() + 20, 70));
-		Bounds padding = alignment == Direction.EAST ? Bounds.createPadding(0, 0, 20, 0) : Bounds.createPadding(20, 0, 0, 0);
+		Rect bounds = position.applyTo(new Rect(size.getX() + 20, 70));
+		Rect padding = alignment == Direction.EAST ? Rect.createPadding(0, 0, 20, 0) : Rect.createPadding(20, 0, 0, 0);
 
-		Bounds row = new Bounds(size).grow(padding);
+		Rect row = new Rect(size).grow(padding);
 		row = row.anchor(bounds, Direction.NORTH);
 
 		for(int i = 3; i >= 0; i--, row = row.withY(row.getY() + 18)) {
 			ItemStack stack = MC.player.inventory.armorItemInSlot(i);
-			Bounds item = new Bounds(16, 16).anchor(row, alignment);
+			Rect item = new Rect(16, 16).anchor(row, alignment);
 
 			if(stack == null || stack.isEmpty()) {
 				drawEmptySlot(item.getPosition(), i);
 			} else {
 				GlUtil.renderSingleItem(stack, item.getPosition());
-				Bounds content = row.grow(padding.scale(-1));
+				Rect content = row.grow(padding.invert());
 
 				if(hasText() && text[i] != null) {
 					MC.mcProfiler.startSection("text");
 
-					Bounds textBounds = new Bounds(GlUtil.getStringSize(text[i])).anchor(content, alignment);
+					Rect textRect = new Rect(GlUtil.getStringSize(text[i])).anchor(content, alignment);
 					if(stack.isItemStackDamageable() && largeBars()) {
-						textBounds = textBounds.withY(textBounds.getY() - 1);
+						textRect = textRect.withY(textRect.getY() - 1);
 					}
 
-					MC.ingameGUI.drawString(MC.fontRenderer, text[i], textBounds.getX(), textBounds.getY(), Colors.WHITE);
+					MC.ingameGUI.drawString(MC.fontRenderer, text[i], textRect.getX(), textRect.getY(), Colors.WHITE);
 					MC.mcProfiler.endSection();
 				}
 
@@ -130,10 +130,10 @@ public class ArmorBars extends EquipmentDisplay {
 					MC.mcProfiler.startSection("bars");
 
 					if(largeBars()) {
-						Bounds bar = new Bounds(content.getWidth(), 2).anchor(content, Direction.SOUTH);
+						Rect bar = new Rect(content.getWidth(), 2).anchor(content, Direction.SOUTH);
 						GlUtil.drawDamageBar(bar, stack, false);
 					} else {
-						Bounds bar = new Bounds(2, item.getHeight()).anchor(item.grow(2, 0, 2, 0), alignment.mirrorColumn());
+						Rect bar = new Rect(2, item.getHeight()).anchor(item.grow(2, 0, 2, 0), alignment.mirrorCol());
 						GlUtil.drawDamageBar(bar, stack, true);
 					}
 

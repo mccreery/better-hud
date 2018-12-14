@@ -39,8 +39,8 @@ public class LayoutManager {
 		}
 		offset -= 9;
 
-		Rect wideBounds = bounds.withWidth(182).anchor(screen.grow(-offset), Direction.SOUTH, false);
-		bounds = bounds.anchor(wideBounds, alignment, false);
+		Rect wideRect = bounds.withWidth(182).anchor(screen.grow(-offset), Direction.SOUTH, false);
+		bounds = bounds.anchor(wideRect, alignment, false);
 
 		int newHeight = offset + bounds.getHeight() + postSpacer + 9;
 

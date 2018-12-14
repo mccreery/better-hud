@@ -9,15 +9,15 @@ import net.minecraft.init.Items;
 import net.minecraft.item.ItemArrow;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.Event;
+import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.util.Bounds;
+import jobicade.betterhud.util.geom.Rect;
 import jobicade.betterhud.util.Colors;
-import jobicade.betterhud.util.Direction;
-import jobicade.betterhud.util.Direction.Options;
+import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.util.Point;
+import jobicade.betterhud.util.geom.Point;
 
 public class ArrowCount extends HudElement {
 	private static final ItemStack ARROW = new ItemStack(Items.ARROW, 1);
@@ -33,7 +33,7 @@ public class ArrowCount extends HudElement {
 	}
 
 	public ArrowCount() {
-		super("arrowCount", new SettingPosition(Options.CORNERS, Options.NONE));
+		super("arrowCount", new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.NONE));
 		position.setEnableOn(() -> !overlay.get());
 	}
 
@@ -90,29 +90,29 @@ public class ArrowCount extends HudElement {
 	}
 
 	@Override
-	public Bounds render(Event event) {
+	public Rect render(Event event) {
 		int totalArrows = arrowCount(MC.player);
 
 		if(overlay.get()) {
-			Bounds stackBounds = new Bounds(16, 16).anchor(HOTBAR.getLastBounds().grow(-3), Direction.WEST);
+			Rect stackRect = new Rect(16, 16).anchor(HOTBAR.getLastRect().grow(-3), Direction.WEST);
 
 			for(int i = 0; i < 9; i++) {
 				ItemStack stack = MC.player.inventory.getStackInSlot(i);
 
 				if(stack != null && stack.getItem() == Items.BOW) {
-					drawCounter(stackBounds, totalArrows);
+					drawCounter(stackRect, totalArrows);
 				}
-				stackBounds = stackBounds.withX(stackBounds.getX() + 20);
+				stackRect = stackRect.withX(stackRect.getX() + 20);
 			}
 
 			ItemStack stack = MC.player.inventory.getStackInSlot(40);
 
 			if(stack != null && stack.getItem() == Items.BOW) {
-				drawCounter(new Bounds(OFFHAND.getLastBounds().getPosition().add(3, 3), new Point(16, 16)), totalArrows);
+				drawCounter(new Rect(OFFHAND.getLastRect().getPosition().add(3, 3), new Point(16, 16)), totalArrows);
 			}
-			return Bounds.EMPTY;
+			return Rect.empty();
 		} else {
-			Bounds bounds = position.applyTo(new Bounds(16, 16));
+			Rect bounds = position.applyTo(new Rect(16, 16));
 
 			GlUtil.renderSingleItem(ARROW, bounds.getPosition());
 			drawCounter(bounds, totalArrows);
@@ -121,10 +121,10 @@ public class ArrowCount extends HudElement {
 		}
 	}
 
-	private static void drawCounter(Bounds stackBounds, int count) {
+	private static void drawCounter(Rect stackRect, int count) {
 		String countDisplay = String.valueOf(count);
 
-		Bounds text = new Bounds(GlUtil.getStringSize(countDisplay)).align(stackBounds.grow(1, 1, 1, 2).getAnchor(Direction.NORTH_EAST), Direction.NORTH_EAST);
+		Rect text = new Rect(GlUtil.getStringSize(countDisplay)).align(stackRect.grow(1, 1, 1, 2).getAnchor(Direction.NORTH_EAST), Direction.NORTH_EAST);
 
 		MC.ingameGUI.drawString(MC.fontRenderer, countDisplay, text.getX(), text.getY(), Colors.WHITE);
 	}

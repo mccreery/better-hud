@@ -128,7 +128,18 @@ public class Size extends Point {
      * Returns a size with both width and height negated.
      * @return A point with both width and height negated.
      */
+    @Override
     public Size invert() { return new Size(-x, -y); }
+
+    /**
+     * Scales the point by a factor.
+     * @param factor The factor.
+     * @return A point scaled by the given factor.
+     */
+    @Override
+    public Size scale(float factor) {
+        return new Size(Math.round(x * factor), Math.round(y * factor));
+    }
 
     /**
      * Scales the size by a factor in X and Y.
@@ -136,6 +147,7 @@ public class Size extends Point {
      * @param yf The factor in the Y axis.
      * @return A size scaled by the given factors.
      */
+    @Override
     public Size scale(float xf, float yf) {
         return new Size(Math.round(x * xf), Math.round(y * yf));
     }
@@ -146,6 +158,7 @@ public class Size extends Point {
      * @param factor The scaling factor.
      * @return A point scaled by the given factor.
      */
+    @Override
     public Size scale(Point factor) {
         return new Size(x * factor.x, y * factor.y);
     }
@@ -160,6 +173,7 @@ public class Size extends Point {
      * @return A size scaled by the given factors around the given point.
      * @see #scale(float, float)
      */
+    @Override
     public Size scale(float xf, float yf, int x, int y) {
         return new Size(
             Math.round((this.x - x) * xf + x),
@@ -173,6 +187,7 @@ public class Size extends Point {
      * @return A size scaled by the given factors around the given point.
      * @see #scale(float, float, int, int)
      */
+    @Override
     public Size scale(float xf, float yf, Point point) {
         return scale(xf, yf, point.x, point.y);
     }

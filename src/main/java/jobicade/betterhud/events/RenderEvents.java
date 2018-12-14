@@ -38,7 +38,7 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.util.Point;
+import jobicade.betterhud.util.geom.Point;
 
 @SideOnly(Side.CLIENT)
 public final class RenderEvents {
@@ -90,7 +90,7 @@ public final class RenderEvents {
 		Entity pointed = getMouseOver(HudElement.GLOBAL.getBillboardDistance(), event.getPartialTicks());
 
 		if(pointed != null && pointed instanceof EntityLivingBase) {
-			MANAGER.reset(Point.ZERO);
+			MANAGER.reset(Point.zero());
 			pointedEntity = (EntityLivingBase)pointed;
 
 			GlStateManager.pushMatrix();

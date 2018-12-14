@@ -11,16 +11,16 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.versioning.InvalidVersionSpecificationException;
 import net.minecraftforge.fml.common.versioning.VersionRange;
+import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.settings.SettingSlider;
 import jobicade.betterhud.events.PickupNotifier;
-import jobicade.betterhud.util.Bounds;
+import jobicade.betterhud.util.geom.Rect;
 import jobicade.betterhud.util.Colors;
-import jobicade.betterhud.util.Direction;
-import jobicade.betterhud.util.Direction.Options;
+import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.util.Point;
+import jobicade.betterhud.util.geom.Point;
 
 public class PickupCount extends HudElement {
 	private SettingSlider maxStacks, fadeAfter;
@@ -36,7 +36,7 @@ public class PickupCount extends HudElement {
 	}
 
 	public PickupCount() {
-		super("itemPickup", new SettingPosition(Options.X, Options.CORNERS));
+		super("itemPickup", new SettingPosition(DirectionOptions.X, DirectionOptions.CORNERS));
 	}
 
 	@Override
@@ -57,13 +57,13 @@ public class PickupCount extends HudElement {
 	}
 
 	@Override
-	public Bounds render(Event event) {
-		Bounds bounds = getBounds();
+	public Rect render(Event event) {
+		Rect bounds = getRect();
 		Direction alignment = position.getContentAlignment();
 		Direction rowAlignment = alignment.withRow(1);
 
 		// The bounds to draw each item in
-		Bounds stackBounds = bounds.withSize(16, 16).anchor(bounds, alignment);
+		Rect stackRect = bounds.resize(16, 16).anchor(bounds, alignment);
 
 		long updateCounter = MC.ingameGUI.getUpdateCounter();
 		long lifetime = fadeAfter.getInt();
@@ -83,10 +83,10 @@ public class PickupCount extends HudElement {
 			// Opacity lower than 4 defaults to 255
 			int color = Colors.setAlpha(Colors.WHITE, Math.max(4, Math.round(opacity * 255)));
 
-			GlUtil.renderSingleItem(node.stack, stackBounds.getPosition());
-			GlUtil.drawString(node.toString(), stackBounds.grow(SPACER).getAnchor(rowAlignment.mirrorColumn()), rowAlignment, color);
+			GlUtil.renderSingleItem(node.stack, stackRect.getPosition());
+			GlUtil.drawString(node.toString(), stackRect.grow(SPACER).getAnchor(rowAlignment.mirrorCol()), rowAlignment, color);
 
-			stackBounds = stackBounds.align(stackBounds.grow(2).getAnchor(alignment.mirrorRow()), alignment);
+			stackRect = stackRect.align(stackRect.grow(2).getAnchor(alignment.mirrorRow()), alignment);
 		}
 
 		// Remove invisible stacks
@@ -96,12 +96,12 @@ public class PickupCount extends HudElement {
 		return bounds;
 	}
 
-	private Bounds getBounds() {
+	private Rect getRect() {
 		int maximum = Math.min(stacks.size(), maxStacks.getInt());
-		Bounds bounds;
+		Rect bounds;
 
 		if(maximum == 0) {
-			bounds = Bounds.EMPTY;
+			bounds = Rect.empty();
 		} else {
 			int width = 0;
 
@@ -112,7 +112,7 @@ public class PickupCount extends HudElement {
 					width = lineWidth;
 				}
 			}
-			bounds = new Bounds(16 + SPACER + width, (16 + 2) * stacks.size() - 2);
+			bounds = new Rect(16 + SPACER + width, (16 + 2) * stacks.size() - 2);
 		}
 
 		if(position.isDirection(Direction.CENTER)) {

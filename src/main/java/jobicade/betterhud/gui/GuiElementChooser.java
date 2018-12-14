@@ -8,7 +8,7 @@ import java.util.Map;
 import net.minecraft.client.gui.GuiScreen;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.Setting;
-import jobicade.betterhud.util.Bounds;
+import jobicade.betterhud.util.geom.Rect;
 
 public class GuiElementChooser extends GuiElements {
 	private final GuiScreen parent;
@@ -42,8 +42,8 @@ public class GuiElementChooser extends GuiElements {
 		});
 		setting.set(selected);
 
-		for(Map.Entry<HudElement, Bounds> entry : HudElement.getActiveBounds().entrySet()) {
-			drawBounds(entry.getValue(), entry.getKey() == selected);
+		for(Map.Entry<HudElement, Rect> entry : HudElement.getActiveRect().entrySet()) {
+			drawRect(entry.getValue(), entry.getKey() == selected);
 		}
 	}
 }

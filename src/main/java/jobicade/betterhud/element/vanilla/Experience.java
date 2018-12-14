@@ -7,21 +7,21 @@ import java.util.List;
 
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
+import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.util.Bounds;
+import jobicade.betterhud.util.geom.Rect;
 import jobicade.betterhud.util.Colors;
-import jobicade.betterhud.util.Direction;
-import jobicade.betterhud.util.Direction.Options;
+import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.util.Point;
+import jobicade.betterhud.util.geom.Point;
 
 public class Experience extends OverrideElement {
 	private SettingBoolean hideMount;
 
 	public Experience() {
-		super("experience", new SettingPosition(Options.BAR, Options.NORTH_SOUTH));
+		super("experience", new SettingPosition(DirectionOptions.BAR, DirectionOptions.NORTH_SOUTH));
 	}
 
 	@Override
@@ -49,26 +49,26 @@ public class Experience extends OverrideElement {
 	}
 
 	@Override
-	protected Bounds render(Event event) {
-		Bounds bgTexture = new Bounds(0, 64, 182, 5);
-		Bounds fgTexture = new Bounds(0, 69, 182, 5);
+	protected Rect render(Event event) {
+		Rect bgTexture = new Rect(0, 64, 182, 5);
+		Rect fgTexture = new Rect(0, 69, 182, 5);
 
-		Bounds barBounds = new Bounds(bgTexture);
+		Rect barRect = new Rect(bgTexture);
 
 		if(!position.isCustom() && position.getDirection() == Direction.SOUTH) {
-			barBounds = MANAGER.position(Direction.SOUTH, barBounds, false, 1);
+			barRect = MANAGER.position(Direction.SOUTH, barRect, false, 1);
 		} else {
-			barBounds = position.applyTo(barBounds);
+			barRect = position.applyTo(barRect);
 		}
-		GlUtil.drawTexturedProgressBar(barBounds.getPosition(), bgTexture, fgTexture, MC.player.experience, Direction.EAST);
+		GlUtil.drawTexturedProgressBar(barRect.getPosition(), bgTexture, fgTexture, MC.player.experience, Direction.EAST);
 
 		if(MC.player.experienceLevel > 0) {
 			String numberText = String.valueOf(MC.player.experienceLevel);
-			Point numberPosition = new Bounds(GlUtil.getStringSize(numberText))
-				.anchor(barBounds.grow(6), position.getContentAlignment().mirrorRow()).getPosition();
+			Point numberPosition = new Rect(GlUtil.getStringSize(numberText))
+				.anchor(barRect.grow(6), position.getContentAlignment().mirrorRow()).getPosition();
 
 			GlUtil.drawBorderedString(numberText, numberPosition.getX(), numberPosition.getY(), Colors.fromRGB(128, 255, 32));
 		}
-		return barBounds;
+		return barRect;
 	}
 }

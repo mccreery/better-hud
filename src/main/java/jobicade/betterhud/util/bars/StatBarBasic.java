@@ -3,15 +3,15 @@ package jobicade.betterhud.util.bars;
 import java.util.ArrayList;
 import java.util.List;
 
-import jobicade.betterhud.util.Bounds;
+import jobicade.betterhud.util.geom.Rect;
 
 public abstract class StatBarBasic<T> extends StatBar<T> {
-	protected abstract Bounds getIcon(IconType icon, int pointsIndex);
+	protected abstract Rect getIcon(IconType icon, int pointsIndex);
 	protected abstract int getCurrent();
 
 	@Override
-	protected List<Bounds> getIcons(int pointsIndex) {
-		List<Bounds> textures = new ArrayList<>(2);
+	protected List<Rect> getIcons(int pointsIndex) {
+		List<Rect> textures = new ArrayList<>(2);
 		textures.add(getIcon(IconType.BACKGROUND, pointsIndex));
 		int current = getCurrent();
 

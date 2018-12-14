@@ -9,7 +9,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
-import jobicade.betterhud.util.Bounds;
+import jobicade.betterhud.util.geom.Rect;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.mode.GlMode;
 import jobicade.betterhud.util.mode.TextureMode;
@@ -38,13 +38,13 @@ public class HelmetOverlay extends OverrideElement {
 	}
 
 	@Override
-	protected Bounds render(Event event) {
+	protected Rect render(Event event) {
 		ItemStack stack = MC.player.inventory.armorItemInSlot(3);
 		Item item = stack.getItem();
 
 		if(item == Item.getItemFromBlock(Blocks.PUMPKIN)) {
 			GlMode.push(new TextureMode(PUMPKIN_BLUR_TEX_PATH));
-			GlUtil.drawTexturedModalRect(MANAGER.getScreen(), new Bounds(256, 256));
+			GlUtil.drawTexturedModalRect(MANAGER.getScreen(), new Rect(256, 256));
 			GlMode.pop();
 		} else {
 			item.renderHelmetOverlay(stack, MC.player, MANAGER.getScaledResolution(), getPartialTicks(event));

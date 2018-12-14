@@ -9,17 +9,17 @@ import java.util.List;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
-import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.EntityLivingBase;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingSlider;
-import jobicade.betterhud.util.Bounds;
 import jobicade.betterhud.util.Colors;
-import jobicade.betterhud.util.Direction;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.MathUtil;
-import jobicade.betterhud.util.Point;
 import jobicade.betterhud.util.bars.StatBarHealth;
+import jobicade.betterhud.util.geom.Direction;
+import jobicade.betterhud.util.geom.Point;
+import jobicade.betterhud.util.geom.Rect;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.EntityLivingBase;
 
 public class MobInfo extends EntityInfo {
 	private final StatBarHealth bar = new StatBarHealth();
@@ -70,14 +70,14 @@ public class MobInfo extends EntityInfo {
 			size = size.add(0, barSize.getY());
 		}
 
-		Bounds bounds = MANAGER.position(Direction.SOUTH, new Bounds(size).grow(SPACER));
+		Rect bounds = MANAGER.position(Direction.SOUTH, new Rect(size).grow(SPACER));
 		GlUtil.drawRect(bounds, Colors.TRANSLUCENT);
 		bounds = bounds.grow(-SPACER);
 
 		GlUtil.drawString(text, bounds.getPosition(), Direction.NORTH_WEST, Colors.WHITE);
-		Bounds barBounds = new Bounds(barSize).anchor(bounds, Direction.SOUTH_WEST);
+		Rect barRect = new Rect(barSize).anchor(bounds, Direction.SOUTH_WEST);
 
 		MC.getTextureManager().bindTexture(ICONS);
-		bar.render(barBounds, Direction.NORTH_WEST);
+		bar.render(barRect, Direction.NORTH_WEST);
 	}
 }

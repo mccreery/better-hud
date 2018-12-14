@@ -23,6 +23,7 @@ import jobicade.betterhud.element.entityinfo.MobInfo;
 import jobicade.betterhud.element.entityinfo.PlayerInfo;
 import jobicade.betterhud.element.particles.BloodSplatters;
 import jobicade.betterhud.element.particles.WaterDrops;
+import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.RootSetting;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingPosition;
@@ -52,8 +53,7 @@ import jobicade.betterhud.element.vanilla.PotionBar;
 import jobicade.betterhud.element.vanilla.RidingHealth;
 import jobicade.betterhud.element.vanilla.Sidebar;
 import jobicade.betterhud.element.vanilla.Vignette;
-import jobicade.betterhud.util.Bounds;
-import jobicade.betterhud.util.Direction.Options;
+import jobicade.betterhud.util.geom.Rect;
 import jobicade.betterhud.util.IGetSet.IBoolean;
 import jobicade.betterhud.util.SortField;
 import jobicade.betterhud.util.Sorter;
@@ -185,7 +185,7 @@ public abstract class HudElement implements IBoolean {
 	public final String name;
 
 	protected HudElement(String name) {
-		this(name, new SettingPosition(Options.NONE, Options.NONE));
+		this(name, new SettingPosition(DirectionOptions.NONE, DirectionOptions.NONE));
 	}
 
 	protected HudElement(String name, SettingPosition position) {
@@ -210,7 +210,7 @@ public abstract class HudElement implements IBoolean {
 	 * @param settings The list of settings to add new settings to.
 	 */
 	protected void addSettings(List<Setting<?>> settings) {
-		if(position.getDirectionOptions() != Options.NONE || position.getContentOptions() != Options.NONE) {
+		if(position.getDirectionOptions() != DirectionOptions.NONE || position.getContentOptions() != DirectionOptions.NONE) {
 			settings.add(position);
 		}
 	}
@@ -265,13 +265,13 @@ public abstract class HudElement implements IBoolean {
 	 * Should only be called if {@link #shouldRender(Event)} returns {@code true}
 	 *
 	 * @param event The current render event
-	 * @return The bounds containing the element. {@code null} will be replaced by {@link Bounds#EMPTY} */
-	protected abstract Bounds render(Event event);
+	 * @return The bounds containing the element. {@code null} will be replaced by {@link Rect#EMPTY} */
+	protected abstract Rect render(Event event);
 
 	/** Calls {@link #render(Event)} if the element
-	 * should be rendered and caches the bounds so they are available from {@link #getLastBounds()} */
+	 * should be rendered and caches the bounds so they are available from {@link #getLastRect()} */
 	public final void tryRender(Event event) {
-		Bounds bounds = null;
+		Rect bounds = null;
 
 		if(shouldRender(event) && isEnabledAndSupported()) {
 			MC.mcProfiler.startSection(name);
@@ -284,9 +284,9 @@ public abstract class HudElement implements IBoolean {
 		}
 
 		if(bounds != null && !bounds.isEmpty()) {
-			activeBounds.put(this, bounds);
+			activeRect.put(this, bounds);
 		} else {
-			activeBounds.remove(this);
+			activeRect.remove(this);
 		}
 	}
 
@@ -302,16 +302,16 @@ public abstract class HudElement implements IBoolean {
 		}
 	}
 
-	private static final Map<HudElement, Bounds> activeBounds = new TreeMap<>(SortType.ALPHABETICAL);
+	private static final Map<HudElement, Rect> activeRect = new TreeMap<>(SortType.ALPHABETICAL);
 
 	/** @return The last or appropriate bounds for this element.<br>
-	 * {@link Bounds#EMPTY} if the element has no appropriate bounds */
-	public Bounds getLastBounds() {
-		return activeBounds.getOrDefault(this, Bounds.EMPTY);
+	 * {@link Rect#EMPTY} if the element has no appropriate bounds */
+	public Rect getLastRect() {
+		return activeRect.getOrDefault(this, Rect.empty());
 	}
 
-	public static Map<HudElement, Bounds> getActiveBounds() {
-		return Collections.unmodifiableMap(activeBounds);
+	public static Map<HudElement, Rect> getActiveRect() {
+		return Collections.unmodifiableMap(activeRect);
 	}
 
 	/** Calls {@link #init(FMLInitializationEvent)} on all elements

@@ -16,7 +16,10 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.client.config.GuiUtils;
-import jobicade.betterhud.util.Direction.Options;
+import jobicade.betterhud.element.settings.DirectionOptions;
+import jobicade.betterhud.util.geom.Direction;
+import jobicade.betterhud.util.geom.Point;
+import jobicade.betterhud.util.geom.Rect;
 import jobicade.betterhud.util.mode.GlMode;
 
 public final class GlUtil {
@@ -41,12 +44,12 @@ public final class GlUtil {
 	}
 
 	/** @see Gui#drawRect(int, int, int, int, int) */
-	public static void drawRect(Bounds bounds, int color) {
+	public static void drawRect(Rect bounds, int color) {
 		Gui.drawRect(bounds.getLeft(), bounds.getTop(), bounds.getRight(), bounds.getBottom(), color);
 		GlMode.clean();
 	}
 
-	public static void drawBorderRect(Bounds bounds, int color) {
+	public static void drawBorderRect(Rect bounds, int color) {
 		drawRect(bounds.withWidth(1).grow(0, -1, 0, -1), color);
 		drawRect(bounds.withLeft(bounds.getRight() - 1).grow(0, -1, 0, -1), color);
 
@@ -55,7 +58,7 @@ public final class GlUtil {
 	}
 
 	/** @see #drawTexturedModalRect(int, int, int, int, int, int) */
-	public static void drawTexturedModalRect(Point position, Bounds texture) {
+	public static void drawTexturedModalRect(Point position, Rect texture) {
 		drawTexturedModalRect(position.getX(), position.getY(), texture.getX(), texture.getY(), texture.getWidth(), texture.getHeight());
 	}
 
@@ -65,7 +68,7 @@ public final class GlUtil {
 	}
 
 	/** @see #drawTexturedModalRect(int, int, int, int, int, int, int, int) */
-	public static void drawTexturedModalRect(Bounds bounds, Bounds texture) {
+	public static void drawTexturedModalRect(Rect bounds, Rect texture) {
 		drawTexturedModalRect(bounds.getX(), bounds.getY(), texture.getX(), texture.getY(), bounds.getWidth(), bounds.getHeight(), texture.getWidth(), texture.getHeight());
 	}
 
@@ -130,7 +133,7 @@ public final class GlUtil {
 	}
 
 	/** Renders the item with hotbar animations */
-	public static void renderHotbarItem(Bounds bounds, ItemStack stack, float partialTicks) {
+	public static void renderHotbarItem(Rect bounds, ItemStack stack, float partialTicks) {
 		if(stack.isEmpty()) return;
 		float animationTicks = stack.getAnimationsToGo() - partialTicks;
 
@@ -205,8 +208,8 @@ public final class GlUtil {
 	}
 
 	/** {@code progress} defaults to the durability of {@code stack}
-	 * @see #drawProgressBar(Bounds, float, boolean) */
-	public static void drawDamageBar(Bounds bounds, ItemStack stack, boolean vertical) {
+	 * @see #drawProgressBar(Rect, float, boolean) */
+	public static void drawDamageBar(Rect bounds, ItemStack stack, boolean vertical) {
 		float progress = (float)(stack.getMaxDamage() - stack.getItemDamage()) / stack.getMaxDamage();
 		drawProgressBar(bounds, progress, vertical);
 	}
@@ -214,18 +217,18 @@ public final class GlUtil {
 	/** Draws a progress bar for item damage
 	 * @param progress Index of progress between 0 and 1
 	 * @param vertical {@code true} to render bar from bottom to top */
-	public static void drawProgressBar(Bounds bounds, float progress, boolean vertical) {
+	public static void drawProgressBar(Rect bounds, float progress, boolean vertical) {
 		drawRect(bounds, Colors.BLACK);
 		progress = MathHelper.clamp(progress, 0, 1);
 
 		int color = Colors.fromHSV(progress / 3, 1, 1);
 
-		Bounds bar;
+		Rect bar;
 		if(vertical) {
-			bar = new Bounds(bounds.getWidth() - 1, (int)(progress * bounds.getHeight()));
+			bar = new Rect(bounds.getWidth() - 1, (int)(progress * bounds.getHeight()));
 			bar = bar.anchor(bounds, Direction.SOUTH_WEST);
 		} else {
-			bar = new Bounds((int)(progress * bounds.getWidth()), bounds.getHeight() - 1);
+			bar = new Rect((int)(progress * bounds.getWidth()), bounds.getHeight() - 1);
 			bar = bar.anchor(bounds, Direction.NORTH_WEST);
 		}
 		drawRect(bar, color);
@@ -234,30 +237,30 @@ public final class GlUtil {
 	/** Draws a progress bar with textures
 	 * @param progress Index of progress between 0 and 1
 	 * @param direction The direction the bar should fill up in */
-	public static void drawTexturedProgressBar(Point position, Bounds background, Bounds foreground, float progress, Direction direction) {
+	public static void drawTexturedProgressBar(Point position, Rect background, Rect foreground, float progress, Direction direction) {
 		drawTexturedModalRect(position, background);
 
-		Bounds bounds = background.withPosition(position);
-		Bounds partialBounds = new Bounds(bounds);
-		Bounds partialForeground = new Bounds(foreground);
+		Rect bounds = background.move(position);
+		Rect partialRect = new Rect(bounds);
+		Rect partialForeground = new Rect(foreground);
 
-		if(!Options.VERTICAL.isValid(direction)) {
-			int partial = MathHelper.ceil(progress * partialBounds.getWidth());
+		if(!DirectionOptions.VERTICAL.isValid(direction)) {
+			int partial = MathHelper.ceil(progress * partialRect.getWidth());
 
-			partialBounds = partialBounds.withWidth(partial);
+			partialRect = partialRect.withWidth(partial);
 			partialForeground = partialForeground.withWidth(partial);
 		} else {
-			int partial = MathHelper.ceil(progress * partialBounds.getHeight());
+			int partial = MathHelper.ceil(progress * partialRect.getHeight());
 
-			partialBounds = partialBounds.withHeight(partial);
+			partialRect = partialRect.withHeight(partial);
 			partialForeground = partialForeground.withHeight(partial);
 		}
 
 		Direction anchor = direction.mirror();
-		partialBounds = partialBounds.anchor(bounds, anchor);
+		partialRect = partialRect.anchor(bounds, anchor);
 		partialForeground = partialForeground.anchor(foreground, anchor);
 
-		drawTexturedModalRect(partialBounds.getPosition(), partialForeground);
+		drawTexturedModalRect(partialRect.getPosition(), partialForeground);
 	}
 
 	/** @return The size of {@code string} as rendered by Minecraft's font renderer */
@@ -268,8 +271,8 @@ public final class GlUtil {
 	/** @param origin The anchor point
 	 * @param alignment The alignment around {@code origin}
 	 * @see net.minecraft.client.gui.FontRenderer#drawStringWithShadow(String, float, float, int) */
-	public static Bounds drawString(String string, Point origin, Direction alignment, int color) {
-		Bounds bounds = new Bounds(getStringSize(string)).align(origin, alignment);
+	public static Rect drawString(String string, Point origin, Direction alignment, int color) {
+		Rect bounds = new Rect(getStringSize(string)).align(origin, alignment);
 		MC.fontRenderer.drawStringWithShadow(string, bounds.getX(), bounds.getY(), color);
 
 		GlMode.clean();

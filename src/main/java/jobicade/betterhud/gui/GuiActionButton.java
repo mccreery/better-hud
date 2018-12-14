@@ -9,8 +9,8 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import jobicade.betterhud.BetterHud;
-import jobicade.betterhud.util.Bounds;
-import jobicade.betterhud.util.Point;
+import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.util.geom.Point;
 import jobicade.betterhud.util.mode.GlMode;
 
 public class GuiActionButton extends GuiButton {
@@ -55,7 +55,7 @@ public class GuiActionButton extends GuiButton {
 		return this;
 	}
 
-	public GuiActionButton setBounds(Bounds bounds) {
+	public GuiActionButton setRect(Rect bounds) {
 		this.x = bounds.getX();
 		this.y = bounds.getY();
 		this.width = bounds.getWidth();
@@ -64,15 +64,15 @@ public class GuiActionButton extends GuiButton {
 		return this;
 	}
 
-	public Bounds getBounds() {
-		return new Bounds(x, y, width, height);
+	public Rect getRect() {
+		return new Rect(x, y, width, height);
 	}
 
 	public final void actionPerformed() {
 		if(callback != null) callback.actionPerformed(this);
 	}
 
-	protected void drawButton(Bounds bounds, Point mousePosition, float partialTicks) {
+	protected void drawButton(Rect bounds, Point mousePosition, float partialTicks) {
 		super.drawButton(BetterHud.MC, mousePosition.getX(), mousePosition.getY(), partialTicks);
 	}
 
@@ -97,7 +97,7 @@ public class GuiActionButton extends GuiButton {
 		if(!visible) return;
 
 		GlMode.set(GlMode.DEFAULT);
-		Bounds bounds = getBounds();
+		Rect bounds = getRect();
 		hovered = bounds.contains(mouseX, mouseY);
 
 		drawButton(bounds, new Point(mouseX, mouseY), partialTicks);

@@ -9,15 +9,15 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.HudElement.SortType;
-import jobicade.betterhud.util.Bounds;
-import jobicade.betterhud.util.Direction;
+import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.util.geom.Direction;
 
 class ButtonRow {
 	private final HudElement element;
 	private final GuiActionButton toggle;
 	private final GuiActionButton options;
 
-	private Bounds bounds;
+	private Rect bounds;
 
 	public ButtonRow(GuiHudMenu callback, HudElement element) {
 		this.element = element;
@@ -30,18 +30,18 @@ class ButtonRow {
 				MC.currentScreen.initGui();
 			}
 		});
-		options = new GuiTexturedButton(new Bounds(40, 0, 20, 20)).setCallback(b ->
+		options = new GuiTexturedButton(new Rect(40, 0, 20, 20)).setCallback(b ->
 			MC.displayGuiScreen(new GuiElementSettings(element, callback)));
 	}
 
-	public ButtonRow setBounds(Bounds bounds) {
+	public ButtonRow setRect(Rect bounds) {
 		this.bounds = bounds;
-		toggle.setBounds(bounds.withWidth(bounds.getWidth() - 20).anchor(bounds, Direction.NORTH_WEST));
-		options.setBounds(bounds.withWidth(20).anchor(bounds, Direction.NORTH_EAST));
+		toggle.setRect(bounds.withWidth(bounds.getWidth() - 20).anchor(bounds, Direction.NORTH_WEST));
+		options.setRect(bounds.withWidth(20).anchor(bounds, Direction.NORTH_EAST));
 		return this;
 	}
 
-	public Bounds getBounds() {
+	public Rect getRect() {
 		return bounds;
 	}
 

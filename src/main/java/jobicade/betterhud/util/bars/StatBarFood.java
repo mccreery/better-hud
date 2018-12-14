@@ -6,8 +6,8 @@ import java.util.Random;
 
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
-import jobicade.betterhud.util.Bounds;
-import jobicade.betterhud.util.Direction;
+import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.MathUtil;
 
 public class StatBarFood extends StatBarBasic<EntityPlayer> {
@@ -19,14 +19,14 @@ public class StatBarFood extends StatBarBasic<EntityPlayer> {
 	}
 
 	@Override
-	protected Bounds getIcon(IconType icon, int pointsIndex) {
+	protected Rect getIcon(IconType icon, int pointsIndex) {
 		boolean hasHunger = host.isPotionActive(MobEffects.HUNGER);
 		int xOffset = hasHunger ? 88 : 52;
 
 		switch(icon) {
-			case BACKGROUND: return new Bounds(hasHunger ? 133 : 16, 27, 9, 9);
-			case HALF:       return new Bounds(xOffset + 9, 27, 9, 9);
-			case FULL:       return new Bounds(xOffset, 27, 9, 9);
+			case BACKGROUND: return new Rect(hasHunger ? 133 : 16, 27, 9, 9);
+			case HALF:       return new Rect(xOffset + 9, 27, 9, 9);
+			case FULL:       return new Rect(xOffset, 27, 9, 9);
 			default:         return null;
 		}
 	}
@@ -46,7 +46,7 @@ public class StatBarFood extends StatBarBasic<EntityPlayer> {
 	}
 
 	@Override
-	public void renderUnsafe(Bounds bounds, Direction contentAlignment) {
+	public void renderUnsafe(Rect bounds, Direction contentAlignment) {
 		random.setSeed(MC.ingameGUI.getUpdateCounter());
 		MathUtil.setRandom(random);
 

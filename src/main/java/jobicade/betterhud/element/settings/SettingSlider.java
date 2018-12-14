@@ -9,8 +9,8 @@ import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.config.Property.Type;
 import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.gui.GuiSlider;
-import jobicade.betterhud.util.Bounds;
-import jobicade.betterhud.util.Direction;
+import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.FormatUtil;
 import jobicade.betterhud.util.ISlider;
 
@@ -81,7 +81,7 @@ public class SettingSlider extends SettingAlignable<Double> implements ISlider {
 	}
 
 	@Override
-	public void getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Bounds bounds) {
+	public void getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Rect bounds) {
 		slider = new GuiSlider(0, bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), this);
 
 		parts.add(slider);

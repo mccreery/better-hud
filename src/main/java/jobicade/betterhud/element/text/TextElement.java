@@ -3,14 +3,15 @@ package jobicade.betterhud.element.text;
 import java.util.List;
 
 import net.minecraftforge.fml.common.eventhandler.Event;
+import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
+import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingColor;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.util.Bounds;
+import jobicade.betterhud.util.geom.Rect;
 import jobicade.betterhud.util.Colors;
-import jobicade.betterhud.util.Direction;
-import jobicade.betterhud.util.Direction.Options;
+import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.StringGroup;
 
@@ -20,7 +21,7 @@ public abstract class TextElement extends HudElement {
 	protected boolean border = false;
 
 	public TextElement(String name) {
-		this(name, new SettingPosition(Options.CORNERS, Options.CORNERS));
+		this(name, new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.CORNERS));
 	}
 
 	public TextElement(String name, SettingPosition position) {
@@ -45,47 +46,47 @@ public abstract class TextElement extends HudElement {
 		color.set(Colors.WHITE);
 	}
 
-	protected Bounds getPadding() {
-		return border ? Bounds.PADDING : Bounds.EMPTY;
+	protected Rect getPadding() {
+		return border ? Rect.createPadding(BetterHud.SPACER) : Rect.empty();
 	}
 
-	protected Bounds getMargin() {
-		return Bounds.EMPTY;
+	protected Rect getMargin() {
+		return Rect.empty();
 	}
 
-	protected Bounds moveBounds(Bounds bounds) {
+	protected Rect moveRect(Rect bounds) {
 		return position.applyTo(bounds);
 	}
 
 	@Override
-	public Bounds render(Event event) {
+	public Rect render(Event event) {
 		List<String> text = getText();
 		return text == null || text.isEmpty() ? null : render(event, text);
 	}
 
-	protected Bounds render(Event event, List<String> text) {
+	protected Rect render(Event event, List<String> text) {
 		StringGroup group = new StringGroup(text);
 		group.setColor(color.get());
 
 		Direction contentAlignment = position.getContentAlignment();
 		if(contentAlignment != null) group.setAlignment(contentAlignment);
 
-		Bounds padding = getPadding();
-		Bounds margin = getMargin();
+		Rect padding = getPadding();
+		Rect margin = getMargin();
 
-		Bounds bounds = moveBounds(new Bounds(group.getSize().add(padding.getSize()).add(margin.getSize())));
+		Rect bounds = moveRect(new Rect(group.getSize().add(padding.getSize()).add(margin.getSize())));
 
 		drawBorder(bounds, padding, margin);
-		group.draw(bounds.grow(margin.grow(padding).scale(-1)));
+		group.draw(bounds.grow(margin.grow(padding).invert()));
 		drawExtras(bounds);
 
 		return bounds;
 	}
 
-	protected void drawBorder(Bounds bounds, Bounds padding, Bounds margin) {
-		if(border) GlUtil.drawRect(bounds.grow(margin.scale(-1)), Colors.TRANSLUCENT);
+	protected void drawBorder(Rect bounds, Rect padding, Rect margin) {
+		if(border) GlUtil.drawRect(bounds.grow(margin.invert()), Colors.TRANSLUCENT);
 	}
 
 	protected abstract List<String> getText();
-	protected void drawExtras(Bounds bounds) {}
+	protected void drawExtras(Rect bounds) {}
 }

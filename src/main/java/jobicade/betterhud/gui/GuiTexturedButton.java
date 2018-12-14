@@ -2,39 +2,39 @@ package jobicade.betterhud.gui;
 
 import static jobicade.betterhud.BetterHud.SETTINGS;
 
-import jobicade.betterhud.util.Bounds;
+import jobicade.betterhud.util.geom.Rect;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.util.Point;
+import jobicade.betterhud.util.geom.Point;
 import jobicade.betterhud.util.mode.GlMode;
 import jobicade.betterhud.util.mode.TextureMode;
 
 public class GuiTexturedButton extends GuiActionButton {
-	private final Bounds disabled, inactive, active;
+	private final Rect disabled, inactive, active;
 
-	public GuiTexturedButton(Bounds disabled) {
+	public GuiTexturedButton(Rect disabled) {
 		this(disabled, disabled.getHeight());
 	}
 
-	public GuiTexturedButton(Bounds disabled, int pitch) {
+	public GuiTexturedButton(Rect disabled, int pitch) {
 		this(disabled,
 			disabled.withY(disabled.getY() + pitch),
 			disabled.withY(disabled.getY() + pitch * 2));
 	}
 
-	public GuiTexturedButton(Bounds disabled, Bounds inactive, Bounds active) {
+	public GuiTexturedButton(Rect disabled, Rect inactive, Rect active) {
 		super("");
 
 		this.disabled = disabled;
-		this.inactive = inactive.withSize(disabled.getSize());
-		this.active   = active.withSize(disabled.getSize());
+		this.inactive = inactive.resize(disabled.getSize());
+		this.active   = active.resize(disabled.getSize());
 	}
 
 	@Override
-	public GuiActionButton setBounds(Bounds bounds) {
-		return super.setBounds(bounds.withSize(disabled.getSize()));
+	public GuiActionButton setRect(Rect bounds) {
+		return super.setRect(bounds.resize(disabled.getSize()));
 	}
 
-	protected Bounds getTexture() {
+	protected Rect getTexture() {
 		switch(getHoverState(this.hovered)) {
 			case 0:  return disabled;
 			case 2:  return active;
@@ -44,7 +44,7 @@ public class GuiTexturedButton extends GuiActionButton {
 	}
 
 	@Override
-	protected void drawButton(Bounds bounds, Point mousePosition, float partialTicks) {
+	protected void drawButton(Rect bounds, Point mousePosition, float partialTicks) {
 		GlMode.push(new TextureMode(SETTINGS));
 		GlUtil.drawTexturedModalRect(bounds, getTexture());
 		GlMode.pop();

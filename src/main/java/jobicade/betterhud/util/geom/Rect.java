@@ -635,4 +635,69 @@ public final class Rect implements Serializable {
     public Rect anchor(Rect container, Direction direction) {
         return anchor(container, direction, false);
     }
+
+    /**
+     * Returns a rectangle with all the coordinates negated.
+     * @return A rectangle with all the coordinates negated.
+     */
+    public Rect invert() { return new Rect(-x, -y, -width, -height); }
+
+    /**
+     * Scales the rectangle by a factor.
+     *
+     * @param factor The scaling factor.
+     * @return A rectangle scaled by the given factor.
+     */
+    public Rect scale(int factor) {
+        return new Rect(x * factor, y * factor, width * factor, height * factor);
+    }
+
+    /**
+     * Scales the rectangle by a factor in X and Y.
+     * @param xf The factor in the X axis.
+     * @param yf The factor in the Y axis.
+     * @return A rectangle scaled by the given factors.
+     */
+    public Rect scale(float xf, float yf) {
+        return new Rect(Math.round(x * xf), Math.round(y * yf), Math.round(width * xf), Math.round(height * yf));
+    }
+
+    /**
+     * Scales the rectangle by a factor in X and Y.
+     *
+     * @param factor The scaling factor.
+     * @return A rectangle scaled by the given factor.
+     */
+    public Rect scale(Point factor) {
+        return new Rect(x * factor.x, y * factor.y, width * factor.x, height * factor.y);
+    }
+
+    /**
+     * Scales the rectangle by a factor in X and Y around a point.
+     *
+     * @param xf The factor in the X axis.
+     * @param yf The factor in the Y axis.
+     * @param x The point to scale around X coordinate.
+     * @param y The point to scale around Y coordinate.
+     * @return A rectangle scaled by the given factors around the given point.
+     * @see #scale(float, float)
+     */
+    public Rect scale(float xf, float yf, int x, int y) {
+        return new Rect(
+            Math.round((this.x - x) * xf + x),
+            Math.round((this.y - y) * yf + y),
+            Math.round(this.width * xf),
+            Math.round(this.height * yf));
+    }
+
+    /**
+     * @param xf The factor in the X axis.
+     * @param yf The factor in the Y axis.
+     * @param point The point.
+     * @return A rectangle scaled by the given factors around the given point.
+     * @see #scale(float, float, int, int)
+     */
+    public Rect scale(float xf, float yf, Point point) {
+        return scale(xf, yf, point.x, point.y);
+    }
 }

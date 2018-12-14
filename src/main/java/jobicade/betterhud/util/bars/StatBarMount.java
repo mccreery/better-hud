@@ -2,8 +2,8 @@ package jobicade.betterhud.util.bars;
 
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
-import jobicade.betterhud.util.Bounds;
-import jobicade.betterhud.util.Direction;
+import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.MathUtil;
 
 public class StatBarMount extends StatBarBasic<Entity> {
@@ -13,11 +13,11 @@ public class StatBarMount extends StatBarBasic<Entity> {
 	}
 
 	@Override
-	protected Bounds getIcon(IconType icon, int pointsIndex) {
+	protected Rect getIcon(IconType icon, int pointsIndex) {
 		switch(icon) {
-			case BACKGROUND: return new Bounds(52, 9, 9, 9);
-			case HALF:       return new Bounds(97, 9, 9, 9);
-			case FULL:       return new Bounds(88, 9, 9, 9);
+			case BACKGROUND: return new Rect(52, 9, 9, 9);
+			case HALF:       return new Rect(97, 9, 9, 9);
+			case FULL:       return new Rect(88, 9, 9, 9);
 			default:         return null;
 		}
 	}

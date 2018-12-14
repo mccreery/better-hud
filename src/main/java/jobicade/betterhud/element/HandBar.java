@@ -6,14 +6,14 @@ import java.util.List;
 
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.Event;
+import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.util.Bounds;
+import jobicade.betterhud.util.geom.Rect;
 import jobicade.betterhud.util.Colors;
-import jobicade.betterhud.util.Direction;
-import jobicade.betterhud.util.Direction.Options;
+import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
 
 public class HandBar extends EquipmentDisplay {
@@ -31,7 +31,7 @@ public class HandBar extends EquipmentDisplay {
 	}
 
 	public HandBar() {
-		super("handBar", new SettingPosition(Options.BAR, Options.NORTH_SOUTH));
+		super("handBar", new SettingPosition(DirectionOptions.BAR, DirectionOptions.NORTH_SOUTH));
 	}
 
 	@Override
@@ -71,14 +71,14 @@ public class HandBar extends EquipmentDisplay {
 
 		if(isTool && showBars.get()) {
 			MC.mcProfiler.startSection("bars");
-			GlUtil.drawDamageBar(new Bounds(x, y + 16, 180, 2), stack, false);
+			GlUtil.drawDamageBar(new Rect(x, y + 16, 180, 2), stack, false);
 			MC.mcProfiler.endSection();
 		}
 	}
 
 	@Override
-	public Bounds render(Event event) {
-		Bounds bounds = position.applyTo(new Bounds(180, offHand.get() ? 41 : 18));
+	public Rect render(Event event) {
+		Rect bounds = position.applyTo(new Rect(180, offHand.get() ? 41 : 18));
 		renderBar(MC.player.getHeldItemMainhand(), bounds.getX(), bounds.getBottom() - 18);
 
 		if(offHand.get()) {

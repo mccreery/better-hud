@@ -8,12 +8,12 @@ import java.util.List;
 
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.fml.common.eventhandler.Event;
+import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.util.Bounds;
-import jobicade.betterhud.util.Direction;
-import jobicade.betterhud.util.Direction.Options;
+import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.bars.StatBar;
 
 public abstract class Bar extends OverrideElement {
@@ -22,7 +22,7 @@ public abstract class Bar extends OverrideElement {
 	private StatBar<? super EntityPlayerSP> bar;
 
 	public Bar(String name, StatBar<? super EntityPlayerSP> bar) {
-		super(name, new SettingPosition(Options.BAR, Options.CORNERS));
+		super(name, new SettingPosition(DirectionOptions.BAR, DirectionOptions.CORNERS));
 		this.bar = bar;
 	}
 
@@ -59,11 +59,11 @@ public abstract class Bar extends OverrideElement {
 	}
 
 	@Override
-	protected Bounds render(Event event) {
+	protected Rect render(Event event) {
 		MC.getTextureManager().bindTexture(ICONS);
 		Direction contentAlignment = getContentAlignment();
 
-		Bounds bounds = new Bounds(bar.getSize());
+		Rect bounds = new Rect(bar.getSize());
 
 		if(position.isDirection(Direction.SOUTH)) {
 			bounds = MANAGER.positionBar(bounds, contentAlignment.withRow(1), 1);

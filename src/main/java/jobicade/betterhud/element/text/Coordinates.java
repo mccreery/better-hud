@@ -9,15 +9,15 @@ import java.util.List;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.common.eventhandler.Event;
+import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.settings.SettingSlider;
-import jobicade.betterhud.util.Bounds;
-import jobicade.betterhud.util.Direction;
+import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.StringGroup;
-import jobicade.betterhud.util.Direction.Options;
 
 public class Coordinates extends TextElement {
 	private SettingBoolean spaced;
@@ -34,7 +34,7 @@ public class Coordinates extends TextElement {
 	}
 
 	public Coordinates() {
-		super("coordinates", new SettingPosition(Options.TOP_BOTTOM, Options.NONE));
+		super("coordinates", new SettingPosition(DirectionOptions.TOP_BOTTOM, DirectionOptions.NONE));
 	}
 
 	@Override
@@ -46,13 +46,13 @@ public class Coordinates extends TextElement {
 	}
 
 	@Override
-	public Bounds render(Event event, List<String> text) {
+	public Rect render(Event event, List<String> text) {
 		if(!spaced.get() || !position.isDirection(Direction.NORTH) && !position.isDirection(Direction.SOUTH)) {
 			return super.render(event, text);
 		}
 
 		StringGroup group = new StringGroup(text).setAlignment(position.getDirection()).setSpacing(50).setRow();
-		Bounds bounds = MANAGER.position(position.getDirection(), new Bounds(group.getSize()));
+		Rect bounds = MANAGER.position(position.getDirection(), new Rect(group.getSize()));
 
 		return group.draw(bounds);
 	}

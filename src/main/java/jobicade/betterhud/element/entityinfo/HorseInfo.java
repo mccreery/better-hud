@@ -11,9 +11,9 @@ import net.minecraft.entity.passive.EntityHorse;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
-import jobicade.betterhud.util.Bounds;
+import jobicade.betterhud.util.geom.Rect;
 import jobicade.betterhud.util.Colors;
-import jobicade.betterhud.util.Direction;
+import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.FormatUtil;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.StringGroup;
@@ -54,7 +54,7 @@ public class HorseInfo extends EntityInfo {
 
 		StringGroup group = new StringGroup(infoParts);
 
-		Bounds bounds = new Bounds(group.getSize().add(Bounds.PADDING.getSize()));
+		Rect bounds = new Rect(group.getSize().add(Rect.createPadding(SPACER).getSize()));
 		bounds = BetterHud.MANAGER.position(Direction.SOUTH, bounds);
 
 		GlUtil.drawRect(bounds, Colors.TRANSLUCENT);

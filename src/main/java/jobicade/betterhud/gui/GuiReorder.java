@@ -12,19 +12,19 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.MathHelper;
 import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.util.Bounds;
-import jobicade.betterhud.util.Direction;
+import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.IGetSet;
-import jobicade.betterhud.util.Point;
+import jobicade.betterhud.util.geom.Point;
 
 public class GuiReorder extends GuiElements {
 	private final GuiScreen parent;
 
-	private Bounds toolbox;
-	private GuiActionButton moveUp = new GuiTexturedButton(new Bounds(20, 60, 20, 20));
-	private GuiActionButton moveDown = new GuiTexturedButton(new Bounds(40, 60, 20, 20));
-	private GuiActionButton moveTop = new GuiTexturedButton(new Bounds(60, 60, 20, 20));
-	private GuiActionButton moveBottom = new GuiTexturedButton(new Bounds(80, 60, 20, 20));
+	private Rect toolbox;
+	private GuiActionButton moveUp = new GuiTexturedButton(new Rect(20, 60, 20, 20));
+	private GuiActionButton moveDown = new GuiTexturedButton(new Rect(40, 60, 20, 20));
+	private GuiActionButton moveTop = new GuiTexturedButton(new Rect(60, 60, 20, 20));
+	private GuiActionButton moveBottom = new GuiTexturedButton(new Rect(80, 60, 20, 20));
 
 	private HudElement hovered;
 	private HudElement selected;
@@ -72,23 +72,23 @@ public class GuiReorder extends GuiElements {
 
 	private void select(HudElement element) {
 		selected = element;
-		Bounds button = new Bounds(20, 20);
+		Rect button = new Rect(20, 20);
 
 		if(element != null) {
-			toolbox = button.withHeight(button.getHeight() * 4 + 6).position(element.getLastBounds().grow(SPACER, 0, SPACER, 0),
-					Direction.NORTH_EAST, Point.ZERO, Direction.NORTH_WEST);
+			toolbox = button.withHeight(button.getHeight() * 4 + 6).position(element.getLastRect().grow(SPACER, 0, SPACER, 0),
+					Direction.NORTH_EAST, Point.zero(), Direction.NORTH_WEST);
 
-			toolbox = toolbox.withPosition(
+			toolbox = toolbox.move(
 					MathHelper.clamp(toolbox.getX(), 0, MANAGER.getScreen().getWidth() - toolbox.getWidth()),
 					MathHelper.clamp(toolbox.getY(), 0, MANAGER.getScreen().getHeight() - toolbox.getHeight()));
 		} else {
-			toolbox = new Bounds(MANAGER.getScreen().getSize(), Point.ZERO);
+			toolbox = new Rect(MANAGER.getScreen().getSize(), Point.zero());
 		}
 
-		moveTop.setBounds(button = button.anchor(toolbox, Direction.NORTH_WEST));
-		moveUp.setBounds(button = button.withY(button.getBottom() + 2));
-		moveDown.setBounds(button = button.withY(button.getBottom() + 2));
-		moveBottom.setBounds(button.withY(button.getBottom() + 2));
+		moveTop.setRect(button = button.anchor(toolbox, Direction.NORTH_WEST));
+		moveUp.setRect(button = button.withY(button.getBottom() + 2));
+		moveDown.setRect(button = button.withY(button.getBottom() + 2));
+		moveBottom.setRect(button.withY(button.getBottom() + 2));
 	}
 
 	@Override
@@ -128,8 +128,8 @@ public class GuiReorder extends GuiElements {
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		hovered = getHoveredElement(mouseX, mouseY, Predicates.alwaysFalse());
 
-		for(Map.Entry<HudElement, Bounds> entry : HudElement.getActiveBounds().entrySet()) {
-			drawBounds(entry.getValue(), entry.getKey() == hovered || entry.getKey() == selected);
+		for(Map.Entry<HudElement, Rect> entry : HudElement.getActiveRect().entrySet()) {
+			drawRect(entry.getValue(), entry.getKey() == hovered || entry.getKey() == selected);
 		}
 		super.drawScreen(mouseX, mouseY, partialTicks);
 	}

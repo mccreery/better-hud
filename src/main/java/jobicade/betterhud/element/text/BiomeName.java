@@ -6,9 +6,9 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.util.math.BlockPos;
+import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.util.Direction;
-import jobicade.betterhud.util.Direction.Options;
+import jobicade.betterhud.util.geom.Direction;
 
 public class BiomeName extends TextElement {
 	@Override
@@ -19,7 +19,7 @@ public class BiomeName extends TextElement {
 	}
 
 	public BiomeName() {
-		super("biome", new SettingPosition(Options.TOP_BOTTOM, Options.NONE));
+		super("biome", new SettingPosition(DirectionOptions.TOP_BOTTOM, DirectionOptions.NONE));
 	}
 
 	@Override

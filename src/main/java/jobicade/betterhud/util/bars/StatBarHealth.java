@@ -9,8 +9,8 @@ import java.util.Random;
 
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.MobEffects;
-import jobicade.betterhud.util.Bounds;
-import jobicade.betterhud.util.Direction;
+import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.MathUtil;
 
 public class StatBarHealth extends StatBar<EntityLivingBase> {
@@ -78,8 +78,8 @@ public class StatBarHealth extends StatBar<EntityLivingBase> {
 	}
 
 	@Override
-	protected List<Bounds> getIcons(int pointsIndex) {
-		List<Bounds> icons = new ArrayList<>(3);
+	protected List<Rect> getIcons(int pointsIndex) {
+		List<Rect> icons = new ArrayList<>(3);
 
 		int fullX;
 		if(pointsIndex >= maxHealth) {
@@ -95,25 +95,25 @@ public class StatBarHealth extends StatBar<EntityLivingBase> {
 		int y = host.getEntityWorld().getWorldInfo().isHardcoreModeEnabled() ? 45 : 0;
 
 		if(flash % 6 >= 3) {
-			icons.add(new Bounds(25, y, 9, 9));
+			icons.add(new Rect(25, y, 9, 9));
 
 			if(pointsIndex + 1 >= currentHealth && pointsIndex < displayHealth) {
-				icons.add(new Bounds(pointsIndex + 1 < displayHealth ? fullX + 18 : fullX + 27, y, 9, 9));
+				icons.add(new Rect(pointsIndex + 1 < displayHealth ? fullX + 18 : fullX + 27, y, 9, 9));
 			}
 		} else {
-			icons.add(new Bounds(16, y, 9, 9));
+			icons.add(new Rect(16, y, 9, 9));
 		}
 
 		if(pointsIndex < currentHealth) {
-			icons.add(new Bounds(pointsIndex + 1 < currentHealth ? fullX : fullX + 9, y, 9, 9));
+			icons.add(new Rect(pointsIndex + 1 < currentHealth ? fullX : fullX + 9, y, 9, 9));
 		} else if(pointsIndex >= maxHealth) {
-			icons.add(new Bounds(pointsIndex + 1 < getMaximum() ? fullX : fullX + 9, y, 9, 9));
+			icons.add(new Rect(pointsIndex + 1 < getMaximum() ? fullX : fullX + 9, y, 9, 9));
 		}
 		return icons;
 	}
 
 	@Override
-	public void renderUnsafe(Bounds bounds, Direction contentAlignment) {
+	public void renderUnsafe(Rect bounds, Direction contentAlignment) {
 		int newUpdateCounter = MC.ingameGUI.getUpdateCounter();
 		int updateDelta = newUpdateCounter - currentUpdateCounter;
 

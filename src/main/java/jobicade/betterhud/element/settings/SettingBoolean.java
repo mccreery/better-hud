@@ -9,8 +9,8 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraftforge.common.config.Property.Type;
 import jobicade.betterhud.gui.GuiActionButton;
 import jobicade.betterhud.gui.GuiElementSettings;
-import jobicade.betterhud.util.Bounds;
-import jobicade.betterhud.util.Direction;
+import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.IGetSet.IBoolean;
 
 public class SettingBoolean extends SettingAlignable<Boolean> implements IBoolean {
@@ -43,8 +43,8 @@ public class SettingBoolean extends SettingAlignable<Boolean> implements IBoolea
 	public void set(Boolean value) {this.value = value;}
 
 	@Override
-	public void getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Bounds bounds) {
-		toggler = new GuiActionButton("").setBounds(bounds).setCallback(b -> toggle());
+	public void getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Rect bounds) {
+		toggler = new GuiActionButton("").setRect(bounds).setCallback(b -> toggle());
 		parts.add(toggler);
 		callbacks.put(toggler, this);
 	}

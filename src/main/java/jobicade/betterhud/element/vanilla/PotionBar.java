@@ -23,18 +23,18 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
+import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.util.Bounds;
+import jobicade.betterhud.util.geom.Rect;
 import jobicade.betterhud.util.Colors;
-import jobicade.betterhud.util.Direction;
-import jobicade.betterhud.util.Direction.Options;
+import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.mode.ColorMode;
 import jobicade.betterhud.util.mode.GlMode;
 import jobicade.betterhud.util.mode.TextureMode;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.MathUtil;
-import jobicade.betterhud.util.Point;
+import jobicade.betterhud.util.geom.Point;
 
 public class PotionBar extends HudElement {
 	public static final ResourceLocation INVENTORY = new ResourceLocation("textures/gui/container/inventory.png");
@@ -47,7 +47,7 @@ public class PotionBar extends HudElement {
 	@Override
 	protected void addSettings(List<Setting<?>> settings) {
 		super.addSettings(settings);
-		settings.add(position = new SettingPosition("position", Options.X, Options.CORNERS));
+		settings.add(position = new SettingPosition("position", DirectionOptions.X, DirectionOptions.CORNERS));
 	}
 
 	@Override
@@ -75,7 +75,7 @@ public class PotionBar extends HudElement {
 	}
 
 	@Override
-	public Bounds render(Event event) {
+	public Rect render(Event event) {
 		List<PotionEffect> effects = new ArrayList<>(MC.player.getActivePotionEffects());
 
 		int pivot = MathUtil.partition(effects, effect -> effect.getPotion().isBeneficial());
@@ -86,12 +86,12 @@ public class PotionBar extends HudElement {
 		Collections.sort(harmful, order);
 		Collections.sort(helpful, order);
 
-		Bounds bounds = getBounds(harmful.size(), helpful.size());
+		Rect bounds = getRect(harmful.size(), helpful.size());
 
 		Direction alignment = position.getContentAlignment();
-		Point icon = new Bounds(24, 24).anchor(bounds, alignment).getPosition();
+		Point icon = new Rect(24, 24).anchor(bounds, alignment).getPosition();
 
-		int deltaX = alignment.getColumn() == 2 ? -25 : 25;
+		int deltaX = alignment.getCol() == 2 ? -25 : 25;
 		for(int i = 0; i < helpful.size(); i++) {
 			drawIcon(icon.add(i * deltaX, 0), helpful.get(i));
 		}
@@ -103,16 +103,16 @@ public class PotionBar extends HudElement {
 		return bounds;
 	}
 
-	private Bounds getBounds(int harmful, int helpful) {
+	private Rect getRect(int harmful, int helpful) {
 		// Swap to enforce harmful <= helpful
 		if(harmful > helpful) {
 			int temp = harmful;
 			harmful = helpful;
 			helpful = temp;
 		}
-		if(helpful <= 0) return Bounds.EMPTY;
+		if(helpful <= 0) return Rect.empty();
 
-		Bounds bounds = new Bounds(helpful * 25 - 1, harmful > 0 ? 50 : 24);
+		Rect bounds = new Rect(helpful * 25 - 1, harmful > 0 ? 50 : 24);
 
 		if(position.isDirection(Direction.CENTER)) {
 			return bounds.positioned(Direction.CENTER, new Point(SPACER, SPACER), Direction.NORTH_WEST);
@@ -129,12 +129,12 @@ public class PotionBar extends HudElement {
 		}
 
 		float opacity = 1;
-		Bounds background;
+		Rect background;
 
 		if(effect.getIsAmbient()) {
-			background = new Bounds(165, 166, 24, 24);
+			background = new Rect(165, 166, 24, 24);
 		} else {
-			background = new Bounds(141, 166, 24, 24);
+			background = new Rect(141, 166, 24, 24);
 
 			if(effect.getDuration() <= 200) {
 				int durationSeconds = effect.getDuration() / 20;
@@ -150,7 +150,7 @@ public class PotionBar extends HudElement {
 
 		if(potion.hasStatusIcon()) {
 			int index = potion.getStatusIconIndex();
-			Bounds icon = new Bounds((index % 8) * 18, 198 + (index / 8) * 18, 18, 18);
+			Rect icon = new Rect((index % 8) * 18, 198 + (index / 8) * 18, 18, 18);
 
 			GlUtil.drawTexturedModalRect(position.add(3, 3), icon);
 		}

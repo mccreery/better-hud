@@ -15,14 +15,14 @@ import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.HudElement;
+import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.util.Bounds;
+import jobicade.betterhud.util.geom.Rect;
 import jobicade.betterhud.util.Colors;
-import jobicade.betterhud.util.Direction;
-import jobicade.betterhud.util.Direction.Options;
+import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.util.Point;
+import jobicade.betterhud.util.geom.Point;
 import jobicade.betterhud.util.StringGroup;
 
 public class Sidebar extends HudElement {
@@ -35,7 +35,7 @@ public class Sidebar extends HudElement {
 	@Override
 	protected void addSettings(List<Setting<?>> settings) {
 		super.addSettings(settings);
-		settings.add(position = new SettingPosition("position", Options.LEFT_RIGHT, Options.WEST_EAST));
+		settings.add(position = new SettingPosition("position", DirectionOptions.LEFT_RIGHT, DirectionOptions.WEST_EAST));
 	}
 
 	@Override
@@ -44,7 +44,7 @@ public class Sidebar extends HudElement {
 	}
 
 	@Override
-	protected Bounds render(Event event) {
+	protected Rect render(Event event) {
 		ScoreObjective objective = getObjective();
 		Scoreboard scoreboard = objective.getScoreboard();
 
@@ -72,35 +72,35 @@ public class Sidebar extends HudElement {
 			values.add(String.valueOf(score.getScorePoints()));
 		}
 
-		StringGroup namesGroup = new StringGroup(names).setAlignment(position.getContentAlignment().mirrorColumn());
+		StringGroup namesGroup = new StringGroup(names).setAlignment(position.getContentAlignment().mirrorCol());
 		StringGroup valuesGroup = new StringGroup(values).setColor(0xffff5555).setAlignment(position.getContentAlignment());
 		Point valuesSize = valuesGroup.getSize();
 
 		Point size = namesGroup.getSize().add(MC.fontRenderer.getCharWidth(' ') * 2 + valuesSize.getX(), 0);
 		size = size.withX(Math.max(size.getX(), MC.fontRenderer.getStringWidth(title)));
 
-		Bounds padding = Bounds.createPadding(0, MC.fontRenderer.FONT_HEIGHT + 1, 0, 0);
-		Bounds margin = Bounds.createPadding(1);
-		Bounds bounds = new Bounds(size).grow(padding).grow(margin);
+		Rect padding = Rect.createPadding(0, MC.fontRenderer.FONT_HEIGHT + 1, 0, 0);
+		Rect margin = Rect.createPadding(1);
+		Rect bounds = new Rect(size).grow(padding).grow(margin);
 
 		if(!position.isCustom() && position.getDirection().getRow() == 1) {
 			bounds = bounds.anchor(MANAGER.getScreen(), position.getDirection());
 		} else {
 			bounds = position.applyTo(bounds);
 		}
-		Bounds paddingBounds = bounds.grow(margin.scale(-1));
-		Bounds contentBounds = paddingBounds.grow(padding.scale(-1));
+		Rect paddingRect = bounds.grow(margin.invert());
+		Rect contentRect = paddingRect.grow(padding.invert());
 
 		// Translucent background
-		Bounds background = new Bounds(bounds).withBottom(contentBounds.getTop() - 1);
+		Rect background = new Rect(bounds).withBottom(contentRect.getTop() - 1);
 		GlUtil.drawRect(background, 0x60000000);
 
 		background = background.withTop(background.getBottom()).withBottom(bounds.getBottom());
 		GlUtil.drawRect(background, 0x50000000);
 
-		GlUtil.drawString(title, paddingBounds.getAnchor(Direction.NORTH), Direction.NORTH, Colors.WHITE);
-		namesGroup.draw(contentBounds);
-		valuesGroup.draw(contentBounds);
+		GlUtil.drawString(title, paddingRect.getAnchor(Direction.NORTH), Direction.NORTH, Colors.WHITE);
+		namesGroup.draw(contentRect);
+		valuesGroup.draw(contentRect);
 
 		return bounds;
 	}

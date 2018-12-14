@@ -6,20 +6,20 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
+import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.util.Direction;
-import jobicade.betterhud.util.Direction.Options;
+import jobicade.betterhud.util.geom.Direction;
 
 public abstract class Clock extends TextElement {
 	private SettingBoolean twentyFour, showSeconds, fullYear;
 	private SettingChoose dateType;
 
 	public Clock(String name) {
-		super(name, new SettingPosition(Options.CORNERS, Options.WEST_EAST));
+		super(name, new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.WEST_EAST));
 		border = true;
 	}
 

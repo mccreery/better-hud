@@ -7,7 +7,7 @@ import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingPercentage;
 import jobicade.betterhud.element.settings.SettingSlider;
-import jobicade.betterhud.util.Bounds;
+import jobicade.betterhud.util.geom.Rect;
 
 public class GlobalSettings extends HudElement {
 	private SettingPercentage billboardScale;
@@ -49,5 +49,5 @@ public class GlobalSettings extends HudElement {
 	}
 
 	@Override public boolean shouldRender(Event event) {return false;}
-	@Override public Bounds render(Event event) {return null;}
+	@Override public Rect render(Event event) {return null;}
 }

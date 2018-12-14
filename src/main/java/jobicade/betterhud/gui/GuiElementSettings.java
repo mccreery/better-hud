@@ -26,9 +26,9 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.Setting;
-import jobicade.betterhud.util.Bounds;
+import jobicade.betterhud.util.geom.Rect;
 import jobicade.betterhud.util.Colors;
-import jobicade.betterhud.util.Point;
+import jobicade.betterhud.util.geom.Point;
 
 @SideOnly(Side.CLIENT)
 public class GuiElementSettings extends GuiScreen {
@@ -39,7 +39,7 @@ public class GuiElementSettings extends GuiScreen {
 	private ArrayList<GuiTextField> textboxList = new ArrayList<GuiTextField>();
 	public HashMap<Gui, Setting<?>> callbacks = new HashMap<Gui, Setting<?>>();
 
-	private Bounds viewport;
+	private Rect viewport;
 
 	private final GuiScreen prev;
 	private GuiButton done;
@@ -74,7 +74,7 @@ public class GuiElementSettings extends GuiScreen {
 			}
 		}
 
-		viewport = new Bounds(width / 2 - 200, height / 16 + 40 + SPACER, 400, 0).withBottom(height - 20);
+		viewport = new Rect(width / 2 - 200, height / 16 + 40 + SPACER, 400, 0).withBottom(height - 20);
 		scrollbar = new GuiScrollbar(viewport, contentHeight);
 
 		for(Setting<?> setting : callbacks.values()) {

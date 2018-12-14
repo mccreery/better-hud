@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.client.gui.Gui;
-import jobicade.betterhud.util.Bounds;
-import jobicade.betterhud.util.Direction;
-import jobicade.betterhud.util.Point;
+import jobicade.betterhud.util.geom.Direction;
+import jobicade.betterhud.util.geom.Point;
+import jobicade.betterhud.util.geom.Rect;
 
 public abstract class SettingAlignable<T> extends Setting<T> {
 	protected Direction alignment;
@@ -27,8 +27,8 @@ public abstract class SettingAlignable<T> extends Setting<T> {
 	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Point origin) {
 		origin = super.getGuiParts(parts, callbacks, origin);
 
-		Bounds bounds = new Bounds(getSize());
-		bounds = bounds.anchor(new Bounds(getAlignmentWidth(), bounds.getHeight()).align(origin, Direction.NORTH), alignment);
+		Rect bounds = new Rect(getSize());
+		bounds = bounds.anchor(new Rect(getAlignmentWidth(), bounds.getHeight()).align(origin, Direction.NORTH), alignment);
 
 		getGuiParts(parts, callbacks, bounds);
 		return shouldBreak() ? origin.withY(bounds.getBottom() + SPACER) : null;
@@ -47,5 +47,5 @@ public abstract class SettingAlignable<T> extends Setting<T> {
 	}
 
 	/** @see Setting#getGuiParts(List, Map, Point) */
-	public abstract void getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Bounds bounds);
+	public abstract void getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Rect bounds);
 }

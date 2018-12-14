@@ -5,6 +5,10 @@ import static jobicade.betterhud.BetterHud.MC;
 import java.util.Arrays;
 import java.util.Collection;
 
+import jobicade.betterhud.util.geom.Direction;
+import jobicade.betterhud.util.geom.Point;
+import jobicade.betterhud.util.geom.Rect;
+
 public class StringGroup {
 	private final Collection<String> source;
 
@@ -95,7 +99,7 @@ public class StringGroup {
 		}
 	}
 
-	public Bounds draw(Bounds container) {
+	public Rect draw(Rect container) {
 		return draw(container.getAnchor(alignment));
 	}
 
@@ -108,26 +112,26 @@ public class StringGroup {
 	 * @param gutter The minimum space between the end of a line and the start of the next
 	 * @see #getColumnSize(Collection, int, int)
 	 * @see #drawRow(Collection, Point, Direction, int, int, int) */
-	public Bounds draw(Point origin) {
-		Bounds lineBounds = new Bounds(getCellSize());
+	public Rect draw(Point origin) {
+		Rect lineRect = new Rect(getCellSize());
 
-		Bounds bounds;
+		Rect bounds;
 		if(vertical) {
-			bounds = lineBounds.withHeight((lineBounds.getHeight() + gutter) * source.size() - gutter);
+			bounds = lineRect.withHeight((lineRect.getHeight() + gutter) * source.size() - gutter);
 		} else {
-			bounds = lineBounds.withWidth((lineBounds.getWidth() + gutter) * source.size() - gutter);
+			bounds = lineRect.withWidth((lineRect.getWidth() + gutter) * source.size() - gutter);
 		}
 		bounds = bounds.align(origin, alignment);
 
-		lineBounds = lineBounds.withPosition(bounds.getPosition());
+		lineRect = lineRect.move(bounds.getPosition());
 
 		for(String line : source) {
-			GlUtil.drawString(line, lineBounds.getAnchor(alignment), alignment, color);
+			GlUtil.drawString(line, lineRect.getAnchor(alignment), alignment, color);
 
 			if(vertical) {
-				lineBounds = lineBounds.withY(lineBounds.getBottom() + gutter);
+				lineRect = lineRect.withY(lineRect.getBottom() + gutter);
 			} else {
-				lineBounds = lineBounds.withX(lineBounds.getRight() + gutter);
+				lineRect = lineRect.withX(lineRect.getRight() + gutter);
 			}
 		}
 		return bounds;

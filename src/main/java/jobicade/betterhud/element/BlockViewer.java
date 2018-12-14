@@ -33,17 +33,17 @@ import net.minecraftforge.fml.common.versioning.VersionRange;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import jobicade.betterhud.BetterHud;
+import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.text.TextElement;
 import jobicade.betterhud.network.InventoryNameQuery;
-import jobicade.betterhud.util.Bounds;
-import jobicade.betterhud.util.Direction;
-import jobicade.betterhud.util.Direction.Options;
+import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.util.Point;
+import jobicade.betterhud.util.geom.Point;
 
 public class BlockViewer extends TextElement {
 	private SettingBoolean showBlock, showIds, invNames;
@@ -52,7 +52,7 @@ public class BlockViewer extends TextElement {
 	private ItemStack stack;
 
 	public BlockViewer() {
-		super("blockViewer", new SettingPosition(Options.I, Options.WEST_EAST));
+		super("blockViewer", new SettingPosition(DirectionOptions.I, DirectionOptions.WEST_EAST));
 	}
 
 	@Override
@@ -113,10 +113,10 @@ public class BlockViewer extends TextElement {
 	}
 
 	@Override
-	protected Bounds getPadding() {
+	protected Rect getPadding() {
 		int vPad = 20 - MC.fontRenderer.FONT_HEIGHT;
 		int bottom = vPad / 2;
-		Bounds bounds = Bounds.createPadding(5, vPad - bottom, 5, bottom);
+		Rect bounds = Rect.createPadding(5, vPad - bottom, 5, bottom);
 
 		if(stack != null && showBlock.get()) {
 			if(position.getContentAlignment() == Direction.EAST) {
@@ -129,27 +129,27 @@ public class BlockViewer extends TextElement {
 	}
 
 	@Override
-	protected void drawBorder(Bounds bounds, Bounds padding, Bounds margin) {
+	protected void drawBorder(Rect bounds, Rect padding, Rect margin) {
 		GlUtil.drawTooltipBox(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight());
 	}
 
 	@Override
-	protected void drawExtras(Bounds bounds) {
+	protected void drawExtras(Rect bounds) {
 		if(stack != null && showBlock.get()) {
-			Bounds stackBounds = new Bounds(16, 16).anchor(bounds.grow(-5, -2, -5, -2), position.getContentAlignment());
+			Rect stackRect = new Rect(16, 16).anchor(bounds.grow(-5, -2, -5, -2), position.getContentAlignment());
 
 			RenderHelper.enableGUIStandardItemLighting();
-			MC.getRenderItem().renderItemAndEffectIntoGUI(stack, stackBounds.getX(), stackBounds.getY());
+			MC.getRenderItem().renderItemAndEffectIntoGUI(stack, stackRect.getX(), stackRect.getY());
 			RenderHelper.disableStandardItemLighting();
 		}
 	}
 
 	@Override
-	protected Bounds moveBounds(Bounds bounds) {
+	protected Rect moveRect(Rect bounds) {
 		if(position.isDirection(Direction.CENTER)) {
 			return bounds.positioned(Direction.CENTER, new Point(0, -SPACER), Direction.SOUTH);
 		} else {
-			return super.moveBounds(bounds);
+			return super.moveRect(bounds);
 		}
 	}
 
