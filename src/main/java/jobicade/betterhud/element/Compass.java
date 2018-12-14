@@ -156,7 +156,6 @@ public class Compass extends HudElement {
 
 	@Override
 	public Rect render(Event event) {
-		GlUtil.enableBlendTranslucent();
 		Rect bounds;
 
 		if(mode.getIndex() == 0) {

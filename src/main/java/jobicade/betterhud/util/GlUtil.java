@@ -8,7 +8,6 @@ import java.util.List;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.GlStateManager.Profile;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
@@ -27,11 +26,6 @@ public final class GlUtil {
 	private GlUtil() {}
 
 	private static final double TEXTURE_NORMALIZE = 1.0 / 256.0;
-
-	/** Enables general blending for translucent primitives */
-	public static void enableBlendTranslucent() {
-		GlStateManager.enableBlendProfile(Profile.PLAYER_SKIN);
-	}
 
 	/** All axes default to {@code scale}
 	 * @see GlStateManager#scale(float, float, float) */
@@ -166,7 +160,6 @@ public final class GlUtil {
 
 	/** @see GuiUtils#drawHoveringText(ItemStack, List, int, int, int, int, int, net.minecraft.client.gui.FontRenderer) */
 	public static void drawTooltipBox(int x, int y, int w, int h) {
-		enableBlendTranslucent();
 		GlStateManager.disableRescaleNormal();
 		RenderHelper.disableStandardItemLighting();
 		GlStateManager.disableLighting();

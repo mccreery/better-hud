@@ -66,9 +66,6 @@ public abstract class StatBar<T> extends Renderable {
 			throw new IllegalArgumentException("Bar must start in a corner");
 		}
 
-		GlUtil.enableBlendTranslucent();
-		Color.WHITE.apply();
-
 		Direction columnWise = contentAlignment.withRow(1).mirrorCol();
 		Rect icon = new Rect(getIconSize(), getIconSize()).anchor(bounds, contentAlignment);
 		Rect rowReturn = new Rect(icon);
