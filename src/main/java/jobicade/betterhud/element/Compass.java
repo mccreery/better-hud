@@ -10,6 +10,7 @@ import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingChoose;
+import jobicade.betterhud.element.settings.SettingDirection;
 import jobicade.betterhud.element.settings.SettingPercentage;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.settings.SettingSlider;
@@ -150,7 +151,7 @@ public class Compass extends HudElement {
 			case EAST: coord = "+X"; direction = Direction.EAST; break;
 			default: return "?";
 		}
-		return I18n.format("betterHud.hud.facing", direction.getLocalizedName(), coord);
+		return I18n.format("betterHud.hud.facing", SettingDirection.localizeDirection(direction), coord);
 	}
 
 	@Override

@@ -143,7 +143,7 @@ public class SettingDirection extends SettingAlignable<Direction> {
 		return options;
 	}
 
-	public String localizeDirection(Direction direction) {
+	public static String localizeDirection(Direction direction) {
 		String name;
 		switch(direction) {
 			case NORTH_WEST: name = "northWest"; break;
