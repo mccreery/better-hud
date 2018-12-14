@@ -5,8 +5,8 @@ import static jobicade.betterhud.BetterHud.SETTINGS;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.geom.Point;
-import jobicade.betterhud.util.mode.GlMode;
-import jobicade.betterhud.util.mode.TextureMode;
+import jobicade.betterhud.render.GlMode;
+import jobicade.betterhud.render.TextureMode;
 
 public class GuiTexturedButton extends GuiActionButton {
 	private final Rect disabled, inactive, active;

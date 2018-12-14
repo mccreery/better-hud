@@ -1,28 +1,31 @@
-package jobicade.betterhud.util.mode;
-
-import static jobicade.betterhud.BetterHud.*;
+package jobicade.betterhud.render;
 
 import java.util.ArrayDeque;
 import java.util.Deque;
 
+import com.google.common.util.concurrent.Runnables;
+
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.RenderHelper;
-import jobicade.betterhud.render.Color;
 
 public class GlMode {
-	private Runnable beginCallback, endCallback;
+	private final Runnable beginCallback, endCallback;
 
 	protected void begin() {
-		if(beginCallback != null) beginCallback.run();
+		beginCallback.run();
 	}
 
 	protected void end() {
-		if(endCallback != null) endCallback.run();;
+		endCallback.run();
 	}
 
-	public GlMode() {}
+	public GlMode() {
+		this(Runnables.doNothing(), Runnables.doNothing());
+	}
 
 	public GlMode(Runnable beginCallback, Runnable endCallback) {
 		this.beginCallback = beginCallback;
@@ -33,12 +36,13 @@ public class GlMode {
 		@Override
 		public void begin() {
 			Color.WHITE.apply();
-			GlStateManager.disableLighting();
-			GlStateManager.disableAlpha();
+			RenderHelper.disableStandardItemLighting();
+			GlStateManager.disableRescaleNormal();
+			GlStateManager.enableAlpha();
 			GlStateManager.enableBlend();
 			GlStateManager.disableDepth();
 			GlStateManager.tryBlendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO);
-			MC.getTextureManager().bindTexture(ICONS);
+			Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
 		}
 
 		@Override
@@ -62,13 +66,25 @@ public class GlMode {
 	public static final GlMode INVERT = new GlMode() {
 		@Override
 		public void begin() {
-			MC.getTextureManager().bindTexture(ICONS);
+			Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
 			GlStateManager.tryBlendFuncSeparate(SourceFactor.ONE_MINUS_DST_COLOR, DestFactor.ONE_MINUS_SRC_COLOR, SourceFactor.ONE, DestFactor.ZERO);
 		}
 
 		@Override
 		public void end() {
 			GlStateManager.tryBlendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO);
+		}
+	};
+
+	public static final GlMode OUTLINE = new GlMode() {
+		@Override
+		protected void begin() {
+			GlStateManager.enableOutlineMode(Color.WHITE.getPacked());
+		}
+
+		@Override
+		protected void end() {
+			GlStateManager.disableOutlineMode();
 		}
 	};
 

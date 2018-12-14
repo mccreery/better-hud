@@ -57,7 +57,7 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.IGetSet.IBoolean;
 import jobicade.betterhud.util.SortField;
 import jobicade.betterhud.util.Sorter;
-import jobicade.betterhud.util.mode.GlMode;
+import jobicade.betterhud.render.GlMode;
 
 public abstract class HudElement implements IBoolean {
 	/** A list of all the registered elements */

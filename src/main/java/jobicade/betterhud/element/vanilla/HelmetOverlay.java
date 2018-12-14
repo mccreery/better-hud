@@ -12,8 +12,8 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.util.mode.GlMode;
-import jobicade.betterhud.util.mode.TextureMode;
+import jobicade.betterhud.render.GlMode;
+import jobicade.betterhud.render.TextureMode;
 
 public class HelmetOverlay extends OverrideElement {
 	private static final ResourceLocation PUMPKIN_BLUR_TEX_PATH = new ResourceLocation("textures/misc/pumpkinblur.png");

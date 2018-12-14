@@ -9,8 +9,8 @@ import net.minecraft.init.Blocks;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.util.mode.ColorMode;
-import jobicade.betterhud.util.mode.GlMode;
+import jobicade.betterhud.render.ColorMode;
+import jobicade.betterhud.render.GlMode;
 import jobicade.betterhud.render.Color;
 
 public class PortalOverlay extends OverrideElement {

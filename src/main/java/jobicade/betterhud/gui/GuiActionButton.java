@@ -11,7 +11,7 @@ import net.minecraft.client.resources.I18n;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Point;
-import jobicade.betterhud.util.mode.GlMode;
+import jobicade.betterhud.render.GlMode;
 
 public class GuiActionButton extends GuiButton {
 	private ActionCallback callback;

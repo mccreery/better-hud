@@ -1,7 +1,7 @@
 package jobicade.betterhud.util;
 
 import static jobicade.betterhud.BetterHud.MC;
-import static jobicade.betterhud.util.mode.GlMode.ITEM;
+import static jobicade.betterhud.render.GlMode.ITEM;
 
 import java.util.List;
 
@@ -20,7 +20,7 @@ import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.util.mode.GlMode;
+import jobicade.betterhud.render.GlMode;
 import jobicade.betterhud.render.Color;
 
 public final class GlUtil {

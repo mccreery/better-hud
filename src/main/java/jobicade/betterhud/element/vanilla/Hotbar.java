@@ -10,8 +10,8 @@ import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.util.mode.GlMode;
-import jobicade.betterhud.util.mode.TextureMode;
+import jobicade.betterhud.render.GlMode;
+import jobicade.betterhud.render.TextureMode;
 import jobicade.betterhud.util.GlUtil;
 
 public class Hotbar extends OverrideElement {

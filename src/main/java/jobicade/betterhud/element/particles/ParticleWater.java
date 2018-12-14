@@ -8,8 +8,8 @@ import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.MathUtil;
 import jobicade.betterhud.geom.Point;
-import jobicade.betterhud.util.mode.GlMode;
-import jobicade.betterhud.util.mode.TextureMode;
+import jobicade.betterhud.render.GlMode;
+import jobicade.betterhud.render.TextureMode;
 import jobicade.betterhud.render.Color;
 
 public class ParticleWater extends ParticleBase {

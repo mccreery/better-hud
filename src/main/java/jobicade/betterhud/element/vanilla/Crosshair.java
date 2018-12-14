@@ -3,8 +3,8 @@ package jobicade.betterhud.element.vanilla;
 import static jobicade.betterhud.BetterHud.MANAGER;
 import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
-import static jobicade.betterhud.util.mode.GlMode.DEFAULT;
-import static jobicade.betterhud.util.mode.GlMode.INVERT;
+import static jobicade.betterhud.render.GlMode.DEFAULT;
+import static jobicade.betterhud.render.GlMode.INVERT;
 
 import java.util.List;
 
@@ -30,7 +30,7 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.geom.Point;
-import jobicade.betterhud.util.mode.GlMode;
+import jobicade.betterhud.render.GlMode;
 
 public class Crosshair extends OverrideElement {
 	private SettingBoolean attackIndicator;

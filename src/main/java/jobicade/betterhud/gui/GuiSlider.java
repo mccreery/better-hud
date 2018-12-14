@@ -5,8 +5,8 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 import jobicade.betterhud.util.ISlider;
-import jobicade.betterhud.util.mode.GlMode;
-import jobicade.betterhud.util.mode.TextureMode;
+import jobicade.betterhud.render.GlMode;
+import jobicade.betterhud.render.TextureMode;
 
 @SideOnly(Side.CLIENT)
 public class GuiSlider extends GuiButton {
