@@ -23,7 +23,7 @@ import jobicade.betterhud.util.geom.Rect;
 import jobicade.betterhud.util.mode.ColorMode;
 import jobicade.betterhud.util.mode.GlMode;
 import jobicade.betterhud.util.mode.TextureMode;
-import jobicade.betterhud.util.render.Color;
+import jobicade.betterhud.render.Color;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.potion.Potion;

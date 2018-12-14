@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.RenderHelper;
-import jobicade.betterhud.util.render.Color;
+import jobicade.betterhud.render.Color;
 
 public class GlMode {
 	private Runnable beginCallback, endCallback;

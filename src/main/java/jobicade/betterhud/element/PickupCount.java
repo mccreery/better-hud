@@ -18,7 +18,7 @@ import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.settings.SettingSlider;
 import jobicade.betterhud.events.PickupNotifier;
 import jobicade.betterhud.util.geom.Rect;
-import jobicade.betterhud.util.render.Color;
+import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
 

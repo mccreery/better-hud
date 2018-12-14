@@ -17,7 +17,7 @@ import jobicade.betterhud.util.bars.StatBarHealth;
 import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.geom.Point;
 import jobicade.betterhud.util.geom.Rect;
-import jobicade.betterhud.util.render.Color;
+import jobicade.betterhud.render.Color;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 

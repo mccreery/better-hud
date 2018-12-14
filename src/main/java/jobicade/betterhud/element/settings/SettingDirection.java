@@ -14,7 +14,7 @@ import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.geom.Point;
 import jobicade.betterhud.util.geom.Rect;
-import jobicade.betterhud.util.render.Color;
+import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
 
 public class SettingDirection extends SettingAlignable<Direction> {

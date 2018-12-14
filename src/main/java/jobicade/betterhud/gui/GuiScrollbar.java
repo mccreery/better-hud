@@ -5,7 +5,7 @@ import org.lwjgl.input.Mouse;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.util.math.MathHelper;
 import jobicade.betterhud.util.geom.Rect;
-import jobicade.betterhud.util.render.Color;
+import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
 

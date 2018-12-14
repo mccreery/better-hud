@@ -18,7 +18,7 @@ import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.util.mode.GlMode;
 import jobicade.betterhud.util.mode.TextureMode;
-import jobicade.betterhud.util.render.Color;
+import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.geom.Point;
 import jobicade.betterhud.util.StringGroup;

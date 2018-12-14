@@ -11,7 +11,7 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.util.geom.Rect;
 import jobicade.betterhud.util.mode.ColorMode;
 import jobicade.betterhud.util.mode.GlMode;
-import jobicade.betterhud.util.render.Color;
+import jobicade.betterhud.render.Color;
 
 public class PortalOverlay extends OverrideElement {
 	public PortalOverlay() {

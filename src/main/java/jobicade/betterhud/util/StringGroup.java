@@ -8,7 +8,7 @@ import java.util.Collection;
 import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.geom.Point;
 import jobicade.betterhud.util.geom.Rect;
-import jobicade.betterhud.util.render.Color;
+import jobicade.betterhud.render.Color;
 
 public class StringGroup {
 	private final Collection<String> source;

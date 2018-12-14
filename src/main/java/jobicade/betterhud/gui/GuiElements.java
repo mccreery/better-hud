@@ -6,7 +6,7 @@ import java.util.function.Predicate;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.geom.Rect;
-import jobicade.betterhud.util.render.Color;
+import jobicade.betterhud.render.Color;
 import net.minecraft.client.gui.GuiScreen;
 
 public abstract class GuiElements extends GuiScreen {

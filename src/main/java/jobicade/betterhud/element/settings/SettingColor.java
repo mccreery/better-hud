@@ -1,6 +1,6 @@
 package jobicade.betterhud.element.settings;
 
-import jobicade.betterhud.util.render.Color;
+import jobicade.betterhud.render.Color;
 
 public class SettingColor extends SettingStub<Color> {
 	protected final SettingSlider red, green, blue;

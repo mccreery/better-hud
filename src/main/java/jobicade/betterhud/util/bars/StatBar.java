@@ -4,7 +4,7 @@ import java.util.List;
 
 import jobicade.betterhud.util.geom.Rect;
 import jobicade.betterhud.util.geom.Size;
-import jobicade.betterhud.util.render.Color;
+import jobicade.betterhud.render.Color;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.MathUtil;

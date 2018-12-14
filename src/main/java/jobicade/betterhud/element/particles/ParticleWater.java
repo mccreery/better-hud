@@ -10,7 +10,7 @@ import jobicade.betterhud.util.MathUtil;
 import jobicade.betterhud.util.geom.Point;
 import jobicade.betterhud.util.mode.GlMode;
 import jobicade.betterhud.util.mode.TextureMode;
-import jobicade.betterhud.util.render.Color;
+import jobicade.betterhud.render.Color;
 
 public class ParticleWater extends ParticleBase {
 	private float speed;

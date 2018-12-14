@@ -21,7 +21,7 @@ import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.geom.Point;
 import jobicade.betterhud.util.geom.Rect;
 import jobicade.betterhud.util.mode.GlMode;
-import jobicade.betterhud.util.render.Color;
+import jobicade.betterhud.render.Color;
 
 public final class GlUtil {
 	private GlUtil() {}

@@ -1,4 +1,4 @@
-package jobicade.betterhud.util.render;
+package jobicade.betterhud.render;
 
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.MathHelper;
