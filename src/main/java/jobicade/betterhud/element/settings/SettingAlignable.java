@@ -6,9 +6,9 @@ import java.util.List;
 import java.util.Map;
 
 import net.minecraft.client.gui.Gui;
-import jobicade.betterhud.util.geom.Direction;
-import jobicade.betterhud.util.geom.Point;
-import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
 
 public abstract class SettingAlignable<T> extends Setting<T> {
 	protected Direction alignment;

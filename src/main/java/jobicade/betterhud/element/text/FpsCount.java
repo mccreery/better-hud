@@ -7,7 +7,7 @@ import java.util.List;
 
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
-import jobicade.betterhud.util.geom.Direction;
+import jobicade.betterhud.geom.Direction;
 
 public class FpsCount extends TextElement {
 	private SettingBoolean numberOnly;

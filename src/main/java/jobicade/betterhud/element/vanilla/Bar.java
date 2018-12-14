@@ -12,8 +12,8 @@ import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.util.geom.Rect;
-import jobicade.betterhud.util.geom.Direction;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.bars.StatBar;
 
 public abstract class Bar extends OverrideElement {

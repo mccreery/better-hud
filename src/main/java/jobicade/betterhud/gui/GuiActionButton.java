@@ -9,8 +9,8 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import jobicade.betterhud.BetterHud;
-import jobicade.betterhud.util.geom.Rect;
-import jobicade.betterhud.util.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.util.mode.GlMode;
 
 public class GuiActionButton extends GuiButton {

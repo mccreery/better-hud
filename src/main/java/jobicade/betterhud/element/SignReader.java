@@ -13,9 +13,9 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
-import jobicade.betterhud.util.geom.Direction;
+import jobicade.betterhud.geom.Direction;
 
 public class SignReader extends HudElement {
 	private static final ResourceLocation SIGN_TEXTURE = new ResourceLocation("textures/entity/sign.png");

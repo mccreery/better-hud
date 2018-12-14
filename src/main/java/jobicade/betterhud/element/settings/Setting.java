@@ -17,7 +17,7 @@ import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.util.HudConfig;
 import jobicade.betterhud.util.IGetSet;
 import jobicade.betterhud.util.ISaveLoad;
-import jobicade.betterhud.util.geom.Point;
+import jobicade.betterhud.geom.Point;
 
 /** A setting for a {@link HudElement}. Child elements will be saved under
  * the namespace of the parent's name

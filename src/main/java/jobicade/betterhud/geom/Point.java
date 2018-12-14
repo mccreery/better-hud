@@ -1,8 +1,8 @@
-package jobicade.betterhud.util.geom;
+package jobicade.betterhud.geom;
 
 import java.io.Serializable;
 
-import jobicade.betterhud.util.geom.Size;
+import jobicade.betterhud.geom.Size;
 import net.minecraft.client.gui.ScaledResolution;
 
 /**

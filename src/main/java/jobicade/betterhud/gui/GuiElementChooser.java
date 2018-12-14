@@ -8,7 +8,7 @@ import java.util.Map;
 import net.minecraft.client.gui.GuiScreen;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.Setting;
-import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.geom.Rect;
 
 public class GuiElementChooser extends GuiElements {
 	private final GuiScreen parent;

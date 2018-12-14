@@ -11,7 +11,7 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingChoose;
-import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.Tickable;
 
 public abstract class ParticleOverlay extends HudElement implements Tickable {

@@ -8,7 +8,7 @@ import java.util.List;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;

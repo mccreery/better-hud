@@ -53,7 +53,7 @@ import jobicade.betterhud.element.vanilla.PotionBar;
 import jobicade.betterhud.element.vanilla.RidingHealth;
 import jobicade.betterhud.element.vanilla.Sidebar;
 import jobicade.betterhud.element.vanilla.Vignette;
-import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.IGetSet.IBoolean;
 import jobicade.betterhud.util.SortField;
 import jobicade.betterhud.util.Sorter;

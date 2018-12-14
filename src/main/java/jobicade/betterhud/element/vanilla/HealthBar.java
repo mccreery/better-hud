@@ -6,7 +6,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.HealIndicator;
 import jobicade.betterhud.element.settings.DirectionOptions;
-import jobicade.betterhud.util.geom.Direction;
+import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.bars.StatBarHealth;
 
 public class HealthBar extends Bar {

@@ -10,7 +10,7 @@ import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.settings.SettingWarnings;
-import jobicade.betterhud.util.geom.Direction;
+import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.FormatUtil;
 
 public abstract class EquipmentDisplay extends HudElement {

@@ -15,7 +15,7 @@ import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingSlider;
 import jobicade.betterhud.util.Tickable;
-import jobicade.betterhud.util.geom.Direction;
+import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.FormatUtil;
 
 public class CpsCount extends TextElement implements Tickable {

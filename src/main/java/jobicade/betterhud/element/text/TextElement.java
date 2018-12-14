@@ -9,9 +9,9 @@ import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingColor;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
-import jobicade.betterhud.util.geom.Direction;
+import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.StringGroup;
 

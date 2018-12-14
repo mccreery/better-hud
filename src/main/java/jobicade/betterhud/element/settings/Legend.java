@@ -12,7 +12,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiLabel;
 import net.minecraft.client.resources.I18n;
-import jobicade.betterhud.util.geom.Point;
+import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.render.Color;
 
 public class Legend extends SettingStub<Object> {

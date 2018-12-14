@@ -17,9 +17,9 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.client.config.GuiUtils;
 import jobicade.betterhud.element.settings.DirectionOptions;
-import jobicade.betterhud.util.geom.Direction;
-import jobicade.betterhud.util.geom.Point;
-import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.mode.GlMode;
 import jobicade.betterhud.render.Color;
 

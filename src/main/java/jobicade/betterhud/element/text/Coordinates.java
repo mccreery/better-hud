@@ -15,8 +15,8 @@ import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.settings.SettingSlider;
-import jobicade.betterhud.util.geom.Rect;
-import jobicade.betterhud.util.geom.Direction;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.StringGroup;
 
 public class Coordinates extends TextElement {

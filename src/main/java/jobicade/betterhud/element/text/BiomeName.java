@@ -8,7 +8,7 @@ import java.util.List;
 import net.minecraft.util.math.BlockPos;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.util.geom.Direction;
+import jobicade.betterhud.geom.Direction;
 
 public class BiomeName extends TextElement {
 	@Override

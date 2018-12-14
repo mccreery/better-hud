@@ -41,8 +41,8 @@ import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.text.TextElement;
 import jobicade.betterhud.network.InventoryNameQuery;
-import jobicade.betterhud.util.geom.Rect;
-import jobicade.betterhud.util.geom.Direction;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
 
 public class BlockViewer extends TextElement {

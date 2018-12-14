@@ -10,10 +10,10 @@ import org.lwjgl.input.Keyboard;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.util.geom.Point;
+import jobicade.betterhud.geom.Point;
 
 public class GuiOffsetChooser extends GuiScreen {
 	private final GuiElementSettings parent;

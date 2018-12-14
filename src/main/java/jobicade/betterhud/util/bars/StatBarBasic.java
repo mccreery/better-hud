@@ -3,7 +3,7 @@ package jobicade.betterhud.util.bars;
 import java.util.ArrayList;
 import java.util.List;
 
-import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.geom.Rect;
 
 public abstract class StatBarBasic<T> extends StatBar<T> {
 	protected abstract Rect getIcon(IconType icon, int pointsIndex);

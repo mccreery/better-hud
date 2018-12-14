@@ -1,7 +1,7 @@
 package jobicade.betterhud.element.settings;
 
-import jobicade.betterhud.util.geom.Direction;
-import static jobicade.betterhud.util.geom.Direction.*;
+import jobicade.betterhud.geom.Direction;
+import static jobicade.betterhud.geom.Direction.*;
 
 import java.util.Collections;
 import java.util.EnumSet;

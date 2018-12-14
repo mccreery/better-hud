@@ -1,4 +1,4 @@
-package jobicade.betterhud.util.geom;
+package jobicade.betterhud.geom;
 
 import java.util.HashMap;
 import java.util.Map;

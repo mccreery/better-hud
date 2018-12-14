@@ -1,4 +1,4 @@
-package jobicade.betterhud.util.geom;
+package jobicade.betterhud.geom;
 
 import net.minecraft.client.gui.ScaledResolution;
 

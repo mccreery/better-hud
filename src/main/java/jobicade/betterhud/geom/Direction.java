@@ -1,4 +1,4 @@
-package jobicade.betterhud.util.geom;
+package jobicade.betterhud.geom;
 
 /**
  * Enum representing the eight cardinal directions and the

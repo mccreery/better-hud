@@ -12,10 +12,10 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.MathHelper;
 import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.util.geom.Rect;
-import jobicade.betterhud.util.geom.Direction;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.IGetSet;
-import jobicade.betterhud.util.geom.Point;
+import jobicade.betterhud.geom.Point;
 
 public class GuiReorder extends GuiElements {
 	private final GuiScreen parent;

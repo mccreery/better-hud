@@ -7,7 +7,7 @@ import java.util.List;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.common.eventhandler.Event;
-import jobicade.betterhud.util.geom.Direction;
+import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.FormatUtil;
 
 public class Saturation extends TextElement {

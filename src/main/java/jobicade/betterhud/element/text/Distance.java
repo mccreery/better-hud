@@ -15,8 +15,8 @@ import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.util.geom.Rect;
-import jobicade.betterhud.util.geom.Direction;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.geom.Direction;
 
 public class Distance extends TextElement {
 	private SettingChoose mode;

@@ -5,9 +5,9 @@ import static jobicade.betterhud.BetterHud.MC;
 import java.util.Arrays;
 import java.util.Collection;
 
-import jobicade.betterhud.util.geom.Direction;
-import jobicade.betterhud.util.geom.Point;
-import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 
 public class StringGroup {

@@ -1,6 +1,6 @@
 package jobicade.betterhud.gui;
 
-import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.geom.Rect;
 
 public class GuiUpDownButton extends GuiTexturedButton {
 	public GuiUpDownButton(boolean up) {

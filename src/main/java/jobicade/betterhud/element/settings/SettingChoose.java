@@ -10,11 +10,11 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import jobicade.betterhud.gui.GuiElementSettings;
-import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
-import jobicade.betterhud.util.geom.Direction;
+import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.util.geom.Point;
+import jobicade.betterhud.geom.Point;
 
 public class SettingChoose extends SettingAlignable<String> {
 	protected GuiButton last, next, backing;

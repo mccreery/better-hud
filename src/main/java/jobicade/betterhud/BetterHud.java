@@ -38,7 +38,7 @@ import jobicade.betterhud.network.MessagePickup;
 import jobicade.betterhud.network.MessagePickupHandler;
 import jobicade.betterhud.network.MessageVersion;
 import jobicade.betterhud.util.HudConfig;
-import jobicade.betterhud.util.geom.LayoutManager;
+import jobicade.betterhud.geom.LayoutManager;
 import jobicade.betterhud.util.Tickable.Ticker;
 
 @Mod(modid = BetterHud.MODID, name = "Better HUD", version = BetterHud.VERSION_STRING, updateJSON = "https://raw.githubusercontent.com/mccreery/better-hud/master/update.json")

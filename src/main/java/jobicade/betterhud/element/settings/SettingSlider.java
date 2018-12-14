@@ -9,8 +9,8 @@ import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.config.Property.Type;
 import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.gui.GuiSlider;
-import jobicade.betterhud.util.geom.Rect;
-import jobicade.betterhud.util.geom.Direction;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.FormatUtil;
 import jobicade.betterhud.util.ISlider;
 

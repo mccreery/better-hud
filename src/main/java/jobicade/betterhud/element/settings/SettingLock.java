@@ -5,8 +5,8 @@ import java.util.Map;
 
 import net.minecraft.client.gui.Gui;
 import jobicade.betterhud.gui.GuiTexturedButton;
-import jobicade.betterhud.util.geom.Rect;
-import jobicade.betterhud.util.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.geom.Point;
 
 public class SettingLock extends SettingBoolean {
 	private Rect bounds;

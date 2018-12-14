@@ -2,7 +2,7 @@ package jobicade.betterhud.util.bars;
 
 import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
-import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.geom.Rect;
 
 public class StatBarAir extends StatBarBasic<Entity> {
 	@Override

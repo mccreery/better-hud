@@ -15,8 +15,8 @@ import net.minecraft.client.resources.I18n;
 import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.gui.GuiOffsetChooser;
 import jobicade.betterhud.gui.GuiUpDownButton;
-import jobicade.betterhud.util.geom.Rect;
-import jobicade.betterhud.util.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.geom.Point;
 
 public class SettingAbsolutePosition extends Setting<Point> {
 	public GuiTextField xBox, yBox;

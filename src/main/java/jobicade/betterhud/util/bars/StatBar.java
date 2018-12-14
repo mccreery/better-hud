@@ -2,14 +2,14 @@ package jobicade.betterhud.util.bars;
 
 import java.util.List;
 
-import jobicade.betterhud.util.geom.Rect;
-import jobicade.betterhud.util.geom.Size;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.geom.Size;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.MathUtil;
-import jobicade.betterhud.util.geom.Direction;
-import jobicade.betterhud.util.geom.Point;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.util.Renderable;
 
 public abstract class StatBar<T> extends Renderable {

@@ -2,9 +2,9 @@ package jobicade.betterhud.gui;
 
 import static jobicade.betterhud.BetterHud.SETTINGS;
 
-import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.util.geom.Point;
+import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.util.mode.GlMode;
 import jobicade.betterhud.util.mode.TextureMode;
 

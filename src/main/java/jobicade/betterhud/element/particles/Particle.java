@@ -1,6 +1,6 @@
 package jobicade.betterhud.element.particles;
 
-import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.Tickable;
 
 import static jobicade.betterhud.BetterHud.MANAGER;

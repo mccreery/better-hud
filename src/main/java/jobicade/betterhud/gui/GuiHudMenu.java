@@ -16,12 +16,12 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.HudElement.SortType;
-import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
-import jobicade.betterhud.util.geom.Direction;
+import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.IGetSet;
 import jobicade.betterhud.util.Paginator;
-import jobicade.betterhud.util.geom.Point;
+import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.util.SortField;
 
 @SideOnly(Side.CLIENT)

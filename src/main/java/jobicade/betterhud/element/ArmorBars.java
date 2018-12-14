@@ -13,14 +13,14 @@ import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.util.geom.Rect;
-import jobicade.betterhud.util.geom.Direction;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.util.mode.GlMode;
 import jobicade.betterhud.util.mode.TextureMode;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.util.geom.Point;
+import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.util.StringGroup;
 
 public class ArmorBars extends EquipmentDisplay {

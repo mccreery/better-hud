@@ -11,8 +11,8 @@ import java.util.function.Predicate;
 
 import com.google.common.graph.Graph;
 
-import jobicade.betterhud.util.geom.Point;
-import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
 import net.minecraft.util.math.MathHelper;
 
 public final class MathUtil {

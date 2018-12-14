@@ -1,8 +1,8 @@
 package jobicade.betterhud.util;
 
-import jobicade.betterhud.util.geom.Direction;
-import jobicade.betterhud.util.geom.Rect;
-import jobicade.betterhud.util.geom.Size;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.geom.Size;
 
 public abstract class Renderable {
 	public abstract Size getSize();
