@@ -112,12 +112,16 @@ public class SettingDirection extends SettingAlignable<Direction> {
 
 	@Override
 	public String save() {
-		return get().name();
+		return value != null ? value.name() : "null";
 	}
 
 	@Override
 	public void load(String save) {
-		set(Direction.valueOf(save));
+		try {
+			set(Direction.valueOf(save));
+		} catch(IllegalArgumentException e) {
+			set(null);
+		}
 	}
 
 	@Override

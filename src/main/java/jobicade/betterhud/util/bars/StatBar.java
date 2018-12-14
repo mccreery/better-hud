@@ -3,6 +3,7 @@ package jobicade.betterhud.util.bars;
 import java.util.List;
 
 import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.util.geom.Size;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.util.Colors;
 import jobicade.betterhud.util.GlUtil;
@@ -127,9 +128,9 @@ public abstract class StatBar<T> extends Renderable {
 	}
 
 	@Override
-	public Point getSize() {
+	public Size getSize() {
 		int rowPoints = getRowPoints();
-		Point rowSize = new Point((getIconSize() - 1) * MathUtil.ceilDiv(rowPoints, 2) + 1, getIconSize());
+		Size rowSize = new Size((getIconSize() - 1) * MathUtil.ceilDiv(rowPoints, 2) + 1, getIconSize());
 
 		int rows;
 		if(shouldCompress()) {

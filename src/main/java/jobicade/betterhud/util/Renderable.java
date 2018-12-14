@@ -1,11 +1,11 @@
 package jobicade.betterhud.util;
 
 import jobicade.betterhud.util.geom.Direction;
-import jobicade.betterhud.util.geom.Point;
 import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.util.geom.Size;
 
 public abstract class Renderable {
-	public abstract Point getSize();
+	public abstract Size getSize();
 	protected abstract void renderUnsafe(Rect bounds, Direction contentAlignment);
 
 	public boolean shouldRender() {return true;}
