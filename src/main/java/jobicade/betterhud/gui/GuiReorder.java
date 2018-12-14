@@ -75,8 +75,9 @@ public class GuiReorder extends GuiElements {
 		Rect button = new Rect(20, 20);
 
 		if(element != null) {
-			toolbox = button.withHeight(button.getHeight() * 4 + 6).position(element.getLastRect().grow(SPACER, 0, SPACER, 0),
-					Direction.NORTH_EAST, Point.zero(), Direction.NORTH_WEST);
+			toolbox = button
+				.withHeight(button.getHeight() * 4 + 6)
+				.align(element.getLastRect().grow(SPACER, 0, SPACER, 0).getPosition(), Direction.NORTH_WEST);
 
 			toolbox = toolbox.move(
 					MathHelper.clamp(toolbox.getX(), 0, MANAGER.getScreen().getWidth() - toolbox.getWidth()),

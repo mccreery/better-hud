@@ -14,7 +14,6 @@ import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.util.geom.Rect;
 import jobicade.betterhud.util.Colors;
 import jobicade.betterhud.util.geom.Direction;
-import jobicade.betterhud.util.geom.Point;
 
 public class HealIndicator extends HudElement {
 	private SettingChoose mode;
@@ -47,7 +46,7 @@ public class HealIndicator extends HudElement {
 				bounds = position.applyTo(bounds);
 			} else {
 				Direction side = HudElement.HEALTH.getIndicatorSide();
-				bounds = bounds.position(HudElement.HEALTH.getLastRect().grow(SPACER, 0, SPACER, 0), side, Point.zero(), side.mirrorCol());
+				bounds = bounds.align(HudElement.HEALTH.getLastRect().grow(SPACER, 0, SPACER, 0).getAnchor(side), side.mirrorCol());
 			}
 
 			if(mode.getIndex() == 0) {

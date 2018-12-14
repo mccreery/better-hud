@@ -2,6 +2,7 @@ package jobicade.betterhud.element;
 
 import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
+import static jobicade.betterhud.BetterHud.MANAGER;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -43,7 +44,6 @@ import jobicade.betterhud.network.InventoryNameQuery;
 import jobicade.betterhud.util.geom.Rect;
 import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.util.geom.Point;
 
 public class BlockViewer extends TextElement {
 	private SettingBoolean showBlock, showIds, invNames;
@@ -147,7 +147,7 @@ public class BlockViewer extends TextElement {
 	@Override
 	protected Rect moveRect(Rect bounds) {
 		if(position.isDirection(Direction.CENTER)) {
-			return bounds.positioned(Direction.CENTER, new Point(0, -SPACER), Direction.SOUTH);
+			return bounds.align(MANAGER.getScreen().getAnchor(Direction.CENTER).add(0, -SPACER), Direction.SOUTH);
 		} else {
 			return super.moveRect(bounds);
 		}

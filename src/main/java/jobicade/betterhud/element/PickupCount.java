@@ -2,6 +2,7 @@ package jobicade.betterhud.element;
 
 import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
+import static jobicade.betterhud.BetterHud.MANAGER;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -20,7 +21,6 @@ import jobicade.betterhud.util.geom.Rect;
 import jobicade.betterhud.util.Colors;
 import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.util.geom.Point;
 
 public class PickupCount extends HudElement {
 	private SettingSlider maxStacks, fadeAfter;
@@ -116,7 +116,7 @@ public class PickupCount extends HudElement {
 		}
 
 		if(position.isDirection(Direction.CENTER)) {
-			return bounds.positioned(Direction.CENTER, new Point(5, 5), Direction.NORTH_WEST);
+			return bounds.align(MANAGER.getScreen().getAnchor(Direction.CENTER).add(5, 5), Direction.NORTH_WEST);
 		} else {
 			return position.applyTo(bounds);
 		}

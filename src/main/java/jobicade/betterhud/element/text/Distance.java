@@ -2,6 +2,7 @@ package jobicade.betterhud.element.text;
 
 import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
+import static jobicade.betterhud.BetterHud.MANAGER;
 
 import java.util.Arrays;
 import java.util.List;
@@ -16,7 +17,6 @@ import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.util.geom.Rect;
 import jobicade.betterhud.util.geom.Direction;
-import jobicade.betterhud.util.geom.Point;
 
 public class Distance extends TextElement {
 	private SettingChoose mode;
@@ -43,7 +43,7 @@ public class Distance extends TextElement {
 	@Override
 	protected Rect moveRect(Rect bounds) {
 		if(position.isDirection(Direction.CENTER)) {
-			return bounds.positioned(Direction.CENTER, new Point(-SPACER, -SPACER), Direction.SOUTH_EAST);
+			return bounds.align(MANAGER.getScreen().getAnchor(Direction.CENTER).sub(SPACER, SPACER), Direction.SOUTH_EAST);
 		} else {
 			return super.moveRect(bounds);
 		}

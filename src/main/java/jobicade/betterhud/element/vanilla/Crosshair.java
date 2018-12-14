@@ -149,7 +149,7 @@ public class Crosshair extends OverrideElement {
 			Direction primary = MC.player.getPrimaryHand() == EnumHandSide.RIGHT ? Direction.EAST : Direction.WEST;
 			bounds = bounds.align(HudElement.HOTBAR.getLastRect().grow(SPACER).getAnchor(primary), primary.mirrorCol());
 		} else if(position.isDirection(Direction.CENTER)) {
-			bounds = bounds.positioned(Direction.CENTER, new Point(0, SPACER), Direction.NORTH);
+			bounds = bounds.align(MANAGER.getScreen().getAnchor(Direction.CENTER).add(0, SPACER), Direction.NORTH);
 		} else {
 			bounds = position.applyTo(bounds);
 		}

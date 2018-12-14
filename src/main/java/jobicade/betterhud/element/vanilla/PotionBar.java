@@ -2,6 +2,7 @@ package jobicade.betterhud.element.vanilla;
 
 import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
+import static jobicade.betterhud.BetterHud.MANAGER;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -115,7 +116,7 @@ public class PotionBar extends HudElement {
 		Rect bounds = new Rect(helpful * 25 - 1, harmful > 0 ? 50 : 24);
 
 		if(position.isDirection(Direction.CENTER)) {
-			return bounds.positioned(Direction.CENTER, new Point(SPACER, SPACER), Direction.NORTH_WEST);
+			return bounds.align(MANAGER.getScreen().getAnchor(Direction.CENTER).add(SPACER, SPACER), Direction.NORTH_WEST);
 		} else {
 			return position.applyTo(bounds);
 		}
