@@ -5,6 +5,11 @@ import static jobicade.betterhud.BetterHud.MC;
 
 import java.util.List;
 
+import jobicade.betterhud.element.settings.Setting;
+import jobicade.betterhud.element.settings.SettingBoolean;
+import jobicade.betterhud.util.GlUtil;
+import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.util.render.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
@@ -14,11 +19,6 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.border.WorldBorder;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
-import jobicade.betterhud.element.settings.Setting;
-import jobicade.betterhud.element.settings.SettingBoolean;
-import jobicade.betterhud.util.geom.Rect;
-import jobicade.betterhud.util.Colors;
-import jobicade.betterhud.util.GlUtil;
 
 public class Vignette extends OverrideElement {
 	private static final ResourceLocation VIGNETTE_TEX_PATH = new ResourceLocation("textures/misc/vignette.png");
@@ -86,7 +86,7 @@ public class Vignette extends OverrideElement {
 
 		GlStateManager.depthMask(true);
 		GlStateManager.enableDepth();
-		GlUtil.color(Colors.WHITE);
+		Color.WHITE.apply();
 		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
 
 		return null;

@@ -12,8 +12,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiLabel;
 import net.minecraft.client.resources.I18n;
-import jobicade.betterhud.util.Colors;
 import jobicade.betterhud.util.geom.Point;
+import jobicade.betterhud.util.render.Color;
 
 public class Legend extends SettingStub<Object> {
 	public Legend(String name) {
@@ -27,7 +27,7 @@ public class Legend extends SettingStub<Object> {
 
 	@Override
 	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Point origin) {
-		GuiLegendLabel label = new GuiLegendLabel(0, origin.getX() - 150, origin.getY(), 300, MC.fontRenderer.FONT_HEIGHT, Colors.WHITE);
+		GuiLegendLabel label = new GuiLegendLabel(0, origin.getX() - 150, origin.getY(), 300, MC.fontRenderer.FONT_HEIGHT, Color.WHITE);
 		label.addLine("betterHud.group." + this.name);
 		parts.add(label);
 
@@ -35,11 +35,11 @@ public class Legend extends SettingStub<Object> {
 	}
 
 	private static class GuiLegendLabel extends GuiLabel {
-		protected final int color;
+		protected final Color color;
 		protected final List<String> lines = new ArrayList<String>();
 
-		public GuiLegendLabel(int id, int x, int y, int width, int height, int color) {
-			super(MC.fontRenderer, id, x, y, width, height, color);
+		public GuiLegendLabel(int id, int x, int y, int width, int height, Color color) {
+			super(MC.fontRenderer, id, x, y, width, height, color.getPacked());
 			setCentered();
 
 			this.color = color;
@@ -71,8 +71,8 @@ public class Legend extends SettingStub<Object> {
 				int top = y + height / 2;
 				int center = x + width / 2;
 
-				drawRect(x, top, center - blank, top + 1, color);
-				drawRect(center + blank, top, x + width, top + 1, color);
+				drawRect(x, top, center - blank, top + 1, color.getPacked());
+				drawRect(center + blank, top, x + width, top + 1, color.getPacked());
 			}
 		}
 	}

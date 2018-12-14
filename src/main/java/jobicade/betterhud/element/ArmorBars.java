@@ -14,11 +14,11 @@ import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.util.geom.Rect;
-import jobicade.betterhud.util.Colors;
 import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.util.mode.GlMode;
 import jobicade.betterhud.util.mode.TextureMode;
+import jobicade.betterhud.util.render.Color;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.geom.Point;
 import jobicade.betterhud.util.StringGroup;
@@ -122,7 +122,7 @@ public class ArmorBars extends EquipmentDisplay {
 						textRect = textRect.withY(textRect.getY() - 1);
 					}
 
-					MC.ingameGUI.drawString(MC.fontRenderer, text[i], textRect.getX(), textRect.getY(), Colors.WHITE);
+					MC.ingameGUI.drawString(MC.fontRenderer, text[i], textRect.getX(), textRect.getY(), Color.WHITE.getPacked());
 					MC.mcProfiler.endSection();
 				}
 

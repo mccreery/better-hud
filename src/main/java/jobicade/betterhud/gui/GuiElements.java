@@ -3,11 +3,11 @@ package jobicade.betterhud.gui;
 import java.util.Map;
 import java.util.function.Predicate;
 
-import net.minecraft.client.gui.GuiScreen;
 import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.util.geom.Rect;
-import jobicade.betterhud.util.Colors;
 import jobicade.betterhud.util.GlUtil;
+import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.util.render.Color;
+import net.minecraft.client.gui.GuiScreen;
 
 public abstract class GuiElements extends GuiScreen {
 	protected static HudElement getHoveredElement(int mouseX, int mouseY, Predicate<HudElement> ignore) {
@@ -27,8 +27,8 @@ public abstract class GuiElements extends GuiScreen {
 		return result != null ? result.getKey() : null;
 	}
 
-	private static final int FADED = Colors.setAlpha(Colors.RED, 63);
-	private static final int HIGHLIGHT = Colors.RED;
+	private static final Color FADED = Color.RED.withAlpha(63);
+	private static final Color HIGHLIGHT = Color.RED;
 
 	protected static void drawRect(Rect bounds, boolean highlight) {
 		GlUtil.drawBorderRect(bounds, highlight ? HIGHLIGHT : FADED);

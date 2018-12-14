@@ -8,12 +8,13 @@ import java.util.Collection;
 import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.geom.Point;
 import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.util.render.Color;
 
 public class StringGroup {
 	private final Collection<String> source;
 
 	private Direction alignment;
-	private int color;
+	private Color color;
 	private int spacing;
 	private int gutter;
 	private boolean vertical;
@@ -25,7 +26,7 @@ public class StringGroup {
 	public StringGroup(Collection<String> source) {
 		this.source = source;
 
-		color = Colors.WHITE;
+		color = Color.WHITE;
 		alignment = Direction.NORTH_WEST;
 		spacing = 0;
 		gutter = 2;
@@ -50,7 +51,7 @@ public class StringGroup {
 		this.alignment = alignment;
 		return this;
 	}
-	public StringGroup setColor(int color) {
+	public StringGroup setColor(Color color) {
 		this.color = color;
 		return this;
 	}

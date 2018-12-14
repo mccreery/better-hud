@@ -1,22 +1,21 @@
 package jobicade.betterhud.util.mode;
 
-import jobicade.betterhud.util.Colors;
-import jobicade.betterhud.util.GlUtil;
+import jobicade.betterhud.util.render.Color;
 
 public class ColorMode extends GlMode {
-	private final int color;
+	private final Color color;
 
-	public ColorMode(int color) {
+	public ColorMode(Color color) {
 		this.color = color;
 	}
 
 	@Override
 	public void begin() {
-        GlUtil.color(color);
+		color.apply();
 	}
 
 	@Override
 	public void end() {
-		GlUtil.color(Colors.WHITE);
+		Color.WHITE.apply();
 	}
 }

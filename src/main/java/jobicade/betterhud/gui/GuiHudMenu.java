@@ -17,7 +17,7 @@ import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.HudElement.SortType;
 import jobicade.betterhud.util.geom.Rect;
-import jobicade.betterhud.util.Colors;
+import jobicade.betterhud.util.render.Color;
 import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.IGetSet;
 import jobicade.betterhud.util.Paginator;
@@ -158,11 +158,11 @@ public class GuiHudMenu extends GuiScreen {
 
 		int enabled = (int)HudElement.ELEMENTS.stream().filter(HudElement::get).count();
 
-		drawCenteredString(fontRenderer, I18n.format("betterHud.menu.hudSettings"), width / 2, height / 16 + 5, Colors.WHITE);
-		drawString(fontRenderer, enabled + "/" + HudElement.ELEMENTS.size() + " enabled", 5, 5, Colors.WHITE);
+		drawCenteredString(fontRenderer, I18n.format("betterHud.menu.hudSettings"), width / 2, height / 16 + 5, Color.WHITE.getPacked());
+		drawString(fontRenderer, enabled + "/" + HudElement.ELEMENTS.size() + " enabled", 5, 5, Color.WHITE.getPacked());
 
 		String page = I18n.format("betterHud.menu.page", (paginator.getPageIndex() + 1) + "/" + paginator.getPageCount());
-		drawCenteredString(fontRenderer, page, width / 2, height - height / 16 - 13, Colors.WHITE);
+		drawCenteredString(fontRenderer, page, width / 2, height - height / 16 - 13, Color.WHITE.getPacked());
 	}
 
 	private List<GuiActionButton> getIndexControls(SortField<HudElement>[] sortValues) {

@@ -1,8 +1,8 @@
 package jobicade.betterhud.element.vanilla;
 
+import static jobicade.betterhud.BetterHud.MANAGER;
 import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
-import static jobicade.betterhud.BetterHud.MANAGER;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -10,6 +10,20 @@ import java.util.List;
 
 import com.google.common.collect.Ordering;
 
+import jobicade.betterhud.BetterHud;
+import jobicade.betterhud.element.HudElement;
+import jobicade.betterhud.element.settings.DirectionOptions;
+import jobicade.betterhud.element.settings.Setting;
+import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.util.GlUtil;
+import jobicade.betterhud.util.MathUtil;
+import jobicade.betterhud.util.geom.Direction;
+import jobicade.betterhud.util.geom.Point;
+import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.util.mode.ColorMode;
+import jobicade.betterhud.util.mode.GlMode;
+import jobicade.betterhud.util.mode.TextureMode;
+import jobicade.betterhud.util.render.Color;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.potion.Potion;
@@ -22,20 +36,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import jobicade.betterhud.BetterHud;
-import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.element.settings.DirectionOptions;
-import jobicade.betterhud.element.settings.Setting;
-import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.util.geom.Rect;
-import jobicade.betterhud.util.Colors;
-import jobicade.betterhud.util.geom.Direction;
-import jobicade.betterhud.util.mode.ColorMode;
-import jobicade.betterhud.util.mode.GlMode;
-import jobicade.betterhud.util.mode.TextureMode;
-import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.util.MathUtil;
-import jobicade.betterhud.util.geom.Point;
 
 public class PotionBar extends HudElement {
 	public static final ResourceLocation INVENTORY = new ResourceLocation("textures/gui/container/inventory.png");
@@ -65,7 +65,7 @@ public class PotionBar extends HudElement {
 
 	@SubscribeEvent
 	public void onRenderTick(RenderGameOverlayEvent.Pre event) {
-		if(BetterHud.isEnabled() && event.getType() == ElementType.POTION_ICONS) {
+		if (BetterHud.isEnabled() && event.getType() == ElementType.POTION_ICONS) {
 			event.setCanceled(true);
 		}
 	}
@@ -147,7 +147,7 @@ public class PotionBar extends HudElement {
 		GlMode.push(new TextureMode(GuiContainer.INVENTORY_BACKGROUND));
 		GlUtil.drawTexturedModalRect(position, background);
 
-		GlMode.set(new ColorMode(Colors.setAlpha(Colors.WHITE, Math.round(opacity * 255))));
+		GlMode.set(new ColorMode(Color.WHITE.withAlpha(Math.round(opacity * 255))));
 
 		if(potion.hasStatusIcon()) {
 			int index = potion.getStatusIconIndex();
@@ -161,7 +161,7 @@ public class PotionBar extends HudElement {
 
 		String potionLevel = getPotionLevel(effect);
 		if(!potionLevel.isEmpty()) {
-			GlUtil.drawString(potionLevel, new Point(position.getX() + 21, position.getY() + 21), Direction.SOUTH_EAST, Colors.WHITE);
+			GlUtil.drawString(potionLevel, new Point(position.getX() + 21, position.getY() + 21), Direction.SOUTH_EAST, Color.WHITE);
 		}
 	}
 

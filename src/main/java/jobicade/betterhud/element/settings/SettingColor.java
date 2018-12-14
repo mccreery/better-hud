@@ -1,8 +1,8 @@
 package jobicade.betterhud.element.settings;
 
-import jobicade.betterhud.util.Colors;
+import jobicade.betterhud.util.render.Color;
 
-public class SettingColor extends SettingStub<Integer> {
+public class SettingColor extends SettingStub<Color> {
 	protected final SettingSlider red, green, blue;
 
 	public SettingColor(String name) {
@@ -13,14 +13,14 @@ public class SettingColor extends SettingStub<Integer> {
 	}
 
 	@Override
-	public void set(Integer color) {
-		red.set(Double.valueOf(Colors.red(color)));
-		green.set(Double.valueOf(Colors.green(color)));
-		blue.set(Double.valueOf(Colors.blue(color)));
+	public void set(Color color) {
+		red.set(color.getRed());
+		green.set(color.getGreen());
+		blue.set(color.getBlue());
 	}
 
 	@Override
-	public Integer get() {
-		return Colors.fromRGB(red.get().intValue(), green.get().intValue(), blue.get().intValue());
+	public Color get() {
+		return new Color(red.get().intValue(), green.get().intValue(), blue.get().intValue());
 	}
 }

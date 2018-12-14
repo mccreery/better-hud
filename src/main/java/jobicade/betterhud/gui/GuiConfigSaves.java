@@ -22,6 +22,7 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.I18n;
 import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.util.render.Color;
 import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.HudConfig;
@@ -198,8 +199,8 @@ public class GuiConfigSaves extends GuiScreen {
 			if(fileName.length() == name.getText().length() + 4 && fileName.regionMatches(0, name.getText(), 0, fileName.length() - 4)) {
 				Rect bounds = new Rect(300, MC.fontRenderer.FONT_HEIGHT).align(origin.add(0, (MC.fontRenderer.FONT_HEIGHT + SPACER) * i), Direction.NORTH).grow(2);
 
-				GlUtil.drawRect(bounds, 0x30000000);
-				GlUtil.drawBorderRect(bounds, 0xA0909090);
+				GlUtil.drawRect(bounds, new Color(48, 0, 0, 0));
+				GlUtil.drawBorderRect(bounds, new Color(160, 144, 144, 144));
 
 				break;
 			}

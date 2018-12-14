@@ -14,7 +14,7 @@ import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.geom.Point;
 import jobicade.betterhud.util.geom.Rect;
-import jobicade.betterhud.util.Colors;
+import jobicade.betterhud.util.render.Color;
 import jobicade.betterhud.util.GlUtil;
 
 public class SettingDirection extends SettingAlignable<Direction> {
@@ -104,9 +104,9 @@ public class SettingDirection extends SettingAlignable<Direction> {
 		String text = getText();
 
 		if(horizontal) {
-			GlUtil.drawString(text, bounds.withWidth(60 + SPACER).getAnchor(Direction.EAST), Direction.WEST, Colors.WHITE);
+			GlUtil.drawString(text, bounds.withWidth(60 + SPACER).getAnchor(Direction.EAST), Direction.WEST, Color.WHITE);
 		} else {
-			GlUtil.drawString(text, bounds.getAnchor(Direction.NORTH), Direction.NORTH, Colors.WHITE);
+			GlUtil.drawString(text, bounds.getAnchor(Direction.NORTH), Direction.NORTH, Color.WHITE);
 		}
 	}
 

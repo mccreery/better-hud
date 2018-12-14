@@ -12,7 +12,7 @@ import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.util.geom.Rect;
-import jobicade.betterhud.util.Colors;
+import jobicade.betterhud.util.render.Color;
 import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
 
@@ -65,7 +65,7 @@ public class HandBar extends EquipmentDisplay {
 
 		if(text != null) {
 			MC.mcProfiler.startSection("text");
-			MC.ingameGUI.drawString(MC.fontRenderer, text, x + 90 - width / 2 + (showItem.get() ? 21 : 0), y + 4, Colors.WHITE);
+			MC.ingameGUI.drawString(MC.fontRenderer, text, x + 90 - width / 2 + (showItem.get() ? 21 : 0), y + 4, Color.WHITE.getPacked());
 			MC.mcProfiler.endSection();
 		}
 

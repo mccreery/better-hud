@@ -4,13 +4,13 @@ import static jobicade.betterhud.BetterHud.HUD_ICONS;
 
 import net.minecraft.client.renderer.GlStateManager;
 import jobicade.betterhud.util.geom.Rect;
-import jobicade.betterhud.util.Colors;
 import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.MathUtil;
 import jobicade.betterhud.util.geom.Point;
 import jobicade.betterhud.util.mode.GlMode;
 import jobicade.betterhud.util.mode.TextureMode;
+import jobicade.betterhud.util.render.Color;
 
 public class ParticleBase implements Particle {
 	protected Point position;
@@ -56,7 +56,7 @@ public class ParticleBase implements Particle {
 		GlStateManager.rotate(rotation, 0, 0, 1);
 		GlStateManager.scale(this.size, this.size, 1.0F);
 
-		int color = Colors.setAlpha(Colors.WHITE, Math.round(opacity * 255));
+		Color color = Color.WHITE.withAlpha(Math.round(opacity * 255));
 		Rect bounds = texture.align(Point.zero(), Direction.CENTER);
 		GlUtil.drawTexturedColoredModalRect(bounds.getX(), bounds.getY(), texture.getX(), texture.getY(), bounds.getWidth(), bounds.getHeight(), texture.getWidth(), texture.getHeight(), color);
 

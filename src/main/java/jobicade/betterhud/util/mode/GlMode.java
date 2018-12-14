@@ -9,8 +9,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.RenderHelper;
-import jobicade.betterhud.util.Colors;
-import jobicade.betterhud.util.GlUtil;
+import jobicade.betterhud.util.render.Color;
 
 public class GlMode {
 	private Runnable beginCallback, endCallback;
@@ -33,7 +32,7 @@ public class GlMode {
 	public static final GlMode DEFAULT = new GlMode() {
 		@Override
 		public void begin() {
-			GlUtil.color(Colors.WHITE);
+			Color.WHITE.apply();
 			GlStateManager.disableLighting();
 			GlStateManager.disableAlpha();
 			GlStateManager.enableBlend();

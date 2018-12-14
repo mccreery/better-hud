@@ -18,7 +18,7 @@ import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.settings.SettingSlider;
 import jobicade.betterhud.events.PickupNotifier;
 import jobicade.betterhud.util.geom.Rect;
-import jobicade.betterhud.util.Colors;
+import jobicade.betterhud.util.render.Color;
 import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
 
@@ -81,7 +81,7 @@ public class PickupCount extends HudElement {
 			float opacity = (lifetime - age) / (float)lifetime;
 
 			// Opacity lower than 4 defaults to 255
-			int color = Colors.setAlpha(Colors.WHITE, Math.max(4, Math.round(opacity * 255)));
+			Color color = Color.WHITE.withAlpha(Math.max(4, Math.round(opacity * 255)));
 
 			GlUtil.renderSingleItem(node.stack, stackRect.getPosition());
 			GlUtil.drawString(node.toString(), stackRect.grow(SPACER).getAnchor(rowAlignment.mirrorCol()), rowAlignment, color);

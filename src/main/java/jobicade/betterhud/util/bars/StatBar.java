@@ -4,8 +4,8 @@ import java.util.List;
 
 import jobicade.betterhud.util.geom.Rect;
 import jobicade.betterhud.util.geom.Size;
+import jobicade.betterhud.util.render.Color;
 import jobicade.betterhud.element.settings.DirectionOptions;
-import jobicade.betterhud.util.Colors;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.MathUtil;
 import jobicade.betterhud.util.geom.Direction;
@@ -67,7 +67,7 @@ public abstract class StatBar<T> extends Renderable {
 		}
 
 		GlUtil.enableBlendTranslucent();
-		GlUtil.color(Colors.WHITE);
+		Color.WHITE.apply();
 
 		Direction columnWise = contentAlignment.withRow(1).mirrorCol();
 		Rect icon = new Rect(getIconSize(), getIconSize()).anchor(bounds, contentAlignment);
@@ -102,7 +102,7 @@ public abstract class StatBar<T> extends Renderable {
 		}
 
 		if(text != null) {
-			GlUtil.drawString(text, textPosition, columnWise.mirrorCol(), Colors.WHITE);
+			GlUtil.drawString(text, textPosition, columnWise.mirrorCol(), Color.WHITE);
 		}
 	}
 

@@ -21,6 +21,7 @@ import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.geom.Point;
 import jobicade.betterhud.util.geom.Rect;
 import jobicade.betterhud.util.mode.GlMode;
+import jobicade.betterhud.util.render.Color;
 
 public final class GlUtil {
 	private GlUtil() {}
@@ -32,11 +33,6 @@ public final class GlUtil {
 		GlStateManager.enableBlendProfile(Profile.PLAYER_SKIN);
 	}
 
-	/** Sets the OpenGL color to the 32-bit RGBA composite color */
-	public static void color(int color) {
-		GlStateManager.color(Colors.red(color), Colors.green(color), Colors.blue(color), Colors.alpha(color));
-	}
-
 	/** All axes default to {@code scale}
 	 * @see GlStateManager#scale(float, float, float) */
 	public static void scale(float scale) {
@@ -44,12 +40,24 @@ public final class GlUtil {
 	}
 
 	/** @see Gui#drawRect(int, int, int, int, int) */
+	@Deprecated
 	public static void drawRect(Rect bounds, int color) {
 		Gui.drawRect(bounds.getLeft(), bounds.getTop(), bounds.getRight(), bounds.getBottom(), color);
 		GlMode.clean();
 	}
 
+	/** @see Gui#drawRect(int, int, int, int, int) */
+	public static void drawRect(Rect bounds, Color color) {
+		Gui.drawRect(bounds.getLeft(), bounds.getTop(), bounds.getRight(), bounds.getBottom(), color.getPacked());
+		GlMode.clean();
+	}
+
+	@Deprecated
 	public static void drawBorderRect(Rect bounds, int color) {
+		drawBorderRect(bounds, new Color(color));
+	}
+
+	public static void drawBorderRect(Rect bounds, Color color) {
 		drawRect(bounds.withWidth(1).grow(0, -1, 0, -1), color);
 		drawRect(bounds.withLeft(bounds.getRight() - 1).grow(0, -1, 0, -1), color);
 
@@ -87,13 +95,12 @@ public final class GlUtil {
 		tessellator.draw();
 	}
 
-	// TODO replace hacky rectangle stuff
-	public static void drawTexturedColoredModalRect(int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight, int color) {
+	public static void drawTexturedColoredModalRect(int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight, Color color) {
 		Tessellator tessellator = Tessellator.getInstance();
 		BufferBuilder builder = tessellator.getBuffer();
 		builder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
 
-		int r = Colors.red(color), g = Colors.green(color), b = Colors.blue(color), a = Colors.alpha(color);
+		int r = color.getRed(), g = color.getGreen(), b = color.getBlue(), a = color.getAlpha();
 
 		builder.pos(x,         y + height, 0).tex( u                 * TEXTURE_NORMALIZE, (v + textureHeight) * TEXTURE_NORMALIZE).color(r, g, b, a).endVertex();
 		builder.pos(x + width, y + height, 0).tex((u + textureWidth) * TEXTURE_NORMALIZE, (v + textureHeight) * TEXTURE_NORMALIZE).color(r, g, b, a).endVertex();
@@ -104,14 +111,14 @@ public final class GlUtil {
 	}
 
 	/** Draws text with black borders on all sides */
-	public static void drawBorderedString(String text, int x, int y, int color) {
+	public static void drawBorderedString(String text, int x, int y, Color color) {
 		// Borders
-		MC.fontRenderer.drawString(text, x + 1, y, Colors.BLACK, false);
-		MC.fontRenderer.drawString(text, x - 1, y, Colors.BLACK, false);
-		MC.fontRenderer.drawString(text, x, y + 1, Colors.BLACK, false);
-		MC.fontRenderer.drawString(text, x, y - 1, Colors.BLACK, false);
+		MC.fontRenderer.drawString(text, x + 1, y, Color.BLACK.getPacked(), false);
+		MC.fontRenderer.drawString(text, x - 1, y, Color.BLACK.getPacked(), false);
+		MC.fontRenderer.drawString(text, x, y + 1, Color.BLACK.getPacked(), false);
+		MC.fontRenderer.drawString(text, x, y - 1, Color.BLACK.getPacked(), false);
 
-		MC.fontRenderer.drawString(text, x, y, color, false);
+		MC.fontRenderer.drawString(text, x, y, color.getPacked(), false);
 
 		GlMode.clean();
 	}
@@ -218,10 +225,10 @@ public final class GlUtil {
 	 * @param progress Index of progress between 0 and 1
 	 * @param vertical {@code true} to render bar from bottom to top */
 	public static void drawProgressBar(Rect bounds, float progress, boolean vertical) {
-		drawRect(bounds, Colors.BLACK);
+		drawRect(bounds, Color.BLACK);
 		progress = MathHelper.clamp(progress, 0, 1);
 
-		int color = Colors.fromHSV(progress / 3, 1, 1);
+		Color color = Color.fromHSV(progress / 3, 1, 1);
 
 		Rect bar;
 		if(vertical) {
@@ -271,9 +278,19 @@ public final class GlUtil {
 	/** @param origin The anchor point
 	 * @param alignment The alignment around {@code origin}
 	 * @see net.minecraft.client.gui.FontRenderer#drawStringWithShadow(String, float, float, int) */
+	@Deprecated
 	public static Rect drawString(String string, Point origin, Direction alignment, int color) {
 		Rect bounds = new Rect(getStringSize(string)).align(origin, alignment);
 		MC.fontRenderer.drawStringWithShadow(string, bounds.getX(), bounds.getY(), color);
+
+		GlMode.clean();
+		return bounds;
+	}
+
+	/** @see #drawString(String, Point, Direction, int) */
+	public static Rect drawString(String string, Point origin, Direction alignment, Color color) {
+		Rect bounds = new Rect(getStringSize(string)).align(origin, alignment);
+		MC.fontRenderer.drawStringWithShadow(string, bounds.getX(), bounds.getY(), color.getPacked());
 
 		GlMode.clean();
 		return bounds;

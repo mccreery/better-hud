@@ -5,7 +5,7 @@ import org.lwjgl.input.Mouse;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.util.math.MathHelper;
 import jobicade.betterhud.util.geom.Rect;
-import jobicade.betterhud.util.Colors;
+import jobicade.betterhud.util.render.Color;
 import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
 
@@ -13,7 +13,7 @@ public class GuiScrollbar extends Gui {
 	private final Rect bounds;
 	private Rect grabber;
 	private float scaleFactor;
-	private final int background, foreground, highlight;
+	private final Color background, foreground, highlight;
 
 	/** The size of the visible part of the content */
 	private int viewportHeight;
@@ -39,13 +39,13 @@ public class GuiScrollbar extends Gui {
 	/** The colors used are defaults
 	 * @see #GuiScrollbar(Rect, int, int, int, int, int) */
 	public GuiScrollbar(Rect bounds, int viewport, int content) {
-		this(bounds, viewport, content, Colors.TRANSLUCENT, Colors.FOREGROUND, Colors.HIGHLIGHT);
+		this(bounds, viewport, content, Color.TRANSLUCENT, Color.FOREGROUND, Color.HIGHLIGHT);
 	}
 
 	/** @param bounds The rendering bounds for the scrollbar
 	 * @param viewport The size of the viewport
 	 * @param content The size of the content */
-	public GuiScrollbar(Rect bounds, int viewport, int content, int background, int foreground, int highlight) {
+	public GuiScrollbar(Rect bounds, int viewport, int content, Color background, Color foreground, Color highlight) {
 		this.bounds = bounds;
 
 		this.viewportHeight = viewport;
@@ -108,7 +108,7 @@ public class GuiScrollbar extends Gui {
 		GlUtil.drawRect(bounds, background);
 
 		if(canScroll()) {
-			int grabColor = isScrolling() || bounds.contains(mouseX, mouseY) ? highlight : foreground;
+			Color grabColor = isScrolling() || bounds.contains(mouseX, mouseY) ? highlight : foreground;
 			GlUtil.drawRect(grabber, grabColor);
 		}
 	}

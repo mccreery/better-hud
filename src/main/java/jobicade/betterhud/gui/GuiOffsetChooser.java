@@ -11,7 +11,7 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.util.geom.Rect;
-import jobicade.betterhud.util.Colors;
+import jobicade.betterhud.util.render.Color;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.geom.Point;
 
@@ -55,19 +55,19 @@ public class GuiOffsetChooser extends GuiScreen {
 		}
 		setting.setOffset(offset);
 
-		GlUtil.drawBorderRect(setting.getParent(), Colors.setAlpha(Colors.RED, 63));
+		GlUtil.drawBorderRect(setting.getParent(), Color.RED.withAlpha(63));
 
 		Rect elementRect = parent.element.getLastRect();
 		if(!elementRect.isEmpty()) {
-			GlUtil.drawBorderRect(parent.element.getLastRect(), Colors.RED);
+			GlUtil.drawBorderRect(parent.element.getLastRect(), Color.RED);
 		} else {
 			Point mouse = offset.add(anchor);
-			drawHorizontalLine(mouse.getX() - SPACER, mouse.getX() + SPACER, mouse.getY(), Colors.RED);
-			drawVerticalLine(mouse.getX(), mouse.getY() - SPACER, mouse.getY() + SPACER, Colors.RED);
+			drawHorizontalLine(mouse.getX() - SPACER, mouse.getX() + SPACER, mouse.getY(), Color.RED.getPacked());
+			drawVerticalLine(mouse.getX(), mouse.getY() - SPACER, mouse.getY() + SPACER, Color.RED.getPacked());
 		}
 
 		String key = Keyboard.getKeyName(Keyboard.KEY_LCONTROL);
-		drawString(fontRenderer, I18n.format("betterHud.menu.unsnap", key), SPACER, SPACER, Colors.WHITE);
+		drawString(fontRenderer, I18n.format("betterHud.menu.unsnap", key), SPACER, SPACER, Color.WHITE.getPacked());
 
 		drawHoveringText(offset.toString(), mouseX, mouseY);
 	}

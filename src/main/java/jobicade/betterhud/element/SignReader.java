@@ -14,7 +14,7 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.util.geom.Rect;
-import jobicade.betterhud.util.Colors;
+import jobicade.betterhud.util.render.Color;
 import jobicade.betterhud.util.geom.Direction;
 
 public class SignReader extends HudElement {
@@ -57,7 +57,7 @@ public class SignReader extends HudElement {
 				String text = line.getFormattedText();
 				int textWidth = MC.fontRenderer.getStringWidth(text);
 
-				MC.fontRenderer.drawString(text, bounds.getX() + (bounds.getWidth() - textWidth) / 2, y, Colors.BLACK);
+				MC.fontRenderer.drawString(text, bounds.getX() + (bounds.getWidth() - textWidth) / 2, y, Color.BLACK.getPacked());
 				//MC.ingameGUI.drawCenteredString(MC.fontRenderer, text, bounds.x() + bounds.width() / 2, y, Colors.BLACK);
 			}
 			y += MC.fontRenderer.FONT_HEIGHT + 2;

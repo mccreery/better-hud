@@ -9,21 +9,21 @@ import java.util.List;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
+import jobicade.betterhud.element.HudElement;
+import jobicade.betterhud.element.settings.DirectionOptions;
+import jobicade.betterhud.element.settings.Setting;
+import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.util.GlUtil;
+import jobicade.betterhud.util.StringGroup;
+import jobicade.betterhud.util.geom.Direction;
+import jobicade.betterhud.util.geom.Point;
+import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.util.render.Color;
 import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Scoreboard;
 import net.minecraftforge.fml.common.eventhandler.Event;
-import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.element.settings.DirectionOptions;
-import jobicade.betterhud.element.settings.Setting;
-import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.util.geom.Rect;
-import jobicade.betterhud.util.Colors;
-import jobicade.betterhud.util.geom.Direction;
-import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.util.geom.Point;
-import jobicade.betterhud.util.StringGroup;
 
 public class Sidebar extends HudElement {
 	private SettingPosition position;
@@ -73,7 +73,7 @@ public class Sidebar extends HudElement {
 		}
 
 		StringGroup namesGroup = new StringGroup(names).setAlignment(position.getContentAlignment().mirrorCol());
-		StringGroup valuesGroup = new StringGroup(values).setColor(0xffff5555).setAlignment(position.getContentAlignment());
+		StringGroup valuesGroup = new StringGroup(values).setColor(new Color(255, 255, 55, 55)).setAlignment(position.getContentAlignment());
 		Point valuesSize = valuesGroup.getSize();
 
 		Point size = namesGroup.getSize().add(MC.fontRenderer.getCharWidth(' ') * 2 + valuesSize.getX(), 0);
@@ -93,12 +93,12 @@ public class Sidebar extends HudElement {
 
 		// Translucent background
 		Rect background = new Rect(bounds).withBottom(contentRect.getTop() - 1);
-		GlUtil.drawRect(background, 0x60000000);
+		GlUtil.drawRect(background, new Color(96, 0, 0, 0));
 
 		background = background.withTop(background.getBottom()).withBottom(bounds.getBottom());
-		GlUtil.drawRect(background, 0x50000000);
+		GlUtil.drawRect(background, new Color(80, 0, 0, 0));
 
-		GlUtil.drawString(title, paddingRect.getAnchor(Direction.NORTH), Direction.NORTH, Colors.WHITE);
+		GlUtil.drawString(title, paddingRect.getAnchor(Direction.NORTH), Direction.NORTH, Color.WHITE);
 		namesGroup.draw(contentRect);
 		valuesGroup.draw(contentRect);
 

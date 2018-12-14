@@ -11,7 +11,7 @@ import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.text.TextElement;
 import jobicade.betterhud.util.geom.Rect;
-import jobicade.betterhud.util.Colors;
+import jobicade.betterhud.util.render.Color;
 import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.geom.Point;
@@ -59,10 +59,10 @@ public class ExperienceInfo extends TextElement {
 		Rect bar = EXPERIENCE.getLastRect();
 
 		Point text = new Rect(GlUtil.getStringSize(hasDisplay).sub(0, 2)).anchor(bar, Direction.WEST).getPosition();
-		GlUtil.drawBorderedString(hasDisplay, text.getX(), text.getY(), Colors.WHITE);
+		GlUtil.drawBorderedString(hasDisplay, text.getX(), text.getY(), Color.WHITE);
 
 		text = new Rect(GlUtil.getStringSize(neededDisplay).sub(0, 2)).anchor(bar, Direction.EAST).getPosition();
-		GlUtil.drawBorderedString(neededDisplay, text.getX(), text.getY(), Colors.WHITE);
+		GlUtil.drawBorderedString(neededDisplay, text.getX(), text.getY(), Color.WHITE);
 
 		return super.render(event);
 	}

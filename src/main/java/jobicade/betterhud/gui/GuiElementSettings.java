@@ -11,6 +11,12 @@ import java.util.List;
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
+import jobicade.betterhud.BetterHud;
+import jobicade.betterhud.element.HudElement;
+import jobicade.betterhud.element.settings.Setting;
+import jobicade.betterhud.util.geom.Point;
+import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.util.render.Color;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiLabel;
@@ -23,12 +29,6 @@ import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import jobicade.betterhud.BetterHud;
-import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.element.settings.Setting;
-import jobicade.betterhud.util.geom.Rect;
-import jobicade.betterhud.util.Colors;
-import jobicade.betterhud.util.geom.Point;
 
 @SideOnly(Side.CLIENT)
 public class GuiElementSettings extends GuiScreen {
@@ -190,7 +190,7 @@ public class GuiElementSettings extends GuiScreen {
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		drawDefaultBackground();
-		drawCenteredString(this.fontRenderer, I18n.format("betterHud.menu.settings", this.element.getLocalizedName()), this.width / 2, height / 16 + 5, Colors.WHITE);
+		drawCenteredString(this.fontRenderer, I18n.format("betterHud.menu.settings", this.element.getLocalizedName()), this.width / 2, height / 16 + 5, Color.WHITE.getPacked());
 
 		ScaledResolution resolution = new ScaledResolution(MC);
 		done.drawButton(MC, mouseX, mouseY, partialTicks);
@@ -231,14 +231,14 @@ public class GuiElementSettings extends GuiScreen {
 
 		// Horizontal
 		int textX = x + (width - stringWidth) / 2;
-		drawHorizontalLine(x, textX - SPACER, y, Colors.WHITE);
-		drawHorizontalLine(x + (width + stringWidth) / 2 + SPACER, x + width, y, Colors.WHITE);
-		fontRenderer.drawString(widthDisplay, textX, y, Colors.WHITE);
+		drawHorizontalLine(x, textX - SPACER, y, Color.WHITE.getPacked());
+		drawHorizontalLine(x + (width + stringWidth) / 2 + SPACER, x + width, y, Color.WHITE.getPacked());
+		fontRenderer.drawString(widthDisplay, textX, y, Color.WHITE.getPacked());
 
 		// Vertical
 		int textY = y + (height - fontRenderer.FONT_HEIGHT) / 2;
-		drawVerticalLine(x, y, textY - SPACER, Colors.WHITE);
-		drawVerticalLine(x, y + (height + fontRenderer.FONT_HEIGHT) / 2 + SPACER, y + height, Colors.WHITE);
-		fontRenderer.drawString(String.valueOf(this.height), x, textY, Colors.WHITE);
+		drawVerticalLine(x, y, textY - SPACER, Color.WHITE.getPacked());
+		drawVerticalLine(x, y + (height + fontRenderer.FONT_HEIGHT) / 2 + SPACER, y + height, Color.WHITE.getPacked());
+		fontRenderer.drawString(String.valueOf(this.height), x, textY, Color.WHITE.getPacked());
 	}
 }

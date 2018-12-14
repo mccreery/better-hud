@@ -12,7 +12,7 @@ import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.util.geom.Rect;
-import jobicade.betterhud.util.Colors;
+import jobicade.betterhud.util.render.Color;
 import jobicade.betterhud.util.geom.Direction;
 
 public class HealIndicator extends HudElement {
@@ -50,7 +50,7 @@ public class HealIndicator extends HudElement {
 			}
 
 			if(mode.getIndex() == 0) {
-				MC.ingameGUI.drawString(MC.fontRenderer, healIndicator, bounds.getX(), bounds.getY(), Colors.GREEN);
+				MC.ingameGUI.drawString(MC.fontRenderer, healIndicator, bounds.getX(), bounds.getY(), Color.GREEN.getPacked());
 			} else {
 				MC.getTextureManager().bindTexture(HUD_ICONS);
 				MC.ingameGUI.drawTexturedModalRect(bounds.getX(), bounds.getY(), 0, 80, 9, 9);

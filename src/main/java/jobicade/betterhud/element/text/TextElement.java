@@ -10,7 +10,7 @@ import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingColor;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.util.geom.Rect;
-import jobicade.betterhud.util.Colors;
+import jobicade.betterhud.util.render.Color;
 import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.StringGroup;
@@ -34,7 +34,7 @@ public abstract class TextElement extends HudElement {
 		settings.add(color = new SettingColor("color"));
 	}
 
-	public int getColor() {
+	public Color getColor() {
 		return color.get();
 	}
 
@@ -43,7 +43,7 @@ public abstract class TextElement extends HudElement {
 		super.loadDefaults();
 
 		position.setPreset(Direction.NORTH_EAST);
-		color.set(Colors.WHITE);
+		color.set(Color.WHITE);
 	}
 
 	protected Rect getPadding() {
@@ -84,7 +84,7 @@ public abstract class TextElement extends HudElement {
 	}
 
 	protected void drawBorder(Rect bounds, Rect padding, Rect margin) {
-		if(border) GlUtil.drawRect(bounds.grow(margin.invert()), Colors.TRANSLUCENT);
+		if(border) GlUtil.drawRect(bounds.grow(margin.invert()), Color.TRANSLUCENT);
 	}
 
 	protected abstract List<String> getText();

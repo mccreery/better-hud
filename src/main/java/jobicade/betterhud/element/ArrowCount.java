@@ -14,7 +14,7 @@ import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.util.geom.Rect;
-import jobicade.betterhud.util.Colors;
+import jobicade.betterhud.util.render.Color;
 import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.geom.Point;
@@ -126,6 +126,6 @@ public class ArrowCount extends HudElement {
 
 		Rect text = new Rect(GlUtil.getStringSize(countDisplay)).align(stackRect.grow(1, 1, 1, 2).getAnchor(Direction.NORTH_EAST), Direction.NORTH_EAST);
 
-		MC.ingameGUI.drawString(MC.fontRenderer, countDisplay, text.getX(), text.getY(), Colors.WHITE);
+		MC.ingameGUI.drawString(MC.fontRenderer, countDisplay, text.getX(), text.getY(), Color.WHITE.getPacked());
 	}
 }

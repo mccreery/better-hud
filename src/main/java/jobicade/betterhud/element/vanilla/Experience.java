@@ -12,7 +12,7 @@ import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.util.geom.Rect;
-import jobicade.betterhud.util.Colors;
+import jobicade.betterhud.util.render.Color;
 import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.geom.Point;
@@ -67,7 +67,7 @@ public class Experience extends OverrideElement {
 			Point numberPosition = new Rect(GlUtil.getStringSize(numberText))
 				.anchor(barRect.grow(6), position.getContentAlignment().mirrorRow()).getPosition();
 
-			GlUtil.drawBorderedString(numberText, numberPosition.getX(), numberPosition.getY(), Colors.fromRGB(128, 255, 32));
+			GlUtil.drawBorderedString(numberText, numberPosition.getX(), numberPosition.getY(), new Color(128, 255, 32));
 		}
 		return barRect;
 	}

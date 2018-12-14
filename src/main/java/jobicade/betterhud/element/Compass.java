@@ -14,11 +14,11 @@ import jobicade.betterhud.element.settings.SettingDirection;
 import jobicade.betterhud.element.settings.SettingPercentage;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.settings.SettingSlider;
-import jobicade.betterhud.util.Colors;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.geom.Point;
 import jobicade.betterhud.util.geom.Rect;
+import jobicade.betterhud.util.render.Color;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Items;
@@ -69,8 +69,8 @@ public class Compass extends HudElement {
 	}
 
 	private void drawBackground(Rect bounds) {
-		GlUtil.drawRect(bounds, Colors.fromARGB(170, 0, 0, 0));
-		GlUtil.drawRect(bounds.grow(-50, 0, -50, 0), Colors.fromARGB(85, 85, 85, 85));
+		GlUtil.drawRect(bounds, new Color(170, 0, 0, 0));
+		GlUtil.drawRect(bounds.grow(-50, 0, -50, 0), new Color(85, 85, 85, 85));
 
 		Direction alignment = position.getContentAlignment();
 
@@ -83,14 +83,14 @@ public class Compass extends HudElement {
 		if(showNotches.get()) {
 			for(int loc : notchX) {
 				Rect notchTemp = smallNotch.anchor(smallRect, alignment);
-				GlUtil.drawRect(notchTemp.translate(loc, 0), Colors.WHITE);
-				GlUtil.drawRect(notchTemp.translate(-loc, 0), Colors.WHITE);
+				GlUtil.drawRect(notchTemp.translate(loc, 0), Color.WHITE);
+				GlUtil.drawRect(notchTemp.translate(-loc, 0), Color.WHITE);
 			}
 		}
 
-		GlUtil.drawRect(largeNotch.anchor(largeRect, alignment.withCol(0)), Colors.RED);
-		GlUtil.drawRect(largeNotch.anchor(largeRect, alignment.withCol(1)), Colors.RED);
-		GlUtil.drawRect(largeNotch.anchor(largeRect, alignment.withCol(2)), Colors.RED);
+		GlUtil.drawRect(largeNotch.anchor(largeRect, alignment.withCol(0)), Color.RED);
+		GlUtil.drawRect(largeNotch.anchor(largeRect, alignment.withCol(1)), Color.RED);
+		GlUtil.drawRect(largeNotch.anchor(largeRect, alignment.withCol(2)), Color.RED);
 	}
 
 	private void drawDirections(Rect bounds) {
@@ -112,12 +112,12 @@ public class Compass extends HudElement {
 			GlStateManager.translate(letter.getX(), letter.getY(), 0);
 			GlUtil.scale((float)scale);
 
-			int color = i == 0 ? Colors.BLUE : i == 2 ? Colors.RED : Colors.WHITE;
-			color = Colors.setAlpha(color, (int)(((cos + 1) / 2) * 255));
+			Color color = i == 0 ? Color.BLUE : i == 2 ? Color.RED : Color.WHITE;
+			color = color.withAlpha((int)(((cos + 1) / 2) * 255));
 
 			// Super low alphas can render opaque for some reason
-			if(Colors.alpha(color) > 3) {
-				MC.ingameGUI.drawCenteredString(MC.fontRenderer, DIRECTIONS[i], 0, bottom ? -MC.fontRenderer.FONT_HEIGHT : 0, color);
+			if(color.getAlpha() > 3) {
+				MC.ingameGUI.drawCenteredString(MC.fontRenderer, DIRECTIONS[i], 0, bottom ? -MC.fontRenderer.FONT_HEIGHT : 0, color.getPacked());
 			}
 
 			GlStateManager.popMatrix();
@@ -172,7 +172,7 @@ public class Compass extends HudElement {
 			bounds = position.applyTo(new Rect(GlUtil.getStringSize(text)));
 
 			MC.mcProfiler.startSection("text");
-			GlUtil.drawString(text, bounds.getPosition(), Direction.NORTH_WEST, Colors.WHITE);
+			GlUtil.drawString(text, bounds.getPosition(), Direction.NORTH_WEST, Color.WHITE);
 			MC.mcProfiler.endSection();
 		}
 
