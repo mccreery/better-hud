@@ -14,7 +14,7 @@ public class Point implements Serializable {
     private static final long serialVersionUID = 1L;
     private static final Point ZERO = new Point();
 
-    private final int x, y;
+    protected final int x, y;
 
     /**
      * Default constructor for points. Both X and Y will be zero.
@@ -60,11 +60,10 @@ public class Point implements Serializable {
      */
     @Override
     public boolean equals(Object obj) {
-        if(obj instanceof Point) {
-            Point point = (Point)obj;
-            return x == point.x && y == point.y;
-        }
-        return super.equals(obj);
+        if(!(obj instanceof Point)) return false;
+        Point point = (Point)obj;
+
+        return x == point.x && y == point.y;
     }
 
     /**
@@ -148,6 +147,7 @@ public class Point implements Serializable {
      * @return The result of moving this point in the given direction
      * by the given distance.
      */
+    @Deprecated
     public Point add(Direction direction, int x) { return add(direction.getUnit().scale(x, x)); }
 
     /**

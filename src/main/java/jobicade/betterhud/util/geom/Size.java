@@ -1,30 +1,30 @@
 package jobicade.betterhud.util.geom;
 
+import java.io.Serializable;
+
+import jobicade.betterhud.util.geom.Direction;
 import net.minecraft.client.gui.ScaledResolution;
 
 /**
- * A special type of point that represents a difference
- * or size between two points, for example the size of a rectangle.
+ * A special type of {@link Point} which represents a size, or difference
+ * between two points.
  *
- * @see Rect
+ * @see Point
  */
 public class Size extends Point {
     private static final long serialVersionUID = 1L;
-
     private static final Size ZERO = new Size();
 
     /**
-     * Default constructor for sizes.
-     * @see Point#Point()
+     * Default constructor for sizes. Both width and height will be zero.
      */
     public Size() { super(); }
 
     /**
      * Constructor for sizes.
      *
-     * @param width The width of the size.
-     * @param height The height of the size.
-     * @see Point#Point(int, int)
+     * @param width The width.
+     * @param height The height.
      */
     public Size(int width, int height) {
         super(width, height);
@@ -32,32 +32,31 @@ public class Size extends Point {
 
     /**
      * Copy/conversion constructor for sizes.
-     *
-     * @param point The point to copy.
-     * @see Point#Point(Point)
+     * @param point The original point to copy.
      */
     public Size(Point point) {
         super(point);
     }
 
     /**
-     * Conversion constructor for sizes.
+     * Conversion constructor from scaled resolutions. Uses the scaled width
+     * and height to populate width and height.
      *
-     * @param resolution The resolution to convert.
-     * @see Point#Point(ScaledResolution)
+     * @param resolution The resolution to get width and height from.
      */
     public Size(ScaledResolution resolution) {
         super(resolution);
     }
 
     /**
-     * Returns a size with both X and Y equal to zero.
+     * Size objects are considered equal only to other size objects with the
+     * same width and height.
      *
-     * @return A size with both X and Y equal to zero.
-     * @see Point#zero()
+     * <p>{@inheritDoc}
      */
-    public static Size zero() {
-        return ZERO;
+    @Override
+    public boolean equals(Object obj) {
+        return obj instanceof Size && super.equals(obj);
     }
 
     /**
@@ -68,48 +67,116 @@ public class Size extends Point {
     @Override
     public String toString() {
         return String.format("%s{width: %d, height: %d}@%s",
-            getClass().getName(), getX(), getY(), Integer.toHexString(hashCode()));
+            getClass().getName(), x, y, Integer.toHexString(hashCode()));
     }
+
+    /**
+     * Returns a size with both width and height equal to zero. Prefer to use
+     * this over creating one, as there may be a performance benefit.
+     * @return A size with both width and height equal to zero.
+     */
+    public static Size zero() { return ZERO; }
+
+    // Getters and setters
 
     /**
      * Getter for width.
-     *
-     * @return The width of this size. Same as "x".
-     * @see #getX()
+     * @return The width.
      */
-    public int getWidth() {
-        return getX();
-    }
+    public int getWidth() { return getX(); }
 
     /**
      * Getter for height.
-     *
-     * @return The height of this size. Same as "y".
-     * @see #getY()
+     * @return The height.
      */
-    public int getHeight() {
-        return getY();
-    }
+    public int getHeight() { return getY(); }
+
+    @Override
+    public Size withX(int x) { return new Size(x, y); }
+
+    @Override
+    public Size withY(int y) { return new Size(x, y); }
 
     /**
-     * Returns a size with a new width. Height does not change.
-     *
+     * Returns a size with the given width and the original height.
      * @param width The new width.
-     * @return A size with a new width and the existing height.
-     * @see #withX(int)
+     * @return A size with the given width and the original height.
      */
-    public Point withWidth(int width) {
-        return withX(width);
+    public Size withWidth(int width) { return withX(width); }
+
+    /**
+     * Returns a size with the given height and the original width.
+     * @param width The new width.
+     * @return A size with the given height and the original width.
+     */
+    public Size withHeight(int height) { return withY(height); }
+
+    // End getters and setters
+
+    /**
+     * Returns the sum of this size and another point.
+     * @param x The X coordinate of the other point.
+     * @param y The Y coordinate of the other point.
+     * @return The sum of this size and the other point.
+     */
+    public Size add(int x, int y) { return new Size(this.x + x, this.y + y); }
+
+    /**
+     * @param point The other point.
+     * @see #add(int, int)
+     */
+    public Size add(Point point) { return new Size(x + point.x, y + point.y); }
+
+    /**
+     * Returns a size with both width and height negated.
+     * @return A point with both width and height negated.
+     */
+    public Size invert() { return new Size(-x, -y); }
+
+    /**
+     * Scales the size by a factor in X and Y.
+     * @param xf The factor in the X axis.
+     * @param yf The factor in the Y axis.
+     * @return A size scaled by the given factors.
+     */
+    public Size scale(float xf, float yf) {
+        return new Size(Math.round(x * xf), Math.round(y * yf));
     }
 
     /**
-     * Returns a size with a new height. Width does not change.
+     * Scales the point by a factor in X and Y.
      *
-     * @param height The new height.
-     * @return A size with a new height and the existing width.
-     * @see #withY(int)
+     * @param factor The scaling factor.
+     * @return A point scaled by the given factor.
      */
-    public Point withHeight(int height) {
-        return withY(height);
+    public Size scale(Point factor) {
+        return new Size(x * factor.x, y * factor.y);
+    }
+
+    /**
+     * Scales the point by a factor in X and Y around a point.
+     *
+     * @param xf The factor in the X axis.
+     * @param yf The factor in the Y axis.
+     * @param x The point to scale around X coordinate.
+     * @param y The point to scale around Y coordinate.
+     * @return A size scaled by the given factors around the given point.
+     * @see #scale(float, float)
+     */
+    public Size scale(float xf, float yf, int x, int y) {
+        return new Size(
+            Math.round((this.x - x) * xf + x),
+            Math.round((this.y - y) * yf + y));
+    }
+
+    /**
+     * @param xf The factor in the X axis.
+     * @param yf The factor in the Y axis.
+     * @param point The point.
+     * @return A size scaled by the given factors around the given point.
+     * @see #scale(float, float, int, int)
+     */
+    public Size scale(float xf, float yf, Point point) {
+        return scale(xf, yf, point.x, point.y);
     }
 }

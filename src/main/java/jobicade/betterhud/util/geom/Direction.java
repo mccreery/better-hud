@@ -45,8 +45,20 @@ public enum Direction {
 	 *
 	 * @return A point representing a unit translation in this direction.
 	 */
+	@Deprecated
 	public Point getUnit() {
 		return new Point(col - 1, row - 1);
+	}
+
+	/**
+	 * Returns a size representing a translation in this direction. Diagonal
+	 * directions are the sum of their axes.
+	 *
+	 * @param factor The distance to translate.
+	 * @return A size representing a translation in this direction.
+	 */
+	public Size scale(int factor) {
+		return new Size((col - 1) * factor, (row - 1) * factor);
 	}
 
 	/**
