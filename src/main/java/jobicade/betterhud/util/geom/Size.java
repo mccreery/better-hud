@@ -1,8 +1,5 @@
 package jobicade.betterhud.util.geom;
 
-import java.io.Serializable;
-
-import jobicade.betterhud.util.geom.Direction;
 import net.minecraft.client.gui.ScaledResolution;
 
 /**

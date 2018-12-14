@@ -39,18 +39,6 @@ public enum Direction {
 	}
 
 	/**
-	 * Returns a point representing a translation based on 1 unit
-	 * in this direction. Diagonal directions return a unit both horizontally
-	 * and vertically, so the translation is actually sqrt(2).
-	 *
-	 * @return A point representing a unit translation in this direction.
-	 */
-	@Deprecated
-	public Point getUnit() {
-		return new Point(col - 1, row - 1);
-	}
-
-	/**
 	 * Returns a size representing a translation in this direction. Diagonal
 	 * directions are the sum of their axes.
 	 *

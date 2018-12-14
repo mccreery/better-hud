@@ -2,7 +2,6 @@ package jobicade.betterhud.util.geom;
 
 import java.io.Serializable;
 
-import jobicade.betterhud.util.geom.Direction;
 import jobicade.betterhud.util.geom.Size;
 import net.minecraft.client.gui.ScaledResolution;
 
@@ -139,16 +138,6 @@ public class Point implements Serializable {
      * @see #add(int, int)
      */
     public Point add(Point point) { return new Point(x + point.x, y + point.y); }
-
-    /**
-     * Returns the result of moving a point in a direction by a distance.
-     * @param direction The direction of movement.
-     * @param x The distance to move.
-     * @return The result of moving this point in the given direction
-     * by the given distance.
-     */
-    @Deprecated
-    public Point add(Direction direction, int x) { return add(direction.getUnit().scale(x, x)); }
 
     /**
      * Returns the difference between this point and another point.

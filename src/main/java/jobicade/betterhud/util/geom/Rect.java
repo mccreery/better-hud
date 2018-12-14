@@ -436,18 +436,6 @@ public final class Rect implements Serializable {
     public Rect translate(Point offset) { return new Rect(this.x + offset.getX(), this.y + offset.getY(), width, height); }
 
     /**
-     * Returns the result of translating this rectangle in the given direction
-     * by the given distance. There is no guarantee that the returned rectangle
-     * will be distinct from {@code this}.
-     *
-     * @param direction The direction of translation.
-     * @param x The distance of translation.
-     * @return The result of translating this rectangle in the given direction
-     * by the given amount.
-     */
-    public Rect translate(Direction direction, int x) { return translate(direction.getUnit().scale(x, x)); }
-
-    /**
      * As {@link #translate(int, int)}, but inverts the translation.
      *
      * @param x The X coordinate offset.
