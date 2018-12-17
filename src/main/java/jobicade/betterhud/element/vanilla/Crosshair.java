@@ -133,7 +133,7 @@ public class Crosshair extends OverrideElement {
 			Rect texture = new Rect(16, 16);
 			Point position = new Rect(texture).anchor(MANAGER.getScreen(), Direction.CENTER).getPosition();
 
-			GlUtil.drawTexturedModalRect(position, texture);
+			GlUtil.drawRect(new Rect(position, texture.getSize()), texture);
 
 			if(attackIndicator.get()) {
 				return renderAttackIndicator();
@@ -159,7 +159,7 @@ public class Crosshair extends OverrideElement {
 		if(indicatorType.getIndex() == 0) {
 			if(attackStrength >= 1) {
 				if(MC.pointedEntity != null && MC.pointedEntity instanceof EntityLivingBase && MC.player.getCooldownPeriod() > 5 && ((EntityLivingBase)MC.pointedEntity).isEntityAlive()) {
-					GlUtil.drawTexturedModalRect(bounds.getPosition(), new Rect(68, 94, 16, 8));
+					GlUtil.drawRect(bounds, new Rect(68, 94, 16, 8));
 				}
 			} else {
 				GlUtil.drawTexturedProgressBar(bounds.getPosition(), new Rect(36, 94, 16, 8), new Rect(52, 94, 16, 8), attackStrength, Direction.EAST);

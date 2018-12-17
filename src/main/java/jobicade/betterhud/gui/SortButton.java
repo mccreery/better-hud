@@ -43,10 +43,10 @@ class SortButton extends GuiActionButton {
 
 		if(isTargeted()) {
 			Rect texture = callback.isDescending() ? DOWN_TEXTURE : UP_TEXTURE;
-			Point position = new Rect(texture).anchor(bounds, Direction.EAST).getPosition().add(-2, 0);
+			Rect arrow = new Rect(texture).anchor(bounds, Direction.EAST).translate(-2, 0);
 
 			MC.getTextureManager().bindTexture(ARROW_TEXTURE);
-			GlUtil.drawTexturedModalRect(position, texture);
+			GlUtil.drawRect(arrow, texture);
 			MC.getTextureManager().bindTexture(ICONS);
 		}
 	}

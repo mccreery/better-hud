@@ -29,6 +29,7 @@ public class ParticleWater extends ParticleBase {
 
 		int iconIndex = MathUtil.randomRange(0, 2);
 		return new ParticleWater(position, iconIndex, opacity, size, speed);
+		//return new ParticleWater(new Point(10, 10), 0, 1.0f, 1.0f, 10.0f);
 	}
 
 	@Override
@@ -41,7 +42,7 @@ public class ParticleWater extends ParticleBase {
 
 		Color color = Color.WHITE.withAlpha(Math.round(opacity * 255));
 		Rect bounds = texture.align(Point.zero(), Direction.CENTER);
-		GlUtil.drawTexturedColoredModalRect(bounds.getX(), bounds.getY(), texture.getX(), texture.getY(), bounds.getWidth(), bounds.getHeight(), texture.getWidth(), texture.getHeight(), color);
+		GlUtil.drawRect(bounds, texture, color);
 
 		GlStateManager.popMatrix();
 		GlMode.pop();

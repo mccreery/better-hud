@@ -49,7 +49,7 @@ public class Offhand extends HudElement {
 		}
 
 		GlMode.push(new TextureMode(WIDGETS));
-		GlUtil.drawTexturedModalRect(bounds, texture);
+		GlUtil.drawRect(bounds, texture);
 		GlMode.pop();
 
 		RenderHelper.enableGUIStandardItemLighting();

@@ -6,11 +6,8 @@ import static jobicade.betterhud.render.GlMode.ITEM;
 import java.util.List;
 
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.client.renderer.Tessellator;
-import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
@@ -20,12 +17,11 @@ import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.GlMode;
+import jobicade.betterhud.render.Quad;
 import jobicade.betterhud.render.Color;
 
 public final class GlUtil {
 	private GlUtil() {}
-
-	private static final double TEXTURE_NORMALIZE = 1.0 / 256.0;
 
 	/** All axes default to {@code scale}
 	 * @see GlStateManager#scale(float, float, float) */
@@ -34,74 +30,52 @@ public final class GlUtil {
 	}
 
 	/** @see Gui#drawRect(int, int, int, int, int) */
-	@Deprecated
-	public static void drawRect(Rect bounds, int color) {
-		Gui.drawRect(bounds.getLeft(), bounds.getTop(), bounds.getRight(), bounds.getBottom(), color);
-		GlMode.clean();
-	}
-
-	/** @see Gui#drawRect(int, int, int, int, int) */
 	public static void drawRect(Rect bounds, Color color) {
-		Gui.drawRect(bounds.getLeft(), bounds.getTop(), bounds.getRight(), bounds.getBottom(), color.getPacked());
-		GlMode.clean();
+		Quad quad = new Quad(bounds);
+		quad.setColor(color);
+		quad.render();
 	}
 
-	@Deprecated
-	public static void drawBorderRect(Rect bounds, int color) {
-		drawBorderRect(bounds, new Color(color));
+	/**
+	 * Renders a rectangle with a texture.
+	 * @param bounds The outer bounding box of the rectangle.
+	 * @param texture The texture coordinates.
+	 */
+	public static void drawRect(Rect bounds, Rect texture) {
+		Quad quad = new Quad(bounds);
+		quad.setTexture(texture);
+		quad.render();
 	}
 
+	/**
+	 * Renders a rectangle with a texture and a color.
+	 * @param bounds The outer bounding box of the rectangle.
+	 * @param texture The texture coordinates.
+	 * @param color The color of the rectangle.
+	 */
+	public static void drawRect(Rect bounds, Rect texture, Color color) {
+		Quad quad = new Quad(bounds);
+		quad.setTexture(texture);
+		quad.setColor(color);
+		quad.render();
+	}
+
+	/**
+	 * Renders the edges of a rectangle.
+	 * @param bounds The outer bounding box of the rectangle.
+	 * @param color The color of the rectangle.
+	 */
 	public static void drawBorderRect(Rect bounds, Color color) {
-		drawRect(bounds.withWidth(1).grow(0, -1, 0, -1), color);
-		drawRect(bounds.withLeft(bounds.getRight() - 1).grow(0, -1, 0, -1), color);
+		Quad quad = new Quad(bounds.withWidth(1));
+		quad.setColor(color);
+		quad.render();
 
-		drawRect(bounds.withHeight(1), color);
-		drawRect(bounds.withTop(bounds.getBottom() - 1), color);
-	}
-
-	/** @see #drawTexturedModalRect(int, int, int, int, int, int) */
-	public static void drawTexturedModalRect(Point position, Rect texture) {
-		drawTexturedModalRect(position.getX(), position.getY(), texture.getX(), texture.getY(), texture.getWidth(), texture.getHeight());
-	}
-
-	/** @see #drawTexturedModalRect(int, int, int, int, int, int, int, int) */
-	public static void drawTexturedModalRect(int x, int y, int u, int v, int width, int height) {
-		drawTexturedModalRect(x, y, u, v, Math.abs(width), Math.abs(height), width, height);
-	}
-
-	/** @see #drawTexturedModalRect(int, int, int, int, int, int, int, int) */
-	public static void drawTexturedModalRect(Rect bounds, Rect texture) {
-		drawTexturedModalRect(bounds.getX(), bounds.getY(), texture.getX(), texture.getY(), bounds.getWidth(), bounds.getHeight(), texture.getWidth(), texture.getHeight());
-	}
-
-	/** Supports negative sized textures
-	 * @see net.minecraft.client.gui.Gui#drawTexturedModalRect(int, int, int, int, int, int) */
-	public static void drawTexturedModalRect(int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight) {
-		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder builder = tessellator.getBuffer();
-		builder.begin(7, DefaultVertexFormats.POSITION_TEX);
-
-		builder.pos(x,         y + height, 0).tex( u                 * TEXTURE_NORMALIZE, (v + textureHeight) * TEXTURE_NORMALIZE).endVertex();
-		builder.pos(x + width, y + height, 0).tex((u + textureWidth) * TEXTURE_NORMALIZE, (v + textureHeight) * TEXTURE_NORMALIZE).endVertex();
-		builder.pos(x + width, y,          0).tex((u + textureWidth) * TEXTURE_NORMALIZE,  v                  * TEXTURE_NORMALIZE).endVertex();
-		builder.pos(x,         y,          0).tex( u                 * TEXTURE_NORMALIZE,  v                  * TEXTURE_NORMALIZE).endVertex();
-
-		tessellator.draw();
-	}
-
-	public static void drawTexturedColoredModalRect(int x, int y, int u, int v, int width, int height, int textureWidth, int textureHeight, Color color) {
-		Tessellator tessellator = Tessellator.getInstance();
-		BufferBuilder builder = tessellator.getBuffer();
-		builder.begin(7, DefaultVertexFormats.POSITION_TEX_COLOR);
-
-		int r = color.getRed(), g = color.getGreen(), b = color.getBlue(), a = color.getAlpha();
-
-		builder.pos(x,         y + height, 0).tex( u                 * TEXTURE_NORMALIZE, (v + textureHeight) * TEXTURE_NORMALIZE).color(r, g, b, a).endVertex();
-		builder.pos(x + width, y + height, 0).tex((u + textureWidth) * TEXTURE_NORMALIZE, (v + textureHeight) * TEXTURE_NORMALIZE).color(r, g, b, a).endVertex();
-		builder.pos(x + width, y,          0).tex((u + textureWidth) * TEXTURE_NORMALIZE,  v                  * TEXTURE_NORMALIZE).color(r, g, b, a).endVertex();
-		builder.pos(x,         y,          0).tex( u                 * TEXTURE_NORMALIZE,  v                  * TEXTURE_NORMALIZE).color(r, g, b, a).endVertex();
-
-		tessellator.draw();
+		quad.setBounds(bounds.withHeight(1));
+		quad.render();
+		quad.setBounds(bounds.withLeft(bounds.getRight() - 1));
+		quad.render();
+		quad.setBounds(bounds.withTop(bounds.getBottom() - 1));
+		quad.render();
 	}
 
 	/** Draws text with black borders on all sides */
@@ -238,7 +212,7 @@ public final class GlUtil {
 	 * @param progress Index of progress between 0 and 1
 	 * @param direction The direction the bar should fill up in */
 	public static void drawTexturedProgressBar(Point position, Rect background, Rect foreground, float progress, Direction direction) {
-		drawTexturedModalRect(position, background);
+		drawRect(background.move(position), background);
 
 		Rect bounds = background.move(position);
 		Rect partialRect = new Rect(bounds);
@@ -260,24 +234,12 @@ public final class GlUtil {
 		partialRect = partialRect.anchor(bounds, anchor);
 		partialForeground = partialForeground.anchor(foreground, anchor);
 
-		drawTexturedModalRect(partialRect.getPosition(), partialForeground);
+		drawRect(partialRect, partialForeground);
 	}
 
 	/** @return The size of {@code string} as rendered by Minecraft's font renderer */
 	public static Point getStringSize(String string) {
 		return new Point(MC.fontRenderer.getStringWidth(string), MC.fontRenderer.FONT_HEIGHT);
-	}
-
-	/** @param origin The anchor point
-	 * @param alignment The alignment around {@code origin}
-	 * @see net.minecraft.client.gui.FontRenderer#drawStringWithShadow(String, float, float, int) */
-	@Deprecated
-	public static Rect drawString(String string, Point origin, Direction alignment, int color) {
-		Rect bounds = new Rect(getStringSize(string)).align(origin, alignment);
-		MC.fontRenderer.drawStringWithShadow(string, bounds.getX(), bounds.getY(), color);
-
-		GlMode.clean();
-		return bounds;
 	}
 
 	/** @see #drawString(String, Point, Direction, int) */

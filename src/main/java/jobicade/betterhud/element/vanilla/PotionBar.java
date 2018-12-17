@@ -145,7 +145,7 @@ public class PotionBar extends HudElement {
 		}
 
 		GlMode.push(new TextureMode(GuiContainer.INVENTORY_BACKGROUND));
-		GlUtil.drawTexturedModalRect(position, background);
+		GlUtil.drawRect(background.move(position), background);
 
 		GlMode.set(new ColorMode(Color.WHITE.withAlpha(Math.round(opacity * 255))));
 
@@ -153,7 +153,7 @@ public class PotionBar extends HudElement {
 			int index = potion.getStatusIconIndex();
 			Rect icon = new Rect((index % 8) * 18, 198 + (index / 8) * 18, 18, 18);
 
-			GlUtil.drawTexturedModalRect(position.add(3, 3), icon);
+			GlUtil.drawRect(background.move(position.add(3, 3)), icon);
 		}
 		potion.renderHUDEffect(position.getX(), position.getY(), effect, MC, opacity);
 

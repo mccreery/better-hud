@@ -82,7 +82,7 @@ public class Vignette extends OverrideElement {
 		}
 
 		MC.getTextureManager().bindTexture(VIGNETTE_TEX_PATH);
-		GlUtil.drawTexturedModalRect(MANAGER.getScreen(), new Rect(256, 256));
+		GlUtil.drawRect(MANAGER.getScreen(), new Rect(256, 256));
 
 		GlStateManager.depthMask(true);
 		GlStateManager.enableDepth();

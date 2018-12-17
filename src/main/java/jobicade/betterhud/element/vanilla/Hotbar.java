@@ -42,7 +42,7 @@ public class Hotbar extends OverrideElement {
 		Rect barTexture = new Rect(182, 22);
 		Rect bounds = position.applyTo(new Rect(barTexture));
 
-		GlUtil.drawTexturedModalRect(bounds.getPosition(), barTexture);
+		GlUtil.drawRect(bounds, barTexture);
 
 		Rect slot = bounds.grow(-3).withWidth(16);
 
@@ -52,7 +52,7 @@ public class Hotbar extends OverrideElement {
 
 			if(i == MC.player.inventory.currentItem) {
 				MC.getTextureManager().bindTexture(WIDGETS);
-				GlUtil.drawTexturedModalRect(slot.grow(4), new Rect(0, 22, 24, 24));
+				GlUtil.drawRect(slot.grow(4), new Rect(0, 22, 24, 24));
 			}
 		}
 

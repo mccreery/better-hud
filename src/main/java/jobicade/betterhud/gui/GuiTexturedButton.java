@@ -46,7 +46,7 @@ public class GuiTexturedButton extends GuiActionButton {
 	@Override
 	protected void drawButton(Rect bounds, Point mousePosition, float partialTicks) {
 		GlMode.push(new TextureMode(SETTINGS));
-		GlUtil.drawTexturedModalRect(bounds, getTexture());
+		GlUtil.drawRect(bounds, getTexture());
 		GlMode.pop();
 	}
 }

@@ -109,7 +109,7 @@ public abstract class StatBar<T> extends Renderable {
 		for(Rect texture : getIcons(i)) {
 			if(texture != null) {
 				texture = ensureNative(texture, contentAlignment.withRow(1));
-				GlUtil.drawTexturedModalRect(bounds, texture);
+				GlUtil.drawRect(bounds, texture);
 			}
 		}
 	}

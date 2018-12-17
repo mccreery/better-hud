@@ -12,6 +12,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.GlUtil;
+import jobicade.betterhud.render.Color;
 import jobicade.betterhud.render.GlMode;
 import jobicade.betterhud.render.TextureMode;
 
@@ -45,7 +46,7 @@ public class HelmetOverlay extends OverrideElement {
 
 		if(item == Item.getItemFromBlock(Blocks.PUMPKIN)) {
 			GlMode.push(new TextureMode(PUMPKIN_BLUR_TEX_PATH));
-			GlUtil.drawTexturedModalRect(MANAGER.getScreen(), new Rect(256, 256));
+			GlUtil.drawRect(MANAGER.getScreen(), new Rect(256, 256), Color.RED);
 			GlMode.pop();
 		} else {
 			item.renderHelmetOverlay(stack, MC.player, new ScaledResolution(MC), getPartialTicks(event));
