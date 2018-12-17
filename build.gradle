@@ -20,8 +20,8 @@ ext {
 }
 
 // JAR filenames and Maven coordinates
-archivesBaseName = 'hud'
-group = 'tk.nukeduck.hud'
+archivesBaseName = 'betterhud'
+group = 'jobicade.betterhud'
 version = "${project.ext.mcVersion}-${project.ext.modVersion}"
 
 minecraft {
