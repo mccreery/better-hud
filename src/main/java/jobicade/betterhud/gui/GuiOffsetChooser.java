@@ -13,6 +13,7 @@ import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
+import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 
 public class GuiOffsetChooser extends GuiScreen {
@@ -67,7 +68,7 @@ public class GuiOffsetChooser extends GuiScreen {
 		}
 
 		String key = Keyboard.getKeyName(Keyboard.KEY_LCONTROL);
-		drawString(fontRenderer, I18n.format("betterHud.menu.unsnap", key), SPACER, SPACER, Color.WHITE.getPacked());
+		GlUtil.drawString(I18n.format("betterHud.menu.unsnap", key), new Point(SPACER, SPACER), Direction.NORTH_WEST, Color.WHITE);
 
 		drawHoveringText(offset.toString(), mouseX, mouseY);
 	}

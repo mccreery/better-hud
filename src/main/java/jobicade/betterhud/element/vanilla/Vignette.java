@@ -9,8 +9,8 @@ import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.render.Color;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
@@ -69,14 +69,10 @@ public class Vignette extends OverrideElement {
 		// Animate brightness
 		brightness = brightness + (MathHelper.clamp(1 - MC.player.getBrightness(), 0, 1) - brightness) / 100;
 
-		// TODO put into GlMode
-		GlStateManager.enableBlend();
-		GlStateManager.disableDepth();
-		GlStateManager.depthMask(false);
 		GlStateManager.tryBlendFuncSeparate(SourceFactor.ZERO, DestFactor.ONE_MINUS_SRC_COLOR, SourceFactor.ONE, DestFactor.ZERO);
 
 		if(f > 0) {
-			GlStateManager.color(0, f, f, 1); // Shouldn't this be 1, f, f, 1?
+			GlStateManager.color(0, f, f, 1);
 		} else {
 			GlStateManager.color(brightness, brightness, brightness, 1);
 		}
@@ -84,11 +80,8 @@ public class Vignette extends OverrideElement {
 		MC.getTextureManager().bindTexture(VIGNETTE_TEX_PATH);
 		GlUtil.drawRect(MANAGER.getScreen(), new Rect(256, 256));
 
-		GlStateManager.depthMask(true);
-		GlStateManager.enableDepth();
-		Color.WHITE.apply();
 		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-
+		MC.getTextureManager().bindTexture(Gui.ICONS);
 		return null;
 	}
 

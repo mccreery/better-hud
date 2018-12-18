@@ -1,12 +1,13 @@
 package jobicade.betterhud.gui;
 
+import static jobicade.betterhud.BetterHud.MC;
+
+import jobicade.betterhud.util.ISlider;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import jobicade.betterhud.util.ISlider;
-import jobicade.betterhud.render.GlMode;
-import jobicade.betterhud.render.TextureMode;
 
 @SideOnly(Side.CLIENT)
 public class GuiSlider extends GuiButton {
@@ -37,6 +38,10 @@ public class GuiSlider extends GuiButton {
 		return 0;
 	}
 
+	/**
+	 * OpenGL side-effects: set texture to Gui.ICONS
+	 * <p>{@inheritDoc}
+	 */
 	@Override
 	protected void mouseDragged(Minecraft mc, int mouseX, int mouseY) {
 		if(this.visible) {
@@ -46,10 +51,10 @@ public class GuiSlider extends GuiButton {
 			}
 			int sliderOffset = (int)((slider.get() - slider.getMinimum()) / (slider.getMaximum() - slider.getMinimum()) * (width - 8));
 
-			GlMode.push(new TextureMode(BUTTON_TEXTURES));
+			MC.getTextureManager().bindTexture(BUTTON_TEXTURES);
 			this.drawTexturedModalRect(x + sliderOffset,     y,   0, 66, 4, 20);
 			this.drawTexturedModalRect(x + sliderOffset + 4, y, 196, 66, 4, 20);
-			GlMode.pop();
+			MC.getTextureManager().bindTexture(Gui.ICONS);
 		}
 	}
 

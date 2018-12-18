@@ -1,15 +1,15 @@
 package jobicade.betterhud.element.particles;
 
 import static jobicade.betterhud.BetterHud.HUD_ICONS;
+import static jobicade.betterhud.BetterHud.MC;
 
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.MathUtil;
 import jobicade.betterhud.geom.Point;
-import jobicade.betterhud.render.GlMode;
-import jobicade.betterhud.render.TextureMode;
 import jobicade.betterhud.render.Color;
 
 public class ParticleBase implements Particle {
@@ -49,7 +49,7 @@ public class ParticleBase implements Particle {
 
 	@Override
 	public void render(float partialTicks) {
-		GlMode.push(new TextureMode(HUD_ICONS));
+		MC.getTextureManager().bindTexture(HUD_ICONS);
 		GlStateManager.pushMatrix();
 
 		GlStateManager.translate(position.getX(), position.getY(), 0.0F);
@@ -61,7 +61,7 @@ public class ParticleBase implements Particle {
 		GlUtil.drawRect(bounds, texture, color);
 
 		GlStateManager.popMatrix();
-		GlMode.pop();
+		MC.getTextureManager().bindTexture(Gui.ICONS);
 	}
 
 	@Override

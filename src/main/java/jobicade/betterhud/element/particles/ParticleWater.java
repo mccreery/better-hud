@@ -1,16 +1,16 @@
 package jobicade.betterhud.element.particles;
 
+import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.PARTICLES;
 
-import net.minecraft.client.renderer.GlStateManager;
-import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.MathUtil;
-import jobicade.betterhud.geom.Point;
-import jobicade.betterhud.render.GlMode;
-import jobicade.betterhud.render.TextureMode;
-import jobicade.betterhud.render.Color;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.GlStateManager;
 
 public class ParticleWater extends ParticleBase {
 	private float speed;
@@ -34,7 +34,7 @@ public class ParticleWater extends ParticleBase {
 
 	@Override
 	public void render(float partialTicks) {
-		GlMode.push(new TextureMode(PARTICLES));
+		MC.getTextureManager().bindTexture(PARTICLES);
 		GlStateManager.pushMatrix();
 
 		GlStateManager.translate(position.getX(), position.getY() - opacity * speed, 0);
@@ -45,6 +45,6 @@ public class ParticleWater extends ParticleBase {
 		GlUtil.drawRect(bounds, texture, color);
 
 		GlStateManager.popMatrix();
-		GlMode.pop();
+		MC.getTextureManager().bindTexture(Gui.ICONS);
 	}
 }

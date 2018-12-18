@@ -3,15 +3,13 @@ package jobicade.betterhud.element.vanilla;
 import static jobicade.betterhud.BetterHud.MANAGER;
 import static jobicade.betterhud.BetterHud.MC;
 
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.render.Color;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.init.Blocks;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.render.ColorMode;
-import jobicade.betterhud.render.GlMode;
-import jobicade.betterhud.render.Color;
 
 public class PortalOverlay extends OverrideElement {
 	public PortalOverlay() {
@@ -43,14 +41,13 @@ public class PortalOverlay extends OverrideElement {
 			timeInPortal = timeInPortal * 0.8f + 0.2f;
 		}
 
-		GlMode.push(new ColorMode(Color.WHITE.withAlpha(Math.round(timeInPortal * 255))));
+		Color.WHITE.withAlpha(Math.round(timeInPortal * 255)).apply();
 		MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
 		TextureAtlasSprite texture = MC.getBlockRendererDispatcher().getBlockModelShapes().getTexture(Blocks.PORTAL.getDefaultState());
 		Rect screen = MANAGER.getScreen();
 		MC.ingameGUI.drawTexturedModalRect(0, 0, texture, screen.getWidth(), screen.getHeight());
 
-		GlMode.pop();
 		return null;
 	}
 }

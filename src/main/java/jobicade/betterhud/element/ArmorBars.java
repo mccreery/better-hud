@@ -4,6 +4,7 @@ import static jobicade.betterhud.BetterHud.MC;
 
 import java.util.List;
 
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemArmor;
@@ -16,8 +17,6 @@ import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.element.settings.DirectionOptions;
-import jobicade.betterhud.render.GlMode;
-import jobicade.betterhud.render.TextureMode;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.geom.Point;
@@ -54,11 +53,16 @@ public class ArmorBars extends EquipmentDisplay {
 		return barType.getIndex() == 2;
 	}
 
+	/**
+	 * OpenGL side-effect: texture is reset to Gui.ICONS
+	 */
 	private static void drawEmptySlot(Point position, int slot) {
-		GlMode.push(new TextureMode(TextureMap.LOCATION_BLOCKS_TEXTURE));
+		MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+
 		TextureAtlasSprite empty = MC.getTextureMapBlocks().getAtlasSprite(ItemArmor.EMPTY_SLOT_NAMES[slot]);
 		MC.ingameGUI.drawTexturedModalRect(position.getX(), position.getY(), empty, 16, 16);
-		GlMode.pop();
+
+		MC.getTextureManager().bindTexture(Gui.ICONS);
 	}
 
 	@Override
@@ -122,7 +126,7 @@ public class ArmorBars extends EquipmentDisplay {
 						textRect = textRect.withY(textRect.getY() - 1);
 					}
 
-					MC.ingameGUI.drawString(MC.fontRenderer, text[i], textRect.getX(), textRect.getY(), Color.WHITE.getPacked());
+					GlUtil.drawString(text[i], textRect.getPosition(), Direction.NORTH_WEST, Color.WHITE);
 					MC.mcProfiler.endSection();
 				}
 

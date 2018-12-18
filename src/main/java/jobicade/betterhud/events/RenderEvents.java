@@ -1,5 +1,9 @@
 package jobicade.betterhud.events;
 
+import static jobicade.betterhud.BetterHud.MANAGER;
+import static jobicade.betterhud.BetterHud.MC;
+import static jobicade.betterhud.BetterHud.MODID;
+import static jobicade.betterhud.BetterHud.pointedEntity;
 import static net.minecraftforge.client.GuiIngameForge.renderAir;
 import static net.minecraftforge.client.GuiIngameForge.renderArmor;
 import static net.minecraftforge.client.GuiIngameForge.renderCrosshairs;
@@ -13,15 +17,15 @@ import static net.minecraftforge.client.GuiIngameForge.renderJumpBar;
 import static net.minecraftforge.client.GuiIngameForge.renderObjective;
 import static net.minecraftforge.client.GuiIngameForge.renderPortal;
 import static net.minecraftforge.client.GuiIngameForge.renderVignette;
-import static jobicade.betterhud.BetterHud.MANAGER;
-import static jobicade.betterhud.BetterHud.MC;
-import static jobicade.betterhud.BetterHud.MODID;
-import static jobicade.betterhud.BetterHud.pointedEntity;
 
 import java.util.List;
 
 import com.google.common.base.Predicate;
 
+import jobicade.betterhud.BetterHud;
+import jobicade.betterhud.element.HudElement;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.entity.Entity;
@@ -35,14 +39,11 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import jobicade.betterhud.BetterHud;
-import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.geom.Point;
 
 @SideOnly(Side.CLIENT)
 public final class RenderEvents {
-	private RenderEvents() {}
+	private RenderEvents() {
+	}
 
 	public static void registerEvents() {
 		MinecraftForge.EVENT_BUS.register(new RenderEvents());
@@ -64,22 +65,39 @@ public final class RenderEvents {
 		renderPortal      = disabled;
 
 		// Vanilla puts preconditions in these
-		renderFood        &= disabled;
-		renderJumpBar     &= disabled;
+		renderFood &= disabled;
+		renderJumpBar &= disabled;
 		renderHealthMount &= disabled;
 
-		if(disabled || event.getType() != RenderGameOverlayEvent.ElementType.ALL) {
+		if (disabled || event.getType() != RenderGameOverlayEvent.ElementType.ALL) {
 			return;
 		}
 
+		GlStateManager.enableBlend();
+		GlStateManager.enableTexture2D();
+		MC.getTextureManager().bindTexture(Gui.ICONS);
+
+		/*
+		 * Expected OpenGL state. When changing any of these variables, revert to the
+		 * configuration below. Be careful of nested functions.
+		 *
+		 * Color.WHITE.apply();
+		 * GlStateManager.disableAlpha();
+		 * GlStateManager.enableBlend();
+		 * GlStateManager.tryBlendFuncSeparate(SRC_ALPHA, ONE_MINUS_SRC_ALPHA, ONE, ZERO);
+		 * GlStateManager.disableDepth();
+		 *
+		 * GlStateManager.enableTexture2D();
+		 * MC.getTextureManager().bindTexture(Gui.ICONS);
+		 * RenderHelper.disableStandardItemLighting();
+		 */
+
 		MC.mcProfiler.startSection(MODID);
 		MANAGER.reset(event.getResolution());
-
 		HudElement.renderAll(event);
-
-		// Expected state by vanilla GUI
-		MC.getTextureManager().bindTexture(Gui.ICONS);
 		MC.mcProfiler.endSection();
+
+		GlStateManager.disableBlend();
 	}
 
 	@SubscribeEvent
@@ -93,10 +111,18 @@ public final class RenderEvents {
 			MANAGER.reset(Point.zero());
 			pointedEntity = (EntityLivingBase)pointed;
 
+			GlStateManager.disableDepth();
+			GlStateManager.enableBlend();
+
+			//System.out.println(GL11.glIsEnabled(GL11.GL_DEPTH_TEST));
+
 			GlStateManager.pushMatrix();
 			GlUtil.setupBillboard(pointedEntity, event.getPartialTicks(), HudElement.GLOBAL.getBillboardScale());
 			HudElement.renderAll(event);
 			GlStateManager.popMatrix();
+
+			GlStateManager.enableDepth();
+			GlStateManager.disableBlend();
 		} else {
 			pointedEntity = null;
 		}

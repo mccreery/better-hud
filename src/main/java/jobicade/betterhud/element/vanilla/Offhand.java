@@ -4,18 +4,15 @@ import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 import static jobicade.betterhud.BetterHud.WIDGETS;
 
-import net.minecraft.client.renderer.RenderHelper;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHandSide;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.render.GlMode;
-import jobicade.betterhud.render.TextureMode;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.EnumHandSide;
+import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class Offhand extends HudElement {
 	public Offhand() {
@@ -48,14 +45,10 @@ public class Offhand extends HudElement {
 			bounds = position.applyTo(bounds);
 		}
 
-		GlMode.push(new TextureMode(WIDGETS));
+		MC.getTextureManager().bindTexture(WIDGETS);
 		GlUtil.drawRect(bounds, texture);
-		GlMode.pop();
 
-		RenderHelper.enableGUIStandardItemLighting();
 		GlUtil.renderHotbarItem(bounds.translate(3, 3), offhandStack, getPartialTicks(event));
-		RenderHelper.disableStandardItemLighting();
-
 		return bounds;
 	}
 }

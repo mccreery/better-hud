@@ -10,8 +10,8 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.render.Color;
 import jobicade.betterhud.geom.Point;
-import jobicade.betterhud.render.GlMode;
 
 public class GuiActionButton extends GuiButton {
 	private ActionCallback callback;
@@ -92,25 +92,28 @@ public class GuiActionButton extends GuiButton {
 		glowing = value;
 	}
 
+	/**
+	 * OpenGL side-effects: depth disabled, color set to white
+	 */
 	@Override
 	public final void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
 		if(!visible) return;
 
-		GlMode.set(GlMode.DEFAULT);
 		Rect bounds = getRect();
 		hovered = bounds.contains(mouseX, mouseY);
 
 		drawButton(bounds, new Point(mouseX, mouseY), partialTicks);
 
 		if(tooltip != null && hovered) {
-			GlMode.push(new GlMode(GlStateManager::enableDepth, GlStateManager::disableDepth));
+			GlStateManager.enableDepth();
 			GlStateManager.pushMatrix();
 
 			GlStateManager.translate(0, 0, 1);
 			MC.currentScreen.drawHoveringText(tooltip, mouseX, mouseY);
 
 			GlStateManager.popMatrix();
-			GlMode.pop();
+			GlStateManager.disableDepth();
 		}
+		Color.WHITE.apply();
 	}
 }

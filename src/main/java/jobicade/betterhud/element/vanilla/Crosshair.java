@@ -3,13 +3,23 @@ package jobicade.betterhud.element.vanilla;
 import static jobicade.betterhud.BetterHud.MANAGER;
 import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
-import static jobicade.betterhud.render.GlMode.DEFAULT;
-import static jobicade.betterhud.render.GlMode.INVERT;
 
 import java.util.List;
 
+import jobicade.betterhud.element.HudElement;
+import jobicade.betterhud.element.settings.DirectionOptions;
+import jobicade.betterhud.element.settings.Setting;
+import jobicade.betterhud.element.settings.SettingBoolean;
+import jobicade.betterhud.element.settings.SettingChoose;
+import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.util.GlUtil;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager.DestFactor;
+import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -20,17 +30,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
-import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.element.settings.DirectionOptions;
-import jobicade.betterhud.element.settings.Setting;
-import jobicade.betterhud.element.settings.SettingBoolean;
-import jobicade.betterhud.element.settings.SettingChoose;
-import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.geom.Point;
-import jobicade.betterhud.render.GlMode;
 
 public class Crosshair extends OverrideElement {
 	private SettingBoolean attackIndicator;
@@ -121,11 +120,6 @@ public class Crosshair extends OverrideElement {
 	}
 
 	@Override
-	protected GlMode getMode() {
-		return INVERT;
-	}
-
-	@Override
 	protected Rect render(Event event) {
 		if(MC.gameSettings.showDebugInfo && !MC.gameSettings.reducedDebugInfo && !MC.player.hasReducedDebug()) {
 			renderAxes(MANAGER.getScreen().getAnchor(Direction.CENTER), getPartialTicks(event));
@@ -133,10 +127,15 @@ public class Crosshair extends OverrideElement {
 			Rect texture = new Rect(16, 16);
 			Point position = new Rect(texture).anchor(MANAGER.getScreen(), Direction.CENTER).getPosition();
 
+			GlStateManager.tryBlendFuncSeparate(SourceFactor.ONE_MINUS_DST_COLOR, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO);
 			GlUtil.drawRect(new Rect(position, texture.getSize()), texture);
 
 			if(attackIndicator.get()) {
-				return renderAttackIndicator();
+				Rect bounds = renderAttackIndicator();
+				GlStateManager.tryBlendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO);
+				return bounds;
+			} else {
+				GlStateManager.tryBlendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO);
 			}
 		}
 		return null;
@@ -171,7 +170,6 @@ public class Crosshair extends OverrideElement {
 	}
 
 	private void renderAxes(Point center, float partialTicks) {
-		GlMode.push(DEFAULT);
 		GlStateManager.pushMatrix();
 		GlStateManager.translate(center.getX(), center.getY(), 0);
 
@@ -182,6 +180,5 @@ public class Crosshair extends OverrideElement {
 		OpenGlHelper.renderDirections(10);
 
 		GlStateManager.popMatrix();
-		GlMode.pop();
 	}
 }

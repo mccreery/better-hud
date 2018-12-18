@@ -15,7 +15,9 @@ import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
+import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
 
 public class SignReader extends HudElement {
 	private static final ResourceLocation SIGN_TEXTURE = new ResourceLocation("textures/entity/sign.png");
@@ -50,17 +52,12 @@ public class SignReader extends HudElement {
 		MC.getTextureManager().bindTexture(SIGN_TEXTURE);
 		Gui.drawScaledCustomSizeModalRect(bounds.getX(), bounds.getY(), 2, 2, 24, 12, 96, 48, 64, 32);
 
-		int y = bounds.getY() + 3;
-
+		Point pos = bounds.getAnchor(Direction.NORTH).add(0, 3);
 		for(ITextComponent line : sign.signText) {
 			if(line != null) {
-				String text = line.getFormattedText();
-				int textWidth = MC.fontRenderer.getStringWidth(text);
-
-				MC.fontRenderer.drawString(text, bounds.getX() + (bounds.getWidth() - textWidth) / 2, y, Color.BLACK.getPacked());
-				//MC.ingameGUI.drawCenteredString(MC.fontRenderer, text, bounds.x() + bounds.width() / 2, y, Colors.BLACK);
+				GlUtil.drawString(line.getFormattedText(), pos, Direction.NORTH, Color.BLACK);
 			}
-			y += MC.fontRenderer.FONT_HEIGHT + 2;
+			pos = pos.add(0, MC.fontRenderer.FONT_HEIGHT + 2);
 		}
 
 		return bounds;

@@ -19,6 +19,7 @@ import jobicade.betterhud.element.HudElement.SortType;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.IGetSet;
 import jobicade.betterhud.util.Paginator;
 import jobicade.betterhud.geom.Point;
@@ -159,7 +160,7 @@ public class GuiHudMenu extends GuiScreen {
 		int enabled = (int)HudElement.ELEMENTS.stream().filter(HudElement::get).count();
 
 		drawCenteredString(fontRenderer, I18n.format("betterHud.menu.hudSettings"), width / 2, height / 16 + 5, Color.WHITE.getPacked());
-		drawString(fontRenderer, enabled + "/" + HudElement.ELEMENTS.size() + " enabled", 5, 5, Color.WHITE.getPacked());
+		GlUtil.drawString(enabled + "/" + HudElement.ELEMENTS.size() + " enabled", new Point(SPACER, SPACER), Direction.NORTH_WEST, Color.WHITE);
 
 		String page = I18n.format("betterHud.menu.page", (paginator.getPageIndex() + 1) + "/" + paginator.getPageCount());
 		drawCenteredString(fontRenderer, page, width / 2, height - height / 16 - 13, Color.WHITE.getPacked());

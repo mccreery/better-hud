@@ -52,6 +52,10 @@ public class Quad extends GuiResizable {
         setColorFunction(quad.colorFunction);
     }
 
+    /**
+     * OpenGL side-effect: texture 2D is enabled.
+     * <p>{@inheritDoc}
+     */
     @Override
     public void render() {
         Tessellator tessellator = Tessellator.getInstance();
@@ -70,7 +74,6 @@ public class Quad extends GuiResizable {
         addVertex(builder, Direction.NORTH_WEST);
 
         if(texture == null) {
-            // TODO GL management
             GlStateManager.disableTexture2D();
             tessellator.draw();
             GlStateManager.enableTexture2D();

@@ -57,7 +57,6 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.IGetSet.IBoolean;
 import jobicade.betterhud.util.SortField;
 import jobicade.betterhud.util.Sorter;
-import jobicade.betterhud.render.GlMode;
 
 public abstract class HudElement implements IBoolean {
 	/** A list of all the registered elements */
@@ -256,11 +255,6 @@ public abstract class HudElement implements IBoolean {
 		return event instanceof RenderGameOverlayEvent;
 	}
 
-	/** @Return The mode to apply before rendering this element */
-	protected GlMode getMode() {
-		return GlMode.DEFAULT;
-	}
-
 	/** Renders this element to the screen.<br>
 	 * Should only be called if {@link #shouldRender(Event)} returns {@code true}
 	 *
@@ -276,7 +270,6 @@ public abstract class HudElement implements IBoolean {
 		if(shouldRender(event) && isEnabledAndSupported()) {
 			MC.mcProfiler.startSection(name);
 
-			GlMode.set(getMode());
 			bounds = render(event);
 			postRender(event);
 
@@ -295,8 +288,6 @@ public abstract class HudElement implements IBoolean {
 	/** Renders all elements for the current render event
 	 * @param event The current render event */
 	public static void renderAll(Event event) {
-		GlMode.clear();
-
 		for(HudElement element : SORTER.getSortedData(SortType.PRIORITY)) {
 			element.tryRender(event);
 		}

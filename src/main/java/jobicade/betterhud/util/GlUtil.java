@@ -1,10 +1,15 @@
 package jobicade.betterhud.util;
 
 import static jobicade.betterhud.BetterHud.MC;
-import static jobicade.betterhud.render.GlMode.ITEM;
 
 import java.util.List;
 
+import jobicade.betterhud.element.settings.DirectionOptions;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.render.Color;
+import jobicade.betterhud.render.Quad;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.RenderHelper;
@@ -12,19 +17,16 @@ import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.fml.client.config.GuiUtils;
-import jobicade.betterhud.element.settings.DirectionOptions;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.geom.Point;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.render.GlMode;
-import jobicade.betterhud.render.Quad;
-import jobicade.betterhud.render.Color;
 
 public final class GlUtil {
-	private GlUtil() {}
+	private GlUtil() {
+	}
 
-	/** All axes default to {@code scale}
-	 * @see GlStateManager#scale(float, float, float) */
+	/**
+	 * All axes default to {@code scale}
+	 *
+	 * @see GlStateManager#scale(float, float, float)
+	 */
 	public static void scale(float scale) {
 		GlStateManager.scale(scale, scale, scale);
 	}
@@ -87,8 +89,8 @@ public final class GlUtil {
 		MC.fontRenderer.drawString(text, x, y - 1, Color.BLACK.getPacked(), false);
 
 		MC.fontRenderer.drawString(text, x, y, color.getPacked(), false);
-
-		GlMode.clean();
+		Color.WHITE.apply();
+		MC.getTextureManager().bindTexture(Gui.ICONS);
 	}
 
 	/** @see #renderSingleItem(ItemStack, int, int) */
@@ -97,22 +99,28 @@ public final class GlUtil {
 	}
 
 	/** Renders {@code stack} to the GUI, and reverts lighting side effects
+	 * OpenGL side-effect: disables depth and item lighting
 	 *
 	 * @see RenderHelper#enableGUIStandardItemLighting()
 	 * @see net.minecraft.client.renderer.RenderItem#renderItemAndEffectIntoGUI(ItemStack, int, int)
 	 * @see RenderHelper#disableStandardItemLighting() */
 	public static void renderSingleItem(ItemStack stack, int x, int y) {
-		GlMode.push(ITEM);
+		GlStateManager.enableDepth();
+		RenderHelper.enableGUIStandardItemLighting();
 		MC.getRenderItem().renderItemAndEffectIntoGUI(stack, x, y);
-		GlMode.pop();
+		RenderHelper.disableStandardItemLighting();
+		GlStateManager.disableDepth();
 	}
 
-	/** Renders the item with hotbar animations */
+	/** Renders the item with hotbar animations.
+	 * OpenGL side-effects: disables depth and item ligthing.
+	 */
 	public static void renderHotbarItem(Rect bounds, ItemStack stack, float partialTicks) {
 		if(stack.isEmpty()) return;
 		float animationTicks = stack.getAnimationsToGo() - partialTicks;
 
-		GlMode.push(ITEM);
+		GlStateManager.enableDepth();
+		RenderHelper.enableGUIStandardItemLighting();
 		if(animationTicks > 0) {
 			float factor = 1 + animationTicks / 5;
 
@@ -129,7 +137,12 @@ public final class GlUtil {
 		}
 
 		MC.getRenderItem().renderItemOverlays(MC.fontRenderer, stack, bounds.getX(), bounds.getY());
-		GlMode.pop();
+
+		// Possible side-effects
+		RenderHelper.disableStandardItemLighting();
+		GlStateManager.disableDepth();
+		MC.getTextureManager().bindTexture(Gui.ICONS);
+		GlStateManager.enableAlpha();
 	}
 
 	/** @see GuiUtils#drawHoveringText(ItemStack, List, int, int, int, int, int, net.minecraft.client.gui.FontRenderer) */
@@ -155,7 +168,8 @@ public final class GlUtil {
 		GuiUtils.drawGradientRect(zLevel, x+w-2, y+2,   x+w-1, y+h-2, borderStart, borderEnd);   // Right
 		GuiUtils.drawGradientRect(zLevel, x+1,   y+h-2, x+w-1, y+h-1, borderEnd,   borderEnd);   // Bottom
 
-		GlStateManager.enableDepth();
+		GlStateManager.disableAlpha();
+		GlStateManager.enableBlend();
 	}
 
 	/** Applies transformations such that the Z axis faces directly towards the player
@@ -242,12 +256,16 @@ public final class GlUtil {
 		return new Point(MC.fontRenderer.getStringWidth(string), MC.fontRenderer.FONT_HEIGHT);
 	}
 
-	/** @see #drawString(String, Point, Direction, int) */
+	/**
+	 * OpenGL side-effect: color set to white, texture set to Gui.ICONS
+	 * @see #drawString(String, Point, Direction, int)
+	 */
 	public static Rect drawString(String string, Point origin, Direction alignment, Color color) {
 		Rect bounds = new Rect(getStringSize(string)).align(origin, alignment);
 		MC.fontRenderer.drawStringWithShadow(string, bounds.getX(), bounds.getY(), color.getPacked());
 
-		GlMode.clean();
+		Color.WHITE.apply();
+		MC.getTextureManager().bindTexture(Gui.ICONS);
 		return bounds;
 	}
 }

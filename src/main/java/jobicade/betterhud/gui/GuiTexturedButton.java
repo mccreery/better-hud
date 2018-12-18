@@ -1,12 +1,12 @@
 package jobicade.betterhud.gui;
 
+import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SETTINGS;
 
+import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.geom.Point;
-import jobicade.betterhud.render.GlMode;
-import jobicade.betterhud.render.TextureMode;
+import net.minecraft.client.gui.Gui;
 
 public class GuiTexturedButton extends GuiActionButton {
 	private final Rect disabled, inactive, active;
@@ -43,10 +43,13 @@ public class GuiTexturedButton extends GuiActionButton {
 		}
 	}
 
+	/**
+	 * OpenGL side-effects: set texture to Gui.ICONS
+	 */
 	@Override
 	protected void drawButton(Rect bounds, Point mousePosition, float partialTicks) {
-		GlMode.push(new TextureMode(SETTINGS));
+		MC.getTextureManager().bindTexture(SETTINGS);
 		GlUtil.drawRect(bounds, getTexture());
-		GlMode.pop();
+		MC.getTextureManager().bindTexture(Gui.ICONS);
 	}
 }

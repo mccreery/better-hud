@@ -15,15 +15,13 @@ import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.util.MathUtil;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.render.ColorMode;
-import jobicade.betterhud.render.GlMode;
-import jobicade.betterhud.render.TextureMode;
 import jobicade.betterhud.render.Color;
+import jobicade.betterhud.util.GlUtil;
+import jobicade.betterhud.util.MathUtil;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.potion.Potion;
@@ -122,6 +120,9 @@ public class PotionBar extends HudElement {
 		}
 	}
 
+	/**
+	 * OpenGL side-effects: set texture to Gui.ICONS, color to white
+	 */
 	private void drawIcon(Point position, PotionEffect effect) {
 		Potion potion = effect.getPotion();
 
@@ -144,10 +145,9 @@ public class PotionBar extends HudElement {
 			}
 		}
 
-		GlMode.push(new TextureMode(GuiContainer.INVENTORY_BACKGROUND));
+		MC.getTextureManager().bindTexture(GuiContainer.INVENTORY_BACKGROUND);
 		GlUtil.drawRect(background.move(position), background);
-
-		GlMode.set(new ColorMode(Color.WHITE.withAlpha(Math.round(opacity * 255))));
+		Color.WHITE.withAlpha(Math.round(opacity * 255)).apply();
 
 		if(potion.hasStatusIcon()) {
 			int index = potion.getStatusIconIndex();
@@ -157,12 +157,13 @@ public class PotionBar extends HudElement {
 		}
 		potion.renderHUDEffect(position.getX(), position.getY(), effect, MC, opacity);
 
-		GlMode.pop();
-
 		String potionLevel = getPotionLevel(effect);
 		if(!potionLevel.isEmpty()) {
 			GlUtil.drawString(potionLevel, new Point(position.getX() + 21, position.getY() + 21), Direction.SOUTH_EAST, Color.WHITE);
 		}
+
+		MC.getTextureManager().bindTexture(Gui.ICONS);
+		Color.WHITE.apply();
 	}
 
 	private String getPotionLevel(PotionEffect effect) {
