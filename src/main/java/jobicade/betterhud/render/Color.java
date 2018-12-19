@@ -1,5 +1,7 @@
 package jobicade.betterhud.render;
 
+import java.util.Arrays;
+
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.util.math.MathHelper;
 
@@ -55,6 +57,27 @@ public class Color {
 
 	public void apply() {
 		GlStateManager.color(alpha, red, green, blue);
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if(!(obj instanceof Color)) return false;
+		Color color = (Color)obj;
+
+		return red == color.red &&
+			green == color.green &&
+			blue == color.blue &&
+			alpha == color.alpha;
+	}
+
+	@Override
+	public int hashCode() {
+		return Arrays.hashCode(new int[] {red, green, blue, alpha});
+	}
+
+	@Override
+	public String toString() {
+		return String.format("{rgba: %d, %d, %d, %d}", red, green, blue, alpha);
 	}
 
 	public static Color fromHSV(float hue, float saturation, float value) {
