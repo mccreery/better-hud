@@ -3,7 +3,6 @@ package jobicade.betterhud.events;
 import static jobicade.betterhud.BetterHud.MANAGER;
 import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.MODID;
-import static jobicade.betterhud.BetterHud.pointedEntity;
 import static net.minecraftforge.client.GuiIngameForge.renderAir;
 import static net.minecraftforge.client.GuiIngameForge.renderArmor;
 import static net.minecraftforge.client.GuiIngameForge.renderCrosshairs;
@@ -22,7 +21,6 @@ import java.util.List;
 
 import com.google.common.base.Predicate;
 
-import org.apache.logging.log4j.Level;
 import org.lwjgl.opengl.GL11;
 
 import jobicade.betterhud.BetterHud;
@@ -47,11 +45,37 @@ import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
 public final class RenderEvents {
-	private RenderEvents() {
-	}
+	private RenderEvents() {}
 
 	public static void registerEvents() {
 		MinecraftForge.EVENT_BUS.register(new RenderEvents());
+	}
+
+	@SubscribeEvent
+	public void onRenderTick(RenderGameOverlayEvent.Pre event) {
+		MC.mcProfiler.startSection(MODID);
+
+		boolean enabled = BetterHud.isEnabled();
+		suppressVanilla(enabled);
+
+		if(enabled && event.getType() == ElementType.ALL) {
+			renderOverlay(event);
+		}
+		MC.mcProfiler.endSection();
+	}
+
+	@SubscribeEvent
+	public void worldRender(RenderWorldLastEvent event) {
+		MC.mcProfiler.startSection(MODID);
+
+		if(BetterHud.isEnabled()) {
+			Entity entity = getMouseOver(HudElement.GLOBAL.getBillboardDistance(), event.getPartialTicks());
+
+			if(entity instanceof EntityLivingBase) {
+				renderMobInfo(new RenderMobInfoEvent(event, (EntityLivingBase)entity));
+			}
+		}
+		MC.mcProfiler.endSection();
 	}
 
 	/**
@@ -98,75 +122,41 @@ public final class RenderEvents {
 		renderHealthMount = renderHealthMount && allow;
 	}
 
-	/**
-	 * {@code true} if a warning has already been sent out for inconsistent state.
-	 */
-	private boolean warned = false;
+	private final SnapshotTracker overlayTracker = new SnapshotTracker(BetterHud.getLogger());
 
 	/**
 	 * Renders overlay (normal HUD) elements to the screen.
 	 */
 	private void renderOverlay(RenderGameOverlayEvent.Pre event) {
 		MANAGER.reset(event.getResolution());
-
 		beginOverlayState();
-		GlSnapshot beforeSnapshot = new GlSnapshot();
-		HudElement.renderAll(event);
-		GlSnapshot afterSnapshot = new GlSnapshot();
-		endOverlayState();
 
-		// Check for inconsistent state
-		boolean warn = !beforeSnapshot.equals(afterSnapshot);
-		if(warn != warned) {
-			if(warn) {
-				BetterHud.getLogger().printf(Level.WARN, "OpenGL state inconsistency\nBefore: %s\nAfter: %s", beforeSnapshot, afterSnapshot);
-			} else {
-				BetterHud.getLogger().log(Level.INFO, "OpenGL inconsistency resolved");
-			}
-		}
-		warned = warn;
-	}
-
-	@SubscribeEvent
-	public void onRenderTick(RenderGameOverlayEvent.Pre event) {
-		MC.mcProfiler.startSection(MODID);
-
-		boolean enabled = BetterHud.isEnabled();
-		suppressVanilla(enabled);
-
-		if(enabled && event.getType() == ElementType.ALL) {
-			renderOverlay(event);
-		}
-		MC.mcProfiler.endSection();
-	}
-
-	@SubscribeEvent
-	public void worldRender(RenderWorldLastEvent event) {
-		if(!BetterHud.isEnabled()) return;
-
-		MC.mcProfiler.startSection(BetterHud.MODID);
-		Entity pointed = getMouseOver(HudElement.GLOBAL.getBillboardDistance(), event.getPartialTicks());
-
-		if(pointed != null && pointed instanceof EntityLivingBase) {
-			MANAGER.reset(Point.zero());
-			pointedEntity = (EntityLivingBase)pointed;
-
-			GlStateManager.disableDepth();
-			GlStateManager.enableBlend();
-
-			//System.out.println(GL11.glIsEnabled(GL11.GL_DEPTH_TEST));
-
-			GlStateManager.pushMatrix();
-			GlUtil.setupBillboard(pointedEntity, event.getPartialTicks(), HudElement.GLOBAL.getBillboardScale());
+		if(HudElement.GLOBAL.isDebugMode()) {
+			GlSnapshot pre = new GlSnapshot();
 			HudElement.renderAll(event);
-			GlStateManager.popMatrix();
-
-			GlStateManager.enableDepth();
-			GlStateManager.disableBlend();
+			overlayTracker.step(pre, new GlSnapshot());
 		} else {
-			pointedEntity = null;
+			HudElement.renderAll(event);
 		}
-		MC.mcProfiler.endSection();
+		endOverlayState();
+	}
+
+	/**
+	 * Renders mob info elements to the screen.
+	 */
+	private void renderMobInfo(RenderMobInfoEvent event) {
+		MANAGER.reset(Point.zero());
+
+		GlStateManager.disableDepth();
+		GlStateManager.enableBlend();
+
+		GlStateManager.pushMatrix();
+		GlUtil.setupBillboard(event.getEntity(), event.getPartialTicks(), HudElement.GLOBAL.getBillboardScale());
+		HudElement.renderAll(event);
+		GlStateManager.popMatrix();
+
+		GlStateManager.enableDepth();
+		GlStateManager.disableBlend();
 	}
 
 	/** Allows a custom distance

@@ -5,12 +5,13 @@ import static jobicade.betterhud.BetterHud.SPACER;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.passive.EntityHorse;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
+import jobicade.betterhud.events.RenderMobInfoEvent;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.geom.Direction;
@@ -42,14 +43,20 @@ public class HorseInfo extends EntityInfo {
 	}
 
 	@Override
-	public void render(EntityLivingBase entity) {
+	public boolean shouldRender(Event event) {
+		return super.shouldRender(event) && ((RenderMobInfoEvent)event).getEntity() instanceof EntityHorse;
+	}
+
+	@Override
+	public Rect render(Event event) {
 		ArrayList<String> infoParts = new ArrayList<String>();
+		EntityHorse entity = (EntityHorse)((RenderMobInfoEvent)event).getEntity();
 
 		if(jump.get()) {
-			infoParts.add(jump.getLocalizedName() + ": " + FormatUtil.formatToPlaces(getJumpHeight((EntityHorse)entity), 3) + "m");
+			infoParts.add(jump.getLocalizedName() + ": " + FormatUtil.formatToPlaces(getJumpHeight(entity), 3) + "m");
 		}
 		if(speed.get()) {
-			infoParts.add(speed.getLocalizedName() + ": " + FormatUtil.formatToPlaces(getSpeed((EntityHorse)entity), 3) + "m/s");
+			infoParts.add(speed.getLocalizedName() + ": " + FormatUtil.formatToPlaces(getSpeed(entity), 3) + "m/s");
 		}
 
 		StringGroup group = new StringGroup(infoParts);
@@ -59,6 +66,7 @@ public class HorseInfo extends EntityInfo {
 
 		GlUtil.drawRect(bounds, Color.TRANSLUCENT);
 		group.draw(bounds.grow(-SPACER));
+		return null;
 	}
 
 	/** Calculates horse jump height using a derived polynomial
@@ -72,10 +80,5 @@ public class HorseInfo extends EntityInfo {
 	 * @see <a href=https://minecraft.gamepedia.com/Horse#Movement_speed>Minecraft Wiki</a> */
 	public double getSpeed(EntityHorse horse) {
 		return horse.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getBaseValue() * 43.17037;
-	}
-
-	@Override
-	public boolean shouldRender(EntityLivingBase entity) {
-		return entity instanceof EntityHorse;
 	}
 }

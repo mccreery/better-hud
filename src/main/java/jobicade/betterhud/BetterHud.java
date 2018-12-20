@@ -8,7 +8,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
@@ -73,8 +72,6 @@ public class BetterHud {
 
 	public static HudConfig CONFIG;
 	public static final LayoutManager MANAGER = new LayoutManager();
-
-	public static EntityLivingBase pointedEntity;
 
 	public static final int SPACER = 5;
 

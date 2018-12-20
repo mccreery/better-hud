@@ -13,6 +13,7 @@ public class GlobalSettings extends HudElement {
 	private SettingPercentage billboardScale;
 	private SettingSlider billboardDistance;
 	private SettingBoolean hideOnDebug;
+	private SettingBoolean debugMode;
 
 	public GlobalSettings() {
 		super("global");
@@ -25,6 +26,7 @@ public class GlobalSettings extends HudElement {
 		settings.add(billboardScale = new SettingPercentage("billboardScale"));
 		settings.add(billboardDistance = new SettingSlider("rayDistance", 5, 200).setUnlocalizedValue("betterHud.hud.meters"));
 		settings.add(hideOnDebug = new SettingBoolean("hideOnDebug"));
+		settings.add(debugMode = new SettingBoolean("debugMode"));
 	}
 
 	public float getBillboardScale() {
@@ -37,6 +39,10 @@ public class GlobalSettings extends HudElement {
 
 	public boolean hideOnDebug() {
 		return hideOnDebug.get();
+	}
+
+	public boolean isDebugMode() {
+		return debugMode.get();
 	}
 
 	@Override
