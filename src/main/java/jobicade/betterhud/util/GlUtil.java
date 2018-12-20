@@ -93,6 +93,7 @@ public final class GlUtil {
 
 		MC.fontRenderer.drawString(text, x, y, color.getPacked(), false);
 		Color.WHITE.apply();
+		GlStateManager.disableAlpha();
 		MC.getTextureManager().bindTexture(Gui.ICONS);
 	}
 
@@ -146,6 +147,7 @@ public final class GlUtil {
 		// Possible side-effects
 		RenderHelper.disableStandardItemLighting();
 		GlStateManager.disableDepth();
+		GlStateManager.disableAlpha();
 		MC.getTextureManager().bindTexture(Gui.ICONS);
 		GlUtil.blendFuncSafe(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
 	}
