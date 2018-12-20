@@ -270,8 +270,6 @@ public abstract class HudElement implements IBoolean {
 			postRender(event);
 
 			MC.mcProfiler.endSection();
-		} else {
-			lastBounds = Rect.empty();
 		}
 	}
 
