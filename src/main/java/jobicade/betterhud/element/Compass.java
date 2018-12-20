@@ -117,7 +117,7 @@ public class Compass extends HudElement {
 
 			// Super low alphas can render opaque for some reason
 			if(color.getAlpha() > 3) {
-				MC.ingameGUI.drawCenteredString(MC.fontRenderer, DIRECTIONS[i], 0, bottom ? -MC.fontRenderer.FONT_HEIGHT : 0, color.getPacked());
+				GlUtil.drawString(DIRECTIONS[i], Point.zero(), bottom ? Direction.SOUTH : Direction.NORTH, color);
 			}
 
 			GlStateManager.popMatrix();
