@@ -1,6 +1,5 @@
 package jobicade.betterhud.render;
 
-import java.nio.ByteBuffer;
 import java.nio.FloatBuffer;
 import java.util.Arrays;
 import java.util.Collection;
@@ -10,6 +9,7 @@ import java.util.EnumSet;
 import java.util.Map;
 import java.util.Objects;
 
+import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
 
@@ -44,7 +44,7 @@ public class GlSnapshot {
     }
 
     private Color getCurrentColor() {
-        FloatBuffer buf = ByteBuffer.allocateDirect(4 * 16).asFloatBuffer();
+        FloatBuffer buf = BufferUtils.createFloatBuffer(16);
         GL11.glGetFloat(GL11.GL_CURRENT_COLOR, buf);
 
         int red   = Math.round(buf.get(0) * 255.0f);
