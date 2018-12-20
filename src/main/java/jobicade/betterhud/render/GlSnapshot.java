@@ -11,6 +11,7 @@ import java.util.Objects;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
+import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GL14;
 
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
@@ -171,6 +172,7 @@ public class GlSnapshot {
         LIGHTING(GL11.GL_LIGHTING),
         TEXTURE_2D(GL11.GL_TEXTURE_2D),
         COLOR_MATERIAL(GL11.GL_COLOR_MATERIAL),
+        RESCALE_NORMAL(GL12.GL_RESCALE_NORMAL),
 
         LIGHT_0(GL11.GL_LIGHT0),
         LIGHT_1(GL11.GL_LIGHT1),
