@@ -3,7 +3,6 @@ package jobicade.betterhud.util;
 import static jobicade.betterhud.BetterHud.MC;
 
 import java.util.EnumSet;
-import java.util.List;
 
 import org.lwjgl.opengl.GL11;
 
@@ -21,7 +20,6 @@ import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
-import net.minecraftforge.fml.client.config.GuiUtils;
 
 public final class GlUtil {
 	private GlUtil() {
@@ -151,31 +149,35 @@ public final class GlUtil {
 		MC.getTextureManager().bindTexture(Gui.ICONS);
 	}
 
-	/** @see GuiUtils#drawHoveringText(ItemStack, List, int, int, int, int, int, net.minecraft.client.gui.FontRenderer) */
-	public static void drawTooltipBox(int x, int y, int w, int h) {
-		GlStateManager.disableRescaleNormal();
-		RenderHelper.disableStandardItemLighting();
-		GlStateManager.disableLighting();
-		GlStateManager.disableDepth();
+	/**
+	 * Draws a box resembling an item tooltip.
+	 * @param bounds The bounding box of the tooltip box.
+	 */
+	public static void drawTooltipBox(Rect bounds) {
+		Color background   = new Color(183, 16, 0, 16);
+		Color borderTop    = new Color(80, 80, 0, 255);
+		Color borderBottom = new Color(80, 40, 0, 127);
 
-		final int zLevel	  = 300;
-		final int bgColor	  = 0xb7100010;
-		final int borderStart = 0x505000ff;
-		final int borderEnd   = (borderStart & 0xfefefe) >> 1 | borderStart & 0xff000000;
+		// TODO check state
+		GlStateManager.shadeModel(GL11.GL_SMOOTH);
+
+		Quad quad = new Quad(bounds.withHeight(1).grow(-1, 0, -1, 0));
+		quad.setZLevel(300);
 
 		// Box
-		GuiUtils.drawGradientRect(zLevel, x+1, y,	 x+w-1, y+1,   bgColor, bgColor); // Top
-		GuiUtils.drawGradientRect(zLevel, x,   y+1,   x+w,   y+h-1, bgColor, bgColor); // Middle
-		GuiUtils.drawGradientRect(zLevel, x+1, y+h-1, x+w-1, y+h,   bgColor, bgColor); // Bottom
+		quad.setColor(background).render();
+		quad.setBounds(bounds.grow(0, -1, 0, -1)).render();
+		quad.setBounds(bounds.withTop(bounds.getBottom() - 1).grow(-1, 0, -1, 0)).render();
 
 		// Borders
-		GuiUtils.drawGradientRect(zLevel, x+1,   y+1,   x+w-1, y+2,   borderStart, borderStart); // Top
-		GuiUtils.drawGradientRect(zLevel, x+1,   y+2,   x+2,   y+h-2, borderStart, borderEnd);   // Left
-		GuiUtils.drawGradientRect(zLevel, x+w-2, y+2,   x+w-1, y+h-2, borderStart, borderEnd);   // Right
-		GuiUtils.drawGradientRect(zLevel, x+1,   y+h-2, x+w-1, y+h-1, borderEnd,   borderEnd);   // Bottom
-
-		GlStateManager.disableAlpha();
-		GlStateManager.enableBlend();
+		Rect inner = bounds.grow(-1);
+		quad.setColor(borderTop).setBounds(inner.withHeight(1)).render();
+		quad.setColor(borderBottom).setBounds(inner.withTop(inner.getBottom() - 1)).render();
+		// Sides
+		inner = inner.grow(0, -1, 0, -1);
+		quad.setColors(borderTop, borderTop, borderBottom, borderBottom);
+		quad.setBounds(inner.withWidth(1)).render();
+		quad.setBounds(inner.withLeft(inner.getRight() - 1)).render();
 	}
 
 	/** Applies transformations such that the Z axis faces directly towards the player

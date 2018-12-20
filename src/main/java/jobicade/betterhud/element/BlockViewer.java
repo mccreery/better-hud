@@ -130,7 +130,7 @@ public class BlockViewer extends TextElement {
 
 	@Override
 	protected void drawBorder(Rect bounds, Rect padding, Rect margin) {
-		GlUtil.drawTooltipBox(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight());
+		GlUtil.drawTooltipBox(bounds);
 	}
 
 	@Override

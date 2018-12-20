@@ -28,7 +28,8 @@ public abstract class GuiResizable extends GuiElement {
      * Sets the bounding box to a new rectangle.
      * @param bounds The new bounding box.
      */
-    public void setBounds(Rect bounds) {
+    public GuiResizable setBounds(Rect bounds) {
         this.bounds = bounds;
+        return this;
     }
 }

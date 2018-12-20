@@ -1,6 +1,7 @@
 package jobicade.betterhud.render;
 
-import java.util.function.Function;
+import java.util.EnumMap;
+import java.util.Map;
 
 import org.lwjgl.opengl.GL11;
 
@@ -19,37 +20,60 @@ public class Quad extends GuiResizable {
 
     private double zLevel;
     private Rect texture;
-    private Function<Direction, Color> colorFunction;
+    private final Map<Direction, Color> colors;
+    private boolean hasColor = false;
 
     public Quad(Point size) {
         super(size);
+        colors = new EnumMap<>(Direction.class);
     }
 
     public Quad(Rect bounds) {
         super(bounds);
+        colors = new EnumMap<>(Direction.class);
     }
 
-    public void setZLevel(double zLevel) {
+    public Quad setZLevel(double zLevel) {
         this.zLevel = zLevel;
+        return this;
     }
 
-    public void setTexture(Rect texture) {
+    public Quad setTexture(Rect texture) {
         this.texture = texture;
+        return this;
     }
 
-    public void setColor(Color color) {
-        this.colorFunction = d -> color;
+    public Quad setColor(Color color) {
+        setColors(color, color, color, color);
+        return this;
     }
 
-    public void setColorFunction(Function<Direction, Color> colorFunction) {
-        this.colorFunction = colorFunction;
+    public Quad setColor(Direction direction, Color color) {
+        colors.put(direction, color);
+        hasColor = true;
+        return this;
+    }
+
+    public Quad setColors(Color northWest, Color northEast, Color southWest, Color southEast) {
+        colors.put(Direction.NORTH_WEST, northWest);
+        colors.put(Direction.NORTH_EAST, northEast);
+        colors.put(Direction.SOUTH_WEST, southWest);
+        colors.put(Direction.SOUTH_EAST, southEast);
+        hasColor = true;
+        return this;
+    }
+
+    public Quad noColor() {
+        hasColor = false;
+        return this;
     }
 
     public Quad(Quad quad) {
-        this(quad.bounds);
+        super(quad.bounds);
+        colors = new EnumMap<>(quad.colors);
+        hasColor = quad.hasColor;
         setZLevel(quad.zLevel);
         setTexture(quad.texture);
-        setColorFunction(quad.colorFunction);
     }
 
     /**
@@ -65,7 +89,7 @@ public class Quad extends GuiResizable {
 
         format.addElement(DefaultVertexFormats.POSITION_3F);
         if(texture != null) format.addElement(DefaultVertexFormats.TEX_2F);
-        if(colorFunction != null) format.addElement(DefaultVertexFormats.COLOR_4UB);
+        if(hasColor) format.addElement(DefaultVertexFormats.COLOR_4UB);
 
         builder.begin(GL11.GL_QUADS, format);
         addVertex(builder, Direction.SOUTH_WEST);
@@ -96,7 +120,7 @@ public class Quad extends GuiResizable {
                     break;
                 }
                 case COLOR: {
-                    Color color = colorFunction.apply(anchor);
+                    Color color = colors.get(anchor);
                     builder.color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
                     break;
                 }
