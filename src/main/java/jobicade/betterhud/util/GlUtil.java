@@ -116,6 +116,7 @@ public final class GlUtil {
 		GlStateManager.disableDepth();
 		MC.getTextureManager().bindTexture(Gui.ICONS);
 		blendFuncSafe(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
+		GlStateManager.shadeModel(GL11.GL_SMOOTH);
 	}
 
 	/** Renders the item with hotbar animations.
@@ -150,6 +151,7 @@ public final class GlUtil {
 		GlStateManager.disableAlpha();
 		MC.getTextureManager().bindTexture(Gui.ICONS);
 		GlUtil.blendFuncSafe(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
+		GlStateManager.shadeModel(GL11.GL_SMOOTH);
 	}
 
 	/**
