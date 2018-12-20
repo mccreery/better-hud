@@ -158,9 +158,6 @@ public final class GlUtil {
 		Color borderTop    = new Color(80, 80, 0, 255);
 		Color borderBottom = new Color(80, 40, 0, 127);
 
-		// TODO check state
-		GlStateManager.shadeModel(GL11.GL_SMOOTH);
-
 		Quad quad = new Quad(bounds.withHeight(1).grow(-1, 0, -1, 0));
 		quad.setZLevel(300);
 

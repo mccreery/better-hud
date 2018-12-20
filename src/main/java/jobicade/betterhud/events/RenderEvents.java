@@ -23,6 +23,7 @@ import java.util.List;
 import com.google.common.base.Predicate;
 
 import org.apache.logging.log4j.Level;
+import org.lwjgl.opengl.GL11;
 
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
@@ -60,6 +61,7 @@ public final class RenderEvents {
 	private static void beginOverlayState() {
 		GlStateManager.enableBlend();
 		MC.getTextureManager().bindTexture(Gui.ICONS);
+		GlStateManager.shadeModel(GL11.GL_SMOOTH);
 	}
 
 	/**
@@ -69,6 +71,7 @@ public final class RenderEvents {
 	private static void endOverlayState() {
 		GlStateManager.disableBlend();
 		GlStateManager.bindTexture(0);
+		GlStateManager.shadeModel(GL11.GL_FLAT);
 	}
 
 	/**

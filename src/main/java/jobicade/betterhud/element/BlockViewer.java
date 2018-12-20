@@ -13,7 +13,6 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -137,10 +136,7 @@ public class BlockViewer extends TextElement {
 	protected void drawExtras(Rect bounds) {
 		if(stack != null && showBlock.get()) {
 			Rect stackRect = new Rect(16, 16).anchor(bounds.grow(-5, -2, -5, -2), position.getContentAlignment());
-
-			RenderHelper.enableGUIStandardItemLighting();
-			MC.getRenderItem().renderItemAndEffectIntoGUI(stack, stackRect.getX(), stackRect.getY());
-			RenderHelper.disableStandardItemLighting();
+			GlUtil.renderSingleItem(stack, stackRect.getPosition());
 		}
 	}
 
