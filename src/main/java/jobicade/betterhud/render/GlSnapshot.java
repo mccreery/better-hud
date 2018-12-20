@@ -103,7 +103,7 @@ public class GlSnapshot {
 
     @Override
     public String toString() {
-        return String.format("{flags: %s, color: %s, texture: %d}", flags, color, texture);
+        return String.format("{flags: %s, color: %s, texture: %d, blendfunc: %s}", flags, color, texture, blendFunc);
     }
 
     public static class BlendFunc {
@@ -156,6 +156,11 @@ public class GlSnapshot {
         @Override
         public int hashCode() {
             return Objects.hash(srcFactor, dstFactor, srcFactorAlpha, dstFactorAlpha);
+        }
+
+        @Override
+        public String toString() {
+            return String.format("{src: %s, dst: %s, srcAlpha: %s, dstAlpha: %s}", srcFactor, dstFactor, srcFactorAlpha, dstFactorAlpha);
         }
     }
 
