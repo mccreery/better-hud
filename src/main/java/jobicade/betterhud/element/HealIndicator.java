@@ -47,7 +47,7 @@ public class HealIndicator extends HudElement {
 				bounds = position.applyTo(bounds);
 			} else {
 				Direction side = HudElement.HEALTH.getIndicatorSide();
-				bounds = bounds.align(HudElement.HEALTH.getLastRect().grow(SPACER, 0, SPACER, 0).getAnchor(side), side.mirrorCol());
+				bounds = bounds.align(HudElement.HEALTH.getLastBounds().grow(SPACER, 0, SPACER, 0).getAnchor(side), side.mirrorCol());
 			}
 
 			if(mode.getIndex() == 0) {

@@ -149,7 +149,7 @@ public class Crosshair extends OverrideElement {
 		if(position.isDirection(Direction.SOUTH)) {
 			Direction primary = MC.player.getPrimaryHand() == EnumHandSide.RIGHT ? Direction.EAST : Direction.WEST;
 			// Vanilla indicator is also offset by (1, 0) regardless of main hand
-			bounds = bounds.align(HudElement.HOTBAR.getLastRect().grow(5).getAnchor(primary), primary.mirrorCol()).translate(1, 0);
+			bounds = bounds.align(HudElement.HOTBAR.getLastBounds().grow(5).getAnchor(primary), primary.mirrorCol()).translate(1, 0);
 		} else if(position.isDirection(Direction.CENTER)) {
 			bounds = bounds.align(MANAGER.getScreen().getAnchor(Direction.CENTER).add(0, 9), Direction.NORTH);
 		} else {

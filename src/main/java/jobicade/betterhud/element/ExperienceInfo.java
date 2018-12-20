@@ -56,7 +56,7 @@ public class ExperienceInfo extends TextElement {
 		String hasDisplay = String.valueOf(has);
 		String neededDisplay = String.valueOf(needed);
 
-		Rect bar = EXPERIENCE.getLastRect();
+		Rect bar = EXPERIENCE.getLastBounds();
 
 		Point text = new Rect(GlUtil.getStringSize(hasDisplay).sub(0, 2)).anchor(bar, Direction.WEST).getPosition();
 		GlUtil.drawBorderedString(hasDisplay, text.getX(), text.getY(), Color.WHITE);

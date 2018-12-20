@@ -1,6 +1,5 @@
 package jobicade.betterhud.gui;
 
-import java.util.Map;
 import java.util.function.Predicate;
 
 import jobicade.betterhud.element.HudElement;
@@ -11,20 +10,20 @@ import net.minecraft.client.gui.GuiScreen;
 
 public abstract class GuiElements extends GuiScreen {
 	protected static HudElement getHoveredElement(int mouseX, int mouseY, Predicate<HudElement> ignore) {
-		Map.Entry<HudElement, Rect> result = null;
+		HudElement result = null;
 
-		for(Map.Entry<HudElement, Rect> entry : HudElement.getActiveRect().entrySet()) {
-			if(!ignore.test(entry.getKey())) {
-				Rect bounds = entry.getValue();
+		for(HudElement element : HudElement.ELEMENTS) {
+			if(!ignore.test(element)) {
+				Rect bounds = element.getLastBounds();
 
 				if(bounds.contains(mouseX, mouseY) && (result == null ||
-						bounds.getWidth() < result.getValue().getWidth() &&
-						bounds.getHeight() < result.getValue().getHeight())) {
-					result = entry;
+						bounds.getWidth() < result.getLastBounds().getWidth() &&
+						bounds.getHeight() < result.getLastBounds().getHeight())) {
+					result = element;
 				}
 			}
 		}
-		return result != null ? result.getKey() : null;
+		return result;
 	}
 
 	private static final Color FADED = Color.RED.withAlpha(63);

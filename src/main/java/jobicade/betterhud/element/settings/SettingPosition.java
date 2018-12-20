@@ -130,7 +130,7 @@ public class SettingPosition extends SettingStub<Object> {
 		if(!isCustom()) throw new IllegalStateException("Position is not custom");
 
 		if(parent.get() != null) {
-			Rect bounds = parent.get().getLastRect();
+			Rect bounds = parent.get().getLastBounds();
 			if(!bounds.isEmpty()) return bounds;
 		}
 		return MANAGER.getScreen();

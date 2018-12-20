@@ -58,9 +58,9 @@ public class GuiOffsetChooser extends GuiScreen {
 
 		GlUtil.drawBorderRect(setting.getParent(), Color.RED.withAlpha(63));
 
-		Rect elementRect = parent.element.getLastRect();
+		Rect elementRect = parent.element.getLastBounds();
 		if(!elementRect.isEmpty()) {
-			GlUtil.drawBorderRect(parent.element.getLastRect(), Color.RED);
+			GlUtil.drawBorderRect(parent.element.getLastBounds(), Color.RED);
 		} else {
 			Point mouse = offset.add(anchor);
 			drawHorizontalLine(mouse.getX() - SPACER, mouse.getX() + SPACER, mouse.getY(), Color.RED.getPacked());

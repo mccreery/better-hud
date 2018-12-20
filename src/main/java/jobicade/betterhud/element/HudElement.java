@@ -4,10 +4,7 @@ import static jobicade.betterhud.BetterHud.ALL;
 import static jobicade.betterhud.BetterHud.MC;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.TreeMap;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -265,23 +262,20 @@ public abstract class HudElement implements IBoolean {
 	/** Calls {@link #render(Event)} if the element
 	 * should be rendered and caches the bounds so they are available from {@link #getLastRect()} */
 	public final void tryRender(Event event) {
-		Rect bounds = null;
-
 		if(shouldRender(event) && isEnabledAndSupported()) {
 			MC.mcProfiler.startSection(name);
 
-			bounds = render(event);
+			lastBounds = render(event);
+			if(lastBounds == null) lastBounds = Rect.empty();
 			postRender(event);
 
 			MC.mcProfiler.endSection();
-		}
-
-		if(bounds != null && !bounds.isEmpty()) {
-			activeRect.put(this, bounds);
 		} else {
-			activeRect.remove(this);
+			lastBounds = Rect.empty();
 		}
 	}
+
+	private Rect lastBounds = Rect.empty();
 
 	protected void postRender(Event event) {}
 
@@ -293,16 +287,10 @@ public abstract class HudElement implements IBoolean {
 		}
 	}
 
-	private static final Map<HudElement, Rect> activeRect = new TreeMap<>(SortType.ALPHABETICAL);
-
 	/** @return The last or appropriate bounds for this element.<br>
-	 * {@link Rect#EMPTY} if the element has no appropriate bounds */
-	public Rect getLastRect() {
-		return activeRect.getOrDefault(this, Rect.empty());
-	}
-
-	public static Map<HudElement, Rect> getActiveRect() {
-		return Collections.unmodifiableMap(activeRect);
+	 * {@link Rect#empty()} if the element has no appropriate bounds */
+	public Rect getLastBounds() {
+		return lastBounds;
 	}
 
 	/** Calls {@link #init(FMLInitializationEvent)} on all elements

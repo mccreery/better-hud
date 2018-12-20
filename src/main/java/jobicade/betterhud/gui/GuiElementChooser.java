@@ -3,7 +3,6 @@ package jobicade.betterhud.gui;
 import static jobicade.betterhud.BetterHud.MC;
 
 import java.io.IOException;
-import java.util.Map;
 
 import net.minecraft.client.gui.GuiScreen;
 import jobicade.betterhud.element.HudElement;
@@ -42,8 +41,12 @@ public class GuiElementChooser extends GuiElements {
 		});
 		setting.set(selected);
 
-		for(Map.Entry<HudElement, Rect> entry : HudElement.getActiveRect().entrySet()) {
-			drawRect(entry.getValue(), entry.getKey() == selected);
+		for(HudElement element : HudElement.ELEMENTS) {
+			Rect bounds = element.getLastBounds();
+
+			if(!bounds.isEmpty()) {
+				drawRect(bounds, element == selected);
+			}
 		}
 	}
 }

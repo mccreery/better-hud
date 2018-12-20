@@ -94,7 +94,7 @@ public class ArrowCount extends HudElement {
 		int totalArrows = arrowCount(MC.player);
 
 		if(overlay.get()) {
-			Rect stackRect = new Rect(16, 16).anchor(HOTBAR.getLastRect().grow(-3), Direction.WEST);
+			Rect stackRect = new Rect(16, 16).anchor(HOTBAR.getLastBounds().grow(-3), Direction.WEST);
 
 			for(int i = 0; i < 9; i++) {
 				ItemStack stack = MC.player.inventory.getStackInSlot(i);
@@ -108,7 +108,7 @@ public class ArrowCount extends HudElement {
 			ItemStack stack = MC.player.inventory.getStackInSlot(40);
 
 			if(stack != null && stack.getItem() == Items.BOW) {
-				drawCounter(new Rect(OFFHAND.getLastRect().getPosition().add(3, 3), new Point(16, 16)), totalArrows);
+				drawCounter(new Rect(OFFHAND.getLastBounds().getPosition().add(3, 3), new Point(16, 16)), totalArrows);
 			}
 			return Rect.empty();
 		} else {

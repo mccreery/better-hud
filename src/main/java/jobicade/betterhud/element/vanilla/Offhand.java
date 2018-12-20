@@ -40,7 +40,7 @@ public class Offhand extends HudElement {
 		Rect texture = new Rect(24, 23, 22, 22);
 
 		if(position.isDirection(Direction.SOUTH)) {
-			bounds = bounds.align(HudElement.HOTBAR.getLastRect().grow(SPACER).getAnchor(offhand), offhand.mirrorCol());
+			bounds = bounds.align(HudElement.HOTBAR.getLastBounds().grow(SPACER).getAnchor(offhand), offhand.mirrorCol());
 		} else {
 			bounds = position.applyTo(bounds);
 		}

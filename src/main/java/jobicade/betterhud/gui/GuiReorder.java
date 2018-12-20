@@ -4,7 +4,6 @@ import static jobicade.betterhud.BetterHud.*;
 
 import java.io.IOException;
 import java.util.List;
-import java.util.Map;
 
 import com.google.common.base.Predicates;
 import net.minecraft.client.gui.GuiButton;
@@ -77,7 +76,7 @@ public class GuiReorder extends GuiElements {
 		if(element != null) {
 			toolbox = button
 				.withHeight(button.getHeight() * 4 + 6)
-				.align(element.getLastRect().grow(SPACER, 0, SPACER, 0).getPosition(), Direction.NORTH_WEST);
+				.align(element.getLastBounds().grow(SPACER, 0, SPACER, 0).getPosition(), Direction.NORTH_WEST);
 
 			toolbox = toolbox.move(
 					MathHelper.clamp(toolbox.getX(), 0, MANAGER.getScreen().getWidth() - toolbox.getWidth()),
@@ -129,8 +128,12 @@ public class GuiReorder extends GuiElements {
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		hovered = getHoveredElement(mouseX, mouseY, Predicates.alwaysFalse());
 
-		for(Map.Entry<HudElement, Rect> entry : HudElement.getActiveRect().entrySet()) {
-			drawRect(entry.getValue(), entry.getKey() == hovered || entry.getKey() == selected);
+		for(HudElement element : HudElement.ELEMENTS) {
+			Rect bounds = element.getLastBounds();
+
+			if(!bounds.isEmpty()) {
+				drawRect(bounds, element == hovered || element == selected);
+			}
 		}
 		super.drawScreen(mouseX, mouseY, partialTicks);
 	}
