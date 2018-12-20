@@ -106,11 +106,11 @@ public final class RenderEvents {
 	private void renderOverlay(RenderGameOverlayEvent.Pre event) {
 		MANAGER.reset(event.getResolution());
 
-		GlSnapshot beforeSnapshot = new GlSnapshot();
 		beginOverlayState();
+		GlSnapshot beforeSnapshot = new GlSnapshot();
 		HudElement.renderAll(event);
-		endOverlayState();
 		GlSnapshot afterSnapshot = new GlSnapshot();
+		endOverlayState();
 
 		// Check for inconsistent state
 		boolean warn = !beforeSnapshot.equals(afterSnapshot);
