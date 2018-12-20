@@ -22,9 +22,12 @@ import java.util.List;
 
 import com.google.common.base.Predicate;
 
+import org.apache.logging.log4j.Level;
+
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.render.GlSnapshot;
 import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
@@ -34,6 +37,7 @@ import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -49,55 +53,88 @@ public final class RenderEvents {
 		MinecraftForge.EVENT_BUS.register(new RenderEvents());
 	}
 
-	@SubscribeEvent
-	public void onRenderTick(RenderGameOverlayEvent.Pre event) {
-		final boolean disabled = !BetterHud.isEnabled();
+	/**
+	 * Modifies the OpenGL state for maximum compatibility with elements.
+	 * This is only used for {@link #onRenderTick(net.minecraftforge.client.event.RenderGameOverlayEvent.Pre)}
+	 */
+	private static void beginOverlayState() {
+		GlStateManager.enableBlend();
+		MC.getTextureManager().bindTexture(Gui.ICONS);
+	}
 
-		renderHotbar      = disabled || MC.player.isSpectator();
-		renderExperiance  = disabled;
-		renderHealth      = disabled;
-		renderArmor       = disabled;
-		renderAir         = disabled;
-		renderHelmet      = disabled;
-		renderVignette    = disabled;
-		renderObjective   = disabled;
-		renderCrosshairs  = disabled;
-		renderPortal      = disabled;
+	/**
+	 * Reverts the OpenGL state to the expected state at the time of the event.
+	 * This is only used for {@link #onRenderTick(net.minecraftforge.client.event.RenderGameOverlayEvent.Pre))}
+	 */
+	private static void endOverlayState() {
+		GlStateManager.disableBlend();
+		GlStateManager.bindTexture(0);
+	}
+
+	/**
+	 * Suppresses or unsuppresses vanilla HUD rendering.
+	 * @param suppress {@code true} to suppress
+	 */
+	private static void suppressVanilla(boolean suppress) {
+		boolean allow = !suppress;
+
+		renderHotbar      = allow || MC.player.isSpectator();
+		renderExperiance  = allow;
+		renderHealth      = allow;
+		renderArmor       = allow;
+		renderAir         = allow;
+		renderHelmet      = allow;
+		renderVignette    = allow;
+		renderObjective   = allow;
+		renderCrosshairs  = allow;
+		renderPortal      = allow;
 
 		// Vanilla puts preconditions in these
-		renderFood &= disabled;
-		renderJumpBar &= disabled;
-		renderHealthMount &= disabled;
+		renderFood        = renderFood && allow;
+		renderJumpBar     = renderJumpBar && allow;
+		renderHealthMount = renderHealthMount && allow;
+	}
 
-		if (disabled || event.getType() != RenderGameOverlayEvent.ElementType.ALL) {
-			return;
-		}
+	/**
+	 * {@code true} if a warning has already been sent out for inconsistent state.
+	 */
+	private boolean warned = false;
 
-		GlStateManager.enableBlend();
-		GlStateManager.enableTexture2D();
-		MC.getTextureManager().bindTexture(Gui.ICONS);
-
-		/*
-		 * Expected OpenGL state. When changing any of these variables, revert to the
-		 * configuration below. Be careful of nested functions.
-		 *
-		 * Color.WHITE.apply();
-		 * GlStateManager.disableAlpha();
-		 * GlStateManager.enableBlend();
-		 * GlStateManager.tryBlendFuncSeparate(SRC_ALPHA, ONE_MINUS_SRC_ALPHA, ONE, ZERO);
-		 * GlStateManager.disableDepth();
-		 *
-		 * GlStateManager.enableTexture2D();
-		 * MC.getTextureManager().bindTexture(Gui.ICONS);
-		 * RenderHelper.disableStandardItemLighting();
-		 */
-
-		MC.mcProfiler.startSection(MODID);
+	/**
+	 * Renders overlay (normal HUD) elements to the screen.
+	 */
+	private void renderOverlay(RenderGameOverlayEvent.Pre event) {
 		MANAGER.reset(event.getResolution());
-		HudElement.renderAll(event);
-		MC.mcProfiler.endSection();
 
-		GlStateManager.disableBlend();
+		GlSnapshot beforeSnapshot = new GlSnapshot();
+		beginOverlayState();
+		HudElement.renderAll(event);
+		endOverlayState();
+		GlSnapshot afterSnapshot = new GlSnapshot();
+
+		// Check for inconsistent state
+		boolean warn = !beforeSnapshot.equals(afterSnapshot);
+		if(warn != warned) {
+			if(warn) {
+				BetterHud.getLogger().printf(Level.WARN, "OpenGL state inconsistency\nBefore: %s\nAfter: %s", beforeSnapshot, afterSnapshot);
+			} else {
+				BetterHud.getLogger().log(Level.INFO, "OpenGL inconsistency resolved");
+			}
+		}
+		warned = warn;
+	}
+
+	@SubscribeEvent
+	public void onRenderTick(RenderGameOverlayEvent.Pre event) {
+		MC.mcProfiler.startSection(MODID);
+
+		boolean enabled = BetterHud.isEnabled();
+		suppressVanilla(enabled);
+
+		if(enabled && event.getType() == ElementType.ALL) {
+			renderOverlay(event);
+		}
+		MC.mcProfiler.endSection();
 	}
 
 	@SubscribeEvent
