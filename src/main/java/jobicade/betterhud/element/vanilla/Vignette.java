@@ -69,7 +69,7 @@ public class Vignette extends OverrideElement {
 		// Animate brightness
 		brightness = brightness + (MathHelper.clamp(1 - MC.player.getBrightness(), 0, 1) - brightness) / 100;
 
-		GlStateManager.tryBlendFuncSeparate(SourceFactor.ZERO, DestFactor.ONE_MINUS_SRC_COLOR, SourceFactor.ONE, DestFactor.ZERO);
+		GlUtil.blendFuncSafe(SourceFactor.ZERO, DestFactor.ONE_MINUS_SRC_COLOR, SourceFactor.ONE, DestFactor.ZERO);
 
 		if(f > 0) {
 			GlStateManager.color(0, f, f, 1);
@@ -80,7 +80,7 @@ public class Vignette extends OverrideElement {
 		MC.getTextureManager().bindTexture(VIGNETTE_TEX_PATH);
 		GlUtil.drawRect(MANAGER.getScreen(), new Rect(256, 256));
 
-		GlStateManager.tryBlendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
+		GlUtil.blendFuncSafe(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO);
 		MC.getTextureManager().bindTexture(Gui.ICONS);
 		return null;
 	}

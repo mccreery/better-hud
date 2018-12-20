@@ -121,24 +121,23 @@ public class Crosshair extends OverrideElement {
 
 	@Override
 	protected Rect render(Event event) {
+		Rect bounds = null;
+
 		if(MC.gameSettings.showDebugInfo && !MC.gameSettings.reducedDebugInfo && !MC.player.hasReducedDebug()) {
 			renderAxes(MANAGER.getScreen().getAnchor(Direction.CENTER), getPartialTicks(event));
 		} else {
 			Rect texture = new Rect(16, 16);
 			Point position = new Rect(texture).anchor(MANAGER.getScreen(), Direction.CENTER).getPosition();
 
-			GlStateManager.tryBlendFuncSeparate(SourceFactor.ONE_MINUS_DST_COLOR, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO);
+			GlUtil.blendFuncSafe(SourceFactor.ONE_MINUS_DST_COLOR, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO);
 			GlUtil.drawRect(new Rect(position, texture.getSize()), texture);
 
 			if(attackIndicator.get()) {
-				Rect bounds = renderAttackIndicator();
-				GlStateManager.tryBlendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO);
-				return bounds;
-			} else {
-				GlStateManager.tryBlendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO);
+				bounds = renderAttackIndicator();
 			}
+			GlUtil.blendFuncSafe(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO);
 		}
-		return null;
+		return bounds;
 	}
 
 	private Rect renderAttackIndicator() {

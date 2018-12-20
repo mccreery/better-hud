@@ -2,7 +2,10 @@ package jobicade.betterhud.util;
 
 import static jobicade.betterhud.BetterHud.MC;
 
+import java.util.EnumSet;
 import java.util.List;
+
+import org.lwjgl.opengl.GL11;
 
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.geom.Direction;
@@ -12,6 +15,8 @@ import jobicade.betterhud.render.Color;
 import jobicade.betterhud.render.Quad;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager.DestFactor;
+import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
@@ -110,6 +115,8 @@ public final class GlUtil {
 		MC.getRenderItem().renderItemAndEffectIntoGUI(stack, x, y);
 		RenderHelper.disableStandardItemLighting();
 		GlStateManager.disableDepth();
+		MC.getTextureManager().bindTexture(Gui.ICONS);
+		blendFuncSafe(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
 	}
 
 	/** Renders the item with hotbar animations.
@@ -142,7 +149,6 @@ public final class GlUtil {
 		RenderHelper.disableStandardItemLighting();
 		GlStateManager.disableDepth();
 		MC.getTextureManager().bindTexture(Gui.ICONS);
-		GlStateManager.enableAlpha();
 	}
 
 	/** @see GuiUtils#drawHoveringText(ItemStack, List, int, int, int, int, int, net.minecraft.client.gui.FontRenderer) */
@@ -266,6 +272,41 @@ public final class GlUtil {
 
 		Color.WHITE.apply();
 		MC.getTextureManager().bindTexture(Gui.ICONS);
+		GlStateManager.disableAlpha();
 		return bounds;
+	}
+
+	/**
+	 * Fixes a GlStateManager bug where calling {@link GlStateManager#blendFunc(SourceFactor, DestFactor)}
+	 * causes a desync, and can ignore calls to {@link GlStateManager#tryBlendFuncSeparate(SourceFactor, DestFactor, SourceFactor, DestFactor)}
+	 * when the cache thinks srcFactorAlpha and dstFactorAlpha haven't been changed by blendFunc (they have).
+	 *
+	 * <p>Fix in vanilla: add these lines:
+	 * <p><blockquote><pre>
+	 * public static void blendFunc(int srcFactor, int dstFactor)
+     * {
+     *     if (srcFactor != blendState.srcFactor || dstFactor != blendState.dstFactor)
+     *     {
+     *         blendState.srcFactor = srcFactor;
+     *         blendState.dstFactor = dstFactor;
+	 *         blendState.srcFactorAlpha = srcFactor;
+	 *         blendState.dstFactorAlpha = dstFactor;
+     *         GL11.glBlendFunc(srcFactor, dstFactor);
+     *     }
+     * }
+	 * </pre></blockquote></p>
+	 */
+	public static void blendFuncSafe(SourceFactor srcFactor, DestFactor dstFactor, SourceFactor srcFactorAlpha, DestFactor dstFactorAlpha) {
+		// We need to trick the state manager into updating the cache
+		EnumSet<SourceFactor> factors = EnumSet.allOf(SourceFactor.class);
+		factors.remove(srcFactor);
+		factors.removeIf(f -> f.factor == GL11.glGetInteger(GL11.GL_BLEND_SRC));
+
+		// Get a factor which is distinct from both current and new factor
+		SourceFactor dummyFactor = factors.iterator().next();
+		// Ensure cache differs from our desired values
+		GlStateManager.tryBlendFuncSeparate(dummyFactor, dstFactor, srcFactorAlpha, dstFactorAlpha);
+		// Guarantee cache updates correctly
+		GlStateManager.tryBlendFuncSeparate(srcFactor, dstFactor, srcFactorAlpha, dstFactorAlpha);
 	}
 }
