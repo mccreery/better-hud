@@ -52,7 +52,7 @@ public class GlSnapshot {
         int blue  = Math.round(buf.get(2) * 255.0f);
         int alpha = Math.round(buf.get(3) * 255.0f);
 
-        // TODO check consistency of ARGB/RGBA
+        // Note ARGB (Minecraft)/RGBA (OpenGL)
         return new Color(alpha, red, green, blue);
     }
 
