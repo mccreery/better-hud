@@ -147,6 +147,7 @@ public final class GlUtil {
 		RenderHelper.disableStandardItemLighting();
 		GlStateManager.disableDepth();
 		MC.getTextureManager().bindTexture(Gui.ICONS);
+		GlUtil.blendFuncSafe(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
 	}
 
 	/**

@@ -47,12 +47,12 @@ public class Hotbar extends OverrideElement {
 
 		float partialTicks = getPartialTicks(event);
 		for(int i = 0; i < 9; i++, slot = slot.translate(Direction.EAST.scale(20))) {
-			GlUtil.renderHotbarItem(slot, MC.player.inventory.mainInventory.get(i), partialTicks);
-
 			if(i == MC.player.inventory.currentItem) {
 				MC.getTextureManager().bindTexture(WIDGETS);
 				GlUtil.drawRect(slot.grow(4), new Rect(0, 22, 24, 24));
 			}
+
+			GlUtil.renderHotbarItem(slot, MC.player.inventory.mainInventory.get(i), partialTicks);
 		}
 
 		MC.getTextureManager().bindTexture(Gui.ICONS);
