@@ -127,7 +127,7 @@ public final class Rect implements Serializable {
     @Override
     public String toString() {
         return String.format("%s{x: %d, y: %d, width: %d, height: %d}@%s",
-            getClass().getName(), x, y, width, height, Integer.toHexString(hashCode()));
+            getClass().getName(), x, y, width, height, Integer.toHexString(System.identityHashCode(this)));
     }
 
     // Factories

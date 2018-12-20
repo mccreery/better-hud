@@ -84,7 +84,7 @@ public class Point implements Serializable {
     @Override
     public String toString() {
         return String.format("%s{x: %d, y: %d}@%s",
-            getClass().getName(), x, y, Integer.toHexString(hashCode()));
+            getClass().getName(), x, y, Integer.toHexString(System.identityHashCode(this)));
     }
 
     /**

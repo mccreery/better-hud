@@ -64,7 +64,7 @@ public class Size extends Point {
     @Override
     public String toString() {
         return String.format("%s{width: %d, height: %d}@%s",
-            getClass().getName(), x, y, Integer.toHexString(hashCode()));
+            getClass().getName(), x, y, Integer.toHexString(System.identityHashCode(this)));
     }
 
     /**
