@@ -2,7 +2,6 @@ package jobicade.betterhud.element.vanilla;
 
 import static jobicade.betterhud.BetterHud.MANAGER;
 import static jobicade.betterhud.BetterHud.MC;
-import static jobicade.betterhud.BetterHud.SPACER;
 
 import java.util.List;
 
@@ -127,15 +126,19 @@ public class Crosshair extends OverrideElement {
 			renderAxes(MANAGER.getScreen().getAnchor(Direction.CENTER), getPartialTicks(event));
 		} else {
 			Rect texture = new Rect(16, 16);
-			Point position = new Rect(texture).anchor(MANAGER.getScreen(), Direction.CENTER).getPosition();
 
-			GlUtil.blendFuncSafe(SourceFactor.ONE_MINUS_DST_COLOR, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO);
-			GlUtil.drawRect(new Rect(position, texture.getSize()), texture);
+			// Vanilla crosshair is offset by (1, 1) for some reason
+			Rect crosshair = new Rect(texture).anchor(MANAGER.getScreen(), Direction.CENTER).translate(1, 1);
+
+			GlStateManager.blendFunc(SourceFactor.ONE_MINUS_DST_COLOR, DestFactor.ONE_MINUS_SRC_COLOR);
+			GlStateManager.enableAlpha();
+			GlUtil.drawRect(crosshair, texture);
 
 			if(attackIndicator.get()) {
 				bounds = renderAttackIndicator();
 			}
-			GlUtil.blendFuncSafe(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO);
+			GlUtil.blendFuncSafe(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
+			GlStateManager.disableAlpha();
 		}
 		return bounds;
 	}
@@ -145,9 +148,10 @@ public class Crosshair extends OverrideElement {
 
 		if(position.isDirection(Direction.SOUTH)) {
 			Direction primary = MC.player.getPrimaryHand() == EnumHandSide.RIGHT ? Direction.EAST : Direction.WEST;
-			bounds = bounds.align(HudElement.HOTBAR.getLastRect().grow(SPACER).getAnchor(primary), primary.mirrorCol());
+			// Vanilla indicator is also offset by (1, 0) regardless of main hand
+			bounds = bounds.align(HudElement.HOTBAR.getLastRect().grow(5).getAnchor(primary), primary.mirrorCol()).translate(1, 0);
 		} else if(position.isDirection(Direction.CENTER)) {
-			bounds = bounds.align(MANAGER.getScreen().getAnchor(Direction.CENTER).add(0, SPACER), Direction.NORTH);
+			bounds = bounds.align(MANAGER.getScreen().getAnchor(Direction.CENTER).add(0, 9), Direction.NORTH);
 		} else {
 			bounds = position.applyTo(bounds);
 		}
@@ -157,12 +161,13 @@ public class Crosshair extends OverrideElement {
 		if(indicatorType.getIndex() == 0) {
 			if(attackStrength >= 1) {
 				if(MC.pointedEntity != null && MC.pointedEntity instanceof EntityLivingBase && MC.player.getCooldownPeriod() > 5 && ((EntityLivingBase)MC.pointedEntity).isEntityAlive()) {
-					GlUtil.drawRect(bounds, new Rect(68, 94, 16, 8));
+					GlUtil.drawRect(bounds.resize(16, 16), new Rect(68, 94, 16, 16));
 				}
 			} else {
 				GlUtil.drawTexturedProgressBar(bounds.getPosition(), new Rect(36, 94, 16, 8), new Rect(52, 94, 16, 8), attackStrength, Direction.EAST);
 			}
 		} else if(attackStrength < 1) {
+			GlUtil.blendFuncSafe(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
 			GlUtil.drawTexturedProgressBar(bounds.getPosition(), new Rect(0, 94, 18, 18), new Rect(18, 94, 18, 18), attackStrength, Direction.NORTH);
 		}
 		return bounds;
