@@ -37,22 +37,19 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class PotionBar extends HudElement {
 	public static final ResourceLocation INVENTORY = new ResourceLocation("textures/gui/container/inventory.png");
-	private SettingPosition position;
 
 	public PotionBar() {
-		super("potionBar");
+		super("potionBar", new SettingPosition(DirectionOptions.X, DirectionOptions.CORNERS));
 	}
 
 	@Override
 	protected void addSettings(List<Setting<?>> settings) {
 		super.addSettings(settings);
-		settings.add(position = new SettingPosition("position", DirectionOptions.X, DirectionOptions.CORNERS));
 	}
 
 	@Override
 	public void loadDefaults() {
 		super.loadDefaults();
-
 		position.setPreset(Direction.NORTH_WEST);
 	}
 
@@ -145,21 +142,26 @@ public class PotionBar extends HudElement {
 			}
 		}
 
+		Rect bounds = background.move(position);
+		Rect inner = bounds.grow(-3);
+
 		MC.getTextureManager().bindTexture(GuiContainer.INVENTORY_BACKGROUND);
-		GlUtil.drawRect(background.move(position), background);
+		GlUtil.drawRect(bounds, background);
 		Color.WHITE.withAlpha(Math.round(opacity * 255)).apply();
 
 		if(potion.hasStatusIcon()) {
 			int index = potion.getStatusIconIndex();
 			Rect icon = new Rect((index % 8) * 18, 198 + (index / 8) * 18, 18, 18);
 
-			GlUtil.drawRect(background.move(position.add(3, 3)), icon);
+			GlUtil.drawRect(inner, icon);
 		}
 		potion.renderHUDEffect(position.getX(), position.getY(), effect, MC, opacity);
 
-		String potionLevel = getPotionLevel(effect);
-		if(!potionLevel.isEmpty()) {
-			GlUtil.drawString(potionLevel, new Point(position.getX() + 21, position.getY() + 21), Direction.SOUTH_EAST, Color.WHITE);
+		if(potion.shouldRenderInvText(effect)) {
+			String potionLevel = getPotionLevel(effect);
+			if(!potionLevel.isEmpty()) {
+				GlUtil.drawString(potionLevel, inner.getAnchor(Direction.SOUTH_EAST), Direction.SOUTH_EAST, Color.WHITE);
+			}
 		}
 
 		MC.getTextureManager().bindTexture(Gui.ICONS);
