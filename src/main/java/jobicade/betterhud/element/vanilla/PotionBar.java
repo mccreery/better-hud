@@ -95,7 +95,7 @@ public class PotionBar extends HudElement {
 			drawIcon(icon.add(i * deltaX, 0), helpful.get(i));
 		}
 
-		icon = icon.add(0, alignment.getRow() == 2 ? -25 : 25);
+		icon = icon.add(0, alignment.getRow() == 2 ? -26 : 26);
 		for(int i = 0; i < harmful.size(); i++) {
 			drawIcon(icon.add(i * deltaX, 0), harmful.get(i));
 		}
