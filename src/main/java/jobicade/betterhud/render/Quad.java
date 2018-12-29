@@ -8,6 +8,7 @@ import org.lwjgl.opengl.GL11;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.geom.Size;
 import net.minecraft.client.renderer.BufferBuilder;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
@@ -15,7 +16,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
 
-public class Quad extends GuiResizable {
+public class Quad implements Boxed {
     private static final float TEX_SCALE = 1f / 256f;
 
     private double zLevel;
@@ -23,14 +24,15 @@ public class Quad extends GuiResizable {
     private final Map<Direction, Color> colors;
     private boolean hasColor = false;
 
-    public Quad(Point size) {
-        super(size);
+    public Quad() {
         colors = new EnumMap<>(Direction.class);
     }
 
-    public Quad(Rect bounds) {
-        super(bounds);
-        colors = new EnumMap<>(Direction.class);
+    public Quad(Quad quad) {
+        colors = new EnumMap<>(quad.colors);
+        hasColor = quad.hasColor;
+        setZLevel(quad.zLevel);
+        setTexture(quad.texture);
     }
 
     public Quad setZLevel(double zLevel) {
@@ -68,20 +70,12 @@ public class Quad extends GuiResizable {
         return this;
     }
 
-    public Quad(Quad quad) {
-        super(quad.bounds);
-        colors = new EnumMap<>(quad.colors);
-        hasColor = quad.hasColor;
-        setZLevel(quad.zLevel);
-        setTexture(quad.texture);
-    }
-
     /**
      * OpenGL side-effect: texture 2D is enabled.
      * <p>{@inheritDoc}
      */
     @Override
-    public void render() {
+    public void render(Rect bounds) {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuffer();
 
@@ -92,10 +86,10 @@ public class Quad extends GuiResizable {
         if(hasColor) format.addElement(DefaultVertexFormats.COLOR_4UB);
 
         builder.begin(GL11.GL_QUADS, format);
-        addVertex(builder, Direction.SOUTH_WEST);
-        addVertex(builder, Direction.SOUTH_EAST);
-        addVertex(builder, Direction.NORTH_EAST);
-        addVertex(builder, Direction.NORTH_WEST);
+        addVertex(bounds, builder, Direction.SOUTH_WEST);
+        addVertex(bounds, builder, Direction.SOUTH_EAST);
+        addVertex(bounds, builder, Direction.NORTH_EAST);
+        addVertex(bounds, builder, Direction.NORTH_WEST);
 
         if(texture == null) {
             GlStateManager.disableTexture2D();
@@ -106,11 +100,11 @@ public class Quad extends GuiResizable {
         }
     }
 
-    private void addVertex(BufferBuilder builder, Direction anchor) {
+    private void addVertex(Rect bounds, BufferBuilder builder, Direction anchor) {
         for(VertexFormatElement element : builder.getVertexFormat().getElements()) {
             switch(element.getUsage()) {
                 case POSITION: {
-                    Point xy = getBounds().getAnchor(anchor);
+                    Point xy = bounds.getAnchor(anchor);
                     builder.pos(xy.getX(), xy.getY(), zLevel);
                     break;
                 }
@@ -128,5 +122,10 @@ public class Quad extends GuiResizable {
             }
         }
         builder.endVertex();
+    }
+
+    @Override
+    public Size getPreferredSize() {
+        return texture != null ? texture.getSize() : Size.zero();
     }
 }

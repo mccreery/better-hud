@@ -36,9 +36,7 @@ public final class GlUtil {
 
 	/** @see Gui#drawRect(int, int, int, int, int) */
 	public static void drawRect(Rect bounds, Color color) {
-		Quad quad = new Quad(bounds);
-		quad.setColor(color);
-		quad.render();
+		new Quad().setColor(color).render(bounds);
 	}
 
 	/**
@@ -47,9 +45,7 @@ public final class GlUtil {
 	 * @param texture The texture coordinates.
 	 */
 	public static void drawRect(Rect bounds, Rect texture) {
-		Quad quad = new Quad(bounds);
-		quad.setTexture(texture);
-		quad.render();
+		new Quad().setTexture(texture).render(bounds);
 	}
 
 	/**
@@ -59,10 +55,7 @@ public final class GlUtil {
 	 * @param color The color of the rectangle.
 	 */
 	public static void drawRect(Rect bounds, Rect texture, Color color) {
-		Quad quad = new Quad(bounds);
-		quad.setTexture(texture);
-		quad.setColor(color);
-		quad.render();
+		new Quad().setTexture(texture).setColor(color).render(bounds);
 	}
 
 	/**
@@ -71,16 +64,11 @@ public final class GlUtil {
 	 * @param color The color of the rectangle.
 	 */
 	public static void drawBorderRect(Rect bounds, Color color) {
-		Quad quad = new Quad(bounds.withWidth(1));
-		quad.setColor(color);
-		quad.render();
-
-		quad.setBounds(bounds.withHeight(1));
-		quad.render();
-		quad.setBounds(bounds.withLeft(bounds.getRight() - 1));
-		quad.render();
-		quad.setBounds(bounds.withTop(bounds.getBottom() - 1));
-		quad.render();
+		Quad quad = new Quad().setColor(color);
+		quad.render(bounds.withWidth(1));
+		quad.render(bounds.withHeight(1));
+		quad.render(bounds.withLeft(bounds.getRight() - 1));
+		quad.render(bounds.withTop(bounds.getBottom() - 1));
 	}
 
 	/** Draws text with black borders on all sides */
@@ -163,23 +151,24 @@ public final class GlUtil {
 		Color borderTop    = new Color(80, 80, 0, 255);
 		Color borderBottom = new Color(80, 40, 0, 127);
 
-		Quad quad = new Quad(bounds.withHeight(1).grow(-1, 0, -1, 0));
-		quad.setZLevel(300);
+		Quad quad = new Quad().setZLevel(300);
 
 		// Box
-		quad.setColor(background).render();
-		quad.setBounds(bounds.grow(0, -1, 0, -1)).render();
-		quad.setBounds(bounds.withTop(bounds.getBottom() - 1).grow(-1, 0, -1, 0)).render();
+		quad.setColor(background);
+		quad.render(bounds.withHeight(1).grow(-1, 0, -1, 0));
+		quad.render(bounds.grow(0, -1, 0, -1));
+		quad.render(bounds.withTop(bounds.getBottom() - 1).grow(-1, 0, -1, 0));
 
 		// Borders
 		Rect inner = bounds.grow(-1);
-		quad.setColor(borderTop).setBounds(inner.withHeight(1)).render();
-		quad.setColor(borderBottom).setBounds(inner.withTop(inner.getBottom() - 1)).render();
+		quad.setColor(borderTop).render(inner.withHeight(1));
+		quad.setColor(borderBottom).render(inner.withTop(inner.getBottom() - 1));
+
 		// Sides
 		inner = inner.grow(0, -1, 0, -1);
 		quad.setColors(borderTop, borderTop, borderBottom, borderBottom);
-		quad.setBounds(inner.withWidth(1)).render();
-		quad.setBounds(inner.withLeft(inner.getRight() - 1)).render();
+		quad.render(inner.withWidth(1));
+		quad.render(inner.withLeft(inner.getRight() - 1));
 	}
 
 	/** Applies transformations such that the Z axis faces directly towards the player
