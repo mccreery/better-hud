@@ -11,6 +11,7 @@ import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
+import jobicade.betterhud.render.Label;
 import jobicade.betterhud.render.Quad;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
@@ -260,12 +261,9 @@ public final class GlUtil {
 	 * @see #drawString(String, Point, Direction, int)
 	 */
 	public static Rect drawString(String string, Point origin, Direction alignment, Color color) {
-		Rect bounds = new Rect(getStringSize(string)).align(origin, alignment);
-		MC.fontRenderer.drawStringWithShadow(string, bounds.getX(), bounds.getY(), color.getPacked());
-
-		Color.WHITE.apply();
-		MC.getTextureManager().bindTexture(Gui.ICONS);
-		GlStateManager.disableAlpha();
+		Label label = new Label(string).setColor(color);
+		Rect bounds = new Rect(label.getPreferredSize()).align(origin, alignment);
+		label.render(bounds);
 		return bounds;
 	}
 
