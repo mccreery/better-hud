@@ -13,7 +13,7 @@ public class Label implements Boxed {
     private String text;
     private Size size;
     private boolean shadow = true;
-    private Color color;
+    private Color color = Color.WHITE;
 
     public Label(String text) {
         setText(text);
