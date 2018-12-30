@@ -500,7 +500,7 @@ public final class Rect implements Serializable {
      * @return {@code true} if the point is inside this rectangle.
      * @see #contains(int, int)
      */
-    public boolean contains(Point point) { return point.getX() >= x && point.getX() < x + width && point.getY() >= y && point.getY() < y + width; }
+    public boolean contains(Point point) { return point.getX() >= x && point.getX() < x + width && point.getY() >= y && point.getY() < y + height; }
 
     /**
      * Tests whether the rectangle is empty. An empty rectangle is any
