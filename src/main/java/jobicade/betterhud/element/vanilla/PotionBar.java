@@ -95,7 +95,7 @@ public class PotionBar extends HudElement {
 		harmful.sort(Collections.reverseOrder());
 	}
 
-	private void fillRow(Grid grid, int row, List<PotionEffect> effects) {
+	private void fillRow(Grid<? super PotionIcon> grid, int row, List<PotionEffect> effects) {
 		for(int i = 0; i < effects.size(); i++) {
 			grid.setCell(new Point(i, row), new PotionIcon(effects.get(i), showDuration.get()));
 		}
@@ -110,7 +110,7 @@ public class PotionBar extends HudElement {
 		if(!harmful.isEmpty()) ++rows;
 
 		if(rows > 0) {
-			Grid grid = new Grid(new Point(Math.max(helpful.size(), harmful.size()), rows));
+			Grid<PotionIcon> grid = new Grid<>(new Point(Math.max(helpful.size(), harmful.size()), rows));
 			grid.setAlignment(position.getContentAlignment());
 			grid.setGutter(new Point(1, 2));
 

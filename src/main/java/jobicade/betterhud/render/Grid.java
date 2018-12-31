@@ -10,8 +10,8 @@ import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Size;
 
-public class Grid implements Boxed {
-    private List<Boxed> source;
+public class Grid<T extends Boxed> implements Boxed {
+    private List<T> source;
     private Rect shape;
 
     private Size gutter = Size.zero();
@@ -22,30 +22,30 @@ public class Grid implements Boxed {
         this(shape, new ArrayList<>(Collections.nCopies(shape.getX() * shape.getY(), null)));
     }
 
-    public Grid(Point shape, List<Boxed> source) {
+    public Grid(Point shape, List<T> source) {
         super();
         this.shape = new Rect(shape);
         this.source = source;
     }
 
-    public Grid setSource(List<Boxed> source) {
+    public Grid<T> setSource(List<T> source) {
         this.source = source;
         return this;
     }
 
-    public List<Boxed> getSource() {
+    public List<T> getSource() {
         return source;
     }
 
-    public List<Boxed> flatten() {
+    public List<T> flatten() {
         return source.subList(0, shape.getWidth() * shape.getHeight());
     }
 
-    public Boxed getCell(Point position) {
+    public T getCell(Point position) {
         return source.get(getCellIndex(position));
     }
 
-    public Grid setCell(Point position, Boxed element) {
+    public Grid<T> setCell(Point position, T element) {
         source.set(getCellIndex(position), element);
         return this;
     }
@@ -61,7 +61,7 @@ public class Grid implements Boxed {
         return gutter;
     }
 
-    public Grid setGutter(Point gutter) {
+    public Grid<T> setGutter(Point gutter) {
         this.gutter = gutter instanceof Size ? (Size)gutter : new Size(gutter);
         return this;
     }
@@ -70,7 +70,7 @@ public class Grid implements Boxed {
         return stretch;
     }
 
-    public Grid setStretch(boolean stretch) {
+    public Grid<T> setStretch(boolean stretch) {
         this.stretch = stretch;
         return this;
     }
@@ -79,7 +79,7 @@ public class Grid implements Boxed {
         return alignment;
     }
 
-    public Grid setAlignment(Direction alignment) {
+    public Grid<T> setAlignment(Direction alignment) {
         if(!DirectionOptions.CORNERS.isValid(alignment)) {
             throw new IllegalArgumentException("Grid alignment must be a corner");
         }
