@@ -67,8 +67,8 @@ public class BetterHud {
 	public static final ResourceLocation WIDGETS   = new ResourceLocation("textures/gui/widgets.png");
 	public static final ResourceLocation PARTICLES = new ResourceLocation("textures/particle/particles.png");
 
-	public static final ResourceLocation HUD_ICONS = new ResourceLocation("hud", "textures/gui/icons_hud.png");
-	public static final ResourceLocation SETTINGS  = new ResourceLocation("hud", "textures/gui/settings.png");
+	public static final ResourceLocation HUD_ICONS = new ResourceLocation(MODID, "textures/gui/icons_hud.png");
+	public static final ResourceLocation SETTINGS  = new ResourceLocation(MODID, "textures/gui/settings.png");
 
 	public static HudConfig CONFIG;
 	public static final LayoutManager MANAGER = new LayoutManager();
