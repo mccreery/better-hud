@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -15,6 +16,7 @@ public class Grid implements Boxed {
 
     private Size gutter = Size.zero();
     private boolean stretch = false;
+    private Direction alignment = Direction.NORTH_WEST;
 
     public Grid(Point shape) {
         this(shape, new ArrayList<>(Collections.nCopies(shape.getX() * shape.getY(), null)));
@@ -73,6 +75,18 @@ public class Grid implements Boxed {
         return this;
     }
 
+    public Direction getAlignment() {
+        return alignment;
+    }
+
+    public Grid setAlignment(Direction alignment) {
+        if(!DirectionOptions.CORNERS.isValid(alignment)) {
+            throw new IllegalArgumentException("Grid alignment must be a corner");
+        }
+        this.alignment = alignment;
+        return this;
+    }
+
     @Override
     public Size getPreferredSize() {
         int width = 0, height = 0;
@@ -94,9 +108,13 @@ public class Grid implements Boxed {
         int x = 0;
 
         Size gutterless = bounds.getSize().sub(shape.getSize().sub(1, 1).scale(gutter));
-        Rect cell = bounds.resize(gutterless).scale(1.0f / shape.getWidth(), 1.0f / shape.getHeight(), bounds.getPosition());
+        Size cellSize = gutterless.scale(1.0f / shape.getWidth(), 1.0f / shape.getHeight());
+
+        Rect cellLeft = new Rect(cellSize).anchor(bounds, alignment);
+        Rect cell = cellLeft;
 
         Rect gutterPadding = new Rect(gutter.invert(), new Point(gutter));
+        Direction flow = alignment.mirror();
 
         for(Boxed element : flatten()) {
             if(element != null) {
@@ -106,10 +124,11 @@ public class Grid implements Boxed {
 
             if(x >= shape.getWidth() - 1) {
                 x = 0;
-                cell = cell.move(bounds.getX(), cell.grow(gutterPadding).getBottom());
+                cellLeft = cellLeft.anchor(cellLeft.grow(gutterPadding), flow.withCol(1), true);
+                cell = cellLeft;
             } else {
                 ++x;
-                cell = cell.withX(cell.grow(gutterPadding).getRight());
+                cell = cell.anchor(cell.grow(gutterPadding), flow.withRow(1), true);
             }
         }
     }
