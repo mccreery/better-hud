@@ -160,7 +160,7 @@ public final class MathUtil {
 	 * @param pass The collection to put passing values into.
 	 * @param fail The collection to put failing values into.
 	 */
-	public static <T> void splitList(Collection<? extends T> items, Predicate<T> condition, Collection<? super T> pass, Collection<? super T> fail) {
+	public static <T> void splitList(Iterable<? extends T> items, Predicate<T> condition, Collection<? super T> pass, Collection<? super T> fail) {
 		for(T t : items) {
 			if(condition.test(t)) {
 				pass.add(t);
