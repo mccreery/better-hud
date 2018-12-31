@@ -35,7 +35,7 @@ public class GuiHudMenu extends GuiScreen {
 	private final GuiButton reorder = new GuiActionButton(I18n.format("betterHud.menu.reorder")).setCallback(b -> MC.displayGuiScreen(new GuiReorder(this)));
 
 	private final GuiButton resetDefaults = new GuiActionButton(I18n.format("betterHud.menu.saveLoad"))
-		.setCallback(b -> MC.displayGuiScreen(new GuiConfigSaves(this)));
+		.setCallback(b -> MC.displayGuiScreen(new GuiConfigSaves(BetterHud.getConfigManager(), this)));
 
 	private final ButtonRow globalRow = new ButtonRow(this, HudElement.GLOBAL);
 
@@ -133,7 +133,7 @@ public class GuiHudMenu extends GuiScreen {
 
 	@Override
 	public void onGuiClosed() {
-		BetterHud.CONFIG.saveSettings();
+		BetterHud.getConfigManager().getConfig().saveSettings();
 	}
 
 	@Override

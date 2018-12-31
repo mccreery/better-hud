@@ -1,5 +1,6 @@
 package jobicade.betterhud;
 
+import java.nio.file.Path;
 import java.util.Arrays;
 
 import org.apache.logging.log4j.Logger;
@@ -26,6 +27,7 @@ import net.minecraftforge.fml.common.versioning.Restriction;
 import net.minecraftforge.fml.common.versioning.VersionRange;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
+import jobicade.betterhud.config.ConfigManager;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.HudElement.SortType;
 import jobicade.betterhud.events.KeyEvents;
@@ -36,7 +38,6 @@ import jobicade.betterhud.network.MessageNotifyClientHandler;
 import jobicade.betterhud.network.MessagePickup;
 import jobicade.betterhud.network.MessagePickupHandler;
 import jobicade.betterhud.network.MessageVersion;
-import jobicade.betterhud.util.HudConfig;
 import jobicade.betterhud.geom.LayoutManager;
 import jobicade.betterhud.util.Tickable.Ticker;
 
@@ -70,10 +71,14 @@ public class BetterHud {
 	public static final ResourceLocation HUD_ICONS = new ResourceLocation(MODID, "textures/gui/icons_hud.png");
 	public static final ResourceLocation SETTINGS  = new ResourceLocation(MODID, "textures/gui/settings.png");
 
-	public static HudConfig CONFIG;
+	private static ConfigManager CONFIG_MANAGER;
 	public static final LayoutManager MANAGER = new LayoutManager();
 
 	public static final int SPACER = 5;
+
+	public static ConfigManager getConfigManager() {
+		return CONFIG_MANAGER;
+	}
 
 	public static boolean isEnabled() {
 		return HudElement.GLOBAL.isEnabledAndSupported() && !(HudElement.GLOBAL.hideOnDebug() && MC.gameSettings.showDebugInfo);
@@ -91,7 +96,9 @@ public class BetterHud {
 			MC = Minecraft.getMinecraft();
 
 			HudElement.loadAllDefaults();
-			CONFIG = new HudConfig(event.getSuggestedConfigurationFile());
+
+			Path configPath = event.getSuggestedConfigurationFile().toPath();
+			CONFIG_MANAGER = new ConfigManager(configPath, configPath.resolveSibling(MODID));
 		}
 	}
 
@@ -118,7 +125,10 @@ public class BetterHud {
 
 		IResourceManager manager = MC.getResourceManager();
 		if(manager instanceof IReloadableResourceManager) {
-			((IReloadableResourceManager)manager).registerReloadListener(m -> HudElement.SORTER.markDirty(SortType.ALPHABETICAL));
+			IReloadableResourceManager reloadableManager = (IReloadableResourceManager)manager;
+
+			reloadableManager.registerReloadListener(m -> HudElement.SORTER.markDirty(SortType.ALPHABETICAL));
+			reloadableManager.registerReloadListener(getConfigManager());
 		} else {
 			logger.warn("Unable to register alphabetical sort update on language change");
 		}

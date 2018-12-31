@@ -1,33 +1,30 @@
 package jobicade.betterhud.gui;
 
-import static jobicade.betterhud.BetterHud.CONFIG;
 import static jobicade.betterhud.BetterHud.MC;
-import static jobicade.betterhud.BetterHud.MODID;
 import static jobicade.betterhud.BetterHud.SPACER;
 
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardCopyOption;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import org.lwjgl.opengl.GL11;
+import org.apache.commons.lang3.StringUtils;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.I18n;
 import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.geom.Size;
+import jobicade.betterhud.render.Boxed;
 import jobicade.betterhud.render.Color;
+import jobicade.betterhud.render.Grid;
+import jobicade.betterhud.render.Label;
+import jobicade.betterhud.config.ConfigManager;
+import jobicade.betterhud.config.ConfigSlot;
+import jobicade.betterhud.config.FileConfigSlot;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.util.HudConfig;
 import jobicade.betterhud.geom.Point;
-import jobicade.betterhud.util.StringGroup;
 
 public class GuiConfigSaves extends GuiScreen {
 	private GuiTextField name;
@@ -35,53 +32,47 @@ public class GuiConfigSaves extends GuiScreen {
 	private Rect viewport;
 
 	private final GuiScreen previous;
+	private final ConfigManager manager;
 
-	private final List<Path> saves = new ArrayList<Path>();
+	private Grid<ListItem> list;
+	private ConfigSlot selected;
 
-	public GuiConfigSaves(GuiScreen previous) {
+	private GuiActionButton load, save;
+
+	public GuiConfigSaves(ConfigManager manager, GuiScreen previous) {
 		this.previous = previous;
+		this.manager = manager;
 	}
 
-	private Path getDirectory() throws IOException {
-		Path directory = Paths.get(CONFIG.getConfigFile().getParent(), MODID);
-		Files.createDirectories(directory);
+	private ConfigSlot getSelectedEntry() {
+		if(StringUtils.isBlank(name.getText())) return null;
 
-		return directory;
+		return list.getSource().stream().map(li -> li.entry)
+			.filter(e -> e.matches(name.getText())).findFirst()
+			.orElseGet(() -> new FileConfigSlot(manager.getRootDirectory().resolve(name.getText() + ".cfg")));
 	}
 
-	private void reloadSaves() {
-		saves.clear();
-
-		try {
-			Files.list(getDirectory()).filter(path -> path.getFileName().toString().endsWith(".cfg")).collect(Collectors.toCollection(() -> saves));
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
-		scrollbar.setContentHeight((MC.fontRenderer.FONT_HEIGHT + SPACER) * saves.size() + SPACER * 2);
+	private void updateSelected() {
+		selected = getSelectedEntry();
+		load.enabled = selected != null;
+		save.enabled = selected != null && selected.isDest();
 	}
 
 	private void save() {
-		if(name.getText().isEmpty()) return;
-		CONFIG.save();
-
 		try {
-			Path destination = Paths.get(getDirectory().toString(), name.getText() + ".cfg");
-			Files.copy(CONFIG.getConfigFile().toPath(), destination, StandardCopyOption.REPLACE_EXISTING);
+			manager.getConfig().saveSettings();
+			selected.copyFrom(manager.getConfigPath());
 		} catch(IOException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
-
-		reloadSaves();
 	}
 
 	private void load() {
 		try {
-			Path source = Paths.get(getDirectory().toString(), name.getText() + ".cfg");
-			Files.copy(source, CONFIG.getConfigFile().toPath(), StandardCopyOption.REPLACE_EXISTING);
-
-			CONFIG = new HudConfig(CONFIG.getConfigFile());
+			selected.copyTo(manager.getConfigPath());
+			manager.reloadConfig();
 		} catch(IOException e) {
-			e.printStackTrace();
+			throw new RuntimeException(e);
 		}
 	}
 
@@ -106,15 +97,18 @@ public class GuiConfigSaves extends GuiScreen {
 		name.setCanLoseFocus(false);
 
 		smallButton = smallButton.move(textField.getAnchor(Direction.NORTH_EAST).add(SPACER, 0));
-		buttonList.add(new GuiActionButton("Load").setCallback(b -> load()).setRect(smallButton));
+		buttonList.add(load = new GuiActionButton("Load").setCallback(b -> load()).setRect(smallButton));
 
 		smallButton = smallButton.move(smallButton.getAnchor(Direction.NORTH_EAST).add(SPACER, 0));
-		buttonList.add(new GuiActionButton("Save").setCallback(b -> save()).setRect(smallButton));
+		buttonList.add(save = new GuiActionButton("Save").setCallback(b -> save()).setRect(smallButton));
+
+		updateSelected();
 
 		viewport = new Rect(400, 0).align(fieldLine.getAnchor(Direction.SOUTH).add(0, SPACER), Direction.NORTH).withBottom(height - 20);
 		scrollbar = new GuiScrollbar(viewport, 0);
 
-		reloadSaves();
+		List<ListItem> listItems = manager.getSlots().stream().map(ListItem::new).collect(Collectors.toList());
+		list = new Grid<>(new Point(1, listItems.size()), listItems);
 	}
 
 	@Override
@@ -127,6 +121,7 @@ public class GuiConfigSaves extends GuiScreen {
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
 		super.keyTyped(typedChar, keyCode);
 		name.textboxKeyTyped(typedChar, keyCode);
+		updateSelected();
 	}
 
 	@Override
@@ -136,6 +131,15 @@ public class GuiConfigSaves extends GuiScreen {
 		name.mouseClicked(mouseX, mouseY, mouseButton);
 		scrollbar.mouseClicked(mouseX, mouseY, mouseButton);
 
+		for(int i = 0; i < list.getSource().size(); i++) {
+			Rect bounds = new Rect(list.getPreferredSize().withWidth(this.width)).withY(150);
+
+			if(list.getCellBounds(bounds, new Point(0, i)).contains(mouseX, mouseY)) {
+				name.setText(list.getSource().get(i).entry.getName());
+				updateSelected();
+			}
+		}
+/*
 		if(viewport.contains(mouseX, mouseY)) {
 			int i = mouseY - viewport.getY() + scrollbar.getScroll();
 			i /= MC.fontRenderer.FONT_HEIGHT + SPACER;
@@ -144,7 +148,7 @@ public class GuiConfigSaves extends GuiScreen {
 				String filename = saves.get(i).getFileName().toString();
 				name.setText(filename.substring(0, filename.length() - 4));
 			}
-		}
+		}*/
 	}
 
 	@Override
@@ -179,13 +183,13 @@ public class GuiConfigSaves extends GuiScreen {
 
 		name.drawTextBox();
 		scrollbar.drawScrollbar(mouseX, mouseY);
-
+/*
 		StringGroup displaySaves = new StringGroup(saves.stream().map(path -> {
 			String name = path.getFileName().toString();
 			return name.substring(0, name.length() - 4);
-		}).collect(Collectors.toList())).setAlignment(Direction.NORTH).setGutter(SPACER);
+		}).collect(Collectors.toList())).setAlignment(Direction.NORTH).setGutter(SPACER);*/
 
-		Rect scissorRect = viewport.withY(height - viewport.getBottom()).scale(new ScaledResolution(MC).getScaleFactor());
+/*		Rect scissorRect = viewport.withY(height - viewport.getBottom()).scale(new ScaledResolution(MC).getScaleFactor());
 
 		GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_SCISSOR_BIT);
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
@@ -207,6 +211,43 @@ public class GuiConfigSaves extends GuiScreen {
 		}
 		displaySaves.draw(origin);
 
-		GL11.glPopAttrib();
+		GL11.glPopAttrib();*/
+
+		list.render(new Rect(list.getPreferredSize().withWidth(this.width)).withY(150));
+	}
+
+	private class ListItem implements Boxed {
+		private final ConfigSlot entry;
+		private final Label label;
+
+		private ListItem(ConfigSlot entry) {
+			this.entry = entry;
+
+			this.label = new Label(entry.getName());
+			if(!entry.isDest()) label.setColor(Color.GRAY);
+		}
+
+		@Override
+		public Size getPreferredSize() {
+			return label.getPreferredSize().add(40, 0).withHeight(20);
+		}
+
+		@Override
+		public Size negotiateSize(Point size) {
+			Size labelSize = label.getPreferredSize();
+			int minWidth = labelSize.getWidth() + 5;
+			int minHeight = Math.max(labelSize.getHeight(), 20);
+
+			return new Size(Math.max(minWidth, size.getX()), Math.max(minHeight, size.getY()));
+		}
+
+		@Override
+		public void render(Rect bounds) {
+			if(selected == this.entry) {
+				GlUtil.drawRect(bounds, new Color(48, 0, 0, 0));
+				GlUtil.drawBorderRect(bounds, new Color(160, 144, 144, 144));
+			}
+			label.render(new Rect(label.getPreferredSize()).anchor(bounds, Direction.CENTER));
+		}
 	}
 }
