@@ -8,10 +8,12 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.apache.commons.lang3.StringUtils;
+import org.lwjgl.opengl.GL11;
 
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.I18n;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Size;
@@ -106,9 +108,15 @@ public class GuiConfigSaves extends GuiScreen {
 
 		viewport = new Rect(400, 0).align(fieldLine.getAnchor(Direction.SOUTH).add(0, SPACER), Direction.NORTH).withBottom(height - 20);
 		scrollbar = new GuiScrollbar(viewport, 0);
+		updateList();
+	}
 
+	private void updateList() {
 		List<ListItem> listItems = manager.getSlots().stream().map(ListItem::new).collect(Collectors.toList());
 		list = new Grid<>(new Point(1, listItems.size()), listItems);
+		list.setStretch(true);
+
+		scrollbar.setContentHeight(list.getPreferredSize().getHeight());
 	}
 
 	@Override
@@ -131,24 +139,16 @@ public class GuiConfigSaves extends GuiScreen {
 		name.mouseClicked(mouseX, mouseY, mouseButton);
 		scrollbar.mouseClicked(mouseX, mouseY, mouseButton);
 
-		for(int i = 0; i < list.getSource().size(); i++) {
-			Rect bounds = new Rect(list.getPreferredSize().withWidth(this.width)).withY(150);
+		if(viewport.contains(mouseX, mouseY)) {
+			for(int i = 0; i < list.getSource().size(); i++) {
+				Rect listBounds = getListBounds();
 
-			if(list.getCellBounds(bounds, new Point(0, i)).contains(mouseX, mouseY)) {
-				name.setText(list.getSource().get(i).entry.getName());
-				updateSelected();
+				if(list.getCellBounds(listBounds, new Point(0, i)).contains(mouseX, mouseY)) {
+					name.setText(list.getSource().get(i).entry.getName());
+					updateSelected();
+				}
 			}
 		}
-/*
-		if(viewport.contains(mouseX, mouseY)) {
-			int i = mouseY - viewport.getY() + scrollbar.getScroll();
-			i /= MC.fontRenderer.FONT_HEIGHT + SPACER;
-
-			if(i >= 0 && i < saves.size()) {
-				String filename = saves.get(i).getFileName().toString();
-				name.setText(filename.substring(0, filename.length() - 4));
-			}
-		}*/
 	}
 
 	@Override
@@ -176,44 +176,27 @@ public class GuiConfigSaves extends GuiScreen {
 		}
 	}
 
+	private Rect getListBounds() {
+		Point origin = viewport.getAnchor(Direction.NORTH).sub(0, scrollbar.getScroll() - SPACER);
+		return new Rect(list.getPreferredSize().withWidth(300)).align(origin, Direction.NORTH);
+	}
+
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		drawDefaultBackground();
 		super.drawScreen(mouseX, mouseY, partialTicks);
 
 		name.drawTextBox();
-		scrollbar.drawScrollbar(mouseX, mouseY);
-/*
-		StringGroup displaySaves = new StringGroup(saves.stream().map(path -> {
-			String name = path.getFileName().toString();
-			return name.substring(0, name.length() - 4);
-		}).collect(Collectors.toList())).setAlignment(Direction.NORTH).setGutter(SPACER);*/
 
-/*		Rect scissorRect = viewport.withY(height - viewport.getBottom()).scale(new ScaledResolution(MC).getScaleFactor());
-
-		GL11.glPushAttrib(GL11.GL_ENABLE_BIT | GL11.GL_SCISSOR_BIT);
+		Rect scissorRect = viewport.withY(height - viewport.getBottom()).scale(new ScaledResolution(MC).getScaleFactor());
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
 		GL11.glScissor(scissorRect.getX(), scissorRect.getY(), scissorRect.getWidth(), scissorRect.getHeight());
 
-		Point origin = viewport.getAnchor(Direction.NORTH).sub(0, scrollbar.getScroll() - SPACER);
+		list.render(getListBounds());
 
-		for(int i = 0; i < saves.size(); i++) {
-			String fileName = saves.get(i).getFileName().toString();
+		GL11.glDisable(GL11.GL_SCISSOR_TEST);
 
-			if(fileName.length() == name.getText().length() + 4 && fileName.regionMatches(0, name.getText(), 0, fileName.length() - 4)) {
-				Rect bounds = new Rect(300, MC.fontRenderer.FONT_HEIGHT).align(origin.add(0, (MC.fontRenderer.FONT_HEIGHT + SPACER) * i), Direction.NORTH).grow(2);
-
-				GlUtil.drawRect(bounds, new Color(48, 0, 0, 0));
-				GlUtil.drawBorderRect(bounds, new Color(160, 144, 144, 144));
-
-				break;
-			}
-		}
-		displaySaves.draw(origin);
-
-		GL11.glPopAttrib();*/
-
-		list.render(new Rect(list.getPreferredSize().withWidth(this.width)).withY(150));
+		scrollbar.drawScrollbar(mouseX, mouseY);
 	}
 
 	private class ListItem implements Boxed {
