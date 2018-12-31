@@ -3,7 +3,7 @@ package jobicade.betterhud.element.settings;
 import java.util.List;
 
 import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.util.HudConfig;
+import jobicade.betterhud.config.HudConfig;
 import jobicade.betterhud.util.IGetSet.IBoolean;
 
 public class RootSetting extends SettingStub<Boolean> implements IBoolean {

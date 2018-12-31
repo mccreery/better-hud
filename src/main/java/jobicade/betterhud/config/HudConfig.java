@@ -1,4 +1,4 @@
-package jobicade.betterhud.util;
+package jobicade.betterhud.config;
 
 import java.io.File;
 

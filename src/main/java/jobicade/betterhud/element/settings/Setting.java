@@ -14,7 +14,7 @@ import net.minecraftforge.common.config.Property;
 import net.minecraftforge.common.config.Property.Type;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.gui.GuiElementSettings;
-import jobicade.betterhud.util.HudConfig;
+import jobicade.betterhud.config.HudConfig;
 import jobicade.betterhud.util.IGetSet;
 import jobicade.betterhud.util.ISaveLoad;
 import jobicade.betterhud.geom.Point;
