@@ -227,6 +227,7 @@ betterHud.setting.showTotalExp=Total de XP
 betterHud.setting.spaced=Espaçado
 betterHud.setting.tooltipLines=Série de dicas
 #betterHud.setting.warnings=Warnings
+#betterHud.setting.duration=Duration
 #betterHud.value.text=Text
 #betterHud.value.visual=Visual
 

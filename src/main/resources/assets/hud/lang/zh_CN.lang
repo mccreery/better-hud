@@ -227,6 +227,7 @@ betterHud.setting.showTotalExp=总共
 betterHud.setting.spaced=分组
 #betterHud.setting.tooltipLines=Tooltip Lines
 #betterHud.setting.warnings=Warnings
+#betterHud.setting.duration=Duration
 #betterHud.value.text=Text
 #betterHud.value.visual=Visual
 

@@ -7,27 +7,23 @@ import static jobicade.betterhud.BetterHud.SPACER;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-
-import com.google.common.collect.Ordering;
+import java.util.stream.Stream;
 
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
+import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.render.Color;
-import jobicade.betterhud.util.GlUtil;
+import jobicade.betterhud.render.Boxed;
+import jobicade.betterhud.render.Grid;
 import jobicade.betterhud.util.MathUtil;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.inventory.GuiContainer;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.MathHelper;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
@@ -38,6 +34,8 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class PotionBar extends HudElement {
 	public static final ResourceLocation INVENTORY = new ResourceLocation("textures/gui/container/inventory.png");
 
+	private SettingBoolean showDuration;
+
 	public PotionBar() {
 		super("potionBar", new SettingPosition(DirectionOptions.X, DirectionOptions.CORNERS));
 	}
@@ -45,6 +43,7 @@ public class PotionBar extends HudElement {
 	@Override
 	protected void addSettings(List<Setting<?>> settings) {
 		super.addSettings(settings);
+		settings.add(showDuration = new SettingBoolean("duration").setValuePrefix(SettingBoolean.VISIBLE));
 	}
 
 	@Override
@@ -72,112 +71,56 @@ public class PotionBar extends HudElement {
 
 	@Override
 	public Rect render(Event event) {
-		List<PotionEffect> effects = new ArrayList<>(MC.player.getActivePotionEffects());
+		Boxed grid = getGrid();
 
-		int pivot = MathUtil.partition(effects, effect -> effect.getPotion().isBeneficial());
-		List<PotionEffect> harmful = effects.subList(0, pivot);
-		List<PotionEffect> helpful = effects.subList(pivot, effects.size());
-
-		Ordering<PotionEffect> order = Ordering.natural().reverse();
-		Collections.sort(harmful, order);
-		Collections.sort(helpful, order);
-
-		Rect bounds = getRect(harmful.size(), helpful.size());
-
-		Direction alignment = position.getContentAlignment();
-		Point icon = new Rect(24, 24).anchor(bounds, alignment).getPosition();
-
-		int deltaX = alignment.getCol() == 2 ? -25 : 25;
-		for(int i = 0; i < helpful.size(); i++) {
-			drawIcon(icon.add(i * deltaX, 0), helpful.get(i));
+		Rect bounds = new Rect(grid.getPreferredSize());
+		if(position.isDirection(Direction.CENTER)) {
+			bounds = bounds.align(MANAGER.getScreen().getAnchor(Direction.CENTER).add(SPACER, SPACER), Direction.NORTH_WEST);
+		} else {
+			bounds = position.applyTo(bounds);
 		}
+		grid.render(bounds);
+		MC.getTextureManager().bindTexture(Gui.ICONS);
 
-		icon = icon.add(0, alignment.getRow() == 2 ? -26 : 26);
-		for(int i = 0; i < harmful.size(); i++) {
-			drawIcon(icon.add(i * deltaX, 0), harmful.get(i));
-		}
 		return bounds;
 	}
 
-	private Rect getRect(int harmful, int helpful) {
-		// Swap to enforce harmful <= helpful
-		if(harmful > helpful) {
-			int temp = harmful;
-			harmful = helpful;
-			helpful = temp;
-		}
-		if(helpful <= 0) return Rect.empty();
+	private void populateEffects(List<PotionEffect> helpful, List<PotionEffect> harmful) {
+		Stream<PotionEffect> source = MC.player
+			.getActivePotionEffects().parallelStream()
+			.filter(e -> e.doesShowParticles() && e.getPotion().shouldRenderHUD(e));
 
-		Rect bounds = new Rect(helpful * 25 - 1, harmful > 0 ? 50 : 24);
+		MathUtil.splitList(source::iterator, e -> e.getPotion().isBeneficial(), helpful, harmful);
+		helpful.sort(Collections.reverseOrder());
+		harmful.sort(Collections.reverseOrder());
+	}
 
-		if(position.isDirection(Direction.CENTER)) {
-			return bounds.align(MANAGER.getScreen().getAnchor(Direction.CENTER).add(SPACER, SPACER), Direction.NORTH_WEST);
-		} else {
-			return position.applyTo(bounds);
+	private void fillRow(Grid grid, int row, List<PotionEffect> effects) {
+		for(int i = 0; i < effects.size(); i++) {
+			grid.setCell(new Point(i, row), new PotionIcon(effects.get(i), showDuration.get()));
 		}
 	}
 
-	/**
-	 * OpenGL side-effects: set texture to Gui.ICONS, color to white
-	 */
-	private void drawIcon(Point position, PotionEffect effect) {
-		Potion potion = effect.getPotion();
+	private Boxed getGrid() {
+		List<PotionEffect> helpful = new ArrayList<>(), harmful = new ArrayList<>();
+		populateEffects(helpful, harmful);
 
-		if(!potion.shouldRenderHUD(effect) || !effect.doesShowParticles()) {
-			return;
-		}
+		int rows = 0;
+		if(!helpful.isEmpty()) ++rows;
+		if(!harmful.isEmpty()) ++rows;
 
-		float opacity = 1;
-		Rect background;
+		if(rows > 0) {
+			Grid grid = new Grid(new Point(Math.max(helpful.size(), harmful.size()), rows));
+			grid.setAlignment(position.getContentAlignment());
+			grid.setGutter(new Point(1, 2));
 
-		if(effect.getIsAmbient()) {
-			background = new Rect(165, 166, 24, 24);
+			int row = 0;
+			if(!helpful.isEmpty()) fillRow(grid, row++, helpful);
+			if(!harmful.isEmpty()) fillRow(grid, row++, harmful);
+
+			return grid;
 		} else {
-			background = new Rect(141, 166, 24, 24);
-
-			if(effect.getDuration() <= 200) {
-				int durationSeconds = effect.getDuration() / 20;
-				opacity = MathHelper.clamp(effect.getDuration() / 100f, 0, .5f)
-					+ MathHelper.cos(effect.getDuration() * (float)Math.PI / 5f) * MathHelper.clamp(10 - durationSeconds / 40f, 0f, .25f);
-			}
+			return null;
 		}
-
-		Rect bounds = background.move(position);
-		Rect inner = bounds.grow(-3);
-
-		MC.getTextureManager().bindTexture(GuiContainer.INVENTORY_BACKGROUND);
-		GlUtil.drawRect(bounds, background);
-		Color.WHITE.withAlpha(Math.round(opacity * 255)).apply();
-
-		if(potion.hasStatusIcon()) {
-			int index = potion.getStatusIconIndex();
-			Rect icon = new Rect((index % 8) * 18, 198 + (index / 8) * 18, 18, 18);
-
-			GlUtil.drawRect(inner, icon);
-		}
-		potion.renderHUDEffect(position.getX(), position.getY(), effect, MC, opacity);
-
-		if(potion.shouldRenderInvText(effect)) {
-			String potionLevel = getPotionLevel(effect);
-			if(!potionLevel.isEmpty()) {
-				GlUtil.drawString(potionLevel, inner.getAnchor(Direction.SOUTH_EAST), Direction.SOUTH_EAST, Color.WHITE);
-			}
-		}
-
-		MC.getTextureManager().bindTexture(Gui.ICONS);
-		Color.WHITE.apply();
-	}
-
-	private String getPotionLevel(PotionEffect effect) {
-		int amplifier = effect.getAmplifier();
-
-		if(amplifier > 0) {
-			String unlocalized = "enchantment.level." + (amplifier + 1);
-
-			if(I18n.hasKey(unlocalized)) {
-				return I18n.format(unlocalized);
-			}
-		}
-		return "";
 	}
 }
