@@ -1,6 +1,7 @@
 package jobicade.betterhud.util;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
@@ -150,5 +151,22 @@ public final class MathUtil {
 			++i;
 		}
 		return i;
+	}
+
+	/**
+	 * Splits a collection into two based on a predicate.
+	 * @param items The collection to split.
+	 * @param condition The condition predicate.
+	 * @param pass The collection to put passing values into.
+	 * @param fail The collection to put failing values into.
+	 */
+	public static <T> void splitList(Collection<? extends T> items, Predicate<T> condition, Collection<? super T> pass, Collection<? super T> fail) {
+		for(T t : items) {
+			if(condition.test(t)) {
+				pass.add(t);
+			} else {
+				fail.add(t);
+			}
+		}
 	}
 }
