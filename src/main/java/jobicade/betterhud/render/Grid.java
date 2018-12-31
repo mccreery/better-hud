@@ -57,6 +57,15 @@ public class Grid<T extends Boxed> implements Boxed {
         return position.getY() * shape.getWidth() + position.getX();
     }
 
+    public Rect getCellBounds(Rect bounds, Point position) {
+        Size gutterless = bounds.getSize().sub(shape.getSize().sub(1, 1).scale(gutter));
+        Size cellSize = gutterless.scale(1.0f / shape.getWidth(), 1.0f / shape.getHeight());
+
+        Direction flow = alignment.mirror();
+        Point offset = new Point((flow.getCol() - 1) * position.getX(), (flow.getRow() - 1) * position.getY()).scale(cellSize.add(gutter));
+        return new Rect(cellSize).anchor(bounds, alignment).translate(offset);
+    }
+
     public Size getGutter() {
         return gutter;
     }
