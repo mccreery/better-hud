@@ -30,11 +30,13 @@ public class ConfigManager implements IResourceManagerReloadListener {
     private List<ConfigSlot> internalConfigs;
     private Path rootDirectory;
 
-    private Path configPath;
+    private final Path configPath;
     private HudConfig config;
 
     public ConfigManager(Path configPath, Path rootDirectory) {
         this.setRootDirectory(rootDirectory);
+
+        this.configPath = configPath;
         this.reloadConfig();
     }
 
