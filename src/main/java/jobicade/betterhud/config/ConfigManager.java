@@ -9,7 +9,11 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.util.Arrays;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
+import java.util.function.Function;
+import java.util.function.Predicate;
 import java.util.stream.Stream;
 
 import com.google.common.collect.ImmutableList;
@@ -68,7 +72,9 @@ public class ConfigManager implements IResourceManagerReloadListener {
     }
 
     public List<ConfigSlot> getSlots() {
-        return Stream.concat(getInternalSlots().stream(), streamExternalSlots()).collect(ImmutableList.toImmutableList());
+        return Stream.concat(getInternalSlots().stream(), streamExternalSlots())
+            .filter(distinctBy(ConfigSlot::getName))
+            .collect(ImmutableList.toImmutableList());
     }
 
     public List<ConfigSlot> getInternalSlots() {
@@ -105,5 +111,18 @@ public class ConfigManager implements IResourceManagerReloadListener {
         } catch(IOException e) {
             return Stream.empty();
         }
+    }
+
+    /**
+     * Creates a stateful filter which adds the result of the key function
+     * on each object it filters to a set, returning true the first time it
+     * sees a key and false for all subsequent times.
+     *
+     * <p>The filter is intended to be used for {@link Stream#filter(Predicate)}
+     * and mimics {@link Stream#distinct()} for comparing different keys.
+     */
+    private static <T, U> Predicate<T> distinctBy(Function<? super T, U> key) {
+        Set<U> seen = new HashSet<>();
+        return t -> seen.add(key.apply(t));
     }
 }
