@@ -9,9 +9,9 @@ import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.render.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.util.ResourceLocation;
@@ -69,19 +69,22 @@ public class Vignette extends OverrideElement {
 		// Animate brightness
 		brightness = brightness + (MathHelper.clamp(1 - MC.player.getBrightness(), 0, 1) - brightness) / 100;
 
-		GlUtil.blendFuncSafe(SourceFactor.ZERO, DestFactor.ONE_MINUS_SRC_COLOR, SourceFactor.ONE, DestFactor.ZERO);
-
+		Color color;
 		if(f > 0) {
-			GlStateManager.color(0, f, f, 1);
+			int shade = Math.round(f * 255.0f);
+			color = new Color(0, shade, shade);
 		} else {
-			GlStateManager.color(brightness, brightness, brightness, 1);
+			int value = Math.round(brightness * 255.0f);
+			color = new Color(value, value, value);
 		}
 
+		GlUtil.blendFuncSafe(SourceFactor.ZERO, DestFactor.ONE_MINUS_SRC_COLOR, SourceFactor.ONE, DestFactor.ZERO);
 		MC.getTextureManager().bindTexture(VIGNETTE_TEX_PATH);
-		GlUtil.drawRect(MANAGER.getScreen(), new Rect(256, 256));
 
-		GlUtil.blendFuncSafe(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ONE, DestFactor.ZERO);
+		GlUtil.drawRect(MANAGER.getScreen(), new Rect(256, 256), color);
+
 		MC.getTextureManager().bindTexture(Gui.ICONS);
+		GlUtil.blendFuncSafe(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
 		return null;
 	}
 
