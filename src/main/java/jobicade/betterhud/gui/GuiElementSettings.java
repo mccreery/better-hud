@@ -14,9 +14,12 @@ import org.lwjgl.opengl.GL11;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.Setting;
+import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
+import jobicade.betterhud.util.GlUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiLabel;
@@ -31,7 +34,7 @@ import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
 
 @SideOnly(Side.CLIENT)
-public class GuiElementSettings extends GuiScreen {
+public class GuiElementSettings extends GuiMenuScreen {
 	private static final int REPEAT_SPEED	   = 20; // Rate of speed-up to 20/s
 	private static final int REPEAT_SPEED_FAST = 10; // Rate of speed-up beyond 20/s
 
@@ -41,25 +44,25 @@ public class GuiElementSettings extends GuiScreen {
 
 	private Rect viewport;
 
-	private final GuiScreen prev;
-	private GuiButton done;
+	private final GuiActionButton done = new GuiActionButton(I18n.format("gui.done"));
 	private GuiScrollbar scrollbar;
 
 	private int repeatTimer = 0;
 
 	public GuiElementSettings(HudElement element, GuiScreen prev) {
 		this.element = element;
-		this.prev = prev;
+		done.setCallback(b -> Minecraft.getMinecraft().displayGuiScreen(prev));
 	}
 
 	@Override
 	public void initGui() {
+		setTitle(I18n.format("betterHud.menu.settings", this.element.getLocalizedName()));
 		buttonList.clear();
 		textboxList.clear();
 		labelList.clear();
 
 		Keyboard.enableRepeatEvents(true);
-		done = new GuiButton(-1, width / 2 - 100, height / 16 + 20, I18n.format("gui.done"));
+		done.setBounds(new Rect(200, 20).align(getOrigin(), Direction.NORTH));
 
 		List<Gui> parts = new ArrayList<Gui>();
 		int contentHeight = element.settings.getGuiParts(parts, callbacks, new Point(width / 2, SPACER)).getY();
@@ -90,17 +93,15 @@ public class GuiElementSettings extends GuiScreen {
 
 	@Override
 	protected void actionPerformed(GuiButton button) {
-		if(button.id == -1) {
-			mc.displayGuiScreen(prev);
-		} else {
-			if(callbacks.containsKey(button)) {
-				callbacks.get(button).actionPerformed(this, button);
-			}
+		if(callbacks.containsKey(button)) {
+			callbacks.get(button).actionPerformed(this, button);
 
 			// Notify the rest of the elements that a button has been pressed
 			for(Setting<?> setting : callbacks.values()) {
 				setting.updateGuiParts(callbacks.values());
 			}
+		} else {
+			super.actionPerformed(button);
 		}
 	}
 
@@ -187,26 +188,26 @@ public class GuiElementSettings extends GuiScreen {
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		drawDefaultBackground();
-		drawCenteredString(this.fontRenderer, I18n.format("betterHud.menu.settings", this.element.getLocalizedName()), this.width / 2, height / 16 + 5, Color.WHITE.getPacked());
+		drawTitle();
 
 		ScaledResolution resolution = new ScaledResolution(MC);
 		done.drawButton(MC, mouseX, mouseY, partialTicks);
 
 		GlStateManager.pushMatrix();
-		GL11.glPushAttrib(GL11.GL_SCISSOR_BIT);
-
-		GL11.glEnable(GL11.GL_SCISSOR_TEST);
-		GL11.glScissor(viewport.getX() * resolution.getScaleFactor(), (height - viewport.getY() - viewport.getHeight()) * resolution.getScaleFactor(), viewport.getWidth() * resolution.getScaleFactor(), viewport.getHeight() * resolution.getScaleFactor());
-
+		GlUtil.beginScissor(viewport, resolution);
 		GL11.glTranslatef(0, -getMouseOffset(), 0);
 
-		super.drawScreen(mouseX, mouseY + getMouseOffset(), partialTicks);
+		int viewportMouseY = mouseY + getMouseOffset();
+
+		for(GuiButton button : buttonList) button.drawButton(mc, mouseX, viewportMouseY, partialTicks);
+		for(GuiLabel label : labelList) label.drawLabel(mc, mouseX, viewportMouseY);
+
 		for(GuiTextField field : this.textboxList) {
 			field.drawTextBox();
 		}
 		element.settings.draw();
 
-		GL11.glPopAttrib();
+		GlUtil.endScissor();
 		GlStateManager.popMatrix();
 
 		scrollbar.drawScrollbar(mouseX, mouseY);

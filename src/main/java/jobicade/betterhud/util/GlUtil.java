@@ -14,6 +14,7 @@ import jobicade.betterhud.render.Color;
 import jobicade.betterhud.render.Label;
 import jobicade.betterhud.render.Quad;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
@@ -299,5 +300,18 @@ public final class GlUtil {
 		GlStateManager.tryBlendFuncSeparate(dummyFactor, dstFactor, srcFactorAlpha, dstFactorAlpha);
 		// Guarantee cache updates correctly
 		GlStateManager.tryBlendFuncSeparate(srcFactor, dstFactor, srcFactorAlpha, dstFactorAlpha);
+	}
+
+	public static void beginScissor(Rect scissorRect, ScaledResolution resolution) {
+		final Rect scaledRect = scissorRect
+			.withY(resolution.getScaledHeight() - scissorRect.getBottom())
+			.scale(resolution.getScaleFactor());
+
+		GL11.glEnable(GL11.GL_SCISSOR_TEST);
+		GL11.glScissor(scaledRect.getX(), scaledRect.getY(), scaledRect.getWidth(), scaledRect.getHeight());
+	}
+
+	public static void endScissor() {
+		GL11.glDisable(GL11.GL_SCISSOR_TEST);
 	}
 }
