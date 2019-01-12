@@ -86,7 +86,7 @@ public class GuiConfigSaves extends GuiScreen {
 
 		buttonList.add(new GuiActionButton(I18n.format("gui.done"))
 			.setCallback(b -> MC.displayGuiScreen(previous))
-			.setRect(new Rect(200, 20).align(origin, Direction.NORTH)));
+			.setBounds(new Rect(200, 20).align(origin, Direction.NORTH)));
 
 		Rect textField = new Rect(150, 20);
 		Rect smallButton = new Rect(50, 20);
@@ -99,10 +99,10 @@ public class GuiConfigSaves extends GuiScreen {
 		name.setCanLoseFocus(false);
 
 		smallButton = smallButton.move(textField.getAnchor(Direction.NORTH_EAST).add(SPACER, 0));
-		buttonList.add(load = new GuiActionButton("Load").setCallback(b -> load()).setRect(smallButton));
+		buttonList.add(load = new GuiActionButton("Load").setCallback(b -> load()).setBounds(smallButton));
 
 		smallButton = smallButton.move(smallButton.getAnchor(Direction.NORTH_EAST).add(SPACER, 0));
-		buttonList.add(save = new GuiActionButton("Save").setCallback(b -> save()).setRect(smallButton));
+		buttonList.add(save = new GuiActionButton("Save").setCallback(b -> save()).setBounds(smallButton));
 
 		updateSelected();
 

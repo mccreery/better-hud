@@ -66,7 +66,7 @@ public class SettingDirection extends SettingAlignable<Direction> {
 		for(Direction direction : Direction.values()) {
 			GuiActionButton button = new GuiActionButton("")
 				.setId(direction.ordinal())
-				.setRect(radio.anchor(radios, direction));
+				.setBounds(radio.anchor(radios, direction));
 
 			parts.add(button);
 			callbacks.put(button, this);

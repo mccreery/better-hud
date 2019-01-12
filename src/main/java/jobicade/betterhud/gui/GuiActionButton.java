@@ -55,7 +55,7 @@ public class GuiActionButton extends GuiButton {
 		return this;
 	}
 
-	public GuiActionButton setRect(Rect bounds) {
+	public GuiActionButton setBounds(Rect bounds) {
 		this.x = bounds.getX();
 		this.y = bounds.getY();
 		this.width = bounds.getWidth();
@@ -64,7 +64,7 @@ public class GuiActionButton extends GuiButton {
 		return this;
 	}
 
-	public Rect getRect() {
+	public Rect getBounds() {
 		return new Rect(x, y, width, height);
 	}
 
@@ -99,7 +99,7 @@ public class GuiActionButton extends GuiButton {
 	public final void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
 		if(!visible) return;
 
-		Rect bounds = getRect();
+		Rect bounds = getBounds();
 		hovered = bounds.contains(mouseX, mouseY);
 
 		drawButton(bounds, new Point(mouseX, mouseY), partialTicks);

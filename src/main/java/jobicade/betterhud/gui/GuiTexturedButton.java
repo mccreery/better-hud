@@ -30,8 +30,8 @@ public class GuiTexturedButton extends GuiActionButton {
 	}
 
 	@Override
-	public GuiActionButton setRect(Rect bounds) {
-		return super.setRect(bounds.resize(disabled.getSize()));
+	public GuiActionButton setBounds(Rect bounds) {
+		return super.setBounds(bounds.resize(disabled.getSize()));
 	}
 
 	protected Rect getTexture() {

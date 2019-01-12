@@ -85,10 +85,10 @@ public class GuiReorder extends GuiElements {
 			toolbox = new Rect(MANAGER.getScreen().getSize(), Point.zero());
 		}
 
-		moveTop.setRect(button = button.anchor(toolbox, Direction.NORTH_WEST));
-		moveUp.setRect(button = button.withY(button.getBottom() + 2));
-		moveDown.setRect(button = button.withY(button.getBottom() + 2));
-		moveBottom.setRect(button.withY(button.getBottom() + 2));
+		moveTop.setBounds(button = button.anchor(toolbox, Direction.NORTH_WEST));
+		moveUp.setBounds(button = button.withY(button.getBottom() + 2));
+		moveDown.setBounds(button = button.withY(button.getBottom() + 2));
+		moveBottom.setBounds(button.withY(button.getBottom() + 2));
 	}
 
 	@Override

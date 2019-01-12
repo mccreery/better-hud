@@ -44,7 +44,7 @@ public class SettingBoolean extends SettingAlignable<Boolean> implements IBoolea
 
 	@Override
 	public void getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Rect bounds) {
-		toggler = new GuiActionButton("").setRect(bounds).setCallback(b -> toggle());
+		toggler = new GuiActionButton("").setBounds(bounds).setCallback(b -> toggle());
 		parts.add(toggler);
 		callbacks.put(toggler, this);
 	}

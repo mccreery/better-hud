@@ -59,7 +59,7 @@ public class SettingElement extends SettingAlignable<HudElement> {
 	public void getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Rect bounds) {
 		String text = getLocalizedName() + ": " + (value != null ? value.getLocalizedName() : I18n.format("betterHud.value.none"));
 		button = new GuiActionButton(text);
-		button.setRect(bounds);
+		button.setBounds(bounds);
 
 		parts.add(button);
 		callbacks.put(button, this);

@@ -36,8 +36,8 @@ class ButtonRow {
 
 	public ButtonRow setRect(Rect bounds) {
 		this.bounds = bounds;
-		toggle.setRect(bounds.withWidth(bounds.getWidth() - 20).anchor(bounds, Direction.NORTH_WEST));
-		options.setRect(bounds.withWidth(20).anchor(bounds, Direction.NORTH_EAST));
+		toggle.setBounds(bounds.withWidth(bounds.getWidth() - 20).anchor(bounds, Direction.NORTH_WEST));
+		options.setBounds(bounds.withWidth(20).anchor(bounds, Direction.NORTH_EAST));
 		return this;
 	}
 

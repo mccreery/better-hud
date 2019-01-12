@@ -118,7 +118,7 @@ public class GuiHudMenu extends GuiScreen {
 		sortButton = sortButton.move(bounds.getPosition());
 
 		for(GuiActionButton button : indexerControls) {
-			button.setRect(sortButton);
+			button.setBounds(sortButton);
 			sortButton = sortButton.withX(sortButton.getRight() + SPACER);
 		}
 		buttonList.addAll(indexerControls);
