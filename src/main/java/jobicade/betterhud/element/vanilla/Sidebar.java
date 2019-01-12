@@ -26,16 +26,13 @@ import net.minecraft.scoreboard.Scoreboard;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class Sidebar extends HudElement {
-	private SettingPosition position;
-
 	public Sidebar() {
-		super("scoreboard");
+		super("scoreboard", new SettingPosition(DirectionOptions.LEFT_RIGHT, DirectionOptions.WEST_EAST));
 	}
 
 	@Override
 	protected void addSettings(List<Setting<?>> settings) {
 		super.addSettings(settings);
-		settings.add(position = new SettingPosition("position", DirectionOptions.LEFT_RIGHT, DirectionOptions.WEST_EAST));
 	}
 
 	@Override
