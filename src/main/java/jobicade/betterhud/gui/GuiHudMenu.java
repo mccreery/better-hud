@@ -8,8 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
@@ -20,29 +18,28 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.util.IGetSet;
 import jobicade.betterhud.util.Paginator;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.util.SortField;
 
 @SideOnly(Side.CLIENT)
-public class GuiHudMenu extends GuiScreen {
+public class GuiHudMenu extends GuiMenuScreen {
 	private final Map<HudElement, ButtonRow> rows = new HashMap<HudElement, ButtonRow>(HudElement.ELEMENTS.size());
 	final Paginator<HudElement> paginator = new Paginator<HudElement>();
 
-	private final GuiButton returnToGame = new GuiActionButton(I18n.format("menu.returnToGame")).setCallback(b -> MC.displayGuiScreen(null));
-	private final GuiButton toggleAll = new GuiActionButton("").setCallback(b -> setAll(!allEnabled()));
-	private final GuiButton reorder = new GuiActionButton(I18n.format("betterHud.menu.reorder")).setCallback(b -> MC.displayGuiScreen(new GuiReorder(this)));
+	private final GuiActionButton returnToGame = new GuiActionButton(I18n.format("menu.returnToGame")).setCallback(b -> MC.displayGuiScreen(null));
+	private final GuiActionButton toggleAll = new GuiActionButton("").setCallback(b -> setAll(!allEnabled()));
+	private final GuiActionButton reorder = new GuiActionButton(I18n.format("betterHud.menu.reorder")).setCallback(b -> MC.displayGuiScreen(new GuiReorder(this)));
 
-	private final GuiButton resetDefaults = new GuiActionButton(I18n.format("betterHud.menu.saveLoad"))
+	private final GuiActionButton resetDefaults = new GuiActionButton(I18n.format("betterHud.menu.saveLoad"))
 		.setCallback(b -> MC.displayGuiScreen(new GuiConfigSaves(BetterHud.getConfigManager(), this)));
 
 	private final ButtonRow globalRow = new ButtonRow(this, HudElement.GLOBAL);
 
-	private final GuiButton lastPage = new GuiActionButton(I18n.format("betterHud.menu.lastPage"))
+	private final GuiActionButton lastPage = new GuiActionButton(I18n.format("betterHud.menu.lastPage"))
 		.setCallback(b -> {paginator.previousPage(); initGui();});
 
-	private final GuiButton nextPage = new GuiActionButton(I18n.format("betterHud.menu.nextPage"))
+	private final GuiActionButton nextPage = new GuiActionButton(I18n.format("betterHud.menu.nextPage"))
 		.setCallback(b -> {paginator.nextPage(); initGui();});
 
 	private SortField<HudElement> sortCriteria = SortType.ALPHABETICAL;
@@ -61,17 +58,18 @@ public class GuiHudMenu extends GuiScreen {
 	}
 
 	public void initGui() {
+		setTitle(I18n.format("betterHud.menu.hudSettings"));
 		paginator.setData(HudElement.SORTER.getSortedData(sortCriteria, descending ^ sortCriteria.isInverted()));
 		paginator.setPageSize(Math.max(1, (int) Math.floor((height / 8 * 7 - 134) / 24)));
 
 		addDefaultButtons();
-		Rect buttonRect = new Rect(170, 20).align(new Point(width / 2, height / 16 + 102), Direction.NORTH);
+		Rect buttonRect = new Rect(170, 20).align(getOrigin().add(0, 82), Direction.NORTH);
 
 		for(HudElement element : paginator.getPage()) {
 			ButtonRow row = getRow(element);
 			buttonList.addAll(row.getButtons());
 
-			row.setRect(buttonRect);
+			row.setBounds(buttonRect);
 			row.update();
 
 			buttonRect = buttonRect.withY(buttonRect.getBottom() + 4);
@@ -79,25 +77,25 @@ public class GuiHudMenu extends GuiScreen {
 	}
 
 	private void addDefaultButtons() {
-		Rect buttons = new Rect(300, 42).align(new Point(width / 2, height / 16 + 20), Direction.NORTH);
+		Rect buttons = new Rect(300, 42).align(getOrigin(), Direction.NORTH);
 		Rect halfWidth = new Rect((buttons.getWidth() - 2) / 2, 20);
 		Rect thirdWidth = new Rect((buttons.getWidth() - 4) / 3, 20);
 
-		moveButton(returnToGame,   halfWidth.anchor(buttons, Direction.NORTH_WEST));
+		returnToGame.setBounds(halfWidth.anchor(buttons, Direction.NORTH_WEST));
 
-		globalRow.setRect(halfWidth.anchor(buttons, Direction.NORTH_EAST));
+		globalRow.setBounds(halfWidth.anchor(buttons, Direction.NORTH_EAST));
 
-		moveButton(toggleAll,     thirdWidth.anchor(buttons, Direction.SOUTH_WEST));
-		moveButton(reorder,    thirdWidth.anchor(buttons,      Direction.SOUTH));
-		moveButton(resetDefaults, thirdWidth.anchor(buttons, Direction.SOUTH_EAST));
+		toggleAll.setBounds(thirdWidth.anchor(buttons, Direction.SOUTH_WEST));
+		reorder.setBounds(thirdWidth.anchor(buttons,      Direction.SOUTH));
+		resetDefaults.setBounds(thirdWidth.anchor(buttons, Direction.SOUTH_EAST));
 		toggleAll.displayString = I18n.format(allEnabled() ? "betterHud.menu.disableAll" : "betterHud.menu.enableAll");
 
 		lastPage.enabled = paginator.hasPrevious();
 		nextPage.enabled = paginator.hasNext();
 
 		buttons = buttons.align(new Point(width / 2, height - 20 - height / 16), Direction.NORTH);
-		moveButton(lastPage, thirdWidth.anchor(buttons, Direction.NORTH_WEST));
-		moveButton(nextPage, thirdWidth.anchor(buttons, Direction.NORTH_EAST));
+		lastPage.setBounds(thirdWidth.anchor(buttons, Direction.NORTH_WEST));
+		nextPage.setBounds(thirdWidth.anchor(buttons, Direction.NORTH_EAST));
 
 		buttonList.clear();
 
@@ -114,7 +112,7 @@ public class GuiHudMenu extends GuiScreen {
 
 		List<GuiActionButton> indexerControls = getIndexControls(SortType.values());
 		Rect sortButton = new Rect(75, 20);
-		Rect bounds = sortButton.withWidth((sortButton.getWidth() + SPACER) * indexerControls.size() - SPACER).align(new Point(width / 2, height / 16 + 78), Direction.NORTH);
+		Rect bounds = sortButton.withWidth((sortButton.getWidth() + SPACER) * indexerControls.size() - SPACER).align(getOrigin().add(0, 58), Direction.NORTH);
 		sortButton = sortButton.move(bounds.getPosition());
 
 		for(GuiActionButton button : indexerControls) {
@@ -124,23 +122,9 @@ public class GuiHudMenu extends GuiScreen {
 		buttonList.addAll(indexerControls);
 	}
 
-	private void moveButton(GuiButton button, Rect bounds) {
-		button.x = bounds.getX();
-		button.y = bounds.getY();
-		button.width = bounds.getWidth();
-		button.height = bounds.getHeight();
-	}
-
 	@Override
 	public void onGuiClosed() {
 		BetterHud.getConfigManager().getConfig().saveSettings();
-	}
-
-	@Override
-	protected void actionPerformed(GuiButton button) {
-		if(button instanceof GuiActionButton) {
-			((GuiActionButton)button).actionPerformed();
-		}
 	}
 
 	private void setAll(boolean enabled) {
@@ -154,12 +138,9 @@ public class GuiHudMenu extends GuiScreen {
 
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float p_73863_3_) {
-		this.drawDefaultBackground();
 		super.drawScreen(mouseX, mouseY, p_73863_3_);
 
 		int enabled = (int)HudElement.ELEMENTS.stream().filter(HudElement::get).count();
-
-		drawCenteredString(fontRenderer, I18n.format("betterHud.menu.hudSettings"), width / 2, height / 16 + 5, Color.WHITE.getPacked());
 		GlUtil.drawString(enabled + "/" + HudElement.ELEMENTS.size() + " enabled", new Point(SPACER, SPACER), Direction.NORTH_WEST, Color.WHITE);
 
 		String page = I18n.format("betterHud.menu.page", (paginator.getPageIndex() + 1) + "/" + paginator.getPageCount());
@@ -177,35 +158,6 @@ public class GuiHudMenu extends GuiScreen {
 
 	private ButtonRow getRow(HudElement element) {
 		return rows.computeIfAbsent(element, e -> new ButtonRow(this, e));
-	}
-
-	public boolean showArrows() {
-		return sortCriteria == SortType.PRIORITY;
-	}
-
-	public void swapPriority(HudElement element, int delta) {
-		if(sortCriteria != SortType.PRIORITY) {
-			throw new IllegalStateException("Must be sorting by priority");
-		}
-
-		List<HudElement> data = paginator.getData();
-		swapPriority(element, data.get(data.indexOf(element) + delta));
-	}
-
-	public void swapPriority(int first, int second) {
-		if(sortCriteria != SortType.PRIORITY) {
-			throw new IllegalStateException("Must be sorting by priority");
-		}
-
-		List<HudElement> data = paginator.getData();
-		swapPriority(data.get(first), data.get(second));
-	}
-
-	public void swapPriority(HudElement first, HudElement second) {
-		IGetSet.swap(first.settings.priority, second.settings.priority);
-
-		HudElement.SORTER.markDirty(SortType.PRIORITY);
-		initGui();
 	}
 
 	public void changeSort(SortField<HudElement> sortCriteria) {

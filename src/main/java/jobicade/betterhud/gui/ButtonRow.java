@@ -34,14 +34,14 @@ class ButtonRow {
 			MC.displayGuiScreen(new GuiElementSettings(element, callback)));
 	}
 
-	public ButtonRow setRect(Rect bounds) {
+	public ButtonRow setBounds(Rect bounds) {
 		this.bounds = bounds;
 		toggle.setBounds(bounds.withWidth(bounds.getWidth() - 20).anchor(bounds, Direction.NORTH_WEST));
 		options.setBounds(bounds.withWidth(20).anchor(bounds, Direction.NORTH_EAST));
 		return this;
 	}
 
-	public Rect getRect() {
+	public Rect getBounds() {
 		return bounds;
 	}
 
