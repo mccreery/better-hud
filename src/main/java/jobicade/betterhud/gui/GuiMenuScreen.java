@@ -1,7 +1,5 @@
 package jobicade.betterhud.gui;
 
-import java.io.IOException;
-
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.render.Color;
@@ -15,7 +13,7 @@ public class GuiMenuScreen extends GuiScreen {
     private String title;
 
     @Override
-    protected void actionPerformed(GuiButton button) throws IOException {
+    protected void actionPerformed(GuiButton button) {
         if(button instanceof GuiActionButton) {
             ((GuiActionButton)button).actionPerformed();
         }
@@ -35,12 +33,16 @@ public class GuiMenuScreen extends GuiScreen {
         this.title = title;
     }
 
-    @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        this.drawDefaultBackground();
+    protected void drawTitle() {
         if(title != null) {
             GlUtil.drawString(title, origin.sub(0, 15), Direction.NORTH, Color.WHITE);
         }
+    }
+
+    @Override
+    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+        this.drawDefaultBackground();
+        this.drawTitle();
         super.drawScreen(mouseX, mouseY, partialTicks);
     }
 }
