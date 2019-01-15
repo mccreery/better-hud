@@ -46,6 +46,7 @@ public class Experience extends OverrideElement {
 	public void loadDefaults() {
 		super.loadDefaults();
 		settings.priority.set(1);
+		position.setPreset(Direction.SOUTH);
 	}
 
 	@Override
