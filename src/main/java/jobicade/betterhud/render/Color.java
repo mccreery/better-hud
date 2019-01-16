@@ -22,14 +22,14 @@ public class Color {
 	private final int packed;
 
 	public Color(int red, int green, int blue) {
-		this(0xff, red, green, blue);
+		this(255, red, green, blue);
 	}
 
 	public Color(int alpha, int red, int green, int blue) {
-		this.alpha = alpha & 0xff;
-		this.red = red & 0xff;
-		this.green = green & 0xff;
-		this.blue = blue & 0xff;
+		this.alpha = MathHelper.clamp(alpha, 0, 255);
+		this.red = MathHelper.clamp(red, 0, 255);
+		this.green = MathHelper.clamp(green, 0, 255);
+		this.blue = MathHelper.clamp(blue, 0, 255);
 		this.packed = (this.alpha << 24) | (this.red << 16) | (this.green << 8) | this.blue;
 	}
 
