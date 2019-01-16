@@ -109,18 +109,14 @@ public class PotionBar extends HudElement {
 		if(!helpful.isEmpty()) ++rows;
 		if(!harmful.isEmpty()) ++rows;
 
-		if(rows > 0) {
-			Grid<PotionIcon> grid = new Grid<>(new Point(Math.max(helpful.size(), harmful.size()), rows));
-			grid.setAlignment(position.getContentAlignment());
-			grid.setGutter(new Point(1, 2));
+		Grid<PotionIcon> grid = new Grid<>(new Point(Math.max(helpful.size(), harmful.size()), rows));
+		grid.setAlignment(position.getContentAlignment());
+		grid.setGutter(new Point(1, 2));
 
-			int row = 0;
-			if(!helpful.isEmpty()) fillRow(grid, row++, helpful);
-			if(!harmful.isEmpty()) fillRow(grid, row++, harmful);
+		int row = 0;
+		if(!helpful.isEmpty()) fillRow(grid, row++, helpful);
+		if(!harmful.isEmpty()) fillRow(grid, row++, harmful);
 
-			return grid;
-		} else {
-			return null;
-		}
+		return grid;
 	}
 }
