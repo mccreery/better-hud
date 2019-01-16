@@ -54,13 +54,15 @@ public class Label implements Boxed {
 
     @Override
     public void render(Rect bounds) {
-        Point position = new Rect(size).anchor(bounds, Direction.CENTER).getPosition();
+        /*
+        * The font renderer for some reason ignores our request
+        * and renders completely opaque if opacity < 4.
+        */
+        if(color.getAlpha() < 4) return;
 
-        if(shadow) {
-            MC.fontRenderer.drawStringWithShadow(text, position.getX(), position.getY(), color.getPacked());
-        } else {
-            MC.fontRenderer.drawString(text, position.getX(), position.getY(), color.getPacked());
-        }
+        Point position = new Rect(size).anchor(bounds, Direction.CENTER).getPosition();
+        MC.fontRenderer.drawString(text, position.getX(), position.getY(), color.getPacked(), shadow);
+
         // Restore OpenGL state as expected
         Color.WHITE.apply();
         MC.getTextureManager().bindTexture(Gui.ICONS);
