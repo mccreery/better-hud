@@ -1,7 +1,6 @@
 package jobicade.betterhud.element;
 
 import static jobicade.betterhud.BetterHud.MC;
-import static jobicade.betterhud.BetterHud.SPACER;
 import static jobicade.betterhud.BetterHud.MANAGER;
 
 import java.util.List;
@@ -18,8 +17,13 @@ import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.settings.SettingSlider;
 import jobicade.betterhud.events.PickupNotifier;
 import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.geom.Size;
+import jobicade.betterhud.render.Boxed;
 import jobicade.betterhud.render.Color;
+import jobicade.betterhud.render.Grid;
+import jobicade.betterhud.render.Label;
 import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.util.GlUtil;
 
 public class PickupCount extends HudElement {
@@ -56,104 +60,110 @@ public class PickupCount extends HudElement {
 		return VersionRange.createFromVersionSpec("[1.4-beta,)");
 	}
 
+	/**
+	 * Searches for and removes an equivalent stack. Stacks are considered
+	 * equivalent if their items are equivalent, ignoring max stack size.
+	 *
+	 * @param stack The item to search for.
+	 * @return The removed item stack, if any, or {@code null}.
+	 */
+	private StackNode removeStack(ItemStack stack) {
+		for(StackNode node : stacks) {
+			if(PickupNotifier.stackEqualExact(stack, node.stack)) {
+				stacks.remove(node);
+				return node;
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * Adds or refreshes an item in the list.
+	 */
+	public void pickUpStack(ItemStack stack) {
+		StackNode node = removeStack(stack);
+
+		if(node != null) {
+			node.increaseStackSize(stack.getCount());
+		} else {
+			node = new StackNode(stack);
+		}
+		stacks.add(0, node);
+	}
+
+	/**
+	 * Returns the list of recently picked up stacks, newest first.
+	 * Expired stacks are removed, and the limit is enforced before returning.
+	 *
+	 * @return The list of recently picked up stacks.
+	 */
+	private List<StackNode> getStacks() {
+		stacks.removeIf(StackNode::isDead);
+
+		int limit = maxStacks.getInt();
+		if(limit < 11 && limit < stacks.size()) {
+			stacks.subList(limit, stacks.size()).clear();
+		}
+		return stacks;
+	}
+
 	@Override
 	public Rect render(Event event) {
-		Rect bounds = getRect();
-		Direction alignment = position.getContentAlignment();
-		Direction rowAlignment = alignment.withRow(1);
+		List<StackNode> stacks = getStacks();
+		Grid<StackNode> grid = new Grid<>(new Point(1, stacks.size()), stacks)
+			.setAlignment(position.getContentAlignment())
+			.setCellAlignment(position.getContentAlignment());
 
-		// The bounds to draw each item in
-		Rect stackRect = bounds.resize(16, 16).anchor(bounds, alignment);
+		Rect bounds = new Rect(grid.getPreferredSize());
 
-		long updateCounter = MC.ingameGUI.getUpdateCounter();
-		long lifetime = fadeAfter.getInt();
-
-		int maximum = maxStacks.getInt() <= 10 ? Math.min(stacks.size(), maxStacks.getInt()) : stacks.size();
-
-		int i;
-		for(i = 0; i < maximum; i++) {
-			StackNode node = stacks.get(i);
-
-			long age = updateCounter - node.updateCounter;
-			// All stacks past this point are dead
-			if(age >= lifetime) break;
-
-			float opacity = (lifetime - age) / (float)lifetime;
-
-			// Opacity lower than 4 defaults to 255
-			Color color = Color.WHITE.withAlpha(Math.max(4, Math.round(opacity * 255)));
-
-			GlUtil.renderSingleItem(node.stack, stackRect.getPosition());
-			GlUtil.drawString(node.toString(), stackRect.grow(SPACER).getAnchor(rowAlignment.mirrorCol()), rowAlignment, color);
-
-			stackRect = stackRect.align(stackRect.grow(2).getAnchor(alignment.mirrorRow()), alignment);
+		if(position.isDirection(Direction.CENTER)) {
+			bounds = bounds.align(MANAGER.getScreen().getAnchor(Direction.CENTER).add(5, 5), Direction.NORTH_WEST);
+		} else {
+			bounds = position.applyTo(bounds);
 		}
-
-		// Remove invisible stacks
-		if(i != stacks.size()) {
-			stacks.subList(i, stacks.size()).clear();
-		}
+		grid.render(bounds);
 		return bounds;
 	}
 
-	private Rect getRect() {
-		int maximum = Math.min(stacks.size(), maxStacks.getInt());
-		Rect bounds;
+	private class StackNode implements Boxed {
+		private final ItemStack stack;
+		private long updateCounter;
 
-		if(maximum == 0) {
-			bounds = Rect.empty();
-		} else {
-			int width = 0;
-
-			for(StackNode node : stacks) {
-				int lineWidth = MC.fontRenderer.getStringWidth(node.toString());
-
-				if(lineWidth > width) {
-					width = lineWidth;
-				}
-			}
-			bounds = new Rect(16 + SPACER + width, (16 + 2) * stacks.size() - 2);
-		}
-
-		if(position.isDirection(Direction.CENTER)) {
-			return bounds.align(MANAGER.getScreen().getAnchor(Direction.CENTER).add(5, 5), Direction.NORTH_WEST);
-		} else {
-			return position.applyTo(bounds);
-		}
-	}
-
-	public void pickupItem(ItemStack stack) {
-		StackNode foundNode;
-
-		int i;
-		for(i = 0; i < stacks.size(); i++) {
-			if(PickupNotifier.stackEqualExact(stacks.get(i).stack, stack)) {
-				break;
-			}
-		}
-
-		if(i != stacks.size()) {
-			foundNode = stacks.remove(i);
-			foundNode.stack.grow(stack.getCount());
-		} else {
-			foundNode = new StackNode(stack);
-		}
-		foundNode.updateCounter = MC.ingameGUI.getUpdateCounter();
-
-		stacks.add(0, foundNode);
-	}
-
-	public static class StackNode {
-		public final ItemStack stack;
-		public long updateCounter;
-
-		private StackNode(ItemStack stack) {
+		public StackNode(ItemStack stack) {
 			this.stack = stack;
+			this.updateCounter = MC.ingameGUI.getUpdateCounter();
+		}
+
+		public void increaseStackSize(int size) {
+			stack.setCount(stack.getCount() + size);
+			this.updateCounter = MC.ingameGUI.getUpdateCounter();
+		}
+
+		private Label getLabel() {
+			return new Label(stack.getCount() + " " + stack.getDisplayName())
+				.setColor(Color.WHITE.withAlpha(Math.round(getOpacity() * 255)));
+		}
+
+		private float getOpacity() {
+			return 1.0f - (MC.ingameGUI.getUpdateCounter() - updateCounter) / fadeAfter.get().floatValue();
+		}
+
+		private boolean isDead() {
+			return getOpacity() <= 0;
 		}
 
 		@Override
-		public String toString() {
-			return String.format("%dx %s", stack.getCount(), stack.getDisplayName());
+		public Size negotiateSize(Point size) {
+			return getLabel().getPreferredSize().withHeight(16).add(21, 0);
+		}
+
+		@Override
+		public void render(Rect bounds) {
+			Direction alignment = position.getContentAlignment().withRow(1);
+			GlUtil.renderSingleItem(stack, new Rect(16, 16).anchor(bounds, alignment).getPosition());
+
+			Label label = getLabel();
+			label.render(new Rect(label.getPreferredSize()).anchor(bounds, alignment.mirrorCol()));
 		}
 	}
 }

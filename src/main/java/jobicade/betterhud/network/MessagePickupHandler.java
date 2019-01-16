@@ -8,7 +8,7 @@ import jobicade.betterhud.element.HudElement;
 public class MessagePickupHandler implements IMessageHandler<MessagePickup, IMessage> {
 	@Override
 	public IMessage onMessage(MessagePickup message, MessageContext ctx) {
-		HudElement.PICKUP.pickupItem(message.getStack());
+		HudElement.PICKUP.pickUpStack(message.getStack());
 		return null;
 	}
 }
