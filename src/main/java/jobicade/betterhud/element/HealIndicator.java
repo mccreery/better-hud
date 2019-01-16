@@ -40,7 +40,7 @@ public class HealIndicator extends HudElement {
 
 	@Override
 	public Rect render(Event event) {
-			String healIndicator = I18n.format("betterHud.strings.healIndicator");
+			String healIndicator = I18n.format("betterHud.hud.healIndicator");
 			Rect bounds = mode.getIndex() == 0 ? new Rect(MC.fontRenderer.getStringWidth(healIndicator), MC.fontRenderer.FONT_HEIGHT) : new Rect(9, 9);
 
 			if(position.isCustom()) {
