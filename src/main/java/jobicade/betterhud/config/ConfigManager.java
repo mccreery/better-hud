@@ -39,6 +39,11 @@ public class ConfigManager implements IResourceManagerReloadListener {
 
     public ConfigManager(Path configPath, Path rootDirectory) {
         this.setRootDirectory(rootDirectory);
+        try {
+            Files.createDirectories(rootDirectory);
+        } catch(IOException e) {
+            throw new RuntimeException(e);
+        }
 
         this.configPath = configPath;
         this.reloadConfig();
