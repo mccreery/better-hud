@@ -1,5 +1,5 @@
 [{
-	"modid": "hud",
+	"modid": "betterhud",
 	"name": "Better HUD",
 	"description": "Better HUD adds 28 new elements to the ingame HUD. New elements can be customized in many different ways, moved around and enabled/disabled as you choose. New elements include a sign reader, player/mob info, raindrops and blood effects, armor and held item info, clock and many more.",
 	"version": "${modVersion}",

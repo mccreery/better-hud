@@ -32,7 +32,7 @@ minecraft {
 
 processResources {
     // this will ensure that this task is redone when the versions change.
-    inputs.property 'version', project.version
+    inputs.property 'modVersion', project.version
     inputs.property 'mcVersion', project.minecraft.version
 
     // replace stuff in mcmod.info, nothing else
