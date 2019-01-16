@@ -1,0 +1,246 @@
+tile.null.name=Неизвестный блок
+tile.endPortal.name=Портал в Край
+
+key.betterHud.open=Открыть меню "Better HUD"
+key.betterHud.disable=Переключить "Better HUD"
+
+# Generic Formatters
+betterHud.hud.meters=%sm
+betterHud.hud.seconds=%ss
+
+# Menu buttons
+betterHud.menu.hudSettings=Настройки HUD
+betterHud.menu.settings=Настройки %s
+betterHud.menu.enableAll=Вкл. всё
+betterHud.menu.disableAll=Откл. всё
+betterHud.menu.reorder=Переупорядочить...
+betterHud.menu.saveLoad=Сохр./Загр...
+betterHud.menu.lastPage=Последняя страница
+betterHud.menu.nextPage=След. страница
+betterHud.menu.page=Страница %s
+betterHud.menu.pick=Выбрать
+
+betterHud.menu.alphabetical=А-Я
+betterHud.menu.enabled=Включено
+betterHud.menu.priority=Draw Order
+
+betterHud.menu.moveTop=Передвинуть наверх
+betterHud.menu.moveUp=Двигаться вверх
+betterHud.menu.moveDown=Двигаться вниз
+betterHud.menu.moveBottom=Двигаться на дно
+
+# Menu text
+betterHud.menu.unsnap=Удерживайте %s чтобы отключить замыкание
+betterHud.menu.unsupported=Этот элемент не поддерживается сервером
+
+# Element names
+betterHud.element.global=Better HUD
+
+betterHud.element.armorBars=Панель брони
+betterHud.element.arrowCount=Кол-во стрел
+betterHud.element.biome=Биом
+betterHud.element.blockViewer=Просмотр блоков
+betterHud.element.bloodSplatters=Брызги крови
+betterHud.element.breedIndicator=Показатель породы
+betterHud.element.compass=Компас
+betterHud.element.connection=Соединение
+betterHud.element.coordinates=Координаты
+betterHud.element.cps=Герц
+betterHud.element.distance=Расстояние
+betterHud.element.enchantIndicator=Показатель зачарования
+betterHud.element.experienceInfo=Информация XP
+betterHud.element.fpsCount=Кол-во FPS
+betterHud.element.fullInvIndicator=Полный инвент. Показатель
+betterHud.element.gameClock=Время игры
+betterHud.element.handBar=Удерживающая панель
+betterHud.element.healIndicator=Показатель сердца
+betterHud.element.horseInfo=Информация лошади
+betterHud.element.itemPickup=Подобранный предмет
+betterHud.element.lightLevel=Уровень освещения
+betterHud.element.mobInfo=Информация моба
+betterHud.element.playerInfo=Информация игрока
+betterHud.element.potionBar=Отображение зелья
+betterHud.element.saturation=Насыщение
+betterHud.element.signReader=Чтение знака
+betterHud.element.systemClock=Системное время
+betterHud.element.waterDrops=Капли воды
+
+# Vanilla elements
+betterHud.element.airBar=Воздушная панель
+betterHud.element.armor=Панель брони
+betterHud.element.crosshair=Прицел
+betterHud.element.experience=Панель опыта
+betterHud.element.food=Панель голода
+betterHud.element.health=Панель здоровья
+betterHud.element.helmetOverlay=Наложение шлема
+betterHud.element.hotbar=Горячая панель
+betterHud.element.jumpBar=Панель перехода
+betterHud.element.mountHealth=Mount Health
+betterHud.element.offhand=Off-Hand
+betterHud.element.portal=Наложение портала
+betterHud.element.scoreboard=Табло
+betterHud.element.vignette=Виньетка
+
+# Setting Groups
+betterHud.group.position=Позиция
+betterHud.group.misc=Разное.
+betterHud.group.damageWarning=DПредупреждения о повреждениях
+
+# Generic Settings
+betterHud.value.none=Ничего
+
+betterHud.value.visible.on=Видимость
+betterHud.value.visible.off=Скрытый
+
+betterHud.setting.mode=Режим
+betterHud.value.mode=Тип %s
+
+betterHud.setting.position=Позиция
+betterHud.value.preset=Задать
+betterHud.value.custom=Пользовательский
+
+betterHud.setting.positionType=Тип позиции
+betterHud.value.hotbar=Горячая панель
+
+betterHud.setting.direction=Направление
+betterHud.setting.parent=Родитель
+betterHud.setting.anchor=Привязка
+betterHud.setting.alignment=Выравнивание
+betterHud.setting.contentAlignment=Выравнивание содержимого
+betterHud.value.northWest=Северо-запад
+betterHud.value.north=Север
+betterHud.value.northEast=Северо-восток
+betterHud.value.west=Запад
+betterHud.value.center=Центер
+betterHud.value.east=Восток
+betterHud.value.southWest=Юго-западный
+betterHud.value.south=Юг
+betterHud.value.southEast=Юго-восточный
+
+betterHud.value.percent=%s%%
+betterHud.setting.precision=Точность
+betterHud.value.places=%s размещён
+betterHud.setting.distance=Расстояние
+betterHud.setting.rayDistance=Расстояние трассировки луча
+betterHud.setting.hideOnDebug=Скрыть, пока F3 открыт
+betterHud.setting.debugMode=режим отладки
+betterHud.setting.red=§cКрасный
+betterHud.setting.green=§aЗелёный
+betterHud.setting.blue=§1Синий
+
+# Particles
+betterHud.setting.density=Плотность
+betterHud.value.sparse=Редкий
+betterHud.value.normal=Нормальный
+betterHud.value.dense=Плотный
+betterHud.value.denser=Более плотный
+
+# Equipment
+betterHud.setting.showItem=Предмет
+betterHud.setting.showName=Название
+betterHud.setting.showDurability=Прочность
+betterHud.setting.offhand=Off-Hand
+
+betterHud.setting.showNonTools=Показать для
+betterHud.value.nonTools.off=Только инструменты
+betterHud.value.nonTools.on=Все предметы
+
+betterHud.setting.bars=Панели
+betterHud.value.smallBars=Малые панели
+betterHud.value.largeBars=Большие панели
+
+betterHud.setting.durabilityFormat=Формат
+betterHud.value.points=Очки урона
+betterHud.value.percentage=Процент
+
+betterHud.setting.warning.1=§c!§r
+betterHud.setting.warning.2=§c! !§r
+betterHud.setting.warning.3=§c! ! !§r
+betterHud.value.disabled=Отключено
+
+# Block Viewer
+betterHud.setting.invNames=Названия инвентарей
+betterHud.setting.showIds=Идентификаторы
+betterHud.setting.chunks=%s чанков
+
+# Compass
+betterHud.setting.letterScale=Персперктива
+betterHud.setting.showNotches=Зарубки
+betterHud.setting.scale=Размер
+betterHud.setting.requireItem=Требуемый предмет
+betterHud.value.inventory=В инвентаре
+betterHud.value.hand=В руке
+
+# Clocks
+betterHud.setting.24hr=24 часа
+betterHud.setting.showSeconds=Секунды
+betterHud.setting.showDays=Дни
+betterHud.setting.fullYear=Целый год
+
+betterHud.setting.dateType=Формат
+betterHud.value.dmy=D/M/Y (UK)
+betterHud.value.mdy=M/D/Y (US)
+betterHud.value.ymd=Y/M/D
+betterHud.hud.day=День %s
+
+# Connection
+betterHud.setting.playerCount=Кол-во игроков
+betterHud.setting.showIp=IP адрес
+betterHud.setting.latency=Время ожидания (Пинг)
+
+betterHud.hud.player=1 игрок
+betterHud.hud.players=%s игроков
+betterHud.hud.localServer=Локальный сервер
+betterHud.hud.ip=IP: %s
+betterHud.hud.ping=Пинг: %sмс
+
+# Coordinates
+betterHud.hud.x=X: %s
+betterHud.hud.y=Y: %s
+betterHud.hud.z=Z: %s
+betterHud.hud.xyz=X: %s, Y: %s, Z: %s
+
+# Mob Info
+betterHud.setting.billboardScale=Размер плаката
+betterHud.setting.jump=Прыжок в высоту
+betterHud.setting.speed=Скорость
+betterHud.setting.players=Игроки
+betterHud.setting.mobs=Мобы
+
+betterHud.setting.compress=Сжать выше
+betterHud.value.neverНикогда
+betterHud.value.unlimited=Неограниченный
+
+# CPS Counter
+betterHud.setting.timeout=Время ожидания
+betterHud.setting.showBurst=Показать взрыв
+betterHud.setting.remember=Запомнить взрыв
+
+# Others
+betterHud.setting.alwaysVisible=Всегда видимый
+betterHud.setting.disableDefault=Отключить по умолчанию
+betterHud.setting.hideMount=Скрыть во время скачки
+betterHud.setting.numberOnly=Только число
+betterHud.setting.overlay=Наложение
+betterHud.setting.showLifetimeExp=XP после смерти
+betterHud.setting.showTotalExp=Всего XP
+betterHud.setting.spaced=Расположенный
+betterHud.setting.tooltipLines=Линии подсказки
+betterHud.setting.warnings=Предупреждения
+betterHud.setting.duration=Продолжительность
+betterHud.value.text=Текст
+betterHud.value.visual=Визуальный
+
+betterHud.setting.maxStacks=Максимум стэков
+betterHud.setting.fadeAfter=Исчезает после
+
+betterHud.hud.biome=Биом: %s
+betterHud.hud.burst=Взрыв: %s щелчки по %ss
+betterHud.hud.distance.0=§a[§r%s§a]
+betterHud.hud.distance.1=%sm пути
+betterHud.hud.fullInv=Инвентарь полон
+betterHud.hud.healIndicator=+
+betterHud.hud.holding=Удерживание: %s
+betterHud.hud.saturation=Насыщение: %s
+betterHud.hud.unknownBlock=Неизвестный блок
+betterHud.hud.facing=Облицовка: %s (%s)
