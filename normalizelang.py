@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 import os
 
-ROOT_DIR = "src/main/resources/assets/hud/lang"
+MODID = "betterhud"
+ROOT_DIR = os.path.join("src", "main", "resources", "assets", MODID, "lang")
 CANONICAL = "en_US.lang"
 
 HEADER = ("file", "score", "changed", "unchanged", "missing", "extra")
