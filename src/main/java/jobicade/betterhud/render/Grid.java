@@ -17,6 +17,7 @@ public class Grid<T extends Boxed> implements Boxed {
     private Size gutter = Size.zero();
     private boolean stretch = false;
     private Direction alignment = Direction.NORTH_WEST;
+    private Direction cellAlignment = Direction.CENTER;
 
     public Grid(Point shape) {
         this(shape, new ArrayList<>(Collections.nCopies(shape.getX() * shape.getY(), null)));
@@ -96,6 +97,15 @@ public class Grid<T extends Boxed> implements Boxed {
         return this;
     }
 
+    public Direction getCellAlignment() {
+        return cellAlignment;
+    }
+
+    public Grid<T> setCellAlignment(Direction cellAlignment) {
+        this.cellAlignment = cellAlignment;
+        return this;
+    }
+
     @Override
     public Size getPreferredSize() {
         int width = 0, height = 0;
@@ -128,7 +138,7 @@ public class Grid<T extends Boxed> implements Boxed {
         for(Boxed element : flatten()) {
             if(element != null) {
                 Size size = stretch ? element.negotiateSize(cell.getSize()) : element.getPreferredSize();
-                element.render(new Rect(size).anchor(cell, Direction.CENTER));
+                element.render(new Rect(size).anchor(cell, cellAlignment));
             }
 
             if(x >= shape.getWidth() - 1) {
