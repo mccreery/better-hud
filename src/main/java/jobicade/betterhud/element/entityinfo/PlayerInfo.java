@@ -1,13 +1,11 @@
 package jobicade.betterhud.element.entityinfo;
 
-import static jobicade.betterhud.BetterHud.ICONS;
 import static jobicade.betterhud.BetterHud.MANAGER;
-import static jobicade.betterhud.BetterHud.MC;
-import static jobicade.betterhud.BetterHud.SPACER;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
@@ -23,10 +21,11 @@ import jobicade.betterhud.element.settings.SettingSlider;
 import jobicade.betterhud.events.RenderMobInfoEvent;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
+import jobicade.betterhud.render.Grid;
+import jobicade.betterhud.render.Label;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.geom.Point;
-import jobicade.betterhud.util.StringGroup;
 import jobicade.betterhud.util.bars.StatBar;
 import jobicade.betterhud.util.bars.StatBarArmor;
 
@@ -77,20 +76,19 @@ public class PlayerInfo extends EntityInfo {
 			}
 		}
 
-		StringGroup group = new StringGroup(tooltip);
-		Point size = group.getSize();
-		if(size.getX() < 81) size = size.withX(81);
+		List<Label> tooltipLabels = tooltip.stream().map(Label::new).collect(Collectors.toList());
+		Grid<Label> grid = new Grid<Label>(new Point(1, tooltip.size()), tooltipLabels)
+			.setCellAlignment(Direction.WEST).setGutter(new Point(2, 2));
 
-		Rect padding = Rect.createPadding(SPACER, SPACER, SPACER, SPACER + bar.getSize().getY());
-		Rect bounds = new Rect(size).grow(padding);
+		Rect bounds = new Rect(grid.getPreferredSize().add(10, 10));
+		if(bar.shouldRender()) bounds = bounds.grow(0, 0, 0, bar.getSize().getY() + 2);
 		bounds = MANAGER.position(Direction.SOUTH, bounds);
-		Rect contentRect = bounds.grow(padding.invert());
-
 		GlUtil.drawRect(bounds, Color.TRANSLUCENT);
-		group.draw(contentRect);
 
-		MC.getTextureManager().bindTexture(ICONS);
-		bar.render(contentRect.getAnchor(Direction.SOUTH_WEST), Direction.NORTH_WEST, Direction.NORTH_WEST);
+		Rect inner = bounds.grow(-5);
+		grid.render(new Rect(grid.getPreferredSize()).anchor(inner, Direction.NORTH_WEST));
+		if(bar.shouldRender()) bar.render(new Rect(bar.getSize()).anchor(inner, Direction.SOUTH_WEST), Direction.NORTH_WEST);
+
 		return null;
 	}
 

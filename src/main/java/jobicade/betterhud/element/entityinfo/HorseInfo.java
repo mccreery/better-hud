@@ -1,7 +1,5 @@
 package jobicade.betterhud.element.entityinfo;
 
-import static jobicade.betterhud.BetterHud.SPACER;
-
 import java.util.ArrayList;
 import java.util.List;
 
@@ -14,10 +12,12 @@ import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.events.RenderMobInfoEvent;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
+import jobicade.betterhud.render.Grid;
+import jobicade.betterhud.render.Label;
 import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.util.FormatUtil;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.util.StringGroup;
 
 public class HorseInfo extends EntityInfo {
 	private SettingBoolean jump, speed;
@@ -49,23 +49,22 @@ public class HorseInfo extends EntityInfo {
 
 	@Override
 	public Rect render(Event event) {
-		ArrayList<String> infoParts = new ArrayList<String>();
+		ArrayList<Label> infoParts = new ArrayList<Label>();
 		EntityHorse entity = (EntityHorse)((RenderMobInfoEvent)event).getEntity();
 
 		if(jump.get()) {
-			infoParts.add(jump.getLocalizedName() + ": " + FormatUtil.formatToPlaces(getJumpHeight(entity), 3) + "m");
+			infoParts.add(new Label(jump.getLocalizedName() + ": " + FormatUtil.formatToPlaces(getJumpHeight(entity), 3) + "m"));
 		}
 		if(speed.get()) {
-			infoParts.add(speed.getLocalizedName() + ": " + FormatUtil.formatToPlaces(getSpeed(entity), 3) + "m/s");
+			infoParts.add(new Label(speed.getLocalizedName() + ": " + FormatUtil.formatToPlaces(getSpeed(entity), 3) + "m/s"));
 		}
 
-		StringGroup group = new StringGroup(infoParts);
-
-		Rect bounds = new Rect(group.getSize().add(Rect.createPadding(SPACER).getSize()));
+		Grid<Label> grid = new Grid<Label>(new Point(1, infoParts.size()), infoParts).setGutter(new Point(2, 2));
+		Rect bounds = new Rect(grid.getPreferredSize().add(10, 10));
 		bounds = BetterHud.MANAGER.position(Direction.SOUTH, bounds);
 
 		GlUtil.drawRect(bounds, Color.TRANSLUCENT);
-		group.draw(bounds.grow(-SPACER));
+		grid.render(new Rect(grid.getPreferredSize()).anchor(bounds, Direction.CENTER));
 		return null;
 	}
 
