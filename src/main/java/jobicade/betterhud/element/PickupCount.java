@@ -8,14 +8,19 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemPickupEvent;
 import net.minecraftforge.fml.common.versioning.InvalidVersionSpecificationException;
 import net.minecraftforge.fml.common.versioning.VersionRange;
+import net.minecraftforge.items.ItemHandlerHelper;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.settings.SettingSlider;
-import jobicade.betterhud.events.PickupNotifier;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Size;
 import jobicade.betterhud.render.Boxed;
@@ -44,6 +49,11 @@ public class PickupCount extends HudElement {
 	}
 
 	@Override
+	public void init(FMLInitializationEvent event) {
+		MinecraftForge.EVENT_BUS.register(this);
+	}
+
+	@Override
 	protected void addSettings(List<Setting<?>> settings) {
 		super.addSettings(settings);
 		settings.add(fadeAfter = new SettingSlider("fadeAfter", 20, 600, 20).setDisplayScale(0.05).setUnlocalizedValue("betterHud.hud.seconds"));
@@ -69,7 +79,7 @@ public class PickupCount extends HudElement {
 	 */
 	private StackNode removeStack(ItemStack stack) {
 		for(StackNode node : stacks) {
-			if(PickupNotifier.stackEqualExact(stack, node.stack)) {
+			if(ItemHandlerHelper.canItemStacksStack(stack, node.stack)) {
 				stacks.remove(node);
 				return node;
 			}
@@ -80,7 +90,11 @@ public class PickupCount extends HudElement {
 	/**
 	 * Adds or refreshes an item in the list.
 	 */
-	public void pickUpStack(ItemStack stack) {
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public void onItemPickupPlayer(ItemPickupEvent e) {
+		ItemStack stack = e.getStack();
+		if(stack.isEmpty()) return;
+
 		StackNode node = removeStack(stack);
 
 		if(node != null) {

@@ -31,12 +31,9 @@ import jobicade.betterhud.config.ConfigManager;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.HudElement.SortType;
 import jobicade.betterhud.events.KeyEvents;
-import jobicade.betterhud.events.PickupNotifier;
 import jobicade.betterhud.events.RenderEvents;
 import jobicade.betterhud.network.InventoryNameQuery;
 import jobicade.betterhud.network.MessageNotifyClientHandler;
-import jobicade.betterhud.network.MessagePickup;
-import jobicade.betterhud.network.MessagePickupHandler;
 import jobicade.betterhud.network.MessageVersion;
 import jobicade.betterhud.geom.LayoutManager;
 import jobicade.betterhud.util.Tickable.Ticker;
@@ -86,8 +83,6 @@ public class BetterHud {
 
 	public static final SimpleNetworkWrapper NET_WRAPPER = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
 
-	public static PickupNotifier pickupNotifier;
-
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		logger = event.getModLog();
@@ -113,14 +108,12 @@ public class BetterHud {
 		}
 
 		// Message ID 0 reserved for ignored server presence message from [,1.4)
-		NET_WRAPPER.registerMessage(MessagePickupHandler.class, MessagePickup.class, 1, Side.CLIENT);
 		NET_WRAPPER.registerMessage(MessageNotifyClientHandler.class, MessageVersion.class, 2, Side.CLIENT);
 
 		// Used to update inventory names
 		NET_WRAPPER.registerMessage(InventoryNameQuery.ServerHandler.class, InventoryNameQuery.Request.class, 3, Side.SERVER);
 		NET_WRAPPER.registerMessage(InventoryNameQuery.ClientHandler.class, InventoryNameQuery.Response.class, 4, Side.CLIENT);
 
-		MinecraftForge.EVENT_BUS.register(pickupNotifier = new PickupNotifier());
 		MinecraftForge.EVENT_BUS.register(this);
 
 		IResourceManager manager = MC.getResourceManager();
