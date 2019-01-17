@@ -6,6 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.HudElement.SortType;
@@ -19,7 +20,7 @@ class ButtonRow {
 
 	private Rect bounds;
 
-	public ButtonRow(GuiHudMenu callback, HudElement element) {
+	public ButtonRow(GuiScreen callback, HudElement element) {
 		this.element = element;
 
 		toggle = new GuiActionButton("").setCallback(b -> {
