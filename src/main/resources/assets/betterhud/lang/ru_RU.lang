@@ -5,8 +5,8 @@ key.betterHud.open=Открыть меню "Better HUD"
 key.betterHud.disable=Переключить "Better HUD"
 
 # Generic Formatters
-betterHud.hud.meters=%sm
-betterHud.hud.seconds=%ss
+betterHud.hud.meters=%sм
+betterHud.hud.seconds=%sсек.
 
 # Menu buttons
 betterHud.menu.hudSettings=Настройки HUD
@@ -22,12 +22,12 @@ betterHud.menu.pick=Выбрать
 
 betterHud.menu.alphabetical=А-Я
 betterHud.menu.enabled=Включено
-betterHud.menu.priority=Draw Order
+betterHud.menu.priority=Порядок отображения
 
-betterHud.menu.moveTop=Передвинуть наверх
-betterHud.menu.moveUp=Двигаться вверх
-betterHud.menu.moveDown=Двигаться вниз
-betterHud.menu.moveBottom=Двигаться на дно
+betterHud.menu.moveTop=Перемещать наверх
+betterHud.menu.moveUp=Перемещать вверх
+betterHud.menu.moveDown=Перемещать вниз
+betterHud.menu.moveBottom=Перемещать основание
 
 # Menu text
 betterHud.menu.unsnap=Удерживайте %s чтобы отключить замыкание
@@ -37,7 +37,7 @@ betterHud.menu.unsupported=Этот элемент не поддерживает
 betterHud.element.global=Better HUD
 
 betterHud.element.armorBars=Панель брони
-betterHud.element.arrowCount=Кол-во стрел
+betterHud.element.arrowCount=Кол-во стрелок
 betterHud.element.biome=Биом
 betterHud.element.blockViewer=Просмотр блоков
 betterHud.element.bloodSplatters=Брызги крови
@@ -48,17 +48,17 @@ betterHud.element.coordinates=Координаты
 betterHud.element.cps=Герц
 betterHud.element.distance=Расстояние
 betterHud.element.enchantIndicator=Показатель зачарования
-betterHud.element.experienceInfo=Информация XP
+betterHud.element.experienceInfo=Информация о опыте
 betterHud.element.fpsCount=Кол-во FPS
 betterHud.element.fullInvIndicator=Полный инвент. Показатель
 betterHud.element.gameClock=Время игры
 betterHud.element.handBar=Удерживающая панель
 betterHud.element.healIndicator=Показатель сердца
-betterHud.element.horseInfo=Информация лошади
+betterHud.element.horseInfo=Информация о лошади
 betterHud.element.itemPickup=Подобранный предмет
 betterHud.element.lightLevel=Уровень освещения
-betterHud.element.mobInfo=Информация моба
-betterHud.element.playerInfo=Информация игрока
+betterHud.element.mobInfo=Информация о мобе
+betterHud.element.playerInfo=Информация о игроке
 betterHud.element.potionBar=Отображение зелья
 betterHud.element.saturation=Насыщение
 betterHud.element.signReader=Чтение знака
@@ -75,21 +75,21 @@ betterHud.element.health=Панель здоровья
 betterHud.element.helmetOverlay=Наложение шлема
 betterHud.element.hotbar=Горячая панель
 betterHud.element.jumpBar=Панель перехода
-betterHud.element.mountHealth=Mount Health
-betterHud.element.offhand=Off-Hand
+betterHud.element.mountHealth=Установить здоровье
+betterHud.element.offhand=Левая рука
 betterHud.element.portal=Наложение портала
 betterHud.element.scoreboard=Табло
 betterHud.element.vignette=Виньетка
 
 # Setting Groups
 betterHud.group.position=Позиция
-betterHud.group.misc=Разное.
-betterHud.group.damageWarning=DПредупреждения о повреждениях
+betterHud.group.misc=Разн.
+betterHud.group.damageWarning=Предупреждения о повреждениях
 
 # Generic Settings
 betterHud.value.none=Ничего
 
-betterHud.value.visible.on=Видимость
+betterHud.value.visible.on=Видимый
 betterHud.value.visible.off=Скрытый
 
 betterHud.setting.mode=Режим
@@ -123,7 +123,7 @@ betterHud.value.places=%s размещён
 betterHud.setting.distance=Расстояние
 betterHud.setting.rayDistance=Расстояние трассировки луча
 betterHud.setting.hideOnDebug=Скрыть, пока F3 открыт
-betterHud.setting.debugMode=режим отладки
+betterHud.setting.debugMode=Режим отладки
 betterHud.setting.red=§cКрасный
 betterHud.setting.green=§aЗелёный
 betterHud.setting.blue=§1Синий
@@ -139,7 +139,7 @@ betterHud.value.denser=Более плотный
 betterHud.setting.showItem=Предмет
 betterHud.setting.showName=Название
 betterHud.setting.showDurability=Прочность
-betterHud.setting.offhand=Off-Hand
+betterHud.setting.offhand=Левая рука
 
 betterHud.setting.showNonTools=Показать для
 betterHud.value.nonTools.off=Только инструменты
@@ -165,7 +165,7 @@ betterHud.setting.chunks=%s чанков
 
 # Compass
 betterHud.setting.letterScale=Персперктива
-betterHud.setting.showNotches=Зарубки
+betterHud.setting.showNotches=Засечки
 betterHud.setting.scale=Размер
 betterHud.setting.requireItem=Требуемый предмет
 betterHud.value.inventory=В инвентаре
@@ -202,13 +202,13 @@ betterHud.hud.xyz=X: %s, Y: %s, Z: %s
 
 # Mob Info
 betterHud.setting.billboardScale=Размер плаката
-betterHud.setting.jump=Прыжок в высоту
+betterHud.setting.jump=Высота прыжка
 betterHud.setting.speed=Скорость
 betterHud.setting.players=Игроки
 betterHud.setting.mobs=Мобы
 
 betterHud.setting.compress=Сжать выше
-betterHud.value.neverНикогда
+betterHud.value.never=Никогда
 betterHud.value.unlimited=Неограниченный
 
 # CPS Counter
@@ -219,11 +219,11 @@ betterHud.setting.remember=Запомнить взрыв
 # Others
 betterHud.setting.alwaysVisible=Всегда видимый
 betterHud.setting.disableDefault=Отключить по умолчанию
-betterHud.setting.hideMount=Скрыть во время скачки
+betterHud.setting.hideMount=Скрыть, во время скачки
 betterHud.setting.numberOnly=Только число
 betterHud.setting.overlay=Наложение
-betterHud.setting.showLifetimeExp=XP после смерти
-betterHud.setting.showTotalExp=Всего XP
+betterHud.setting.showLifetimeExp=Опыта после смерти
+betterHud.setting.showTotalExp=Всего опыта
 betterHud.setting.spaced=Расположенный
 betterHud.setting.tooltipLines=Линии подсказки
 betterHud.setting.warnings=Предупреждения
@@ -237,7 +237,7 @@ betterHud.setting.fadeAfter=Исчезает после
 betterHud.hud.biome=Биом: %s
 betterHud.hud.burst=Взрыв: %s щелчки по %ss
 betterHud.hud.distance.0=§a[§r%s§a]
-betterHud.hud.distance.1=%sm пути
+betterHud.hud.distance.1=%sм пути
 betterHud.hud.fullInv=Инвентарь полон
 betterHud.hud.healIndicator=+
 betterHud.hud.holding=Удерживание: %s
