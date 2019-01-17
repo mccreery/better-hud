@@ -15,12 +15,14 @@ import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.geom.Size;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.element.settings.DirectionOptions;
-import jobicade.betterhud.render.Color;
+import jobicade.betterhud.render.Boxed;
+import jobicade.betterhud.render.Grid;
+import jobicade.betterhud.render.Label;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.geom.Point;
-import jobicade.betterhud.util.StringGroup;
 
 public class ArmorBars extends EquipmentDisplay {
 	private SettingChoose barType;
@@ -46,25 +48,6 @@ public class ArmorBars extends EquipmentDisplay {
 		settings.add(alwaysVisible = new SettingBoolean("alwaysVisible"));
 	}
 
-	private boolean showBars() {
-		return barType.getIndex() != 0;
-	}
-	private boolean largeBars() {
-		return barType.getIndex() == 2;
-	}
-
-	/**
-	 * OpenGL side-effect: texture is reset to Gui.ICONS
-	 */
-	private static void drawEmptySlot(Point position, int slot) {
-		MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-
-		TextureAtlasSprite empty = MC.getTextureMapBlocks().getAtlasSprite(ItemArmor.EMPTY_SLOT_NAMES[slot]);
-		MC.ingameGUI.drawTexturedModalRect(position.getX(), position.getY(), empty, 16, 16);
-
-		MC.getTextureManager().bindTexture(Gui.ICONS);
-	}
-
 	@Override
 	public boolean shouldRender(Event event) {
 		if(!super.shouldRender(event)) return false;
@@ -80,71 +63,73 @@ public class ArmorBars extends EquipmentDisplay {
 
 	@Override
 	public Rect render(Event event) {
-		String[] text = null;
-		Point size;
+		Grid<Boxed> grid = new Grid<>(new Point(1, 4)).setStretch(true);
 
-		if(hasText()) {
-			text = new String[4];
-			StringGroup group = new StringGroup(text);
+		for(int i = 0; i < 4; i++) {
+			ItemStack stack = MC.player.inventory.armorItemInSlot(3-i);
+			TextureAtlasSprite empty = MC.getTextureMapBlocks().getAtlasSprite(ItemArmor.EMPTY_SLOT_NAMES[3-i]);
 
-			for(int i = 0; i < 4; i++) {
-				text[i] = getText(MC.player.inventory.armorItemInSlot(i));
+			grid.setCell(new Point(0, i), new SlotDisplay(stack, empty));
+		}
+
+		Rect bounds = position.applyTo(new Rect(grid.getPreferredSize()));
+		grid.render(bounds);
+		return bounds;
+	}
+
+	private class SlotDisplay implements Boxed {
+		private final ItemStack stack;
+		private final TextureAtlasSprite empty;
+
+		public SlotDisplay(ItemStack stack, TextureAtlasSprite empty) {
+			this.stack = stack;
+			this.empty = empty;
+		}
+
+		private Label getLabel() {
+			return new Label(getText(stack));
+		}
+
+		@Override
+		public Size getPreferredSize() {
+			int textBarWidth = getLabel().getPreferredSize().getWidth();
+
+			if(barType.getIndex() == 2 && stack.isItemDamaged()) {
+				textBarWidth = Math.max(textBarWidth, 64);
 			}
-			size = group.getSize().withY(16);
-		} else {
-			size = new Point(0, 16);
+			return new Size(textBarWidth > 0 ? 20 + textBarWidth : 16, 16);
 		}
 
-		// Make sure large bar fits
-		if(largeBars() && size.getX() < 80) {
-			size = size.withX(80);
-		}
+		@Override
+		public void render(Rect bounds) {
+			Direction contentAlignment = position.getContentAlignment();
+			Rect textBarArea = bounds.withWidth(bounds.getWidth() - 20)
+				.anchor(bounds, contentAlignment.mirrorCol());
 
-		Direction alignment = position.getContentAlignment();
-
-		Rect bounds = position.applyTo(new Rect(size.getX() + 20, 70));
-		Rect padding = alignment == Direction.EAST ? Rect.createPadding(0, 0, 20, 0) : Rect.createPadding(20, 0, 0, 0);
-
-		Rect row = new Rect(size).grow(padding);
-		row = row.anchor(bounds, Direction.NORTH);
-
-		for(int i = 3; i >= 0; i--, row = row.withY(row.getY() + 18)) {
-			ItemStack stack = MC.player.inventory.armorItemInSlot(i);
-			Rect item = new Rect(16, 16).anchor(row, alignment);
-
-			if(stack == null || stack.isEmpty()) {
-				drawEmptySlot(item.getPosition(), i);
+			Rect item = new Rect(16, 16).anchor(bounds, contentAlignment);
+			if(stack.isEmpty()) {
+				MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+				MC.ingameGUI.drawTexturedModalRect(item.getX(), item.getY(), empty, item.getWidth(), item.getHeight());
+				MC.getTextureManager().bindTexture(Gui.ICONS);
 			} else {
 				GlUtil.renderSingleItem(stack, item.getPosition());
-				Rect content = row.grow(padding.invert());
+			}
 
-				if(hasText() && text[i] != null) {
-					MC.mcProfiler.startSection("text");
+			Label label = getLabel();
+			label.render(new Rect(label.getPreferredSize()).anchor(textBarArea, contentAlignment));
 
-					Rect textRect = new Rect(GlUtil.getStringSize(text[i])).anchor(content, alignment);
-					if(stack.isItemStackDamageable() && largeBars()) {
-						textRect = textRect.withY(textRect.getY() - 1);
-					}
+			int barTypeIndex = barType.getIndex();
+			if(barTypeIndex != 0 && stack.isItemDamaged()) {
+				Rect bar;
 
-					GlUtil.drawString(text[i], textRect.getPosition(), Direction.NORTH_WEST, Color.WHITE);
-					MC.mcProfiler.endSection();
+				if(barTypeIndex == 2) {
+					Direction barAlignment = label.getText() != null ? Direction.SOUTH : Direction.CENTER;
+					bar = textBarArea.withHeight(2).anchor(textBarArea, barAlignment);
+				} else {
+					bar = item.grow(-2, -13, -1, -1);
 				}
-
-				if(stack.isItemStackDamageable() && showBars()) {
-					MC.mcProfiler.startSection("bars");
-
-					if(largeBars()) {
-						Rect bar = new Rect(content.getWidth(), 2).anchor(content, Direction.SOUTH);
-						GlUtil.drawDamageBar(bar, stack, false);
-					} else {
-						Rect bar = new Rect(2, item.getHeight()).anchor(item.grow(2, 0, 2, 0), alignment.mirrorCol());
-						GlUtil.drawDamageBar(bar, stack, true);
-					}
-
-					MC.mcProfiler.endSection();
-				}
+				GlUtil.drawDamageBar(bar, stack, false);
 			}
 		}
-		return bounds;
 	}
 }

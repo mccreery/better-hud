@@ -65,7 +65,7 @@ public abstract class EquipmentDisplay extends HudElement {
 
 		float value = (float)durability / (float)maxDurability;
 
-		if(stack.isItemStackDamageable() && this.showDurability.get()) {
+		if(showDurability.get() && stack.isItemDamaged()) {
 			if(durabilityMode.getIndex() == 1) {
 				parts.add(FormatUtil.formatToPlaces(value * 100, 1) + "%");
 			} else {
