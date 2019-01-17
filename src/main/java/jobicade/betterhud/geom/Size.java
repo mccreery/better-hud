@@ -45,6 +45,11 @@ public class Size extends Point {
         super(resolution);
     }
 
+    @Override
+    public Size toSize() {
+        return this;
+    }
+
     /**
      * Size objects are considered equal only to other size objects with the
      * same width and height.

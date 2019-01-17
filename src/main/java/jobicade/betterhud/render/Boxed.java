@@ -35,7 +35,7 @@ public interface Boxed {
      * @return The argument or a counter offer size to render with.
      */
     default Size negotiateSize(Point size) {
-        return size instanceof Size ? (Size)size : new Size(size);
+        return size.toSize();
     }
 
     /**

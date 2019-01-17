@@ -52,6 +52,16 @@ public class Point implements Serializable {
     }
 
     /**
+     * Converts a point to a size if necessary.
+     * @param point The original point.
+     * @return The original point if it is already a Size instance, or an
+     * equivalent Size instance if not.
+     */
+    public Size toSize() {
+        return new Size(this);
+    }
+
+    /**
      * Point objects are considered equal only to other point objects
      * with the same X and Y.
      *
