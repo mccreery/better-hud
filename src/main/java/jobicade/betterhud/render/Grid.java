@@ -108,6 +108,8 @@ public class Grid<T extends Boxed> implements Boxed {
 
     @Override
     public Size getPreferredSize() {
+        if(shape.isEmpty()) return Size.zero();
+
         int width = 0, height = 0;
 
         for(Boxed element : flatten()) {
