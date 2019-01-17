@@ -6,6 +6,7 @@ import static jobicade.betterhud.BetterHud.MC;
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.common.eventhandler.Event;
@@ -16,8 +17,11 @@ import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.settings.SettingSlider;
 import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.geom.Size;
+import jobicade.betterhud.render.Grid;
+import jobicade.betterhud.render.Label;
 import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.util.StringGroup;
+import jobicade.betterhud.geom.Point;
 
 public class Coordinates extends TextElement {
 	private SettingBoolean spaced;
@@ -51,10 +55,15 @@ public class Coordinates extends TextElement {
 			return super.render(event, text);
 		}
 
-		StringGroup group = new StringGroup(text).setAlignment(position.getDirection()).setSpacing(50).setRow();
-		Rect bounds = MANAGER.position(position.getDirection(), new Rect(group.getSize()));
+		Grid<Label> grid = new Grid<>(new Point(3, 1), text.stream().map(Label::new).collect(Collectors.toList()))
+			.setCellAlignment(position.getDirection()).setGutter(new Point(5, 5));
 
-		return group.draw(bounds);
+		Size size = grid.getPreferredSize();
+		if(size.getX() < 150) size = size.withX(150);
+		Rect bounds = MANAGER.position(position.getDirection(), new Rect(size));
+
+		grid.render(bounds);
+		return bounds;
 	}
 
 	@Override
