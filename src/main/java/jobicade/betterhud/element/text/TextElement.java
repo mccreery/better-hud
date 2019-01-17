@@ -11,9 +11,11 @@ import jobicade.betterhud.element.settings.SettingColor;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
+import jobicade.betterhud.render.Grid;
+import jobicade.betterhud.render.Label;
 import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.util.StringGroup;
 
 public abstract class TextElement extends HudElement {
 	private SettingColor color;
@@ -65,19 +67,23 @@ public abstract class TextElement extends HudElement {
 	}
 
 	protected Rect render(Event event, List<String> text) {
-		StringGroup group = new StringGroup(text);
-		group.setColor(color.get());
+		Grid<Label> grid = new Grid<Label>(new Point(1, text.size()))
+			.setGutter(new Point(2, 2));
 
 		Direction contentAlignment = position.getContentAlignment();
-		if(contentAlignment != null) group.setAlignment(contentAlignment);
+		if(contentAlignment != null) grid.setCellAlignment(contentAlignment);
+
+		for(int i = 0; i < text.size(); i++) {
+			grid.setCell(new Point(0, i), new Label(text.get(i)).setColor(color.get()));
+		}
 
 		Rect padding = getPadding();
 		Rect margin = getMargin();
 
-		Rect bounds = moveRect(new Rect(group.getSize().add(padding.getSize()).add(margin.getSize())));
+		Rect bounds = moveRect(new Rect(grid.getPreferredSize().add(padding.getSize()).add(margin.getSize())));
 
 		drawBorder(bounds, padding, margin);
-		group.draw(bounds.grow(margin.grow(padding).invert()));
+		grid.render(bounds.grow(margin.grow(padding).invert()));
 		drawExtras(bounds);
 
 		return bounds;
