@@ -4,21 +4,23 @@ import static jobicade.betterhud.BetterHud.MANAGER;
 import static jobicade.betterhud.BetterHud.MC;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-
-import com.google.common.collect.Iterables;
-import com.google.common.collect.Lists;
+import java.util.stream.Collectors;
 
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.util.StringGroup;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.geom.Size;
 import jobicade.betterhud.render.Color;
+import jobicade.betterhud.render.Grid;
+import jobicade.betterhud.render.Label;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.ScorePlayerTeam;
@@ -37,74 +39,83 @@ public class Sidebar extends HudElement {
 
 	@Override
 	public boolean shouldRender(Event event) {
-		return getObjective() != null && super.shouldRender(event);
+		return getObjective(MC.player) != null && super.shouldRender(event);
 	}
 
 	@Override
 	protected Rect render(Event event) {
-		ScoreObjective objective = getObjective();
-		Scoreboard scoreboard = objective.getScoreboard();
+		ScoreObjective objective = getObjective(MC.player);
+		List<Score> scores = getScores(objective);
 
-		List<Score> scores = Lists.newArrayList(Iterables.filter(scoreboard.getSortedScores(objective),
-			(score) -> score.getPlayerName() != null && !score.getPlayerName().startsWith("#")));
+		Label title = new Label(objective.getDisplayName());
+		List<Label> names  = new ArrayList<>(scores.size());
+		List<Label> values = new ArrayList<>(scores.size());
 
-		if(scores.isEmpty()) {
-			return null;
-		}
-
-		scores = Lists.reverse(scores);
-
-		if(scores.size() > 15) {
-			scores = Lists.newArrayList(Iterables.skip(scores, scores.size() - 15));
-		}
-
-		String title = objective.getDisplayName();
-		List<String> names  = new ArrayList<>(scores.size());
-		List<String> values = new ArrayList<>(scores.size());
+		Color valueColor = new Color(255, 255, 55, 55);
 
 		for(Score score : scores) {
 			String name = score.getPlayerName();
 
-			names.add(ScorePlayerTeam.formatPlayerName(scoreboard.getPlayersTeam(name), name));
-			values.add(String.valueOf(score.getScorePoints()));
+			names.add(new Label(ScorePlayerTeam.formatPlayerName(objective.getScoreboard().getPlayersTeam(name), name)));
+			values.add(new Label(String.valueOf(score.getScorePoints())).setColor(valueColor));
 		}
 
-		StringGroup namesGroup = new StringGroup(names).setAlignment(position.getContentAlignment().mirrorCol());
-		StringGroup valuesGroup = new StringGroup(values).setColor(new Color(255, 255, 55, 55)).setAlignment(position.getContentAlignment());
-		Point valuesSize = valuesGroup.getSize();
+		Grid<Label> namesGroup = new Grid<>(new Point(1, names.size()), names).setStretch(true).setCellAlignment(position.getContentAlignment().mirrorCol());
+		Grid<Label> valuesGroup = new Grid<>(new Point(1, values.size()), values).setStretch(true).setCellAlignment(position.getContentAlignment());
 
-		Point size = namesGroup.getSize().add(MC.fontRenderer.getCharWidth(' ') * 2 + valuesSize.getX(), 0);
-		size = size.withX(Math.max(size.getX(), MC.fontRenderer.getStringWidth(title)));
+		int spaceWidth = MC.fontRenderer.getCharWidth(' ');
+		Size size = namesGroup.getPreferredSize().add(valuesGroup.getPreferredSize().getX() + spaceWidth * 2, 0);
 
-		Rect padding = Rect.createPadding(0, MC.fontRenderer.FONT_HEIGHT + 1, 0, 0);
-		Rect margin = Rect.createPadding(1);
-		Rect bounds = new Rect(size).grow(padding).grow(margin);
+		int tWidth = title.getPreferredSize().getWidth();
+		if(tWidth > size.getWidth()) size = size.withWidth(tWidth);
+
+		Rect padding = Rect.createPadding(1, MC.fontRenderer.FONT_HEIGHT + 1, 1, 1);
+		Rect bounds = new Rect(size).grow(padding);
 
 		if(!position.isCustom() && position.getDirection().getRow() == 1) {
 			bounds = bounds.anchor(MANAGER.getScreen(), position.getDirection());
 		} else {
 			bounds = position.applyTo(bounds);
 		}
-		Rect paddingRect = bounds.grow(margin.invert());
-		Rect contentRect = paddingRect.grow(padding.invert());
+		Rect inner = bounds.grow(padding.invert());
 
 		// Translucent background
-		Rect background = new Rect(bounds).withBottom(contentRect.getTop() - 1);
-		GlUtil.drawRect(background, new Color(96, 0, 0, 0));
+		int titleBottom = inner.getTop() - 1;
+		GlUtil.drawRect(bounds.withBottom(titleBottom), new Color(96, 0, 0, 0));
+		GlUtil.drawRect(bounds.withTop(titleBottom), new Color(80, 0, 0, 0));
 
-		background = background.withTop(background.getBottom()).withBottom(bounds.getBottom());
-		GlUtil.drawRect(background, new Color(80, 0, 0, 0));
-
-		GlUtil.drawString(title, paddingRect.getAnchor(Direction.NORTH), Direction.NORTH, Color.WHITE);
-		namesGroup.draw(contentRect);
-		valuesGroup.draw(contentRect);
-
+		title.render(new Rect(title.getPreferredSize()).anchor(bounds.grow(-1), Direction.NORTH));
+		namesGroup.render(inner);
+		valuesGroup.render(inner);
 		return bounds;
 	}
 
-	/** @return The objective to display in the sidebar for the player */
-	private ScoreObjective getObjective() {
-		Scoreboard scoreboard = MC.world.getScoreboard();
+	private boolean showScore(Score score) {
+		return !score.getPlayerName().startsWith("#");
+	}
+
+	/**
+	 * Gets a maximum of 15 scores for the given objective, in descending order.
+	 * @param objective The objective.
+	 * @return A list of scores for the given objective.
+	 */
+	private List<Score> getScores(ScoreObjective objective) {
+		List<Score> scores = objective.getScoreboard().getSortedScores(objective).stream()
+			.filter(this::showScore).collect(Collectors.toCollection(ArrayList::new));
+
+		Collections.reverse(scores);
+		if(scores.size() > 15) scores = scores.subList(0, 15);
+
+		return scores;
+	}
+
+	/**
+	 * Gets the objective in the player's sidebar slot.
+	 * @param player The player.
+	 * @return The objective in the player's sidebar slot.
+	 */
+	private ScoreObjective getObjective(EntityPlayer player) {
+		Scoreboard scoreboard = player.getWorldScoreboard();
 		ScorePlayerTeam team = scoreboard.getPlayersTeam(MC.player.getName());
 
 		if(team != null) {
