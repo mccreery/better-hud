@@ -26,10 +26,12 @@ import org.lwjgl.opengl.GL11;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.render.Color;
 import jobicade.betterhud.render.GlSnapshot;
 import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.AxisAlignedBB;
@@ -123,6 +125,7 @@ public final class RenderEvents {
 	}
 
 	private final SnapshotTracker overlayTracker = new SnapshotTracker(BetterHud.getLogger());
+	private final SnapshotTracker mobInfoTracker = new SnapshotTracker(BetterHud.getLogger());
 
 	/**
 	 * Renders overlay (normal HUD) elements to the screen.
@@ -149,12 +152,25 @@ public final class RenderEvents {
 
 		GlStateManager.disableDepth();
 		GlStateManager.enableBlend();
+		GlStateManager.disableAlpha();
+		Color.WHITE.apply();
+		MC.getTextureManager().bindTexture(Gui.ICONS);
 
 		GlStateManager.pushMatrix();
 		GlUtil.setupBillboard(event.getEntity(), event.getPartialTicks(), HudElement.GLOBAL.getBillboardScale());
-		HudElement.renderAll(event);
+
+		if(HudElement.GLOBAL.isDebugMode()) {
+			GlSnapshot pre = new GlSnapshot();
+			HudElement.renderAll(event);
+			mobInfoTracker.step(pre, new GlSnapshot());
+		} else {
+			HudElement.renderAll(event);
+		}
+
 		GlStateManager.popMatrix();
 
+		MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+		GlStateManager.enableAlpha();
 		GlStateManager.enableDepth();
 		GlStateManager.disableBlend();
 	}
