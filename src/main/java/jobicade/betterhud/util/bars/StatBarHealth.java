@@ -113,7 +113,7 @@ public class StatBarHealth extends StatBar<EntityLivingBase> {
 	}
 
 	@Override
-	public void renderUnsafe(Rect bounds, Direction contentAlignment) {
+	public void render(Rect bounds) {
 		int newUpdateCounter = MC.ingameGUI.getUpdateCounter();
 		int updateDelta = newUpdateCounter - currentUpdateCounter;
 
@@ -153,6 +153,6 @@ public class StatBarHealth extends StatBar<EntityLivingBase> {
 		currentUpdateCounter = newUpdateCounter;
 
 		MC.getTextureManager().bindTexture(ICONS);
-		super.renderUnsafe(bounds, contentAlignment);
+		super.render(bounds);
 	}
 }

@@ -65,7 +65,7 @@ public class MobInfo extends EntityInfo {
 		String text = String.format("%s %s(%d/%d)", entity.getName(), ChatFormatting.GRAY, health, maxHealth);
 
 		Point size = GlUtil.getStringSize(text);
-		Point barSize = bar.getSize();
+		Point barSize = bar.getPreferredSize();
 
 		if(barSize.getX() > size.getX()) {
 			size = new Point(barSize.getX(), size.getY() + barSize.getY());
@@ -81,7 +81,7 @@ public class MobInfo extends EntityInfo {
 		Rect barRect = new Rect(barSize).anchor(bounds, Direction.SOUTH_WEST);
 
 		MC.getTextureManager().bindTexture(ICONS);
-		bar.render(barRect, Direction.NORTH_WEST);
+		bar.render(barRect);
 		return null;
 	}
 }

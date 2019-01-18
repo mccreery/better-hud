@@ -81,13 +81,13 @@ public class PlayerInfo extends EntityInfo {
 			.setCellAlignment(Direction.WEST).setGutter(new Point(2, 2));
 
 		Rect bounds = new Rect(grid.getPreferredSize().add(10, 10));
-		if(bar.shouldRender()) bounds = bounds.grow(0, 0, 0, bar.getSize().getY() + 2);
+		if(bar.shouldRender()) bounds = bounds.grow(0, 0, 0, bar.getPreferredSize().getY() + 2);
 		bounds = MANAGER.position(Direction.SOUTH, bounds);
 		GlUtil.drawRect(bounds, Color.TRANSLUCENT);
 
 		Rect inner = bounds.grow(-5);
 		grid.render(new Rect(grid.getPreferredSize()).anchor(inner, Direction.NORTH_WEST));
-		if(bar.shouldRender()) bar.render(new Rect(bar.getSize()).anchor(inner, Direction.SOUTH_WEST), Direction.NORTH_WEST);
+		if(bar.shouldRender()) bar.render(new Rect(bar.getPreferredSize()).anchor(inner, Direction.SOUTH_WEST));
 
 		return null;
 	}

@@ -63,7 +63,7 @@ public abstract class Bar extends OverrideElement {
 		MC.getTextureManager().bindTexture(ICONS);
 		Direction contentAlignment = getContentAlignment();
 
-		Rect bounds = new Rect(bar.getSize());
+		Rect bounds = new Rect(bar.getPreferredSize());
 
 		if(position.isDirection(Direction.SOUTH)) {
 			bounds = MANAGER.positionBar(bounds, contentAlignment.withRow(1), 1);
@@ -71,7 +71,7 @@ public abstract class Bar extends OverrideElement {
 			bounds = position.applyTo(bounds);
 		}
 
-		bar.render(bounds.getPosition(), Direction.NORTH_WEST, contentAlignment);
+		bar.setContentAlignment(contentAlignment).render(bounds);
 		return bounds;
 	}
 }

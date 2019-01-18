@@ -10,17 +10,27 @@ import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.MathUtil;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
-import jobicade.betterhud.util.Renderable;
+import jobicade.betterhud.render.Boxed;
 
-public abstract class StatBar<T> extends Renderable {
+public abstract class StatBar<T> implements Boxed {
 	protected int getMaximum() {
 		return 20;
 	}
 
 	protected T host;
+	protected Direction contentAlignment = Direction.NORTH_WEST;
 
 	public void setHost(T host) {
 		this.host = host;
+	}
+
+	public Direction getContentAlignment() {
+		return contentAlignment;
+	}
+
+	public StatBar<T> setContentAlignment(Direction contentAlignment) {
+		this.contentAlignment = contentAlignment;
+		return this;
 	}
 
 	protected boolean shouldCompress() {
@@ -28,6 +38,7 @@ public abstract class StatBar<T> extends Renderable {
 	}
 
 	protected abstract List<Rect> getIcons(int pointsIndex);
+	public boolean shouldRender() { return true; }
 
 	protected int getIconBounce(int pointsIndex) {
 		return 0;
@@ -54,14 +65,8 @@ public abstract class StatBar<T> extends Renderable {
 		return null;
 	}
 
-	public Rect render(Point anchor, Direction alignment, Direction contentAlignment) {
-		Rect bounds = new Rect(getSize()).align(anchor, alignment);
-		render(bounds, contentAlignment);
-		return bounds;
-	}
-
 	@Override
-	public void renderUnsafe(Rect bounds, Direction contentAlignment) {
+	public void render(Rect bounds) {
 		if(!DirectionOptions.CORNERS.isValid(contentAlignment)) {
 			throw new IllegalArgumentException("Bar must start in a corner");
 		}
@@ -125,7 +130,7 @@ public abstract class StatBar<T> extends Renderable {
 	}
 
 	@Override
-	public Size getSize() {
+	public Size negotiateSize(Point size) {
 		int rowPoints = getRowPoints();
 		Size rowSize = new Size((getIconSize() - 1) * MathUtil.ceilDiv(rowPoints, 2) + 1, getIconSize());
 
@@ -135,7 +140,6 @@ public abstract class StatBar<T> extends Renderable {
 		} else {
 			rows = MathUtil.ceilDiv(getMaximum(), rowPoints);
 		}
-
 		return rowSize.add(0, (rows - 1) * getRowSpacing());
 	}
 }
