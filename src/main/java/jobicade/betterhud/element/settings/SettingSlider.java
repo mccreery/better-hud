@@ -11,8 +11,8 @@ import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.gui.GuiSlider;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.util.FormatUtil;
 import jobicade.betterhud.util.ISlider;
+import jobicade.betterhud.util.MathUtil;
 
 public class SettingSlider extends SettingAlignable<Double> implements ISlider {
 	protected GuiSlider slider;
@@ -72,7 +72,7 @@ public class SettingSlider extends SettingAlignable<Double> implements ISlider {
 	}
 
 	public String getDisplayValue(double scaledValue) {
-		String displayValue = FormatUtil.formatToPlaces(scaledValue, displayPlaces);
+		String displayValue = MathUtil.formatToPlaces(scaledValue, displayPlaces);
 
 		if(unlocalizedValue != null) {
 			displayValue = I18n.format(unlocalizedValue, displayValue);

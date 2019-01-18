@@ -11,7 +11,7 @@ import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.settings.SettingWarnings;
 import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.util.FormatUtil;
+import jobicade.betterhud.util.MathUtil;
 
 public abstract class EquipmentDisplay extends HudElement {
 	private SettingBoolean showName;
@@ -67,24 +67,18 @@ public abstract class EquipmentDisplay extends HudElement {
 
 		if(showDurability.get() && stack.isItemDamaged()) {
 			if(durabilityMode.getIndex() == 1) {
-				parts.add(FormatUtil.formatToPlaces(value * 100, 1) + "%");
+				parts.add(MathUtil.formatToPlaces(value * 100, 1) + "%");
 			} else {
 				parts.add(durability + "/" + maxDurability);
 			}
 		}
 
-		StringBuilder builder = new StringBuilder();
-
-		FormatUtil.join(" - ", parts, builder);
+		String text = String.join(" - ", parts);
 
 		if(stack.isItemStackDamageable()) {
 			int count = warnings.getWarning(value);
-
-			if(count > 0) {
-				builder.append(' ');
-				builder.append(I18n.format("betterHud.setting.warning." + count));
-			}
+			if(count > 0) text += ' ' + I18n.format("betterHud.setting.warning." + count);
 		}
-		return builder.toString();
+		return text;
 	}
 }

@@ -16,8 +16,8 @@ import jobicade.betterhud.render.Grid;
 import jobicade.betterhud.render.Label;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
-import jobicade.betterhud.util.FormatUtil;
 import jobicade.betterhud.util.GlUtil;
+import jobicade.betterhud.util.MathUtil;
 
 public class HorseInfo extends EntityInfo {
 	private SettingBoolean jump, speed;
@@ -53,10 +53,10 @@ public class HorseInfo extends EntityInfo {
 		EntityHorse entity = (EntityHorse)((RenderMobInfoEvent)event).getEntity();
 
 		if(jump.get()) {
-			infoParts.add(new Label(jump.getLocalizedName() + ": " + FormatUtil.formatToPlaces(getJumpHeight(entity), 3) + "m"));
+			infoParts.add(new Label(jump.getLocalizedName() + ": " + MathUtil.formatToPlaces(getJumpHeight(entity), 3) + "m"));
 		}
 		if(speed.get()) {
-			infoParts.add(new Label(speed.getLocalizedName() + ": " + FormatUtil.formatToPlaces(getSpeed(entity), 3) + "m/s"));
+			infoParts.add(new Label(speed.getLocalizedName() + ": " + MathUtil.formatToPlaces(getSpeed(entity), 3) + "m/s"));
 		}
 
 		Grid<Label> grid = new Grid<Label>(new Point(1, infoParts.size()), infoParts).setGutter(new Point(2, 2));

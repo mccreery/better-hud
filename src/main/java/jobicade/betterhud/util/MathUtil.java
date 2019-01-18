@@ -1,5 +1,6 @@
 package jobicade.betterhud.util;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
@@ -168,5 +169,17 @@ public final class MathUtil {
 				fail.add(t);
 			}
 		}
+	}
+
+	/**
+	 * Formats a number to a maximum number of decimal places.
+	 * @param x The number to format.
+	 * @param n The number of decimal places.
+	 * @return {@code x} formatted to a maximum of {@code n} decimal places.
+	 */
+	public static String formatToPlaces(double x, int n) {
+		DecimalFormat format = new DecimalFormat();
+		format.setMaximumFractionDigits(n);
+		return format.format(x);
 	}
 }

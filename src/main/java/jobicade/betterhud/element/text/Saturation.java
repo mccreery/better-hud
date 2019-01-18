@@ -8,7 +8,7 @@ import java.util.List;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.util.FormatUtil;
+import jobicade.betterhud.util.MathUtil;
 
 public class Saturation extends TextElement {
 	public Saturation() {
@@ -28,6 +28,6 @@ public class Saturation extends TextElement {
 
 	@Override
 	protected List<String> getText() {
-		return Arrays.asList(I18n.format("betterHud.hud.saturation", FormatUtil.formatToPlaces(MC.player.getFoodStats().getSaturationLevel(), 1)));
+		return Arrays.asList(I18n.format("betterHud.hud.saturation", MathUtil.formatToPlaces(MC.player.getFoodStats().getSaturationLevel(), 1)));
 	}
 }

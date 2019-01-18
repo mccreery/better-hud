@@ -16,7 +16,7 @@ import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingSlider;
 import jobicade.betterhud.util.Tickable;
 import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.util.FormatUtil;
+import jobicade.betterhud.util.MathUtil;
 
 public class CpsCount extends TextElement implements Tickable {
 	private SettingSlider timeoutMax;
@@ -114,7 +114,7 @@ public class CpsCount extends TextElement implements Tickable {
 	@Override
 	protected List<String> getText() {
 		float cps = timeout < timeoutMax.get() || remember.get() ? this.cps : 0;
-		String cpsDisplay = getLocalizedName() + ": " + FormatUtil.formatToPlaces(cps, 1);
+		String cpsDisplay = getLocalizedName() + ": " + MathUtil.formatToPlaces(cps, 1);
 
 		if(showBurst.get() && cps > 0) {
 			return Arrays.asList(
