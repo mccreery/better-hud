@@ -14,18 +14,16 @@
 - Vanilla elements can now be moved, configured and disabled
 - Better support for adding and changing translations
 - Some Brazilian Portuguese support
+- Russian language support
 - Option to disable compass and clock without corresponding item
 - Configs can be saved and loaded from files
 - Option to show undamageable items in Holding Bar
 - Text mode for compass
 - Support for Forge's update check
 ### Changed
-- Code refactoring, easier to work with
-- Much smaller code
 - Multiple choice settings now save their names rather than indices
-- Config uses Forge's system
-- Some settings show different text
-- Language file made easier to view
+- Config brought in line with Forge
+- Clarified settings text
 - Entity info scale can now be configured globally
 - Player info moved to its own element
 - Improved ping performance, no packet spam
