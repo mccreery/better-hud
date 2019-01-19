@@ -47,7 +47,7 @@ public class Sidebar extends HudElement {
 		ScoreObjective objective = getObjective(MC.player);
 		List<Score> scores = getScores(objective);
 
-		Label title = new Label(objective.getDisplayName());
+		Label title = new Label(objective.getDisplayName()).setShadow(false);
 		List<Label> names  = new ArrayList<>(scores.size());
 		List<Label> values = new ArrayList<>(scores.size());
 
@@ -55,9 +55,11 @@ public class Sidebar extends HudElement {
 
 		for(Score score : scores) {
 			String name = score.getPlayerName();
+			String formattedName = ScorePlayerTeam.formatPlayerName(objective.getScoreboard().getPlayersTeam(name), name);
+			String points = String.valueOf(score.getScorePoints());
 
-			names.add(new Label(ScorePlayerTeam.formatPlayerName(objective.getScoreboard().getPlayersTeam(name), name)));
-			values.add(new Label(String.valueOf(score.getScorePoints())).setColor(valueColor));
+			names.add(new Label(formattedName).setShadow(false));
+			values.add(new Label(points).setColor(valueColor).setShadow(false));
 		}
 
 		Grid<Label> namesGroup = new Grid<>(new Point(1, names.size()), names).setStretch(true).setCellAlignment(position.getContentAlignment().mirrorCol());
