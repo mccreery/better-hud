@@ -31,6 +31,8 @@ import jobicade.betterhud.render.GlSnapshot;
 import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.GlStateManager.DestFactor;
+import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -85,7 +87,10 @@ public final class RenderEvents {
 	 * This is only used for {@link #onRenderTick(net.minecraftforge.client.event.RenderGameOverlayEvent.Pre)}
 	 */
 	public static void beginOverlayState() {
+		GlStateManager.tryBlendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
 		GlStateManager.enableBlend();
+		GlStateManager.disableAlpha();
+
 		MC.getTextureManager().bindTexture(Gui.ICONS);
 		GlStateManager.shadeModel(GL11.GL_SMOOTH);
 	}
@@ -95,7 +100,10 @@ public final class RenderEvents {
 	 * This is only used for {@link #onRenderTick(net.minecraftforge.client.event.RenderGameOverlayEvent.Pre))}
 	 */
 	public static void endOverlayState() {
+		GlStateManager.tryBlendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
 		GlStateManager.disableBlend();
+		GlStateManager.disableAlpha();
+
 		GlStateManager.bindTexture(0);
 		GlStateManager.shadeModel(GL11.GL_FLAT);
 	}
