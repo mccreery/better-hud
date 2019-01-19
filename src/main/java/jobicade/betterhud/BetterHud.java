@@ -47,7 +47,7 @@ public class BetterHud {
 	public static final VersionRange ALL = VersionRange.newRange(null, Arrays.asList(Restriction.EVERYTHING));
 	public static final ArtifactVersion ZERO = new DefaultArtifactVersion("0.0");
 
-	protected static final String VERSION_STRING = "1.4-beta.2";
+	protected static final String VERSION_STRING = "1.4-beta.3";
 	public static final ArtifactVersion VERSION = new DefaultArtifactVersion(VERSION_STRING);
 
 	public static ArtifactVersion serverVersion = ZERO;
