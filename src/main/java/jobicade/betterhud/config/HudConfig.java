@@ -15,6 +15,9 @@ public class HudConfig extends Configuration {
 	public void load() {
 		super.load();
 
+		HudElement.GLOBAL.settings.bindConfig(this);
+		HudElement.GLOBAL.settings.loadConfig();
+
 		for(HudElement element : HudElement.ELEMENTS) {
 			element.settings.bindConfig(this);
 			element.settings.loadConfig();
@@ -26,6 +29,8 @@ public class HudConfig extends Configuration {
 	}
 
 	public void saveSettings() {
+		HudElement.GLOBAL.settings.saveConfig();
+
 		for(HudElement element : HudElement.ELEMENTS) {
 			element.settings.saveConfig();
 		}
