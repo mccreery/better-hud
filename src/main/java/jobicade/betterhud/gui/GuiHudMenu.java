@@ -122,11 +122,6 @@ public class GuiHudMenu extends GuiMenuScreen {
 		buttonList.addAll(indexerControls);
 	}
 
-	@Override
-	public void onGuiClosed() {
-		BetterHud.getConfigManager().getConfig().saveSettings();
-	}
-
 	private void setAll(boolean enabled) {
 		for(HudElement element : HudElement.ELEMENTS) {
 			element.set(enabled);
