@@ -20,7 +20,7 @@ public abstract class OverrideElement extends HudElement {
 	protected abstract ElementType getType();
 
 	private static boolean safePost(Event event) {
-		RenderEvents.endOverlayState();
+		//RenderEvents.endOverlayState(); // Never disable blend
 		boolean cancel = MinecraftForge.EVENT_BUS.post(event);
 		RenderEvents.beginOverlayState();
 
