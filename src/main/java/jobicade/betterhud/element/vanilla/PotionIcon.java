@@ -47,7 +47,7 @@ public class PotionIcon extends DefaultBoxed {
 
             new Quad().setTexture(icon).setBounds(iconInnerBounds).render();
         }
-        potion.renderHUDEffect(iconInnerBounds.getX(), iconInnerBounds.getY(), effect, MC, iconColor.getAlpha() / 255.0f);
+        potion.renderHUDEffect(iconBounds.getX(), iconBounds.getY(), effect, MC, iconColor.getAlpha() / 255.0f);
 
         String levelLabel = getLevelLabel();
         if(levelLabel != null) {
