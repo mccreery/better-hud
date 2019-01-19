@@ -46,11 +46,11 @@ public class StatBarFood extends StatBarBasic<EntityPlayer> {
 	}
 
 	@Override
-	public void render(Rect bounds) {
+	public void render() {
 		random.setSeed(MC.ingameGUI.getUpdateCounter());
 		MathUtil.setRandom(random);
 
-		super.render(bounds);
+		super.render();
 
 		MathUtil.setRandom(null);
 	}

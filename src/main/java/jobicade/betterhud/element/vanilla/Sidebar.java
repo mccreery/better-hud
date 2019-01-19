@@ -84,9 +84,9 @@ public class Sidebar extends HudElement {
 		GlUtil.drawRect(bounds.withBottom(titleBottom), new Color(96, 0, 0, 0));
 		GlUtil.drawRect(bounds.withTop(titleBottom), new Color(80, 0, 0, 0));
 
-		title.render(new Rect(title.getPreferredSize()).anchor(bounds.grow(-1), Direction.NORTH));
-		namesGroup.render(inner);
-		valuesGroup.render(inner);
+		title.setBounds(new Rect(title.getPreferredSize()).anchor(bounds.grow(-1), Direction.NORTH)).render();
+		namesGroup.setBounds(inner).render();
+		valuesGroup.setBounds(inner).render();
 		return bounds;
 	}
 

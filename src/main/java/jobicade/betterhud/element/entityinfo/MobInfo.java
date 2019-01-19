@@ -81,7 +81,7 @@ public class MobInfo extends EntityInfo {
 		Rect barRect = new Rect(barSize).anchor(bounds, Direction.SOUTH_WEST);
 
 		MC.getTextureManager().bindTexture(ICONS);
-		bar.render(barRect);
+		bar.setBounds(barRect).render();
 		return null;
 	}
 }

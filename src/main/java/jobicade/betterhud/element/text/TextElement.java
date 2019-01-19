@@ -83,7 +83,7 @@ public abstract class TextElement extends HudElement {
 		Rect bounds = moveRect(new Rect(grid.getPreferredSize().add(padding.getSize()).add(margin.getSize())));
 
 		drawBorder(bounds, padding, margin);
-		grid.render(bounds.grow(margin.grow(padding).invert()));
+		grid.setBounds(bounds.grow(margin.grow(padding).invert())).render();
 		drawExtras(bounds);
 
 		return bounds;

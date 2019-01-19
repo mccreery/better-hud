@@ -113,7 +113,7 @@ public class StatBarHealth extends StatBar<EntityLivingBase> {
 	}
 
 	@Override
-	public void render(Rect bounds) {
+	public void render() {
 		int newUpdateCounter = MC.ingameGUI.getUpdateCounter();
 		int updateDelta = newUpdateCounter - currentUpdateCounter;
 
@@ -153,6 +153,6 @@ public class StatBarHealth extends StatBar<EntityLivingBase> {
 		currentUpdateCounter = newUpdateCounter;
 
 		MC.getTextureManager().bindTexture(ICONS);
-		super.render(bounds);
+		super.render();
 	}
 }

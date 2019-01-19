@@ -10,7 +10,7 @@ import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Size;
 
-public class Grid<T extends Boxed> implements Boxed {
+public class Grid<T extends Boxed> extends DefaultBoxed {
     private List<T> source;
     private Rect shape;
 
@@ -125,7 +125,7 @@ public class Grid<T extends Boxed> implements Boxed {
     }
 
     @Override
-    public void render(Rect bounds) {
+    public void render() {
         int x = 0;
 
         Size gutterless = bounds.getSize().sub(shape.getSize().sub(1, 1).scale(gutter));
@@ -140,7 +140,7 @@ public class Grid<T extends Boxed> implements Boxed {
         for(Boxed element : flatten()) {
             if(element != null) {
                 Size size = stretch ? element.negotiateSize(cell.getSize()) : element.getPreferredSize();
-                element.render(new Rect(size).anchor(cell, cellAlignment));
+                element.setBounds(new Rect(size).anchor(cell, cellAlignment)).render();
             }
 
             if(x >= shape.getWidth() - 1) {

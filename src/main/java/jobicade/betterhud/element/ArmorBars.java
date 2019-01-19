@@ -19,6 +19,7 @@ import jobicade.betterhud.geom.Size;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.render.Boxed;
+import jobicade.betterhud.render.DefaultBoxed;
 import jobicade.betterhud.render.Grid;
 import jobicade.betterhud.render.Label;
 import jobicade.betterhud.util.GlUtil;
@@ -73,11 +74,11 @@ public class ArmorBars extends EquipmentDisplay {
 		}
 
 		Rect bounds = position.applyTo(new Rect(grid.getPreferredSize()));
-		grid.render(bounds);
+		grid.setBounds(bounds).render();
 		return bounds;
 	}
 
-	private class SlotDisplay implements Boxed {
+	private class SlotDisplay extends DefaultBoxed {
 		private final ItemStack stack;
 		private final TextureAtlasSprite empty;
 
@@ -101,7 +102,7 @@ public class ArmorBars extends EquipmentDisplay {
 		}
 
 		@Override
-		public void render(Rect bounds) {
+		public void render() {
 			Direction contentAlignment = position.getContentAlignment();
 			Rect textBarArea = bounds.withWidth(bounds.getWidth() - 20)
 				.anchor(bounds, contentAlignment.mirrorCol());
@@ -116,7 +117,7 @@ public class ArmorBars extends EquipmentDisplay {
 			}
 
 			Label label = getLabel();
-			label.render(new Rect(label.getPreferredSize()).anchor(textBarArea, contentAlignment));
+			label.setBounds(new Rect(label.getPreferredSize()).anchor(textBarArea, contentAlignment)).render();
 
 			int barTypeIndex = barType.getIndex();
 			if(barTypeIndex != 0 && stack.isItemDamaged()) {

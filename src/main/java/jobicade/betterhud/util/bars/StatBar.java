@@ -5,14 +5,14 @@ import java.util.List;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Size;
 import jobicade.betterhud.render.Color;
+import jobicade.betterhud.render.DefaultBoxed;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.MathUtil;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
-import jobicade.betterhud.render.Boxed;
 
-public abstract class StatBar<T> implements Boxed {
+public abstract class StatBar<T> extends DefaultBoxed {
 	protected int getMaximum() {
 		return 20;
 	}
@@ -66,7 +66,7 @@ public abstract class StatBar<T> implements Boxed {
 	}
 
 	@Override
-	public void render(Rect bounds) {
+	public void render() {
 		if(!DirectionOptions.CORNERS.isValid(contentAlignment)) {
 			throw new IllegalArgumentException("Bar must start in a corner");
 		}

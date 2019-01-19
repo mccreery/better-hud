@@ -6,8 +6,8 @@ import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Size;
-import jobicade.betterhud.render.Boxed;
 import jobicade.betterhud.render.Color;
+import jobicade.betterhud.render.DefaultBoxed;
 import jobicade.betterhud.render.Label;
 import jobicade.betterhud.render.Quad;
 import net.minecraft.client.gui.Gui;
@@ -17,7 +17,7 @@ import net.minecraft.potion.Potion;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.MathHelper;
 
-public class PotionIcon implements Boxed {
+public class PotionIcon extends DefaultBoxed {
     private final PotionEffect effect;
     private final Potion potion;
 
@@ -30,13 +30,13 @@ public class PotionIcon implements Boxed {
     }
 
     @Override
-    public void render(Rect bounds) {
+    public void render() {
         Color iconColor = getIconColor();
         Rect background = getIconBackground();
         Rect iconBounds = background.anchor(bounds, Direction.NORTH);
 
         MC.getTextureManager().bindTexture(GuiContainer.INVENTORY_BACKGROUND);
-        new Quad().setTexture(background).render(iconBounds);
+        new Quad().setTexture(background).setBounds(iconBounds).render();
 
         iconColor.apply();
         Rect iconInnerBounds = new Rect(18, 18).anchor(iconBounds, Direction.CENTER);
@@ -45,20 +45,20 @@ public class PotionIcon implements Boxed {
             int index = potion.getStatusIconIndex();
             Rect icon = new Rect((index % 8) * 18, 198 + (index / 8) * 18, 18, 18);
 
-            new Quad().setTexture(icon).render(iconInnerBounds);
+            new Quad().setTexture(icon).setBounds(iconInnerBounds).render();
         }
         potion.renderHUDEffect(iconInnerBounds.getX(), iconInnerBounds.getY(), effect, MC, iconColor.getAlpha() / 255.0f);
 
         String levelLabel = getLevelLabel();
         if(levelLabel != null) {
             Label label = new Label(levelLabel);
-            label.render(new Rect(label.getPreferredSize()).anchor(iconInnerBounds, Direction.SOUTH_EAST));
+            label.setBounds(new Rect(label.getPreferredSize()).anchor(iconInnerBounds, Direction.SOUTH_EAST)).render();
         }
 
         String durationLabel = getDurationLabel();
         if(durationLabel != null) {
             Label label = new Label(durationLabel);
-            label.render(new Rect(label.getPreferredSize()).anchor(iconBounds.grow(2), Direction.SOUTH, true));
+            label.setBounds(new Rect(label.getPreferredSize()).anchor(iconBounds.grow(2), Direction.SOUTH, true)).render();
         }
 
         MC.getTextureManager().bindTexture(Gui.ICONS);

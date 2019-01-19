@@ -86,8 +86,8 @@ public class PlayerInfo extends EntityInfo {
 		GlUtil.drawRect(bounds, Color.TRANSLUCENT);
 
 		Rect inner = bounds.grow(-5);
-		grid.render(new Rect(grid.getPreferredSize()).anchor(inner, Direction.NORTH_WEST));
-		if(bar.shouldRender()) bar.render(new Rect(bar.getPreferredSize()).anchor(inner, Direction.SOUTH_WEST));
+		grid.setBounds(new Rect(grid.getPreferredSize()).anchor(inner, Direction.NORTH_WEST)).render();
+		if(bar.shouldRender()) bar.setBounds(new Rect(bar.getPreferredSize()).anchor(inner, Direction.SOUTH_WEST)).render();
 
 		return null;
 	}

@@ -9,7 +9,7 @@ import jobicade.betterhud.geom.Size;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 
-public class Label implements Boxed {
+public class Label extends DefaultBoxed {
     private String text;
     private Size size;
     private boolean shadow = true;
@@ -53,7 +53,7 @@ public class Label implements Boxed {
     }
 
     @Override
-    public void render(Rect bounds) {
+    public void render() {
         /*
         * The font renderer for some reason ignores our request
         * and renders completely opaque if opacity < 4.

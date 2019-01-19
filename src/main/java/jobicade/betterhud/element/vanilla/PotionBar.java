@@ -79,7 +79,7 @@ public class PotionBar extends HudElement {
 		} else {
 			bounds = position.applyTo(bounds);
 		}
-		grid.render(bounds);
+		grid.setBounds(bounds).render();
 		MC.getTextureManager().bindTexture(Gui.ICONS);
 
 		return bounds;

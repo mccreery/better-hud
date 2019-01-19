@@ -16,7 +16,7 @@ import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
 
-public class Quad implements Boxed {
+public class Quad extends DefaultBoxed {
     private static final float TEX_SCALE = 1f / 256f;
 
     private double zLevel;
@@ -75,7 +75,7 @@ public class Quad implements Boxed {
      * <p>{@inheritDoc}
      */
     @Override
-    public void render(Rect bounds) {
+    public void render() {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuffer();
 

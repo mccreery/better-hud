@@ -17,8 +17,8 @@ import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.I18n;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Size;
-import jobicade.betterhud.render.Boxed;
 import jobicade.betterhud.render.Color;
+import jobicade.betterhud.render.DefaultBoxed;
 import jobicade.betterhud.render.Grid;
 import jobicade.betterhud.render.Label;
 import jobicade.betterhud.config.ConfigManager;
@@ -192,14 +192,14 @@ public class GuiConfigSaves extends GuiScreen {
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
 		GL11.glScissor(scissorRect.getX(), scissorRect.getY(), scissorRect.getWidth(), scissorRect.getHeight());
 
-		list.render(getListBounds());
+		list.setBounds(getListBounds()).render();
 
 		GL11.glDisable(GL11.GL_SCISSOR_TEST);
 
 		scrollbar.drawScrollbar(mouseX, mouseY);
 	}
 
-	private class ListItem implements Boxed {
+	private class ListItem extends DefaultBoxed {
 		private final ConfigSlot entry;
 		private final Label label;
 
@@ -225,12 +225,12 @@ public class GuiConfigSaves extends GuiScreen {
 		}
 
 		@Override
-		public void render(Rect bounds) {
+		public void render() {
 			if(selected == this.entry) {
 				GlUtil.drawRect(bounds, new Color(48, 0, 0, 0));
 				GlUtil.drawBorderRect(bounds, new Color(160, 144, 144, 144));
 			}
-			label.render(new Rect(label.getPreferredSize()).anchor(bounds, Direction.CENTER));
+			label.setBounds(new Rect(label.getPreferredSize()).anchor(bounds, Direction.CENTER)).render();
 		}
 	}
 }

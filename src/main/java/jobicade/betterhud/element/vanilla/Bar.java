@@ -71,7 +71,7 @@ public abstract class Bar extends OverrideElement {
 			bounds = position.applyTo(bounds);
 		}
 
-		bar.setContentAlignment(contentAlignment).render(bounds);
+		bar.setContentAlignment(contentAlignment).setBounds(bounds).render();
 		return bounds;
 	}
 }

@@ -38,7 +38,7 @@ public final class GlUtil {
 
 	/** @see Gui#drawRect(int, int, int, int, int) */
 	public static void drawRect(Rect bounds, Color color) {
-		new Quad().setColor(color).render(bounds);
+		new Quad().setColor(color).setBounds(bounds).render();
 	}
 
 	/**
@@ -47,7 +47,7 @@ public final class GlUtil {
 	 * @param texture The texture coordinates.
 	 */
 	public static void drawRect(Rect bounds, Rect texture) {
-		new Quad().setTexture(texture).render(bounds);
+		new Quad().setTexture(texture).setBounds(bounds).render();
 	}
 
 	/**
@@ -57,7 +57,7 @@ public final class GlUtil {
 	 * @param color The color of the rectangle.
 	 */
 	public static void drawRect(Rect bounds, Rect texture, Color color) {
-		new Quad().setTexture(texture).setColor(color).render(bounds);
+		new Quad().setTexture(texture).setColor(color).setBounds(bounds).render();
 	}
 
 	/**
@@ -67,10 +67,10 @@ public final class GlUtil {
 	 */
 	public static void drawBorderRect(Rect bounds, Color color) {
 		Quad quad = new Quad().setColor(color);
-		quad.render(bounds.withWidth(1));
-		quad.render(bounds.withHeight(1));
-		quad.render(bounds.withLeft(bounds.getRight() - 1));
-		quad.render(bounds.withTop(bounds.getBottom() - 1));
+		quad.setBounds(bounds.withWidth(1)).render();
+		quad.setBounds(bounds.withHeight(1)).render();
+		quad.setBounds(bounds.withLeft(bounds.getRight() - 1)).render();
+		quad.setBounds(bounds.withTop(bounds.getBottom() - 1)).render();
 	}
 
 	/** Draws text with black borders on all sides */
@@ -157,20 +157,20 @@ public final class GlUtil {
 
 		// Box
 		quad.setColor(background);
-		quad.render(bounds.withHeight(1).grow(-1, 0, -1, 0));
-		quad.render(bounds.grow(0, -1, 0, -1));
-		quad.render(bounds.withTop(bounds.getBottom() - 1).grow(-1, 0, -1, 0));
+		quad.setBounds(bounds.withHeight(1).grow(-1, 0, -1, 0)).render();
+		quad.setBounds(bounds.grow(0, -1, 0, -1)).render();
+		quad.setBounds(bounds.withTop(bounds.getBottom() - 1).grow(-1, 0, -1, 0)).render();
 
 		// Borders
 		Rect inner = bounds.grow(-1);
-		quad.setColor(borderTop).render(inner.withHeight(1));
-		quad.setColor(borderBottom).render(inner.withTop(inner.getBottom() - 1));
+		quad.setColor(borderTop).setBounds(inner.withHeight(1)).render();
+		quad.setColor(borderBottom).setBounds(inner.withTop(inner.getBottom() - 1)).render();
 
 		// Sides
 		inner = inner.grow(0, -1, 0, -1);
 		quad.setColors(borderTop, borderTop, borderBottom, borderBottom);
-		quad.render(inner.withWidth(1));
-		quad.render(inner.withLeft(inner.getRight() - 1));
+		quad.setBounds(inner.withWidth(1)).render();
+		quad.setBounds(inner.withLeft(inner.getRight() - 1)).render();
 	}
 
 	/** Applies transformations such that the Z axis faces directly towards the player
@@ -264,7 +264,7 @@ public final class GlUtil {
 	public static Rect drawString(String string, Point origin, Direction alignment, Color color) {
 		Label label = new Label(string).setColor(color);
 		Rect bounds = new Rect(label.getPreferredSize()).align(origin, alignment);
-		label.render(bounds);
+		label.setBounds(bounds).render();
 		return bounds;
 	}
 

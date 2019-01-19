@@ -23,8 +23,8 @@ import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.settings.SettingSlider;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Size;
-import jobicade.betterhud.render.Boxed;
 import jobicade.betterhud.render.Color;
+import jobicade.betterhud.render.DefaultBoxed;
 import jobicade.betterhud.render.Grid;
 import jobicade.betterhud.render.Label;
 import jobicade.betterhud.geom.Direction;
@@ -135,11 +135,11 @@ public class PickupCount extends HudElement {
 		} else {
 			bounds = position.applyTo(bounds);
 		}
-		grid.render(bounds);
+		grid.setBounds(bounds).render();
 		return bounds;
 	}
 
-	private class StackNode implements Boxed {
+	private class StackNode extends DefaultBoxed {
 		private final ItemStack stack;
 		private long updateCounter;
 
@@ -172,12 +172,12 @@ public class PickupCount extends HudElement {
 		}
 
 		@Override
-		public void render(Rect bounds) {
+		public void render() {
 			Direction alignment = position.getContentAlignment().withRow(1);
 			GlUtil.renderSingleItem(stack, new Rect(16, 16).anchor(bounds, alignment).getPosition());
 
 			Label label = getLabel();
-			label.render(new Rect(label.getPreferredSize()).anchor(bounds, alignment.mirrorCol()));
+			label.setBounds(new Rect(label.getPreferredSize()).anchor(bounds, alignment.mirrorCol())).render();
 		}
 	}
 }

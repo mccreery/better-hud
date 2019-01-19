@@ -62,7 +62,7 @@ public class Coordinates extends TextElement {
 		if(size.getX() < 150) size = size.withX(150);
 		Rect bounds = MANAGER.position(position.getDirection(), new Rect(size));
 
-		grid.render(bounds);
+		grid.setBounds(bounds).render();
 		return bounds;
 	}
 

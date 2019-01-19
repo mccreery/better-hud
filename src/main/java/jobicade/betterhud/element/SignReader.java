@@ -46,14 +46,14 @@ public class SignReader extends HudElement {
 		Rect bounds = position.applyTo(new Rect(96, 48));
 
 		MC.getTextureManager().bindTexture(SIGN_TEXTURE);
-		new Quad().setTexture(new Rect(2, 2, 24, 12).scale(4, 8)).render(bounds);
+		new Quad().setTexture(new Rect(2, 2, 24, 12).scale(4, 8)).setBounds(bounds).render();
 
 		List<Label> labels = Stream.of(getSign().signText)
 			.map(line -> new Label(line.getFormattedText()).setColor(Color.BLACK).setShadow(false))
 			.collect(Collectors.toList());
 
 		Grid<Label> grid = new Grid<>(new Point(1, labels.size()), labels);
-		grid.render(bounds.grow(-3));
+		grid.setBounds(bounds.grow(-3)).render();
 
 		return bounds;
 	}

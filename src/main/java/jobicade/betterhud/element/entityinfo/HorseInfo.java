@@ -64,7 +64,7 @@ public class HorseInfo extends EntityInfo {
 		bounds = BetterHud.MANAGER.position(Direction.SOUTH, bounds);
 
 		GlUtil.drawRect(bounds, Color.TRANSLUCENT);
-		grid.render(new Rect(grid.getPreferredSize()).anchor(bounds, Direction.CENTER));
+		grid.setBounds(new Rect(grid.getPreferredSize()).anchor(bounds, Direction.CENTER)).render();
 		return null;
 	}
 

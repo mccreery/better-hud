@@ -9,17 +9,32 @@ import jobicade.betterhud.geom.Size;
  */
 public interface Boxed {
     /**
-     * Renders the object inside the given bounds.
+     * Set the current bounds to a given value.
+     * @param bounds The new bounding box.
+     * @return {@code this}
+     * @see #getBounds()
+     */
+    Boxed setBounds(Rect bounds);
+
+    /**
+     * Gets the current bounds. The initial bounds should be a valid size, and
+     * its top-left corner should be the origin.
      *
-     * <p>If the size of {@code bounds} is not equal to
+     * @return The current bounds.
+     * @see #setBounds(Rect)
+     */
+    Rect getBounds();
+
+    /**
+     * Renders the object inside the current bounds.
+     *
+     * <p>If the size of the current bounds is not equal to
      * the result of {@code getPreferredSize(bounds.getSize())},
      * this method does not guarantee that the object
      * will be rendered correctly. Implementations may throw an
      * exception if the given bounds are undesirable.
-     *
-     * @param bounds The bounds to render inside.
      */
-    void render(Rect bounds);
+    void render();
 
     /**
      * Responds to a size offer with the offer itself or a counter offer.
