@@ -6,6 +6,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.events.RenderEvents;
 
 public abstract class OverrideElement extends HudElement {
 	protected OverrideElement(String name) {
@@ -18,6 +19,14 @@ public abstract class OverrideElement extends HudElement {
 
 	protected abstract ElementType getType();
 
+	private static boolean safePost(Event event) {
+		RenderEvents.endOverlayState();
+		boolean cancel = MinecraftForge.EVENT_BUS.post(event);
+		RenderEvents.beginOverlayState();
+
+		return cancel;
+	}
+
 	@Override
 	public boolean shouldRender(Event event) {
 		if(!(event instanceof RenderGameOverlayEvent)) {
@@ -26,7 +35,7 @@ public abstract class OverrideElement extends HudElement {
 		RenderGameOverlayEvent parent = (RenderGameOverlayEvent)event;
 		Event child = new RenderGameOverlayEvent.Pre(parent, getType());
 
-		return !MinecraftForge.EVENT_BUS.post(child);
+		return !safePost(child);
 	}
 
 	@Override
@@ -36,7 +45,7 @@ public abstract class OverrideElement extends HudElement {
 
 			if(type != null) {
 				RenderGameOverlayEvent e = (RenderGameOverlayEvent)event;
-				MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(e, type));
+				safePost(new RenderGameOverlayEvent.Post(e, type));
 			}
 		}
 	}

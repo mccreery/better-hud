@@ -84,7 +84,7 @@ public final class RenderEvents {
 	 * Modifies the OpenGL state for maximum compatibility with elements.
 	 * This is only used for {@link #onRenderTick(net.minecraftforge.client.event.RenderGameOverlayEvent.Pre)}
 	 */
-	private static void beginOverlayState() {
+	public static void beginOverlayState() {
 		GlStateManager.enableBlend();
 		MC.getTextureManager().bindTexture(Gui.ICONS);
 		GlStateManager.shadeModel(GL11.GL_SMOOTH);
@@ -94,7 +94,7 @@ public final class RenderEvents {
 	 * Reverts the OpenGL state to the expected state at the time of the event.
 	 * This is only used for {@link #onRenderTick(net.minecraftforge.client.event.RenderGameOverlayEvent.Pre))}
 	 */
-	private static void endOverlayState() {
+	public static void endOverlayState() {
 		GlStateManager.disableBlend();
 		GlStateManager.bindTexture(0);
 		GlStateManager.shadeModel(GL11.GL_FLAT);
