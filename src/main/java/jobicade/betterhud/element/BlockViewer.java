@@ -65,7 +65,7 @@ public class BlockViewer extends TextElement {
 			@Override
 			public boolean enabled() {
 				try {
-					return super.enabled() && BetterHud.serverSupports(VersionRange.createFromVersionSpec("[1.4,)"));
+					return super.enabled() && BetterHud.serverSupports(VersionRange.createFromVersionSpec("[1.4-beta,)"));
 				} catch (InvalidVersionSpecificationException e) {
 					return false;
 				}
