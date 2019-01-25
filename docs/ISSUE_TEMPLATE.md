@@ -2,6 +2,7 @@
 
 If you encounter a game crash, please do as many of these as possible:
 - [ ] Ensure you are running the latest version of the mod and can reproduce the problem
+- [ ] **Ensure the problem is actually related to this mod**: crash reports (excluding forced ones, see below) must mention the modid `betterhud` outside of the mod list. Look for a line that starts with `at jobicade.betterhud.`
 - [ ] Attach the full crash report, including mod list (from `.minecraft/crash-reports`)
 - [ ] Attach your configuration file from Better HUD and any mods you think may be relevant to the problem
 - [ ] Provide a description of what you were doing/looking at/holding when the game crashed
