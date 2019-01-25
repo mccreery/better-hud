@@ -1,11 +1,8 @@
 package jobicade.betterhud.render;
 
 import java.nio.FloatBuffer;
-import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.EnumMap;
-import java.util.EnumSet;
 import java.util.Map;
 import java.util.Objects;
 
@@ -24,23 +21,15 @@ import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 public class GlSnapshot {
     private final Map<Flag, Boolean> flags = new EnumMap<>(Flag.class);
     private final Color color;
-    private final Integer texture;
+    private final int texture;
     private final BlendFunc blendFunc;
 
     public GlSnapshot() {
-        this(EnumSet.allOf(Flag.class), true, true);
-    }
-
-    public GlSnapshot(boolean color, boolean texture, Flag... flags) {
-        this(Arrays.asList(flags), color, texture);
-    }
-
-    public GlSnapshot(Collection<Flag> flags, boolean color, boolean texture) {
-        for(Flag flag : flags) {
+        for(Flag flag : Flag.values()) {
             this.flags.put(flag, flag.isEnabled());
         }
-        this.color = color ? getCurrentColor() : null;
-        this.texture = texture ? getCurrentTexture() : null;
+        this.color = getCurrentColor();
+        this.texture = getCurrentTexture();
         this.blendFunc = getCurrentBlendFunc();
     }
 
@@ -92,7 +81,7 @@ public class GlSnapshot {
         GlSnapshot snapshot = (GlSnapshot)obj;
 
         return flags.equals(snapshot.flags) &&
-            Objects.equals(color, snapshot.color) &&
+            color.equals(snapshot.color) &&
             texture == snapshot.texture &&
             blendFunc.equals(snapshot.blendFunc);
     }
