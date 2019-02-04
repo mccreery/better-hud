@@ -64,6 +64,7 @@ public class GuiConfigSaves extends GuiScreen {
 		try {
 			manager.getConfig().saveSettings();
 			selected.copyFrom(manager.getConfigPath());
+			updateList();
 		} catch(IOException e) {
 			throw new RuntimeException(e);
 		}
@@ -104,8 +105,6 @@ public class GuiConfigSaves extends GuiScreen {
 		smallButton = smallButton.move(smallButton.getAnchor(Direction.NORTH_EAST).add(SPACER, 0));
 		buttonList.add(save = new GuiActionButton("Save").setCallback(b -> save()).setBounds(smallButton));
 
-		updateSelected();
-
 		viewport = new Rect(400, 0).align(fieldLine.getAnchor(Direction.SOUTH).add(0, SPACER), Direction.NORTH).withBottom(height - 20);
 		scrollbar = new GuiScrollbar(viewport, 0);
 		updateList();
@@ -117,6 +116,7 @@ public class GuiConfigSaves extends GuiScreen {
 		list.setStretch(true);
 
 		scrollbar.setContentHeight(list.getPreferredSize().getHeight());
+		updateSelected();
 	}
 
 	@Override
