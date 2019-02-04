@@ -152,6 +152,7 @@ betterHud.value.largeBars=Large Bars
 betterHud.setting.durabilityFormat=Format
 betterHud.value.points=Damage Points
 betterHud.value.percentage=Percentage
+betterHud.setting.showUndamaged=Full Durability
 
 betterHud.setting.warning.1=§c!§r
 betterHud.setting.warning.2=§c! !§r

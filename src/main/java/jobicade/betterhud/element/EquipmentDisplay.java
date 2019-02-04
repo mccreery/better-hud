@@ -18,6 +18,7 @@ public abstract class EquipmentDisplay extends HudElement {
 	private SettingBoolean showDurability;
 	private SettingWarnings warnings;
 	private SettingChoose durabilityMode;
+	private SettingBoolean showUndamaged;
 
 	protected EquipmentDisplay(String name, SettingPosition position) {
 		super(name, position);
@@ -28,12 +29,18 @@ public abstract class EquipmentDisplay extends HudElement {
 		super.addSettings(settings);
 		settings.add(showName = new SettingBoolean("showName"));
 		settings.add(showDurability = new SettingBoolean("showDurability", Direction.WEST));
-		settings.add(durabilityMode = new SettingChoose("durabilityMode", Direction.EAST, "points", "percentage") {
+		settings.add(durabilityMode = new SettingChoose("durabilityFormat", Direction.EAST, "points", "percentage") {
 			@Override
 			public boolean enabled() {
 				return showDurability.get();
 			}
 		});
+		settings.add(showUndamaged = new SettingBoolean("showUndamaged") {
+			@Override
+			public boolean enabled() {
+				return showDurability.get();
+			}
+		}.setValuePrefix("betterHud.value.visible"));
 		settings.add(warnings = new SettingWarnings("damageWarning"));
 	}
 
@@ -44,12 +51,17 @@ public abstract class EquipmentDisplay extends HudElement {
 		showName.set(true);
 		showDurability.set(true);
 		durabilityMode.setIndex(0);
+		showUndamaged.set(true);
 
 		warnings.set(new Double[] {.45, .25, .1});
 	}
 
 	protected boolean hasText() {
 		return showName.get() || showDurability.get();
+	}
+
+	protected boolean showDurability(ItemStack stack) {
+		return showDurability.get() && (showUndamaged.get() ? stack.isItemStackDamageable() : stack.isItemDamaged());
 	}
 
 	protected String getText(ItemStack stack) {
@@ -65,7 +77,7 @@ public abstract class EquipmentDisplay extends HudElement {
 
 		float value = (float)durability / (float)maxDurability;
 
-		if(showDurability.get() && stack.isItemDamaged()) {
+		if(showDurability(stack)) {
 			if(durabilityMode.getIndex() == 1) {
 				parts.add(MathUtil.formatToPlaces(value * 100, 1) + "%");
 			} else {

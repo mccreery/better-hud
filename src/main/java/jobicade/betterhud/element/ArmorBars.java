@@ -95,7 +95,7 @@ public class ArmorBars extends EquipmentDisplay {
 		public Size getPreferredSize() {
 			int textBarWidth = getLabel().getPreferredSize().getWidth();
 
-			if(barType.getIndex() == 2 && stack.isItemDamaged()) {
+			if(barType.getIndex() == 2 && showDurability(stack)) {
 				textBarWidth = Math.max(textBarWidth, 64);
 			}
 			return new Size(textBarWidth > 0 ? 20 + textBarWidth : 16, 16);
@@ -120,7 +120,7 @@ public class ArmorBars extends EquipmentDisplay {
 			label.setBounds(new Rect(label.getPreferredSize()).anchor(textBarArea, contentAlignment)).render();
 
 			int barTypeIndex = barType.getIndex();
-			if(barTypeIndex != 0 && stack.isItemDamaged()) {
+			if(barTypeIndex != 0 && showDurability(stack)) {
 				Rect bar;
 
 				if(barTypeIndex == 2) {

@@ -152,6 +152,7 @@ betterHud.value.largeBars=大条
 betterHud.setting.durabilityFormat=耐久模式
 #betterHud.value.points=Damage Points
 betterHud.value.percentage=百分比
+#betterHud.setting.showUndamaged=Full Durability
 
 #betterHud.setting.warning.1=§c!§r
 #betterHud.setting.warning.2=§c! !§r

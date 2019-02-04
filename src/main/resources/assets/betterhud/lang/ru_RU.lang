@@ -152,6 +152,7 @@ betterHud.value.largeBars=Большие панели
 betterHud.setting.durabilityFormat=Формат
 betterHud.value.points=Очки урона
 betterHud.value.percentage=Процент
+#betterHud.setting.showUndamaged=Full Durability
 
 betterHud.setting.warning.1=§c!§r
 betterHud.setting.warning.2=§c! !§r
