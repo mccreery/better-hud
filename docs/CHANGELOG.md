@@ -1,6 +1,6 @@
 # Changelog
 
-## [Unreleased]
+## [1.4-beta.4] - 2019-02-04
 ### Added
 - Option to show or hide durability when full for armor bars
 ### Changed
