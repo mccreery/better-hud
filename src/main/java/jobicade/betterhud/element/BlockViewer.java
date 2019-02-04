@@ -13,6 +13,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
@@ -130,6 +131,12 @@ public class BlockViewer extends TextElement {
 	@Override
 	protected void drawBorder(Rect bounds, Rect padding, Rect margin) {
 		GlUtil.drawTooltipBox(bounds);
+	}
+
+	@Override
+	public Rect render(Event event) {
+		GlStateManager.disableDepth();
+		return super.render(event);
 	}
 
 	@Override
