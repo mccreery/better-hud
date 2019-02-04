@@ -1,6 +1,63 @@
 # Changelog
 
-## [1.4]
+## [Unreleased]
+### Added
+- Option to show or hide durability when full for armor bars
+### Changed
+- License changed to MIT
+### Fixed
+- Block viewer bug with shaders or Optifine Fast Render (#50)
+- Save list not updating when saving new configs (#49)
+- Log spam in debug mode when an OpenGL inconsistency is present
+- Block viewer doesn't show inventory names on 1.4-beta.X even though it's supported
+- Crash using blood/water droplets (#47)
+
+## [1.4-beta.3] - 2019-01-19
+### Added
+- Russian language support (ru_RU)
+- Debug mode log warnings for OpenGL inconsistencies
+### Changed
+- Removed text shadows from scoreboard sidebar and sign reader
+### Fixed
+- Mod potion icons are uncentred in potion viewer
+- Global settings not being saved
+- Config saved multiple times unnecessarily
+- Item pickup crash with Forge < 14.23.1.2557
+- Crash while using potion bar
+- Correct modid in `mcmod.info`
+- Crash if config directory doesn't exist
+
+## [1.4-beta.2] - 2019-01-16
+### Added
+- Potion bar timer display (#32)
+- Option to hide HUD with debug screen open
+### Changed
+- Change modid from `hud` to `betterhud`
+### Removed
+- Keybinding (F3) to disable mod
+### Fixed
+- Heal indicator localization error
+- Strings rendering full opacity when <4 alpha
+- Experience bar default position is top left instead of bottom
+- OpenGL state inconsistency with vignette
+- Config files in both jar and folder show up twice
+- Correct modid for resources
+- Incorrect rectangle-point collision
+- Potion display incorrect position/texture (#31)
+- Block viewer box has flat instead of gradient shading
+- OpenGL consistency improvements
+- Colors have swapped alpha and blue values, incorrectly scaled
+- GlStateManager blend func corruption
+- Add OpenGL state inconsistency warnings
+- Crash with blood/water droplets (#35)
+- Some mods unable to redraw vanilla elements (#29)
+- Armor bar ignores special armor values (#34)
+- Unable to set parents other than the child creating a loop
+- Crash with invalid ID enchantments
+- Elements showing in non-alphabetical order
+- Pickup count doesn't work for 1.4-beta.X even though it's supported
+
+## [1.4-beta] - 2018-09-26
 ### Added
 - Server compatibility checks for future elements
 - CPS counter
@@ -14,7 +71,6 @@
 - Vanilla elements can now be moved, configured and disabled
 - Better support for adding and changing translations
 - Some Brazilian Portuguese support
-- Russian language support
 - Option to disable compass and clock without corresponding item
 - Configs can be saved and loaded from files
 - Option to show undamageable items in Holding Bar
@@ -40,7 +96,6 @@
 - Mob Info showing incorrect health bar
 - Configuration not saving some values
 - Player hider not turning off
-- Incorrect default config
 - Compass directions disappearing with 0% perspective
 - ConcurrentModificationException crashes
 - Unsnap prompt not localized
