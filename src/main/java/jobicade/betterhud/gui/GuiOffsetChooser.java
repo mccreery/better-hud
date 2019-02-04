@@ -70,6 +70,6 @@ public class GuiOffsetChooser extends GuiScreen {
 		String key = Keyboard.getKeyName(Keyboard.KEY_LCONTROL);
 		GlUtil.drawString(I18n.format("betterHud.menu.unsnap", key), new Point(SPACER, SPACER), Direction.NORTH_WEST, Color.WHITE);
 
-		drawHoveringText(offset.toString(), mouseX, mouseY);
+		drawHoveringText(offset.toPrettyString(), mouseX, mouseY);
 	}
 }

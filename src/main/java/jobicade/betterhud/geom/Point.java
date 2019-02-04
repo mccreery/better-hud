@@ -90,11 +90,20 @@ public class Point implements Serializable {
      * Point implementation includes the values of X and Y.
      *
      * <p>{@inheritDoc}
+     * @see #toPrettyString()
      */
     @Override
     public String toString() {
         return String.format("%s{x: %d, y: %d}@%s",
             getClass().getName(), x, y, Integer.toHexString(System.identityHashCode(this)));
+    }
+
+    /**
+     * Returns a human-readable string representing the point.
+     * @return A human readable string representing the point.
+     */
+    public String toPrettyString() {
+        return String.format("(%d, %d)", x, y);
     }
 
     /**
