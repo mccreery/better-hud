@@ -25,10 +25,20 @@ import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
 
+/**
+ * Maintains a list of config slots for saving and loading.
+ * Configs come from inside the jar, listed in
+ * {@code betterhud:configs/configs.json}, and outside the jar in the user's
+ * config folder.
+ */
 public class ConfigManager implements IResourceManagerReloadListener {
+    /**
+     * The resource location for lists of configs, where each entry is a resource
+     * string. Configs from resource packs will stack, if used.
+     */
     public static final ResourceLocation CONFIGS_LOCATION = new ResourceLocation(MODID, "configs/configs.json");
-    private PathMatcher pathMatcher;
 
+    private PathMatcher pathMatcher;
     private IResourceManager resourceManager;
     private Gson gson = new Gson();
     private List<ConfigSlot> internalConfigs;
@@ -37,6 +47,11 @@ public class ConfigManager implements IResourceManagerReloadListener {
     private final Path configPath;
     private HudConfig config;
 
+    /**
+     * Constructor for the config manager.
+     * @param configPath The path of the config file.
+     * @param rootDirectory The directory path where config saves are stored.
+     */
     public ConfigManager(Path configPath, Path rootDirectory) {
         this.setRootDirectory(rootDirectory);
         try {
@@ -49,22 +64,41 @@ public class ConfigManager implements IResourceManagerReloadListener {
         this.reloadConfig();
     }
 
+    /**
+     * Reloads the current config, for example after overwriting it.
+     */
     public void reloadConfig() {
         this.config = new HudConfig(configPath.toFile());
     }
 
+    /**
+     * Getter for the current config.
+     * @return The current config.
+     */
     public HudConfig getConfig() {
         return config;
     }
 
+    /**
+     * Getter for the path of the current config.
+     * @return The path of the current config.
+     */
     public Path getConfigPath() {
         return configPath;
     }
 
+    /**
+     * Getter for the directory path where saved configs are stored.
+     * @return The root directory.
+     */
     public Path getRootDirectory() {
         return rootDirectory;
     }
 
+    /**
+     * Setter for the directory where saved configs are stored.
+     * @param rootDirectory The new root directory.
+     */
     public void setRootDirectory(Path rootDirectory) {
         this.rootDirectory = rootDirectory;
         this.pathMatcher = rootDirectory.getFileSystem().getPathMatcher("glob:**/*.cfg");
@@ -76,12 +110,29 @@ public class ConfigManager implements IResourceManagerReloadListener {
         this.internalConfigs = null;
     }
 
+    /**
+     * Generates or returns a list of all internal and external save slots.
+     * Internal save slots are stored in resources, and external save slots
+     * are stored in the root directory.
+     *
+     * @return A list of all internal and external save slots.
+     * @see #getInternalSlots()
+     * @see #getExternalSlots()
+     */
     public List<ConfigSlot> getSlots() {
         return Stream.concat(getInternalSlots().stream(), streamExternalSlots())
             .filter(distinctBy(ConfigSlot::getName))
             .collect(ImmutableList.toImmutableList());
     }
 
+    /**
+     * Generates or returns a list of internal save slots.
+     * Internal save slots are stored in resources, and can be stacked using
+     * resource packs. The resource locations of the config files are stored in
+     * a JSON list inside the resource {@link #CONFIGS_LOCATION}.
+     *
+     * @return A list of all internal save slots.
+     */
     public List<ConfigSlot> getInternalSlots() {
         if(internalConfigs == null) {
             internalConfigs = streamInternalSlots().collect(ImmutableList.toImmutableList());
@@ -106,6 +157,13 @@ public class ConfigManager implements IResourceManagerReloadListener {
         }
     }
 
+    /**
+     * Generates or returns a list of external save slots.
+     * External save slots are stored in the root directory, as files.
+     *
+     * @return A list of all external save slots.
+     * @see #getRootDirectory()
+     */
     public List<ConfigSlot> getExternalSlots() {
         return streamExternalSlots().collect(ImmutableList.toImmutableList());
     }

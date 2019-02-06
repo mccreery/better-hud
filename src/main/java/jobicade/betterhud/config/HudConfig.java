@@ -6,6 +6,10 @@ import net.minecraftforge.common.config.Configuration;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.HudElement.SortType;
 
+/**
+ * Handles saving and loading config files through Forge's system. Note that
+ * actual settings are stored in each element's settings object.
+ */
 public class HudConfig extends Configuration {
 	public HudConfig(File file) {
 		super(file);

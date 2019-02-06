@@ -5,13 +5,23 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
+import com.google.common.io.MoreFiles;
+
+/**
+ * A config slot representing an external config file.
+ * This slot is a destination.
+ */
 public class FileConfigSlot implements ConfigSlot {
     private final Path path;
     private final String name;
 
+    /**
+     * Constructor for file config slots.
+     * @param path The filesystem path for the config file.
+     */
     public FileConfigSlot(Path path) {
         this.path = path;
-        this.name = ConfigSlot.getName(path);
+        this.name = MoreFiles.getNameWithoutExtension(path);
     }
 
     @Override
