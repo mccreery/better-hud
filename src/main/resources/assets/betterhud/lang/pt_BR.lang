@@ -1,8 +1,8 @@
-tile.null.name=Bloco desconhecido
+tile.null.name=Bloco Desconhecido
 tile.endPortal.name=Portal do End
 
-key.betterHud.open=Abrir menu do Better HUD
-key.betterHud.disable=Ativar Better HUD
+key.betterHud.open=Abrir Menu do Better HUD
+key.betterHud.disable=Alternarr Better HUD
 
 # Generic Formatters
 betterHud.hud.meters=%sm
@@ -13,8 +13,8 @@ betterHud.menu.hudSettings=Configurações do HUD
 betterHud.menu.settings=Configurações de %s
 betterHud.menu.enableAll=Ativar tudo
 betterHud.menu.disableAll=Desativar tudo
-#betterHud.menu.reorder=Reorder...
-#betterHud.menu.saveLoad=Save/Load...
+betterHud.menu.reorder=Reordenar...
+betterHud.menu.saveLoad=Salvar/Carregar...
 betterHud.menu.lastPage=Página anterior
 betterHud.menu.nextPage=Próxima página
 betterHud.menu.page=Página %s
@@ -22,12 +22,12 @@ betterHud.menu.pick=Selecionar
 
 betterHud.menu.alphabetical=A-Z
 betterHud.menu.enabled=Ativada
-#betterHud.menu.priority=Draw Order
+betterHud.menu.priority=Ordem de Sorteio
 
-#betterHud.menu.moveTop=Move to Top
-#betterHud.menu.moveUp=Move Up
-#betterHud.menu.moveDown=Move Down
-#betterHud.menu.moveBottom=Move to Bottom
+betterHud.menu.moveTop=Mover para o Topo
+betterHud.menu.moveUp=Mover para Cima
+betterHud.menu.moveDown=Mover para Baixo
+betterHud.menu.moveBottom=Mover para o Fundo
 
 # Menu text
 betterHud.menu.unsnap=Pressione %s para desativar o snapping.
@@ -76,10 +76,10 @@ betterHud.element.helmetOverlay=Sobrep. do capacete
 betterHud.element.hotbar=Barra rápida
 betterHud.element.jumpBar=Barra de salto
 betterHud.element.mountHealth=Saúde
-#betterHud.element.offhand=Off-Hand
-#betterHud.element.portal=Portal Overlay
-#betterHud.element.scoreboard=Scoreboard
-#betterHud.element.vignette=Vignette
+betterHud.element.offhand=Mão Secundária
+betterHud.element.portal=Sobreposição de Portal
+betterHud.element.scoreboard=Placar
+betterHud.element.vignette=Vinheta
 
 # Setting Groups
 betterHud.group.position=Posição
@@ -87,7 +87,7 @@ betterHud.group.misc=Div.
 betterHud.group.damageWarning=Alertas de dano
 
 # Generic Settings
-#betterHud.value.none=None
+betterHud.value.none=Nenhum
 
 betterHud.value.visible.on=Visível
 betterHud.value.visible.off=Oculto
@@ -99,14 +99,14 @@ betterHud.setting.position=Posição
 betterHud.value.preset=Predefinição
 betterHud.value.custom=Personalizado
 
-#betterHud.setting.positionType=Position Type
-#betterHud.value.hotbar=Hotbar
+betterHud.setting.positionType=Tipo de Posição
+betterHud.value.hotbar=Barra Rápida
 
 betterHud.setting.direction=Direção
-#betterHud.setting.parent=Parent
+betterHud.setting.parent=Origem
 betterHud.setting.anchor=Fixar
 betterHud.setting.alignment=Alinhamento
-#betterHud.setting.contentAlignment=Content Alignment
+betterHud.setting.contentAlignment=Alinhamento de Conteúdo
 betterHud.value.northWest=Noroeste
 betterHud.value.north=Norte
 betterHud.value.northEast=Nordeste
@@ -121,9 +121,9 @@ betterHud.value.percent=%s%%
 betterHud.setting.precision=Precisão
 betterHud.value.places=%s locais
 betterHud.setting.distance=Distância
-#betterHud.setting.rayDistance=Ray Trace Distance
-#betterHud.setting.hideOnDebug=Hide While F3 is Open
-#betterHud.setting.debugMode=Debug Mode
+betterHud.setting.rayDistance=Distância do Traço de Raio
+betterHud.setting.hideOnDebug=Esconder Enquanto F3 é Aberto
+betterHud.setting.debugMode=Modo de Debug
 betterHud.setting.red=§cRed
 betterHud.setting.green=§aGreen
 betterHud.setting.blue=§1Blue
@@ -136,14 +136,14 @@ betterHud.value.dense=Densa
 betterHud.value.denser=Mais densa
 
 # Equipment
-#betterHud.setting.showItem=Item
-#betterHud.setting.showName=Name
+betterHud.setting.showItem=Item
+betterHud.setting.showName=Nome
 betterHud.setting.showDurability=Duração
-betterHud.setting.offhand=Mão secundária
+betterHud.setting.offhand=Mão Secundária
 
-#betterHud.setting.showNonTools=Show For
-#betterHud.value.nonTools.off=Tools Only
-#betterHud.value.nonTools.on=All Items
+betterHud.setting.showNonTools=Mostrar Por
+betterHud.value.nonTools.off=Ferramentas Somente
+betterHud.value.nonTools.on=Todos os Itens
 
 betterHud.setting.bars=Barras
 betterHud.value.smallBars=Barras curtas
@@ -152,7 +152,7 @@ betterHud.value.largeBars=Barras longas
 betterHud.setting.durabilityFormat=Formato
 betterHud.value.points=Danos em pontos
 betterHud.value.percentage=Porcentagem
-#betterHud.setting.showUndamaged=Full Durability
+betterHud.setting.showUndamaged=Durabilidade Completa
 
 betterHud.setting.warning.1=§c!§r
 betterHud.setting.warning.2=§c! !§r
@@ -168,9 +168,9 @@ betterHud.setting.chunks=%s chunks
 betterHud.setting.letterScale=Ângulo
 betterHud.setting.showNotches=Posições
 betterHud.setting.scale=Escala
-#betterHud.setting.requireItem=Require Item
-#betterHud.value.inventory=In Inventory
-#betterHud.value.hand=In Hand
+betterHud.setting.requireItem=Requere Item
+betterHud.value.inventory=No Inventário
+betterHud.value.hand=Na Mão
 
 # Clocks
 betterHud.setting.24hr=24 horas
@@ -206,7 +206,7 @@ betterHud.setting.billboardScale=Escala do quadro
 betterHud.setting.jump=Altura do salto
 betterHud.setting.speed=Velocidade
 betterHud.setting.players=Jogadores
-#betterHud.setting.mobs=Mobs
+betterHud.setting.mobs=Mobs
 
 betterHud.setting.compress=Comprimir acima de
 betterHud.value.never=Nunca
@@ -220,20 +220,20 @@ betterHud.setting.remember=Salvar combo
 # Others
 betterHud.setting.alwaysVisible=Sempre visível
 betterHud.setting.disableDefault=Desativar padrões
-#betterHud.setting.hideMount=Hide While Riding
+betterHud.setting.hideMount=Esconder Enquanto em Montaria
 betterHud.setting.numberOnly=Apenas números
 betterHud.setting.overlay=Sobreposição
 betterHud.setting.showLifetimeExp=XP desde a morte
 betterHud.setting.showTotalExp=Total de XP
 betterHud.setting.spaced=Espaçado
 betterHud.setting.tooltipLines=Série de dicas
-#betterHud.setting.warnings=Warnings
-#betterHud.setting.duration=Duration
-#betterHud.value.text=Text
-#betterHud.value.visual=Visual
+betterHud.setting.warnings=Avisos
+betterHud.setting.duration=Duração
+betterHud.value.text=Texto
+betterHud.value.visual=Visual
 
-#betterHud.setting.maxStacks=Maximum Stacks
-#betterHud.setting.fadeAfter=Fade After
+betterHud.setting.maxStacks=Pilhas Máximas
+betterHud.setting.fadeAfter=Desaparecer Depois
 
 betterHud.hud.biome=Bioma: %s
 betterHud.hud.burst=Combo: %s cliques em %ss
