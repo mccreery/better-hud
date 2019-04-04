@@ -162,6 +162,7 @@ betterHud.setting.durabilityFormat=Haltbarkeitsmodus
 # Block Viewer
 betterHud.setting.invNames=Inventarnamen
 betterHud.setting.showIds=Zeige IDs
+#betterHud.setting.storeNbt=Store NBT in Stack
 #betterHud.setting.chunks=%s Chunks
 
 # Compass

@@ -162,6 +162,7 @@ betterHud.value.disabled=Отключено
 # Block Viewer
 betterHud.setting.invNames=Названия инвентарей
 betterHud.setting.showIds=Идентификаторы
+#betterHud.setting.storeNbt=Store NBT in Stack
 betterHud.setting.chunks=%s чанков
 
 # Compass

@@ -162,6 +162,7 @@ betterHud.value.percentage=百分比
 # Block Viewer
 betterHud.setting.invNames=容器名称
 betterHud.setting.showIds=显示ID
+#betterHud.setting.storeNbt=Store NBT in Stack
 betterHud.setting.chunks=%s 区块
 
 # Compass

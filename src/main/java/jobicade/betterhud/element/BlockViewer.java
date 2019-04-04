@@ -46,7 +46,7 @@ import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
 
 public class BlockViewer extends TextElement {
-	private SettingBoolean showBlock, showIds, invNames;
+	private SettingBoolean showBlock, showIds, invNames, storeNbt;
 	private RayTraceResult trace;
 	private IBlockState state;
 	private ItemStack stack;
@@ -72,6 +72,7 @@ public class BlockViewer extends TextElement {
 				}
 			}
 		});
+		settings.add(storeNbt = new SettingBoolean("storeNbt"));
 	}
 
 	@Override
@@ -87,6 +88,7 @@ public class BlockViewer extends TextElement {
 		showBlock.set(true);
 		showIds.set(false);
 		invNames.set(true);
+		storeNbt.set(true);
 	}
 
 	@Override
@@ -160,7 +162,7 @@ public class BlockViewer extends TextElement {
 	 * If the block has no {@link net.minecraft.item.ItemBlock}, it is impossible to create a stack.
 	 *
 	 * @see net.minecraftforge.common.ForgeHooks#onPickBlock(RayTraceResult, net.minecraft.entity.player.EntityPlayer, net.minecraft.world.World) */
-	private static ItemStack getDisplayStack(RayTraceResult trace, IBlockState state) {
+	private ItemStack getDisplayStack(RayTraceResult trace, IBlockState state) {
 		ItemStack stack = state.getBlock().getPickBlock(state, trace, MC.world, trace.getBlockPos(), MC.player);
 
 		if(isStackEmpty(stack)) {
@@ -173,7 +175,8 @@ public class BlockViewer extends TextElement {
 		}
 		// At this point stack contains some item
 
-		if(state.getBlock().hasTileEntity(state)) { // Tile entity data can change rendering or display name
+		// Tile entity data can change rendering or display name
+		if(storeNbt.get() && state.getBlock().hasTileEntity(state)) {
 			TileEntity tileEntity = MC.world.getTileEntity(trace.getBlockPos());
 
 			if(tileEntity != null) {

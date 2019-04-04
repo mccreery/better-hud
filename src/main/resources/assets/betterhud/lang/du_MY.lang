@@ -162,6 +162,7 @@
 # Block Viewer
 #betterHud.setting.invNames=Inventory Names
 #betterHud.setting.showIds=IDs
+#betterHud.setting.storeNbt=Store NBT in Stack
 #betterHud.setting.chunks=%s Chunks
 
 # Compass
