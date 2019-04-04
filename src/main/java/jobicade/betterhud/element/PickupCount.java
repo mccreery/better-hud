@@ -95,6 +95,15 @@ public class PickupCount extends HudElement {
 		ItemStack stack = e.getStack();
 		if(stack.isEmpty()) return;
 
+		refreshStack(stack);
+	}
+
+	/**
+	 * Brings a stack to the front of the list of recent stacks.
+	 *
+	 * @param stack The stack to find and refresh.
+	 */
+	private synchronized void refreshStack(ItemStack stack) {
 		StackNode node = removeStack(stack);
 
 		if(node != null) {
@@ -111,7 +120,7 @@ public class PickupCount extends HudElement {
 	 *
 	 * @return The list of recently picked up stacks.
 	 */
-	private List<StackNode> getStacks() {
+	private synchronized List<StackNode> getStacks() {
 		stacks.removeIf(StackNode::isDead);
 
 		int limit = maxStacks.getInt();
