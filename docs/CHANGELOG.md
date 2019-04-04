@@ -1,8 +1,14 @@
 # Changelog
 
-## [Unreleased]
+## [1.4] - 2019-04-04
+### Added
+- Option to disable writing NBT data in block viewer, fixes some crashes (#53)
+### Changed
+- Some translations for Brazilian Portuguese (pt_BR)
 ### Fixed
 - Points showing debug output string on offset chooser screen
+- Unsafe accesses in pickup count synchronized (#54)
+- Points showing unfriendly text in offset chooser
 
 ## [1.4-beta.4] - 2019-02-04
 ### Added
