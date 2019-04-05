@@ -1,48 +1,61 @@
 buildscript {
     repositories {
-        jcenter()
         maven { url = 'http://files.minecraftforge.net/maven' }
+        jcenter()
+        mavenCentral()
     }
     dependencies {
-        classpath 'net.minecraftforge.gradle:ForgeGradle:2.3-SNAPSHOT'
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '3.+', changing: true
     }
 }
+apply plugin: 'net.minecraftforge.gradle'
+apply plugin: 'eclipse'
+apply plugin: 'maven-publish'
 
-apply plugin: 'net.minecraftforge.gradle.forge'
-sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
-
-// Version information
-ext {
-    mcVersion = '1.12.2'
-    forgeVersion = '14.23.4.2710'
-    modVersion = '1.4'
-    mcpMappings = 'snapshot_20171003'
-}
-
-// JAR filenames and Maven coordinates
-archivesBaseName = 'betterhud'
+version = '1.13.2-1.4'
 group = 'jobicade.betterhud'
-version = "${project.ext.mcVersion}-${project.ext.modVersion}"
+archivesBaseName = 'betterhud'
+
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8' // Need this here so eclipse task generates correctly.
 
 minecraft {
-    version = "${project.ext.mcVersion}-${project.ext.forgeVersion}"
-    mappings = project.ext.mcpMappings
-    runDir = 'run'
+    mappings channel: 'snapshot', version: '20180921-1.13'
+
+    runs {
+        client {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                betterhud {
+                    source sourceSets.main
+                }
+            }
+        }
+
+        server {
+            workingDirectory project.file('run')
+
+            // Recommended logging data for a userdev environment
+            property 'forge.logging.markers', 'SCAN,REGISTRIES,REGISTRYDUMP'
+
+            // Recommended logging level for the console
+            property 'forge.logging.console.level', 'debug'
+
+            mods {
+                betterhud {
+                    source sourceSets.main
+                }
+            }
+        }
+    }
 }
 
-processResources {
-    // this will ensure that this task is redone when the versions change.
-    inputs.property 'modVersion', project.version
-    inputs.property 'mcVersion', project.minecraft.version
-
-    // replace stuff in mcmod.info, nothing else
-    from(sourceSets.main.resources.srcDirs) {
-        include 'mcmod.info'
-        expand project.ext.properties
-    }
-
-    // copy everything else except the mcmod.info
-    from(sourceSets.main.resources.srcDirs) {
-        exclude 'mcmod.info'
-    }
+dependencies {
+    minecraft 'net.minecraftforge:forge:1.13.2-25.0.107'
 }
