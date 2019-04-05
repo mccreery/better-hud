@@ -99,7 +99,7 @@ public class PlayerInfo extends EntityInfo {
 		if(stack.hasDisplayName()) {
 			builder.append(TextFormatting.ITALIC);
 		}
-		if(stack.isItemEnchanted()) {
+		if(stack.isEnchanted()) {
 			builder.append(TextFormatting.AQUA);
 		} else {
 			builder.append(TextFormatting.GRAY);

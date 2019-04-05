@@ -78,6 +78,6 @@ public class HorseInfo extends EntityInfo {
 	/** Calculates horse speed using an approximate coefficient
 	 * @see <a href=https://minecraft.gamepedia.com/Horse#Movement_speed>Minecraft Wiki</a> */
 	public double getSpeed(EntityHorse horse) {
-		return horse.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getBaseValue() * 43.17037;
+		return horse.getAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getBaseValue() * 43.17037;
 	}
 }

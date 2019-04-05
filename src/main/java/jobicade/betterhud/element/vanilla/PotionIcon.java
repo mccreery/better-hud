@@ -99,7 +99,7 @@ public class PotionIcon extends DefaultBoxed {
     }
 
     private Color getIconColor() {
-        if(effect.getIsAmbient() || effect.getDuration() > 200) {
+        if(effect.isAmbient() || effect.getDuration() > 200) {
             return Color.WHITE;
         } else {
             int duration = effect.getDuration();
@@ -111,6 +111,6 @@ public class PotionIcon extends DefaultBoxed {
     }
 
     private Rect getIconBackground() {
-        return new Rect(effect.getIsAmbient() ? 165 : 141, 166, 24, 24);
+        return new Rect(effect.isAmbient() ? 165 : 141, 166, 24, 24);
     }
 }

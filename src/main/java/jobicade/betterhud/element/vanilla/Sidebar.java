@@ -25,6 +25,8 @@ import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Scoreboard;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentString;
 import net.minecraftforge.eventbus.api.Event;
 
 public class Sidebar extends HudElement {
@@ -47,7 +49,7 @@ public class Sidebar extends HudElement {
 		ScoreObjective objective = getObjective(MC.player);
 		List<Score> scores = getScores(objective);
 
-		Label title = new Label(objective.getDisplayName()).setShadow(false);
+		Label title = new Label(objective.getDisplayName().getFormattedText()).setShadow(false);
 		List<Label> names  = new ArrayList<>(scores.size());
 		List<Label> values = new ArrayList<>(scores.size());
 
@@ -55,17 +57,18 @@ public class Sidebar extends HudElement {
 
 		for(Score score : scores) {
 			String name = score.getPlayerName();
-			String formattedName = ScorePlayerTeam.formatPlayerName(objective.getScoreboard().getPlayersTeam(name), name);
+			ITextComponent formattedName = ScorePlayerTeam.formatMemberName(
+					objective.getScoreboard().getPlayersTeam(name), new TextComponentString(name));
 			String points = String.valueOf(score.getScorePoints());
 
-			names.add(new Label(formattedName).setShadow(false));
+			names.add(new Label(formattedName.getFormattedText()).setShadow(false));
 			values.add(new Label(points).setColor(valueColor).setShadow(false));
 		}
 
 		Grid<Label> namesGroup = new Grid<>(new Point(1, names.size()), names).setStretch(true).setCellAlignment(position.getContentAlignment().mirrorCol());
 		Grid<Label> valuesGroup = new Grid<>(new Point(1, values.size()), values).setStretch(true).setCellAlignment(position.getContentAlignment());
 
-		int spaceWidth = MC.fontRenderer.getCharWidth(' ');
+		int spaceWidth = (int)MC.fontRenderer.getStringWidth(" ");
 		Size size = namesGroup.getPreferredSize().add(valuesGroup.getPreferredSize().getX() + spaceWidth * 2, 0);
 
 		int tWidth = title.getPreferredSize().getWidth();
@@ -118,7 +121,7 @@ public class Sidebar extends HudElement {
 	 */
 	private ScoreObjective getObjective(EntityPlayer player) {
 		Scoreboard scoreboard = player.getWorldScoreboard();
-		ScorePlayerTeam team = scoreboard.getPlayersTeam(MC.player.getName());
+		ScorePlayerTeam team = scoreboard.getPlayersTeam(MC.player.getName().getFormattedText());
 
 		if(team != null) {
 			int slot = team.getColor().getColorIndex();
