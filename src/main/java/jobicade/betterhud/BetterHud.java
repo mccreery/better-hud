@@ -1,10 +1,11 @@
 package jobicade.betterhud;
 
-import java.nio.file.Path;
+import java.nio.file.Paths;
 
 import org.apache.logging.log4j.Logger;
 import org.apache.maven.artifact.versioning.ArtifactVersion;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
+import org.apache.maven.artifact.versioning.InvalidVersionSpecificationException;
 import org.apache.maven.artifact.versioning.VersionRange;
 
 import jobicade.betterhud.config.ConfigManager;
@@ -13,22 +14,26 @@ import jobicade.betterhud.element.HudElement.SortType;
 import jobicade.betterhud.events.KeyEvents;
 import jobicade.betterhud.events.RenderEvents;
 import jobicade.betterhud.geom.LayoutManager;
-import jobicade.betterhud.network.InventoryNameQuery;
-import jobicade.betterhud.network.MessageNotifyClientHandler;
-import jobicade.betterhud.network.MessageVersion;
+import jobicade.betterhud.network.InventoryNameReq;
+import jobicade.betterhud.network.InventoryNameRes;
+import jobicade.betterhud.network.VersionHandler;
 import jobicade.betterhud.util.Tickable.Ticker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.network.NetworkManager;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
+import net.minecraftforge.fml.network.NetworkDirection;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 
@@ -39,7 +44,15 @@ import net.minecraftforge.fml.network.simple.SimpleChannel;
 public class BetterHud {
 	public static final String MODID = "betterhud";
 
-	public static final VersionRange ALL = VersionRange.createFromVersionSpec("*"););
+	public static VersionRange ALL;
+	static {
+		try {
+			ALL = VersionRange.createFromVersionSpec("*");
+		} catch(InvalidVersionSpecificationException e) {
+			throw new RuntimeException(e);
+		}
+	}
+
 	public static final ArtifactVersion ZERO = new DefaultArtifactVersion("0.0");
 
 	protected static final String VERSION_STRING = "1.4";
@@ -81,38 +94,21 @@ public class BetterHud {
 	public static final SimpleChannel NET_WRAPPER = NetworkRegistry.ChannelBuilder
 			.named(new ResourceLocation(MODID, "main_channel")).simpleChannel();
 
-	@EventHandler
-	public void preInit(FMLPreInitializationEvent event) {
-		logger = event.getModLog();
+	@SubscribeEvent
+	public static void clientInit(FMLClientSetupEvent event) {
+		MC = Minecraft.getInstance();
+		HudElement.loadAllDefaults();
 
-		if(event.getSide() == Dist.CLIENT) {
-			MC = Minecraft.getInstance();
+		// TODO config overhaul
+		// Path configPath = event.getSuggestedConfigurationFile().toPath();
+		// CONFIG_MANAGER = new ConfigManager(configPath, configPath.resolveSibling(MODID));
+		CONFIG_MANAGER = new ConfigManager(Paths.get("."), Paths.get("..", MODID));
 
-			HudElement.loadAllDefaults();
+		KeyEvents.registerEvents();
+		RenderEvents.registerEvents();
+		Ticker.registerEvents();
 
-			Path configPath = event.getSuggestedConfigurationFile().toPath();
-			CONFIG_MANAGER = new ConfigManager(configPath, configPath.resolveSibling(MODID));
-		}
-	}
-
-	@EventHandler
-	public void init(FMLInitializationEvent event) {
-		if(event.getSide() == Dist.CLIENT) {
-			KeyEvents.registerEvents();
-			RenderEvents.registerEvents();
-			Ticker.registerEvents();
-
-			HudElement.initAll(event);
-		}
-
-		// Message ID 0 reserved for ignored server presence message from [,1.4)
-		NET_WRAPPER.registerMessage(MessageNotifyClientHandler.class, MessageVersion.class, 2, Dist.CLIENT);
-
-		// Used to update inventory names
-		NET_WRAPPER.registerMessage(InventoryNameQuery.ServerHandler.class, InventoryNameQuery.Request.class, 3, Dist.DEDICATED_SERVER);
-		NET_WRAPPER.registerMessage(InventoryNameQuery.ClientHandler.class, InventoryNameQuery.Response.class, 4, Dist.CLIENT);
-
-		MinecraftForge.EVENT_BUS.register(this);
+		HudElement.initAll(event);
 
 		IResourceManager manager = MC.getResourceManager();
 		if(manager instanceof IReloadableResourceManager) {
@@ -126,15 +122,26 @@ public class BetterHud {
 	}
 
 	@SubscribeEvent
+	public static void commonInit(FMLCommonSetupEvent event) {
+		// Message ID 0 reserved for ignored server presence message from [,1.4)
+		NET_WRAPPER.registerMessage(2, ArtifactVersion.class, VersionHandler::encode, VersionHandler::decode, VersionHandler::consume);
+
+		// Used to update inventory names
+		NET_WRAPPER.registerMessage(3, InventoryNameReq.class, InventoryNameReq::encode, InventoryNameReq::decode, InventoryNameReq::consume);
+		NET_WRAPPER.registerMessage(4, InventoryNameRes.class, InventoryNameRes::encode, InventoryNameRes::decode, InventoryNameRes::consume);
+	}
+
+	@SubscribeEvent
 	public void onPlayerConnected(PlayerLoggedInEvent e) {
 		if(e.getPlayer() instanceof EntityPlayerMP) {
-			NET_WRAPPER.sendTo(new MessageVersion(VERSION), (EntityPlayerMP)e.getPlayer());
+			NetworkManager netManager = ((EntityPlayerMP)e.getPlayer()).connection.netManager;
+			NET_WRAPPER.sendTo(VERSION, netManager, NetworkDirection.PLAY_TO_CLIENT);
 		}
 	}
 
 	@OnlyIn(Dist.CLIENT)
 	@SubscribeEvent
-	public void onPlayerDisconnected(ClientDisconnectionFromServerEvent e) {
+	public void onPlayerDisconnected(PlayerLoggedOutEvent e) {
 		serverVersion = ZERO;
 	}
 }
