@@ -114,7 +114,7 @@ public class StatBarHealth extends StatBar<EntityLivingBase> {
 
 	@Override
 	public void render() {
-		int newUpdateCounter = MC.ingameGUI.getUpdateCounter();
+		int newUpdateCounter = MC.ingameGUI.getTicks();
 		int updateDelta = newUpdateCounter - currentUpdateCounter;
 
 		random.setSeed(newUpdateCounter);

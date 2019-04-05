@@ -38,7 +38,7 @@ public class StatBarFood extends StatBarBasic<EntityPlayer> {
 
 	@Override
 	protected int getIconBounce(int pointsIndex) {
-		if(host.getFoodStats().getSaturationLevel() <= 0 && MC.ingameGUI.getUpdateCounter() % (getCurrent() * 3 + 1) == 0) {
+		if(host.getFoodStats().getSaturationLevel() <= 0 && MC.ingameGUI.getTicks() % (getCurrent() * 3 + 1) == 0) {
 			return MathUtil.randomRange(-1, 2);
 		} else {
 			return 0;
@@ -47,7 +47,7 @@ public class StatBarFood extends StatBarBasic<EntityPlayer> {
 
 	@Override
 	public void render() {
-		random.setSeed(MC.ingameGUI.getUpdateCounter());
+		random.setSeed(MC.ingameGUI.getTicks());
 		MathUtil.setRandom(random);
 
 		super.render();

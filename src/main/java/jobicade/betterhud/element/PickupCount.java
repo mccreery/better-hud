@@ -29,6 +29,7 @@ import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemPickupEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class PickupCount extends HudElement {
@@ -49,7 +50,7 @@ public class PickupCount extends HudElement {
 	}
 
 	@Override
-	public void init(FMLInitializationEvent event) {
+	public void init(FMLClientSetupEvent event) {
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
@@ -154,12 +155,12 @@ public class PickupCount extends HudElement {
 
 		public StackNode(ItemStack stack) {
 			this.stack = stack;
-			this.updateCounter = MC.ingameGUI.getUpdateCounter();
+			this.updateCounter = MC.ingameGUI.getTicks();
 		}
 
 		public void increaseStackSize(int size) {
 			stack.setCount(stack.getCount() + size);
-			this.updateCounter = MC.ingameGUI.getUpdateCounter();
+			this.updateCounter = MC.ingameGUI.getTicks();
 		}
 
 		private Label getLabel() {
@@ -168,7 +169,7 @@ public class PickupCount extends HudElement {
 		}
 
 		private float getOpacity() {
-			return 1.0f - (MC.ingameGUI.getUpdateCounter() - updateCounter) / fadeAfter.get().floatValue();
+			return 1.0f - (MC.ingameGUI.getTicks() - updateCounter) / fadeAfter.get().floatValue();
 		}
 
 		private boolean isDead() {

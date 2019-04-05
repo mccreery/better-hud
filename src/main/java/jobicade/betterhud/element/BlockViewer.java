@@ -23,7 +23,8 @@ import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.text.TextElement;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.network.InventoryNameQuery;
+import jobicade.betterhud.network.InventoryNameReq;
+import jobicade.betterhud.network.InventoryNameRes;
 import jobicade.betterhud.util.GlUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -32,15 +33,20 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.INameable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceFluidMode;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 public class BlockViewer extends TextElement {
 	private SettingBoolean showBlock, showIds, invNames, storeNbt;
@@ -73,7 +79,7 @@ public class BlockViewer extends TextElement {
 	}
 
 	@Override
-	public void init(FMLInitializationEvent event) {
+	public void init(FMLClientSetupEvent event) {
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 
@@ -92,9 +98,9 @@ public class BlockViewer extends TextElement {
 	public boolean shouldRender(Event event) {
 		if(!super.shouldRender(event)) return false;
 
-		trace = MC.getRenderViewEntity().rayTrace(HudElement.GLOBAL.getBillboardDistance(), 1f);
+		trace = MC.getRenderViewEntity().rayTrace(HudElement.GLOBAL.getBillboardDistance(), 1f, RayTraceFluidMode.NEVER);
 
-		if(trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK) {
+		if(trace != null && trace.type == RayTraceResult.Type.BLOCK) {
 			state = MC.world.getBlockState(trace.getBlockPos());
 			stack = getDisplayStack(trace, state);
 			return true;
@@ -160,11 +166,11 @@ public class BlockViewer extends TextElement {
 	 *
 	 * @see net.minecraftforge.common.ForgeHooks#onPickBlock(RayTraceResult, net.minecraft.entity.player.EntityPlayer, net.minecraft.world.World) */
 	private ItemStack getDisplayStack(RayTraceResult trace, IBlockState state) {
-		ItemStack stack = state.getBlock().getPickBlock(state, trace, MC.world, trace.getBlockPos(), MC.player);
+		ItemStack stack = state.getPickBlock(trace, MC.world, trace.getBlockPos(), MC.player);
 
 		if(isStackEmpty(stack)) {
 			// Pick block is disabled, however we can grab the information directly
-			stack = new ItemStack(state.getBlock(), state.getBlock().getMetaFromState(state));
+			stack = new ItemStack(state.getBlock());
 
 			if(isStackEmpty(stack)) { // There's no registered ItemBlock, no stack exists
 				return null;
@@ -198,7 +204,7 @@ public class BlockViewer extends TextElement {
 		if(invNames.get() && state.getBlock().hasTileEntity(state)) {
 			TileEntity tileEntity = MC.world.getTileEntity(trace.getBlockPos());
 
-			if(tileEntity instanceof IWorldNameable) {
+			if(tileEntity instanceof INameable) {
 				ITextComponent invName = ensureInvName(trace.getBlockPos());
 
 				if(invName != null) {
@@ -221,7 +227,7 @@ public class BlockViewer extends TextElement {
 
 	@OnlyIn(Dist.CLIENT)
 	@SubscribeEvent
-	public void onPlayerDisconnected(ClientDisconnectionFromServerEvent event) {
+	public void onPlayerDisconnected(PlayerLoggedOutEvent event) {
 		nameCache.clear();
 	}
 
@@ -234,7 +240,7 @@ public class BlockViewer extends TextElement {
 	@OnlyIn(Dist.DEDICATED_SERVER)
 	@SubscribeEvent
 	public void onBlockBreak(BlockEvent.BreakEvent event) {
-		BetterHud.NET_WRAPPER.sendToDimension(new InventoryNameQuery.Response(event.getPos(), null), event.getWorld().provider.getDimension());
+		BetterHud.NET_WRAPPER.sendToDimension(new InventoryNameRes(event.getPos(), null), event.getWorld().getDimension());
 	}
 
 	public static final Map<BlockPos, ITextComponent> nameCache = new HashMap<BlockPos, ITextComponent>();
@@ -249,7 +255,7 @@ public class BlockViewer extends TextElement {
 	 * of the inventory, it will return that value */
 	private static ITextComponent ensureInvName(BlockPos pos) {
 		if(!nameCache.containsKey(pos)) {
-			BetterHud.NET_WRAPPER.sendToServer(new InventoryNameQuery.Request(pos));
+			BetterHud.NET_WRAPPER.sendToServer(new InventoryNameReq(pos));
 			nameCache.put(pos, null);
 		}
 		ITextComponent name = nameCache.get(pos);
@@ -257,7 +263,7 @@ public class BlockViewer extends TextElement {
 		if(name != null) {
 			return name;
 		} else {
-			return MC.world.getTileEntity(pos).getDisplayName();
+			return ((INameable)MC.world.getTileEntity(pos)).getDisplayName();
 		}
 	}
 

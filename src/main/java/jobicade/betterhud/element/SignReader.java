@@ -20,6 +20,7 @@ import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.RayTraceFluidMode;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.eventbus.api.Event;
 
@@ -59,7 +60,7 @@ public class SignReader extends HudElement {
 	}
 
 	private TileEntitySign getSign() {
-		RayTraceResult trace = MC.getRenderViewEntity().rayTrace(200, 1.0F);
+		RayTraceResult trace = MC.getRenderViewEntity().rayTrace(200, 1.0F, RayTraceFluidMode.NEVER);
 		IBlockState state = MC.world.getBlockState(trace.getBlockPos());
 
 		if(state.getBlock() instanceof ITileEntityProvider) {
