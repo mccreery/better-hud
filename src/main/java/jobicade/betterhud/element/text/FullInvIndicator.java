@@ -5,12 +5,12 @@ import static jobicade.betterhud.BetterHud.MC;
 import java.util.Arrays;
 import java.util.List;
 
-import net.minecraft.client.resources.I18n;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.geom.Direction;
+import net.minecraft.client.resources.I18n;
+import net.minecraftforge.eventbus.api.Event;
 
 public class FullInvIndicator extends TextElement {
 	private SettingBoolean offHand;

@@ -1,8 +1,7 @@
 package jobicade.betterhud.network;
 
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import javax.xml.ws.handler.MessageContext;
+
 import jobicade.betterhud.BetterHud;
 
 public class MessageNotifyClientHandler implements IMessageHandler<MessageVersion, IMessage> {

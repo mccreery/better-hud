@@ -93,12 +93,12 @@ public class GuiReorder extends GuiElements {
 
 	@Override
 	public void initGui() {
-		buttonList.clear();
+		buttons.clear();
 
-		buttonList.add(moveTop);
-		buttonList.add(moveUp);
-		buttonList.add(moveDown);
-		buttonList.add(moveBottom);
+		buttons.add(moveTop);
+		buttons.add(moveUp);
+		buttons.add(moveDown);
+		buttons.add(moveBottom);
 		select(null);
 	}
 

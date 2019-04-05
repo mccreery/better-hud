@@ -39,15 +39,15 @@ import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public final class RenderEvents {
 	private RenderEvents() {}
 
@@ -57,7 +57,7 @@ public final class RenderEvents {
 
 	@SubscribeEvent
 	public void onRenderTick(RenderGameOverlayEvent.Pre event) {
-		MC.mcProfiler.startSection(MODID);
+		MC.profiler.startSection(MODID);
 
 		boolean enabled = BetterHud.isEnabled();
 		suppressVanilla(enabled);
@@ -65,12 +65,12 @@ public final class RenderEvents {
 		if(enabled && event.getType() == ElementType.ALL) {
 			renderOverlay(event);
 		}
-		MC.mcProfiler.endSection();
+		MC.profiler.endSection();
 	}
 
 	@SubscribeEvent
 	public void worldRender(RenderWorldLastEvent event) {
-		MC.mcProfiler.startSection(MODID);
+		MC.profiler.startSection(MODID);
 
 		if(BetterHud.isEnabled()) {
 			Entity entity = getMouseOver(HudElement.GLOBAL.getBillboardDistance(), event.getPartialTicks());
@@ -79,7 +79,7 @@ public final class RenderEvents {
 				renderMobInfo(new RenderMobInfoEvent(event, (EntityLivingBase)entity));
 			}
 		}
-		MC.mcProfiler.endSection();
+		MC.profiler.endSection();
 	}
 
 	/**
@@ -87,9 +87,9 @@ public final class RenderEvents {
 	 * This is only used for {@link #onRenderTick(net.minecraftforge.client.event.RenderGameOverlayEvent.Pre)}
 	 */
 	public static void beginOverlayState() {
-		GlStateManager.tryBlendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
+		GlStateManager.blendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
 		GlStateManager.enableBlend();
-		GlStateManager.disableAlpha();
+		GlStateManager.disableAlphaTest();
 
 		MC.getTextureManager().bindTexture(Gui.ICONS);
 		GlStateManager.shadeModel(GL11.GL_SMOOTH);
@@ -100,9 +100,9 @@ public final class RenderEvents {
 	 * This is only used for {@link #onRenderTick(net.minecraftforge.client.event.RenderGameOverlayEvent.Pre))}
 	 */
 	public static void endOverlayState() {
-		GlStateManager.tryBlendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
+		GlStateManager.blendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
 		GlStateManager.disableBlend();
-		GlStateManager.disableAlpha();
+		GlStateManager.disableAlphaTest();
 
 		GlStateManager.bindTexture(0);
 		GlStateManager.shadeModel(GL11.GL_FLAT);
@@ -139,7 +139,7 @@ public final class RenderEvents {
 	 * Renders overlay (normal HUD) elements to the screen.
 	 */
 	private void renderOverlay(RenderGameOverlayEvent.Pre event) {
-		MANAGER.reset(event.getResolution());
+		MANAGER.reset();
 		beginOverlayState();
 
 		if(HudElement.GLOBAL.isDebugMode()) {
@@ -158,9 +158,9 @@ public final class RenderEvents {
 	private void renderMobInfo(RenderMobInfoEvent event) {
 		MANAGER.reset(Point.zero());
 
-		GlStateManager.disableDepth();
+		GlStateManager.disableDepthTest();
 		GlStateManager.enableBlend();
-		GlStateManager.disableAlpha();
+		GlStateManager.disableAlphaTest();
 		Color.WHITE.apply();
 		MC.getTextureManager().bindTexture(Gui.ICONS);
 
@@ -178,8 +178,8 @@ public final class RenderEvents {
 		GlStateManager.popMatrix();
 
 		MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-		GlStateManager.enableAlpha();
-		GlStateManager.enableDepth();
+		GlStateManager.enableAlphaTest();
+		GlStateManager.enableDepthTest();
 		GlStateManager.disableBlend();
 	}
 
@@ -192,7 +192,7 @@ public final class RenderEvents {
 
 		Entity pointedEntity = null;
 
-		MC.mcProfiler.startSection("pick");
+		MC.profiler.startSection("pick");
 
 		RayTraceResult trace = viewEntity.rayTrace(distance, partialTicks);
 		Vec3d eyePosition = viewEntity.getPositionEyes(partialTicks);
@@ -235,7 +235,7 @@ public final class RenderEvents {
 				}
 			}
 		}
-		MC.mcProfiler.endSection();
+		MC.profiler.endSection();
 		return pointedEntity;
 	}
 }

@@ -105,14 +105,14 @@ public class GuiActionButton extends GuiButton {
 		drawButton(bounds, new Point(mouseX, mouseY), partialTicks);
 
 		if(tooltip != null && hovered) {
-			GlStateManager.enableDepth();
+			GlStateManager.enableDepthTest();
 			GlStateManager.pushMatrix();
 
-			GlStateManager.translate(0, 0, 1);
+			GlStateManager.translatef(0, 0, 1);
 			MC.currentScreen.drawHoveringText(tooltip, mouseX, mouseY);
 
 			GlStateManager.popMatrix();
-			GlStateManager.disableDepth();
+			GlStateManager.disableDepthTest();
 		}
 		Color.WHITE.apply();
 	}

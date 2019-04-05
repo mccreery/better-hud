@@ -26,6 +26,6 @@ public class BiomeName extends TextElement {
 	protected List<String> getText() {
 		BlockPos pos = new BlockPos((int)MC.player.posX, 0, (int)MC.player.posZ);
 
-		return Arrays.asList(getLocalizedName() + ": " + MC.world.getBiomeForCoordsBody(pos).getBiomeName());
+		return Arrays.asList(getLocalizedName() + ": " + MC.world.getBiomeBody(pos).getDisplayName());
 	}
 }

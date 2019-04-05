@@ -1,8 +1,8 @@
 package jobicade.betterhud.element;
 
+import static jobicade.betterhud.BetterHud.MANAGER;
 import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
-import static jobicade.betterhud.BetterHud.MANAGER;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -11,6 +11,20 @@ import java.util.Map;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
+import org.apache.maven.artifact.versioning.InvalidVersionSpecificationException;
+import org.apache.maven.artifact.versioning.VersionRange;
+
+import jobicade.betterhud.BetterHud;
+import jobicade.betterhud.element.settings.DirectionOptions;
+import jobicade.betterhud.element.settings.Legend;
+import jobicade.betterhud.element.settings.Setting;
+import jobicade.betterhud.element.settings.SettingBoolean;
+import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.element.text.TextElement;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.network.InventoryNameQuery;
+import jobicade.betterhud.util.GlUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.renderer.GlStateManager;
@@ -21,29 +35,12 @@ import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.IWorldNameable;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.world.BlockEvent;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.Event;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
-import net.minecraftforge.fml.common.versioning.InvalidVersionSpecificationException;
-import net.minecraftforge.fml.common.versioning.VersionRange;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import jobicade.betterhud.BetterHud;
-import jobicade.betterhud.element.settings.DirectionOptions;
-import jobicade.betterhud.element.settings.Legend;
-import jobicade.betterhud.element.settings.Setting;
-import jobicade.betterhud.element.settings.SettingBoolean;
-import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.element.text.TextElement;
-import jobicade.betterhud.network.InventoryNameQuery;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.util.GlUtil;
 
 public class BlockViewer extends TextElement {
 	private SettingBoolean showBlock, showIds, invNames, storeNbt;
@@ -137,7 +134,7 @@ public class BlockViewer extends TextElement {
 
 	@Override
 	public Rect render(Event event) {
-		GlStateManager.disableDepth();
+		GlStateManager.disableDepthTest();
 		return super.render(event);
 	}
 
@@ -222,19 +219,19 @@ public class BlockViewer extends TextElement {
 		return String.format("%s(%s:%d/#%04d)", ChatFormatting.YELLOW, name, meta, id);
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	@SubscribeEvent
 	public void onPlayerDisconnected(ClientDisconnectionFromServerEvent event) {
 		nameCache.clear();
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	@SubscribeEvent
 	public void onPlayerChangeDimension(PlayerChangedDimensionEvent event) {
 		nameCache.clear();
 	}
 
-	@SideOnly(Side.SERVER)
+	@OnlyIn(Dist.DEDICATED_SERVER)
 	@SubscribeEvent
 	public void onBlockBreak(BlockEvent.BreakEvent event) {
 		BetterHud.NET_WRAPPER.sendToDimension(new InventoryNameQuery.Response(event.getPos(), null), event.getWorld().provider.getDimension());

@@ -6,22 +6,22 @@ import java.util.List;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import jobicade.betterhud.element.settings.DirectionOptions;
+import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.render.Color;
+import jobicade.betterhud.render.Grid;
+import jobicade.betterhud.render.Label;
+import jobicade.betterhud.render.Quad;
 import net.minecraft.block.ITileEntityProvider;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraftforge.fml.common.eventhandler.Event;
-import jobicade.betterhud.element.settings.DirectionOptions;
-import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.render.Color;
-import jobicade.betterhud.render.Grid;
-import jobicade.betterhud.render.Label;
-import jobicade.betterhud.render.Quad;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.geom.Point;
+import net.minecraftforge.eventbus.api.Event;
 
 public class SignReader extends HudElement {
 	private static final ResourceLocation SIGN_TEXTURE = new ResourceLocation("textures/entity/sign.png");

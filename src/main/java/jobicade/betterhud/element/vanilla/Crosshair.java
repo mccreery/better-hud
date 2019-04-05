@@ -131,14 +131,14 @@ public class Crosshair extends OverrideElement {
 			Rect crosshair = new Rect(texture).anchor(MANAGER.getScreen(), Direction.CENTER).translate(1, 1);
 
 			GlStateManager.blendFunc(SourceFactor.ONE_MINUS_DST_COLOR, DestFactor.ONE_MINUS_SRC_COLOR);
-			GlStateManager.enableAlpha();
+			GlStateManager.enableAlphaTest();
 			GlUtil.drawRect(crosshair, texture);
 
 			if(attackIndicator.get()) {
 				bounds = renderAttackIndicator();
 			}
 			GlUtil.blendFuncSafe(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
-			GlStateManager.disableAlpha();
+			GlStateManager.disableAlphaTest();
 		}
 		return bounds;
 	}

@@ -4,26 +4,26 @@ import static jobicade.betterhud.BetterHud.MC;
 
 import java.util.List;
 
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.item.ItemArmor;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Size;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.render.Boxed;
 import jobicade.betterhud.render.DefaultBoxed;
 import jobicade.betterhud.render.Grid;
 import jobicade.betterhud.render.Label;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.geom.Point;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.item.ItemArmor;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.eventbus.api.Event;
 
 public class ArmorBars extends EquipmentDisplay {
 	private SettingChoose barType;

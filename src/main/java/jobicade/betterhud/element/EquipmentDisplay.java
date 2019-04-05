@@ -3,8 +3,6 @@ package jobicade.betterhud.element;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingChoose;
@@ -12,6 +10,8 @@ import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.settings.SettingWarnings;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.MathUtil;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.item.ItemStack;
 
 public abstract class EquipmentDisplay extends HudElement {
 	private SettingBoolean showName;
@@ -61,7 +61,7 @@ public abstract class EquipmentDisplay extends HudElement {
 	}
 
 	protected boolean showDurability(ItemStack stack) {
-		return showDurability.get() && (showUndamaged.get() ? stack.isItemStackDamageable() : stack.isItemDamaged());
+		return showDurability.get() && (showUndamaged.get() ? stack.isDamageable() : stack.isDamaged());
 	}
 
 	protected String getText(ItemStack stack) {
@@ -69,11 +69,11 @@ public abstract class EquipmentDisplay extends HudElement {
 		ArrayList<String> parts = new ArrayList<String>();
 
 		if(this.showName.get()) {
-			parts.add(stack.getDisplayName());
+			parts.add(stack.getDisplayName().getFormattedText());
 		}
 
 		int maxDurability = stack.getMaxDamage();
-		int durability = maxDurability - stack.getItemDamage();
+		int durability = maxDurability - stack.getDamage();
 
 		float value = (float)durability / (float)maxDurability;
 
@@ -87,7 +87,7 @@ public abstract class EquipmentDisplay extends HudElement {
 
 		String text = String.join(" - ", parts);
 
-		if(stack.isItemStackDamageable()) {
+		if(stack.isDamageable()) {
 			int count = warnings.getWarning(value);
 			if(count > 0) text += ' ' + I18n.format("betterHud.setting.warning." + count);
 		}

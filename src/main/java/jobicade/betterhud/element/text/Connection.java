@@ -5,15 +5,13 @@ import static jobicade.betterhud.BetterHud.MC;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.client.network.NetworkPlayerInfo;
-import net.minecraft.client.resources.I18n;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
+import net.minecraft.client.network.NetworkPlayerInfo;
+import net.minecraft.client.resources.I18n;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 public class Connection extends TextElement {
 	private SettingBoolean playerCount, showIp, latency;

@@ -6,14 +6,9 @@ import static jobicade.betterhud.BetterHud.MC;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.client.resources.I18n;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.Event;
-import net.minecraftforge.fml.common.versioning.InvalidVersionSpecificationException;
-import net.minecraftforge.fml.common.versioning.VersionRange;
+import org.apache.maven.artifact.versioning.InvalidVersionSpecificationException;
+import org.apache.maven.artifact.versioning.VersionRange;
+
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.entityinfo.HorseInfo;
 import jobicade.betterhud.element.entityinfo.MobInfo;
@@ -54,6 +49,10 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.IGetSet.IBoolean;
 import jobicade.betterhud.util.SortField;
 import jobicade.betterhud.util.Sorter;
+import net.minecraft.client.resources.I18n;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.eventbus.api.Event;
 
 public abstract class HudElement implements IBoolean {
 	/** A list of all the registered elements */
@@ -263,13 +262,13 @@ public abstract class HudElement implements IBoolean {
 	 * should be rendered and caches the bounds so they are available from {@link #getLastRect()} */
 	public final void tryRender(Event event) {
 		if(shouldRender(event) && isEnabledAndSupported()) {
-			MC.mcProfiler.startSection(name);
+			MC.profiler.startSection(name);
 
 			lastBounds = render(event);
 			if(lastBounds == null) lastBounds = Rect.empty();
 			postRender(event);
 
-			MC.mcProfiler.endSection();
+			MC.profiler.endSection();
 		}
 	}
 

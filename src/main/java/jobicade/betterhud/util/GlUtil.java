@@ -14,7 +14,6 @@ import jobicade.betterhud.render.Color;
 import jobicade.betterhud.render.Label;
 import jobicade.betterhud.render.Quad;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
@@ -33,7 +32,7 @@ public final class GlUtil {
 	 * @see GlStateManager#scale(float, float, float)
 	 */
 	public static void scale(float scale) {
-		GlStateManager.scale(scale, scale, scale);
+		GlStateManager.scalef(scale, scale, scale);
 	}
 
 	/** @see Gui#drawRect(int, int, int, int, int) */
@@ -76,14 +75,14 @@ public final class GlUtil {
 	/** Draws text with black borders on all sides */
 	public static void drawBorderedString(String text, int x, int y, Color color) {
 		// Borders
-		MC.fontRenderer.drawString(text, x + 1, y, Color.BLACK.getPacked(), false);
-		MC.fontRenderer.drawString(text, x - 1, y, Color.BLACK.getPacked(), false);
-		MC.fontRenderer.drawString(text, x, y + 1, Color.BLACK.getPacked(), false);
-		MC.fontRenderer.drawString(text, x, y - 1, Color.BLACK.getPacked(), false);
+		MC.fontRenderer.drawString(text, x + 1, y, Color.BLACK.getPacked());
+		MC.fontRenderer.drawString(text, x - 1, y, Color.BLACK.getPacked());
+		MC.fontRenderer.drawString(text, x, y + 1, Color.BLACK.getPacked());
+		MC.fontRenderer.drawString(text, x, y - 1, Color.BLACK.getPacked());
 
-		MC.fontRenderer.drawString(text, x, y, color.getPacked(), false);
+		MC.fontRenderer.drawString(text, x, y, color.getPacked());
 		Color.WHITE.apply();
-		GlStateManager.disableAlpha();
+		GlStateManager.disableAlphaTest();
 		MC.getTextureManager().bindTexture(Gui.ICONS);
 	}
 
@@ -99,11 +98,11 @@ public final class GlUtil {
 	 * @see net.minecraft.client.renderer.RenderItem#renderItemAndEffectIntoGUI(ItemStack, int, int)
 	 * @see RenderHelper#disableStandardItemLighting() */
 	public static void renderSingleItem(ItemStack stack, int x, int y) {
-		GlStateManager.enableDepth();
+		GlStateManager.enableDepthTest();
 		RenderHelper.enableGUIStandardItemLighting();
-		MC.getRenderItem().renderItemAndEffectIntoGUI(stack, x, y);
+		MC.getItemRenderer().renderItemAndEffectIntoGUI(stack, x, y);
 		RenderHelper.disableStandardItemLighting();
-		GlStateManager.disableDepth();
+		GlStateManager.disableDepthTest();
 		MC.getTextureManager().bindTexture(Gui.ICONS);
 		blendFuncSafe(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
 		GlStateManager.shadeModel(GL11.GL_SMOOTH);
@@ -116,29 +115,29 @@ public final class GlUtil {
 		if(stack.isEmpty()) return;
 		float animationTicks = stack.getAnimationsToGo() - partialTicks;
 
-		GlStateManager.enableDepth();
+		GlStateManager.enableDepthTest();
 		RenderHelper.enableGUIStandardItemLighting();
 		if(animationTicks > 0) {
 			float factor = 1 + animationTicks / 5;
 
 			GlStateManager.pushMatrix();
-			GlStateManager.translate(bounds.getX() + 8, bounds.getY() + 12, 0);
-			GlStateManager.scale(1 / factor, (factor + 1) / 2, 1);
-			GlStateManager.translate(-(bounds.getX() + 8), -(bounds.getY() + 12), 0.0F);
+			GlStateManager.translatef(bounds.getX() + 8, bounds.getY() + 12, 0);
+			GlStateManager.scalef(1 / factor, (factor + 1) / 2, 1);
+			GlStateManager.translatef(-(bounds.getX() + 8), -(bounds.getY() + 12), 0.0F);
 
-			MC.getRenderItem().renderItemAndEffectIntoGUI(MC.player, stack, bounds.getX(), bounds.getY());
+			MC.getItemRenderer().renderItemAndEffectIntoGUI(MC.player, stack, bounds.getX(), bounds.getY());
 
 			GlStateManager.popMatrix();
 		} else {
-			MC.getRenderItem().renderItemAndEffectIntoGUI(MC.player, stack, bounds.getX(), bounds.getY());
+			MC.getItemRenderer().renderItemAndEffectIntoGUI(MC.player, stack, bounds.getX(), bounds.getY());
 		}
 
-		MC.getRenderItem().renderItemOverlays(MC.fontRenderer, stack, bounds.getX(), bounds.getY());
+		MC.getItemRenderer().renderItemOverlays(MC.fontRenderer, stack, bounds.getX(), bounds.getY());
 
 		// Possible side-effects
 		RenderHelper.disableStandardItemLighting();
-		GlStateManager.disableDepth();
-		GlStateManager.disableAlpha();
+		GlStateManager.disableDepthTest();
+		GlStateManager.disableAlphaTest();
 		MC.getTextureManager().bindTexture(Gui.ICONS);
 		GlUtil.blendFuncSafe(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
 		GlStateManager.shadeModel(GL11.GL_SMOOTH);
@@ -185,21 +184,21 @@ public final class GlUtil {
 		double dz = (entity.prevPosZ + (entity.posZ - entity.prevPosZ) * partialTicks) - (MC.player.prevPosZ + (MC.player.posZ - MC.player.prevPosZ) * partialTicks);
 
 		dy += entity.height + 0.5;
-		GlStateManager.translate(dx, dy, dz);
+		GlStateManager.translated(dx, dy, dz);
 
 		dy -= MC.player.getEyeHeight();
 		float distance = (float)Math.sqrt(dx*dx + dy*dy + dz*dz);
 		scale(distance * (scaleFactor + 0.5f) / 300f);
 
-		GlStateManager.rotate(-MC.player.rotationYaw,  0, 1, 0);
-		GlStateManager.rotate(MC.player.rotationPitch, 1, 0, 0);
-		GlStateManager.rotate(180, 0, 0, 1);
+		GlStateManager.rotatef(-MC.player.rotationYaw,  0, 1, 0);
+		GlStateManager.rotatef(MC.player.rotationPitch, 1, 0, 0);
+		GlStateManager.rotatef(180, 0, 0, 1);
 	}
 
 	/** {@code progress} defaults to the durability of {@code stack}
 	 * @see #drawProgressBar(Rect, float, boolean) */
 	public static void drawDamageBar(Rect bounds, ItemStack stack, boolean vertical) {
-		float progress = (float)(stack.getMaxDamage() - stack.getItemDamage()) / stack.getMaxDamage();
+		float progress = (float)(stack.getMaxDamage() - stack.getDamage()) / stack.getMaxDamage();
 		drawProgressBar(bounds, progress, vertical);
 	}
 
@@ -288,6 +287,7 @@ public final class GlUtil {
      * }
 	 * </pre></blockquote></p>
 	 */
+	// TODO check if this desync has been fixed with 1.13
 	public static void blendFuncSafe(SourceFactor srcFactor, DestFactor dstFactor, SourceFactor srcFactorAlpha, DestFactor dstFactorAlpha) {
 		// We need to trick the state manager into updating the cache
 		EnumSet<SourceFactor> factors = EnumSet.allOf(SourceFactor.class);
@@ -297,15 +297,15 @@ public final class GlUtil {
 		// Get a factor which is distinct from both current and new factor
 		SourceFactor dummyFactor = factors.iterator().next();
 		// Ensure cache differs from our desired values
-		GlStateManager.tryBlendFuncSeparate(dummyFactor, dstFactor, srcFactorAlpha, dstFactorAlpha);
+		GlStateManager.blendFuncSeparate(dummyFactor, dstFactor, srcFactorAlpha, dstFactorAlpha);
 		// Guarantee cache updates correctly
-		GlStateManager.tryBlendFuncSeparate(srcFactor, dstFactor, srcFactorAlpha, dstFactorAlpha);
+		GlStateManager.blendFuncSeparate(srcFactor, dstFactor, srcFactorAlpha, dstFactorAlpha);
 	}
 
-	public static void beginScissor(Rect scissorRect, ScaledResolution resolution) {
+	public static void beginScissor(Rect scissorRect) {
 		final Rect scaledRect = scissorRect
-			.withY(resolution.getScaledHeight() - scissorRect.getBottom())
-			.scale(resolution.getScaleFactor());
+			.withY(MC.mainWindow.getScaledHeight() - scissorRect.getBottom())
+			.scale(MC.mainWindow.getScaledWidth());
 
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
 		GL11.glScissor(scaledRect.getX(), scaledRect.getY(), scaledRect.getWidth(), scaledRect.getHeight());

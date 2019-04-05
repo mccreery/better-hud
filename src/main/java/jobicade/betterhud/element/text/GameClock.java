@@ -9,18 +9,18 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
-import net.minecraft.client.resources.I18n;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingChoose;
-import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.util.GlUtil;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.eventbus.api.Event;
 
 public class GameClock extends Clock {
 	private static final ItemStack BED = new ItemStack(Items.BED);

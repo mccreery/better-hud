@@ -4,20 +4,20 @@ import static jobicade.betterhud.BetterHud.MC;
 
 import java.util.List;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemArrow;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
-import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.geom.Point;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.init.Items;
+import net.minecraft.item.ItemArrow;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.eventbus.api.Event;
 
 public class ArrowCount extends HudElement {
 	private static final ItemStack ARROW = new ItemStack(Items.ARROW, 1);

@@ -4,18 +4,18 @@ import static jobicade.betterhud.BetterHud.MC;
 
 import java.util.List;
 
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.render.Color;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.eventbus.api.Event;
 
 public class HandBar extends EquipmentDisplay {
 	private SettingBoolean showItem, offHand, showBars, showNonTools;
@@ -46,7 +46,7 @@ public class HandBar extends EquipmentDisplay {
 	}
 
 	public void renderBar(ItemStack stack, int x, int y) {
-		boolean isTool = stack.isItemStackDamageable();
+		boolean isTool = stack.isDamageable();
 		if(stack == null || !showNonTools.get() && !isTool) return;
 
 		String text = getText(stack);
@@ -59,21 +59,21 @@ public class HandBar extends EquipmentDisplay {
 		}
 
 		if(showItem.get()) {
-			MC.mcProfiler.startSection("items");
+			MC.profiler.startSection("items");
 			GlUtil.renderSingleItem(stack, x + 90 - width / 2, y);
-			MC.mcProfiler.endSection();
+			MC.profiler.endSection();
 		}
 
 		if(text != null) {
-			MC.mcProfiler.startSection("text");
+			MC.profiler.startSection("text");
 			GlUtil.drawString(text, new Point(x + 90 - width / 2 + (showItem.get() ? 21 : 0), y + 4), Direction.NORTH_WEST, Color.WHITE);
-			MC.mcProfiler.endSection();
+			MC.profiler.endSection();
 		}
 
 		if(isTool && showBars.get()) {
-			MC.mcProfiler.startSection("bars");
+			MC.profiler.startSection("bars");
 			GlUtil.drawDamageBar(new Rect(x, y + 16, 180, 2), stack, false);
-			MC.mcProfiler.endSection();
+			MC.profiler.endSection();
 		}
 	}
 

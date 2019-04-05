@@ -40,6 +40,6 @@ public class ResourceConfigSlot implements ConfigSlot {
 
     @Override
     public String getName() {
-        return com.google.common.io.Files.getNameWithoutExtension(path.getResourcePath());
+        return com.google.common.io.Files.getNameWithoutExtension(path.getPath());
     }
 }

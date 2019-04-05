@@ -92,7 +92,7 @@ public class StatBarHealth extends StatBar<EntityLivingBase> {
 			fullX = 52;
 		}
 
-		int y = host.getEntityWorld().getWorldInfo().isHardcoreModeEnabled() ? 45 : 0;
+		int y = host.getEntityWorld().getWorldInfo().isHardcore() ? 45 : 0;
 
 		if(flash % 6 >= 3) {
 			icons.add(new Rect(25, y, 9, 9));

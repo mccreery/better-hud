@@ -19,10 +19,9 @@ import java.util.stream.Stream;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
 
-import jobicade.betterhud.config.HudConfig;
-import net.minecraft.client.resources.IResource;
-import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.client.resources.IResourceManagerReloadListener;
+import net.minecraft.resources.IResource;
+import net.minecraft.resources.IResourceManager;
+import net.minecraft.resources.IResourceManagerReloadListener;
 import net.minecraft.util.ResourceLocation;
 
 /**

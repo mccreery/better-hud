@@ -3,7 +3,6 @@ package jobicade.betterhud.geom;
 import java.io.Serializable;
 
 import jobicade.betterhud.geom.Size;
-import net.minecraft.client.gui.ScaledResolution;
 
 /**
  * Represents an immutable 2D point in integer precision, typically in screen
@@ -38,17 +37,6 @@ public class Point implements Serializable {
     public Point(Point point) {
         this.x = point.x;
         this.y = point.y;
-    }
-
-    /**
-     * Conversion constructor from scaled resolutions. Uses the scaled width
-     * and height to populate X and Y.
-     *
-     * @param resolution The resolution to get width and height from.
-     */
-    public Point(ScaledResolution resolution) {
-        this.x = resolution.getScaledWidth();
-        this.y = resolution.getScaledHeight();
     }
 
     /**

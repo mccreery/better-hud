@@ -8,21 +8,21 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.client.resources.I18n;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.HudElement.SortType;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
-import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.Paginator;
-import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.util.SortField;
+import net.minecraft.client.resources.I18n;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class GuiHudMenu extends GuiMenuScreen {
 	private final Map<HudElement, ButtonRow> rows = new HashMap<HudElement, ButtonRow>(HudElement.ELEMENTS.size());
 	final Paginator<HudElement> paginator = new Paginator<HudElement>();
@@ -67,7 +67,7 @@ public class GuiHudMenu extends GuiMenuScreen {
 
 		for(HudElement element : paginator.getPage()) {
 			ButtonRow row = getRow(element);
-			buttonList.addAll(row.getButtons());
+			buttons.addAll(row.getButtons());
 
 			row.setBounds(buttonRect);
 			row.update();
@@ -97,18 +97,18 @@ public class GuiHudMenu extends GuiMenuScreen {
 		lastPage.setBounds(thirdWidth.anchor(buttons, Direction.NORTH_WEST));
 		nextPage.setBounds(thirdWidth.anchor(buttons, Direction.NORTH_EAST));
 
-		buttonList.clear();
+		this.buttons.clear();
 
-		buttonList.add(returnToGame);
-		buttonList.addAll(globalRow.getButtons());
+		this.buttons.add(returnToGame);
+		this.buttons.addAll(globalRow.getButtons());
 		globalRow.update();
 
-		buttonList.add(toggleAll);
-		buttonList.add(reorder);
-		buttonList.add(resetDefaults);
+		this.buttons.add(toggleAll);
+		this.buttons.add(reorder);
+		this.buttons.add(resetDefaults);
 
-		buttonList.add(lastPage);
-		buttonList.add(nextPage);
+		this.buttons.add(lastPage);
+		this.buttons.add(nextPage);
 
 		List<GuiActionButton> indexerControls = getIndexControls(SortType.values());
 		Rect sortButton = new Rect(75, 20);
@@ -119,7 +119,7 @@ public class GuiHudMenu extends GuiMenuScreen {
 			button.setBounds(sortButton);
 			sortButton = sortButton.withX(sortButton.getRight() + SPACER);
 		}
-		buttonList.addAll(indexerControls);
+		this.buttons.addAll(indexerControls);
 	}
 
 	private void setAll(boolean enabled) {

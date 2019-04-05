@@ -1,50 +1,45 @@
 package jobicade.betterhud;
 
 import java.nio.file.Path;
-import java.util.Arrays;
 
 import org.apache.logging.log4j.Logger;
+import org.apache.maven.artifact.versioning.ArtifactVersion;
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
+import org.apache.maven.artifact.versioning.VersionRange;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.resources.IReloadableResourceManager;
-import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import net.minecraftforge.fml.common.versioning.ArtifactVersion;
-import net.minecraftforge.fml.common.versioning.DefaultArtifactVersion;
-import net.minecraftforge.fml.common.versioning.Restriction;
-import net.minecraftforge.fml.common.versioning.VersionRange;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import jobicade.betterhud.config.ConfigManager;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.HudElement.SortType;
 import jobicade.betterhud.events.KeyEvents;
 import jobicade.betterhud.events.RenderEvents;
+import jobicade.betterhud.geom.LayoutManager;
 import jobicade.betterhud.network.InventoryNameQuery;
 import jobicade.betterhud.network.MessageNotifyClientHandler;
 import jobicade.betterhud.network.MessageVersion;
-import jobicade.betterhud.geom.LayoutManager;
 import jobicade.betterhud.util.Tickable.Ticker;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.resources.IReloadableResourceManager;
+import net.minecraft.resources.IResourceManager;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.fml.network.NetworkRegistry;
+import net.minecraftforge.fml.network.simple.SimpleChannel;
 
-@Mod(modid = BetterHud.MODID, name = "Better HUD", version = BetterHud.VERSION_STRING,
+@Mod(BetterHud.MODID)
+/* @Mod(modid = BetterHud.MODID, name = "Better HUD", version = BetterHud.VERSION_STRING,
 	updateJSON = "https://raw.githubusercontent.com/mccreery/better-hud/develop/update.json",
-	dependencies = "required-after:forge@[14.23.1.2557,)")
+	dependencies = "required-after:forge@[14.23.1.2557,)") */
 public class BetterHud {
 	public static final String MODID = "betterhud";
 
-	public static final VersionRange ALL = VersionRange.newRange(null, Arrays.asList(Restriction.EVERYTHING));
+	public static final VersionRange ALL = VersionRange.createFromVersionSpec("*"););
 	public static final ArtifactVersion ZERO = new DefaultArtifactVersion("0.0");
 
 	protected static final String VERSION_STRING = "1.4";
@@ -61,7 +56,7 @@ public class BetterHud {
 		return logger;
 	}
 
-	@SideOnly(Side.CLIENT) public static Minecraft MC;
+	@OnlyIn(Dist.CLIENT) public static Minecraft MC;
 
 	public static final ResourceLocation ICONS     = Gui.ICONS;
 	public static final ResourceLocation WIDGETS   = new ResourceLocation("textures/gui/widgets.png");
@@ -83,14 +78,15 @@ public class BetterHud {
 		return HudElement.GLOBAL.isEnabledAndSupported() && !(HudElement.GLOBAL.hideOnDebug() && MC.gameSettings.showDebugInfo);
 	}
 
-	public static final SimpleNetworkWrapper NET_WRAPPER = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
+	public static final SimpleChannel NET_WRAPPER = NetworkRegistry.ChannelBuilder
+			.named(new ResourceLocation(MODID, "main_channel")).simpleChannel();
 
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		logger = event.getModLog();
 
-		if(event.getSide() == Side.CLIENT) {
-			MC = Minecraft.getMinecraft();
+		if(event.getSide() == Dist.CLIENT) {
+			MC = Minecraft.getInstance();
 
 			HudElement.loadAllDefaults();
 
@@ -101,7 +97,7 @@ public class BetterHud {
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		if(event.getSide() == Side.CLIENT) {
+		if(event.getSide() == Dist.CLIENT) {
 			KeyEvents.registerEvents();
 			RenderEvents.registerEvents();
 			Ticker.registerEvents();
@@ -110,11 +106,11 @@ public class BetterHud {
 		}
 
 		// Message ID 0 reserved for ignored server presence message from [,1.4)
-		NET_WRAPPER.registerMessage(MessageNotifyClientHandler.class, MessageVersion.class, 2, Side.CLIENT);
+		NET_WRAPPER.registerMessage(MessageNotifyClientHandler.class, MessageVersion.class, 2, Dist.CLIENT);
 
 		// Used to update inventory names
-		NET_WRAPPER.registerMessage(InventoryNameQuery.ServerHandler.class, InventoryNameQuery.Request.class, 3, Side.SERVER);
-		NET_WRAPPER.registerMessage(InventoryNameQuery.ClientHandler.class, InventoryNameQuery.Response.class, 4, Side.CLIENT);
+		NET_WRAPPER.registerMessage(InventoryNameQuery.ServerHandler.class, InventoryNameQuery.Request.class, 3, Dist.DEDICATED_SERVER);
+		NET_WRAPPER.registerMessage(InventoryNameQuery.ClientHandler.class, InventoryNameQuery.Response.class, 4, Dist.CLIENT);
 
 		MinecraftForge.EVENT_BUS.register(this);
 
@@ -122,8 +118,8 @@ public class BetterHud {
 		if(manager instanceof IReloadableResourceManager) {
 			IReloadableResourceManager reloadableManager = (IReloadableResourceManager)manager;
 
-			reloadableManager.registerReloadListener(m -> HudElement.SORTER.markDirty(SortType.ALPHABETICAL));
-			reloadableManager.registerReloadListener(getConfigManager());
+			reloadableManager.addReloadListener(m -> HudElement.SORTER.markDirty(SortType.ALPHABETICAL));
+			reloadableManager.addReloadListener(getConfigManager());
 		} else {
 			logger.warn("Unable to register alphabetical sort update on language change");
 		}
@@ -131,12 +127,12 @@ public class BetterHud {
 
 	@SubscribeEvent
 	public void onPlayerConnected(PlayerLoggedInEvent e) {
-		if(e.player instanceof EntityPlayerMP) {
-			NET_WRAPPER.sendTo(new MessageVersion(VERSION), (EntityPlayerMP)e.player);
+		if(e.getPlayer() instanceof EntityPlayerMP) {
+			NET_WRAPPER.sendTo(new MessageVersion(VERSION), (EntityPlayerMP)e.getPlayer());
 		}
 	}
 
-	@SideOnly(Side.CLIENT)
+	@OnlyIn(Dist.CLIENT)
 	@SubscribeEvent
 	public void onPlayerDisconnected(ClientDisconnectionFromServerEvent e) {
 		serverVersion = ZERO;

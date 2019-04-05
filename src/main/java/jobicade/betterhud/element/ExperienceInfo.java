@@ -5,16 +5,16 @@ import static jobicade.betterhud.BetterHud.MC;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.text.TextElement;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
-import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.geom.Point;
+import net.minecraftforge.eventbus.api.Event;
 
 public class ExperienceInfo extends TextElement {
 	private SettingBoolean total;

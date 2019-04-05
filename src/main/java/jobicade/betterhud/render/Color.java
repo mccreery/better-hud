@@ -56,7 +56,7 @@ public class Color {
 	public Color withBlue(int blue) {return new Color(alpha, red, green, blue);}
 
 	public void apply() {
-		GlStateManager.color(red / 255.0f, green / 255.0f, blue / 255.0f, alpha / 255.0f);
+		GlStateManager.color4f(red / 255.0f, green / 255.0f, blue / 255.0f, alpha / 255.0f);
 	}
 
 	@Override

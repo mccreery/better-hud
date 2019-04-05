@@ -8,7 +8,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import jobicade.betterhud.BetterHud;
@@ -19,21 +18,21 @@ import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
+import net.java.games.input.Keyboard;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiLabel;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
+@OnlyIn(Dist.CLIENT)
 public class GuiElementSettings extends GuiMenuScreen {
 	private static final int REPEAT_SPEED	   = 20; // Rate of speed-up to 20/s
 	private static final int REPEAT_SPEED_FAST = 10; // Rate of speed-up beyond 20/s
@@ -51,15 +50,15 @@ public class GuiElementSettings extends GuiMenuScreen {
 
 	public GuiElementSettings(HudElement element, GuiScreen prev) {
 		this.element = element;
-		done.setCallback(b -> Minecraft.getMinecraft().displayGuiScreen(prev));
+		done.setCallback(b -> Minecraft.getInstance().displayGuiScreen(prev));
 	}
 
 	@Override
 	public void initGui() {
 		setTitle(I18n.format("betterHud.menu.settings", this.element.getLocalizedName()));
-		buttonList.clear();
+		buttons.clear();
 		textboxList.clear();
-		labelList.clear();
+		labels.clear();
 
 		Keyboard.enableRepeatEvents(true);
 		done.setBounds(new Rect(200, 20).align(getOrigin(), Direction.NORTH));
@@ -69,9 +68,9 @@ public class GuiElementSettings extends GuiMenuScreen {
 
 		for(Gui gui : parts) {
 			if(gui instanceof GuiButton) {
-				buttonList.add((GuiButton)gui);
+				buttons.add((GuiButton)gui);
 			} else if(gui instanceof GuiLabel) {
-				labelList.add((GuiLabel)gui);
+				labels.add((GuiLabel)gui);
 			} else if(gui instanceof GuiTextField) {
 				textboxList.add((GuiTextField)gui);
 			}
@@ -156,9 +155,9 @@ public class GuiElementSettings extends GuiMenuScreen {
 			}
 		}
 
-		// Done button isn't in buttonList, have to handle it manually
+		// Done button isn't in buttons, have to handle it manually
 		if(done.mousePressed(this.mc, mouseX, mouseY)) {
-			ActionPerformedEvent.Pre event = new ActionPerformedEvent.Pre(this, done, buttonList);
+			ActionPerformedEvent.Pre event = new ActionPerformedEvent.Pre(this, done, buttons);
 			if(MinecraftForge.EVENT_BUS.post(event)) return;
 
 			GuiButton eventResult = event.getButton();
@@ -167,7 +166,7 @@ public class GuiElementSettings extends GuiMenuScreen {
 			actionPerformed(eventResult);
 
 			if(this.equals(MC.currentScreen)) {
-				MinecraftForge.EVENT_BUS.post(new ActionPerformedEvent.Post(this, done, buttonList));
+				MinecraftForge.EVENT_BUS.post(new ActionPerformedEvent.Post(this, done, buttons));
 			}
 		}
 		scrollbar.mouseClicked(mouseX, mouseY, button);
@@ -190,20 +189,19 @@ public class GuiElementSettings extends GuiMenuScreen {
 		drawDefaultBackground();
 		drawTitle();
 
-		ScaledResolution resolution = new ScaledResolution(MC);
 		done.drawButton(MC, mouseX, mouseY, partialTicks);
 
 		GlStateManager.pushMatrix();
-		GlUtil.beginScissor(viewport, resolution);
+		GlUtil.beginScissor(viewport);
 		GL11.glTranslatef(0, -getMouseOffset(), 0);
 
 		int viewportMouseY = mouseY + getMouseOffset();
 
-		for(GuiButton button : buttonList) button.drawButton(mc, mouseX, viewportMouseY, partialTicks);
-		for(GuiLabel label : labelList) label.drawLabel(mc, mouseX, viewportMouseY);
+		for(GuiButton button : buttons) button.render(mouseX, viewportMouseY, partialTicks);
+		for(GuiLabel label : labels) label.render(mouseX, viewportMouseY, partialTicks);
 
 		for(GuiTextField field : this.textboxList) {
-			field.drawTextBox();
+			field.drawTextField(mouseX, viewportMouseY, partialTicks);
 		}
 		element.settings.draw();
 

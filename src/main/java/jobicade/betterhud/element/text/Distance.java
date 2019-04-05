@@ -1,22 +1,22 @@
 package jobicade.betterhud.element.text;
 
+import static jobicade.betterhud.BetterHud.MANAGER;
 import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
-import static jobicade.betterhud.BetterHud.MANAGER;
 
 import java.util.Arrays;
 import java.util.List;
 
-import net.minecraft.client.resources.I18n;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Rect;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraftforge.eventbus.api.Event;
 
 public class Distance extends TextElement {
 	private SettingChoose mode;

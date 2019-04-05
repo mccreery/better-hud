@@ -2,12 +2,12 @@ package jobicade.betterhud.util;
 
 import java.util.ArrayList;
 
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import jobicade.betterhud.BetterHud;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 
 /** A generic interface for something which responds to ticks */
 public interface Tickable {
@@ -76,12 +76,12 @@ public interface Tickable {
 			FASTER.tick();
 		}
 
-		@SideOnly(Side.CLIENT)
+		@OnlyIn(Dist.CLIENT)
 		public static void registerEvents() {
 			MinecraftForge.EVENT_BUS.register(FASTER);
 		}
 
-		@SideOnly(Side.CLIENT)
+		@OnlyIn(Dist.CLIENT)
 		@SubscribeEvent
 		public void clientTick(ClientTickEvent event) {
 			if(BetterHud.isEnabled()) startTick();

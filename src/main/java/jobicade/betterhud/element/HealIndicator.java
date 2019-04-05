@@ -6,15 +6,15 @@ import static jobicade.betterhud.BetterHud.SPACER;
 
 import java.util.List;
 
-import net.minecraft.client.resources.I18n;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingChoose;
+import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.geom.Direction;
+import net.minecraft.client.resources.I18n;
+import net.minecraftforge.eventbus.api.Event;
 
 public class HealIndicator extends HudElement {
 	private SettingChoose mode;

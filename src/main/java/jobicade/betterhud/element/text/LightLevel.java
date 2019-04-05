@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.util.math.BlockPos;
-import net.minecraft.world.EnumSkyBlock;
+import net.minecraft.world.EnumLightType;
 import jobicade.betterhud.geom.Direction;
 
 public class LightLevel extends TextElement {
@@ -26,8 +26,8 @@ public class LightLevel extends TextElement {
 
 		int light = 0;
 		if(MC.world != null && MC.world.isBlockLoaded(position)) {
-			light = MC.world.getLightFor(EnumSkyBlock.SKY, position) - MC.world.calculateSkylightSubtracted(1.0F);
-			light = Math.max(light, MC.world.getLightFor(EnumSkyBlock.BLOCK, position));
+			light = MC.world.getLightFor(EnumLightType.SKY, position) - MC.world.calculateSkylightSubtracted(1.0F);
+			light = Math.max(light, MC.world.getLightFor(EnumLightType.BLOCK, position));
 		}
 		return Arrays.asList(getLocalizedName() + ": " + light);
 	}

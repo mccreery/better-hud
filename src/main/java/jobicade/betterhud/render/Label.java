@@ -61,11 +61,16 @@ public class Label extends DefaultBoxed {
         if(color.getAlpha() < 4) return;
 
         Point position = new Rect(size).anchor(bounds, Direction.CENTER).getPosition();
-        MC.fontRenderer.drawString(text, position.getX(), position.getY(), color.getPacked(), shadow);
+
+        if(shadow) {
+            MC.fontRenderer.drawStringWithShadow(text, position.getX(), position.getY(), color.getPacked());
+        } else {
+            MC.fontRenderer.drawString(text, position.getX(), position.getY(), color.getPacked());
+        }
 
         // Restore OpenGL state as expected
         Color.WHITE.apply();
         MC.getTextureManager().bindTexture(Gui.ICONS);
-        GlStateManager.disableAlpha();
+        GlStateManager.disableAlphaTest();
     }
 }

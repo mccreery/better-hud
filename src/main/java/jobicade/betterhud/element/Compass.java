@@ -14,17 +14,17 @@ import jobicade.betterhud.element.settings.SettingDirection;
 import jobicade.betterhud.element.settings.SettingPercentage;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.settings.SettingSlider;
-import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
+import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.eventbus.api.Event;
 
 public class Compass extends HudElement {
 	private static final String[] DIRECTIONS = { "S", "E", "N", "W" };
@@ -109,7 +109,7 @@ public class Compass extends HudElement {
 
 			GlStateManager.pushMatrix();
 
-			GlStateManager.translate(letter.getX(), letter.getY(), 0);
+			GlStateManager.translatef(letter.getX(), letter.getY(), 0);
 			GlUtil.scale((float)scale);
 
 			Color color = i == 0 ? Color.BLUE : i == 2 ? Color.RED : Color.WHITE;
@@ -161,18 +161,18 @@ public class Compass extends HudElement {
 		if(mode.getIndex() == 0) {
 			bounds = position.applyTo(new Rect(180, 12));
 
-			MC.mcProfiler.startSection("background");
+			MC.profiler.startSection("background");
 			drawBackground(bounds);
-			MC.mcProfiler.endStartSection("text");
+			MC.profiler.endStartSection("text");
 			drawDirections(bounds);
-			MC.mcProfiler.endSection();
+			MC.profiler.endSection();
 		} else {
 			String text = getText();
 			bounds = position.applyTo(new Rect(GlUtil.getStringSize(text)));
 
-			MC.mcProfiler.startSection("text");
+			MC.profiler.startSection("text");
 			GlUtil.drawString(text, bounds.getPosition(), Direction.NORTH_WEST, Color.WHITE);
-			MC.mcProfiler.endSection();
+			MC.profiler.endSection();
 		}
 
 		return bounds;
