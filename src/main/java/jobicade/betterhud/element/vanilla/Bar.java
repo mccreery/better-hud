@@ -6,15 +6,15 @@ import static jobicade.betterhud.BetterHud.MC;
 
 import java.util.List;
 
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.bars.StatBar;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraftforge.eventbus.api.Event;
 
 public abstract class Bar extends OverrideElement {
 	protected SettingChoose side;

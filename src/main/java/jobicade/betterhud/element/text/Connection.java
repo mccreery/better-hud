@@ -12,6 +12,8 @@ import net.minecraft.client.network.NetworkPlayerInfo;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 public class Connection extends TextElement {
 	private SettingBoolean playerCount, showIp, latency;
@@ -28,7 +30,7 @@ public class Connection extends TextElement {
 	}
 
 	@Override
-	public void init(FMLInitializationEvent event) {
+	public void init(FMLClientSetupEvent event) {
 		super.init(event);
 		MinecraftForge.EVENT_BUS.register(this);
 	}
@@ -47,7 +49,7 @@ public class Connection extends TextElement {
 	}
 
 	@SubscribeEvent
-	public void onConnect(ClientConnectedToServerEvent event) {
+	public void onConnect(PlayerLoggedInEvent event) {
 		if(!event.isLocal()) {
 			ip = event.getManager().getRemoteAddress().toString();
 		} else {

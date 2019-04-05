@@ -12,7 +12,7 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.GlUtil;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHandSide;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.eventbus.api.Event;
 
 public class Offhand extends HudElement {
 	public Offhand() {

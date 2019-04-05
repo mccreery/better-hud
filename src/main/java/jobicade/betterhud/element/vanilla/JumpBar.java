@@ -4,13 +4,13 @@ import static jobicade.betterhud.BetterHud.ICONS;
 import static jobicade.betterhud.BetterHud.MANAGER;
 import static jobicade.betterhud.BetterHud.MC;
 
-import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.GlUtil;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.eventbus.api.Event;
 
 public class JumpBar extends OverrideElement {
 	public JumpBar() {

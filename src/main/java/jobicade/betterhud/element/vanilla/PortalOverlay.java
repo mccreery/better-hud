@@ -9,7 +9,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.init.Blocks;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.eventbus.api.Event;
 
 public class PortalOverlay extends OverrideElement {
 	public PortalOverlay() {
@@ -44,7 +44,7 @@ public class PortalOverlay extends OverrideElement {
 		Color.WHITE.withAlpha(Math.round(timeInPortal * 255)).apply();
 		MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
-		TextureAtlasSprite texture = MC.getBlockRendererDispatcher().getBlockModelShapes().getTexture(Blocks.PORTAL.getDefaultState());
+		TextureAtlasSprite texture = MC.getBlockRendererDispatcher().getBlockModelShapes().getTexture(Blocks.NETHER_PORTAL.getDefaultState());
 		Rect screen = MANAGER.getScreen();
 		MC.ingameGUI.drawTexturedModalRect(0, 0, texture, screen.getWidth(), screen.getHeight());
 

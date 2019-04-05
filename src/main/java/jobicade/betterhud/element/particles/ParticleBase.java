@@ -52,9 +52,9 @@ public class ParticleBase implements Particle {
 		MC.getTextureManager().bindTexture(HUD_ICONS);
 		GlStateManager.pushMatrix();
 
-		GlStateManager.translate(position.getX(), position.getY(), 0.0F);
-		GlStateManager.rotate(rotation, 0, 0, 1);
-		GlStateManager.scale(this.size, this.size, 1.0F);
+		GlStateManager.translatef(position.getX(), position.getY(), 0.0F);
+		GlStateManager.rotatef(rotation, 0, 0, 1);
+		GlStateManager.scalef(this.size, this.size, 1.0F);
 
 		Color color = Color.WHITE.withAlpha(Math.round(opacity * 255));
 		Rect bounds = texture.align(Point.zero(), Direction.CENTER);

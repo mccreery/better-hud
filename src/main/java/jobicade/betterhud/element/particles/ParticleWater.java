@@ -37,8 +37,8 @@ public class ParticleWater extends ParticleBase {
 		MC.getTextureManager().bindTexture(PARTICLES);
 		GlStateManager.pushMatrix();
 
-		GlStateManager.translate(position.getX(), position.getY() - opacity * speed, 0);
-		GlStateManager.scale(size, size, 1);
+		GlStateManager.translatef(position.getX(), position.getY() - opacity * speed, 0);
+		GlStateManager.scalef(size, size, 1);
 
 		Color color = Color.WHITE.withAlpha(Math.round(opacity * 255));
 		Rect bounds = texture.align(Point.zero(), Direction.CENTER);

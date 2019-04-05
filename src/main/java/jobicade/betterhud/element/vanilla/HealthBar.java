@@ -2,12 +2,12 @@ package jobicade.betterhud.element.vanilla;
 
 import static jobicade.betterhud.BetterHud.MC;
 
-import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.HealIndicator;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.bars.StatBarHealth;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.eventbus.api.Event;
 
 public class HealthBar extends Bar {
 	public HealthBar() {

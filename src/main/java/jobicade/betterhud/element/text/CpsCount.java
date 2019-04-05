@@ -15,6 +15,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent.MouseInputEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 public class CpsCount extends TextElement implements Tickable {
 	private SettingSlider timeoutMax;
@@ -55,7 +56,7 @@ public class CpsCount extends TextElement implements Tickable {
 	}
 
 	@Override
-	public void init(FMLInitializationEvent event) {
+	public void init(FMLClientSetupEvent event) {
 		Ticker.FAST.register(this);
 		MinecraftForge.EVENT_BUS.register(this);
 	}

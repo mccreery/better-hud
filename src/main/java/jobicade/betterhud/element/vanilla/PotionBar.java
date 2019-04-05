@@ -27,9 +27,9 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.Event;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 public class PotionBar extends HudElement {
 	public static final ResourceLocation INVENTORY = new ResourceLocation("textures/gui/container/inventory.png");
@@ -53,7 +53,7 @@ public class PotionBar extends HudElement {
 	}
 
 	@Override
-	public void init(FMLInitializationEvent event) {
+	public void init(FMLClientSetupEvent event) {
 		MinecraftForge.EVENT_BUS.register(this);
 	}
 

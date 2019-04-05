@@ -15,6 +15,7 @@ import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.math.RayTraceFluidMode;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.eventbus.api.Event;
 
@@ -62,7 +63,7 @@ public class Distance extends TextElement {
 
 	@Override
 	protected List<String> getText() {
-		RayTraceResult trace = MC.getRenderViewEntity().rayTrace(200, 1.0F);
+		RayTraceResult trace = MC.getRenderViewEntity().rayTrace(200, 1.0F, RayTraceFluidMode.NEVER);
 
 		if(trace != null) {
 			long distance = Math.round(Math.sqrt(trace.getBlockPos().distanceSqToCenter(MC.player.posX, MC.player.posY, MC.player.posZ)));

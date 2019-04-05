@@ -6,13 +6,13 @@ import static jobicade.betterhud.BetterHud.MC;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.Tickable;
+import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 public abstract class ParticleOverlay extends HudElement implements Tickable {
 	protected SettingChoose density;
@@ -35,7 +35,7 @@ public abstract class ParticleOverlay extends HudElement implements Tickable {
 	}
 
 	@Override
-	public void init(FMLInitializationEvent event) {
+	public void init(FMLClientSetupEvent event) {
 		Ticker.FASTER.register(this);
 	}
 

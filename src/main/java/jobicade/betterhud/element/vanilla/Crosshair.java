@@ -28,7 +28,7 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.eventbus.api.Event;
 
 public class Crosshair extends OverrideElement {
 	private SettingBoolean attackIndicator;
@@ -101,7 +101,7 @@ public class Crosshair extends OverrideElement {
 	public boolean shouldRender(Event event) {
 		return super.shouldRender(event)
 			&& MC.gameSettings.thirdPersonView == 0
-			&& (!MC.playerController.isSpectator() || canInteract());
+			&& (!MC.playerController.isSpectatorMode() || canInteract());
 	}
 
 	/** @return {@code true} if the player is looking at something that can be interacted with in spectator mode */
@@ -110,7 +110,7 @@ public class Crosshair extends OverrideElement {
 			return true;
 		} else {
 			RayTraceResult trace = MC.objectMouseOver;
-			if(trace == null || trace.typeOfHit != Type.BLOCK) return false;
+			if(trace == null || trace.type != Type.BLOCK) return false;
 
 			BlockPos pos = trace.getBlockPos();
 			IBlockState state = MC.world.getBlockState(pos);
@@ -160,7 +160,7 @@ public class Crosshair extends OverrideElement {
 
 		if(indicatorType.getIndex() == 0) {
 			if(attackStrength >= 1) {
-				if(MC.pointedEntity != null && MC.pointedEntity instanceof EntityLivingBase && MC.player.getCooldownPeriod() > 5 && ((EntityLivingBase)MC.pointedEntity).isEntityAlive()) {
+				if(MC.pointedEntity != null && MC.pointedEntity instanceof EntityLivingBase && MC.player.getCooldownPeriod() > 5 && ((EntityLivingBase)MC.pointedEntity).isAlive()) {
 					GlUtil.drawRect(bounds.resize(16, 16), new Rect(68, 94, 16, 16));
 				}
 			} else {
@@ -175,12 +175,12 @@ public class Crosshair extends OverrideElement {
 
 	private void renderAxes(Point center, float partialTicks) {
 		GlStateManager.pushMatrix();
-		GlStateManager.translate(center.getX(), center.getY(), 0);
+		GlStateManager.translatef(center.getX(), center.getY(), 0);
 
 		Entity entity = MC.getRenderViewEntity();
-		GlStateManager.rotate(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks, -1.0F, 0.0F, 0.0F);
-		GlStateManager.rotate(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks, 0.0F, 1.0F, 0.0F);
-		GlStateManager.scale(-1.0F, -1.0F, -1.0F);
+		GlStateManager.rotatef(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks, -1.0F, 0.0F, 0.0F);
+		GlStateManager.rotatef(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks, 0.0F, 1.0F, 0.0F);
+		GlStateManager.scalef(-1.0F, -1.0F, -1.0F);
 		OpenGlHelper.renderDirections(10);
 
 		GlStateManager.popMatrix();

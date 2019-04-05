@@ -23,7 +23,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.eventbus.api.Event;
 
 public class GameClock extends Clock {
-	private static final ItemStack BED = new ItemStack(Items.BED);
+	private static final ItemStack BED = new ItemStack(Items.RED_BED);
 
 	private SettingBoolean showDays;
 	private SettingChoose requireItem;
@@ -82,7 +82,7 @@ public class GameClock extends Clock {
 
 	@Override
 	protected Date getDate() {
-		long worldTime = MC.world.getWorldTime() + 6000;
+		long worldTime = MC.world.getGameTime() + 6000;
 
 		// Convert to milliseconds
 		worldTime = Math.round(worldTime / 1000. * 3600.) * 1000;

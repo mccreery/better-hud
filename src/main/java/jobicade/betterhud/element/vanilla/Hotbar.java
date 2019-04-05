@@ -11,7 +11,7 @@ import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.gui.Gui;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.eventbus.api.Event;
 
 public class Hotbar extends OverrideElement {
 	public Hotbar() {

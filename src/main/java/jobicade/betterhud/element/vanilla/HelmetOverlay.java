@@ -7,13 +7,12 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.eventbus.api.Event;
 
 public class HelmetOverlay extends OverrideElement {
 	private static final ResourceLocation PUMPKIN_BLUR_TEX_PATH = new ResourceLocation("textures/misc/pumpkinblur.png");
@@ -48,7 +47,8 @@ public class HelmetOverlay extends OverrideElement {
 			GlUtil.drawRect(MANAGER.getScreen(), new Rect(256, 256), Color.RED);
 			MC.getTextureManager().bindTexture(Gui.ICONS);
 		} else {
-			item.renderHelmetOverlay(stack, MC.player, new ScaledResolution(MC), getPartialTicks(event));
+			item.renderHelmetOverlay(stack, MC.player, MC.mainWindow.getScaledWidth(),
+					MC.mainWindow.getScaledHeight(), getPartialTicks(event));
 		}
 		return MANAGER.getScreen();
 	}
