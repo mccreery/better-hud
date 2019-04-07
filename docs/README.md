@@ -4,6 +4,6 @@
 
 Better HUD is a Forge mod which adds many different configurable elements to your in-game HUD. Everything can be enabled or disabled and customised to your liking, giving you lots of control over the information you see.
 
-[Contributing](CONTRIBUTING.md)
+The [`develop`](https://github.com/mccreery/better-hud/tree/develop) branch is the default branch, and contains the most up-to-date documentation. See [CONTRIBUTING.md](https://github.com/mccreery/better-hud/blob/develop/docs/CONTRIBUTING.md) for details on the different branches.
 
 ![Screenshot](http://i.imgur.com/xqyNOhj.png)
