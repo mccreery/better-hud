@@ -7,8 +7,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
-
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingSlider;
 import jobicade.betterhud.events.RenderMobInfoEvent;
@@ -26,6 +24,7 @@ import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.ITextComponent;
 import net.minecraft.util.text.TextFormatting;
 import net.minecraftforge.eventbus.api.Event;
 
@@ -114,7 +113,11 @@ public class PlayerInfo extends EntityInfo {
 
 		for(Map.Entry<Enchantment, Integer> enchantment : enchantments.entrySet()) {
 			if(enchantment.getKey() != null && enchantment.getValue() > 0) {
-				dest.add(ChatFormatting.GRAY + enchantment.getKey().getTranslatedName(enchantment.getValue()));
+				// See ItemStack#getTooltip for SRG func_200305_d
+				ITextComponent text = enchantment.getKey().func_200305_d(enchantment.getValue());
+				text.applyTextStyle(TextFormatting.GRAY);
+
+				dest.add(text.getFormattedText());
 			}
 		}
 	}
