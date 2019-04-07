@@ -132,8 +132,8 @@ public class GuiHudMenu extends GuiMenuScreen {
 	}
 
 	@Override
-	public void drawScreen(int mouseX, int mouseY, float p_73863_3_) {
-		super.drawScreen(mouseX, mouseY, p_73863_3_);
+	public void render(int mouseX, int mouseY, float p_73863_3_) {
+		super.render(mouseX, mouseY, p_73863_3_);
 
 		int enabled = (int)HudElement.ELEMENTS.stream().filter(HudElement::get).count();
 		GlUtil.drawString(enabled + "/" + HudElement.ELEMENTS.size() + " enabled", new Point(SPACER, SPACER), Direction.NORTH_WEST, Color.WHITE);

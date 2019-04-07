@@ -4,14 +4,12 @@ import static jobicade.betterhud.BetterHud.MC;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
-import net.minecraft.client.Minecraft;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.render.Color;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
-import jobicade.betterhud.BetterHud;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.render.Color;
-import jobicade.betterhud.geom.Point;
 
 public class GuiActionButton extends GuiButton {
 	private ActionCallback callback;
@@ -72,8 +70,8 @@ public class GuiActionButton extends GuiButton {
 		if(callback != null) callback.actionPerformed(this);
 	}
 
-	protected void drawButton(Rect bounds, Point mousePosition, float partialTicks) {
-		super.drawButton(BetterHud.MC, mousePosition.getX(), mousePosition.getY(), partialTicks);
+	protected void render(Rect bounds, Point mousePosition, float partialTicks) {
+		super.render(mousePosition.getX(), mousePosition.getY(), partialTicks);
 	}
 
 	public void updateText(String name, String value) {
@@ -96,13 +94,13 @@ public class GuiActionButton extends GuiButton {
 	 * OpenGL side-effects: depth disabled, color set to white
 	 */
 	@Override
-	public final void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
+	public final void render(int mouseX, int mouseY, float partialTicks) {
 		if(!visible) return;
 
 		Rect bounds = getBounds();
 		hovered = bounds.contains(mouseX, mouseY);
 
-		drawButton(bounds, new Point(mouseX, mouseY), partialTicks);
+		render(bounds, new Point(mouseX, mouseY), partialTicks);
 
 		if(tooltip != null && hovered) {
 			GlStateManager.enableDepthTest();

@@ -51,6 +51,9 @@ public class GuiElementSettings extends GuiMenuScreen {
 	public GuiElementSettings(HudElement element, GuiScreen prev) {
 		this.element = element;
 		done.setCallback(b -> Minecraft.getInstance().displayGuiScreen(prev));
+
+		//children.add(scrollbar); // TODO
+		children.add(done);
 	}
 
 	@Override
@@ -60,7 +63,6 @@ public class GuiElementSettings extends GuiMenuScreen {
 		textboxList.clear();
 		labels.clear();
 
-		Keyboard.enableRepeatEvents(true);
 		done.setBounds(new Rect(200, 20).align(getOrigin(), Direction.NORTH));
 
 		List<Gui> parts = new ArrayList<Gui>();
@@ -86,7 +88,6 @@ public class GuiElementSettings extends GuiMenuScreen {
 
 	@Override
 	public void onGuiClosed() {
-		Keyboard.enableRepeatEvents(false);
 		BetterHud.getConfigManager().getConfig().saveSettings();
 	}
 
@@ -127,26 +128,22 @@ public class GuiElementSettings extends GuiMenuScreen {
 	}
 
 	@Override
-	protected void keyTyped(char typedChar, int keyCode) throws IOException {
-		super.keyTyped(typedChar, keyCode);
+	public boolean charTyped(char typedChar, int keyCode) {
+		if(super.charTyped(typedChar, keyCode)) return true;
 
 		for(GuiTextField field : this.textboxList) {
-			field.textboxKeyTyped(typedChar, keyCode);
+			field.charTyped(typedChar, keyCode);
 
 			if(callbacks.containsKey(field)) {
 				callbacks.get(field).updateGuiParts(callbacks.values());
+				return true;
 			}
 		}
+		return false;
 	}
 
 	@Override
-	public void handleMouseInput() throws IOException {
-		super.handleMouseInput();
-		scrollbar.handleMouseInput();
-	}
-
-	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
+	public boolean mouseClicked(double mouseX, double mouseY, int modifiers) {
 		if(mouseY >= viewport.getTop() && mouseY < viewport.getBottom()) {
 			super.mouseClicked(mouseX, mouseY + getMouseOffset(), button);
 
@@ -168,20 +165,8 @@ public class GuiElementSettings extends GuiMenuScreen {
 			if(this.equals(MC.currentScreen)) {
 				MinecraftForge.EVENT_BUS.post(new ActionPerformedEvent.Post(this, done, buttons));
 			}
+			return true;
 		}
-		scrollbar.mouseClicked(mouseX, mouseY, button);
-	}
-
-	@Override
-	protected void mouseClickMove(int mouseX, int mouseY, int button, long heldTime) {
-		super.mouseClickMove(mouseX, mouseY + getMouseOffset(), button, heldTime);
-		scrollbar.mouseClickMove(mouseX, mouseY, button, heldTime);
-	}
-
-	@Override
-	public void mouseReleased(int mouseX, int mouseY, int button) {
-		super.mouseReleased(mouseX, mouseY + getMouseOffset(), button);
-		scrollbar.mouseReleased(mouseX, mouseY, button);
 	}
 
 	@Override
@@ -189,7 +174,7 @@ public class GuiElementSettings extends GuiMenuScreen {
 		drawDefaultBackground();
 		drawTitle();
 
-		done.drawButton(MC, mouseX, mouseY, partialTicks);
+		done.render(mouseX, mouseY, partialTicks);
 
 		GlStateManager.pushMatrix();
 		GlUtil.beginScissor(viewport);

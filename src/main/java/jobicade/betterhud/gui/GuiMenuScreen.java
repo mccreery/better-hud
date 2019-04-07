@@ -5,19 +5,11 @@ import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 
 public class GuiMenuScreen extends GuiScreen {
     private Point origin;
     private String title;
-
-    @Override
-    protected void actionPerformed(GuiButton button) {
-        if(button instanceof GuiActionButton) {
-            ((GuiActionButton)button).actionPerformed();
-        }
-    }
 
     @Override
     public void setWorldAndResolution(Minecraft mc, int width, int height) {
@@ -40,9 +32,9 @@ public class GuiMenuScreen extends GuiScreen {
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+    public void render(int mouseX, int mouseY, float partialTicks) {
         this.drawDefaultBackground();
         this.drawTitle();
-        super.drawScreen(mouseX, mouseY, partialTicks);
+        super.render(mouseX, mouseY, partialTicks);
     }
 }

@@ -27,9 +27,8 @@ class ButtonRow {
 			element.toggle();
 			HudElement.SORTER.markDirty(SortType.ENABLED);
 
-			if(MC.currentScreen != null) {
-				MC.currentScreen.initGui();
-			}
+			// TODO check if this works (when it compiles)
+			MC.currentScreen.onResize(MC, MC.mainWindow.getScaledWidth(), MC.mainWindow.getScaledHeight());
 		});
 		options = new GuiTexturedButton(new Rect(40, 0, 20, 20)).setCallback(b ->
 			MC.displayGuiScreen(new GuiElementSettings(element, callback)));

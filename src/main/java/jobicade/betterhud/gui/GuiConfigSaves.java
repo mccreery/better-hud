@@ -10,23 +10,21 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.resources.I18n;
+import jobicade.betterhud.config.ConfigManager;
+import jobicade.betterhud.config.ConfigSlot;
+import jobicade.betterhud.config.FileConfigSlot;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Size;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.render.DefaultBoxed;
 import jobicade.betterhud.render.Grid;
 import jobicade.betterhud.render.Label;
-import jobicade.betterhud.config.ConfigManager;
-import jobicade.betterhud.config.ConfigSlot;
-import jobicade.betterhud.config.FileConfigSlot;
-import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.geom.Point;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.resources.I18n;
 
 public class GuiConfigSaves extends GuiScreen {
 	private GuiTextField name;
@@ -120,60 +118,21 @@ public class GuiConfigSaves extends GuiScreen {
 	}
 
 	@Override
-	public void updateScreen() {
-		super.updateScreen();
-		name.updateCursorCounter();
-	}
+	public boolean mouseClicked(double mouseX, double mouseY, int modifiers) {
+		if(super.mouseClicked(mouseX, mouseY, modifiers)) return true;
 
-	@Override
-	protected void keyTyped(char typedChar, int keyCode) throws IOException {
-		super.keyTyped(typedChar, keyCode);
-		name.textboxKeyTyped(typedChar, keyCode);
-		updateSelected();
-	}
-
-	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-		super.mouseClicked(mouseX, mouseY, mouseButton);
-
-		name.mouseClicked(mouseX, mouseY, mouseButton);
-		scrollbar.mouseClicked(mouseX, mouseY, mouseButton);
-
-		if(viewport.contains(mouseX, mouseY)) {
+		if(viewport.contains((int)mouseX, (int)mouseY)) {
 			for(int i = 0; i < list.getSource().size(); i++) {
 				Rect listBounds = getListBounds();
 
-				if(list.getCellBounds(listBounds, new Point(0, i)).contains(mouseX, mouseY)) {
+				if(list.getCellBounds(listBounds, new Point(0, i)).contains((int)mouseX, (int)mouseY)) {
 					name.setText(list.getSource().get(i).entry.getName());
 					updateSelected();
+					return true;
 				}
 			}
 		}
-	}
-
-	@Override
-	protected void mouseClickMove(int mouseX, int mouseY, int button, long heldTime) {
-		super.mouseClickMove(mouseX, mouseY, button, heldTime);
-		scrollbar.mouseClickMove(mouseX, mouseY, button, heldTime);
-	}
-
-	@Override
-	public void mouseReleased(int mouseX, int mouseY, int button) {
-		super.mouseReleased(mouseX, mouseY, button);
-		scrollbar.mouseReleased(mouseX, mouseY, button);
-	}
-
-	@Override
-	public void handleMouseInput() throws IOException {
-		super.handleMouseInput();
-		scrollbar.handleMouseInput();
-	}
-
-	@Override
-	protected void actionPerformed(GuiButton button) throws IOException {
-		if(button instanceof GuiActionButton) {
-			((GuiActionButton)button).actionPerformed();
-		}
+		return false;
 	}
 
 	private Rect getListBounds() {
@@ -182,13 +141,13 @@ public class GuiConfigSaves extends GuiScreen {
 	}
 
 	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+	public void render(int mouseX, int mouseY, float partialTicks) {
 		drawDefaultBackground();
-		super.drawScreen(mouseX, mouseY, partialTicks);
+		super.render(mouseX, mouseY, partialTicks);
 
-		name.drawTextBox();
+		name.drawTextField(mouseX, mouseY, partialTicks);
 
-		Rect scissorRect = viewport.withY(height - viewport.getBottom()).scale(new ScaledResolution(MC).getScaleFactor());
+		Rect scissorRect = viewport.withY(height - viewport.getBottom()).scale(MC.mainWindow.getScaleFactor(0));
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
 		GL11.glScissor(scissorRect.getX(), scissorRect.getY(), scissorRect.getWidth(), scissorRect.getHeight());
 

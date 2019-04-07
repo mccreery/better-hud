@@ -1,20 +1,23 @@
 package jobicade.betterhud.gui;
 
-import static jobicade.betterhud.BetterHud.*;
+import static jobicade.betterhud.BetterHud.MANAGER;
+import static jobicade.betterhud.BetterHud.MC;
+import static jobicade.betterhud.BetterHud.SPACER;
 
-import java.io.IOException;
 import java.util.List;
 
 import com.google.common.base.Predicates;
-import net.minecraft.client.gui.GuiButton;
+
+import org.lwjgl.glfw.GLFW;
+
+import jobicade.betterhud.element.HudElement;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.util.IGetSet;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.MathHelper;
-import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.util.IGetSet;
-import jobicade.betterhud.geom.Point;
 
 public class GuiReorder extends GuiElements {
 	private final GuiScreen parent;
@@ -103,29 +106,27 @@ public class GuiReorder extends GuiElements {
 	}
 
 	@Override
-	protected void actionPerformed(GuiButton button) throws IOException {
-		if(button instanceof GuiActionButton)
-			((GuiActionButton)button).actionPerformed();
-	}
-
-	@Override
-	protected void keyTyped(char typedChar, int keyCode) throws IOException {
-		if(keyCode == 1) {
+	public boolean charTyped(char typedChar, int keyCode) {
+		if(keyCode == GLFW.GLFW_KEY_ESCAPE) {
 			MC.displayGuiScreen(parent);
+			return true;
+		} else {
+			return false;
 		}
 	}
 
 	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-		if(toolbox.contains(mouseX, mouseY)) {
-			super.mouseClicked(mouseX, mouseY, mouseButton);
+	public boolean mouseClicked(double mouseX, double mouseY, int modifiers) {
+		if(toolbox.contains((int)mouseX, (int)mouseY)) {
+			return super.mouseClicked(mouseX, mouseY, modifiers);
 		} else {
 			select(hovered);
+			return hovered != null;
 		}
 	}
 
 	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+	public void render(int mouseX, int mouseY, float partialTicks) {
 		hovered = getHoveredElement(mouseX, mouseY, Predicates.alwaysFalse());
 
 		for(HudElement element : HudElement.ELEMENTS) {
@@ -135,6 +136,6 @@ public class GuiReorder extends GuiElements {
 				drawRect(bounds, element == hovered || element == selected);
 			}
 		}
-		super.drawScreen(mouseX, mouseY, partialTicks);
+		super.render(mouseX, mouseY, partialTicks);
 	}
 }

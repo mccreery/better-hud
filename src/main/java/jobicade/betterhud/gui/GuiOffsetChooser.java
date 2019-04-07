@@ -3,18 +3,16 @@ package jobicade.betterhud.gui;
 import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 
-import java.io.IOException;
+import org.lwjgl.glfw.GLFW;
 
-import org.lwjgl.input.Keyboard;
-
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
 import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.geom.Point;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.resources.I18n;
 
 public class GuiOffsetChooser extends GuiScreen {
 	private final GuiElementSettings parent;
@@ -26,24 +24,28 @@ public class GuiOffsetChooser extends GuiScreen {
 	}
 
 	@Override
-	protected void keyTyped(char typedChar, int keyCode) throws IOException {
-		if(keyCode == 1) {
+	public boolean charTyped(char typedChar, int keyCode) {
+		if(keyCode == GLFW.GLFW_KEY_ESCAPE) {
 			setting.set(null);
 			MC.displayGuiScreen(parent);
+			return true;
+		} else {
+			return false;
 		}
 	}
 
 	@Override
-	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+	public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
 		MC.displayGuiScreen(parent);
+		return true;
 	}
 
 	@Override
-	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+	public void render(int mouseX, int mouseY, float partialTicks) {
 		Point anchor = setting.getParent().getAnchor(setting.getAnchor());
 		Point offset = new Point(mouseX, mouseY).sub(anchor);
 
-		if(!Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
+		if(GLFW.glfwGetKey(MC.mainWindow.getHandle(), GLFW.GLFW_KEY_LEFT_CONTROL) == GLFW.GLFW_RELEASE) {
 			int x = (offset.getX() + SPACER * 3 / 2) / SPACER - 1;
 			if(x >= -1 && x <= 1) {
 				offset = offset.withX(x * SPACER);
@@ -67,7 +69,7 @@ public class GuiOffsetChooser extends GuiScreen {
 			drawVerticalLine(mouse.getX(), mouse.getY() - SPACER, mouse.getY() + SPACER, Color.RED.getPacked());
 		}
 
-		String key = Keyboard.getKeyName(Keyboard.KEY_LCONTROL);
+		String key = GLFW.glfwGetKeyName(GLFW.GLFW_KEY_LEFT_CONTROL, 0);
 		GlUtil.drawString(I18n.format("betterHud.menu.unsnap", key), new Point(SPACER, SPACER), Direction.NORTH_WEST, Color.WHITE);
 
 		drawHoveringText(offset.toPrettyString(), mouseX, mouseY);

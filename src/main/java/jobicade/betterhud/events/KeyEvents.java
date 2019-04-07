@@ -2,6 +2,8 @@ package jobicade.betterhud.events;
 
 import static jobicade.betterhud.BetterHud.MC;
 
+import org.lwjgl.glfw.GLFW;
+
 import jobicade.betterhud.gui.GuiHudMenu;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.api.distmarker.Dist;
@@ -13,7 +15,7 @@ import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
 
 @OnlyIn(Dist.CLIENT)
 public final class KeyEvents {
-	private static final KeyBinding MENU_KEY = new KeyBinding("key.betterHud.open", Keyboard.KEY_U, "key.categories.misc");
+	private static final KeyBinding MENU_KEY = new KeyBinding("key.betterHud.open", GLFW.GLFW_KEY_U, "key.categories.misc");
 
 	private KeyEvents() {}
 
@@ -25,7 +27,7 @@ public final class KeyEvents {
 
 	@SubscribeEvent
 	public void onKey(KeyInputEvent event) {
-		if(MC.inGameHasFocus && MENU_KEY.isPressed()) {
+		if(MC.isGameFocused() && MENU_KEY.isPressed()) {
 			MC.displayGuiScreen(new GuiHudMenu());
 		}
 	}

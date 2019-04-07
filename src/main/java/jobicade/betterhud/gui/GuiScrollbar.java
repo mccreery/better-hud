@@ -1,15 +1,14 @@
 package jobicade.betterhud.gui;
 
-import org.lwjgl.input.Mouse;
-
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.util.math.MathHelper;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
 
-public class GuiScrollbar extends Gui {
+public class GuiScrollbar extends Gui implements IGuiEventListener {
 	private final Rect bounds;
 	private Rect grabber;
 	private float scaleFactor;
@@ -113,18 +112,21 @@ public class GuiScrollbar extends Gui {
 		}
 	}
 
-	public void handleMouseInput() {
-		int scrollDelta = Mouse.getEventDWheel();
-
-		if(canScroll() && !isScrolling() && scrollDelta != 0) {
-			setScroll(scroll - (scrollDelta > 0 ? 20 : -20));
+	@Override
+	public boolean mouseScrolled(double delta) {
+		if(canScroll() && !isScrolling() && delta != 0) {
+			setScroll(scroll - delta > 0 ? 20 : -20);
+			return true;
+		} else {
+			return false;
 		}
 	}
 
-	protected void mouseClicked(int mouseX, int mouseY, int button) {
-		if(canScroll() && !isScrolling() && bounds.contains(mouseX, mouseY)) {
-			if(grabber.contains(mouseX, mouseY)) {
-				clickOffset = mouseY - grabber.getTop();
+	@Override
+	public boolean mouseClicked(double mouseX, double mouseY, int modifiers) {
+		if(canScroll() && !isScrolling() && bounds.contains((int)mouseX, (int)mouseY)) {
+			if(grabber.contains((int)mouseX, (int)mouseY)) {
+				clickOffset = (int)mouseY - grabber.getTop();
 			} else {
 				clickOffset = grabber.getHeight() / 2;
 			}
@@ -133,13 +135,20 @@ public class GuiScrollbar extends Gui {
 		}
 	}
 
-	protected void mouseClickMove(int mouseX, int mouseY, int button, long heldTime) {
+	@Override
+	public boolean mouseDragged(double mouseX, double mouseY, int modifiers,
+			double p_mouseDragged_6_, double p_mouseDragged_8_) {
 		if(isScrolling()) {
 			setScroll((int)((mouseY - bounds.getY() - clickOffset) / scaleFactor));
+			return true;
+		} else {
+			return false;
 		}
 	}
 
-	public void mouseReleased(int mouseX, int mouseY, int button) {
+	@Override
+	public boolean mouseReleased(double mouseX, double mouseY, int modifiers) {
 		clickOffset = -1;
+		return true;
 	}
 }
