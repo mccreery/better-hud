@@ -162,7 +162,7 @@ betterHud.value.disabled=Desativado
 # Block Viewer
 betterHud.setting.invNames=Nomes de inv.
 betterHud.setting.showIds=IDs
-#betterHud.setting.storeNbt=Store NBT in Stack
+#betterHud.setting.storeNbt=Armazenar NBT na Pilha
 betterHud.setting.chunks=%s chunks
 
 # Compass
