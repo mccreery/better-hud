@@ -3,8 +3,8 @@ package jobicade.betterhud.element;
 import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.MANAGER;
 
+import java.util.ArrayList;
 import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
 
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
@@ -33,7 +33,7 @@ import jobicade.betterhud.util.GlUtil;
 
 public class PickupCount extends HudElement {
 	private SettingSlider maxStacks, fadeAfter;
-	public final List<StackNode> stacks = new CopyOnWriteArrayList<>();
+	public final List<StackNode> stacks = new ArrayList<>();
 
 	@Override
 	public void loadDefaults() {
@@ -77,7 +77,7 @@ public class PickupCount extends HudElement {
 	 * @param stack The item to search for.
 	 * @return The removed item stack, if any, or {@code null}.
 	 */
-	private StackNode removeStack(ItemStack stack) {
+	private synchronized StackNode removeStack(ItemStack stack) {
 		for(StackNode node : stacks) {
 			if(ItemHandlerHelper.canItemStacksStack(stack, node.stack)) {
 				stacks.remove(node);
@@ -133,18 +133,22 @@ public class PickupCount extends HudElement {
 	@Override
 	public Rect render(Event event) {
 		List<StackNode> stacks = getStacks();
-		Grid<StackNode> grid = new Grid<>(new Point(1, stacks.size()), stacks)
-			.setAlignment(position.getContentAlignment())
-			.setCellAlignment(position.getContentAlignment());
+		Rect bounds;
 
-		Rect bounds = new Rect(grid.getPreferredSize());
+		synchronized(this) {
+			Grid<StackNode> grid = new Grid<>(new Point(1, stacks.size()), stacks)
+				.setAlignment(position.getContentAlignment())
+				.setCellAlignment(position.getContentAlignment());
 
-		if(position.isDirection(Direction.CENTER)) {
-			bounds = bounds.align(MANAGER.getScreen().getAnchor(Direction.CENTER).add(5, 5), Direction.NORTH_WEST);
-		} else {
-			bounds = position.applyTo(bounds);
+			bounds = new Rect(grid.getPreferredSize());
+
+			if(position.isDirection(Direction.CENTER)) {
+				bounds = bounds.align(MANAGER.getScreen().getAnchor(Direction.CENTER).add(5, 5), Direction.NORTH_WEST);
+			} else {
+				bounds = position.applyTo(bounds);
+			}
+			grid.setBounds(bounds).render();
 		}
-		grid.setBounds(bounds).render();
 		return bounds;
 	}
 
