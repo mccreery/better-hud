@@ -115,18 +115,24 @@ public class Sidebar extends HudElement {
 	 * Gets the objective in the player's sidebar slot.
 	 * @param player The player.
 	 * @return The objective in the player's sidebar slot.
+	 * @see net.minecraft.client.gui.GuiIngame#renderGameOverlay(float)
 	 */
 	private ScoreObjective getObjective(EntityPlayer player) {
 		Scoreboard scoreboard = player.getWorldScoreboard();
+		ScoreObjective objective = null;
 		ScorePlayerTeam team = scoreboard.getPlayersTeam(MC.player.getName());
 
 		if(team != null) {
 			int slot = team.getColor().getColorIndex();
 
 			if(slot >= 0) {
-				return scoreboard.getObjectiveInDisplaySlot(3 + slot);
+				objective = scoreboard.getObjectiveInDisplaySlot(3 + slot);
 			}
 		}
-		return scoreboard.getObjectiveInDisplaySlot(1);
+
+		if(objective == null) {
+			objective = scoreboard.getObjectiveInDisplaySlot(1);
+		}
+		return objective;
 	}
 }
