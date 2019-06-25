@@ -46,7 +46,7 @@ import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
 
 public class BlockViewer extends TextElement {
-	private SettingBoolean showBlock, showIds, invNames, storeNbt;
+	private SettingBoolean showBlock, showIds, invNames;
 	private RayTraceResult trace;
 	private IBlockState state;
 	private ItemStack stack;
@@ -72,7 +72,6 @@ public class BlockViewer extends TextElement {
 				}
 			}
 		});
-		settings.add(storeNbt = new SettingBoolean("storeNbt"));
 	}
 
 	@Override
@@ -88,7 +87,6 @@ public class BlockViewer extends TextElement {
 		showBlock.set(true);
 		showIds.set(false);
 		invNames.set(true);
-		storeNbt.set(true);
 	}
 
 	@Override
@@ -173,17 +171,6 @@ public class BlockViewer extends TextElement {
 				return null;
 			}
 		}
-		// At this point stack contains some item
-
-		// Tile entity data can change rendering or display name
-		if(storeNbt.get() && state.getBlock().hasTileEntity(state)) {
-			TileEntity tileEntity = MC.world.getTileEntity(trace.getBlockPos());
-
-			if(tileEntity != null) {
-				MC.storeTEInStack(stack, tileEntity);
-			}
-		}
-
 		return stack;
 	}
 

@@ -1,5 +1,9 @@
 # Changelog
 
+## [1.4.1]
+### Removed
+- Block viewer NBT storage (#51, #53, #57, #58, #61, #66)
+
 ## [1.4] - 2019-04-04
 ### Added
 - Option to disable writing NBT data in block viewer, fixes some crashes (#53)
