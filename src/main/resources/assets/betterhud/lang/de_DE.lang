@@ -177,6 +177,7 @@ betterHud.setting.scale=Skala
 betterHud.setting.24hr=24 Stunden
 betterHud.setting.showSeconds=Zeige Sekunden
 #betterHud.setting.showDays=Days
+#betterHud.setting.showSleepIndicator=Sleep Indicator
 betterHud.setting.fullYear=Volles Jahr
 
 #betterHud.setting.dateType=Format

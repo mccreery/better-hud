@@ -177,6 +177,7 @@ betterHud.setting.scale=缩放
 betterHud.setting.24hr=24小时计时法
 betterHud.setting.showSeconds=显示秒数
 #betterHud.setting.showDays=Days
+#betterHud.setting.showSleepIndicator=Sleep Indicator
 betterHud.setting.fullYear=年全称
 
 #betterHud.setting.dateType=Format

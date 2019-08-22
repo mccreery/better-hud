@@ -12,6 +12,8 @@ import java.util.TimeZone;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.world.WorldProvider.WorldSleepResult;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
@@ -23,9 +25,10 @@ import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.geom.Point;
 
 public class GameClock extends Clock {
-	private static final ItemStack BED = new ItemStack(Items.BED);
+	private static final ItemStack BED = new ItemStack(Items.BED, 1, 14);
 
 	private SettingBoolean showDays;
+	private SettingBoolean showSleepIndicator;
 	private SettingChoose requireItem;
 
 	public GameClock() {
@@ -37,6 +40,7 @@ public class GameClock extends Clock {
 	protected void addSettings(List<Setting<?>> settings) {
 		super.addSettings(settings);
 		settings.add(showDays = new SettingBoolean("showDays").setValuePrefix(SettingBoolean.VISIBLE));
+		settings.add(showSleepIndicator = new SettingBoolean("showSleepIndicator").setValuePrefix(SettingBoolean.VISIBLE));
 		settings.add(requireItem = new SettingChoose("requireItem", "disabled", "inventory", "hand"));
 	}
 
@@ -45,6 +49,7 @@ public class GameClock extends Clock {
 		super.loadDefaults();
 
 		showDays.set(true);
+		showSleepIndicator.set(false);
 		requireItem.setIndex(0);
 	}
 
@@ -70,14 +75,27 @@ public class GameClock extends Clock {
 	@Override
 	public Rect render(Event event) {
 		Rect bounds = super.render(event);
+		float partialTicks = ((RenderGameOverlayEvent)event).getPartialTicks();
 
-		if(!MC.world.isDaytime()) {
-			Direction bedAnchor = DirectionOptions.WEST_EAST.apply(position.getContentAlignment());
+		if(showSleepIndicator(partialTicks)) {
+			Direction bedAnchor = DirectionOptions.WEST_EAST.apply(position.getContentAlignment().mirrorCol());
 			Rect bed = new Rect(16, 16).anchor(bounds, bedAnchor);
 
 			GlUtil.renderSingleItem(BED, bed.getPosition());
 		}
 		return bounds;
+	}
+
+	private boolean showSleepIndicator(float partialTicks) {
+		return showSleepIndicator.get()
+				&& MC.world.provider.canSleepAt(MC.player, MC.player.getPosition()) == WorldSleepResult.ALLOW
+				// Taken from EntityPlayer#trySleep, ignores enemies and bed position
+				&& !MC.player.isPlayerSleeping()
+				&& MC.player.isEntityAlive()
+				&& MC.world.provider.isSurfaceWorld()
+				// World#isDayTime is server only
+				//&& !MC.world.isDaytime();
+				&& MC.world.calculateSkylightSubtracted(partialTicks) >= 4;
 	}
 
 	@Override

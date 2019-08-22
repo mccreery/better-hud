@@ -177,6 +177,7 @@ betterHud.value.hand=В руке
 betterHud.setting.24hr=24 часа
 betterHud.setting.showSeconds=Секунды
 betterHud.setting.showDays=Дни
+#betterHud.setting.showSleepIndicator=Sleep Indicator
 betterHud.setting.fullYear=Целый год
 
 betterHud.setting.dateType=Формат

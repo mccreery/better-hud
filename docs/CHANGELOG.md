@@ -1,8 +1,12 @@
 # Changelog
 
 ## [1.4.1]
+### Added
+- Option to disable sleep indicator on game clock
 ### Removed
 - Block viewer NBT storage (#51, #53, #57, #58, #61, #66)
+### Fixed
+- Sleep icon using `World#isDaytime` on client and never showing
 
 ## [1.4] - 2019-04-04
 ### Added

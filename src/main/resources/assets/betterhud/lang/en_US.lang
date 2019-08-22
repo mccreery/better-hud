@@ -177,6 +177,7 @@ betterHud.value.hand=In Hand
 betterHud.setting.24hr=24 Hour
 betterHud.setting.showSeconds=Seconds
 betterHud.setting.showDays=Days
+betterHud.setting.showSleepIndicator=Sleep Indicator
 betterHud.setting.fullYear=Full Year
 
 betterHud.setting.dateType=Format
