@@ -1,6 +1,6 @@
 # Changelog
 
-## [1.4.1]
+## [1.4.1] - 2019-08-22
 ### Added
 - Option to disable sleep indicator on game clock
 ### Removed
