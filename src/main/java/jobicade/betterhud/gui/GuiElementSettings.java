@@ -1,14 +1,10 @@
 package jobicade.betterhud.gui;
 
-import static jobicade.betterhud.BetterHud.MC;
-import static jobicade.betterhud.BetterHud.SPACER;
+import static jobicade.betterhud.BetterHud.*;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
-import org.lwjgl.opengl.GL11;
 
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
@@ -16,21 +12,15 @@ import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.render.Color;
-import jobicade.betterhud.util.GlUtil;
-import net.java.games.input.Keyboard;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiLabel;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
-import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
-import net.minecraftforge.common.MinecraftForge;
 
 @OnlyIn(Dist.CLIENT)
 public class GuiElementSettings extends GuiMenuScreen {
@@ -91,7 +81,7 @@ public class GuiElementSettings extends GuiMenuScreen {
 		BetterHud.getConfigManager().getConfig().saveSettings();
 	}
 
-	@Override
+	/*@Override
 	protected void actionPerformed(GuiButton button) {
 		if(callbacks.containsKey(button)) {
 			callbacks.get(button).actionPerformed(this, button);
@@ -103,10 +93,10 @@ public class GuiElementSettings extends GuiMenuScreen {
 		} else {
 			super.actionPerformed(button);
 		}
-	}
+	}*/
 
 	/** @see GuiScreen#handleMouseInput() */
-	@Override
+	/*@Override
 	public void updateScreen() {
 		for(GuiTextField field : this.textboxList) {
 			field.updateCursorCounter();
@@ -125,7 +115,7 @@ public class GuiElementSettings extends GuiMenuScreen {
 		} else {
 			repeatTimer = 0;
 		}
-	}
+	}*/
 
 	@Override
 	public boolean charTyped(char typedChar, int keyCode) {
@@ -145,15 +135,15 @@ public class GuiElementSettings extends GuiMenuScreen {
 	@Override
 	public boolean mouseClicked(double mouseX, double mouseY, int modifiers) {
 		if(mouseY >= viewport.getTop() && mouseY < viewport.getBottom()) {
-			super.mouseClicked(mouseX, mouseY + getMouseOffset(), button);
+			//super.mouseClicked(mouseX, mouseY + getMouseOffset(), button);
 
 			for(GuiTextField field : this.textboxList) {
-				field.mouseClicked(mouseX, mouseY + getMouseOffset(), button);
+				//field.mouseClicked(mouseX, mouseY + getMouseOffset(), button);
 			}
 		}
 
 		// Done button isn't in buttons, have to handle it manually
-		if(done.mousePressed(this.mc, mouseX, mouseY)) {
+		/*if(done.mousePressed(this.mc, mouseX, mouseY)) {
 			ActionPerformedEvent.Pre event = new ActionPerformedEvent.Pre(this, done, buttons);
 			if(MinecraftForge.EVENT_BUS.post(event)) return;
 
@@ -166,10 +156,11 @@ public class GuiElementSettings extends GuiMenuScreen {
 				MinecraftForge.EVENT_BUS.post(new ActionPerformedEvent.Post(this, done, buttons));
 			}
 			return true;
-		}
+		}*/
+		return true;//
 	}
 
-	@Override
+	/*@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		drawDefaultBackground();
 		drawTitle();
@@ -195,15 +186,15 @@ public class GuiElementSettings extends GuiMenuScreen {
 
 		scrollbar.drawScrollbar(mouseX, mouseY);
 		drawResolution(10, 10, 100);
-	}
+	}*/
 
 	/** Add to {@code mouseY} to get the effective {@code mouseY} taking into account scroll */
-	@Deprecated private int getMouseOffset() {
+	/*@Deprecated private int getMouseOffset() {
 		return scrollbar.getScroll() - viewport.getTop();
-	}
+	}*/
 
 	/** Draws a diagram of the size of the HUD */
-	private void drawResolution(int x, int y, int width) {
+	/*private void drawResolution(int x, int y, int width) {
 		int height = width * this.height / this.width;
 
 		// Precalculate width
@@ -221,5 +212,5 @@ public class GuiElementSettings extends GuiMenuScreen {
 		drawVerticalLine(x, y, textY - SPACER, Color.WHITE.getPacked());
 		drawVerticalLine(x, y + (height + fontRenderer.FONT_HEIGHT) / 2 + SPACER, y + height, Color.WHITE.getPacked());
 		fontRenderer.drawString(String.valueOf(this.height), x, textY, Color.WHITE.getPacked());
-	}
+	}*/
 }

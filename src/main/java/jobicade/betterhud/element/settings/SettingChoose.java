@@ -6,15 +6,16 @@ import java.util.Map;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.gui.GuiElementSettings;
+import jobicade.betterhud.gui.GuiNormalButton;
+import jobicade.betterhud.render.Color;
+import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
-import jobicade.betterhud.gui.GuiElementSettings;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.render.Color;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.geom.Point;
 
 public class SettingChoose extends SettingAlignable<String> {
 	protected GuiButton last, next, backing;
@@ -89,9 +90,9 @@ public class SettingChoose extends SettingAlignable<String> {
 
 	@Override
 	public void getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Rect bounds) {
-		parts.add(backing = new GuiButton(2, bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), ""));
-		parts.add(last = new GuiButton(0, bounds.getLeft(), bounds.getY(), 20, bounds.getHeight(), "<"));
-		parts.add(next = new GuiButton(1, bounds.getRight() - 20, bounds.getY(), 20, bounds.getHeight(), ">"));
+		parts.add(backing = new GuiNormalButton(2, bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), ""));
+		parts.add(last = new GuiNormalButton(0, bounds.getLeft(), bounds.getY(), 20, bounds.getHeight(), "<"));
+		parts.add(next = new GuiNormalButton(1, bounds.getRight() - 20, bounds.getY(), 20, bounds.getHeight(), ">"));
 		backing.enabled = false;
 
 		callbacks.put(last, this);

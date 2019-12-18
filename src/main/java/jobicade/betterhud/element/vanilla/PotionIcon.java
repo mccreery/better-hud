@@ -1,6 +1,6 @@
 package jobicade.betterhud.element.vanilla;
 
-import static jobicade.betterhud.BetterHud.MC;
+import static jobicade.betterhud.BetterHud.*;
 
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
@@ -77,7 +77,7 @@ public class PotionIcon extends DefaultBoxed {
 
     private String getDurationLabel() {
         if(potion.shouldRenderInvText(effect) && showDuration) {
-            return Potion.getPotionDurationString(effect, 1.0f);
+            return String.valueOf(effect.getDuration());
         } else {
             return null;
         }

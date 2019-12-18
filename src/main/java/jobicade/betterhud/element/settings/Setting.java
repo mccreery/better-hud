@@ -6,18 +6,16 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BooleanSupplier;
 
+import jobicade.betterhud.config.HudConfig;
+import jobicade.betterhud.element.HudElement;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.gui.GuiElementSettings;
+import jobicade.betterhud.util.IGetSet;
+import jobicade.betterhud.util.ISaveLoad;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
-import net.minecraftforge.common.config.ConfigCategory;
-import net.minecraftforge.common.config.Property;
-import net.minecraftforge.common.config.Property.Type;
-import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.gui.GuiElementSettings;
-import jobicade.betterhud.config.HudConfig;
-import jobicade.betterhud.util.IGetSet;
-import jobicade.betterhud.util.ISaveLoad;
-import jobicade.betterhud.geom.Point;
+import net.minecraftforge.fml.client.config.ConfigGuiType;
 
 /** A setting for a {@link HudElement}. Child elements will be saved under
  * the namespace of the parent's name
@@ -33,7 +31,7 @@ public abstract class Setting<T> implements IGetSet<T>, ISaveLoad {
 	private String unlocalizedName;
 
 	/** The config property associated with this setting */
-	private Property property;
+	//private Property property;
 
 	/** Set to {@code true} to hide the setting from the GUI
 	 * @see #getGuiParts(List, Map, Point) */
@@ -104,7 +102,7 @@ public abstract class Setting<T> implements IGetSet<T>, ISaveLoad {
 	/** Binds properties to elements for loading and saving */
 	protected final void bindConfig(HudConfig config, String category, StringBuilder path) {
 		if(hasValue()) {
-			property = getProperty(config, category, path.toString());
+			//property = getProperty(config, category, path.toString());
 		}
 		int length = path.length();
 
@@ -120,9 +118,9 @@ public abstract class Setting<T> implements IGetSet<T>, ISaveLoad {
 
 	/** Loads this setting and all its children */
 	public final void loadConfig() {
-		if(property != null) {
+		/*if(property != null) {
 			load(property.getString());
-		}
+		}*/
 
 		for(Setting<?> child : children) {
 			child.loadConfig();
@@ -131,20 +129,20 @@ public abstract class Setting<T> implements IGetSet<T>, ISaveLoad {
 
 	/** Saves this setting and all its children to {@code config} */
 	public final void saveConfig() {
-		if(property != null) {
+		/*if(property != null) {
 			String save = save();
 
 			if(property.getString() != save) {
 				property.setValue(save);
 			}
-		}
+		}*/
 
 		for(Setting<?> child : children) {
 			child.saveConfig();
 		}
 	}
 
-	protected Property getProperty(HudConfig config, String category, String path) {
+	/*protected Property getProperty(HudConfig config, String category, String path) {
 		ConfigCategory configCategory = config.getCategory(category);
 		Property property = null;
 		String save = save();
@@ -162,10 +160,10 @@ public abstract class Setting<T> implements IGetSet<T>, ISaveLoad {
 
 		property.setDefaultValue(save);
 		return property;
-	}
+	}*/
 
-	protected Type getPropertyType() {
-		return Type.STRING;
+	protected ConfigGuiType getPropertyType() {
+		return ConfigGuiType.STRING;
 	}
 
 	/** Populates {@code parts} with {@link Gui}s which should be added to the settings screen.<br>

@@ -1,9 +1,6 @@
 package jobicade.betterhud.element.entityinfo;
 
-import static jobicade.betterhud.BetterHud.ICONS;
-import static jobicade.betterhud.BetterHud.MANAGER;
-import static jobicade.betterhud.BetterHud.MC;
-import static jobicade.betterhud.BetterHud.SPACER;
+import static jobicade.betterhud.BetterHud.*;
 
 import java.util.List;
 
@@ -62,7 +59,7 @@ public class MobInfo extends EntityInfo {
 		int health = MathUtil.getHealthForDisplay(entity.getHealth());
 		int maxHealth = MathUtil.getHealthForDisplay(entity.getMaxHealth());
 
-		String text = String.format("%s %s(%d/%d)", entity.getName(), ChatFormatting.GRAY, health, maxHealth);
+		String text = String.format("%s %s(%d/%d)", entity.getDisplayName().getString(), ChatFormatting.GRAY, health, maxHealth);
 
 		Point size = GlUtil.getStringSize(text);
 		Point barSize = bar.getPreferredSize();

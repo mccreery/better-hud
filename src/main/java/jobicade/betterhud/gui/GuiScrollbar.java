@@ -1,12 +1,12 @@
 package jobicade.betterhud.gui;
 
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.render.Color;
+import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.util.math.MathHelper;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.render.Color;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.util.GlUtil;
 
 public class GuiScrollbar extends Gui implements IGuiEventListener {
 	private final Rect bounds;
@@ -131,8 +131,9 @@ public class GuiScrollbar extends Gui implements IGuiEventListener {
 				clickOffset = grabber.getHeight() / 2;
 			}
 
-			mouseClickMove(mouseX, mouseY, button, 0);
+			//mouseClickMove(mouseX, mouseY, button, 0);
 		}
+		return false;//
 	}
 
 	@Override

@@ -10,7 +10,6 @@ import jobicade.betterhud.element.settings.SettingSlider;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.MathUtil;
 import jobicade.betterhud.util.Tickable;
-import net.java.games.input.Mouse;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -63,9 +62,9 @@ public class CpsCount extends TextElement implements Tickable {
 
 	@SubscribeEvent
 	public void onClick(MouseInputEvent event) {
-		if(Mouse.getEventButton() != -1 && Mouse.getEventButtonState()) {
+		/*if(Mouse.getEventButton() != -1 && Mouse.getEventButtonState()) {
 			++clickHistory[i];
-		}
+		}*/
 	}
 
 	@Override

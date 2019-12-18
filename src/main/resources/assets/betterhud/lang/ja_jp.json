@@ -1,0 +1,248 @@
+{
+"tile.null.name":"不明なブロック",
+"tile.endPortal.name":"エンドポータル",
+
+
+"key.betterHud.open":"Better HUDのメニューを開く",
+"key.betterHud.disable":"Better HUDを切り替える",
+
+
+"_comment":" Generic Formatters",
+"betterHud.hud.meters":"%sm",
+"betterHud.hud.seconds":"%ss",
+
+
+"_comment":" Menu buttons",
+"betterHud.menu.hudSettings":"HUDの設定",
+"betterHud.menu.settings":"%s 設定",
+"betterHud.menu.enableAll":"すべて有効",
+"betterHud.menu.disableAll":"すべて無効",
+"betterHud.menu.resetDefaults":"初期化",
+"betterHud.menu.lastPage":"最後",
+"betterHud.menu.nextPage":"次",
+"betterHud.menu.page":"ページ %s",
+"betterHud.menu.picking":"Picking (Cancel)",
+"betterHud.menu.pick":"Pick",
+"betterHud.menu.options":"オプション",
+
+
+"betterHud.menu.alphabetical":"A-Z",
+"betterHud.menu.enabled":"有効",
+"betterHud.menu.priority":"優先",
+
+
+"_comment":" Menu text",
+"betterHud.menu.arrowCountNotice":"Position will only have effect if the mode is set to Side.",
+"betterHud.menu.fhNotice":"Food and health values will always be beside the hotbar. These settings are for saturation.",
+"betterHud.menu.expInfoNotice":"These settings are only for total experience count.",
+"betterHud.menu.invNames":"For inventories, such as chests, which have been named via anvil.",
+"betterHud.menu.unsnap":"Hold %s to disable snapping",
+"betterHud.menu.potionsUseless":"This is basically useless in 1.9, but I'm leaving it in. You can disable the default one, if you like.",
+"betterHud.menu.unsupported":"This element is not supported by the server",
+
+
+"_comment":" Element names",
+"betterHud.element.global":"Better HUD",
+"betterHud.element.bloodSplatters":"流血表現",
+"betterHud.element.arrowCount":"矢の数",
+"betterHud.element.blockViewer":"ブロックビューア",
+"betterHud.element.gameClock":"ゲーム内時間",
+"betterHud.element.compass":"コンパス",
+"betterHud.element.connection":"接続",
+"betterHud.element.coordinates":"座標",
+"betterHud.element.cps":"CPS",
+"betterHud.element.enchantIndicator":"エンチャント",
+"betterHud.element.armorBars":"アーマーバー",
+"betterHud.element.handBar":"手持ちバー",
+"betterHud.element.experienceInfo":"XPの詳細",
+"betterHud.element.foodHealthStats":"満腹度、HPの詳細",
+"betterHud.element.foodIndicator":"飢えインジゲーター",
+"betterHud.element.fpsCount":"FPS",
+"betterHud.element.healIndicator":"回復インジゲーター",
+"betterHud.element.lightLevel":"明るさレベル",
+"betterHud.element.potionBar":"Potion Display",
+"betterHud.element.signReader":"Sign Reader",
+"betterHud.element.mobInfo":"Mobの詳細",
+"betterHud.element.playerInfo":"プレイヤーの詳細",
+"betterHud.element.horseInfo":"馬の詳細",
+"betterHud.element.distance":"Distance",
+"betterHud.element.hidePlayers":"Hide Players",
+"betterHud.element.biome":"バイオーム",
+"betterHud.element.breedIndicator":"Breed Indicator",
+"betterHud.element.fullInvIndicator":"フルインベントリインジゲーター",
+"betterHud.element.waterDrops":"水滴",
+"betterHud.element.itemPickup":"Item Pickup",
+"betterHud.element.systemClock":"システム時間",
+
+
+"_comment":" Setting Groups",
+"betterHud.group.position":"Position",
+"betterHud.group.misc":"Misc.",
+"betterHud.group.damageWarning":"Damage Warnings",
+
+
+"_comment":" Generic Settings",
+"betterHud.value.visible.on":"表示",
+"betterHud.value.visible.off":"非表示",
+
+
+"betterHud.setting.mode":"モード",
+"betterHud.value.mode":"タイプ %s",
+
+
+"betterHud.setting.position":"Position",
+"betterHud.value.preset":"プリセット",
+"betterHud.value.custom":"カスタム",
+
+
+"betterHud.setting.direction":"Direction",
+"betterHud.setting.anchor":"Anchor",
+"betterHud.setting.alignment":"Alignment",
+"betterHud.value.northWest":"北西",
+"betterHud.value.north":"北",
+"betterHud.value.northEast":"北東",
+"betterHud.value.west":"西",
+"betterHud.value.center":"中央",
+"betterHud.value.east":"東",
+"betterHud.value.southWest":"南西",
+"betterHud.value.south":"南",
+"betterHud.value.southEast":"南東",
+
+
+"betterHud.value.percent":"%s%%",
+"betterHud.setting.precision":"Precision",
+"betterHud.value.places":"%s places",
+"betterHud.setting.distance":"Distance",
+"betterHud.setting.red":"§c赤",
+"betterHud.setting.green":"§a緑",
+"betterHud.setting.blue":"§1青",
+
+
+"_comment":" Particles",
+"betterHud.setting.density":"Density",
+"betterHud.value.sparse":"Sparse",
+"betterHud.value.normal":"Normal",
+"betterHud.value.dense":"Dense",
+"betterHud.value.denser":"Denser",
+
+
+"_comment":" Equipment",
+"betterHud.setting.showItem":"アイテム",
+"betterHud.setting.showName":"名前",
+"betterHud.setting.showDurability":"継続時間",
+"betterHud.setting.offhand":"オフハンド",
+
+
+"betterHud.setting.bars":"バー",
+"betterHud.value.smallBars":"小さいバー",
+"betterHud.value.largeBars":"大きいバー",
+
+
+"betterHud.setting.durabilityFormat":"フォーマット",
+"betterHud.value.points":"ダメージポイント",
+"betterHud.value.percentage":"パーセント",
+
+
+"betterHud.setting.warning.1":"§c!§r",
+"betterHud.setting.warning.2":"§c! !§r",
+"betterHud.setting.warning.3":"§c! ! !§r",
+"betterHud.value.disabled":"無効",
+
+
+"_comment":" Block Viewer",
+"betterHud.setting.invNames":"インベントリ名",
+"betterHud.setting.showIds":"ID",
+"betterHud.setting.chunks":"%s チャンク",
+
+
+"_comment":" Compass",
+"betterHud.setting.letterScale":"Perspective",
+"betterHud.setting.showNotches":"Notches",
+"betterHud.setting.scale":"Scale",
+
+
+"_comment":" Clocks",
+"betterHud.setting.24hr":"24時間",
+"betterHud.setting.showSeconds":"秒",
+"betterHud.setting.showDays":"日",
+"betterHud.setting.fullYear":"Full Year",
+
+
+"betterHud.setting.dateType":"フォーマット",
+"betterHud.value.dmy":"D/M/Y (UK)",
+"betterHud.value.mdy":"M/D/Y (US)",
+"betterHud.value.ymd":"Y/M/D",
+"betterHud.hud.day":"Day %s",
+
+
+"_comment":" Connection",
+"betterHud.setting.playerCount":"プレイヤー数",
+"betterHud.setting.showIp":"IPアドレス",
+"betterHud.setting.latency":"遅延 (Ping)",
+
+
+"betterHud.hud.player":"1 player",
+"betterHud.hud.players":"%s players",
+"betterHud.hud.localServer":"Local Server",
+"betterHud.hud.ip":"IP: %s",
+"betterHud.hud.ping":"Ping: %sms",
+
+
+"_comment":" Coordinates",
+"betterHud.hud.x":"X: %s",
+"betterHud.hud.y":"Y: %s",
+"betterHud.hud.z":"Z: %s",
+"betterHud.hud.xyz":"X: %s, Y: %s, Z: %s",
+
+
+"_comment":" Hunger Indicator",
+"betterHud.setting.maxLimit":"Start Flashing At",
+"betterHud.setting.speed":"Flash Speed",
+"betterHud.value.slowest":"遅い",
+"betterHud.value.fastest":"早い",
+
+
+"_comment":" Mob Info",
+"betterHud.setting.billboardScale":"Billboard Scale",
+"betterHud.setting.jump":"Jump Height",
+"betterHud.setting.speed":"Speed",
+"betterHud.setting.players":"Players",
+"betterHud.setting.mobs":"Mobs",
+
+
+"betterHud.setting.compress":"Compress Above",
+"betterHud.value.never":"Never",
+"betterHud.value.unlimited":"無制限",
+
+
+"_comment":" CPS Counter",
+"betterHud.setting.timeout":"Timeout",
+"betterHud.setting.showBurst":"Show Burst",
+"betterHud.setting.remember":"Remember Burst",
+
+
+"_comment":" Others",
+"betterHud.setting.includeMe":"Include Me",
+"betterHud.setting.overlay":"オーバーレイ",
+"betterHud.setting.spaced":"Spaced",
+"betterHud.setting.numberOnly":"Number Only",
+"betterHud.setting.saturation":"Saturation",
+"betterHud.setting.text":"テキスト",
+"betterHud.setting.visual":"ビジュアル",
+"betterHud.setting.showTotalExp":"合計XP",
+"betterHud.setting.showLifetimeExp":"死亡後のXP",
+"betterHud.setting.disableDefault":"デフォルトで無効化",
+"betterHud.setting.alwaysVisible":"常に有効",
+"betterHud.setting.tooltipLines":"Tooltip Lines",
+
+
+"betterHud.hud.distance.0":"§a[§r%s§a]",
+"betterHud.hud.distance.1":"%sm away",
+"betterHud.hud.day":"Day %s",
+"betterHud.hud.healIndicator":"+",
+"betterHud.hud.fullInv":"Inventory Full",
+"betterHud.hud.biome":"バイオーム: %s",
+"betterHud.hud.unknownBlock":"不明なブロック",
+"betterHud.hud.holding":"Holding: %s",
+"betterHud.hud.burst":"Burst: %s clicks over %ss"
+}

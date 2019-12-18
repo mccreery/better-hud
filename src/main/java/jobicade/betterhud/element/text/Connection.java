@@ -1,6 +1,6 @@
 package jobicade.betterhud.element.text;
 
-import static jobicade.betterhud.BetterHud.MC;
+import static jobicade.betterhud.BetterHud.*;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -50,8 +50,8 @@ public class Connection extends TextElement {
 
 	@SubscribeEvent
 	public void onConnect(PlayerLoggedInEvent event) {
-		if(!event.isLocal()) {
-			ip = event.getManager().getRemoteAddress().toString();
+		if(!event.getPlayer().getServer().isSinglePlayer()) {
+			ip = event.getPlayer().getServer().getServerHostname().toString();
 		} else {
 			ip = "localServer";
 		}

@@ -2,6 +2,7 @@ package jobicade.betterhud;
 
 import java.nio.file.Paths;
 
+import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.maven.artifact.versioning.ArtifactVersion;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
@@ -27,13 +28,14 @@ import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedOutEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
-import net.minecraftforge.fml.network.NetworkDirection;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 
@@ -43,6 +45,16 @@ import net.minecraftforge.fml.network.simple.SimpleChannel;
 	dependencies = "required-after:forge@[14.23.1.2557,)") */
 public class BetterHud {
 	public static final String MODID = "betterhud";
+
+	public BetterHud() {
+        // Register the setup method for modloading
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::commonInit);
+        // Register the enqueueIMC method for modloading
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::clientInit);
+
+        // Register ourselves for server and other game events we are interested in
+        MinecraftForge.EVENT_BUS.register(this);
+    }
 
 	public static VersionRange ALL;
 	static {
@@ -91,12 +103,16 @@ public class BetterHud {
 		return HudElement.GLOBAL.isEnabledAndSupported() && !(HudElement.GLOBAL.hideOnDebug() && MC.gameSettings.showDebugInfo);
 	}
 
-	public static final SimpleChannel NET_WRAPPER = NetworkRegistry.ChannelBuilder
-			.named(new ResourceLocation(MODID, "main_channel")).simpleChannel();
+	static ResourceLocation loc = new ResourceLocation(MODID,"main_channel");
+	private static final String PROTOCOL_VERSION = Integer.toString(1);
+	public static SimpleChannel NET_WRAPPER = NetworkRegistry.ChannelBuilder.named(loc).clientAcceptedVersions(PROTOCOL_VERSION::equals).serverAcceptedVersions(PROTOCOL_VERSION::equals).networkProtocolVersion(() -> PROTOCOL_VERSION).simpleChannel();
 
-	@SubscribeEvent
-	public static void clientInit(FMLClientSetupEvent event) {
+	public void clientInit(FMLClientSetupEvent event) {
 		MC = Minecraft.getInstance();
+		logger = LogManager.getLogger();
+
+		Logger log = getLogger();
+		log.debug("path:"+loc.getNamespace());
 		HudElement.loadAllDefaults();
 
 		// TODO config overhaul
@@ -121,8 +137,7 @@ public class BetterHud {
 		}
 	}
 
-	@SubscribeEvent
-	public static void commonInit(FMLCommonSetupEvent event) {
+	public void commonInit(FMLCommonSetupEvent event) {
 		// Message ID 0 reserved for ignored server presence message from [,1.4)
 		NET_WRAPPER.registerMessage(2, ArtifactVersion.class, VersionHandler::encode, VersionHandler::decode, VersionHandler::consume);
 
@@ -135,7 +150,7 @@ public class BetterHud {
 	public void onPlayerConnected(PlayerLoggedInEvent e) {
 		if(e.getPlayer() instanceof EntityPlayerMP) {
 			NetworkManager netManager = ((EntityPlayerMP)e.getPlayer()).connection.netManager;
-			NET_WRAPPER.sendTo(VERSION, netManager, NetworkDirection.PLAY_TO_CLIENT);
+			//NET_WRAPPER.sendTo(VERSION, netManager, NetworkDirection.PLAY_TO_CLIENT);
 		}
 	}
 

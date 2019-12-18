@@ -1,22 +1,22 @@
 package jobicade.betterhud.element.settings;
 
-import static jobicade.betterhud.BetterHud.MC;
-import static jobicade.betterhud.BetterHud.SPACER;
+import static jobicade.betterhud.BetterHud.*;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.gui.GuiElementSettings;
+import jobicade.betterhud.gui.GuiNormalButton;
+import jobicade.betterhud.gui.GuiOffsetChooser;
+import jobicade.betterhud.gui.GuiUpDownButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
-import jobicade.betterhud.gui.GuiElementSettings;
-import jobicade.betterhud.gui.GuiOffsetChooser;
-import jobicade.betterhud.gui.GuiUpDownButton;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.geom.Point;
 
 public class SettingAbsolutePosition extends Setting<Point> {
 	public GuiTextField xBox, yBox;
@@ -43,9 +43,9 @@ public class SettingAbsolutePosition extends Setting<Point> {
 
 	@Override
 	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Point origin) {
-		parts.add(xBox = new GuiTextField(0, Minecraft.getMinecraft().fontRenderer, origin.getX() - 106, origin.getY() + 1, 80, 18));
+		parts.add(xBox = new GuiTextField(0, Minecraft.getInstance().fontRenderer, origin.getX() - 106, origin.getY() + 1, 80, 18));
 		xBox.setText(String.valueOf(x));
-		parts.add(yBox = new GuiTextField(0, Minecraft.getMinecraft().fontRenderer, origin.getX() + 2, origin.getY() + 1, 80, 18));
+		parts.add(yBox = new GuiTextField(0, Minecraft.getInstance().fontRenderer, origin.getX() + 2, origin.getY() + 1, 80, 18));
 		yBox.setText(String.valueOf(y));
 
 		parts.add(xUp   = new GuiUpDownButton(true ).setBounds(new Rect(origin.getX() - 22, origin.getY(),      0, 0)).setId(0).setRepeat());
@@ -54,7 +54,7 @@ public class SettingAbsolutePosition extends Setting<Point> {
 		parts.add(yDown = new GuiUpDownButton(false).setBounds(new Rect(origin.getX() + 86, origin.getY() + 10, 0, 0)).setId(3).setRepeat());
 
 		if(position != null) {
-			parts.add(pick = new GuiButton(4, origin.getX() - 100, origin.getY() + 22, 200, 20, I18n.format("betterHud.menu.pick")));
+			parts.add(pick = new GuiNormalButton(4, origin.getX() - 100, origin.getY() + 22, 200, 20, I18n.format("betterHud.menu.pick")));
 			callbacks.put(pick, this);
 		}
 

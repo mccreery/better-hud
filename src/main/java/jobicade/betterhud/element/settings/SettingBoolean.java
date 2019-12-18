@@ -4,14 +4,14 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraftforge.common.config.Property.Type;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.GuiActionButton;
 import jobicade.betterhud.gui.GuiElementSettings;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.IGetSet.IBoolean;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraftforge.fml.client.config.ConfigGuiType;
 
 public class SettingBoolean extends SettingAlignable<Boolean> implements IBoolean {
 	public static final String VISIBLE = "betterHud.value.visible";
@@ -35,8 +35,8 @@ public class SettingBoolean extends SettingAlignable<Boolean> implements IBoolea
 	}
 
 	@Override
-	protected Type getPropertyType() {
-		return Type.BOOLEAN;
+	protected ConfigGuiType getPropertyType() {
+		return ConfigGuiType.BOOLEAN;
 	}
 
 	public Boolean get() {return enabled() && value;}

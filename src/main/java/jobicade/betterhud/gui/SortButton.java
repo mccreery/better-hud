@@ -1,15 +1,15 @@
 package jobicade.betterhud.gui;
 
-import static jobicade.betterhud.BetterHud.MC;
+import static jobicade.betterhud.BetterHud.*;
 
+import jobicade.betterhud.element.HudElement;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.util.GlUtil;
+import jobicade.betterhud.util.SortField;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
-import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.geom.Point;
-import jobicade.betterhud.util.SortField;
 
 class SortButton extends GuiActionButton {
 	private static final ResourceLocation ARROW_TEXTURE = new ResourceLocation("textures/gui/resource_packs.png");
@@ -38,8 +38,8 @@ class SortButton extends GuiActionButton {
 	}
 
 	@Override
-	protected void drawButton(Rect bounds, Point mousePosition, float partialTicks) {
-		super.drawButton(bounds, mousePosition, partialTicks);
+	protected void render(Rect bounds, Point mousePosition, float partialTicks) {
+		super.render(bounds, mousePosition, partialTicks);
 
 		if(isTargeted()) {
 			Rect texture = callback.isDescending() ? DOWN_TEXTURE : UP_TEXTURE;

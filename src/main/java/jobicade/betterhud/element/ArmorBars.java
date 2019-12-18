@@ -1,6 +1,6 @@
 package jobicade.betterhud.element;
 
-import static jobicade.betterhud.BetterHud.MC;
+import static jobicade.betterhud.BetterHud.*;
 
 import java.util.List;
 
@@ -21,7 +21,6 @@ import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.eventbus.api.Event;
 
@@ -68,7 +67,8 @@ public class ArmorBars extends EquipmentDisplay {
 
 		for(int i = 0; i < 4; i++) {
 			ItemStack stack = MC.player.inventory.armorItemInSlot(3-i);
-			TextureAtlasSprite empty = MC.getTextureMapBlocks().getAtlasSprite(ItemArmor.EMPTY_SLOT_NAMES[3-i]);
+
+			TextureAtlasSprite empty = MC.getTextureMap().getAtlasSprite(MC.player.inventoryContainer.getSlot(i+5).getSlotTexture());
 
 			grid.setCell(new Point(0, i), new SlotDisplay(stack, empty));
 		}

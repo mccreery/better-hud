@@ -1,27 +1,13 @@
 package jobicade.betterhud.events;
 
-import static jobicade.betterhud.BetterHud.MANAGER;
-import static jobicade.betterhud.BetterHud.MC;
-import static jobicade.betterhud.BetterHud.MODID;
-import static net.minecraftforge.client.GuiIngameForge.renderAir;
-import static net.minecraftforge.client.GuiIngameForge.renderArmor;
-import static net.minecraftforge.client.GuiIngameForge.renderCrosshairs;
-import static net.minecraftforge.client.GuiIngameForge.renderExperiance;
-import static net.minecraftforge.client.GuiIngameForge.renderFood;
-import static net.minecraftforge.client.GuiIngameForge.renderHealth;
-import static net.minecraftforge.client.GuiIngameForge.renderHealthMount;
-import static net.minecraftforge.client.GuiIngameForge.renderHelmet;
-import static net.minecraftforge.client.GuiIngameForge.renderHotbar;
-import static net.minecraftforge.client.GuiIngameForge.renderJumpBar;
-import static net.minecraftforge.client.GuiIngameForge.renderObjective;
-import static net.minecraftforge.client.GuiIngameForge.renderPortal;
-import static net.minecraftforge.client.GuiIngameForge.renderVignette;
+import static jobicade.betterhud.BetterHud.*;
+import static net.minecraftforge.client.GuiIngameForge.*;
 
 import java.util.List;
 
-import com.google.common.base.Predicate;
-
 import org.lwjgl.opengl.GL11;
+
+import com.google.common.base.Predicate;
 
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
@@ -37,6 +23,7 @@ import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.util.math.AxisAlignedBB;
+import net.minecraft.util.math.RayTraceFluidMode;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.api.distmarker.Dist;
@@ -194,15 +181,15 @@ public final class RenderEvents {
 
 		MC.profiler.startSection("pick");
 
-		RayTraceResult trace = viewEntity.rayTrace(distance, partialTicks);
-		Vec3d eyePosition = viewEntity.getPositionEyes(partialTicks);
+		RayTraceResult trace = viewEntity.rayTrace(distance, partialTicks,RayTraceFluidMode.ALWAYS);
+		Vec3d eyePosition = viewEntity.getEyePosition(partialTicks);
 		Vec3d lookDelta = viewEntity.getLookVec().scale(distance);
 
 		if(trace != null) {
 			distance = trace.hitVec.distanceTo(eyePosition);
 		}
 
-		AxisAlignedBB range = viewEntity.getEntityBoundingBox().expand(lookDelta.x, lookDelta.y, lookDelta.z).grow(1, 1, 1);
+		AxisAlignedBB range = viewEntity.getBoundingBox().expand(lookDelta.x, lookDelta.y, lookDelta.z).grow(1, 1, 1);
 
 		List<Entity> entitiesInRange = MC.world.getEntitiesInAABBexcluding(viewEntity, range, new Predicate<Entity>() {
 			@Override
@@ -212,7 +199,7 @@ public final class RenderEvents {
 		});
 
 		for(Entity entity : entitiesInRange) {
-			AxisAlignedBB entityBox = entity.getEntityBoundingBox().grow(entity.getCollisionBorderSize());
+			AxisAlignedBB entityBox = entity.getBoundingBox().grow(entity.getCollisionBorderSize());
 			RayTraceResult entityTrace = entityBox.calculateIntercept(eyePosition, eyePosition.add(lookDelta));
 
 			if(entityBox.contains(eyePosition)) {

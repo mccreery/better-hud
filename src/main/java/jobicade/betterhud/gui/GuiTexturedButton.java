@@ -1,7 +1,6 @@
 package jobicade.betterhud.gui;
 
-import static jobicade.betterhud.BetterHud.MC;
-import static jobicade.betterhud.BetterHud.SETTINGS;
+import static jobicade.betterhud.BetterHud.*;
 
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -47,7 +46,7 @@ public class GuiTexturedButton extends GuiActionButton {
 	 * OpenGL side-effects: set texture to Gui.ICONS
 	 */
 	@Override
-	protected void drawButton(Rect bounds, Point mousePosition, float partialTicks) {
+	protected void render(Rect bounds, Point mousePosition, float partialTicks) {
 		MC.getTextureManager().bindTexture(SETTINGS);
 		GlUtil.drawRect(bounds, getTexture());
 		MC.getTextureManager().bindTexture(Gui.ICONS);

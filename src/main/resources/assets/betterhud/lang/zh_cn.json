@@ -1,248 +1,286 @@
-#tile.null.name=Unknown Block
-#tile.endPortal.name=End Portal
+{
+"_comment":"tile.null.name=Unknown Block",
+"_comment":"tile.endPortal.name=End Portal",
 
-key.betterHud.open=打开Better HUD菜单
-#key.betterHud.disable=Toggle Better HUD
 
-# Generic Formatters
-#betterHud.hud.meters=%sm
-#betterHud.hud.seconds=%ss
+"key.betterHud.open":"打开Better HUD菜单",
+"_comment":"key.betterHud.disable=Toggle Better HUD",
 
-# Menu buttons
-betterHud.menu.hudSettings=HUD 配置
-betterHud.menu.settings=%s 配置
-betterHud.menu.enableAll=启用全部
-betterHud.menu.disableAll=禁用全部
-#betterHud.menu.reorder=Reorder...
-#betterHud.menu.saveLoad=Save/Load...
-betterHud.menu.lastPage=上一页
-betterHud.menu.nextPage=下一页
-betterHud.menu.page=%s 页
-betterHud.menu.pick=选择位置
 
-#betterHud.menu.alphabetical=A-Z
-#betterHud.menu.enabled=Enabled
-#betterHud.menu.priority=Draw Order
+"_comment":" Generic Formatters",
+"_comment":"betterHud.hud.meters=%sm",
+"_comment":"betterHud.hud.seconds=%ss",
 
-#betterHud.menu.moveTop=Move to Top
-#betterHud.menu.moveUp=Move Up
-#betterHud.menu.moveDown=Move Down
-#betterHud.menu.moveBottom=Move to Bottom
 
-# Menu text
-#betterHud.menu.unsnap=Hold %s to disable snapping
-betterHud.menu.unsupported=此元素不受服务器支持。
+"_comment":" Menu buttons",
+"betterHud.menu.hudSettings":"HUD 配置",
+"betterHud.menu.settings":"%s 配置",
+"betterHud.menu.enableAll":"启用全部",
+"betterHud.menu.disableAll":"禁用全部",
+"_comment":"betterHud.menu.reorder=Reorder...",
+"_comment":"betterHud.menu.saveLoad=Save/Load...",
+"betterHud.menu.lastPage":"上一页",
+"betterHud.menu.nextPage":"下一页",
+"betterHud.menu.page":"%s 页",
+"betterHud.menu.pick":"选择位置",
 
-# Element names
-#betterHud.element.global=Better HUD
 
-betterHud.element.armorBars=护甲耐久条
-betterHud.element.arrowCount=背包箭数量
-betterHud.element.biome=生物群系
-betterHud.element.blockViewer=方块显示
-betterHud.element.bloodSplatters=溅血
-betterHud.element.breedIndicator=饲养繁殖指示器
-betterHud.element.compass=指南针
-betterHud.element.connection=服务器连接情况
-betterHud.element.coordinates=坐标
-#betterHud.element.cps=CPS
-betterHud.element.distance=方块距离
-betterHud.element.enchantIndicator=附魔指示器
-betterHud.element.experienceInfo=经验信息
-betterHud.element.fpsCount=FPS帧数
-betterHud.element.fullInvIndicator=背包已满指示器
-betterHud.element.gameClock=时钟
-betterHud.element.handBar=手持物品条
-betterHud.element.healIndicator=治疗指示器
-betterHud.element.horseInfo=马信息
-betterHud.element.itemPickup=捡拾物品指示
-betterHud.element.lightLevel=光照等级
-betterHud.element.mobInfo=动物信息
-#betterHud.element.playerInfo=Player Info
-betterHud.element.potionBar=药水显示
-#betterHud.element.saturation=Saturation
-betterHud.element.signReader=告示牌放大
-betterHud.element.systemClock=系统时钟（现实时间）
-betterHud.element.waterDrops=水滴
+"_comment":"betterHud.menu.alphabetical=A-Z",
+"_comment":"betterHud.menu.enabled=Enabled",
+"_comment":"betterHud.menu.priority=Draw Order",
 
-# Vanilla elements
-#betterHud.element.airBar=Air Bar
-#betterHud.element.armor=Armor Bar
-#betterHud.element.crosshair=Crosshair
-#betterHud.element.experience=Experience Bar
-#betterHud.element.food=Hunger Bar
-#betterHud.element.health=Health Bar
-#betterHud.element.helmetOverlay=Helmet Overlay
-#betterHud.element.hotbar=Hotbar
-#betterHud.element.jumpBar=Jump Bar
-#betterHud.element.mountHealth=Mount Health
-#betterHud.element.offhand=Off-Hand
-#betterHud.element.portal=Portal Overlay
-#betterHud.element.scoreboard=Scoreboard
-#betterHud.element.vignette=Vignette
 
-# Setting Groups
-betterHud.group.position=位置
-#betterHud.group.misc=Misc.
-betterHud.group.damageWarning=损毁警告
+"_comment":"betterHud.menu.moveTop=Move to Top",
+"_comment":"betterHud.menu.moveUp=Move Up",
+"_comment":"betterHud.menu.moveDown=Move Down",
+"_comment":"betterHud.menu.moveBottom=Move to Bottom",
 
-# Generic Settings
-#betterHud.value.none=None
 
-betterHud.value.visible.on=可见
-betterHud.value.visible.off=隐藏
+"_comment":" Menu text",
+"_comment":"betterHud.menu.unsnap=Hold %s to disable snapping",
+"betterHud.menu.unsupported":"此元素不受服务器支持。",
 
-betterHud.setting.mode=模式
-betterHud.value.mode=类型
 
-betterHud.setting.position=位置
-betterHud.value.preset=相对位置
-betterHud.value.custom=绝对位置
+"_comment":" Element names",
+"_comment":"betterHud.element.global=Better HUD",
 
-#betterHud.setting.positionType=Position Type
-#betterHud.value.hotbar=Hotbar
 
-#betterHud.setting.direction=Direction
-#betterHud.setting.parent=Parent
-#betterHud.setting.anchor=Anchor
-betterHud.setting.alignment=对齐
-#betterHud.setting.contentAlignment=Content Alignment
-betterHud.value.northWest=左上
-betterHud.value.north=上
-betterHud.value.northEast=右上
-betterHud.value.west=左
-betterHud.value.center=中
-betterHud.value.east=右
-betterHud.value.southWest=左下
-betterHud.value.south=下
-betterHud.value.southEast=右下
+"betterHud.element.armorBars":"护甲耐久条",
+"betterHud.element.arrowCount":"背包箭数量",
+"betterHud.element.biome":"生物群系",
+"betterHud.element.blockViewer":"方块显示",
+"betterHud.element.bloodSplatters":"溅血",
+"betterHud.element.breedIndicator":"饲养繁殖指示器",
+"betterHud.element.compass":"指南针",
+"betterHud.element.connection":"服务器连接情况",
+"betterHud.element.coordinates":"坐标",
+"_comment":"betterHud.element.cps=CPS",
+"betterHud.element.distance":"方块距离",
+"betterHud.element.enchantIndicator":"附魔指示器",
+"betterHud.element.experienceInfo":"经验信息",
+"betterHud.element.fpsCount":"FPS帧数",
+"betterHud.element.fullInvIndicator":"背包已满指示器",
+"betterHud.element.gameClock":"时钟",
+"betterHud.element.handBar":"手持物品条",
+"betterHud.element.healIndicator":"治疗指示器",
+"betterHud.element.horseInfo":"马信息",
+"betterHud.element.itemPickup":"捡拾物品指示",
+"betterHud.element.lightLevel":"光照等级",
+"betterHud.element.mobInfo":"动物信息",
+"_comment":"betterHud.element.playerInfo=Player Info",
+"betterHud.element.potionBar":"药水显示",
+"_comment":"betterHud.element.saturation=Saturation",
+"betterHud.element.signReader":"告示牌放大",
+"betterHud.element.systemClock":"系统时钟（现实时间）",
+"betterHud.element.waterDrops":"水滴",
 
-#betterHud.value.percent=%s%%
-betterHud.setting.precision=小数点精度
-#betterHud.value.places=%s places
-betterHud.setting.distance=距离
-#betterHud.setting.rayDistance=Ray Trace Distance
-#betterHud.setting.hideOnDebug=Hide While F3 is Open
-#betterHud.setting.debugMode=Debug Mode
-betterHud.setting.red=§c红色
-betterHud.setting.green=§a绿色
-betterHud.setting.blue=§1蓝色
 
-# Particles
-#betterHud.setting.density=Density
-betterHud.value.sparse=稀疏
-betterHud.value.normal=常规
-betterHud.value.dense=密集
-betterHud.value.denser=更密集
+"_comment":" Vanilla elements",
+"_comment":"betterHud.element.airBar=Air Bar",
+"_comment":"betterHud.element.armor=Armor Bar",
+"_comment":"betterHud.element.crosshair=Crosshair",
+"_comment":"betterHud.element.experience=Experience Bar",
+"_comment":"betterHud.element.food=Hunger Bar",
+"_comment":"betterHud.element.health=Health Bar",
+"_comment":"betterHud.element.helmetOverlay=Helmet Overlay",
+"_comment":"betterHud.element.hotbar=Hotbar",
+"_comment":"betterHud.element.jumpBar=Jump Bar",
+"_comment":"betterHud.element.mountHealth=Mount Health",
+"_comment":"betterHud.element.offhand=Off-Hand",
+"_comment":"betterHud.element.portal=Portal Overlay",
+"_comment":"betterHud.element.scoreboard=Scoreboard",
+"_comment":"betterHud.element.vignette=Vignette",
 
-# Equipment
-betterHud.setting.showItem=显示鼠标所指方块
-betterHud.setting.showName=显示名称
-betterHud.setting.showDurability=显示耐久
-#betterHud.setting.offhand=Off-Hand
 
-#betterHud.setting.showNonTools=Show For
-#betterHud.value.nonTools.off=Tools Only
-#betterHud.value.nonTools.on=All Items
+"_comment":" Setting Groups",
+"betterHud.group.position":"位置",
+"_comment":"betterHud.group.misc=Misc.",
+"betterHud.group.damageWarning":"损毁警告",
 
-#betterHud.setting.bars=Bars
-betterHud.value.smallBars=小条
-betterHud.value.largeBars=大条
 
-betterHud.setting.durabilityFormat=耐久模式
-#betterHud.value.points=Damage Points
-betterHud.value.percentage=百分比
-#betterHud.setting.showUndamaged=Full Durability
+"_comment":" Generic Settings",
+"_comment":"betterHud.value.none=None",
 
-#betterHud.setting.warning.1=§c!§r
-#betterHud.setting.warning.2=§c! !§r
-#betterHud.setting.warning.3=§c! ! !§r
-#betterHud.value.disabled=Disabled
 
-# Block Viewer
-betterHud.setting.invNames=容器名称
-betterHud.setting.showIds=显示ID
-#betterHud.setting.storeNbt=Store NBT in Stack
-betterHud.setting.chunks=%s 区块
+"betterHud.value.visible.on":"可见",
+"betterHud.value.visible.off":"隐藏",
 
-# Compass
-betterHud.setting.letterScale=Scaled Directions
-betterHud.setting.showNotches=Show Notches
-betterHud.setting.scale=缩放
-#betterHud.setting.requireItem=Require Item
-#betterHud.value.inventory=In Inventory
-#betterHud.value.hand=In Hand
 
-# Clocks
-betterHud.setting.24hr=24小时计时法
-betterHud.setting.showSeconds=显示秒数
-#betterHud.setting.showDays=Days
-betterHud.setting.fullYear=年全称
+"betterHud.setting.mode":"模式",
+"betterHud.value.mode":"类型",
 
-#betterHud.setting.dateType=Format
-betterHud.value.dmy=日/月/年 (英式)
-betterHud.value.mdy=月/日/年 (美式)
-betterHud.value.ymd=年/月/日 (中式)
-#betterHud.hud.day=Day %s
 
-# Connection
-betterHud.setting.playerCount=玩家数量
-betterHud.setting.showIp=IP地址
-betterHud.setting.latency=延迟 (Ping)
+"betterHud.setting.position":"位置",
+"betterHud.value.preset":"相对位置",
+"betterHud.value.custom":"绝对位置",
 
-betterHud.hud.player=1 玩家
-betterHud.hud.players=%s 玩家
-betterHud.hud.localServer=本地服务器
-#betterHud.hud.ip=IP: %s
-#betterHud.hud.ping=Ping: %sms
 
-# Coordinates
-#betterHud.hud.x=X: %s
-#betterHud.hud.y=Y: %s
-#betterHud.hud.z=Z: %s
-#betterHud.hud.xyz=X: %s, Y: %s, Z: %s
+"_comment":"betterHud.setting.positionType=Position Type",
+"_comment":"betterHud.value.hotbar=Hotbar",
 
-# Mob Info
-#betterHud.setting.billboardScale=Billboard Scale
-betterHud.setting.jump=跳跃高度
-betterHud.setting.speed=速度
-betterHud.setting.players=玩家
-betterHud.setting.mobs=动物
 
-#betterHud.setting.compress=Compress Above
-#betterHud.value.never=Never
-#betterHud.value.unlimited=Unlimited
+"_comment":"betterHud.setting.direction=Direction",
+"_comment":"betterHud.setting.parent=Parent",
+"_comment":"betterHud.setting.anchor=Anchor",
+"betterHud.setting.alignment":"对齐",
+"_comment":"betterHud.setting.contentAlignment=Content Alignment",
+"betterHud.value.northWest":"左上",
+"betterHud.value.north":"上",
+"betterHud.value.northEast":"右上",
+"betterHud.value.west":"左",
+"betterHud.value.center":"中",
+"betterHud.value.east":"右",
+"betterHud.value.southWest":"左下",
+"betterHud.value.south":"下",
+"betterHud.value.southEast":"右下",
 
-# CPS Counter
-#betterHud.setting.timeout=Timeout
-#betterHud.setting.showBurst=Show Burst
-#betterHud.setting.remember=Remember Burst
 
-# Others
-#betterHud.setting.alwaysVisible=Always Visible
-#betterHud.setting.disableDefault=Disable Default
-#betterHud.setting.hideMount=Hide While Riding
-betterHud.setting.numberOnly=仅数字
-betterHud.setting.overlay=覆盖
-#betterHud.setting.showLifetimeExp=XP Since Death
-betterHud.setting.showTotalExp=总共
-betterHud.setting.spaced=分组
-#betterHud.setting.tooltipLines=Tooltip Lines
-#betterHud.setting.warnings=Warnings
-#betterHud.setting.duration=Duration
-#betterHud.value.text=Text
-#betterHud.value.visual=Visual
+"_comment":"betterHud.value.percent=%s%%",
+"betterHud.setting.precision":"小数点精度",
+"_comment":"betterHud.value.places=%s places",
+"betterHud.setting.distance":"距离",
+"_comment":"betterHud.setting.rayDistance=Ray Trace Distance",
+"_comment":"betterHud.setting.hideOnDebug=Hide While F3 is Open",
+"_comment":"betterHud.setting.debugMode=Debug Mode",
+"betterHud.setting.red":"§c红色",
+"betterHud.setting.green":"§a绿色",
+"betterHud.setting.blue":"§1蓝色",
 
-#betterHud.setting.maxStacks=Maximum Stacks
-#betterHud.setting.fadeAfter=Fade After
 
-betterHud.hud.biome=生物群系: %s
-#betterHud.hud.burst=Burst: %s clicks over %ss
-#betterHud.hud.distance.0=§a[§r%s§a]
-betterHud.hud.distance.1=%sm 外
-betterHud.hud.fullInv=背包已满
-#betterHud.hud.healIndicator=+
-#betterHud.hud.holding=Holding: %s
-#betterHud.hud.saturation=Saturation: %s
-betterHud.hud.unknownBlock=未知方块
-#betterHud.hud.facing=Facing: %s (%s)
+"_comment":" Particles",
+"_comment":"betterHud.setting.density=Density",
+"betterHud.value.sparse":"稀疏",
+"betterHud.value.normal":"常规",
+"betterHud.value.dense":"密集",
+"betterHud.value.denser":"更密集",
+
+
+"_comment":" Equipment",
+"betterHud.setting.showItem":"显示鼠标所指方块",
+"betterHud.setting.showName":"显示名称",
+"betterHud.setting.showDurability":"显示耐久",
+"_comment":"betterHud.setting.offhand=Off-Hand",
+
+
+"_comment":"betterHud.setting.showNonTools=Show For",
+"_comment":"betterHud.value.nonTools.off=Tools Only",
+"_comment":"betterHud.value.nonTools.on=All Items",
+
+
+"_comment":"betterHud.setting.bars=Bars",
+"betterHud.value.smallBars":"小条",
+"betterHud.value.largeBars":"大条",
+
+
+"betterHud.setting.durabilityFormat":"耐久模式",
+"_comment":"betterHud.value.points=Damage Points",
+"betterHud.value.percentage":"百分比",
+"_comment":"betterHud.setting.showUndamaged=Full Durability",
+
+
+"_comment":"betterHud.setting.warning.1=§c!§r",
+"_comment":"betterHud.setting.warning.2=§c! !§r",
+"_comment":"betterHud.setting.warning.3=§c! ! !§r",
+"_comment":"betterHud.value.disabled=Disabled",
+
+
+"_comment":" Block Viewer",
+"betterHud.setting.invNames":"容器名称",
+"betterHud.setting.showIds":"显示ID",
+"_comment":"betterHud.setting.storeNbt=Store NBT in Stack",
+"betterHud.setting.chunks":"%s 区块",
+
+
+"_comment":" Compass",
+"betterHud.setting.letterScale":"Scaled Directions",
+"betterHud.setting.showNotches":"Show Notches",
+"betterHud.setting.scale":"缩放",
+"_comment":"betterHud.setting.requireItem=Require Item",
+"_comment":"betterHud.value.inventory=In Inventory",
+"_comment":"betterHud.value.hand=In Hand",
+
+
+"_comment":" Clocks",
+"betterHud.setting.24hr":"24小时计时法",
+"betterHud.setting.showSeconds":"显示秒数",
+"_comment":"betterHud.setting.showDays=Days",
+"betterHud.setting.fullYear":"年全称",
+
+
+"_comment":"betterHud.setting.dateType=Format",
+"betterHud.value.dmy":"日/月/年 (英式)",
+"betterHud.value.mdy":"月/日/年 (美式)",
+"betterHud.value.ymd":"年/月/日 (中式)",
+"_comment":"betterHud.hud.day=Day %s",
+
+
+"_comment":" Connection",
+"betterHud.setting.playerCount":"玩家数量",
+"betterHud.setting.showIp":"IP地址",
+"betterHud.setting.latency":"延迟 (Ping)",
+
+
+"betterHud.hud.player":"1 玩家",
+"betterHud.hud.players":"%s 玩家",
+"betterHud.hud.localServer":"本地服务器",
+"_comment":"betterHud.hud.ip=IP: %s",
+"_comment":"betterHud.hud.ping=Ping: %sms",
+
+
+"_comment":" Coordinates",
+"_comment":"betterHud.hud.x=X: %s",
+"_comment":"betterHud.hud.y=Y: %s",
+"_comment":"betterHud.hud.z=Z: %s",
+"_comment":"betterHud.hud.xyz=X: %s, Y: %s, Z: %s",
+
+
+"_comment":" Mob Info",
+"_comment":"betterHud.setting.billboardScale=Billboard Scale",
+"betterHud.setting.jump":"跳跃高度",
+"betterHud.setting.speed":"速度",
+"betterHud.setting.players":"玩家",
+"betterHud.setting.mobs":"动物",
+
+
+"_comment":"betterHud.setting.compress=Compress Above",
+"_comment":"betterHud.value.never=Never",
+"_comment":"betterHud.value.unlimited=Unlimited",
+
+
+"_comment":" CPS Counter",
+"_comment":"betterHud.setting.timeout=Timeout",
+"_comment":"betterHud.setting.showBurst=Show Burst",
+"_comment":"betterHud.setting.remember=Remember Burst",
+
+
+"_comment":" Others",
+"_comment":"betterHud.setting.alwaysVisible=Always Visible",
+"_comment":"betterHud.setting.disableDefault=Disable Default",
+"_comment":"betterHud.setting.hideMount=Hide While Riding",
+"betterHud.setting.numberOnly":"仅数字",
+"betterHud.setting.overlay":"覆盖",
+"_comment":"betterHud.setting.showLifetimeExp=XP Since Death",
+"betterHud.setting.showTotalExp":"总共",
+"betterHud.setting.spaced":"分组",
+"_comment":"betterHud.setting.tooltipLines=Tooltip Lines",
+"_comment":"betterHud.setting.warnings=Warnings",
+"_comment":"betterHud.setting.duration=Duration",
+"_comment":"betterHud.value.text=Text",
+"_comment":"betterHud.value.visual=Visual",
+
+
+"_comment":"betterHud.setting.maxStacks=Maximum Stacks",
+"_comment":"betterHud.setting.fadeAfter=Fade After",
+
+
+"betterHud.hud.biome":"生物群系: %s",
+"_comment":"betterHud.hud.burst=Burst: %s clicks over %ss",
+"_comment":"betterHud.hud.distance.0=§a[§r%s§a]",
+"betterHud.hud.distance.1":"%sm 外",
+"betterHud.hud.fullInv":"背包已满",
+"_comment":"betterHud.hud.healIndicator=+",
+"_comment":"betterHud.hud.holding=Holding: %s",
+"_comment":"betterHud.hud.saturation=Saturation: %s",
+"betterHud.hud.unknownBlock":"未知方块",
+"_comment":"betterHud.hud.facing=Facing: %s (%s)"
+}
