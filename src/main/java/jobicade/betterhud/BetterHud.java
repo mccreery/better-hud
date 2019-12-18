@@ -103,16 +103,12 @@ public class BetterHud {
 		return HudElement.GLOBAL.isEnabledAndSupported() && !(HudElement.GLOBAL.hideOnDebug() && MC.gameSettings.showDebugInfo);
 	}
 
-	static ResourceLocation loc = new ResourceLocation(MODID,"main_channel");
 	private static final String PROTOCOL_VERSION = Integer.toString(1);
-	public static SimpleChannel NET_WRAPPER = NetworkRegistry.ChannelBuilder.named(loc).clientAcceptedVersions(PROTOCOL_VERSION::equals).serverAcceptedVersions(PROTOCOL_VERSION::equals).networkProtocolVersion(() -> PROTOCOL_VERSION).simpleChannel();
+	public static SimpleChannel NET_WRAPPER = NetworkRegistry.ChannelBuilder.named(new ResourceLocation(MODID,"main_channel")).clientAcceptedVersions(PROTOCOL_VERSION::equals).serverAcceptedVersions(PROTOCOL_VERSION::equals).networkProtocolVersion(() -> PROTOCOL_VERSION).simpleChannel();
 
 	public void clientInit(FMLClientSetupEvent event) {
 		MC = Minecraft.getInstance();
 		logger = LogManager.getLogger();
-
-		Logger log = getLogger();
-		log.debug("path:"+loc.getNamespace());
 		HudElement.loadAllDefaults();
 
 		// TODO config overhaul
@@ -150,7 +146,7 @@ public class BetterHud {
 	public void onPlayerConnected(PlayerLoggedInEvent e) {
 		if(e.getPlayer() instanceof EntityPlayerMP) {
 			NetworkManager netManager = ((EntityPlayerMP)e.getPlayer()).connection.netManager;
-			//NET_WRAPPER.sendTo(VERSION, netManager, NetworkDirection.PLAY_TO_CLIENT);
+			//NET_WRAPPER.sendTo(VERSION, netManager, NetworkDirection.PLAY_TO_CLIENT); //Error
 		}
 	}
 
