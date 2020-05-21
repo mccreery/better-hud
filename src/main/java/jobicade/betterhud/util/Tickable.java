@@ -2,12 +2,13 @@ package jobicade.betterhud.util;
 
 import java.util.ArrayList;
 
+import jobicade.betterhud.BetterHud;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
+import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
 import net.minecraftforge.fml.relauncher.Side;
 import net.minecraftforge.fml.relauncher.SideOnly;
-import jobicade.betterhud.BetterHud;
 
 /** A generic interface for something which responds to ticks */
 public interface Tickable {
@@ -84,7 +85,10 @@ public interface Tickable {
 		@SideOnly(Side.CLIENT)
 		@SubscribeEvent
 		public void clientTick(ClientTickEvent event) {
-			if(BetterHud.isEnabled()) startTick();
+			// Event called twice per tick, for start and end
+			if (event.phase == Phase.END && BetterHud.isEnabled()) {
+				startTick();
+			}
 		}
 	}
 }
