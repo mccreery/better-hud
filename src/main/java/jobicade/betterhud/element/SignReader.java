@@ -3,25 +3,23 @@ package jobicade.betterhud.element;
 import static jobicade.betterhud.BetterHud.MC;
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
-import net.minecraft.block.ITileEntityProvider;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntitySign;
-import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.render.Grid;
 import jobicade.betterhud.render.Label;
 import jobicade.betterhud.render.Quad;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.geom.Point;
+import net.minecraft.tileentity.TileEntitySign;
+import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class SignReader extends HudElement {
 	private static final ResourceLocation SIGN_TEXTURE = new ResourceLocation("textures/entity/sign.png");
@@ -58,17 +56,25 @@ public class SignReader extends HudElement {
 		return bounds;
 	}
 
+	/**
+	 * Finds the sign directly in the player's line of sight.
+	 *
+	 * @return The sign the player is looking at or {@code null} if the player
+	 * is not looking at a sign.
+	 */
 	private TileEntitySign getSign() {
-		RayTraceResult trace = MC.getRenderViewEntity().rayTrace(200, 1.0F);
-		IBlockState state = MC.world.getBlockState(trace.getBlockPos());
-
-		if(state.getBlock() instanceof ITileEntityProvider) {
-			TileEntity tileEntity = MC.world.getTileEntity(trace.getBlockPos());
-
-			if(tileEntity instanceof TileEntitySign) {
-				return (TileEntitySign)tileEntity;
-			}
+		// Sanity check, but can continue normally if null
+		if (MC == null || MC.world == null) {
+			return null;
 		}
-		return null;
+
+		// Functional approach avoids long null check chain
+		return Optional.ofNullable(MC.getRenderViewEntity())
+			.map(entity -> entity.rayTrace(200, 1.0f))
+			.map(RayTraceResult::getBlockPos)
+			.map(MC.world::getTileEntity)
+			.filter(TileEntitySign.class::isInstance)
+			.map(TileEntitySign.class::cast)
+			.orElse(null);
 	}
 }
