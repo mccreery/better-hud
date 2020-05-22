@@ -32,7 +32,7 @@ import net.minecraftforge.fml.relauncher.Side;
 
 @EventBusSubscriber
 @Mod(modid = BetterHud.MODID, name = "Better HUD", version = BetterHud.VERSION,
-	updateJSON = "https://raw.githubusercontent.com/mccreery/better-hud/develop/update.json",
+	updateJSON = "https://raw.githubusercontent.com/mccreery/better-hud/master/update.json",
 	dependencies = "required-after:forge@[14.23.1.2557,)")
 public class BetterHud {
 	public static final String MODID = "betterhud";

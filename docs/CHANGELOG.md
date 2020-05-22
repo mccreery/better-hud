@@ -1,5 +1,16 @@
 # Changelog
 
+## [1.4.2] - 2020-05-22
+### Changed
+- Pickup count not supported when connected to a 1.4.1 server (see bug below)
+- Reduced network traffic in block viewer
+### Fixed
+- Server-side crashes with `NoClassDefFoundError` (#73)
+- Pickup count not working on a server (#93)
+- Tickables running at double speed (#87)
+- World border warning calculation (#81)
+- Crash with `NullPointerException` in sign reader (#90)
+
 ## [1.4.1] - 2019-08-22
 ### Added
 - Option to disable sleep indicator on game clock
