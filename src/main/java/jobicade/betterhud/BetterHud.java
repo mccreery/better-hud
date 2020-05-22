@@ -18,14 +18,20 @@ import jobicade.betterhud.util.Tickable.Ticker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.common.versioning.ArtifactVersion;
+import net.minecraftforge.fml.common.versioning.DefaultArtifactVersion;
 import net.minecraftforge.fml.relauncher.Side;
 
 @Mod(modid = BetterHud.MODID, name = "Better HUD", version = BetterHud.VERSION,
@@ -105,4 +111,25 @@ public class BetterHud {
 			logger.warn("Unable to register alphabetical sort update on language change");
 		}
 	}
+
+	/**
+     * Triggered by a player connecting to the logical server.
+	 * Updates the version tracked by the proxy.
+     */
+    @SubscribeEvent
+    public void onPlayerConnected(PlayerLoggedInEvent e) {
+        if(e.player instanceof EntityPlayerMP) {
+            ArtifactVersion version = new DefaultArtifactVersion(VERSION);
+            BetterHud.NET_WRAPPER.sendTo(new MessageVersion(version), (EntityPlayerMP)e.player);
+        }
+	}
+
+	/**
+	 * Triggered by a player disconnecting on the client only.
+	 * Resets the version tracked by the proxy to none.
+	 */
+	@SubscribeEvent
+    public void onPlayerDisconnected(ClientDisconnectionFromServerEvent e) {
+		BetterHud.getProxy().setServerVersion(null);
+    }
 }
