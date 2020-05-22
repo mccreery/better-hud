@@ -9,7 +9,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.versioning.Restriction;
 import net.minecraftforge.fml.common.versioning.VersionRange;
@@ -50,6 +49,7 @@ import jobicade.betterhud.element.vanilla.RidingHealth;
 import jobicade.betterhud.element.vanilla.Sidebar;
 import jobicade.betterhud.element.vanilla.Vignette;
 import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.proxy.ClientProxy;
 import jobicade.betterhud.util.IGetSet.IBoolean;
 import jobicade.betterhud.util.SortField;
 import jobicade.betterhud.util.Sorter;
@@ -295,8 +295,13 @@ public abstract class HudElement implements IBoolean {
 		}
 	}
 
-	/** Called for all elements during {@link FMLPreInitializationEvent}
-	 * @see BetterHud#preInit(FMLPreInitializationEvent) */
+	/**
+	 * Called for all elements during {@link FMLInitializationEvent} on the
+	 * physical client only. Elements registering themselves as event
+	 * subscribers can only use client-side events.
+	 *
+	 * @see ClientProxy#init(FMLInitializationEvent)
+	 */
 	public void init(FMLInitializationEvent event) {}
 
 	/** Calls {@link #loadDefaults()} on all elements

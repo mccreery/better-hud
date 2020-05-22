@@ -9,6 +9,7 @@ import jobicade.betterhud.network.MessageVersion;
 import jobicade.betterhud.proxy.HudSidedProxy;
 import jobicade.betterhud.util.Tickable.Ticker;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -96,6 +97,19 @@ public class BetterHud {
 	@SubscribeEvent
     public static void onPlayerDisconnected(ClientDisconnectionFromServerEvent e) {
 		setServerVersion(null);
+	}
+
+	/**
+	 * Triggered on the logical server. Sends a message to remove any cached
+	 * inventory name in the block viewer.
+	 */
+	@SubscribeEvent
+	public static void onBlockBreak(BlockEvent.BreakEvent event) {
+		// TODO don't send a packet EVERY TIME a block is broken
+		NET_WRAPPER.sendToDimension(
+			new InventoryNameQuery.Response(event.getPos(), null),
+			event.getWorld().provider.getDimension()
+		);
 	}
 
 	/**

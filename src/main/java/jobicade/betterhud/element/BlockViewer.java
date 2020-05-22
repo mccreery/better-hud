@@ -23,7 +23,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IWorldNameable;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -43,6 +42,9 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
 
+/**
+ * @see BetterHud#onBlockBreak(net.minecraftforge.event.world.BlockEvent.BreakEvent)
+ */
 public class BlockViewer extends TextElement {
 	private SettingBoolean showBlock, showIds, invNames;
 	private RayTraceResult trace;
@@ -218,11 +220,6 @@ public class BlockViewer extends TextElement {
 	@SubscribeEvent
 	public void onPlayerChangeDimension(PlayerChangedDimensionEvent event) {
 		nameCache.clear();
-	}
-
-	@SubscribeEvent
-	public void onBlockBreak(BlockEvent.BreakEvent event) {
-		BetterHud.NET_WRAPPER.sendToDimension(new InventoryNameQuery.Response(event.getPos(), null), event.getWorld().provider.getDimension());
 	}
 
 	public static final Map<BlockPos, ITextComponent> nameCache = new HashMap<BlockPos, ITextComponent>();
