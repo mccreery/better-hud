@@ -30,6 +30,7 @@ public class ClientProxy implements HudSidedProxy {
     public void preInit(FMLPreInitializationEvent event) {
         Path configPath = event.getSuggestedConfigurationFile().toPath();
         configManager = new ConfigManager(configPath, configPath.resolveSibling(BetterHud.MODID));
+        HudElement.loadAllDefaults();
     }
 
     @Override
@@ -48,6 +49,7 @@ public class ClientProxy implements HudSidedProxy {
         ClientRegistry.registerKeyBinding(menuKey);
         MinecraftForge.EVENT_BUS.register(this);
         MinecraftForge.EVENT_BUS.register(new RenderEvents());
+        HudElement.initAll(event);
     }
 
     @Override

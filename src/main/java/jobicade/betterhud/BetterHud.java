@@ -2,7 +2,6 @@ package jobicade.betterhud;
 
 import org.apache.logging.log4j.Logger;
 
-import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.LayoutManager;
 import jobicade.betterhud.network.InventoryNameQuery;
 import jobicade.betterhud.network.MessageNotifyClientHandler;
@@ -62,7 +61,6 @@ public class BetterHud {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		logger = event.getModLog();
-		HudElement.loadAllDefaults();
 		proxy.preInit(event);
 	}
 
@@ -75,7 +73,6 @@ public class BetterHud {
 		NET_WRAPPER.registerMessage(InventoryNameQuery.ServerHandler.class, InventoryNameQuery.Request.class, 3, Side.SERVER);
 		NET_WRAPPER.registerMessage(InventoryNameQuery.ClientHandler.class, InventoryNameQuery.Response.class, 4, Side.CLIENT);
 
-		HudElement.initAll(event);
 		Ticker.registerEvents();
 		proxy.init(event);
 	}
