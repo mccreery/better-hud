@@ -49,7 +49,7 @@ public final class RenderEvents {
 	public void onRenderTick(RenderGameOverlayEvent.Pre event) {
 		Minecraft.getMinecraft().mcProfiler.startSection(MODID);
 
-		boolean enabled = BetterHud.isEnabled();
+		boolean enabled = BetterHud.getProxy().isModEnabled();
 		suppressVanilla(enabled);
 
 		if(enabled && event.getType() == ElementType.ALL) {
@@ -62,7 +62,7 @@ public final class RenderEvents {
 	public void worldRender(RenderWorldLastEvent event) {
 		Minecraft.getMinecraft().mcProfiler.startSection(MODID);
 
-		if(BetterHud.isEnabled()) {
+		if(BetterHud.getProxy().isModEnabled()) {
 			Entity entity = getMouseOver(HudElement.GLOBAL.getBillboardDistance(), event.getPartialTicks());
 
 			if(entity instanceof EntityLivingBase) {

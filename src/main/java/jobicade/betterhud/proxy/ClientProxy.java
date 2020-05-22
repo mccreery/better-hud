@@ -51,14 +51,22 @@ public class ClientProxy implements HudSidedProxy {
     }
 
     @Override
+    public boolean isModEnabled() {
+        return HudElement.GLOBAL.isEnabledAndSupported() && !(
+            HudElement.GLOBAL.hideOnDebug()
+            && Minecraft.getMinecraft().gameSettings.showDebugInfo
+        );
+    }
+
+    @Override
     public HudConfig getConfig() {
         return configManager.getConfig();
     }
 
     @SubscribeEvent
-	public void onKey(KeyInputEvent event) {
-		if(Minecraft.getMinecraft().inGameHasFocus && menuKey.isPressed()) {
+    public void onKey(KeyInputEvent event) {
+        if (Minecraft.getMinecraft().inGameHasFocus && menuKey.isPressed()) {
             Minecraft.getMinecraft().displayGuiScreen(new GuiHudMenu(configManager));
-		}
-	}
+        }
+    }
 }

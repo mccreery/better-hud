@@ -20,6 +20,13 @@ public interface HudSidedProxy {
     }
 
     /**
+     * @throws UnsupportedOperationException on the dedicated server.
+     */
+    default boolean isModEnabled() {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
      * @param configFile The path to the loaded configuration file.
      * @param configDirectory The path to the directory containing saves.
      * @throws UnsupportedOperationException on the dedicated server.

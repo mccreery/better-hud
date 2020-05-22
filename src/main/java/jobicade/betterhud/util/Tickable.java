@@ -82,7 +82,7 @@ public interface Tickable {
 		@SubscribeEvent
 		public void clientTick(ClientTickEvent event) {
 			// Event called twice per tick, for start and end
-			if (event.phase == Phase.END && BetterHud.isEnabled()) {
+			if (event.phase == Phase.END && BetterHud.getProxy().isModEnabled()) {
 				startTick();
 			}
 		}

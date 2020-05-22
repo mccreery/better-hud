@@ -59,7 +59,7 @@ public class PotionBar extends HudElement {
 
 	@SubscribeEvent
 	public void onRenderTick(RenderGameOverlayEvent.Pre event) {
-		if (BetterHud.isEnabled() && event.getType() == ElementType.POTION_ICONS) {
+		if (BetterHud.getProxy().isModEnabled() && event.getType() == ElementType.POTION_ICONS) {
 			event.setCanceled(true);
 		}
 	}
