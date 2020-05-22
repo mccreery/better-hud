@@ -1,8 +1,7 @@
 package jobicade.betterhud.element;
 
-import static jobicade.betterhud.BetterHud.ALL;
-
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
@@ -12,7 +11,7 @@ import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
-import net.minecraftforge.fml.common.versioning.InvalidVersionSpecificationException;
+import net.minecraftforge.fml.common.versioning.Restriction;
 import net.minecraftforge.fml.common.versioning.VersionRange;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.entityinfo.HorseInfo;
@@ -213,19 +212,17 @@ public abstract class HudElement implements IBoolean {
 
 	/** @return The minimum server version that supports this element
 	 * @see #isSupportedByServer() */
-	public VersionRange getServerDependency() throws InvalidVersionSpecificationException {
-		return ALL;
+	public VersionRange getServerDependency() {
+		return VersionRange.newRange(null, Arrays.asList(Restriction.EVERYTHING));
 	}
 
 	/** @return {@code true} if the current connected server supports the element.
 	 * If the server version is too low, some communications may not be supported
 	 * @see #getServerDependency()  */
 	public boolean isSupportedByServer() {
-		try {
-			return BetterHud.serverSupports(getServerDependency());
-		} catch (InvalidVersionSpecificationException e) {
-			return false;
-		}
+		return getServerDependency().containsVersion(
+			BetterHud.getProxy().getServerVersion()
+		);
 	}
 
 	/** @return The localized name of the element

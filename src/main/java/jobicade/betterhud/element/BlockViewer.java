@@ -65,11 +65,16 @@ public class BlockViewer extends TextElement {
 		settings.add(invNames = new SettingBoolean("invNames") {
 			@Override
 			public boolean enabled() {
+				VersionRange versionRange;
 				try {
-					return super.enabled() && BetterHud.serverSupports(VersionRange.createFromVersionSpec("[1.4-beta,)"));
+					versionRange = VersionRange.createFromVersionSpec("[1.4-beta,)");
 				} catch (InvalidVersionSpecificationException e) {
-					return false;
+					throw new RuntimeException(e);
 				}
+
+				return super.enabled() && versionRange.containsVersion(
+					BetterHud.getProxy().getServerVersion()
+				);
 			}
 		});
 	}

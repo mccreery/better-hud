@@ -66,8 +66,12 @@ public class PickupCount extends HudElement {
 	}
 
 	@Override
-	public VersionRange getServerDependency() throws InvalidVersionSpecificationException {
-		return VersionRange.createFromVersionSpec("[1.4-beta,)");
+	public VersionRange getServerDependency() {
+		try {
+			return VersionRange.createFromVersionSpec("[1.4-beta,)");
+		} catch (InvalidVersionSpecificationException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**

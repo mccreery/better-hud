@@ -1,60 +1,39 @@
 package jobicade.betterhud;
 
 import java.nio.file.Path;
-import java.util.Arrays;
 
 import org.apache.logging.log4j.Logger;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.IReloadableResourceManager;
-import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.Mod;
-import net.minecraftforge.fml.common.SidedProxy;
-import net.minecraftforge.fml.common.Mod.EventHandler;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
-import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import net.minecraftforge.fml.common.versioning.ArtifactVersion;
-import net.minecraftforge.fml.common.versioning.DefaultArtifactVersion;
-import net.minecraftforge.fml.common.versioning.Restriction;
-import net.minecraftforge.fml.common.versioning.VersionRange;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import jobicade.betterhud.config.ConfigManager;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.HudElement.SortType;
 import jobicade.betterhud.events.KeyEvents;
 import jobicade.betterhud.events.RenderEvents;
+import jobicade.betterhud.geom.LayoutManager;
 import jobicade.betterhud.network.InventoryNameQuery;
 import jobicade.betterhud.network.MessageNotifyClientHandler;
 import jobicade.betterhud.network.MessageVersion;
 import jobicade.betterhud.proxy.HudSidedProxy;
-import jobicade.betterhud.geom.LayoutManager;
 import jobicade.betterhud.util.Tickable.Ticker;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.IReloadableResourceManager;
+import net.minecraft.client.resources.IResourceManager;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventHandler;
+import net.minecraftforge.fml.common.SidedProxy;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
+import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
+import net.minecraftforge.fml.relauncher.Side;
 
-@Mod(modid = BetterHud.MODID, name = "Better HUD", version = BetterHud.VERSION_STRING,
+@Mod(modid = BetterHud.MODID, name = "Better HUD", version = BetterHud.VERSION,
 	updateJSON = "https://raw.githubusercontent.com/mccreery/better-hud/develop/update.json",
 	dependencies = "required-after:forge@[14.23.1.2557,)")
 public class BetterHud {
 	public static final String MODID = "betterhud";
-
-	public static final VersionRange ALL = VersionRange.newRange(null, Arrays.asList(Restriction.EVERYTHING));
-	public static final ArtifactVersion ZERO = new DefaultArtifactVersion("0.0");
-
-	protected static final String VERSION_STRING = "1.4.1";
-	public static final ArtifactVersion VERSION = new DefaultArtifactVersion(VERSION_STRING);
-
-	public static ArtifactVersion serverVersion = ZERO;
-
-	public static boolean serverSupports(VersionRange range) {
-		return range.containsVersion(serverVersion);
-	}
+	public static final String VERSION = "1.4.1";
 
 	private static Logger logger;
 	public static Logger getLogger() {
@@ -125,18 +104,5 @@ public class BetterHud {
 		} else {
 			logger.warn("Unable to register alphabetical sort update on language change");
 		}
-	}
-
-	@SubscribeEvent
-	public void onPlayerConnected(PlayerLoggedInEvent e) {
-		if(e.player instanceof EntityPlayerMP) {
-			NET_WRAPPER.sendTo(new MessageVersion(VERSION), (EntityPlayerMP)e.player);
-		}
-	}
-
-	@SideOnly(Side.CLIENT)
-	@SubscribeEvent
-	public void onPlayerDisconnected(ClientDisconnectionFromServerEvent e) {
-		serverVersion = ZERO;
 	}
 }
