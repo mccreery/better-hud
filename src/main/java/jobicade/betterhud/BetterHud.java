@@ -15,7 +15,6 @@ import jobicade.betterhud.proxy.HudSidedProxy;
 import jobicade.betterhud.util.Tickable.Ticker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventHandler;
@@ -99,8 +98,6 @@ public class BetterHud {
 		// Used to update inventory names
 		NET_WRAPPER.registerMessage(InventoryNameQuery.ServerHandler.class, InventoryNameQuery.Request.class, 3, Side.SERVER);
 		NET_WRAPPER.registerMessage(InventoryNameQuery.ClientHandler.class, InventoryNameQuery.Response.class, 4, Side.CLIENT);
-
-		MinecraftForge.EVENT_BUS.register(this);
 	}
 
 	/**
@@ -108,7 +105,7 @@ public class BetterHud {
 	 * Updates the version tracked by the proxy.
      */
     @SubscribeEvent
-    public void onPlayerConnected(PlayerLoggedInEvent e) {
+    public static void onPlayerConnected(PlayerLoggedInEvent e) {
         if(e.player instanceof EntityPlayerMP) {
             ArtifactVersion version = new DefaultArtifactVersion(VERSION);
             NET_WRAPPER.sendTo(new MessageVersion(version), (EntityPlayerMP)e.player);
@@ -120,7 +117,7 @@ public class BetterHud {
 	 * Resets the version tracked by the proxy to none.
 	 */
 	@SubscribeEvent
-    public void onPlayerDisconnected(ClientDisconnectionFromServerEvent e) {
+    public static void onPlayerDisconnected(ClientDisconnectionFromServerEvent e) {
 		setServerVersion(null);
 	}
 
