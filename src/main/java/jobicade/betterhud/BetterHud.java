@@ -13,6 +13,7 @@ import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
@@ -35,6 +36,7 @@ import jobicade.betterhud.events.RenderEvents;
 import jobicade.betterhud.network.InventoryNameQuery;
 import jobicade.betterhud.network.MessageNotifyClientHandler;
 import jobicade.betterhud.network.MessageVersion;
+import jobicade.betterhud.proxy.HudSidedProxy;
 import jobicade.betterhud.geom.LayoutManager;
 import jobicade.betterhud.util.Tickable.Ticker;
 
@@ -59,6 +61,15 @@ public class BetterHud {
 	private static Logger logger;
 	public static Logger getLogger() {
 		return logger;
+	}
+
+	@SidedProxy(clientSide = "jobicade.betterhud.proxy.ClientProxy", serverSide = "jobicade.betterhud.proxy.ServerProxy")
+	public static HudSidedProxy proxy;
+	/**
+	 * @return The singleton sided proxy instance.
+	 */
+	public static HudSidedProxy getProxy() {
+		return proxy;
 	}
 
 	@SideOnly(Side.CLIENT) public static Minecraft MC;
