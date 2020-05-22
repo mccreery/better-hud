@@ -5,6 +5,8 @@ import org.apache.logging.log4j.Logger;
 import jobicade.betterhud.geom.LayoutManager;
 import jobicade.betterhud.network.InventoryNameQuery;
 import jobicade.betterhud.network.MessageNotifyClientHandler;
+import jobicade.betterhud.network.MessagePickup;
+import jobicade.betterhud.network.MessagePickupHandler;
 import jobicade.betterhud.network.MessageVersion;
 import jobicade.betterhud.proxy.HudSidedProxy;
 import jobicade.betterhud.util.Tickable.Ticker;
@@ -16,7 +18,9 @@ import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemPickupEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
@@ -68,6 +72,7 @@ public class BetterHud {
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
 		// Message ID 0 reserved for ignored server presence message from [,1.4)
+		NET_WRAPPER.registerMessage(MessagePickupHandler.class, MessagePickup.class, 1, Side.CLIENT);
 		NET_WRAPPER.registerMessage(MessageNotifyClientHandler.class, MessageVersion.class, 2, Side.CLIENT);
 
 		// Used to update inventory names
@@ -110,6 +115,20 @@ public class BetterHud {
 			new InventoryNameQuery.Response(event.getPos(), null),
 			event.getWorld().provider.getDimension()
 		);
+	}
+
+	/**
+	 * Triggered on the logical server. Sends a message to the client for the
+	 * picked up item.
+	 */
+	@SubscribeEvent(priority = EventPriority.LOWEST)
+	public static void onItemPickup(ItemPickupEvent e) {
+		if (!e.getStack().isEmpty() && e.player instanceof EntityPlayerMP) {
+			BetterHud.NET_WRAPPER.sendTo(
+				new MessagePickup(e.getStack()),
+				(EntityPlayerMP)e.player
+			);
+		}
 	}
 
 	/**
