@@ -31,8 +31,6 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensio
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraftforge.fml.common.versioning.InvalidVersionSpecificationException;
 import net.minecraftforge.fml.common.versioning.VersionRange;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Legend;
@@ -212,19 +210,16 @@ public class BlockViewer extends TextElement {
 		return String.format("%s(%s:%d/#%04d)", ChatFormatting.YELLOW, name, meta, id);
 	}
 
-	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void onPlayerDisconnected(ClientDisconnectionFromServerEvent event) {
 		nameCache.clear();
 	}
 
-	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void onPlayerChangeDimension(PlayerChangedDimensionEvent event) {
 		nameCache.clear();
 	}
 
-	@SideOnly(Side.SERVER)
 	@SubscribeEvent
 	public void onBlockBreak(BlockEvent.BreakEvent event) {
 		BetterHud.NET_WRAPPER.sendToDimension(new InventoryNameQuery.Response(event.getPos(), null), event.getWorld().provider.getDimension());

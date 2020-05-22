@@ -19,10 +19,7 @@ import jobicade.betterhud.util.Paginator;
 import jobicade.betterhud.util.SortField;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
 public class GuiHudMenu extends GuiMenuScreen {
 	private final Map<HudElement, ButtonRow> rows = new HashMap<HudElement, ButtonRow>(HudElement.ELEMENTS.size());
 	final Paginator<HudElement> paginator = new Paginator<HudElement>();
