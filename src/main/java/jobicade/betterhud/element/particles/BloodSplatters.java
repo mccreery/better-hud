@@ -1,10 +1,9 @@
 package jobicade.betterhud.element.particles;
 
-import static jobicade.betterhud.BetterHud.MC;
-
 import java.util.ArrayList;
 import java.util.Collection;
 
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -24,7 +23,7 @@ public class BloodSplatters extends ParticleOverlay {
 
 	@SubscribeEvent(priority = EventPriority.LOWEST)
 	public void onEntityDamage(LivingDamageEvent event) {
-		if(event.isCanceled() || !event.getEntity().equals(MC.player)) {
+		if(event.isCanceled() || !event.getEntity().equals(Minecraft.getMinecraft().player)) {
 			return;
 		}
 

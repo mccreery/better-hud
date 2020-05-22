@@ -1,10 +1,10 @@
 package jobicade.betterhud.element.vanilla;
 
 import static jobicade.betterhud.BetterHud.MANAGER;
-import static jobicade.betterhud.BetterHud.MC;
 
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.DirectionOptions;
@@ -38,8 +38,8 @@ public class Experience extends OverrideElement {
 	@Override
 	public boolean shouldRender(Event event) {
 		return super.shouldRender(event)
-			&& MC.playerController.shouldDrawHUD()
-			&& (!hideMount.get() || !MC.player.isRidingHorse());
+			&& Minecraft.getMinecraft().playerController.shouldDrawHUD()
+			&& (!hideMount.get() || !Minecraft.getMinecraft().player.isRidingHorse());
 	}
 
 	@Override
@@ -61,10 +61,10 @@ public class Experience extends OverrideElement {
 		} else {
 			barRect = position.applyTo(barRect);
 		}
-		GlUtil.drawTexturedProgressBar(barRect.getPosition(), bgTexture, fgTexture, MC.player.experience, Direction.EAST);
+		GlUtil.drawTexturedProgressBar(barRect.getPosition(), bgTexture, fgTexture, Minecraft.getMinecraft().player.experience, Direction.EAST);
 
-		if(MC.player.experienceLevel > 0) {
-			String numberText = String.valueOf(MC.player.experienceLevel);
+		if(Minecraft.getMinecraft().player.experienceLevel > 0) {
+			String numberText = String.valueOf(Minecraft.getMinecraft().player.experienceLevel);
 			Point numberPosition = new Rect(GlUtil.getStringSize(numberText))
 				.anchor(barRect.grow(6), position.getContentAlignment().mirrorRow()).getPosition();
 

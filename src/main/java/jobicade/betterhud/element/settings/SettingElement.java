@@ -1,7 +1,5 @@
 package jobicade.betterhud.element.settings;
 
-import static jobicade.betterhud.BetterHud.MC;
-
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -12,6 +10,7 @@ import jobicade.betterhud.gui.GuiElementChooser;
 import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
@@ -52,7 +51,7 @@ public class SettingElement extends SettingAlignable<HudElement> {
 
 	@Override
 	public void actionPerformed(GuiElementSettings gui, GuiButton button) {
-		MC.displayGuiScreen(new GuiElementChooser(gui, gui.element, this));
+		Minecraft.getMinecraft().displayGuiScreen(new GuiElementChooser(gui, gui.element, this));
 	}
 
 	@Override

@@ -1,10 +1,9 @@
 package jobicade.betterhud.element.text;
 
-import static jobicade.betterhud.BetterHud.MC;
-
 import java.util.Arrays;
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.Legend;
@@ -41,7 +40,7 @@ public class FullInvIndicator extends TextElement {
 
 	@Override
 	public boolean shouldRender(Event event) {
-		return super.shouldRender(event) && MC.player.inventory.getFirstEmptyStack() == -1 &&
-			(!offHand.get() || !MC.player.inventory.offHandInventory.get(0).isEmpty());
+		return super.shouldRender(event) && Minecraft.getMinecraft().player.inventory.getFirstEmptyStack() == -1 &&
+			(!offHand.get() || !Minecraft.getMinecraft().player.inventory.offHandInventory.get(0).isEmpty());
 	}
 }

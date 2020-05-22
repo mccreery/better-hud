@@ -1,7 +1,6 @@
 package jobicade.betterhud.element.vanilla;
 
-import static jobicade.betterhud.BetterHud.MC;
-
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.util.bars.StatBarMount;
@@ -25,6 +24,6 @@ public class RidingHealth extends Bar {
 
 	@Override
 	public boolean shouldRender(Event event) {
-		return MC.playerController.shouldDrawHUD() && super.shouldRender(event);
+		return Minecraft.getMinecraft().playerController.shouldDrawHUD() && super.shouldRender(event);
 	}
 }

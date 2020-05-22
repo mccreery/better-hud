@@ -1,9 +1,8 @@
 package jobicade.betterhud.element;
 
-import static jobicade.betterhud.BetterHud.MC;
-
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.DirectionOptions;
@@ -55,35 +54,35 @@ public class HandBar extends EquipmentDisplay {
 		if(showItem.get()) width += 21;
 
 		if(text != null) {
-			width += MC.fontRenderer.getStringWidth(text);
+			width += Minecraft.getMinecraft().fontRenderer.getStringWidth(text);
 		}
 
 		if(showItem.get()) {
-			MC.mcProfiler.startSection("items");
+			Minecraft.getMinecraft().mcProfiler.startSection("items");
 			GlUtil.renderSingleItem(stack, x + 90 - width / 2, y);
-			MC.mcProfiler.endSection();
+			Minecraft.getMinecraft().mcProfiler.endSection();
 		}
 
 		if(text != null) {
-			MC.mcProfiler.startSection("text");
+			Minecraft.getMinecraft().mcProfiler.startSection("text");
 			GlUtil.drawString(text, new Point(x + 90 - width / 2 + (showItem.get() ? 21 : 0), y + 4), Direction.NORTH_WEST, Color.WHITE);
-			MC.mcProfiler.endSection();
+			Minecraft.getMinecraft().mcProfiler.endSection();
 		}
 
 		if(isTool && showBars.get()) {
-			MC.mcProfiler.startSection("bars");
+			Minecraft.getMinecraft().mcProfiler.startSection("bars");
 			GlUtil.drawDamageBar(new Rect(x, y + 16, 180, 2), stack, false);
-			MC.mcProfiler.endSection();
+			Minecraft.getMinecraft().mcProfiler.endSection();
 		}
 	}
 
 	@Override
 	public Rect render(Event event) {
 		Rect bounds = position.applyTo(new Rect(180, offHand.get() ? 41 : 18));
-		renderBar(MC.player.getHeldItemMainhand(), bounds.getX(), bounds.getBottom() - 18);
+		renderBar(Minecraft.getMinecraft().player.getHeldItemMainhand(), bounds.getX(), bounds.getBottom() - 18);
 
 		if(offHand.get()) {
-			renderBar(MC.player.getHeldItemOffhand(), bounds.getX(), bounds.getY());
+			renderBar(Minecraft.getMinecraft().player.getHeldItemOffhand(), bounds.getX(), bounds.getY());
 		}
 		return bounds;
 	}

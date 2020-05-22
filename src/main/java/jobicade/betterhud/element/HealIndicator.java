@@ -1,11 +1,11 @@
 package jobicade.betterhud.element;
 
 import static jobicade.betterhud.BetterHud.HUD_ICONS;
-import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.Legend;
@@ -41,7 +41,7 @@ public class HealIndicator extends HudElement {
 	@Override
 	public Rect render(Event event) {
 			String healIndicator = I18n.format("betterHud.hud.healIndicator");
-			Rect bounds = mode.getIndex() == 0 ? new Rect(MC.fontRenderer.getStringWidth(healIndicator), MC.fontRenderer.FONT_HEIGHT) : new Rect(9, 9);
+			Rect bounds = mode.getIndex() == 0 ? new Rect(Minecraft.getMinecraft().fontRenderer.getStringWidth(healIndicator), Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT) : new Rect(9, 9);
 
 			if(position.isCustom()) {
 				bounds = position.applyTo(bounds);
@@ -53,8 +53,8 @@ public class HealIndicator extends HudElement {
 			if(mode.getIndex() == 0) {
 				GlUtil.drawString(healIndicator, bounds.getPosition(), Direction.NORTH_WEST, Color.GREEN);
 			} else {
-				MC.getTextureManager().bindTexture(HUD_ICONS);
-				MC.ingameGUI.drawTexturedModalRect(bounds.getX(), bounds.getY(), 0, 80, 9, 9);
+				Minecraft.getMinecraft().getTextureManager().bindTexture(HUD_ICONS);
+				Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(bounds.getX(), bounds.getY(), 0, 80, 9, 9);
 			}
 			return bounds;
 	}
@@ -63,9 +63,9 @@ public class HealIndicator extends HudElement {
 	@Override
 	public boolean shouldRender(Event event) {
 		return super.shouldRender(event)
-			&& MC.playerController.gameIsSurvivalOrAdventure()
-			&& MC.world.getGameRules().getBoolean("naturalRegeneration")
-			&& MC.player.getFoodStats().getFoodLevel() >= 18
-			&& MC.player.shouldHeal();
+			&& Minecraft.getMinecraft().playerController.gameIsSurvivalOrAdventure()
+			&& Minecraft.getMinecraft().world.getGameRules().getBoolean("naturalRegeneration")
+			&& Minecraft.getMinecraft().player.getFoodStats().getFoodLevel() >= 18
+			&& Minecraft.getMinecraft().player.shouldHeal();
 	}
 }

@@ -1,7 +1,5 @@
 package jobicade.betterhud.element;
 
-import static jobicade.betterhud.BetterHud.MC;
-
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -16,6 +14,7 @@ import jobicade.betterhud.render.Color;
 import jobicade.betterhud.render.Grid;
 import jobicade.betterhud.render.Label;
 import jobicade.betterhud.render.Quad;
+import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
@@ -43,7 +42,7 @@ public class SignReader extends HudElement {
 	public Rect render(Event event) {
 		Rect bounds = position.applyTo(new Rect(96, 48));
 
-		MC.getTextureManager().bindTexture(SIGN_TEXTURE);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(SIGN_TEXTURE);
 		new Quad().setTexture(new Rect(2, 2, 24, 12).scale(4, 8)).setBounds(bounds).render();
 
 		List<Label> labels = Stream.of(getSign().signText)
@@ -64,15 +63,15 @@ public class SignReader extends HudElement {
 	 */
 	private TileEntitySign getSign() {
 		// Sanity check, but can continue normally if null
-		if (MC == null || MC.world == null) {
+		if (Minecraft.getMinecraft() == null || Minecraft.getMinecraft().world == null) {
 			return null;
 		}
 
 		// Functional approach avoids long null check chain
-		return Optional.ofNullable(MC.getRenderViewEntity())
+		return Optional.ofNullable(Minecraft.getMinecraft().getRenderViewEntity())
 			.map(entity -> entity.rayTrace(200, 1.0f))
 			.map(RayTraceResult::getBlockPos)
-			.map(MC.world::getTileEntity)
+			.map(Minecraft.getMinecraft().world::getTileEntity)
 			.filter(TileEntitySign.class::isInstance)
 			.map(TileEntitySign.class::cast)
 			.orElse(null);

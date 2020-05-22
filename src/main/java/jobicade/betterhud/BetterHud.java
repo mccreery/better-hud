@@ -72,8 +72,6 @@ public class BetterHud {
 		return proxy;
 	}
 
-	@SideOnly(Side.CLIENT) public static Minecraft MC;
-
 	public static final ResourceLocation ICONS     = Gui.ICONS;
 	public static final ResourceLocation WIDGETS   = new ResourceLocation("textures/gui/widgets.png");
 	public static final ResourceLocation PARTICLES = new ResourceLocation("textures/particle/particles.png");
@@ -91,7 +89,7 @@ public class BetterHud {
 	}
 
 	public static boolean isEnabled() {
-		return HudElement.GLOBAL.isEnabledAndSupported() && !(HudElement.GLOBAL.hideOnDebug() && MC.gameSettings.showDebugInfo);
+		return HudElement.GLOBAL.isEnabledAndSupported() && !(HudElement.GLOBAL.hideOnDebug() && Minecraft.getMinecraft().gameSettings.showDebugInfo);
 	}
 
 	public static final SimpleNetworkWrapper NET_WRAPPER = NetworkRegistry.INSTANCE.newSimpleChannel(MODID);
@@ -101,8 +99,6 @@ public class BetterHud {
 		logger = event.getModLog();
 
 		if(event.getSide() == Side.CLIENT) {
-			MC = Minecraft.getMinecraft();
-
 			HudElement.loadAllDefaults();
 
 			Path configPath = event.getSuggestedConfigurationFile().toPath();
@@ -129,7 +125,7 @@ public class BetterHud {
 
 		MinecraftForge.EVENT_BUS.register(this);
 
-		IResourceManager manager = MC.getResourceManager();
+		IResourceManager manager = Minecraft.getMinecraft().getResourceManager();
 		if(manager instanceof IReloadableResourceManager) {
 			IReloadableResourceManager reloadableManager = (IReloadableResourceManager)manager;
 

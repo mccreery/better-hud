@@ -1,7 +1,6 @@
 package jobicade.betterhud.element.vanilla;
 
 import static jobicade.betterhud.BetterHud.MANAGER;
-import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 
 import java.util.ArrayList;
@@ -21,6 +20,7 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Boxed;
 import jobicade.betterhud.render.Grid;
 import jobicade.betterhud.util.MathUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
@@ -66,7 +66,7 @@ public class PotionBar extends HudElement {
 
 	@Override
 	public boolean shouldRender(Event event) {
-		return super.shouldRender(event) && !MC.player.getActivePotionEffects().isEmpty();
+		return super.shouldRender(event) && !Minecraft.getMinecraft().player.getActivePotionEffects().isEmpty();
 	}
 
 	@Override
@@ -80,13 +80,13 @@ public class PotionBar extends HudElement {
 			bounds = position.applyTo(bounds);
 		}
 		grid.setBounds(bounds).render();
-		MC.getTextureManager().bindTexture(Gui.ICONS);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
 
 		return bounds;
 	}
 
 	private void populateEffects(List<PotionEffect> helpful, List<PotionEffect> harmful) {
-		Stream<PotionEffect> source = MC.player
+		Stream<PotionEffect> source = Minecraft.getMinecraft().player
 			.getActivePotionEffects().parallelStream()
 			.filter(e -> e.doesShowParticles() && e.getPotion().shouldRenderHUD(e));
 

@@ -1,11 +1,11 @@
 package jobicade.betterhud.element;
 
-import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.MANAGER;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
@@ -158,12 +158,12 @@ public class PickupCount extends HudElement {
 
 		public StackNode(ItemStack stack) {
 			this.stack = stack;
-			this.updateCounter = MC.ingameGUI.getUpdateCounter();
+			this.updateCounter = Minecraft.getMinecraft().ingameGUI.getUpdateCounter();
 		}
 
 		public void increaseStackSize(int size) {
 			stack.setCount(stack.getCount() + size);
-			this.updateCounter = MC.ingameGUI.getUpdateCounter();
+			this.updateCounter = Minecraft.getMinecraft().ingameGUI.getUpdateCounter();
 		}
 
 		private Label getLabel() {
@@ -172,7 +172,7 @@ public class PickupCount extends HudElement {
 		}
 
 		private float getOpacity() {
-			return 1.0f - (MC.ingameGUI.getUpdateCounter() - updateCounter) / fadeAfter.get().floatValue();
+			return 1.0f - (Minecraft.getMinecraft().ingameGUI.getUpdateCounter() - updateCounter) / fadeAfter.get().floatValue();
 		}
 
 		private boolean isDead() {

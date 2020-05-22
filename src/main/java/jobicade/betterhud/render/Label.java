@@ -1,11 +1,10 @@
 package jobicade.betterhud.render;
 
-import static jobicade.betterhud.BetterHud.MC;
-
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Size;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
 
@@ -25,7 +24,7 @@ public class Label extends DefaultBoxed {
 
     public Label setText(String text) {
         this.text = text;
-        this.size = new Size(MC.fontRenderer.getStringWidth(text), MC.fontRenderer.FONT_HEIGHT);
+        this.size = new Size(Minecraft.getMinecraft().fontRenderer.getStringWidth(text), Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT);
         return this;
     }
 
@@ -61,11 +60,11 @@ public class Label extends DefaultBoxed {
         if(color.getAlpha() < 4) return;
 
         Point position = new Rect(size).anchor(bounds, Direction.CENTER).getPosition();
-        MC.fontRenderer.drawString(text, position.getX(), position.getY(), color.getPacked(), shadow);
+        Minecraft.getMinecraft().fontRenderer.drawString(text, position.getX(), position.getY(), color.getPacked(), shadow);
 
         // Restore OpenGL state as expected
         Color.WHITE.apply();
-        MC.getTextureManager().bindTexture(Gui.ICONS);
+        Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
         GlStateManager.disableAlpha();
     }
 }

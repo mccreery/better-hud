@@ -1,9 +1,8 @@
 package jobicade.betterhud.events;
 
-import static jobicade.betterhud.BetterHud.MC;
-
 import org.lwjgl.input.Keyboard;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
@@ -27,8 +26,8 @@ public final class KeyEvents {
 
 	@SubscribeEvent
 	public void onKey(KeyInputEvent event) {
-		if(MC.inGameHasFocus && MENU_KEY.isPressed()) {
-			MC.displayGuiScreen(new GuiHudMenu());
+		if(Minecraft.getMinecraft().inGameHasFocus && MENU_KEY.isPressed()) {
+			Minecraft.getMinecraft().displayGuiScreen(new GuiHudMenu());
 		}
 	}
 }

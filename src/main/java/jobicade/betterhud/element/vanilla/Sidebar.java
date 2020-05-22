@@ -1,7 +1,6 @@
 package jobicade.betterhud.element.vanilla;
 
 import static jobicade.betterhud.BetterHud.MANAGER;
-import static jobicade.betterhud.BetterHud.MC;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -20,6 +19,7 @@ import jobicade.betterhud.geom.Size;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.render.Grid;
 import jobicade.betterhud.render.Label;
+import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
@@ -39,12 +39,12 @@ public class Sidebar extends HudElement {
 
 	@Override
 	public boolean shouldRender(Event event) {
-		return getObjective(MC.player) != null && super.shouldRender(event);
+		return getObjective(Minecraft.getMinecraft().player) != null && super.shouldRender(event);
 	}
 
 	@Override
 	protected Rect render(Event event) {
-		ScoreObjective objective = getObjective(MC.player);
+		ScoreObjective objective = getObjective(Minecraft.getMinecraft().player);
 		List<Score> scores = getScores(objective);
 
 		Label title = new Label(objective.getDisplayName()).setShadow(false);
@@ -65,13 +65,13 @@ public class Sidebar extends HudElement {
 		Grid<Label> namesGroup = new Grid<>(new Point(1, names.size()), names).setStretch(true).setCellAlignment(position.getContentAlignment().mirrorCol());
 		Grid<Label> valuesGroup = new Grid<>(new Point(1, values.size()), values).setStretch(true).setCellAlignment(position.getContentAlignment());
 
-		int spaceWidth = MC.fontRenderer.getCharWidth(' ');
+		int spaceWidth = Minecraft.getMinecraft().fontRenderer.getCharWidth(' ');
 		Size size = namesGroup.getPreferredSize().add(valuesGroup.getPreferredSize().getX() + spaceWidth * 2, 0);
 
 		int tWidth = title.getPreferredSize().getWidth();
 		if(tWidth > size.getWidth()) size = size.withWidth(tWidth);
 
-		Rect padding = Rect.createPadding(1, MC.fontRenderer.FONT_HEIGHT + 1, 1, 1);
+		Rect padding = Rect.createPadding(1, Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT + 1, 1, 1);
 		Rect bounds = new Rect(size).grow(padding);
 
 		if(!position.isCustom() && position.getDirection().getRow() == 1) {
@@ -120,7 +120,7 @@ public class Sidebar extends HudElement {
 	private ScoreObjective getObjective(EntityPlayer player) {
 		Scoreboard scoreboard = player.getWorldScoreboard();
 		ScoreObjective objective = null;
-		ScorePlayerTeam team = scoreboard.getPlayersTeam(MC.player.getName());
+		ScorePlayerTeam team = scoreboard.getPlayersTeam(Minecraft.getMinecraft().player.getName());
 
 		if(team != null) {
 			int slot = team.getColor().getColorIndex();

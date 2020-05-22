@@ -1,12 +1,12 @@
 package jobicade.betterhud.element.text;
 
-import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 import static jobicade.betterhud.BetterHud.MANAGER;
 
 import java.util.Arrays;
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraftforge.fml.common.eventhandler.Event;
@@ -62,10 +62,10 @@ public class Distance extends TextElement {
 
 	@Override
 	protected List<String> getText() {
-		RayTraceResult trace = MC.getRenderViewEntity().rayTrace(200, 1.0F);
+		RayTraceResult trace = Minecraft.getMinecraft().getRenderViewEntity().rayTrace(200, 1.0F);
 
 		if(trace != null) {
-			long distance = Math.round(Math.sqrt(trace.getBlockPos().distanceSqToCenter(MC.player.posX, MC.player.posY, MC.player.posZ)));
+			long distance = Math.round(Math.sqrt(trace.getBlockPos().distanceSqToCenter(Minecraft.getMinecraft().player.posX, Minecraft.getMinecraft().player.posY, Minecraft.getMinecraft().player.posZ)));
 
 			if(mode.getIndex() == 2) {
 				return Arrays.asList(String.valueOf(distance));

@@ -1,10 +1,9 @@
 package jobicade.betterhud.element.text;
 
-import static jobicade.betterhud.BetterHud.MC;
-
 import java.util.Arrays;
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.EnumSkyBlock;
 import jobicade.betterhud.geom.Direction;
@@ -22,12 +21,12 @@ public class LightLevel extends TextElement {
 
 	@Override
 	protected List<String> getText() {
-		BlockPos position = new BlockPos(MC.player.posX, MC.player.posY, MC.player.posZ);
+		BlockPos position = new BlockPos(Minecraft.getMinecraft().player.posX, Minecraft.getMinecraft().player.posY, Minecraft.getMinecraft().player.posZ);
 
 		int light = 0;
-		if(MC.world != null && MC.world.isBlockLoaded(position)) {
-			light = MC.world.getLightFor(EnumSkyBlock.SKY, position) - MC.world.calculateSkylightSubtracted(1.0F);
-			light = Math.max(light, MC.world.getLightFor(EnumSkyBlock.BLOCK, position));
+		if(Minecraft.getMinecraft().world != null && Minecraft.getMinecraft().world.isBlockLoaded(position)) {
+			light = Minecraft.getMinecraft().world.getLightFor(EnumSkyBlock.SKY, position) - Minecraft.getMinecraft().world.calculateSkylightSubtracted(1.0F);
+			light = Math.max(light, Minecraft.getMinecraft().world.getLightFor(EnumSkyBlock.BLOCK, position));
 		}
 		return Arrays.asList(getLocalizedName() + ": " + light);
 	}

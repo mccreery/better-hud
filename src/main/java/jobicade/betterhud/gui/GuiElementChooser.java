@@ -1,9 +1,8 @@
 package jobicade.betterhud.gui;
 
-import static jobicade.betterhud.BetterHud.MC;
-
 import java.io.IOException;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.Setting;
@@ -25,13 +24,13 @@ public class GuiElementChooser extends GuiElements {
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
 		if(keyCode == 1) {
 			setting.set(null);
-			MC.displayGuiScreen(parent);
+			Minecraft.getMinecraft().displayGuiScreen(parent);
 		}
 	}
 
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-		MC.displayGuiScreen(parent);
+		Minecraft.getMinecraft().displayGuiScreen(parent);
 	}
 
 	@Override

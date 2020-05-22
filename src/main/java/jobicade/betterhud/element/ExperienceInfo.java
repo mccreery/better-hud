@@ -1,10 +1,9 @@
 package jobicade.betterhud.element;
 
-import static jobicade.betterhud.BetterHud.MC;
-
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.Setting;
@@ -43,14 +42,14 @@ public class ExperienceInfo extends TextElement {
 
 	@Override
 	public boolean shouldRender(Event event) {
-		return super.shouldRender(event) && MC.playerController.gameIsSurvivalOrAdventure();
+		return super.shouldRender(event) && Minecraft.getMinecraft().playerController.gameIsSurvivalOrAdventure();
 	}
 
 	@Override
 	public Rect render(Event event) {
-		int fullBar = getExperienceWithinLevel(MC.player.experienceLevel);
+		int fullBar = getExperienceWithinLevel(Minecraft.getMinecraft().player.experienceLevel);
 
-		int has = (int)(MC.player.experience * fullBar);
+		int has = (int)(Minecraft.getMinecraft().player.experience * fullBar);
 		int needed = fullBar - has;
 
 		String hasDisplay = String.valueOf(has);
@@ -100,13 +99,13 @@ public class ExperienceInfo extends TextElement {
 		List<String> parts = new ArrayList<String>(2);
 
 		if(total.get()) {
-			int totalDisplay = getExperienceToLevel(MC.player.experienceLevel);
-			totalDisplay += MC.player.experience * getExperienceWithinLevel(MC.player.experienceLevel);
+			int totalDisplay = getExperienceToLevel(Minecraft.getMinecraft().player.experienceLevel);
+			totalDisplay += Minecraft.getMinecraft().player.experience * getExperienceWithinLevel(Minecraft.getMinecraft().player.experienceLevel);
 
 			parts.add(total.getLocalizedName() + ": "+ totalDisplay);
 		}
 		if(lifetime.get()) {
-			parts.add(lifetime.getLocalizedName() + ": " + MC.player.experienceTotal);
+			parts.add(lifetime.getLocalizedName() + ": " + Minecraft.getMinecraft().player.experienceTotal);
 		}
 		return parts;
 	}

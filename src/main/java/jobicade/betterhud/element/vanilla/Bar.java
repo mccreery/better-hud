@@ -2,10 +2,10 @@ package jobicade.betterhud.element.vanilla;
 
 import static jobicade.betterhud.BetterHud.ICONS;
 import static jobicade.betterhud.BetterHud.MANAGER;
-import static jobicade.betterhud.BetterHud.MC;
 
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.DirectionOptions;
@@ -45,7 +45,7 @@ public abstract class Bar extends OverrideElement {
 
 	@Override
 	public boolean shouldRender(Event event) {
-		bar.setHost(MC.player);
+		bar.setHost(Minecraft.getMinecraft().player);
 		return super.shouldRender(event) && bar.shouldRender();
 	}
 
@@ -60,7 +60,7 @@ public abstract class Bar extends OverrideElement {
 
 	@Override
 	protected Rect render(Event event) {
-		MC.getTextureManager().bindTexture(ICONS);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(ICONS);
 		Direction contentAlignment = getContentAlignment();
 
 		Rect bounds = new Rect(bar.getPreferredSize());

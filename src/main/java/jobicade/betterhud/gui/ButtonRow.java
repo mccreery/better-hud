@@ -1,10 +1,9 @@
 package jobicade.betterhud.gui;
 
-import static jobicade.betterhud.BetterHud.MC;
-
 import java.util.Arrays;
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -27,12 +26,12 @@ class ButtonRow {
 			element.toggle();
 			HudElement.SORTER.markDirty(SortType.ENABLED);
 
-			if(MC.currentScreen != null) {
-				MC.currentScreen.initGui();
+			if(Minecraft.getMinecraft().currentScreen != null) {
+				Minecraft.getMinecraft().currentScreen.initGui();
 			}
 		});
 		options = new GuiTexturedButton(new Rect(40, 0, 20, 20)).setCallback(b ->
-			MC.displayGuiScreen(new GuiElementSettings(element, callback)));
+			Minecraft.getMinecraft().displayGuiScreen(new GuiElementSettings(element, callback)));
 	}
 
 	public ButtonRow setBounds(Rect bounds) {

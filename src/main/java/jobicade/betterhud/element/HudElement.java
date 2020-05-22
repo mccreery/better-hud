@@ -1,11 +1,11 @@
 package jobicade.betterhud.element;
 
 import static jobicade.betterhud.BetterHud.ALL;
-import static jobicade.betterhud.BetterHud.MC;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
@@ -263,13 +263,13 @@ public abstract class HudElement implements IBoolean {
 	 * should be rendered and caches the bounds so they are available from {@link #getLastRect()} */
 	public final void tryRender(Event event) {
 		if(shouldRender(event) && isEnabledAndSupported()) {
-			MC.mcProfiler.startSection(name);
+			Minecraft.getMinecraft().mcProfiler.startSection(name);
 
 			lastBounds = render(event);
 			if(lastBounds == null) lastBounds = Rect.empty();
 			postRender(event);
 
-			MC.mcProfiler.endSection();
+			Minecraft.getMinecraft().mcProfiler.endSection();
 		}
 	}
 

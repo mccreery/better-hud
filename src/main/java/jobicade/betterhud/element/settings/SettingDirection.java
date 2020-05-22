@@ -1,11 +1,11 @@
 package jobicade.betterhud.element.settings;
 
-import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 
 import java.util.Collection;
 import java.util.Map;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
@@ -76,7 +76,7 @@ public class SettingDirection extends SettingAlignable<Direction> {
 
 	@Override
 	protected Point getSize() {
-		return horizontal ? new Point(150, 60) : new Point(60, 60 + SPACER + MC.fontRenderer.FONT_HEIGHT);
+		return horizontal ? new Point(150, 60) : new Point(60, 60 + SPACER + Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT);
 	}
 
 	private String getText() {
