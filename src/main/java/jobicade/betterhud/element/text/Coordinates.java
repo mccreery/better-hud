@@ -1,13 +1,13 @@
 package jobicade.betterhud.element.text;
 
 import static jobicade.betterhud.BetterHud.MANAGER;
-import static jobicade.betterhud.BetterHud.MC;
 
 import java.text.DecimalFormat;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.DirectionOptions;
@@ -71,9 +71,9 @@ public class Coordinates extends TextElement {
 		DecimalFormat format = new DecimalFormat();
 		format.setMaximumFractionDigits(decimalPlaces.get().intValue());
 
-		String x = format.format(MC.player.posX);
-		String y = format.format(MC.player.posY);
-		String z = format.format(MC.player.posZ);
+		String x = format.format(Minecraft.getMinecraft().player.posX);
+		String y = format.format(Minecraft.getMinecraft().player.posY);
+		String z = format.format(Minecraft.getMinecraft().player.posZ);
 
 		if(spaced.get()) {
 			x = I18n.format("betterHud.hud.x", x);

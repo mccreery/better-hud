@@ -1,11 +1,11 @@
 package jobicade.betterhud.element.particles;
 
 import static jobicade.betterhud.BetterHud.MANAGER;
-import static jobicade.betterhud.BetterHud.MC;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import net.minecraft.client.Minecraft;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.HudElement;
@@ -41,7 +41,7 @@ public abstract class ParticleOverlay extends HudElement implements Tickable {
 
 	@Override
 	public void tick() {
-		if(!isEnabledAndSupported() || MC.player == null || MC.world == null) return;
+		if(!isEnabledAndSupported() || Minecraft.getMinecraft().player == null || Minecraft.getMinecraft().world == null) return;
 
 		particles.forEach(Particle::tick);
 		updateParticles();

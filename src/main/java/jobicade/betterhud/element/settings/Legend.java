@@ -1,6 +1,5 @@
 package jobicade.betterhud.element.settings;
 
-import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 
 import java.util.ArrayList;
@@ -27,11 +26,11 @@ public class Legend extends SettingStub<Object> {
 
 	@Override
 	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Point origin) {
-		GuiLegendLabel label = new GuiLegendLabel(0, origin.getX() - 150, origin.getY(), 300, MC.fontRenderer.FONT_HEIGHT, Color.WHITE);
+		GuiLegendLabel label = new GuiLegendLabel(0, origin.getX() - 150, origin.getY(), 300, Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT, Color.WHITE);
 		label.addLine("betterHud.group." + this.name);
 		parts.add(label);
 
-		return origin.add(0, MC.fontRenderer.FONT_HEIGHT + SPACER);
+		return origin.add(0, Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT + SPACER);
 	}
 
 	private static class GuiLegendLabel extends GuiLabel {
@@ -39,7 +38,7 @@ public class Legend extends SettingStub<Object> {
 		protected final List<String> lines = new ArrayList<String>();
 
 		public GuiLegendLabel(int id, int x, int y, int width, int height, Color color) {
-			super(MC.fontRenderer, id, x, y, width, height, color.getPacked());
+			super(Minecraft.getMinecraft().fontRenderer, id, x, y, width, height, color.getPacked());
 			setCentered();
 
 			this.color = color;
@@ -55,7 +54,7 @@ public class Legend extends SettingStub<Object> {
 			int maxWidth = 0;
 
 			for(String s : lines) {
-				int width = MC.fontRenderer.getStringWidth(s);
+				int width = Minecraft.getMinecraft().fontRenderer.getStringWidth(s);
 				if(width > maxWidth) maxWidth = width;
 			}
 

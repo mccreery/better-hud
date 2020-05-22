@@ -1,12 +1,12 @@
 package jobicade.betterhud.gui;
 
-import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 
 import java.io.IOException;
 
 import org.lwjgl.input.Keyboard;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import jobicade.betterhud.element.settings.SettingPosition;
@@ -29,13 +29,13 @@ public class GuiOffsetChooser extends GuiScreen {
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
 		if(keyCode == 1) {
 			setting.set(null);
-			MC.displayGuiScreen(parent);
+			Minecraft.getMinecraft().displayGuiScreen(parent);
 		}
 	}
 
 	@Override
 	protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-		MC.displayGuiScreen(parent);
+		Minecraft.getMinecraft().displayGuiScreen(parent);
 	}
 
 	@Override

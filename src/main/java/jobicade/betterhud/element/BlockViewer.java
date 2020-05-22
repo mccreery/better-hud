@@ -1,6 +1,5 @@
 package jobicade.betterhud.element;
 
-import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 import static jobicade.betterhud.BetterHud.MANAGER;
 
@@ -13,6 +12,7 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Blocks;
@@ -23,7 +23,6 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IWorldNameable;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -31,8 +30,6 @@ import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensio
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraftforge.fml.common.versioning.InvalidVersionSpecificationException;
 import net.minecraftforge.fml.common.versioning.VersionRange;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Legend;
@@ -45,6 +42,9 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
 
+/**
+ * @see BetterHud#onBlockBreak(net.minecraftforge.event.world.BlockEvent.BreakEvent)
+ */
 public class BlockViewer extends TextElement {
 	private SettingBoolean showBlock, showIds, invNames;
 	private RayTraceResult trace;
@@ -65,11 +65,14 @@ public class BlockViewer extends TextElement {
 		settings.add(invNames = new SettingBoolean("invNames") {
 			@Override
 			public boolean enabled() {
+				VersionRange versionRange;
 				try {
-					return super.enabled() && BetterHud.serverSupports(VersionRange.createFromVersionSpec("[1.4-beta,)"));
+					versionRange = VersionRange.createFromVersionSpec("[1.4-beta,)");
 				} catch (InvalidVersionSpecificationException e) {
-					return false;
+					throw new RuntimeException(e);
 				}
+
+				return super.enabled() && versionRange.containsVersion(BetterHud.getServerVersion());
 			}
 		});
 	}
@@ -93,10 +96,10 @@ public class BlockViewer extends TextElement {
 	public boolean shouldRender(Event event) {
 		if(!super.shouldRender(event)) return false;
 
-		trace = MC.getRenderViewEntity().rayTrace(HudElement.GLOBAL.getBillboardDistance(), 1f);
+		trace = Minecraft.getMinecraft().getRenderViewEntity().rayTrace(HudElement.GLOBAL.getBillboardDistance(), 1f);
 
 		if(trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK) {
-			state = MC.world.getBlockState(trace.getBlockPos());
+			state = Minecraft.getMinecraft().world.getBlockState(trace.getBlockPos());
 			stack = getDisplayStack(trace, state);
 			return true;
 		} else {
@@ -114,7 +117,7 @@ public class BlockViewer extends TextElement {
 
 	@Override
 	protected Rect getPadding() {
-		int vPad = 20 - MC.fontRenderer.FONT_HEIGHT;
+		int vPad = 20 - Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT;
 		int bottom = vPad / 2;
 		Rect bounds = Rect.createPadding(5, vPad - bottom, 5, bottom);
 
@@ -161,7 +164,7 @@ public class BlockViewer extends TextElement {
 	 *
 	 * @see net.minecraftforge.common.ForgeHooks#onPickBlock(RayTraceResult, net.minecraft.entity.player.EntityPlayer, net.minecraft.world.World) */
 	private ItemStack getDisplayStack(RayTraceResult trace, IBlockState state) {
-		ItemStack stack = state.getBlock().getPickBlock(state, trace, MC.world, trace.getBlockPos(), MC.player);
+		ItemStack stack = state.getBlock().getPickBlock(state, trace, Minecraft.getMinecraft().world, trace.getBlockPos(), Minecraft.getMinecraft().player);
 
 		if(isStackEmpty(stack)) {
 			// Pick block is disabled, however we can grab the information directly
@@ -186,7 +189,7 @@ public class BlockViewer extends TextElement {
 		}
 
 		if(invNames.get() && state.getBlock().hasTileEntity(state)) {
-			TileEntity tileEntity = MC.world.getTileEntity(trace.getBlockPos());
+			TileEntity tileEntity = Minecraft.getMinecraft().world.getTileEntity(trace.getBlockPos());
 
 			if(tileEntity instanceof IWorldNameable) {
 				ITextComponent invName = ensureInvName(trace.getBlockPos());
@@ -209,22 +212,14 @@ public class BlockViewer extends TextElement {
 		return String.format("%s(%s:%d/#%04d)", ChatFormatting.YELLOW, name, meta, id);
 	}
 
-	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void onPlayerDisconnected(ClientDisconnectionFromServerEvent event) {
 		nameCache.clear();
 	}
 
-	@SideOnly(Side.CLIENT)
 	@SubscribeEvent
 	public void onPlayerChangeDimension(PlayerChangedDimensionEvent event) {
 		nameCache.clear();
-	}
-
-	@SideOnly(Side.SERVER)
-	@SubscribeEvent
-	public void onBlockBreak(BlockEvent.BreakEvent event) {
-		BetterHud.NET_WRAPPER.sendToDimension(new InventoryNameQuery.Response(event.getPos(), null), event.getWorld().provider.getDimension());
 	}
 
 	public static final Map<BlockPos, ITextComponent> nameCache = new HashMap<BlockPos, ITextComponent>();
@@ -247,7 +242,7 @@ public class BlockViewer extends TextElement {
 		if(name != null) {
 			return name;
 		} else {
-			return MC.world.getTileEntity(pos).getDisplayName();
+			return Minecraft.getMinecraft().world.getTileEntity(pos).getDisplayName();
 		}
 	}
 

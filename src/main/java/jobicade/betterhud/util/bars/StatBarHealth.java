@@ -1,12 +1,11 @@
 package jobicade.betterhud.util.bars;
 
-import static jobicade.betterhud.BetterHud.ICONS;
-import static jobicade.betterhud.BetterHud.MC;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.MobEffects;
 import jobicade.betterhud.geom.Rect;
@@ -114,7 +113,7 @@ public class StatBarHealth extends StatBar<EntityLivingBase> {
 
 	@Override
 	public void render() {
-		int newUpdateCounter = MC.ingameGUI.getUpdateCounter();
+		int newUpdateCounter = Minecraft.getMinecraft().ingameGUI.getUpdateCounter();
 		int updateDelta = newUpdateCounter - currentUpdateCounter;
 
 		random.setSeed(newUpdateCounter);
@@ -152,7 +151,7 @@ public class StatBarHealth extends StatBar<EntityLivingBase> {
 		currentHealth = newHealth;
 		currentUpdateCounter = newUpdateCounter;
 
-		MC.getTextureManager().bindTexture(ICONS);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
 		super.render();
 	}
 }

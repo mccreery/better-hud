@@ -1,6 +1,5 @@
 package jobicade.betterhud.gui;
 
-import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 
 import java.io.IOException;
@@ -30,10 +29,7 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
 public class GuiElementSettings extends GuiMenuScreen {
 	private static final int REPEAT_SPEED	   = 20; // Rate of speed-up to 20/s
 	private static final int REPEAT_SPEED_FAST = 10; // Rate of speed-up beyond 20/s
@@ -88,7 +84,7 @@ public class GuiElementSettings extends GuiMenuScreen {
 	@Override
 	public void onGuiClosed() {
 		Keyboard.enableRepeatEvents(false);
-		BetterHud.getConfigManager().getConfig().saveSettings();
+		BetterHud.getProxy().getConfig().saveSettings();
 	}
 
 	@Override
@@ -166,7 +162,7 @@ public class GuiElementSettings extends GuiMenuScreen {
 			eventResult.playPressSound(this.mc.getSoundHandler());
 			actionPerformed(eventResult);
 
-			if(this.equals(MC.currentScreen)) {
+			if(this.equals(Minecraft.getMinecraft().currentScreen)) {
 				MinecraftForge.EVENT_BUS.post(new ActionPerformedEvent.Post(this, done, buttonList));
 			}
 		}
@@ -190,8 +186,8 @@ public class GuiElementSettings extends GuiMenuScreen {
 		drawDefaultBackground();
 		drawTitle();
 
-		ScaledResolution resolution = new ScaledResolution(MC);
-		done.drawButton(MC, mouseX, mouseY, partialTicks);
+		ScaledResolution resolution = new ScaledResolution(Minecraft.getMinecraft());
+		done.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, partialTicks);
 
 		GlStateManager.pushMatrix();
 		GlUtil.beginScissor(viewport, resolution);

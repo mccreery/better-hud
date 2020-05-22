@@ -1,11 +1,11 @@
 package jobicade.betterhud.element.vanilla;
 
 import static jobicade.betterhud.BetterHud.MANAGER;
-import static jobicade.betterhud.BetterHud.MC;
 
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.init.Blocks;
@@ -35,20 +35,20 @@ public class HelmetOverlay extends OverrideElement {
 
 	@Override
 	public boolean shouldRender(Event event) {
-		return super.shouldRender(event) && MC.gameSettings.thirdPersonView == 0 && !MC.player.inventory.armorItemInSlot(3).isEmpty();
+		return super.shouldRender(event) && Minecraft.getMinecraft().gameSettings.thirdPersonView == 0 && !Minecraft.getMinecraft().player.inventory.armorItemInSlot(3).isEmpty();
 	}
 
 	@Override
 	protected Rect render(Event event) {
-		ItemStack stack = MC.player.inventory.armorItemInSlot(3);
+		ItemStack stack = Minecraft.getMinecraft().player.inventory.armorItemInSlot(3);
 		Item item = stack.getItem();
 
 		if(item == Item.getItemFromBlock(Blocks.PUMPKIN)) {
-			MC.getTextureManager().bindTexture(PUMPKIN_BLUR_TEX_PATH);
+			Minecraft.getMinecraft().getTextureManager().bindTexture(PUMPKIN_BLUR_TEX_PATH);
 			GlUtil.drawRect(MANAGER.getScreen(), new Rect(256, 256), Color.RED);
-			MC.getTextureManager().bindTexture(Gui.ICONS);
+			Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
 		} else {
-			item.renderHelmetOverlay(stack, MC.player, new ScaledResolution(MC), getPartialTicks(event));
+			item.renderHelmetOverlay(stack, Minecraft.getMinecraft().player, new ScaledResolution(Minecraft.getMinecraft()), getPartialTicks(event));
 		}
 		return MANAGER.getScreen();
 	}

@@ -1,7 +1,6 @@
 package jobicade.betterhud.element.vanilla;
 
 import static jobicade.betterhud.BetterHud.MANAGER;
-import static jobicade.betterhud.BetterHud.MC;
 
 import java.util.List;
 
@@ -54,9 +53,9 @@ public class Vignette extends OverrideElement {
 
 	@Override
 	protected Rect render(Event event) {
-		WorldBorder border = MC.world.getWorldBorder();
+		WorldBorder border = Minecraft.getMinecraft().world.getWorldBorder();
 
-		float distance = (float)border.getClosestDistance(MC.player);
+		float distance = (float)border.getClosestDistance(Minecraft.getMinecraft().player);
 		float warningDistance = (float)getWarningDistance(border);
 
 		float f;
@@ -67,7 +66,7 @@ public class Vignette extends OverrideElement {
 		}
 
 		// Animate brightness
-		brightness = brightness + (MathHelper.clamp(1 - MC.player.getBrightness(), 0, 1) - brightness) / 100;
+		brightness = brightness + (MathHelper.clamp(1 - Minecraft.getMinecraft().player.getBrightness(), 0, 1) - brightness) / 100;
 
 		Color color;
 		if(f > 0) {
@@ -79,11 +78,11 @@ public class Vignette extends OverrideElement {
 		}
 
 		GlUtil.blendFuncSafe(SourceFactor.ZERO, DestFactor.ONE_MINUS_SRC_COLOR, SourceFactor.ONE, DestFactor.ZERO);
-		MC.getTextureManager().bindTexture(VIGNETTE_TEX_PATH);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(VIGNETTE_TEX_PATH);
 
 		GlUtil.drawRect(MANAGER.getScreen(), new Rect(256, 256), color);
 
-		MC.getTextureManager().bindTexture(Gui.ICONS);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
 		GlUtil.blendFuncSafe(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
 		return null;
 	}

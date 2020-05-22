@@ -1,6 +1,5 @@
 package jobicade.betterhud.element.settings;
 
-import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 
 import java.util.Collection;
@@ -82,7 +81,7 @@ public class SettingAbsolutePosition extends Setting<Point> {
 			case 1: xBox.setText(String.valueOf(--x)); break;
 			case 2: yBox.setText(String.valueOf(++y)); break;
 			case 3: yBox.setText(String.valueOf(--y)); break;
-			case 4: MC.displayGuiScreen(new GuiOffsetChooser(gui, position)); break;
+			case 4: Minecraft.getMinecraft().displayGuiScreen(new GuiOffsetChooser(gui, position)); break;
 		}
 	}
 

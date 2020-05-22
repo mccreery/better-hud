@@ -1,6 +1,5 @@
 package jobicade.betterhud.gui;
 
-import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 
 import java.io.IOException;
@@ -10,6 +9,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.opengl.GL11;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
@@ -86,7 +86,7 @@ public class GuiConfigSaves extends GuiScreen {
 		Point origin = new Point(width / 2, height / 16 + 20);
 
 		buttonList.add(new GuiActionButton(I18n.format("gui.done"))
-			.setCallback(b -> MC.displayGuiScreen(previous))
+			.setCallback(b -> Minecraft.getMinecraft().displayGuiScreen(previous))
 			.setBounds(new Rect(200, 20).align(origin, Direction.NORTH)));
 
 		Rect textField = new Rect(150, 20);
@@ -188,7 +188,7 @@ public class GuiConfigSaves extends GuiScreen {
 
 		name.drawTextBox();
 
-		Rect scissorRect = viewport.withY(height - viewport.getBottom()).scale(new ScaledResolution(MC).getScaleFactor());
+		Rect scissorRect = viewport.withY(height - viewport.getBottom()).scale(new ScaledResolution(Minecraft.getMinecraft()).getScaleFactor());
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
 		GL11.glScissor(scissorRect.getX(), scissorRect.getY(), scissorRect.getWidth(), scissorRect.getHeight());
 

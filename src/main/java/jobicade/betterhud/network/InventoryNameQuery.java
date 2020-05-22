@@ -88,7 +88,7 @@ public abstract class InventoryNameQuery implements IMessage {
 			//System.out.println("Received block request " + message.getBlockPos());
 			TileEntity tileEntity = ctx.getServerHandler().player.world.getTileEntity(message.getBlockPos());
 
-			if(tileEntity != null && tileEntity instanceof IWorldNameable) {
+			if (tileEntity instanceof IWorldNameable) {
 				return new Response(message.getBlockPos(), tileEntity.getDisplayName());
 			} else {
 				return null;

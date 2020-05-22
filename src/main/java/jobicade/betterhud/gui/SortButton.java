@@ -1,7 +1,6 @@
 package jobicade.betterhud.gui;
 
-import static jobicade.betterhud.BetterHud.MC;
-
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import jobicade.betterhud.element.HudElement;
@@ -45,9 +44,9 @@ class SortButton extends GuiActionButton {
 			Rect texture = callback.isDescending() ? DOWN_TEXTURE : UP_TEXTURE;
 			Rect arrow = new Rect(texture).anchor(bounds, Direction.EAST).translate(-2, 0);
 
-			MC.getTextureManager().bindTexture(ARROW_TEXTURE);
+			Minecraft.getMinecraft().getTextureManager().bindTexture(ARROW_TEXTURE);
 			GlUtil.drawRect(arrow, texture);
-			MC.getTextureManager().bindTexture(ICONS);
+			Minecraft.getMinecraft().getTextureManager().bindTexture(ICONS);
 		}
 	}
 }

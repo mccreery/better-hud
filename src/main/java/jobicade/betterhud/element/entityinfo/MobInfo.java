@@ -1,8 +1,6 @@
 package jobicade.betterhud.element.entityinfo;
 
-import static jobicade.betterhud.BetterHud.ICONS;
 import static jobicade.betterhud.BetterHud.MANAGER;
-import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 
 import java.util.List;
@@ -19,6 +17,8 @@ import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraftforge.fml.common.eventhandler.Event;
@@ -80,7 +80,7 @@ public class MobInfo extends EntityInfo {
 		GlUtil.drawString(text, bounds.getPosition(), Direction.NORTH_WEST, Color.WHITE);
 		Rect barRect = new Rect(barSize).anchor(bounds, Direction.SOUTH_WEST);
 
-		MC.getTextureManager().bindTexture(ICONS);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
 		bar.setBounds(barRect).render();
 		return null;
 	}

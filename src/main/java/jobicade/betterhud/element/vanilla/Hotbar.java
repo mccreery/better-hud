@@ -1,13 +1,12 @@
 package jobicade.betterhud.element.vanilla;
 
-import static jobicade.betterhud.BetterHud.MC;
-import static jobicade.betterhud.BetterHud.WIDGETS;
-
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.GlUtil;
+import jobicade.betterhud.util.Textures;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
@@ -40,22 +39,22 @@ public class Hotbar extends OverrideElement {
 		Rect barTexture = new Rect(182, 22);
 		Rect bounds = position.applyTo(new Rect(barTexture));
 
-		MC.getTextureManager().bindTexture(WIDGETS);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(Textures.WIDGETS);
 		GlUtil.drawRect(bounds, barTexture);
 
 		Rect slot = bounds.grow(-3).withWidth(16);
 
 		float partialTicks = getPartialTicks(event);
 		for(int i = 0; i < 9; i++, slot = slot.translate(Direction.EAST.scale(20))) {
-			if(i == MC.player.inventory.currentItem) {
-				MC.getTextureManager().bindTexture(WIDGETS);
+			if(i == Minecraft.getMinecraft().player.inventory.currentItem) {
+				Minecraft.getMinecraft().getTextureManager().bindTexture(Textures.WIDGETS);
 				GlUtil.drawRect(slot.grow(4), new Rect(0, 22, 24, 24));
 			}
 
-			GlUtil.renderHotbarItem(slot, MC.player.inventory.mainInventory.get(i), partialTicks);
+			GlUtil.renderHotbarItem(slot, Minecraft.getMinecraft().player.inventory.mainInventory.get(i), partialTicks);
 		}
 
-		MC.getTextureManager().bindTexture(Gui.ICONS);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
 		return bounds;
 	}
 }

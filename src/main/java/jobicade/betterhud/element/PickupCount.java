@@ -1,35 +1,32 @@
 package jobicade.betterhud.element;
 
-import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.MANAGER;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.Event;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemPickupEvent;
-import net.minecraftforge.fml.common.versioning.InvalidVersionSpecificationException;
-import net.minecraftforge.fml.common.versioning.VersionRange;
-import net.minecraftforge.items.ItemHandlerHelper;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.settings.SettingSlider;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Size;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.render.DefaultBoxed;
 import jobicade.betterhud.render.Grid;
 import jobicade.betterhud.render.Label;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.util.GlUtil;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.fml.common.versioning.InvalidVersionSpecificationException;
+import net.minecraftforge.fml.common.versioning.VersionRange;
+import net.minecraftforge.items.ItemHandlerHelper;
 
 public class PickupCount extends HudElement {
 	private SettingSlider maxStacks, fadeAfter;
@@ -66,8 +63,12 @@ public class PickupCount extends HudElement {
 	}
 
 	@Override
-	public VersionRange getServerDependency() throws InvalidVersionSpecificationException {
-		return VersionRange.createFromVersionSpec("[1.4-beta,)");
+	public VersionRange getServerDependency() {
+		try {
+			return VersionRange.createFromVersionSpec("[1.4-beta,1.4.1),(1.4.1,]");
+		} catch (InvalidVersionSpecificationException e) {
+			throw new RuntimeException(e);
+		}
 	}
 
 	/**
@@ -88,22 +89,11 @@ public class PickupCount extends HudElement {
 	}
 
 	/**
-	 * Adds or refreshes an item in the list.
-	 */
-	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public void onItemPickupPlayer(ItemPickupEvent e) {
-		ItemStack stack = e.getStack();
-		if(stack.isEmpty()) return;
-
-		refreshStack(stack);
-	}
-
-	/**
 	 * Brings a stack to the front of the list of recent stacks.
 	 *
 	 * @param stack The stack to find and refresh.
 	 */
-	private synchronized void refreshStack(ItemStack stack) {
+	public synchronized void refreshStack(ItemStack stack) {
 		StackNode node = removeStack(stack);
 
 		if(node != null) {
@@ -158,12 +148,12 @@ public class PickupCount extends HudElement {
 
 		public StackNode(ItemStack stack) {
 			this.stack = stack;
-			this.updateCounter = MC.ingameGUI.getUpdateCounter();
+			this.updateCounter = Minecraft.getMinecraft().ingameGUI.getUpdateCounter();
 		}
 
 		public void increaseStackSize(int size) {
 			stack.setCount(stack.getCount() + size);
-			this.updateCounter = MC.ingameGUI.getUpdateCounter();
+			this.updateCounter = Minecraft.getMinecraft().ingameGUI.getUpdateCounter();
 		}
 
 		private Label getLabel() {
@@ -172,7 +162,7 @@ public class PickupCount extends HudElement {
 		}
 
 		private float getOpacity() {
-			return 1.0f - (MC.ingameGUI.getUpdateCounter() - updateCounter) / fadeAfter.get().floatValue();
+			return 1.0f - (Minecraft.getMinecraft().ingameGUI.getUpdateCounter() - updateCounter) / fadeAfter.get().floatValue();
 		}
 
 		private boolean isDead() {

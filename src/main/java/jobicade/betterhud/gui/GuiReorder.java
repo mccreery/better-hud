@@ -6,6 +6,8 @@ import java.io.IOException;
 import java.util.List;
 
 import com.google.common.base.Predicates;
+
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
@@ -111,7 +113,7 @@ public class GuiReorder extends GuiElements {
 	@Override
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
 		if(keyCode == 1) {
-			MC.displayGuiScreen(parent);
+			Minecraft.getMinecraft().displayGuiScreen(parent);
 		}
 	}
 

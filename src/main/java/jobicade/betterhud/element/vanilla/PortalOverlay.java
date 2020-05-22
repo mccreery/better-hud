@@ -1,10 +1,10 @@
 package jobicade.betterhud.element.vanilla;
 
 import static jobicade.betterhud.BetterHud.MANAGER;
-import static jobicade.betterhud.BetterHud.MC;
 
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.init.Blocks;
@@ -27,7 +27,7 @@ public class PortalOverlay extends OverrideElement {
 	}
 
 	private float getTimeInPortal(Event event) {
-		return MC.player.prevTimeInPortal + (MC.player.timeInPortal - MC.player.prevTimeInPortal) * getPartialTicks(event);
+		return Minecraft.getMinecraft().player.prevTimeInPortal + (Minecraft.getMinecraft().player.timeInPortal - Minecraft.getMinecraft().player.prevTimeInPortal) * getPartialTicks(event);
 	}
 
 	@Override
@@ -42,11 +42,11 @@ public class PortalOverlay extends OverrideElement {
 		}
 
 		Color.WHITE.withAlpha(Math.round(timeInPortal * 255)).apply();
-		MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
-		TextureAtlasSprite texture = MC.getBlockRendererDispatcher().getBlockModelShapes().getTexture(Blocks.PORTAL.getDefaultState());
+		TextureAtlasSprite texture = Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelShapes().getTexture(Blocks.PORTAL.getDefaultState());
 		Rect screen = MANAGER.getScreen();
-		MC.ingameGUI.drawTexturedModalRect(0, 0, texture, screen.getWidth(), screen.getHeight());
+		Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(0, 0, texture, screen.getWidth(), screen.getHeight());
 
 		return null;
 	}

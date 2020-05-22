@@ -1,6 +1,5 @@
 package jobicade.betterhud.gui;
 
-import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 
 import java.util.ArrayList;
@@ -8,31 +7,28 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.client.resources.I18n;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
-import jobicade.betterhud.BetterHud;
+import jobicade.betterhud.config.ConfigManager;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.HudElement.SortType;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
-import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.Paginator;
-import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.util.SortField;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
 
-@SideOnly(Side.CLIENT)
 public class GuiHudMenu extends GuiMenuScreen {
 	private final Map<HudElement, ButtonRow> rows = new HashMap<HudElement, ButtonRow>(HudElement.ELEMENTS.size());
 	final Paginator<HudElement> paginator = new Paginator<HudElement>();
 
-	private final GuiActionButton returnToGame = new GuiActionButton(I18n.format("menu.returnToGame")).setCallback(b -> MC.displayGuiScreen(null));
+	private final GuiActionButton returnToGame = new GuiActionButton(I18n.format("menu.returnToGame")).setCallback(b -> Minecraft.getMinecraft().displayGuiScreen(null));
 	private final GuiActionButton toggleAll = new GuiActionButton("").setCallback(b -> setAll(!allEnabled()));
-	private final GuiActionButton reorder = new GuiActionButton(I18n.format("betterHud.menu.reorder")).setCallback(b -> MC.displayGuiScreen(new GuiReorder(this)));
+	private final GuiActionButton reorder = new GuiActionButton(I18n.format("betterHud.menu.reorder")).setCallback(b -> Minecraft.getMinecraft().displayGuiScreen(new GuiReorder(this)));
 
-	private final GuiActionButton resetDefaults = new GuiActionButton(I18n.format("betterHud.menu.saveLoad"))
-		.setCallback(b -> MC.displayGuiScreen(new GuiConfigSaves(BetterHud.getConfigManager(), this)));
+	private final GuiActionButton resetDefaults = new GuiActionButton(I18n.format("betterHud.menu.saveLoad"));
 
 	private final ButtonRow globalRow = new ButtonRow(this, HudElement.GLOBAL);
 
@@ -44,6 +40,12 @@ public class GuiHudMenu extends GuiMenuScreen {
 
 	private SortField<HudElement> sortCriteria = SortType.ALPHABETICAL;
 	private boolean descending;
+
+	public GuiHudMenu(ConfigManager configManager) {
+		resetDefaults.setCallback(button -> {
+			Minecraft.getMinecraft().displayGuiScreen(new GuiConfigSaves(configManager, this));
+		});
+	}
 
 	public SortField<HudElement> getSortCriteria() {
 		return sortCriteria;

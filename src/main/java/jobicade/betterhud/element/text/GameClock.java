@@ -1,7 +1,5 @@
 package jobicade.betterhud.element.text;
 
-import static jobicade.betterhud.BetterHud.MC;
-
 import java.text.DateFormat;
 import java.text.FieldPosition;
 import java.text.ParsePosition;
@@ -9,6 +7,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.TimeZone;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
@@ -64,10 +63,10 @@ public class GameClock extends Clock {
 
 		switch(requireItem.getIndex()) {
 			case 1:
-				return MC.player.inventory.hasItemStack(new ItemStack(Items.CLOCK));
+				return Minecraft.getMinecraft().player.inventory.hasItemStack(new ItemStack(Items.CLOCK));
 			case 2:
-				return MC.player.getHeldItemMainhand().getItem() == Items.CLOCK
-					|| MC.player.getHeldItemOffhand().getItem() == Items.CLOCK;
+				return Minecraft.getMinecraft().player.getHeldItemMainhand().getItem() == Items.CLOCK
+					|| Minecraft.getMinecraft().player.getHeldItemOffhand().getItem() == Items.CLOCK;
 		}
 		return true;
 	}
@@ -88,19 +87,19 @@ public class GameClock extends Clock {
 
 	private boolean showSleepIndicator(float partialTicks) {
 		return showSleepIndicator.get()
-				&& MC.world.provider.canSleepAt(MC.player, MC.player.getPosition()) == WorldSleepResult.ALLOW
+				&& Minecraft.getMinecraft().world.provider.canSleepAt(Minecraft.getMinecraft().player, Minecraft.getMinecraft().player.getPosition()) == WorldSleepResult.ALLOW
 				// Taken from EntityPlayer#trySleep, ignores enemies and bed position
-				&& !MC.player.isPlayerSleeping()
-				&& MC.player.isEntityAlive()
-				&& MC.world.provider.isSurfaceWorld()
+				&& !Minecraft.getMinecraft().player.isPlayerSleeping()
+				&& Minecraft.getMinecraft().player.isEntityAlive()
+				&& Minecraft.getMinecraft().world.provider.isSurfaceWorld()
 				// World#isDayTime is server only
-				//&& !MC.world.isDaytime();
-				&& MC.world.calculateSkylightSubtracted(partialTicks) >= 4;
+				//&& !Minecraft.getMinecraft().world.isDaytime();
+				&& Minecraft.getMinecraft().world.calculateSkylightSubtracted(partialTicks) >= 4;
 	}
 
 	@Override
 	protected Date getDate() {
-		long worldTime = MC.world.getWorldTime() + 6000;
+		long worldTime = Minecraft.getMinecraft().world.getWorldTime() + 6000;
 
 		// Convert to milliseconds
 		worldTime = Math.round(worldTime / 1000. * 3600.) * 1000;
