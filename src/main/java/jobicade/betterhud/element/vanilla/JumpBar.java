@@ -1,9 +1,9 @@
 package jobicade.betterhud.element.vanilla;
 
-import static jobicade.betterhud.BetterHud.ICONS;
 import static jobicade.betterhud.BetterHud.MANAGER;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.DirectionOptions;
@@ -30,7 +30,7 @@ public class JumpBar extends OverrideElement {
 
 	@Override
 	protected Rect render(Event event) {
-		Minecraft.getMinecraft().getTextureManager().bindTexture(ICONS);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
 
 		Rect bounds = new Rect(182, 5);
 		if(!position.isCustom() && position.getDirection() == Direction.SOUTH) {

@@ -1,7 +1,5 @@
 package jobicade.betterhud.element.particles;
 
-import static jobicade.betterhud.BetterHud.HUD_ICONS;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
@@ -9,6 +7,7 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.MathUtil;
+import jobicade.betterhud.util.Textures;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.render.Color;
 
@@ -49,7 +48,7 @@ public class ParticleBase implements Particle {
 
 	@Override
 	public void render(float partialTicks) {
-		Minecraft.getMinecraft().getTextureManager().bindTexture(HUD_ICONS);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(Textures.HUD_ICONS);
 		GlStateManager.pushMatrix();
 
 		GlStateManager.translate(position.getX(), position.getY(), 0.0F);

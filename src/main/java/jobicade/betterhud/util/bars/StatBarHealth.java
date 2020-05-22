@@ -1,12 +1,11 @@
 package jobicade.betterhud.util.bars;
 
-import static jobicade.betterhud.BetterHud.ICONS;
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.MobEffects;
 import jobicade.betterhud.geom.Rect;
@@ -152,7 +151,7 @@ public class StatBarHealth extends StatBar<EntityLivingBase> {
 		currentHealth = newHealth;
 		currentUpdateCounter = newUpdateCounter;
 
-		Minecraft.getMinecraft().getTextureManager().bindTexture(ICONS);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
 		super.render();
 	}
 }

@@ -1,7 +1,6 @@
 package jobicade.betterhud.element.vanilla;
 
 import static jobicade.betterhud.BetterHud.SPACER;
-import static jobicade.betterhud.BetterHud.WIDGETS;
 
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
@@ -9,6 +8,7 @@ import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.GlUtil;
+import jobicade.betterhud.util.Textures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHandSide;
@@ -45,7 +45,7 @@ public class Offhand extends HudElement {
 			bounds = position.applyTo(bounds);
 		}
 
-		Minecraft.getMinecraft().getTextureManager().bindTexture(WIDGETS);
+		Minecraft.getMinecraft().getTextureManager().bindTexture(Textures.WIDGETS);
 		GlUtil.drawRect(bounds, texture);
 
 		GlUtil.renderHotbarItem(bounds.translate(3, 3), offhandStack, getPartialTicks(event));

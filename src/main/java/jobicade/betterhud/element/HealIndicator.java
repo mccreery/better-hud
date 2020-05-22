@@ -1,6 +1,5 @@
 package jobicade.betterhud.element;
 
-import static jobicade.betterhud.BetterHud.HUD_ICONS;
 import static jobicade.betterhud.BetterHud.SPACER;
 
 import java.util.List;
@@ -14,6 +13,7 @@ import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
+import jobicade.betterhud.util.Textures;
 import jobicade.betterhud.geom.Direction;
 
 public class HealIndicator extends HudElement {
@@ -53,7 +53,7 @@ public class HealIndicator extends HudElement {
 			if(mode.getIndex() == 0) {
 				GlUtil.drawString(healIndicator, bounds.getPosition(), Direction.NORTH_WEST, Color.GREEN);
 			} else {
-				Minecraft.getMinecraft().getTextureManager().bindTexture(HUD_ICONS);
+				Minecraft.getMinecraft().getTextureManager().bindTexture(Textures.HUD_ICONS);
 				Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(bounds.getX(), bounds.getY(), 0, 80, 9, 9);
 			}
 			return bounds;

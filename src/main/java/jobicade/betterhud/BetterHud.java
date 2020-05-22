@@ -6,11 +6,9 @@ import java.util.Arrays;
 import org.apache.logging.log4j.Logger;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.SidedProxy;
@@ -71,13 +69,6 @@ public class BetterHud {
 	public static HudSidedProxy getProxy() {
 		return proxy;
 	}
-
-	public static final ResourceLocation ICONS     = Gui.ICONS;
-	public static final ResourceLocation WIDGETS   = new ResourceLocation("textures/gui/widgets.png");
-	public static final ResourceLocation PARTICLES = new ResourceLocation("textures/particle/particles.png");
-
-	public static final ResourceLocation HUD_ICONS = new ResourceLocation(MODID, "textures/gui/icons_hud.png");
-	public static final ResourceLocation SETTINGS  = new ResourceLocation(MODID, "textures/gui/settings.png");
 
 	private static ConfigManager CONFIG_MANAGER;
 	public static final LayoutManager MANAGER = new LayoutManager();
