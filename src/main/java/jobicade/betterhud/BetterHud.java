@@ -11,6 +11,7 @@ import jobicade.betterhud.network.MessageVersion;
 import jobicade.betterhud.proxy.HudSidedProxy;
 import jobicade.betterhud.util.Tickable.Ticker;
 import net.minecraft.entity.player.EntityPlayerMP;
+import net.minecraft.world.IWorldNameable;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -110,11 +111,12 @@ public class BetterHud {
 	 */
 	@SubscribeEvent
 	public static void onBlockBreak(BlockEvent.BreakEvent event) {
-		// TODO don't send a packet EVERY TIME a block is broken
-		NET_WRAPPER.sendToDimension(
-			new InventoryNameQuery.Response(event.getPos(), null),
-			event.getWorld().provider.getDimension()
-		);
+		if (event.getWorld().getTileEntity(event.getPos()) instanceof IWorldNameable) {
+			NET_WRAPPER.sendToDimension(
+				new InventoryNameQuery.Response(event.getPos(), null),
+				event.getWorld().provider.getDimension()
+			);
+		}
 	}
 
 	/**

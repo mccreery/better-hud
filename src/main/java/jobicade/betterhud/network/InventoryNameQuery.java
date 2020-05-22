@@ -88,7 +88,7 @@ public abstract class InventoryNameQuery implements IMessage {
 			//System.out.println("Received block request " + message.getBlockPos());
 			TileEntity tileEntity = ctx.getServerHandler().player.world.getTileEntity(message.getBlockPos());
 
-			if(tileEntity != null && tileEntity instanceof IWorldNameable) {
+			if (tileEntity instanceof IWorldNameable) {
 				return new Response(message.getBlockPos(), tileEntity.getDisplayName());
 			} else {
 				return null;
@@ -96,6 +96,9 @@ public abstract class InventoryNameQuery implements IMessage {
 		}
 	}
 
+	// TODO is it possible loading the message class could load this class and
+	// trigger NoClassDefFoundError on the server?
+	// (HudElement refs client-only classes)
 	public static class ClientHandler implements IMessageHandler<Response, IMessage> {
 		@Override
 		public IMessage onMessage(Response message, MessageContext ctx) {
