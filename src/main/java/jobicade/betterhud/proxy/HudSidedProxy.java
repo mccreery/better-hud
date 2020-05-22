@@ -3,8 +3,22 @@ package jobicade.betterhud.proxy;
 import java.nio.file.Path;
 
 import jobicade.betterhud.config.HudConfig;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
 public interface HudSidedProxy {
+    /**
+     * Called directly by the mod class during its pre-init.
+     */
+    default void preInit(FMLPreInitializationEvent event) {
+    }
+
+    /**
+     * Called directly by the mod class during its init.
+     */
+    default void init(FMLInitializationEvent event) {
+    }
+
     /**
      * @param configFile The path to the loaded configuration file.
      * @param configDirectory The path to the directory containing saves.
@@ -18,20 +32,6 @@ public interface HudSidedProxy {
      * @throws UnsupportedOperationException on the dedicated server.
      */
     default HudConfig getConfig() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * @throws UnsupportedOperationException on the dedicated server.
-     */
-    default void registerReloadListeners() {
-        throw new UnsupportedOperationException();
-    }
-
-    /**
-     * @throws UnsupportedOperationException on the dedicated server.
-     */
-    default void displayHudMenu() {
         throw new UnsupportedOperationException();
     }
 }

@@ -7,8 +7,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
 /** A generic interface for something which responds to ticks */
 public interface Tickable {
@@ -77,12 +75,10 @@ public interface Tickable {
 			FASTER.tick();
 		}
 
-		@SideOnly(Side.CLIENT)
 		public static void registerEvents() {
 			MinecraftForge.EVENT_BUS.register(FASTER);
 		}
 
-		@SideOnly(Side.CLIENT)
 		@SubscribeEvent
 		public void clientTick(ClientTickEvent event) {
 			// Event called twice per tick, for start and end

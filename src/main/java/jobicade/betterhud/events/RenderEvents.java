@@ -42,19 +42,9 @@ import net.minecraft.util.math.Vec3d;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.fml.relauncher.SideOnly;
 
-@SideOnly(Side.CLIENT)
 public final class RenderEvents {
-	private RenderEvents() {}
-
-	public static void registerEvents() {
-		MinecraftForge.EVENT_BUS.register(new RenderEvents());
-	}
-
 	@SubscribeEvent
 	public void onRenderTick(RenderGameOverlayEvent.Pre event) {
 		Minecraft.getMinecraft().mcProfiler.startSection(MODID);

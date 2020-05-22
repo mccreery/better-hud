@@ -2,31 +2,40 @@ package jobicade.betterhud.proxy;
 
 import java.nio.file.Path;
 
+import org.lwjgl.input.Keyboard;
+
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.config.ConfigManager;
 import jobicade.betterhud.config.HudConfig;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.HudElement.SortType;
+import jobicade.betterhud.events.RenderEvents;
 import jobicade.betterhud.gui.GuiHudMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
 
+@EventBusSubscriber(modid = BetterHud.MODID)
 public class ClientProxy implements HudSidedProxy {
     private ConfigManager configManager;
+    private KeyBinding menuKey = new KeyBinding("key.betterHud.open", Keyboard.KEY_U, "key.categories.misc");
 
     @Override
-    public void initConfigManager(Path configFile, Path configDirectory) {
-        configManager = new ConfigManager(configFile, configDirectory);
+    public void preInit(FMLPreInitializationEvent event) {
+        Path configPath = event.getSuggestedConfigurationFile().toPath();
+        configManager = new ConfigManager(configPath, configPath.resolveSibling(BetterHud.MODID));
     }
 
     @Override
-    public HudConfig getConfig() {
-        return configManager.getConfig();
-    }
-
-    @Override
-    public void registerReloadListeners() {
+    public void init(FMLInitializationEvent event) {
         IResourceManager manager = Minecraft.getMinecraft().getResourceManager();
 
         if(manager instanceof IReloadableResourceManager) {
@@ -37,10 +46,21 @@ public class ClientProxy implements HudSidedProxy {
         } else {
             BetterHud.getLogger().warn("Unable to register alphabetical sort update on language change");
         }
+
+        ClientRegistry.registerKeyBinding(menuKey);
+        MinecraftForge.EVENT_BUS.register(this);
+        MinecraftForge.EVENT_BUS.register(new RenderEvents());
     }
 
     @Override
-    public void displayHudMenu() {
-        Minecraft.getMinecraft().displayGuiScreen(new GuiHudMenu(configManager));
+    public HudConfig getConfig() {
+        return configManager.getConfig();
     }
+
+    @SubscribeEvent
+	public void onKey(KeyInputEvent event) {
+		if(Minecraft.getMinecraft().inGameHasFocus && menuKey.isPressed()) {
+            Minecraft.getMinecraft().displayGuiScreen(new GuiHudMenu(configManager));
+		}
+	}
 }

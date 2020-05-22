@@ -1,12 +1,8 @@
 package jobicade.betterhud;
 
-import java.nio.file.Path;
-
 import org.apache.logging.log4j.Logger;
 
 import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.events.KeyEvents;
-import jobicade.betterhud.events.RenderEvents;
 import jobicade.betterhud.geom.LayoutManager;
 import jobicade.betterhud.network.InventoryNameQuery;
 import jobicade.betterhud.network.MessageNotifyClientHandler;
@@ -71,33 +67,22 @@ public class BetterHud {
 	@EventHandler
 	public void preInit(FMLPreInitializationEvent event) {
 		logger = event.getModLog();
-
-		if(event.getSide() == Side.CLIENT) {
-			HudElement.loadAllDefaults();
-
-			Path configPath = event.getSuggestedConfigurationFile().toPath();
-			proxy.initConfigManager(configPath, configPath.resolveSibling(MODID));
-		}
+		HudElement.loadAllDefaults();
+		proxy.preInit(event);
 	}
 
 	@EventHandler
 	public void init(FMLInitializationEvent event) {
-		if(event.getSide() == Side.CLIENT) {
-			KeyEvents.registerEvents();
-			RenderEvents.registerEvents();
-			Ticker.registerEvents();
-
-			HudElement.initAll(event);
-		}
-
-		proxy.registerReloadListeners();
-
 		// Message ID 0 reserved for ignored server presence message from [,1.4)
 		NET_WRAPPER.registerMessage(MessageNotifyClientHandler.class, MessageVersion.class, 2, Side.CLIENT);
 
 		// Used to update inventory names
 		NET_WRAPPER.registerMessage(InventoryNameQuery.ServerHandler.class, InventoryNameQuery.Request.class, 3, Side.SERVER);
 		NET_WRAPPER.registerMessage(InventoryNameQuery.ClientHandler.class, InventoryNameQuery.Response.class, 4, Side.CLIENT);
+
+		HudElement.initAll(event);
+		Ticker.registerEvents();
+		proxy.init(event);
 	}
 
 	/**
