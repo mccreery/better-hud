@@ -87,20 +87,24 @@ public class Vignette extends OverrideElement {
 		return null;
 	}
 
-	private double getWarningDistance(WorldBorder border) {
-		// Players closer to the border than this distance receive a warning
-		double warningDistance = border.getWarningDistance();
+	/**
+	 * @return The distance from the world border at which a player will start
+	 * to see a warning.
+	 */
+	private double getWarningDistance(WorldBorder worldBorder) {
+		// The distance the border will move within the warning time
+		double warningTimeDistance = worldBorder.getResizeSpeed() // meters/millis
+			* worldBorder.getWarningTime() * 1000; // millis
 
-		double warningShrink = border.getResizeSpeed() * border.getWarningTime() * 1000;
-		if(warningShrink > warningDistance) {
-			warningDistance = warningShrink;
-		}
+		// Border cannot move further than the target size
+		double remainingResize = Math.abs(worldBorder.getTargetSize() - worldBorder.getDiameter());
+		warningTimeDistance = Math.min(warningTimeDistance, remainingResize);
 
-		double diameterDelta = Math.abs(border.getTargetSize() - border.getDiameter());
-		if(diameterDelta < warningDistance) {
-			warningDistance = diameterDelta;
-		}
-
-		return warningDistance;
+		// Warn by distance and time
+		// The larger distance triggers a warning first
+		return Math.max(
+			worldBorder.getWarningDistance(),
+			warningTimeDistance
+		);
 	}
 }
