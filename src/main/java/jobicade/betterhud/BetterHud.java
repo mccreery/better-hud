@@ -4,9 +4,7 @@ import java.nio.file.Path;
 
 import org.apache.logging.log4j.Logger;
 
-import jobicade.betterhud.config.ConfigManager;
 import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.element.HudElement.SortType;
 import jobicade.betterhud.events.KeyEvents;
 import jobicade.betterhud.events.RenderEvents;
 import jobicade.betterhud.geom.LayoutManager;
@@ -16,24 +14,24 @@ import jobicade.betterhud.network.MessageVersion;
 import jobicade.betterhud.proxy.HudSidedProxy;
 import jobicade.betterhud.util.Tickable.Ticker;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.IReloadableResourceManager;
-import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
-import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
+import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
 import net.minecraftforge.fml.common.versioning.ArtifactVersion;
 import net.minecraftforge.fml.common.versioning.DefaultArtifactVersion;
 import net.minecraftforge.fml.relauncher.Side;
 
+@EventBusSubscriber
 @Mod(modid = BetterHud.MODID, name = "Better HUD", version = BetterHud.VERSION,
 	updateJSON = "https://raw.githubusercontent.com/mccreery/better-hud/develop/update.json",
 	dependencies = "required-after:forge@[14.23.1.2557,)")
@@ -55,14 +53,9 @@ public class BetterHud {
 		return proxy;
 	}
 
-	private static ConfigManager CONFIG_MANAGER;
 	public static final LayoutManager MANAGER = new LayoutManager();
 
 	public static final int SPACER = 5;
-
-	public static ConfigManager getConfigManager() {
-		return CONFIG_MANAGER;
-	}
 
 	public static boolean isEnabled() {
 		return HudElement.GLOBAL.isEnabledAndSupported() && !(HudElement.GLOBAL.hideOnDebug() && Minecraft.getMinecraft().gameSettings.showDebugInfo);
@@ -78,7 +71,7 @@ public class BetterHud {
 			HudElement.loadAllDefaults();
 
 			Path configPath = event.getSuggestedConfigurationFile().toPath();
-			CONFIG_MANAGER = new ConfigManager(configPath, configPath.resolveSibling(MODID));
+			proxy.initConfigManager(configPath, configPath.resolveSibling(MODID));
 		}
 	}
 
@@ -92,6 +85,8 @@ public class BetterHud {
 			HudElement.initAll(event);
 		}
 
+		proxy.registerReloadListeners();
+
 		// Message ID 0 reserved for ignored server presence message from [,1.4)
 		NET_WRAPPER.registerMessage(MessageNotifyClientHandler.class, MessageVersion.class, 2, Side.CLIENT);
 
@@ -100,16 +95,6 @@ public class BetterHud {
 		NET_WRAPPER.registerMessage(InventoryNameQuery.ClientHandler.class, InventoryNameQuery.Response.class, 4, Side.CLIENT);
 
 		MinecraftForge.EVENT_BUS.register(this);
-
-		IResourceManager manager = Minecraft.getMinecraft().getResourceManager();
-		if(manager instanceof IReloadableResourceManager) {
-			IReloadableResourceManager reloadableManager = (IReloadableResourceManager)manager;
-
-			reloadableManager.registerReloadListener(m -> HudElement.SORTER.markDirty(SortType.ALPHABETICAL));
-			reloadableManager.registerReloadListener(getConfigManager());
-		} else {
-			logger.warn("Unable to register alphabetical sort update on language change");
-		}
 	}
 
 	/**

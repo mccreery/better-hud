@@ -87,7 +87,7 @@ public class GuiElementSettings extends GuiMenuScreen {
 	@Override
 	public void onGuiClosed() {
 		Keyboard.enableRepeatEvents(false);
-		BetterHud.getConfigManager().getConfig().saveSettings();
+		BetterHud.getProxy().getConfig().saveSettings();
 	}
 
 	@Override
