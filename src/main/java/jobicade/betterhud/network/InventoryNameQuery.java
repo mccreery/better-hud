@@ -96,9 +96,6 @@ public abstract class InventoryNameQuery implements IMessage {
 		}
 	}
 
-	// TODO is it possible loading the message class could load this class and
-	// trigger NoClassDefFoundError on the server?
-	// (HudElement refs client-only classes)
 	public static class ClientHandler implements IMessageHandler<Response, IMessage> {
 		@Override
 		public IMessage onMessage(Response message, MessageContext ctx) {
