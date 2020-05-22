@@ -39,6 +39,12 @@ public class BetterHud {
 	public static final String MODID = "betterhud";
 	public static final String VERSION = "1.4.1";
 
+	private static ArtifactVersion serverVersion;
+
+	public BetterHud() {
+		setServerVersion(null);
+	}
+
 	private static Logger logger;
 	public static Logger getLogger() {
 		return logger;
@@ -105,7 +111,7 @@ public class BetterHud {
     public void onPlayerConnected(PlayerLoggedInEvent e) {
         if(e.player instanceof EntityPlayerMP) {
             ArtifactVersion version = new DefaultArtifactVersion(VERSION);
-            BetterHud.NET_WRAPPER.sendTo(new MessageVersion(version), (EntityPlayerMP)e.player);
+            NET_WRAPPER.sendTo(new MessageVersion(version), (EntityPlayerMP)e.player);
         }
 	}
 
@@ -115,6 +121,26 @@ public class BetterHud {
 	 */
 	@SubscribeEvent
     public void onPlayerDisconnected(ClientDisconnectionFromServerEvent e) {
-		BetterHud.getProxy().setServerVersion(null);
-    }
+		setServerVersion(null);
+	}
+
+	/**
+     * Updates the server version after a report is received.
+     *
+     * @param version The version or {@code null} to indicate no server.
+     */
+	public static void setServerVersion(ArtifactVersion version) {
+		if (version == null) {
+            serverVersion = new DefaultArtifactVersion("");
+        } else {
+            serverVersion = version;
+        }
+	}
+
+	/**
+     * @return The most recent version reported by the server.
+     */
+	public static ArtifactVersion getServerVersion() {
+		return serverVersion;
+	}
 }

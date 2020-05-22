@@ -10,7 +10,7 @@ public class MessageNotifyClientHandler implements IMessageHandler<MessageVersio
 	public IMessage onMessage(MessageVersion message, MessageContext context) {
 		BetterHud.getLogger().info("Server reported version " + message.version.getVersionString());
 
-		BetterHud.getProxy().setServerVersion(message.version);
+		BetterHud.setServerVersion(message.version);
 		return null;
 	}
 }

@@ -11,30 +11,9 @@ import jobicade.betterhud.gui.GuiHudMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
-import net.minecraftforge.fml.common.versioning.ArtifactVersion;
-import net.minecraftforge.fml.common.versioning.DefaultArtifactVersion;
 
 public class ClientProxy implements HudSidedProxy {
-    private ArtifactVersion serverVersion;
     private ConfigManager configManager;
-
-    public ClientProxy() {
-        setServerVersion(null);
-    }
-
-    @Override
-    public ArtifactVersion getServerVersion() {
-        return serverVersion;
-    }
-
-    @Override
-    public void setServerVersion(ArtifactVersion version) {
-        if (version == null) {
-            serverVersion = new DefaultArtifactVersion("version");
-        } else {
-            serverVersion = version;
-        }
-    }
 
     @Override
     public void initConfigManager(Path configFile, Path configDirectory) {

@@ -220,9 +220,7 @@ public abstract class HudElement implements IBoolean {
 	 * If the server version is too low, some communications may not be supported
 	 * @see #getServerDependency()  */
 	public boolean isSupportedByServer() {
-		return getServerDependency().containsVersion(
-			BetterHud.getProxy().getServerVersion()
-		);
+		return getServerDependency().containsVersion(BetterHud.getServerVersion());
 	}
 
 	/** @return The localized name of the element

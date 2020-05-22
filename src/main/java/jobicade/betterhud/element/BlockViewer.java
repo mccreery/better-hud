@@ -72,9 +72,7 @@ public class BlockViewer extends TextElement {
 					throw new RuntimeException(e);
 				}
 
-				return super.enabled() && versionRange.containsVersion(
-					BetterHud.getProxy().getServerVersion()
-				);
+				return super.enabled() && versionRange.containsVersion(BetterHud.getServerVersion());
 			}
 		});
 	}
