@@ -50,7 +50,7 @@ public class BetterHud {
 	}
 
 	@SidedProxy(clientSide = "jobicade.betterhud.proxy.ClientProxy", serverSide = "jobicade.betterhud.proxy.ServerProxy")
-	public static HudSidedProxy proxy;
+	private static HudSidedProxy proxy;
 	/**
 	 * @return The singleton sided proxy instance.
 	 */
