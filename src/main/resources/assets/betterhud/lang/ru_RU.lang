@@ -32,6 +32,7 @@ betterHud.menu.moveBottom=Перемещать основание
 # Menu text
 betterHud.menu.unsnap=Удерживайте %s чтобы отключить замыкание
 betterHud.menu.unsupported=Этот элемент не поддерживается сервером
+#betterHud.menu.tutorial=Hey! Thanks for installing. Press %s to change your settings.
 
 # Element names
 betterHud.element.global=Better HUD

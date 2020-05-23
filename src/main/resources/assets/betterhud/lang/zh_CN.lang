@@ -32,6 +32,7 @@ betterHud.menu.moveBottom=移到底部
 # Menu text
 betterHud.menu.unsnap=按住 %s 以禁用捕捉。
 betterHud.menu.unsupported=此元素不受服务器支持。
+#betterHud.menu.tutorial=Hey! Thanks for installing. Press %s to change your settings.
 
 # Element names
 betterHud.element.global=Better HUD

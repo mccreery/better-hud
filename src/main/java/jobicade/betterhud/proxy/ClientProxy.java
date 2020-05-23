@@ -15,8 +15,12 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.entity.Entity;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextComponentTranslation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
+import net.minecraftforge.fml.common.Loader;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -71,6 +75,28 @@ public class ClientProxy implements HudSidedProxy {
     public void onKey(KeyInputEvent event) {
         if (Minecraft.getMinecraft().inGameHasFocus && menuKey.isPressed()) {
             Minecraft.getMinecraft().displayGuiScreen(new GuiHudMenu(configManager));
+        }
+    }
+
+    private boolean firstTime;
+    @Override
+    public void setFirstTime() {
+        firstTime = true;
+    }
+
+    /**
+     * @see net.minecraft.network.NetHandlerPlayServer#processChatMessage(CPacketChatMessage)
+     */
+    @Override
+    public void trySendTutorial(Entity entity) {
+        if (firstTime && entity == Minecraft.getMinecraft().player) {
+            String name = Loader.instance().activeModContainer().getName();
+            ITextComponent message = new TextComponentTranslation(
+                "chat.type.text", name,
+                new TextComponentTranslation("betterHud.menu.tutorial", menuKey.getDisplayName())
+            );
+            Minecraft.getMinecraft().player.sendMessage(message);
+            firstTime = false;
         }
     }
 }

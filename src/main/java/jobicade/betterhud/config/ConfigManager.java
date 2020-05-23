@@ -19,6 +19,7 @@ import java.util.stream.Stream;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
 
+import jobicade.betterhud.BetterHud;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
@@ -67,6 +68,12 @@ public class ConfigManager implements IResourceManagerReloadListener {
      * Reloads the current config, for example after overwriting it.
      */
     public void reloadConfig() {
+        // First time player, no existing config
+        // Will only be called once or if the player deletes their cfg
+        if (!Files.exists(configPath)) {
+            BetterHud.getProxy().setFirstTime();
+        }
+
         this.config = new HudConfig(configPath.toFile());
     }
 

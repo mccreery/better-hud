@@ -32,6 +32,7 @@ betterHud.menu.moveBottom=Move to Bottom
 # Menu text
 betterHud.menu.unsnap=Hold %s to disable snapping
 betterHud.menu.unsupported=This element is not supported by the server
+betterHud.menu.tutorial=Hey! Thanks for installing. Press %s to change your settings.
 
 # Element names
 betterHud.element.global=Better HUD

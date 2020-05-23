@@ -32,6 +32,7 @@ betterHud.menu.alphabetical=A-Z
 # Menu text
 betterHud.menu.unsnap=Halten %s um schnappen zu deaktivieren
 betterHud.menu.unsupported=Dieses Element wird nicht vom Server unterstützt
+#betterHud.menu.tutorial=Hey! Thanks for installing. Press %s to change your settings.
 
 # Element names
 betterHud.element.global=Better HUD

@@ -12,6 +12,7 @@ import jobicade.betterhud.proxy.HudSidedProxy;
 import jobicade.betterhud.util.Tickable.Ticker;
 import net.minecraft.entity.player.EntityPlayerMP;
 import net.minecraft.world.IWorldNameable;
+import net.minecraftforge.event.entity.EntityJoinWorldEvent;
 import net.minecraftforge.event.world.BlockEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -23,6 +24,7 @@ import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemPickupEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
+import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
@@ -82,6 +84,15 @@ public class BetterHud {
 
         Ticker.registerEvents();
         proxy.init(event);
+    }
+
+    /**
+     * Triggered by a player spawning.
+     * Sends a status message on first load.
+     */
+    @SubscribeEvent
+    public static void onRespawn(EntityJoinWorldEvent e) {
+        proxy.trySendTutorial(e.getEntity());
     }
 
     /**
