@@ -52,10 +52,12 @@ public enum DirectionOptions implements Function<Direction, Direction> {
     I(NORTH_WEST, NORTH, NORTH_EAST, CENTER, SOUTH_WEST, SOUTH, SOUTH_EAST) {
         @Override
         public Direction apply(Direction direction) {
-            switch(direction) {
-                case WEST: return NORTH_WEST;
-                case EAST: return NORTH_EAST;
-                default:   return direction != null ? direction : NORTH_WEST;
+            if (direction == null || direction == WEST) {
+                return NORTH_WEST;
+            } else if (direction == EAST) {
+                return NORTH_EAST;
+            } else {
+                return direction;
             }
         }
     },

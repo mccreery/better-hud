@@ -148,18 +148,20 @@ public class SettingDirection extends SettingAlignable<Direction> {
 	}
 
 	public static String localizeDirection(Direction direction) {
-		String name;
-		switch(direction) {
-			case NORTH_WEST: name = "northWest"; break;
-			case NORTH:      name = "north"; break;
-			case NORTH_EAST: name = "northEast"; break;
-			case WEST:       name = "west"; break;
-			case CENTER:     name = "center"; break;
-			case EAST:       name = "east"; break;
-			case SOUTH_WEST: name = "southWest"; break;
-			case SOUTH:      name = "south"; break;
-			case SOUTH_EAST: name = "southEast"; break;
-			default:         name = "none";
+		String name = "none";
+
+		if (direction != null) {
+			switch(direction) {
+				case NORTH_WEST: name = "northWest"; break;
+				case NORTH:      name = "north"; break;
+				case NORTH_EAST: name = "northEast"; break;
+				case WEST:       name = "west"; break;
+				case CENTER:     name = "center"; break;
+				case EAST:       name = "east"; break;
+				case SOUTH_WEST: name = "southWest"; break;
+				case SOUTH:      name = "south"; break;
+				case SOUTH_EAST: name = "southEast"; break;
+			}
 		}
 		return I18n.format("betterHud.value." + name);
 	}
