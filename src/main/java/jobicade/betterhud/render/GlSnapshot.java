@@ -8,29 +8,48 @@ import java.util.Objects;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GL14;
 
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
+
+import net.minecraft.client.renderer.GlStateManager;
 
 /**
  * Data class containing a single immutable snapshot of the OpenGL state.
  * Can be used to check that a state has not changed between two points.
  */
 public class GlSnapshot {
-    private final Map<Flag, Boolean> flags = new EnumMap<>(Flag.class);
+    private final Map<GlFlag, Boolean> flags = new EnumMap<>(GlFlag.class);
     private final Color color;
     private final int texture;
     private final BlendFunc blendFunc;
 
     public GlSnapshot() {
-        for(Flag flag : Flag.values()) {
+        for(GlFlag flag : GlFlag.values()) {
             this.flags.put(flag, flag.isEnabled());
         }
         this.color = getCurrentColor();
         this.texture = getCurrentTexture();
         this.blendFunc = getCurrentBlendFunc();
+    }
+
+    public void apply() {
+        for (GlFlag flag : flags.keySet()) {
+            flag.setEnabled(flags.get(flag));
+        }
+        GlStateManager.color(
+            color.getRed() / 255.0f,
+            color.getGreen() / 255.0f,
+            color.getBlue() / 255.0f);
+
+        GlStateManager.bindTexture(texture);
+
+        GlStateManager.tryBlendFuncSeparate(
+            blendFunc.getSrcFactor(),
+            blendFunc.getDstFactor(),
+            blendFunc.getSrcFactorAlpha(),
+            blendFunc.getDstFactorAlpha());
     }
 
     private Color getCurrentColor() {
@@ -59,7 +78,7 @@ public class GlSnapshot {
         return new BlendFunc(srcFactor, dstFactor, srcFactorAlpha, dstFactorAlpha);
     }
 
-    public Map<Flag, Boolean> getFlags() {
+    public Map<GlFlag, Boolean> getFlags() {
         return Collections.unmodifiableMap(flags);
     }
 
@@ -151,35 +170,6 @@ public class GlSnapshot {
         @Override
         public String toString() {
             return String.format("{src: %s, dst: %s, srcAlpha: %s, dstAlpha: %s}", srcFactor, dstFactor, srcFactorAlpha, dstFactorAlpha);
-        }
-    }
-
-    public enum Flag {
-        ALPHA_TEST(GL11.GL_ALPHA_TEST),
-        BLEND(GL11.GL_BLEND),
-        DEPTH_TEST(GL11.GL_DEPTH_TEST),
-        LIGHTING(GL11.GL_LIGHTING),
-        TEXTURE_2D(GL11.GL_TEXTURE_2D),
-        COLOR_MATERIAL(GL11.GL_COLOR_MATERIAL),
-        RESCALE_NORMAL(GL12.GL_RESCALE_NORMAL),
-
-        LIGHT_0(GL11.GL_LIGHT0),
-        LIGHT_1(GL11.GL_LIGHT1),
-        LIGHT_2(GL11.GL_LIGHT2),
-        LIGHT_3(GL11.GL_LIGHT3),
-        LIGHT_4(GL11.GL_LIGHT4),
-        LIGHT_5(GL11.GL_LIGHT5),
-        LIGHT_6(GL11.GL_LIGHT6),
-        LIGHT_7(GL11.GL_LIGHT7);
-
-        private final int code;
-
-        Flag(int code) {
-            this.code = code;
-        }
-
-        public boolean isEnabled() {
-            return GL11.glIsEnabled(code);
         }
     }
 }
