@@ -7,6 +7,7 @@ import java.util.stream.Stream;
 
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.events.HudPhase;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -30,7 +31,7 @@ public class SignReader extends HudElement {
 	}
 
 	public SignReader() {
-		super("signReader", new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.NONE));
+		super("signReader", HudPhase.OVERLAY, new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.NONE));
 	}
 
 	@Override

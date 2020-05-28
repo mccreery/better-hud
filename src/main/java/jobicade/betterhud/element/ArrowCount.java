@@ -12,6 +12,7 @@ import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.events.HudPhase;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.geom.Direction;
@@ -32,7 +33,7 @@ public class ArrowCount extends HudElement {
 	}
 
 	public ArrowCount() {
-		super("arrowCount", new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.NONE));
+		super("arrowCount", HudPhase.OVERLAY, new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.NONE));
 		position.setEnableOn(() -> !overlay.get());
 	}
 

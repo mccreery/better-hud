@@ -11,6 +11,7 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingChoose;
+import jobicade.betterhud.events.HudPhase;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.Tickable;
 
@@ -19,7 +20,7 @@ public abstract class ParticleOverlay extends HudElement implements Tickable {
 	protected final List<Particle> particles = new CopyOnWriteArrayList<Particle>();
 
 	protected ParticleOverlay(String name) {
-		super(name);
+		super(name, HudPhase.OVERLAY);
 	}
 
 	@Override

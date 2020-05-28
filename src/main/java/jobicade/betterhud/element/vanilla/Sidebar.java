@@ -11,6 +11,7 @@ import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.events.HudPhase;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
@@ -29,7 +30,7 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class Sidebar extends HudElement {
 	public Sidebar() {
-		super("scoreboard", new SettingPosition(DirectionOptions.LEFT_RIGHT, DirectionOptions.WEST_EAST));
+		super("scoreboard", HudPhase.OVERLAY, new SettingPosition(DirectionOptions.LEFT_RIGHT, DirectionOptions.WEST_EAST));
 	}
 
 	@Override

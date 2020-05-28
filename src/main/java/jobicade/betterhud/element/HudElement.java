@@ -48,6 +48,7 @@ import jobicade.betterhud.element.vanilla.PotionBar;
 import jobicade.betterhud.element.vanilla.RidingHealth;
 import jobicade.betterhud.element.vanilla.Sidebar;
 import jobicade.betterhud.element.vanilla.Vignette;
+import jobicade.betterhud.events.HudPhase;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.proxy.ClientProxy;
 import jobicade.betterhud.util.SortField;
@@ -162,12 +163,15 @@ public abstract class HudElement {
 	public final int id;
 	public final String name;
 
-	protected HudElement(String name) {
-		this(name, new SettingPosition(DirectionOptions.NONE, DirectionOptions.NONE));
+	private final HudPhase hudPhase;
+
+	protected HudElement(String name, HudPhase hudPhase) {
+		this(name, hudPhase, new SettingPosition(DirectionOptions.NONE, DirectionOptions.NONE));
 	}
 
-	protected HudElement(String name, SettingPosition position) {
+	protected HudElement(String name, HudPhase hudPhase, SettingPosition position) {
 		this.name = name;
+		this.hudPhase = hudPhase;
 		this.position = position;
 
 		List<Setting<?>> rootSettings = new ArrayList<>();
@@ -176,6 +180,10 @@ public abstract class HudElement {
 
 		id = ELEMENTS.size();
 		ELEMENTS.add(this);
+	}
+
+	public final HudPhase getHudPhase() {
+		return hudPhase;
 	}
 
 	/**

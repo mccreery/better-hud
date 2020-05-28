@@ -7,6 +7,7 @@ import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingPercentage;
 import jobicade.betterhud.element.settings.SettingSlider;
+import jobicade.betterhud.events.HudPhase;
 import jobicade.betterhud.geom.Rect;
 
 public class GlobalSettings extends HudElement {
@@ -16,7 +17,7 @@ public class GlobalSettings extends HudElement {
 	private SettingBoolean debugMode;
 
 	public GlobalSettings() {
-		super("global");
+		super("global", HudPhase.NONE);
 		ELEMENTS.remove(this);
 	}
 
@@ -54,6 +55,5 @@ public class GlobalSettings extends HudElement {
 		hideOnDebug.set(true);
 	}
 
-	@Override public boolean shouldRender(Event event) {return false;}
 	@Override public Rect render(Event event) {return null;}
 }

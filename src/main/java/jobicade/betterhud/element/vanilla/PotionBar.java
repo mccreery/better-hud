@@ -14,6 +14,7 @@ import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.events.HudPhase;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -37,7 +38,7 @@ public class PotionBar extends HudElement {
 	private SettingBoolean showDuration;
 
 	public PotionBar() {
-		super("potionBar", new SettingPosition(DirectionOptions.X, DirectionOptions.CORNERS));
+		super("potionBar", HudPhase.OVERLAY, new SettingPosition(DirectionOptions.X, DirectionOptions.CORNERS));
 	}
 
 	@Override

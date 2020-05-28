@@ -9,6 +9,7 @@ import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingColor;
 import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.events.HudPhase;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.render.Grid;
@@ -27,7 +28,7 @@ public abstract class TextElement extends HudElement {
 	}
 
 	public TextElement(String name, SettingPosition position) {
-		super(name, position);
+		super(name, HudPhase.OVERLAY, position);
 	}
 
 	@Override

@@ -5,6 +5,7 @@ import static jobicade.betterhud.BetterHud.SPACER;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.events.HudPhase;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.GlUtil;
@@ -16,7 +17,7 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class Offhand extends HudElement {
 	public Offhand() {
-		super("offhand", new SettingPosition("position", DirectionOptions.BAR, DirectionOptions.NONE));
+		super("offhand", HudPhase.OVERLAY, new SettingPosition("position", DirectionOptions.BAR, DirectionOptions.NONE));
 	}
 
 	@Override

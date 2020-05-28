@@ -10,6 +10,7 @@ import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.settings.SettingWarnings;
+import jobicade.betterhud.events.HudPhase;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.MathUtil;
 
@@ -21,7 +22,7 @@ public abstract class EquipmentDisplay extends HudElement {
 	private SettingBoolean showUndamaged;
 
 	protected EquipmentDisplay(String name, SettingPosition position) {
-		super(name, position);
+		super(name, HudPhase.OVERLAY, position);
 	}
 
 	@Override

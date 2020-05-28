@@ -9,6 +9,7 @@ import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.settings.SettingSlider;
+import jobicade.betterhud.events.HudPhase;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -42,7 +43,7 @@ public class PickupCount extends HudElement {
 	}
 
 	public PickupCount() {
-		super("itemPickup", new SettingPosition(DirectionOptions.X, DirectionOptions.CORNERS));
+		super("itemPickup", HudPhase.OVERLAY, new SettingPosition(DirectionOptions.X, DirectionOptions.CORNERS));
 	}
 
 	@Override

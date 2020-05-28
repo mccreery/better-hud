@@ -10,6 +10,7 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingChoose;
+import jobicade.betterhud.events.HudPhase;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
@@ -28,7 +29,7 @@ public class HealIndicator extends HudElement {
 	}
 
 	public HealIndicator() {
-		super("healIndicator");
+		super("healIndicator", HudPhase.OVERLAY);
 	}
 
 	@Override

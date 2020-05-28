@@ -6,15 +6,16 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.events.HudPhase;
 import jobicade.betterhud.events.RenderEvents;
 
 public abstract class OverrideElement extends HudElement {
 	protected OverrideElement(String name) {
-		super(name);
+		super(name, HudPhase.OVERLAY);
 	}
 
 	protected OverrideElement(String name, SettingPosition position) {
-		super(name, position);
+		super(name, HudPhase.OVERLAY, position);
 	}
 
 	protected abstract ElementType getType();
