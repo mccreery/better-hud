@@ -54,46 +54,38 @@ public final class OverlayHook {
      * Replacement drop-in for {@link GuiIngameForge#renderGameOverlay(float)}
      * Starting after the {@code Pre} event.
      */
-    private static void renderGameOverlay(RenderGameOverlayEvent eventParent) {
+    private static void renderGameOverlay(RenderGameOverlayEvent event) {
         for (HudElement hudElement : HudElement.SORTER.getSortedData(SortType.PRIORITY)) {
             Minecraft.getMinecraft().mcProfiler.startSection(hudElement.name);
 
-            // TODO implement element type
-            ElementType elementType = hudElement.getElementType();
-            if (elementType != null) {
-                mimicGlPre(elementType);
-                MinecraftForge.EVENT_BUS.post(
-                    new RenderGameOverlayEvent.Pre(eventParent, elementType));
-            }
-
             // TODO public render and checks in this method
-            hudElement.render(eventParent);
-
-            if (elementType != null) {
-                mimicGlPost(elementType);
-                MinecraftForge.EVENT_BUS.post(
-                    new RenderGameOverlayEvent.Post(eventParent, elementType));
-            }
+            hudElement.render(event);
 
             Minecraft.getMinecraft().mcProfiler.endSection();
         }
     }
 
     /**
-     * Mimics {@link GuiIngameForge#renderGameOverlay(float)} by applying a
-     * snapshot of the OpenGL state based on the code leading up to the
-     * pre-event of the same type.
+     * Prepares OpenGL state and posts an appropriate event to mimic
+     * {@link GuiIngameForge#renderGameOverlay(float)} just before rendering
+     * {@code elementType}.
      */
-    private static void mimicGlPre(ElementType type) {
-        // TODO
+    public static void mimicPre(RenderGameOverlayEvent parentEvent, ElementType elementType) {
+        // TODO load OpenGL state
+
+        MinecraftForge.EVENT_BUS.post(
+            new RenderGameOverlayEvent.Pre(parentEvent, elementType));
     }
 
     /**
-     * Mimics {@link GuiIngameForge#renderGameOverlay(float)} by applying a
-     * snapshot of the OpenGL state based on the code immediately after the
-     * post-event of the same type.
+     * Prepares OpenGL state and posts an appropriate event to mimic
+     * {@link GuiIngameForge#renderGameOverlay(float)} just after rendering
+     * {@code elementType}.
      */
-    private static void mimicGlPost(ElementType type) {
-        // TODO
+    public static void mimicPost(RenderGameOverlayEvent parentEvent, ElementType elementType) {
+        // TODO load OpenGL state
+
+        MinecraftForge.EVENT_BUS.post(
+            new RenderGameOverlayEvent.Pre(parentEvent, elementType));
     }
 }
