@@ -31,7 +31,7 @@ public final class OverlayHook {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void preOverlayLate(RenderGameOverlayEvent.Pre event) {
-        if (shouldRun(event)) {
+        if (!event.isCanceled() && shouldRun(event)) {
             // Pre event is a valid parent as it just carries identical
             // information to its own parent
             renderGameOverlay(event);
