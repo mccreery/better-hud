@@ -66,6 +66,16 @@ public final class OverlayHook {
     }
 
     /**
+     * @return {@code true} if all conditions for rendering {@code hudElement}
+     * are currently satisfied.
+     */
+    public static boolean shouldRender(HudElement hudElement) {
+        return hudElement.getServerDependency().containsVersion(BetterHud.getServerVersion())
+            && hudElement.isEnabled()
+            && hudElement.shouldRender();
+    }
+
+    /**
      * Prepares OpenGL state and posts an appropriate event to mimic
      * {@link GuiIngameForge#renderGameOverlay(float)} just before rendering
      * {@code elementType}.

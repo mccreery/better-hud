@@ -7,6 +7,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.HudElement.SortType;
 import jobicade.betterhud.geom.Rect;
@@ -50,7 +51,8 @@ class ButtonRow {
 	}
 
 	public ButtonRow update() {
-		boolean supported = element.isSupportedByServer();
+		boolean supported = element.getServerDependency()
+			.containsVersion(BetterHud.getServerVersion());
 
 		toggle.enabled = supported;
 		toggle.glowing = element.isEnabled();

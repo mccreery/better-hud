@@ -25,8 +25,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
-import net.minecraftforge.fml.common.versioning.InvalidVersionSpecificationException;
-import net.minecraftforge.fml.common.versioning.VersionRange;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class PickupCount extends HudElement {
@@ -44,6 +42,7 @@ public class PickupCount extends HudElement {
 
 	public PickupCount() {
 		super("itemPickup", HudPhase.OVERLAY, new SettingPosition(DirectionOptions.X, DirectionOptions.CORNERS));
+		setServerDependency("[1.4-beta,1.4.1),(1.4.1,]");
 	}
 
 	@Override
@@ -61,15 +60,6 @@ public class PickupCount extends HudElement {
 				return scaledValue == getMaximum() ? I18n.format("betterHud.value.unlimited") : super.getDisplayValue(scaledValue);
 			}
 		});
-	}
-
-	@Override
-	public VersionRange getServerDependency() {
-		try {
-			return VersionRange.createFromVersionSpec("[1.4-beta,1.4.1),(1.4.1,]");
-		} catch (InvalidVersionSpecificationException e) {
-			throw new RuntimeException(e);
-		}
 	}
 
 	/**

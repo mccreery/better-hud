@@ -10,6 +10,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.fml.common.versioning.InvalidVersionSpecificationException;
 import net.minecraftforge.fml.common.versioning.Restriction;
 import net.minecraftforge.fml.common.versioning.VersionRange;
 import jobicade.betterhud.BetterHud;
@@ -151,15 +152,6 @@ public abstract class HudElement {
 		settings.set(value);
 	}
 
-	/**
-	 * Checks whether the element can be rendered before deciding.
-	 * @see #shouldRender(Event)
-	 * @return {@code true} if the element can be rendered.
-	 */
-	public boolean isEnabledAndSupported() {
-		return settings.get() && isSupportedByServer();
-	}
-
 	public final int id;
 	public final String name;
 
@@ -186,6 +178,33 @@ public abstract class HudElement {
 		return hudPhase;
 	}
 
+	private static final VersionRange DEFAULT_SERVER_DEPENDENCY
+		= VersionRange.newRange(null, Arrays.asList(Restriction.EVERYTHING));
+
+	private VersionRange serverDependency = DEFAULT_SERVER_DEPENDENCY;
+
+	/**
+	 * Version spec is converted to range using
+	 * {@link VersionRange#createFromVersionSpec(String)}.
+	 */
+	protected final void setServerDependency(String versionSpec) {
+		VersionRange serverDependency;
+		try {
+			serverDependency = VersionRange.createFromVersionSpec(versionSpec);
+		} catch (InvalidVersionSpecificationException e) {
+			throw new RuntimeException(e);
+		}
+		setServerDependency(serverDependency);
+	}
+
+	protected final void setServerDependency(VersionRange serverDependency) {
+		this.serverDependency = serverDependency;
+	}
+
+	public final VersionRange getServerDependency() {
+		return serverDependency;
+	}
+
 	/**
 	 * Adds all the element-specific settings to the settings window.
 	 * Include {@code super.addSettings()} for all child classes.
@@ -199,19 +218,6 @@ public abstract class HudElement {
 		if(position.getDirectionOptions() != DirectionOptions.NONE || position.getContentOptions() != DirectionOptions.NONE) {
 			settings.add(position);
 		}
-	}
-
-	/** @return The minimum server version that supports this element
-	 * @see #isSupportedByServer() */
-	public VersionRange getServerDependency() {
-		return VersionRange.newRange(null, Arrays.asList(Restriction.EVERYTHING));
-	}
-
-	/** @return {@code true} if the current connected server supports the element.
-	 * If the server version is too low, some communications may not be supported
-	 * @see #getServerDependency()  */
-	public boolean isSupportedByServer() {
-		return getServerDependency().containsVersion(BetterHud.getServerVersion());
 	}
 
 	/** @return The localized name of the element
