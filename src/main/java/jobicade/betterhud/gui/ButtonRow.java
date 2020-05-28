@@ -23,7 +23,7 @@ class ButtonRow {
 		this.element = element;
 
 		toggle = new GuiActionButton("").setCallback(b -> {
-			element.toggle();
+			element.setEnabled(!element.isEnabled());
 			HudElement.SORTER.markDirty(SortType.ENABLED);
 
 			if(Minecraft.getMinecraft().currentScreen != null) {
@@ -53,11 +53,11 @@ class ButtonRow {
 		boolean supported = element.isSupportedByServer();
 
 		toggle.enabled = supported;
-		toggle.glowing = element.get();
-		toggle.updateText(element.getUnlocalizedName(), "options", element.get());
+		toggle.glowing = element.isEnabled();
+		toggle.updateText(element.getUnlocalizedName(), "options", element.isEnabled());
 		toggle.setTooltip(toggle.enabled ? null : I18n.format("betterHud.menu.unsupported"));
 
-		options.enabled = supported && element.get() && !element.settings.isEmpty();
+		options.enabled = supported && element.isEnabled() && !element.settings.isEmpty();
 
 		return this;
 	}

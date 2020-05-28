@@ -50,11 +50,10 @@ import jobicade.betterhud.element.vanilla.Sidebar;
 import jobicade.betterhud.element.vanilla.Vignette;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.proxy.ClientProxy;
-import jobicade.betterhud.util.IGetSet.IBoolean;
 import jobicade.betterhud.util.SortField;
 import jobicade.betterhud.util.Sorter;
 
-public abstract class HudElement implements IBoolean {
+public abstract class HudElement {
 	/** A list of all the registered elements */
 	public static final List<HudElement> ELEMENTS = new ArrayList<HudElement>();
 
@@ -143,27 +142,11 @@ public abstract class HudElement implements IBoolean {
 	public final RootSetting settings;
 	protected final SettingPosition position;
 
-	/**
-	 * {@inheritDoc}
-	 * <p>For {@link HudElement}, gets whether the element is enabled, ignoring
-	 * support. Rather use {@link #isEnabledAndSupported()} to check for support.
-	 *
-	 * @see #isEnabledAndSupported()
-	 */
-	@Override
-	public Boolean get() {
+	public boolean isEnabled() {
 		return settings.get();
 	}
 
-	/**
-	 * {@inheritDoc}
-	 * <p>For {@link HudElement}, enables or disables the element. The element
-	 * will still not be rendered if it is not supported.
-	 *
-	 * @see #isSupportedByServer()
-	 */
-	@Override
-	public void set(Boolean value) {
+	public void setEnabled(boolean value) {
 		settings.set(value);
 	}
 
@@ -329,7 +312,7 @@ public abstract class HudElement implements IBoolean {
 	 * You should always call the {@code super} implementation to handle the default enabled value of {@code true}
 	 * and to allow for future expansion */
 	protected void loadDefaults() {
-		set(true);
+		setEnabled(true);
 		settings.priority.set(0);
 	}
 

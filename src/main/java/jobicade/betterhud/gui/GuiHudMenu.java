@@ -56,7 +56,7 @@ public class GuiHudMenu extends GuiMenuScreen {
 	}
 
 	private boolean allEnabled() {
-		return HudElement.ELEMENTS.stream().allMatch(e -> e.get());
+		return HudElement.ELEMENTS.stream().allMatch(HudElement::isEnabled);
 	}
 
 	public void initGui() {
@@ -126,7 +126,7 @@ public class GuiHudMenu extends GuiMenuScreen {
 
 	private void setAll(boolean enabled) {
 		for(HudElement element : HudElement.ELEMENTS) {
-			element.set(enabled);
+			element.setEnabled(enabled);
 		}
 
 		HudElement.SORTER.markDirty(SortType.ENABLED);
@@ -137,7 +137,7 @@ public class GuiHudMenu extends GuiMenuScreen {
 	public void drawScreen(int mouseX, int mouseY, float p_73863_3_) {
 		super.drawScreen(mouseX, mouseY, p_73863_3_);
 
-		int enabled = (int)HudElement.ELEMENTS.stream().filter(HudElement::get).count();
+		int enabled = (int)HudElement.ELEMENTS.stream().filter(HudElement::isEnabled).count();
 		GlUtil.drawString(enabled + "/" + HudElement.ELEMENTS.size() + " enabled", new Point(SPACER, SPACER), Direction.NORTH_WEST, Color.WHITE);
 
 		String page = I18n.format("betterHud.menu.page", (paginator.getPageIndex() + 1) + "/" + paginator.getPageCount());
