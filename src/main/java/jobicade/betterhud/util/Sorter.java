@@ -1,6 +1,5 @@
 package jobicade.betterhud.util;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -11,14 +10,10 @@ import com.google.common.collect.Lists;
 
 public class Sorter<T> {
 	private final Iterable<T> sourceData;
-	private final Map<Comparator<T>, List<T>> sortedDataMap = new HashMap<Comparator<T>, List<T>>();
+	private final Map<Comparator<? super T>, List<T>> sortedDataMap = new HashMap<>();
 
 	public Sorter(Iterable<T> sourceData) {
 		this.sourceData = sourceData;
-	}
-
-	public final Collection<Comparator<T>> getComparators() {
-		return sortedDataMap.keySet();
 	}
 
 	@SafeVarargs
@@ -32,18 +27,18 @@ public class Sorter<T> {
 		}
 	}
 
-	public List<T> getSortedData(Comparator<T> comparator) {
+	public List<T> getSortedData(Comparator<? super T> comparator) {
 		return getSortedData(comparator, false);
 	}
 
-	public List<T> getSortedData(Comparator<T> comparator, boolean descending) {
+	public List<T> getSortedData(Comparator<? super T> comparator, boolean descending) {
 		List<T> sortedData = ensureEntry(comparator);
 		if(descending) sortedData = Lists.reverse(sortedData);
 
 		return Collections.unmodifiableList(sortedData);
 	}
 
-	private List<T> ensureEntry(Comparator<T> comparator) {
+	private List<T> ensureEntry(Comparator<? super T> comparator) {
 		return sortedDataMap.computeIfAbsent(comparator, c -> {
 			List<T> sortedData = Lists.newArrayList(sourceData);
 			sortedData.sort(c);
