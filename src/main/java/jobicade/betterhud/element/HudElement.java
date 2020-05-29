@@ -58,53 +58,6 @@ import net.minecraftforge.fml.common.versioning.VersionRange;
  * @param T context object passed to render methods.
  */
 public abstract class HudElement<T> {
-	/** A list of all the registered elements */
-	public static final List<HudElement<?>> ELEMENTS = new ArrayList<HudElement<?>>();
-
-	// TODO MOVE
-	public static final ArmorBars ARMOR_BARS = null;//new ArmorBars();
-	public static final ArrowCount ARROW_COUNT = null;//new ArrowCount();
-	public static final BiomeName BIOME_NAME = null;//new BiomeName();
-	public static final BlockViewer BLOCK_VIEWER = null;//new BlockViewer();
-	public static final BloodSplatters BLOOD_SPLATTERS = null;//new BloodSplatters();
-	public static final Compass COMPASS = null;//new Compass();
-	public static final Connection CONNECTION = null;//new Connection();
-	public static final Coordinates COORDINATES = null;//new Coordinates();
-	public static final CpsCount CPS = null;//new CpsCount();
-	public static final Distance DISTANCE = null;//new Distance();
-	public static final ExperienceInfo EXPERIENCE_INFO = null;//new ExperienceInfo();
-	public static final FpsCount FPS = null;//new FpsCount();
-	public static final FullInvIndicator FULL_INV = null;//new FullInvIndicator();
-	public static final GameClock CLOCK = null;//new GameClock();
-	public static final GlobalSettings GLOBAL = /*null;*/new GlobalSettings();
-	public static final HandBar HOLDING = null;//new HandBar();
-	public static final HealIndicator HEAL = null;//new HealIndicator();
-	public static final HorseInfo HORSE_INFO = null;//new HorseInfo();
-	public static final LightLevel LIGHT_LEVEL = null;//new LightLevel();
-	public static final MobInfo MOB_INFO = null;//new MobInfo();
-	public static final PickupCount PICKUP = null;//new PickupCount();
-	public static final PlayerInfo PLAYER_INFO = null;//new PlayerInfo();
-	public static final Saturation SATURATION = null;//new Saturation();
-	public static final SignReader SIGN_READER = null;//new SignReader();
-	public static final SystemClock SYSTEM_CLOCK = null;//new SystemClock();
-	public static final WaterDrops WATER_DROPS = null;//new WaterDrops();
-
-	public static final AirBar AIR_BAR = null;//new AirBar();
-	public static final ArmorBar ARMOR_BAR = null;//new ArmorBar();
-	public static final Crosshair CROSSHAIR = null;//new Crosshair();
-	public static final Experience EXPERIENCE = null;//new Experience();
-	public static final FoodBar FOOD_BAR = null;//new FoodBar();
-	public static final HealthBar HEALTH = null;//new HealthBar();
-	public static final HelmetOverlay HELMET_OVERLAY = null;//new HelmetOverlay();
-	public static final Hotbar HOTBAR = null;//new Hotbar();
-	public static final JumpBar JUMP_BAR = null;//new JumpBar();
-	public static final Offhand OFFHAND = null;//new Offhand();
-	public static final PortalOverlay PORTAL = null;//new PortalOverlay();
-	public static final PotionBar POTION_BAR = null;//new PotionBar();
-	public static final RidingHealth MOUNT = null;//new RidingHealth();
-	public static final Sidebar SIDEBAR = null;//new Sidebar();
-	public static final Vignette VIGNETTE = null;//new Vignette();
-
 	public enum SortType implements SortField<HudElement<?>> {
 		ALPHABETICAL("alphabetical", false) {
 			@Override
@@ -141,8 +94,6 @@ public abstract class HudElement<T> {
 		}
 	};
 
-	public static final Sorter<HudElement<?>> SORTER = new Sorter<HudElement<?>>(ELEMENTS);
-
 	/** The settings saved to the config file for this element */
 	public final RootSetting settings;
 	protected final SettingPosition position;
@@ -165,8 +116,6 @@ public abstract class HudElement<T> {
 		List<Setting<?>> rootSettings = new ArrayList<>();
 		addSettings(rootSettings);
 		this.settings = new RootSetting(this, rootSettings);
-
-		ELEMENTS.add(this);
 	}
 
 	private ResourceLocation registryName;
