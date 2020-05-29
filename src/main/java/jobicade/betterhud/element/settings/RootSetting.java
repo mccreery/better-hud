@@ -23,7 +23,9 @@ public class RootSetting extends SettingStub<Boolean> implements IBoolean {
 	}.setHidden();
 
 	public final void bindConfig(HudConfig config) {
-		bindConfig(config, element.name, new StringBuilder());
+		// TODO config file now using registry name
+		// e.g. armorBars --> betterhud:armor_bars
+		bindConfig(config, element.getRegistryName().toString(), new StringBuilder());
 	}
 
 	public RootSetting(HudElement<?> element, List<Setting<?>> settings) {

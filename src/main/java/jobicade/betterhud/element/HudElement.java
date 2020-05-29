@@ -45,6 +45,7 @@ import jobicade.betterhud.proxy.ClientProxy;
 import jobicade.betterhud.util.SortField;
 import jobicade.betterhud.util.Sorter;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -154,23 +155,56 @@ public abstract class HudElement<T> {
 		settings.set(value);
 	}
 
-	public final int id;
-	public final String name;
-
 	protected HudElement(String name) {
 		this(name, new SettingPosition(DirectionOptions.NONE, DirectionOptions.NONE));
 	}
 
 	protected HudElement(String name, SettingPosition position) {
-		this.name = name;
 		this.position = position;
 
 		List<Setting<?>> rootSettings = new ArrayList<>();
 		addSettings(rootSettings);
 		this.settings = new RootSetting(this, rootSettings);
 
-		id = ELEMENTS.size();
 		ELEMENTS.add(this);
+	}
+
+	private ResourceLocation registryName;
+
+	public final void setRegistryName(String name) {
+		setRegistryName(new ResourceLocation(name));
+	}
+
+	public final void setRegistryName(String domain, String path) {
+		setRegistryName(new ResourceLocation(domain, path));
+	}
+
+	public final void setRegistryName(ResourceLocation name) {
+		registryName = name;
+	}
+
+	public final ResourceLocation getRegistryName() {
+		return registryName;
+	}
+
+	private String unlocalizedName;
+
+	/**
+	 * @param name The unlocalizedname without prefix {@code hud.}.
+	 */
+	public final void setUnlocalizedName(String name) {
+		unlocalizedName = "hud." + name;
+	}
+
+	/**
+	 * @return The unlocalized name including prefix {@code hud.}.
+	 */
+	public final String getUnlocalizedName() {
+		return unlocalizedName;
+	}
+
+	public final String getLocalizedName() {
+		return I18n.format(getUnlocalizedName());
 	}
 
 	private static final VersionRange DEFAULT_SERVER_DEPENDENCY
@@ -213,17 +247,6 @@ public abstract class HudElement<T> {
 		if(position.getDirectionOptions() != DirectionOptions.NONE || position.getContentOptions() != DirectionOptions.NONE) {
 			settings.add(position);
 		}
-	}
-
-	/** @return The localized name of the element
-	 * @see #getUnlocalizedName() */
-	public final String getLocalizedName() {
-		return I18n.format(getUnlocalizedName());
-	}
-
-	/** @return The unlocalized name of the element */
-	public final String getUnlocalizedName() {
-		return "betterHud.element." + name;
 	}
 
     /**

@@ -10,6 +10,7 @@ import jobicade.betterhud.config.HudConfig;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.HudElement.SortType;
 import jobicade.betterhud.gui.GuiHudMenu;
+import jobicade.betterhud.registry.HudRegistryEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
@@ -28,6 +29,8 @@ public class ClientProxy implements HudSidedProxy {
     @Override
     public void preInit(FMLPreInitializationEvent event) {
         Path configPath = event.getSuggestedConfigurationFile().toPath();
+
+        MinecraftForge.EVENT_BUS.post(new HudRegistryEvent());
 
         // Order is important: initialising config manager loads settings
         HudElement.loadAllDefaults();

@@ -3,7 +3,7 @@ package jobicade.betterhud.events;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement.SortType;
 import jobicade.betterhud.element.OverlayElement;
-import jobicade.betterhud.util.Sorter;
+import jobicade.betterhud.registry.OverlayElements;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -13,18 +13,11 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
-import net.minecraftforge.registries.IForgeRegistry;
 
 @EventBusSubscriber(value = { Side.CLIENT }, modid = BetterHud.MODID)
 public final class OverlayHook {
     // No instance
     private OverlayHook() {}
-
-    private static Sorter<OverlayElement> sorter;
-
-    public static void setRegistry(IForgeRegistry<OverlayElement> registry) {
-        sorter = new Sorter<>(registry.getValuesCollection());
-    }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void preOverlayEarly(RenderGameOverlayEvent.Pre event) {
@@ -66,8 +59,8 @@ public final class OverlayHook {
         // TODO not here
         BetterHud.MANAGER.reset(event.getResolution());
 
-        for (OverlayElement element : sorter.getSortedData(SortType.PRIORITY)) {
-            Minecraft.getMinecraft().mcProfiler.startSection(element.name);
+        for (OverlayElement element : OverlayElements.get().getRegistered(SortType.PRIORITY)) {
+            Minecraft.getMinecraft().mcProfiler.startSection(element.getRegistryName().toString());
 
             // TODO checks
             element.render(event);
