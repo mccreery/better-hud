@@ -1,20 +1,30 @@
 package jobicade.betterhud.events;
 
 import jobicade.betterhud.BetterHud;
-import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.HudElement.SortType;
 import jobicade.betterhud.element.OverlayElement;
+import jobicade.betterhud.util.Sorter;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.registries.IForgeRegistry;
 
+@EventBusSubscriber(value = { Side.CLIENT }, modid = BetterHud.MODID)
 public final class OverlayHook {
     // No instance
     private OverlayHook() {}
+
+    private static Sorter<OverlayElement> sorter;
+
+    public static void setRegistry(IForgeRegistry<OverlayElement> registry) {
+        sorter = new Sorter<>(registry.getValuesCollection());
+    }
 
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void preOverlayEarly(RenderGameOverlayEvent.Pre event) {
@@ -53,12 +63,14 @@ public final class OverlayHook {
      * Starting after the {@code Pre} event.
      */
     private static void renderGameOverlay(RenderGameOverlayEvent event) {
-        // TODO separate list of overlay elements from entity info
-        for (HudElement<?> hudElement : HudElement.SORTER.getSortedData(SortType.PRIORITY)) {
-            Minecraft.getMinecraft().mcProfiler.startSection(hudElement.name);
+        // TODO not here
+        BetterHud.MANAGER.reset(event.getResolution());
 
-            // TODO public render and checks in this method
-            ((OverlayElement)hudElement).render(event);
+        for (OverlayElement element : sorter.getSortedData(SortType.PRIORITY)) {
+            Minecraft.getMinecraft().mcProfiler.startSection(element.name);
+
+            // TODO checks
+            element.render(event);
 
             Minecraft.getMinecraft().mcProfiler.endSection();
         }

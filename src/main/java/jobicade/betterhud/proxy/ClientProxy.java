@@ -9,7 +9,6 @@ import jobicade.betterhud.config.ConfigManager;
 import jobicade.betterhud.config.HudConfig;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.HudElement.SortType;
-import jobicade.betterhud.events.RenderEvents;
 import jobicade.betterhud.gui.GuiHudMenu;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IReloadableResourceManager;
@@ -50,7 +49,7 @@ public class ClientProxy implements HudSidedProxy {
 
         ClientRegistry.registerKeyBinding(menuKey);
         MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(new RenderEvents());
+        //MinecraftForge.EVENT_BUS.register(new RenderEvents()); // TODO remove entirely
         HudElement.initAll(event);
     }
 
