@@ -13,21 +13,20 @@ import jobicade.betterhud.element.settings.SettingDirection;
 import jobicade.betterhud.element.settings.SettingPercentage;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.settings.SettingSlider;
-import jobicade.betterhud.events.HudPhase;
-import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
+import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
-public class Compass extends HudElement {
+public class Compass extends OverlayElement {
 	private static final String[] DIRECTIONS = { "S", "E", "N", "W" };
 
 	private SettingChoose mode, requireItem;
@@ -56,7 +55,7 @@ public class Compass extends HudElement {
 	}
 
 	public Compass() {
-		super("compass", HudPhase.OVERLAY, new SettingPosition(DirectionOptions.TOP_BOTTOM, DirectionOptions.NORTH_SOUTH));
+		super("compass", new SettingPosition(DirectionOptions.TOP_BOTTOM, DirectionOptions.NORTH_SOUTH));
 	}
 
 	@Override
@@ -126,9 +125,7 @@ public class Compass extends HudElement {
 	}
 
 	@Override
-	public boolean shouldRender(Event event) {
-		if(!super.shouldRender(event)) return false;
-
+	public boolean shouldRender(RenderGameOverlayEvent context) {
 		switch(requireItem.getIndex()) {
 			case 1:
 				return Minecraft.getMinecraft().player.inventory.hasItemStack(new ItemStack(Items.COMPASS));
@@ -156,7 +153,7 @@ public class Compass extends HudElement {
 	}
 
 	@Override
-	public Rect render(Event event) {
+	public Rect render(RenderGameOverlayEvent context) {
 		Rect bounds;
 
 		if(mode.getIndex() == 0) {

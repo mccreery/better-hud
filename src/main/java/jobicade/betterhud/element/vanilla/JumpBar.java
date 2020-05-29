@@ -2,15 +2,15 @@ package jobicade.betterhud.element.vanilla;
 
 import static jobicade.betterhud.BetterHud.MANAGER;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.GlUtil;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
 public class JumpBar extends OverrideElement {
 	public JumpBar() {
@@ -24,12 +24,12 @@ public class JumpBar extends OverrideElement {
 	}
 
 	@Override
-	public boolean shouldRender(Event event) {
-		return Minecraft.getMinecraft().player.isRidingHorse() && super.shouldRender(event);
+	public boolean shouldRender(RenderGameOverlayEvent context) {
+		return Minecraft.getMinecraft().player.isRidingHorse();
 	}
 
 	@Override
-	protected Rect render(Event event) {
+	public Rect render(RenderGameOverlayEvent context) {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
 
 		Rect bounds = new Rect(182, 5);

@@ -3,11 +3,11 @@ package jobicade.betterhud.element.text;
 import java.util.Arrays;
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.MathUtil;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public class Saturation extends TextElement {
 	public Saturation() {
@@ -21,8 +21,8 @@ public class Saturation extends TextElement {
 	}
 
 	@Override
-	public boolean shouldRender(Event event) {
-		return super.shouldRender(event) && Minecraft.getMinecraft().playerController.gameIsSurvivalOrAdventure();
+	public boolean shouldRender(RenderGameOverlayEvent context) {
+		return Minecraft.getMinecraft().playerController.gameIsSurvivalOrAdventure();
 	}
 
 	@Override

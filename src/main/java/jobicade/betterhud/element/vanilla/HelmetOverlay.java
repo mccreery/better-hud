@@ -12,8 +12,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class HelmetOverlay extends OverrideElement {
 	private static final ResourceLocation PUMPKIN_BLUR_TEX_PATH = new ResourceLocation("textures/misc/pumpkinblur.png");
@@ -34,12 +34,12 @@ public class HelmetOverlay extends OverrideElement {
 	}
 
 	@Override
-	public boolean shouldRender(Event event) {
-		return super.shouldRender(event) && Minecraft.getMinecraft().gameSettings.thirdPersonView == 0 && !Minecraft.getMinecraft().player.inventory.armorItemInSlot(3).isEmpty();
+	public boolean shouldRender(RenderGameOverlayEvent context) {
+		return Minecraft.getMinecraft().gameSettings.thirdPersonView == 0 && !Minecraft.getMinecraft().player.inventory.armorItemInSlot(3).isEmpty();
 	}
 
 	@Override
-	protected Rect render(Event event) {
+	public Rect render(RenderGameOverlayEvent context) {
 		ItemStack stack = Minecraft.getMinecraft().player.inventory.armorItemInSlot(3);
 		Item item = stack.getItem();
 
@@ -48,7 +48,7 @@ public class HelmetOverlay extends OverrideElement {
 			GlUtil.drawRect(MANAGER.getScreen(), new Rect(256, 256), Color.RED);
 			Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
 		} else {
-			item.renderHelmetOverlay(stack, Minecraft.getMinecraft().player, new ScaledResolution(Minecraft.getMinecraft()), getPartialTicks(event));
+			item.renderHelmetOverlay(stack, Minecraft.getMinecraft().player, new ScaledResolution(Minecraft.getMinecraft()), getPartialTicks(context));
 		}
 		return MANAGER.getScreen();
 	}

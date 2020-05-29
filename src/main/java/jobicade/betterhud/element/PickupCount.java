@@ -9,7 +9,6 @@ import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.settings.SettingSlider;
-import jobicade.betterhud.events.HudPhase;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -22,12 +21,12 @@ import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-public class PickupCount extends HudElement {
+public class PickupCount extends OverlayElement {
 	private SettingSlider maxStacks, fadeAfter;
 	public final List<StackNode> stacks = new ArrayList<>();
 
@@ -41,7 +40,7 @@ public class PickupCount extends HudElement {
 	}
 
 	public PickupCount() {
-		super("itemPickup", HudPhase.OVERLAY, new SettingPosition(DirectionOptions.X, DirectionOptions.CORNERS));
+		super("itemPickup", new SettingPosition(DirectionOptions.X, DirectionOptions.CORNERS));
 		setServerDependency("[1.4-beta,1.4.1),(1.4.1,]");
 	}
 
@@ -112,7 +111,7 @@ public class PickupCount extends HudElement {
 	}
 
 	@Override
-	public Rect render(Event event) {
+	public Rect render(RenderGameOverlayEvent context) {
 		List<StackNode> stacks = getStacks();
 		Rect bounds;
 

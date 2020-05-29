@@ -3,17 +3,17 @@ package jobicade.betterhud.element;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.text.TextElement;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
-import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.geom.Point;
+import net.minecraft.client.Minecraft;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public class ExperienceInfo extends TextElement {
 	private SettingBoolean total;
@@ -41,12 +41,12 @@ public class ExperienceInfo extends TextElement {
 	}
 
 	@Override
-	public boolean shouldRender(Event event) {
-		return super.shouldRender(event) && Minecraft.getMinecraft().playerController.gameIsSurvivalOrAdventure();
+	public boolean shouldRender(RenderGameOverlayEvent context) {
+		return Minecraft.getMinecraft().playerController.gameIsSurvivalOrAdventure();
 	}
 
 	@Override
-	public Rect render(Event event) {
+	public Rect render(RenderGameOverlayEvent context) {
 		int fullBar = getExperienceWithinLevel(Minecraft.getMinecraft().player.experienceLevel);
 
 		int has = (int)(Minecraft.getMinecraft().player.experience * fullBar);
@@ -63,7 +63,7 @@ public class ExperienceInfo extends TextElement {
 		text = new Rect(GlUtil.getStringSize(neededDisplay).sub(0, 2)).anchor(bar, Direction.EAST).getPosition();
 		GlUtil.drawBorderedString(neededDisplay, text.getX(), text.getY(), Color.WHITE);
 
-		return super.render(event);
+		return super.render(context);
 	}
 
 	/** @param level The player's current level

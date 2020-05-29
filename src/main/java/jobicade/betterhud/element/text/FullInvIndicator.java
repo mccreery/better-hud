@@ -3,13 +3,13 @@ package jobicade.betterhud.element.text;
 import java.util.Arrays;
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.geom.Direction;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public class FullInvIndicator extends TextElement {
 	private SettingBoolean offHand;
@@ -39,8 +39,8 @@ public class FullInvIndicator extends TextElement {
 	}
 
 	@Override
-	public boolean shouldRender(Event event) {
-		return super.shouldRender(event) && Minecraft.getMinecraft().player.inventory.getFirstEmptyStack() == -1 &&
+	public boolean shouldRender(RenderGameOverlayEvent context) {
+		return Minecraft.getMinecraft().player.inventory.getFirstEmptyStack() == -1 &&
 			(!offHand.get() || !Minecraft.getMinecraft().player.inventory.offHandInventory.get(0).isEmpty());
 	}
 }

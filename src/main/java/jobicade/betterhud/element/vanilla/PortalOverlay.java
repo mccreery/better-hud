@@ -4,12 +4,13 @@ import static jobicade.betterhud.BetterHud.MANAGER;
 
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
+import jobicade.betterhud.util.MathUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.init.Blocks;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class PortalOverlay extends OverrideElement {
 	public PortalOverlay() {
@@ -22,17 +23,19 @@ public class PortalOverlay extends OverrideElement {
 	}
 
 	@Override
-	public boolean shouldRender(Event event) {
-		return super.shouldRender(event) && getTimeInPortal(event) > 0;
+	public boolean shouldRender(RenderGameOverlayEvent context) {
+		return getTimeInPortal(context.getPartialTicks()) > 0;
 	}
 
-	private float getTimeInPortal(Event event) {
-		return Minecraft.getMinecraft().player.prevTimeInPortal + (Minecraft.getMinecraft().player.timeInPortal - Minecraft.getMinecraft().player.prevTimeInPortal) * getPartialTicks(event);
+	private float getTimeInPortal(float partialTicks) {
+		return MathUtil.lerp(
+			Minecraft.getMinecraft().player.prevTimeInPortal,
+			Minecraft.getMinecraft().player.timeInPortal, partialTicks);
 	}
 
 	@Override
-	protected Rect render(Event event) {
-		float timeInPortal = getTimeInPortal(event);
+	public Rect render(RenderGameOverlayEvent context) {
+		float timeInPortal = getTimeInPortal(context.getPartialTicks());
 
 		if(timeInPortal < 1) {
 			timeInPortal *= timeInPortal;

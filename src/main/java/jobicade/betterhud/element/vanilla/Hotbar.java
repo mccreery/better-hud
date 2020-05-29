@@ -9,8 +9,8 @@ import jobicade.betterhud.util.Textures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraftforge.client.GuiIngameForge;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class Hotbar extends OverrideElement {
 	public Hotbar() {
@@ -30,12 +30,13 @@ public class Hotbar extends OverrideElement {
 	}
 
 	@Override
-	public boolean shouldRender(Event event) {
-		return !GuiIngameForge.renderHotbar && super.shouldRender(event);
+	public boolean shouldRender(RenderGameOverlayEvent context) {
+		// TODO wut?
+		return !GuiIngameForge.renderHotbar;
 	}
 
 	@Override
-	protected Rect render(Event event) {
+	public Rect render(RenderGameOverlayEvent context) {
 		Rect barTexture = new Rect(182, 22);
 		Rect bounds = position.applyTo(new Rect(barTexture));
 
@@ -44,7 +45,7 @@ public class Hotbar extends OverrideElement {
 
 		Rect slot = bounds.grow(-3).withWidth(16);
 
-		float partialTicks = getPartialTicks(event);
+		float partialTicks = getPartialTicks(context);
 		for(int i = 0; i < 9; i++, slot = slot.translate(Direction.EAST.scale(20))) {
 			if(i == Minecraft.getMinecraft().player.inventory.currentItem) {
 				Minecraft.getMinecraft().getTextureManager().bindTexture(Textures.WIDGETS);

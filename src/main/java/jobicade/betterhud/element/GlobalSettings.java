@@ -2,22 +2,20 @@ package jobicade.betterhud.element;
 
 import java.util.List;
 
-import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingPercentage;
 import jobicade.betterhud.element.settings.SettingSlider;
-import jobicade.betterhud.events.HudPhase;
 import jobicade.betterhud.geom.Rect;
 
-public class GlobalSettings extends HudElement {
+public class GlobalSettings extends HudElement<Object> {
 	private SettingPercentage billboardScale;
 	private SettingSlider billboardDistance;
 	private SettingBoolean hideOnDebug;
 	private SettingBoolean debugMode;
 
 	public GlobalSettings() {
-		super("global", HudPhase.NONE);
+		super("global");
 		ELEMENTS.remove(this);
 	}
 
@@ -55,5 +53,8 @@ public class GlobalSettings extends HudElement {
 		hideOnDebug.set(true);
 	}
 
-	@Override public Rect render(Event event) {return null;}
+	@Override
+	public Rect render(Object context) {
+		return null;
+	}
 }

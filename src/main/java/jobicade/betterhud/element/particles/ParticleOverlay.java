@@ -5,22 +5,21 @@ import static jobicade.betterhud.BetterHud.MANAGER;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
-import net.minecraft.client.Minecraft;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.Event;
-import jobicade.betterhud.element.HudElement;
+import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingChoose;
-import jobicade.betterhud.events.HudPhase;
+import jobicade.betterhud.events.OverlayHook;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.Tickable;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 
-public abstract class ParticleOverlay extends HudElement implements Tickable {
+public abstract class ParticleOverlay extends OverlayElement implements Tickable {
 	protected SettingChoose density;
 	protected final List<Particle> particles = new CopyOnWriteArrayList<Particle>();
 
 	protected ParticleOverlay(String name) {
-		super(name, HudPhase.OVERLAY);
+		super(name);
 	}
 
 	@Override
@@ -42,10 +41,10 @@ public abstract class ParticleOverlay extends HudElement implements Tickable {
 
 	@Override
 	public void tick() {
-		if(!isEnabledAndSupported() || Minecraft.getMinecraft().player == null || Minecraft.getMinecraft().world == null) return;
-
-		particles.forEach(Particle::tick);
-		updateParticles();
+		if (OverlayHook.shouldRender(this, null)) {
+			particles.forEach(Particle::tick);
+			updateParticles();
+		}
 	}
 
 	@Override
@@ -55,15 +54,15 @@ public abstract class ParticleOverlay extends HudElement implements Tickable {
 	}
 
 	@Override
-	public Rect render(Event event) {
+	public Rect render(RenderGameOverlayEvent context) {
 		for(Particle particle : particles) {
-			particle.render(getPartialTicks(event));
+			particle.render(getPartialTicks(context));
 		}
 		return MANAGER.getScreen();
 	}
 
 	@Override
-	public boolean shouldRender(Event event) {
+	public boolean shouldRender(RenderGameOverlayEvent context) {
 		return !particles.isEmpty();
 	}
 }

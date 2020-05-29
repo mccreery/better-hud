@@ -3,18 +3,17 @@ package jobicade.betterhud.element;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.settings.SettingWarnings;
-import jobicade.betterhud.events.HudPhase;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.MathUtil;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.item.ItemStack;
 
-public abstract class EquipmentDisplay extends HudElement {
+public abstract class EquipmentDisplay extends OverlayElement {
 	private SettingBoolean showName;
 	private SettingBoolean showDurability;
 	private SettingWarnings warnings;
@@ -22,7 +21,7 @@ public abstract class EquipmentDisplay extends HudElement {
 	private SettingBoolean showUndamaged;
 
 	protected EquipmentDisplay(String name, SettingPosition position) {
-		super(name, HudPhase.OVERLAY, position);
+		super(name, position);
 	}
 
 	@Override

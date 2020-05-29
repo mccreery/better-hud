@@ -16,9 +16,9 @@ class SortButton extends GuiActionButton {
 	private static final Rect DOWN_TEXTURE = new Rect(82, 20, 11, 7);
 
 	private final GuiHudMenu callback;
-	SortField<HudElement> sortValue;
+	SortField<HudElement<?>> sortValue;
 
-	SortButton(GuiHudMenu callback, SortField<HudElement> sortValue) {
+	SortButton(GuiHudMenu callback, SortField<HudElement<?>> sortValue) {
 		super(I18n.format(sortValue.getUnlocalizedName()));
 
 		this.callback = callback;

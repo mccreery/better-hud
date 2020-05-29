@@ -1,22 +1,23 @@
 package jobicade.betterhud.gui;
 
-import static jobicade.betterhud.BetterHud.*;
+import static jobicade.betterhud.BetterHud.MANAGER;
+import static jobicade.betterhud.BetterHud.SPACER;
 
 import java.io.IOException;
 import java.util.List;
 
 import com.google.common.base.Predicates;
 
+import jobicade.betterhud.element.HudElement;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.util.IGetSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.MathHelper;
-import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.util.IGetSet;
-import jobicade.betterhud.geom.Point;
 
 public class GuiReorder extends GuiElements {
 	private final GuiScreen parent;
@@ -27,8 +28,8 @@ public class GuiReorder extends GuiElements {
 	private GuiActionButton moveTop = new GuiTexturedButton(new Rect(60, 60, 20, 20));
 	private GuiActionButton moveBottom = new GuiTexturedButton(new Rect(80, 60, 20, 20));
 
-	private HudElement hovered;
-	private HudElement selected;
+	private HudElement<?> hovered;
+	private HudElement<?> selected;
 
 	public GuiReorder(GuiScreen parent) {
 		this.parent = parent;
@@ -56,7 +57,7 @@ public class GuiReorder extends GuiElements {
 		@Override
 		public void actionPerformed(GuiActionButton button) {
 			if(relative) {
-				List<HudElement> elements = HudElement.SORTER.getSortedData(HudElement.SortType.PRIORITY);
+				List<HudElement<?>> elements = HudElement.SORTER.getSortedData(HudElement.SortType.PRIORITY);
 				int i = elements.indexOf(selected) + offset;
 
 				if(i >= 0 && i < elements.size()) {
@@ -71,7 +72,7 @@ public class GuiReorder extends GuiElements {
 		}
 	}
 
-	private void select(HudElement element) {
+	private void select(HudElement<?> element) {
 		selected = element;
 		Rect button = new Rect(20, 20);
 
@@ -130,7 +131,7 @@ public class GuiReorder extends GuiElements {
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		hovered = getHoveredElement(mouseX, mouseY, Predicates.alwaysFalse());
 
-		for(HudElement element : HudElement.ELEMENTS) {
+		for(HudElement<?> element : HudElement.ELEMENTS) {
 			Rect bounds = element.getLastBounds();
 
 			if(!bounds.isEmpty()) {

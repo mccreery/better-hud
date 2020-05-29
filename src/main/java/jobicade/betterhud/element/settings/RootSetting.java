@@ -7,7 +7,7 @@ import jobicade.betterhud.config.HudConfig;
 import jobicade.betterhud.util.IGetSet.IBoolean;
 
 public class RootSetting extends SettingStub<Boolean> implements IBoolean {
-	private final HudElement element;
+	private final HudElement<?> element;
 	private int priorityRank = 0;
 
 	public final SettingBoolean enabled = (SettingBoolean)new SettingBoolean("enabled").setHidden();
@@ -26,7 +26,7 @@ public class RootSetting extends SettingStub<Boolean> implements IBoolean {
 		bindConfig(config, element.name, new StringBuilder());
 	}
 
-	public RootSetting(HudElement element, List<Setting<?>> settings) {
+	public RootSetting(HudElement<?> element, List<Setting<?>> settings) {
 		super();
 		this.element = element;
 

@@ -10,18 +10,17 @@ import com.mojang.realmsclient.gui.ChatFormatting;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingSlider;
 import jobicade.betterhud.events.RenderMobInfoEvent;
-import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.util.MathUtil;
-import jobicade.betterhud.util.bars.StatBarHealth;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
+import jobicade.betterhud.util.GlUtil;
+import jobicade.betterhud.util.MathUtil;
+import jobicade.betterhud.util.bars.StatBarHealth;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class MobInfo extends EntityInfo {
 	private final StatBarHealth bar = new StatBarHealth();
@@ -54,8 +53,8 @@ public class MobInfo extends EntityInfo {
 	}
 
 	@Override
-	public Rect render(Event event) {
-		EntityLivingBase entity = ((RenderMobInfoEvent)event).getEntity();
+	public Rect render(RenderMobInfoEvent context) {
+		EntityLivingBase entity = context.getEntity();
 		bar.setHost(entity);
 		bar.setCompressThreshold(compress.getInt());
 

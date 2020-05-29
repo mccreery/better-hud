@@ -7,21 +7,21 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.settings.SettingSlider;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Size;
 import jobicade.betterhud.render.Grid;
 import jobicade.betterhud.render.Label;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.geom.Point;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public class Coordinates extends TextElement {
 	private SettingBoolean spaced;
@@ -50,9 +50,9 @@ public class Coordinates extends TextElement {
 	}
 
 	@Override
-	public Rect render(Event event, List<String> text) {
+	public Rect render(RenderGameOverlayEvent context, List<String> text) {
 		if(!spaced.get() || !position.isDirection(Direction.NORTH) && !position.isDirection(Direction.SOUTH)) {
-			return super.render(event, text);
+			return super.render(context, text);
 		}
 
 		Grid<Label> grid = new Grid<>(new Point(3, 1), text.stream().map(Label::new).collect(Collectors.toList()))

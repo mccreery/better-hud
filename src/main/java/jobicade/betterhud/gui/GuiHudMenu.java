@@ -21,8 +21,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 
 public class GuiHudMenu extends GuiMenuScreen {
-	private final Map<HudElement, ButtonRow> rows = new HashMap<HudElement, ButtonRow>(HudElement.ELEMENTS.size());
-	final Paginator<HudElement> paginator = new Paginator<HudElement>();
+	private final Map<HudElement<?>, ButtonRow> rows = new HashMap<HudElement<?>, ButtonRow>(HudElement.ELEMENTS.size());
+	final Paginator<HudElement<?>> paginator = new Paginator<HudElement<?>>();
 
 	private final GuiActionButton returnToGame = new GuiActionButton(I18n.format("menu.returnToGame")).setCallback(b -> Minecraft.getMinecraft().displayGuiScreen(null));
 	private final GuiActionButton toggleAll = new GuiActionButton("").setCallback(b -> setAll(!allEnabled()));
@@ -38,7 +38,7 @@ public class GuiHudMenu extends GuiMenuScreen {
 	private final GuiActionButton nextPage = new GuiActionButton(I18n.format("betterHud.menu.nextPage"))
 		.setCallback(b -> {paginator.nextPage(); initGui();});
 
-	private SortField<HudElement> sortCriteria = SortType.ALPHABETICAL;
+	private SortField<HudElement<?>> sortCriteria = SortType.ALPHABETICAL;
 	private boolean descending;
 
 	public GuiHudMenu(ConfigManager configManager) {
@@ -47,7 +47,7 @@ public class GuiHudMenu extends GuiMenuScreen {
 		});
 	}
 
-	public SortField<HudElement> getSortCriteria() {
+	public SortField<HudElement<?>> getSortCriteria() {
 		return sortCriteria;
 	}
 
@@ -67,7 +67,7 @@ public class GuiHudMenu extends GuiMenuScreen {
 		addDefaultButtons();
 		Rect buttonRect = new Rect(170, 20).align(getOrigin().add(0, 82), Direction.NORTH);
 
-		for(HudElement element : paginator.getPage()) {
+		for(HudElement<?> element : paginator.getPage()) {
 			ButtonRow row = getRow(element);
 			buttonList.addAll(row.getButtons());
 
@@ -125,7 +125,7 @@ public class GuiHudMenu extends GuiMenuScreen {
 	}
 
 	private void setAll(boolean enabled) {
-		for(HudElement element : HudElement.ELEMENTS) {
+		for(HudElement<?> element : HudElement.ELEMENTS) {
 			element.setEnabled(enabled);
 		}
 
@@ -144,20 +144,20 @@ public class GuiHudMenu extends GuiMenuScreen {
 		drawCenteredString(fontRenderer, page, width / 2, height - height / 16 - 13, Color.WHITE.getPacked());
 	}
 
-	private List<GuiActionButton> getIndexControls(SortField<HudElement>[] sortValues) {
+	private List<GuiActionButton> getIndexControls(SortField<HudElement<?>>[] sortValues) {
 		List<GuiActionButton> buttons = new ArrayList<GuiActionButton>(sortValues.length);
 
-		for(SortField<HudElement> sortValue : sortValues) {
+		for(SortField<HudElement<?>> sortValue : sortValues) {
 			buttons.add(new SortButton(this, sortValue));
 		}
 		return buttons;
 	}
 
-	private ButtonRow getRow(HudElement element) {
+	private ButtonRow getRow(HudElement<?> element) {
 		return rows.computeIfAbsent(element, e -> new ButtonRow(this, e));
 	}
 
-	public void changeSort(SortField<HudElement> sortCriteria) {
+	public void changeSort(SortField<HudElement<?>> sortCriteria) {
 		if(this.sortCriteria == sortCriteria) {
 			descending = !descending;
 		} else {

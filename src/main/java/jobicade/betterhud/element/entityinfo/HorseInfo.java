@@ -3,21 +3,20 @@ package jobicade.betterhud.element.entityinfo;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.entity.SharedMonsterAttributes;
-import net.minecraft.entity.passive.EntityHorse;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.events.RenderMobInfoEvent;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.render.Grid;
 import jobicade.betterhud.render.Label;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.MathUtil;
+import net.minecraft.entity.SharedMonsterAttributes;
+import net.minecraft.entity.passive.EntityHorse;
 
 public class HorseInfo extends EntityInfo {
 	private SettingBoolean jump, speed;
@@ -43,14 +42,14 @@ public class HorseInfo extends EntityInfo {
 	}
 
 	@Override
-	public boolean shouldRender(Event event) {
-		return super.shouldRender(event) && ((RenderMobInfoEvent)event).getEntity() instanceof EntityHorse;
+	public boolean shouldRender(RenderMobInfoEvent context) {
+		return context.getEntity() instanceof EntityHorse;
 	}
 
 	@Override
-	public Rect render(Event event) {
+	public Rect render(RenderMobInfoEvent context) {
 		ArrayList<Label> infoParts = new ArrayList<Label>();
-		EntityHorse entity = (EntityHorse)((RenderMobInfoEvent)event).getEntity();
+		EntityHorse entity = (EntityHorse)context.getEntity();
 
 		if(jump.get()) {
 			infoParts.add(new Label(jump.getLocalizedName() + ": " + MathUtil.formatToPlaces(getJumpHeight(entity), 3) + "m"));

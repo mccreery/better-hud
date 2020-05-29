@@ -7,12 +7,10 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import jobicade.betterhud.element.HudElement;
+import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.events.HudPhase;
-import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -20,17 +18,18 @@ import jobicade.betterhud.geom.Size;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.render.Grid;
 import jobicade.betterhud.render.Label;
+import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Scoreboard;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
-public class Sidebar extends HudElement {
+public class Sidebar extends OverlayElement {
 	public Sidebar() {
-		super("scoreboard", HudPhase.OVERLAY, new SettingPosition(DirectionOptions.LEFT_RIGHT, DirectionOptions.WEST_EAST));
+		super("scoreboard", new SettingPosition(DirectionOptions.LEFT_RIGHT, DirectionOptions.WEST_EAST));
 	}
 
 	@Override
@@ -39,12 +38,12 @@ public class Sidebar extends HudElement {
 	}
 
 	@Override
-	public boolean shouldRender(Event event) {
-		return getObjective(Minecraft.getMinecraft().player) != null && super.shouldRender(event);
+	public boolean shouldRender(RenderGameOverlayEvent context) {
+		return getObjective(Minecraft.getMinecraft().player) != null;
 	}
 
 	@Override
-	protected Rect render(Event event) {
+	public Rect render(RenderGameOverlayEvent context) {
 		ScoreObjective objective = getObjective(Minecraft.getMinecraft().player);
 		List<Score> scores = getScores(objective);
 

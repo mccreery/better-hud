@@ -2,24 +2,24 @@ package jobicade.betterhud.element;
 
 import java.util.List;
 
+import jobicade.betterhud.element.settings.DirectionOptions;
+import jobicade.betterhud.element.settings.Setting;
+import jobicade.betterhud.element.settings.SettingBoolean;
+import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.events.OverlayHook;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.render.Color;
+import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemArrow;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.eventhandler.Event;
-import jobicade.betterhud.element.settings.DirectionOptions;
-import jobicade.betterhud.element.settings.Setting;
-import jobicade.betterhud.element.settings.SettingBoolean;
-import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.events.HudPhase;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.render.Color;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.geom.Point;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
-public class ArrowCount extends HudElement {
+public class ArrowCount extends OverlayElement {
 	private static final ItemStack ARROW = new ItemStack(Items.ARROW, 1);
 	private SettingBoolean overlay;
 
@@ -33,7 +33,7 @@ public class ArrowCount extends HudElement {
 	}
 
 	public ArrowCount() {
-		super("arrowCount", HudPhase.OVERLAY, new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.NONE));
+		super("arrowCount", new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.NONE));
 		position.setEnableOn(() -> !overlay.get());
 	}
 
@@ -60,18 +60,16 @@ public class ArrowCount extends HudElement {
 	}
 
 	@Override
-	public boolean shouldRender(Event event) {
-		if(!super.shouldRender(event)) return false;
-
+	public boolean shouldRender(RenderGameOverlayEvent context) {
 		ItemStack stack = Minecraft.getMinecraft().player.getHeldItemOffhand();
 		boolean offhandHeld = stack != null && stack.getItem() == Items.BOW;
 
 		if(overlay.get()) {
-			if(HudElement.OFFHAND.isEnabledAndSupported() && offhandHeld) {
+			if (OverlayHook.shouldRender(HudElement.OFFHAND, context) && offhandHeld) {
 				return true;
 			}
 
-			if(HudElement.HOTBAR.isEnabledAndSupported()) {
+			if (OverlayHook.shouldRender(HudElement.HOTBAR, context)) {
 				for(int i = 0; i < 9; i++) {
 					stack = Minecraft.getMinecraft().player.inventory.getStackInSlot(i);
 
@@ -90,7 +88,7 @@ public class ArrowCount extends HudElement {
 	}
 
 	@Override
-	public Rect render(Event event) {
+	public Rect render(RenderGameOverlayEvent context) {
 		int totalArrows = arrowCount(Minecraft.getMinecraft().player);
 
 		if(overlay.get()) {

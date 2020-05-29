@@ -14,13 +14,13 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Direction;
 
 class ButtonRow {
-	private final HudElement element;
+	private final HudElement<?> element;
 	private final GuiActionButton toggle;
 	private final GuiActionButton options;
 
 	private Rect bounds;
 
-	public ButtonRow(GuiScreen callback, HudElement element) {
+	public ButtonRow(GuiScreen callback, HudElement<?> element) {
 		this.element = element;
 
 		toggle = new GuiActionButton("").setCallback(b -> {

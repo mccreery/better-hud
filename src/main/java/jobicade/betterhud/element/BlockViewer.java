@@ -1,7 +1,7 @@
 package jobicade.betterhud.element;
 
-import static jobicade.betterhud.BetterHud.SPACER;
 import static jobicade.betterhud.BetterHud.MANAGER;
+import static jobicade.betterhud.BetterHud.SPACER;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -10,6 +10,17 @@ import java.util.Map;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
+import jobicade.betterhud.BetterHud;
+import jobicade.betterhud.element.settings.DirectionOptions;
+import jobicade.betterhud.element.settings.Legend;
+import jobicade.betterhud.element.settings.Setting;
+import jobicade.betterhud.element.settings.SettingBoolean;
+import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.element.text.TextElement;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.network.InventoryNameQuery;
+import jobicade.betterhud.util.GlUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -22,25 +33,14 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IWorldNameable;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraftforge.fml.common.versioning.InvalidVersionSpecificationException;
 import net.minecraftforge.fml.common.versioning.VersionRange;
-import jobicade.betterhud.BetterHud;
-import jobicade.betterhud.element.settings.DirectionOptions;
-import jobicade.betterhud.element.settings.Legend;
-import jobicade.betterhud.element.settings.Setting;
-import jobicade.betterhud.element.settings.SettingBoolean;
-import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.element.text.TextElement;
-import jobicade.betterhud.network.InventoryNameQuery;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.util.GlUtil;
 
 /**
  * @see BetterHud#onBlockBreak(net.minecraftforge.event.world.BlockEvent.BreakEvent)
@@ -93,9 +93,7 @@ public class BlockViewer extends TextElement {
 	}
 
 	@Override
-	public boolean shouldRender(Event event) {
-		if(!super.shouldRender(event)) return false;
-
+	public boolean shouldRender(RenderGameOverlayEvent context) {
 		trace = Minecraft.getMinecraft().getRenderViewEntity().rayTrace(HudElement.GLOBAL.getBillboardDistance(), 1f);
 
 		if(trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK) {
@@ -137,9 +135,9 @@ public class BlockViewer extends TextElement {
 	}
 
 	@Override
-	public Rect render(Event event) {
+	public Rect render(RenderGameOverlayEvent context) {
 		GlStateManager.disableDepth();
-		return super.render(event);
+		return super.render(context);
 	}
 
 	@Override

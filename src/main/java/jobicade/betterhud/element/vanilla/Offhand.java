@@ -3,9 +3,9 @@ package jobicade.betterhud.element.vanilla;
 import static jobicade.betterhud.BetterHud.SPACER;
 
 import jobicade.betterhud.element.HudElement;
+import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.events.HudPhase;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.GlUtil;
@@ -13,11 +13,11 @@ import jobicade.betterhud.util.Textures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHandSide;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
-public class Offhand extends HudElement {
+public class Offhand extends OverlayElement {
 	public Offhand() {
-		super("offhand", HudPhase.OVERLAY, new SettingPosition("position", DirectionOptions.BAR, DirectionOptions.NONE));
+		super("offhand", new SettingPosition("position", DirectionOptions.BAR, DirectionOptions.NONE));
 	}
 
 	@Override
@@ -27,12 +27,12 @@ public class Offhand extends HudElement {
 	}
 
 	@Override
-	public boolean shouldRender(Event event) {
-		return !Minecraft.getMinecraft().player.getHeldItemOffhand().isEmpty() && super.shouldRender(event);
+	public boolean shouldRender(RenderGameOverlayEvent context) {
+		return !Minecraft.getMinecraft().player.getHeldItemOffhand().isEmpty();
 	}
 
 	@Override
-	protected Rect render(Event event) {
+	public Rect render(RenderGameOverlayEvent context) {
 		ItemStack offhandStack = Minecraft.getMinecraft().player.getHeldItemOffhand();
 		EnumHandSide offhandSide = Minecraft.getMinecraft().player.getPrimaryHand().opposite();
 		Direction offhand = offhandSide == EnumHandSide.RIGHT ? Direction.EAST : Direction.WEST;
@@ -49,7 +49,7 @@ public class Offhand extends HudElement {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(Textures.WIDGETS);
 		GlUtil.drawRect(bounds, texture);
 
-		GlUtil.renderHotbarItem(bounds.translate(3, 3), offhandStack, getPartialTicks(event));
+		GlUtil.renderHotbarItem(bounds.translate(3, 3), offhandStack, getPartialTicks(context));
 		return bounds;
 	}
 }

@@ -15,8 +15,8 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 
-public class SettingElement extends SettingAlignable<HudElement> {
-	private HudElement value;
+public class SettingElement extends SettingAlignable<HudElement<?>> {
+	private HudElement<?> value;
 	private GuiActionButton button;
 
 	public SettingElement(String name, Direction alignment) {
@@ -24,12 +24,12 @@ public class SettingElement extends SettingAlignable<HudElement> {
 	}
 
 	@Override
-	public HudElement get() {
+	public HudElement<?> get() {
 		return value;
 	}
 
 	@Override
-	public void set(HudElement value) {
+	public void set(HudElement<?> value) {
 		this.value = value;
 	}
 
@@ -40,7 +40,7 @@ public class SettingElement extends SettingAlignable<HudElement> {
 
 	@Override
 	public void load(String save) {
-		for(HudElement element : HudElement.ELEMENTS) {
+		for(HudElement<?> element : HudElement.ELEMENTS) {
 			if(element.getUnlocalizedName().equals(save)) {
 				value = element;
 				return;

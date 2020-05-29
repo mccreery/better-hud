@@ -1,9 +1,9 @@
 package jobicade.betterhud.element.vanilla;
 
-import net.minecraft.client.Minecraft;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.util.bars.StatBarArmor;
+import net.minecraft.client.Minecraft;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
 public class ArmorBar extends Bar {
 	public ArmorBar() {
@@ -23,7 +23,7 @@ public class ArmorBar extends Bar {
 	}
 
 	@Override
-	public boolean shouldRender(Event event) {
-		return Minecraft.getMinecraft().playerController.shouldDrawHUD() && super.shouldRender(event);
+	public boolean shouldRender(RenderGameOverlayEvent context) {
+		return Minecraft.getMinecraft().playerController.shouldDrawHUD();
 	}
 }

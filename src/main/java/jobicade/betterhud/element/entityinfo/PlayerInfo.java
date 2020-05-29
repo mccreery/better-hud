@@ -9,25 +9,24 @@ import java.util.stream.Collectors;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
+import jobicade.betterhud.element.settings.Setting;
+import jobicade.betterhud.element.settings.SettingSlider;
+import jobicade.betterhud.events.RenderMobInfoEvent;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.render.Color;
+import jobicade.betterhud.render.Grid;
+import jobicade.betterhud.render.Label;
+import jobicade.betterhud.util.GlUtil;
+import jobicade.betterhud.util.bars.StatBar;
+import jobicade.betterhud.util.bars.StatBarArmor;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.common.eventhandler.Event;
-import jobicade.betterhud.element.settings.Setting;
-import jobicade.betterhud.element.settings.SettingSlider;
-import jobicade.betterhud.events.RenderMobInfoEvent;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.render.Color;
-import jobicade.betterhud.render.Grid;
-import jobicade.betterhud.render.Label;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.geom.Point;
-import jobicade.betterhud.util.bars.StatBar;
-import jobicade.betterhud.util.bars.StatBarArmor;
 
 public class PlayerInfo extends EntityInfo {
 	private StatBar<? super EntityPlayer> bar = new StatBarArmor();
@@ -54,13 +53,13 @@ public class PlayerInfo extends EntityInfo {
 	}
 
 	@Override
-	public boolean shouldRender(Event event) {
-		return super.shouldRender(event) && ((RenderMobInfoEvent)event).getEntity() instanceof EntityPlayer;
+	public boolean shouldRender(RenderMobInfoEvent context) {
+		return context.getEntity() instanceof EntityPlayer;
 	}
 
 	@Override
-	public Rect render(Event event) {
-		EntityPlayer player = (EntityPlayer)((RenderMobInfoEvent)event).getEntity();
+	public Rect render(RenderMobInfoEvent context) {
+		EntityPlayer player = (EntityPlayer)context.getEntity();
 		bar.setHost(player);
 		List<String> tooltip = new ArrayList<String>();
 

@@ -4,18 +4,18 @@ import static jobicade.betterhud.BetterHud.MANAGER;
 
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
-import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.geom.Point;
+import net.minecraft.client.Minecraft;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
 public class Experience extends OverrideElement {
 	private SettingBoolean hideMount;
@@ -36,9 +36,8 @@ public class Experience extends OverrideElement {
 	}
 
 	@Override
-	public boolean shouldRender(Event event) {
-		return super.shouldRender(event)
-			&& Minecraft.getMinecraft().playerController.shouldDrawHUD()
+	public boolean shouldRender(RenderGameOverlayEvent context) {
+		return Minecraft.getMinecraft().playerController.shouldDrawHUD()
 			&& (!hideMount.get() || !Minecraft.getMinecraft().player.isRidingHorse());
 	}
 
@@ -50,7 +49,7 @@ public class Experience extends OverrideElement {
 	}
 
 	@Override
-	protected Rect render(Event event) {
+	public Rect render(RenderGameOverlayEvent context) {
 		Rect bgTexture = new Rect(0, 64, 182, 5);
 		Rect fgTexture = new Rect(0, 69, 182, 5);
 

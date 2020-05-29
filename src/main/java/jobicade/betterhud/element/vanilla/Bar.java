@@ -4,17 +4,17 @@ import static jobicade.betterhud.BetterHud.MANAGER;
 
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.Gui;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.bars.StatBar;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.EntityPlayerSP;
+import net.minecraft.client.gui.Gui;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public abstract class Bar extends OverrideElement {
 	protected SettingChoose side;
@@ -44,9 +44,9 @@ public abstract class Bar extends OverrideElement {
 	}
 
 	@Override
-	public boolean shouldRender(Event event) {
+	public boolean shouldRender(RenderGameOverlayEvent context) {
 		bar.setHost(Minecraft.getMinecraft().player);
-		return super.shouldRender(event) && bar.shouldRender();
+		return bar.shouldRender();
 	}
 
 	/** @return {@link Direction#WEST} or {@link Direction#EAST} */
@@ -59,7 +59,7 @@ public abstract class Bar extends OverrideElement {
 	}
 
 	@Override
-	protected Rect render(Event event) {
+	public Rect render(RenderGameOverlayEvent context) {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
 		Direction contentAlignment = getContentAlignment();
 

@@ -4,15 +4,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.Event;
-import net.minecraftforge.fml.common.versioning.InvalidVersionSpecificationException;
-import net.minecraftforge.fml.common.versioning.Restriction;
-import net.minecraftforge.fml.common.versioning.VersionRange;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.entityinfo.HorseInfo;
 import jobicade.betterhud.element.entityinfo.MobInfo;
@@ -49,15 +40,25 @@ import jobicade.betterhud.element.vanilla.PotionBar;
 import jobicade.betterhud.element.vanilla.RidingHealth;
 import jobicade.betterhud.element.vanilla.Sidebar;
 import jobicade.betterhud.element.vanilla.Vignette;
-import jobicade.betterhud.events.HudPhase;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.proxy.ClientProxy;
 import jobicade.betterhud.util.SortField;
 import jobicade.betterhud.util.Sorter;
+import net.minecraft.client.resources.I18n;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.fml.common.versioning.InvalidVersionSpecificationException;
+import net.minecraftforge.fml.common.versioning.Restriction;
+import net.minecraftforge.fml.common.versioning.VersionRange;
 
-public abstract class HudElement {
+/**
+ * @param T context object passed to render methods.
+ */
+public abstract class HudElement<T> {
 	/** A list of all the registered elements */
-	public static final List<HudElement> ELEMENTS = new ArrayList<HudElement>();
+	public static final List<HudElement<?>> ELEMENTS = new ArrayList<HudElement<?>>();
 
 	public static final ArmorBars ARMOR_BARS = new ArmorBars();
 	public static final ArrowCount ARROW_COUNT = new ArrowCount();
@@ -102,21 +103,21 @@ public abstract class HudElement {
 	public static final Sidebar SIDEBAR = new Sidebar();
 	public static final Vignette VIGNETTE = new Vignette();
 
-	public enum SortType implements SortField<HudElement> {
+	public enum SortType implements SortField<HudElement<?>> {
 		ALPHABETICAL("alphabetical", false) {
 			@Override
-			public int compare(HudElement a, HudElement b) {
+			public int compare(HudElement<?> a, HudElement<?> b) {
 				return a.getLocalizedName().compareTo(b.getLocalizedName());
 			}
 		}, ENABLED("enabled", false) {
 			@Override
-			public int compare(HudElement a, HudElement b) {
+			public int compare(HudElement<?> a, HudElement<?> b) {
 				int compare = b.settings.get().compareTo(a.settings.get());
 				return compare != 0 ? compare : ALPHABETICAL.compare(a, b);
 			}
 		}, PRIORITY("priority", false) {
 			@Override
-			public int compare(HudElement a, HudElement b) {
+			public int compare(HudElement<?> a, HudElement<?> b) {
 				int compare = a.settings.priority.get().compareTo(b.settings.priority.get());
 				return compare != 0 ? compare : ALPHABETICAL.compare(a, b);
 			}
@@ -138,7 +139,7 @@ public abstract class HudElement {
 		}
 	};
 
-	public static final Sorter<HudElement> SORTER = new Sorter<HudElement>(ELEMENTS);
+	public static final Sorter<HudElement<?>> SORTER = new Sorter<HudElement<?>>(ELEMENTS);
 
 	/** The settings saved to the config file for this element */
 	public final RootSetting settings;
@@ -155,15 +156,12 @@ public abstract class HudElement {
 	public final int id;
 	public final String name;
 
-	private final HudPhase hudPhase;
-
-	protected HudElement(String name, HudPhase hudPhase) {
-		this(name, hudPhase, new SettingPosition(DirectionOptions.NONE, DirectionOptions.NONE));
+	protected HudElement(String name) {
+		this(name, new SettingPosition(DirectionOptions.NONE, DirectionOptions.NONE));
 	}
 
-	protected HudElement(String name, HudPhase hudPhase, SettingPosition position) {
+	protected HudElement(String name, SettingPosition position) {
 		this.name = name;
-		this.hudPhase = hudPhase;
 		this.position = position;
 
 		List<Setting<?>> rootSettings = new ArrayList<>();
@@ -172,10 +170,6 @@ public abstract class HudElement {
 
 		id = ELEMENTS.size();
 		ELEMENTS.add(this);
-	}
-
-	public final HudPhase getHudPhase() {
-		return hudPhase;
 	}
 
 	private static final VersionRange DEFAULT_SERVER_DEPENDENCY
@@ -231,30 +225,28 @@ public abstract class HudElement {
 		return "betterHud.element." + name;
 	}
 
-	/**
-	 * Checks whether the element should render, in the current event context.
-	 * Note that this neither checks that the element is enabled, nor that
-	 * it is supported by the server. For that, use {@link #isEnabledAndSupported()}.
-	 *
-	 * @return {@code true} if the element should render.
-	 * @param event The current render event
-	 * @see #isEnabledAndSupported()
-	 */
-	public boolean shouldRender(Event event) {
-		return event instanceof RenderGameOverlayEvent;
+    /**
+     * Checks any conditions for rendering apart from being enabled or
+     * compatible. For example, the health bar would return {@code false} in
+     * creative mode. Most elements will not need to override this method.
+     *
+     * @return {@code true} if extra conditions for rendering are met.
+     */
+	public boolean shouldRender(T context) {
+		return true;
 	}
 
-	/** Renders this element to the screen.<br>
-	 * Should only be called if {@link #shouldRender(Event)} returns {@code true}
-	 *
-	 * @param event The current render event
-	 * @return The bounds containing the element. {@code null} will be replaced by {@link Rect#EMPTY} */
-	protected abstract Rect render(Event event);
+	// TODO specify return value when the element is full screen
+	/**
+	 * @return The bounding box containing the rendered element.
+	 */
+	public abstract Rect render(T context);
 
 	/** Calls {@link #render(Event)} if the element
 	 * should be rendered and caches the bounds so they are available from {@link #getLastRect()} */
 	public final void tryRender(Event event) {
-		if(shouldRender(event) && isEnabledAndSupported()) {
+		// TODO remove stub
+		/*if(shouldRender(event) && isEnabledAndSupported()) {
 			Minecraft.getMinecraft().mcProfiler.startSection(name);
 
 			lastBounds = render(event);
@@ -262,17 +254,17 @@ public abstract class HudElement {
 			postRender(event);
 
 			Minecraft.getMinecraft().mcProfiler.endSection();
-		}
+		}*/
 	}
 
 	private Rect lastBounds = Rect.empty();
 
-	protected void postRender(Event event) {}
+	protected void postRender(T context) {}
 
 	/** Renders all elements for the current render event
 	 * @param event The current render event */
 	public static void renderAll(Event event) {
-		for(HudElement element : SORTER.getSortedData(SortType.PRIORITY)) {
+		for(HudElement<?> element : SORTER.getSortedData(SortType.PRIORITY)) {
 			element.tryRender(event);
 		}
 	}
@@ -287,7 +279,7 @@ public abstract class HudElement {
 	 * @see #init(FMLInitializationEvent)
 	 * @see BetterHud#init(FMLInitializationEvent) */
 	public static void initAll(FMLInitializationEvent event) {
-		for(HudElement element : ELEMENTS) {
+		for(HudElement<?> element : ELEMENTS) {
 			element.init(event);
 		}
 	}
@@ -306,7 +298,7 @@ public abstract class HudElement {
 	public static void loadAllDefaults() {
 		GLOBAL.loadDefaults();
 
-		for (HudElement element : ELEMENTS) {
+		for (HudElement<?> element : ELEMENTS) {
 			element.loadDefaults();
 		}
 		normalizePriority();
@@ -314,7 +306,7 @@ public abstract class HudElement {
 
 	public static void normalizePriority() {
 		SORTER.markDirty(SortType.PRIORITY);
-		List<HudElement> prioritySort = SORTER.getSortedData(SortType.PRIORITY);
+		List<HudElement<?>> prioritySort = SORTER.getSortedData(SortType.PRIORITY);
 
 		for(int i = 0; i < prioritySort.size(); i++) {
 			prioritySort.get(i).settings.priority.set(i);

@@ -3,9 +3,7 @@ package jobicade.betterhud.events;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.HudElement.SortType;
-import jobicade.betterhud.geom.LayoutManager;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.util.SortField;
+import jobicade.betterhud.element.OverlayElement;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -55,11 +53,12 @@ public final class OverlayHook {
      * Starting after the {@code Pre} event.
      */
     private static void renderGameOverlay(RenderGameOverlayEvent event) {
-        for (HudElement hudElement : HudElement.SORTER.getSortedData(SortType.PRIORITY)) {
+        // TODO separate list of overlay elements from entity info
+        for (HudElement<?> hudElement : HudElement.SORTER.getSortedData(SortType.PRIORITY)) {
             Minecraft.getMinecraft().mcProfiler.startSection(hudElement.name);
 
             // TODO public render and checks in this method
-            hudElement.render(event);
+            ((OverlayElement)hudElement).render(event);
 
             Minecraft.getMinecraft().mcProfiler.endSection();
         }
@@ -69,10 +68,10 @@ public final class OverlayHook {
      * @return {@code true} if all conditions for rendering {@code hudElement}
      * are currently satisfied.
      */
-    public static boolean shouldRender(HudElement hudElement) {
+    public static boolean shouldRender(OverlayElement hudElement, RenderGameOverlayEvent context) {
         return hudElement.getServerDependency().containsVersion(BetterHud.getServerVersion())
             && hudElement.isEnabled()
-            && hudElement.shouldRender();
+            && hudElement.shouldRender(context);
     }
 
     /**

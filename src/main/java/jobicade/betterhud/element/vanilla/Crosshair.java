@@ -27,8 +27,8 @@ import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class Crosshair extends OverrideElement {
 	private SettingBoolean attackIndicator;
@@ -98,9 +98,8 @@ public class Crosshair extends OverrideElement {
 	}
 
 	@Override
-	public boolean shouldRender(Event event) {
-		return super.shouldRender(event)
-			&& Minecraft.getMinecraft().gameSettings.thirdPersonView == 0
+	public boolean shouldRender(RenderGameOverlayEvent context) {
+		return Minecraft.getMinecraft().gameSettings.thirdPersonView == 0
 			&& (!Minecraft.getMinecraft().playerController.isSpectator() || canInteract());
 	}
 
@@ -119,11 +118,11 @@ public class Crosshair extends OverrideElement {
 	}
 
 	@Override
-	protected Rect render(Event event) {
+	public Rect render(RenderGameOverlayEvent context) {
 		Rect bounds = null;
 
 		if(Minecraft.getMinecraft().gameSettings.showDebugInfo && !Minecraft.getMinecraft().gameSettings.reducedDebugInfo && !Minecraft.getMinecraft().player.hasReducedDebug()) {
-			renderAxes(MANAGER.getScreen().getAnchor(Direction.CENTER), getPartialTicks(event));
+			renderAxes(MANAGER.getScreen().getAnchor(Direction.CENTER), context.getPartialTicks());
 		} else {
 			Rect texture = new Rect(16, 16);
 
