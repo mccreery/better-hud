@@ -318,7 +318,7 @@ public abstract class HudElement<T> {
 	 *
 	 * You should always call the {@code super} implementation to handle the default enabled value of {@code true}
 	 * and to allow for future expansion */
-	protected void loadDefaults() {
+	public void loadDefaults() {
 		setEnabled(true);
 		settings.priority.set(0);
 	}
