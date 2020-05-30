@@ -49,7 +49,7 @@ public class Offhand extends OverlayElement {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(Textures.WIDGETS);
 		GlUtil.drawRect(bounds, texture);
 
-		GlUtil.renderHotbarItem(bounds.translate(3, 3), offhandStack, getPartialTicks(context));
+		GlUtil.renderHotbarItem(bounds.translate(3, 3), offhandStack, context.getPartialTicks());
 		return bounds;
 	}
 }

@@ -15,8 +15,6 @@ import jobicade.betterhud.registry.HudElements;
 import jobicade.betterhud.registry.SortField;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.versioning.InvalidVersionSpecificationException;
@@ -227,16 +225,5 @@ public abstract class HudElement<T> {
 	public void loadDefaults() {
 		setEnabled(true);
 		settings.priority.set(0);
-	}
-
-	/** @return The partial ticks from the given event */
-	public static float getPartialTicks(Event event) {
-		if(event instanceof RenderGameOverlayEvent) {
-			return ((RenderGameOverlayEvent)event).getPartialTicks();
-		} else if(event instanceof RenderWorldLastEvent) {
-			return ((RenderWorldLastEvent)event).getPartialTicks();
-		} else {
-			return 0;
-		}
 	}
 }

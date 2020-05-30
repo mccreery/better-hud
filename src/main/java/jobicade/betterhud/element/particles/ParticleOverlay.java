@@ -56,7 +56,7 @@ public abstract class ParticleOverlay extends OverlayElement implements Tickable
 	@Override
 	public Rect render(RenderGameOverlayEvent context) {
 		for(Particle particle : particles) {
-			particle.render(getPartialTicks(context));
+			particle.render(context.getPartialTicks());
 		}
 		return MANAGER.getScreen();
 	}

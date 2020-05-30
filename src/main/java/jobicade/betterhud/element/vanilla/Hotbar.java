@@ -45,7 +45,7 @@ public class Hotbar extends OverrideElement {
 
 		Rect slot = bounds.grow(-3).withWidth(16);
 
-		float partialTicks = getPartialTicks(context);
+		float partialTicks = context.getPartialTicks();
 		for(int i = 0; i < 9; i++, slot = slot.translate(Direction.EAST.scale(20))) {
 			if(i == Minecraft.getMinecraft().player.inventory.currentItem) {
 				Minecraft.getMinecraft().getTextureManager().bindTexture(Textures.WIDGETS);

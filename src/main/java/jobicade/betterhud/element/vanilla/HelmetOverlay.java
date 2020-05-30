@@ -48,7 +48,7 @@ public class HelmetOverlay extends OverrideElement {
 			GlUtil.drawRect(MANAGER.getScreen(), new Rect(256, 256), Color.RED);
 			Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
 		} else {
-			item.renderHelmetOverlay(stack, Minecraft.getMinecraft().player, new ScaledResolution(Minecraft.getMinecraft()), getPartialTicks(context));
+			item.renderHelmetOverlay(stack, Minecraft.getMinecraft().player, new ScaledResolution(Minecraft.getMinecraft()), context.getPartialTicks());
 		}
 		return MANAGER.getScreen();
 	}
