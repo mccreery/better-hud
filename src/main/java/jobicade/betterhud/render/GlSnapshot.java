@@ -1,43 +1,55 @@
 package jobicade.betterhud.render;
 
 import java.nio.FloatBuffer;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.EnumSet;
 import java.util.Objects;
+import java.util.Set;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
 
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
-
-import net.minecraft.client.renderer.GlStateManager;
 
 /**
  * Data class containing a single immutable snapshot of the OpenGL state.
  * Can be used to check that a state has not changed between two points.
  */
 public class GlSnapshot {
-    private final Map<GlFlag, Boolean> flags = new EnumMap<>(GlFlag.class);
     private final Color color;
     private final int texture;
     private final BlendFunc blendFunc;
+    private final Set<GlFlag> flags;
 
     public GlSnapshot() {
-        for(GlFlag flag : GlFlag.values()) {
-            this.flags.put(flag, flag.isEnabled());
+        color = getCurrentColor();
+        texture = getCurrentTexture();
+        blendFunc = getCurrentBlendFunc();
+
+        flags = EnumSet.noneOf(GlFlag.class);
+
+        for (GlFlag flag : GlFlag.values()) {
+            if (flag.isEnabled()) {
+                flags.add(flag);
+            }
         }
-        this.color = getCurrentColor();
-        this.texture = getCurrentTexture();
-        this.blendFunc = getCurrentBlendFunc();
+    }
+
+    public GlSnapshot(Color color, int texture, BlendFunc blendFunc, GlFlag... flags) {
+        this.color = color;
+        this.texture = texture;
+        this.blendFunc = blendFunc;
+
+        if (flags.length == 0) {
+            this.flags = EnumSet.noneOf(GlFlag.class);
+        } else {
+            this.flags = EnumSet.of(flags[0], flags);
+        }
     }
 
     public void apply() {
-        for (GlFlag flag : flags.keySet()) {
-            flag.setEnabled(flags.get(flag));
-        }
         GlStateManager.color(
             color.getRed() / 255.0f,
             color.getGreen() / 255.0f,
@@ -50,6 +62,10 @@ public class GlSnapshot {
             blendFunc.getDstFactor(),
             blendFunc.getSrcFactorAlpha(),
             blendFunc.getDstFactorAlpha());
+
+        for (GlFlag flag : GlFlag.values()) {
+            flag.setEnabled(flags.contains(flag));
+        }
     }
 
     private Color getCurrentColor() {
@@ -76,22 +92,6 @@ public class GlSnapshot {
         int dstFactorAlpha = GL11.glGetInteger(GL14.GL_BLEND_DST_ALPHA);
 
         return new BlendFunc(srcFactor, dstFactor, srcFactorAlpha, dstFactorAlpha);
-    }
-
-    public Map<GlFlag, Boolean> getFlags() {
-        return Collections.unmodifiableMap(flags);
-    }
-
-    public Color getColor() {
-        return color;
-    }
-
-    public int getTexture() {
-        return texture;
-    }
-
-    public BlendFunc getBlendFunc() {
-        return blendFunc;
     }
 
     @Override
@@ -121,11 +121,11 @@ public class GlSnapshot {
         private final SourceFactor srcFactorAlpha;
         private final DestFactor dstFactorAlpha;
 
-        private BlendFunc(int srcFactor, int dstFactor, int srcFactorAlpha, int dstFactorAlpha) {
+        public BlendFunc(int srcFactor, int dstFactor, int srcFactorAlpha, int dstFactorAlpha) {
             this(getSrcFactor(srcFactor), getDstFactor(dstFactor), getSrcFactor(srcFactorAlpha), getDstFactor(dstFactorAlpha));
         }
 
-        private BlendFunc(SourceFactor srcFactor, DestFactor dstFactor, SourceFactor srcFactorAlpha, DestFactor dstFactorAlpha) {
+        public BlendFunc(SourceFactor srcFactor, DestFactor dstFactor, SourceFactor srcFactorAlpha, DestFactor dstFactorAlpha) {
             this.srcFactor = srcFactor;
             this.dstFactor = dstFactor;
             this.srcFactorAlpha = srcFactorAlpha;
