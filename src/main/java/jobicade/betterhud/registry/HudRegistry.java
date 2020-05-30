@@ -37,6 +37,10 @@ public abstract class HudRegistry<T extends HudElement<?>> {
             parentRegistry.register(element);
         }
 
+        if (element.getRegistryName() == null) {
+            throw new IllegalArgumentException("null registry key");
+        }
+
         if (elements.put(element.getRegistryName(), element) != null) {
             BetterHud.getLogger().warn("Duplicate registry key \"%s\" overwritten");
         }
