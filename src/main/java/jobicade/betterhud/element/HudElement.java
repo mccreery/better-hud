@@ -29,7 +29,7 @@ public abstract class HudElement<T> {
 	public final RootSetting settings = new RootSetting(this);
 
 	public boolean isEnabled() {
-		return settings.get();
+		return settings.isEnabled();
 	}
 
 	public void setEnabled(boolean value) {

@@ -12,7 +12,7 @@ public class GlobalSettings extends HudElement<Object> {
 	private SettingBoolean debugMode;
 
 	public GlobalSettings() {
-		// Not registered
+		setRegistryName("global");
 		setUnlocalizedName("global");
 
 		settings.addChildren(

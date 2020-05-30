@@ -37,7 +37,6 @@ public class Crosshair extends OverlayElement {
 	public Crosshair() {
 		setRegistryName("crosshair");
 		setUnlocalizedName("crosshair");
-		position.setEnableOn(() -> attackIndicator.get());
 
 		settings.addChildren(
 			position = new SettingPosition(DirectionOptions.I, DirectionOptions.NONE),
@@ -72,6 +71,7 @@ public class Crosshair extends OverlayElement {
 				}
 			}.setEnableOn(attackIndicator::get)
 		);
+		position.setEnableOn(() -> attackIndicator.get());
 	}
 
 	@Override
