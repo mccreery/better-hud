@@ -5,6 +5,7 @@ import java.io.File;
 import net.minecraftforge.common.config.Configuration;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.HudElement.SortType;
+import jobicade.betterhud.registry.HudElements;
 
 /**
  * Handles saving and loading config files through Forge's system. Note that
@@ -19,23 +20,23 @@ public class HudConfig extends Configuration {
 	public void load() {
 		super.load();
 
-		HudElement.GLOBAL.settings.bindConfig(this);
-		HudElement.GLOBAL.settings.loadConfig();
+		HudElements.GLOBAL.settings.bindConfig(this);
+		HudElements.GLOBAL.settings.loadConfig();
 
-		for(HudElement<?> element : HudElement.ELEMENTS) {
+		for(HudElement<?> element : HudElements.get().getRegistered()) {
 			element.settings.bindConfig(this);
 			element.settings.loadConfig();
 		}
-		HudElement.SORTER.markDirty(SortType.ENABLED);
+		HudElements.get().invalidateSorts(SortType.ENABLED);
 		HudElement.normalizePriority();
 
 		if(hasChanged()) save();
 	}
 
 	public void saveSettings() {
-		HudElement.GLOBAL.settings.saveConfig();
+		HudElements.GLOBAL.settings.saveConfig();
 
-		for(HudElement<?> element : HudElement.ELEMENTS) {
+		for(HudElement<?> element : HudElements.get().getRegistered()) {
 			element.settings.saveConfig();
 		}
 		if(hasChanged()) save();

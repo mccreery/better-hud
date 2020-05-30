@@ -25,6 +25,7 @@ import org.lwjgl.opengl.GL11;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.registry.HudElements;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.render.GlSnapshot;
 import jobicade.betterhud.util.GlUtil;
@@ -63,7 +64,7 @@ public final class RenderEvents {
 		Minecraft.getMinecraft().mcProfiler.startSection(MODID);
 
 		if(BetterHud.getProxy().isModEnabled()) {
-			Entity entity = getMouseOver(HudElement.GLOBAL.getBillboardDistance(), event.getPartialTicks());
+			Entity entity = getMouseOver(HudElements.GLOBAL.getBillboardDistance(), event.getPartialTicks());
 
 			if(entity instanceof EntityLivingBase) {
 				renderMobInfo(new RenderMobInfoEvent(event, (EntityLivingBase)entity));
@@ -132,7 +133,7 @@ public final class RenderEvents {
 		MANAGER.reset(event.getResolution());
 		beginOverlayState();
 
-		if(HudElement.GLOBAL.isDebugMode()) {
+		if(HudElements.GLOBAL.isDebugMode()) {
 			GlSnapshot pre = new GlSnapshot();
 			HudElement.renderAll(event);
 			overlayTracker.step(pre, new GlSnapshot());
@@ -155,9 +156,9 @@ public final class RenderEvents {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
 
 		GlStateManager.pushMatrix();
-		GlUtil.setupBillboard(event.getEntity(), event.getPartialTicks(), HudElement.GLOBAL.getBillboardScale());
+		GlUtil.setupBillboard(event.getEntity(), event.getPartialTicks(), HudElements.GLOBAL.getBillboardScale());
 
-		if(HudElement.GLOBAL.isDebugMode()) {
+		if(HudElements.GLOBAL.isDebugMode()) {
 			GlSnapshot pre = new GlSnapshot();
 			HudElement.renderAll(event);
 			mobInfoTracker.step(pre, new GlSnapshot());

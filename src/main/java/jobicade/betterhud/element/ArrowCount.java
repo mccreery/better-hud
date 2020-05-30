@@ -10,6 +10,7 @@ import jobicade.betterhud.events.OverlayHook;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.registry.OverlayElements;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
@@ -65,11 +66,11 @@ public class ArrowCount extends OverlayElement {
 		boolean offhandHeld = stack != null && stack.getItem() == Items.BOW;
 
 		if(overlay.get()) {
-			if (OverlayHook.shouldRender(HudElement.OFFHAND, context) && offhandHeld) {
+			if (OverlayHook.shouldRender(OverlayElements.OFFHAND, context) && offhandHeld) {
 				return true;
 			}
 
-			if (OverlayHook.shouldRender(HudElement.HOTBAR, context)) {
+			if (OverlayHook.shouldRender(OverlayElements.HOTBAR, context)) {
 				for(int i = 0; i < 9; i++) {
 					stack = Minecraft.getMinecraft().player.inventory.getStackInSlot(i);
 
@@ -92,7 +93,7 @@ public class ArrowCount extends OverlayElement {
 		int totalArrows = arrowCount(Minecraft.getMinecraft().player);
 
 		if(overlay.get()) {
-			Rect stackRect = new Rect(16, 16).anchor(HOTBAR.getLastBounds().grow(-3), Direction.WEST);
+			Rect stackRect = new Rect(16, 16).anchor(OverlayElements.HOTBAR.getLastBounds().grow(-3), Direction.WEST);
 
 			for(int i = 0; i < 9; i++) {
 				ItemStack stack = Minecraft.getMinecraft().player.inventory.getStackInSlot(i);
@@ -106,7 +107,7 @@ public class ArrowCount extends OverlayElement {
 			ItemStack stack = Minecraft.getMinecraft().player.inventory.getStackInSlot(40);
 
 			if(stack != null && stack.getItem() == Items.BOW) {
-				drawCounter(new Rect(OFFHAND.getLastBounds().getPosition().add(3, 3), new Point(16, 16)), totalArrows);
+				drawCounter(new Rect(OverlayElements.OFFHAND.getLastBounds().getPosition().add(3, 3), new Point(16, 16)), totalArrows);
 			}
 			return Rect.empty();
 		} else {

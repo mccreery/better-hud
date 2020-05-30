@@ -10,6 +10,7 @@ import jobicade.betterhud.config.HudConfig;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.HudElement.SortType;
 import jobicade.betterhud.gui.GuiHudMenu;
+import jobicade.betterhud.registry.HudElements;
 import jobicade.betterhud.registry.HudRegistryEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IReloadableResourceManager;
@@ -44,7 +45,8 @@ public class ClientProxy implements HudSidedProxy {
         if(manager instanceof IReloadableResourceManager) {
             IReloadableResourceManager reloadableManager = (IReloadableResourceManager)manager;
 
-            reloadableManager.registerReloadListener(m -> HudElement.SORTER.markDirty(SortType.ALPHABETICAL));
+            // Language dictates alphabetical order
+            reloadableManager.registerReloadListener(m -> HudElements.get().invalidateSorts(SortType.ALPHABETICAL));
             reloadableManager.registerReloadListener(configManager);
         } else {
             BetterHud.getLogger().warn("Unable to register alphabetical sort update on language change");
@@ -58,8 +60,8 @@ public class ClientProxy implements HudSidedProxy {
 
     @Override
     public boolean isModEnabled() {
-        return HudElement.GLOBAL.isEnabled() && !(
-            HudElement.GLOBAL.hideOnDebug()
+        return HudElements.GLOBAL.isEnabled() && !(
+            HudElements.GLOBAL.hideOnDebug()
             && Minecraft.getMinecraft().gameSettings.showDebugInfo
         );
     }

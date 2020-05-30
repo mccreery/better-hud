@@ -9,6 +9,7 @@ import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.registry.OverlayElements;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.Textures;
@@ -46,8 +47,8 @@ public class HealIndicator extends OverlayElement {
 			if(position.isCustom()) {
 				bounds = position.applyTo(bounds);
 			} else {
-				Direction side = HudElement.HEALTH.getIndicatorSide();
-				bounds = bounds.align(HudElement.HEALTH.getLastBounds().grow(SPACER, 0, SPACER, 0).getAnchor(side), side.mirrorCol());
+				Direction side = OverlayElements.HEALTH.getIndicatorSide();
+				bounds = bounds.align(OverlayElements.HEALTH.getLastBounds().grow(SPACER, 0, SPACER, 0).getAnchor(side), side.mirrorCol());
 			}
 
 			if(mode.getIndex() == 0) {

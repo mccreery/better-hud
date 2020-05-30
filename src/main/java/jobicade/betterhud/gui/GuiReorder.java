@@ -9,9 +9,11 @@ import java.util.List;
 import com.google.common.base.Predicates;
 
 import jobicade.betterhud.element.HudElement;
+import jobicade.betterhud.element.HudElement.SortType;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.registry.HudElements;
 import jobicade.betterhud.util.IGetSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -34,7 +36,7 @@ public class GuiReorder extends GuiElements {
 	public GuiReorder(GuiScreen parent) {
 		this.parent = parent;
 
-		moveTop.setCallback(new ActionMove(false, HudElement.ELEMENTS.size()));
+		moveTop.setCallback(new ActionMove(false, HudElements.get().getRegistered().size()));
 		moveUp.setCallback(new ActionMove(true, 1));
 		moveDown.setCallback(new ActionMove(true, -1));
 		moveBottom.setCallback(new ActionMove(false, -1));
@@ -57,17 +59,17 @@ public class GuiReorder extends GuiElements {
 		@Override
 		public void actionPerformed(GuiActionButton button) {
 			if(relative) {
-				List<HudElement<?>> elements = HudElement.SORTER.getSortedData(HudElement.SortType.PRIORITY);
+				List<HudElement<?>> elements = HudElements.get().getRegistered(HudElement.SortType.PRIORITY);
 				int i = elements.indexOf(selected) + offset;
 
 				if(i >= 0 && i < elements.size()) {
 					IGetSet.swap(selected.settings.priority, elements.get(i).settings.priority);
-					HudElement.SORTER.markDirty(HudElement.SortType.PRIORITY);
+					HudElements.get().invalidateSorts(SortType.PRIORITY);
 				}
 			} else {
 				selected.settings.priority.set(offset);
 				HudElement.normalizePriority();
-				HudElement.SORTER.markDirty(HudElement.SortType.PRIORITY);
+				HudElements.get().invalidateSorts(HudElement.SortType.PRIORITY);
 			}
 		}
 	}
@@ -131,7 +133,8 @@ public class GuiReorder extends GuiElements {
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		hovered = getHoveredElement(mouseX, mouseY, Predicates.alwaysFalse());
 
-		for(HudElement<?> element : HudElement.ELEMENTS) {
+		// TODO OverlayElements only
+		for(HudElement<?> element : HudElements.get().getRegistered()) {
 			Rect bounds = element.getLastBounds();
 
 			if(!bounds.isEmpty()) {

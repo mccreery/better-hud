@@ -5,45 +5,14 @@ import java.util.Arrays;
 import java.util.List;
 
 import jobicade.betterhud.BetterHud;
-import jobicade.betterhud.element.entityinfo.HorseInfo;
-import jobicade.betterhud.element.entityinfo.MobInfo;
-import jobicade.betterhud.element.entityinfo.PlayerInfo;
-import jobicade.betterhud.element.particles.BloodSplatters;
-import jobicade.betterhud.element.particles.WaterDrops;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.RootSetting;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.element.text.BiomeName;
-import jobicade.betterhud.element.text.Connection;
-import jobicade.betterhud.element.text.Coordinates;
-import jobicade.betterhud.element.text.CpsCount;
-import jobicade.betterhud.element.text.Distance;
-import jobicade.betterhud.element.text.FpsCount;
-import jobicade.betterhud.element.text.FullInvIndicator;
-import jobicade.betterhud.element.text.GameClock;
-import jobicade.betterhud.element.text.LightLevel;
-import jobicade.betterhud.element.text.Saturation;
-import jobicade.betterhud.element.text.SystemClock;
-import jobicade.betterhud.element.vanilla.AirBar;
-import jobicade.betterhud.element.vanilla.ArmorBar;
-import jobicade.betterhud.element.vanilla.Crosshair;
-import jobicade.betterhud.element.vanilla.Experience;
-import jobicade.betterhud.element.vanilla.FoodBar;
-import jobicade.betterhud.element.vanilla.HealthBar;
-import jobicade.betterhud.element.vanilla.HelmetOverlay;
-import jobicade.betterhud.element.vanilla.Hotbar;
-import jobicade.betterhud.element.vanilla.JumpBar;
-import jobicade.betterhud.element.vanilla.Offhand;
-import jobicade.betterhud.element.vanilla.PortalOverlay;
-import jobicade.betterhud.element.vanilla.PotionBar;
-import jobicade.betterhud.element.vanilla.RidingHealth;
-import jobicade.betterhud.element.vanilla.Sidebar;
-import jobicade.betterhud.element.vanilla.Vignette;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.proxy.ClientProxy;
+import jobicade.betterhud.registry.HudElements;
 import jobicade.betterhud.util.SortField;
-import jobicade.betterhud.util.Sorter;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -237,7 +206,7 @@ public abstract class HudElement<T> {
 	/** Renders all elements for the current render event
 	 * @param event The current render event */
 	public static void renderAll(Event event) {
-		for(HudElement<?> element : SORTER.getSortedData(SortType.PRIORITY)) {
+		for(HudElement<?> element : HudElements.get().getRegistered(SortType.PRIORITY)) {
 			element.tryRender(event);
 		}
 	}
@@ -252,7 +221,7 @@ public abstract class HudElement<T> {
 	 * @see #init(FMLInitializationEvent)
 	 * @see BetterHud#init(FMLInitializationEvent) */
 	public static void initAll(FMLInitializationEvent event) {
-		for(HudElement<?> element : ELEMENTS) {
+		for(HudElement<?> element : HudElements.get().getRegistered()) {
 			element.init(event);
 		}
 	}
@@ -266,20 +235,21 @@ public abstract class HudElement<T> {
 	 */
 	public void init(FMLInitializationEvent event) {}
 
+	// TODO refactor
 	/** Calls {@link #loadDefaults()} on all elements
 	 * @see #loadDefaults() */
 	public static void loadAllDefaults() {
-		GLOBAL.loadDefaults();
+		HudElements.GLOBAL.loadDefaults();
 
-		for (HudElement<?> element : ELEMENTS) {
+		for (HudElement<?> element : HudElements.get().getRegistered()) {
 			element.loadDefaults();
 		}
 		normalizePriority();
 	}
 
 	public static void normalizePriority() {
-		SORTER.markDirty(SortType.PRIORITY);
-		List<HudElement<?>> prioritySort = SORTER.getSortedData(SortType.PRIORITY);
+		HudElements.get().invalidateSorts(SortType.PRIORITY);
+		List<HudElement<?>> prioritySort = HudElements.get().getRegistered(SortType.PRIORITY);
 
 		for(int i = 0; i < prioritySort.size(); i++) {
 			prioritySort.get(i).settings.priority.set(i);

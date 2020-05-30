@@ -8,6 +8,7 @@ import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.gui.GuiActionButton;
 import jobicade.betterhud.gui.GuiElementChooser;
 import jobicade.betterhud.gui.GuiElementSettings;
+import jobicade.betterhud.registry.HudElements;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import net.minecraft.client.Minecraft;
@@ -35,12 +36,13 @@ public class SettingElement extends SettingAlignable<HudElement<?>> {
 
 	@Override
 	public String save() {
+		// TODO use registry names to be consistent with new config file format
 		return value != null ? value.getUnlocalizedName() : "null";
 	}
 
 	@Override
 	public void load(String save) {
-		for(HudElement<?> element : HudElement.ELEMENTS) {
+		for(HudElement<?> element : HudElements.get().getRegistered()) {
 			if(element.getUnlocalizedName().equals(save)) {
 				value = element;
 				return;

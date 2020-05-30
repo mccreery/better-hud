@@ -16,7 +16,6 @@ public class GlobalSettings extends HudElement<Object> {
 
 	public GlobalSettings() {
 		super("global");
-		ELEMENTS.remove(this);
 	}
 
 	@Override

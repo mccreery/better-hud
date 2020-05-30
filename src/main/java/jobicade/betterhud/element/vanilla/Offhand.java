@@ -2,12 +2,12 @@ package jobicade.betterhud.element.vanilla;
 
 import static jobicade.betterhud.BetterHud.SPACER;
 
-import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.registry.OverlayElements;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.Textures;
 import net.minecraft.client.Minecraft;
@@ -41,7 +41,7 @@ public class Offhand extends OverlayElement {
 		Rect texture = new Rect(24, 23, 22, 22);
 
 		if(position.isDirection(Direction.SOUTH)) {
-			bounds = bounds.align(HudElement.HOTBAR.getLastBounds().grow(SPACER).getAnchor(offhand), offhand.mirrorCol());
+			bounds = bounds.align(OverlayElements.HOTBAR.getLastBounds().grow(SPACER).getAnchor(offhand), offhand.mirrorCol());
 		} else {
 			bounds = position.applyTo(bounds);
 		}

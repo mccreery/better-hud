@@ -10,6 +10,7 @@ import jobicade.betterhud.element.text.TextElement;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.registry.OverlayElements;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
@@ -55,7 +56,7 @@ public class ExperienceInfo extends TextElement {
 		String hasDisplay = String.valueOf(has);
 		String neededDisplay = String.valueOf(needed);
 
-		Rect bar = EXPERIENCE.getLastBounds();
+		Rect bar = OverlayElements.EXPERIENCE.getLastBounds();
 
 		Point text = new Rect(GlUtil.getStringSize(hasDisplay).sub(0, 2)).anchor(bar, Direction.WEST).getPosition();
 		GlUtil.drawBorderedString(hasDisplay, text.getX(), text.getY(), Color.WHITE);

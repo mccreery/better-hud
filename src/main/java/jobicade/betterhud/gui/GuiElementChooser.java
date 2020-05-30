@@ -7,6 +7,7 @@ import net.minecraft.client.gui.GuiScreen;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.registry.HudElements;
 
 public class GuiElementChooser extends GuiElements {
 	private final GuiScreen parent;
@@ -40,7 +41,7 @@ public class GuiElementChooser extends GuiElements {
 		});
 		setting.set(selected);
 
-		for(HudElement<?> element : HudElement.ELEMENTS) {
+		for(HudElement<?> element : HudElements.get().getRegistered()) {
 			Rect bounds = element.getLastBounds();
 
 			if(!bounds.isEmpty()) {

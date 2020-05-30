@@ -7,12 +7,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.Lists;
+
 import jobicade.betterhud.config.ConfigManager;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.HudElement.SortType;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.registry.HudElements;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.Paginator;
@@ -21,7 +24,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 
 public class GuiHudMenu extends GuiMenuScreen {
-	private final Map<HudElement<?>, ButtonRow> rows = new HashMap<HudElement<?>, ButtonRow>(HudElement.ELEMENTS.size());
+	// TODO complexity from initial capacity
+	private final Map<HudElement<?>, ButtonRow> rows = new HashMap<HudElement<?>, ButtonRow>(HudElements.get().getRegistered().size());
 	final Paginator<HudElement<?>> paginator = new Paginator<HudElement<?>>();
 
 	private final GuiActionButton returnToGame = new GuiActionButton(I18n.format("menu.returnToGame")).setCallback(b -> Minecraft.getMinecraft().displayGuiScreen(null));
@@ -30,7 +34,7 @@ public class GuiHudMenu extends GuiMenuScreen {
 
 	private final GuiActionButton resetDefaults = new GuiActionButton(I18n.format("betterHud.menu.saveLoad"));
 
-	private final ButtonRow globalRow = new ButtonRow(this, HudElement.GLOBAL);
+	private final ButtonRow globalRow = new ButtonRow(this, HudElements.GLOBAL);
 
 	private final GuiActionButton lastPage = new GuiActionButton(I18n.format("betterHud.menu.lastPage"))
 		.setCallback(b -> {paginator.previousPage(); initGui();});
@@ -56,12 +60,18 @@ public class GuiHudMenu extends GuiMenuScreen {
 	}
 
 	private boolean allEnabled() {
-		return HudElement.ELEMENTS.stream().allMatch(HudElement::isEnabled);
+		return HudElements.get().getRegistered().stream().allMatch(HudElement::isEnabled);
 	}
 
 	public void initGui() {
 		setTitle(I18n.format("betterHud.menu.hudSettings"));
-		paginator.setData(HudElement.SORTER.getSortedData(sortCriteria, descending ^ sortCriteria.isInverted()));
+
+		List<HudElement<?>> pageData = HudElements.get().getRegistered(sortCriteria);
+		if (descending != sortCriteria.isInverted()) {
+			pageData = Lists.reverse(pageData);
+		}
+
+		paginator.setData(pageData);
 		paginator.setPageSize(Math.max(1, (int) Math.floor((height / 8 * 7 - 134) / 24)));
 
 		addDefaultButtons();
@@ -125,11 +135,11 @@ public class GuiHudMenu extends GuiMenuScreen {
 	}
 
 	private void setAll(boolean enabled) {
-		for(HudElement<?> element : HudElement.ELEMENTS) {
+		for(HudElement<?> element : HudElements.get().getRegistered()) {
 			element.setEnabled(enabled);
 		}
 
-		HudElement.SORTER.markDirty(SortType.ENABLED);
+		HudElements.get().invalidateSorts(SortType.ENABLED);
 		initGui();
 	}
 
@@ -137,8 +147,8 @@ public class GuiHudMenu extends GuiMenuScreen {
 	public void drawScreen(int mouseX, int mouseY, float p_73863_3_) {
 		super.drawScreen(mouseX, mouseY, p_73863_3_);
 
-		int enabled = (int)HudElement.ELEMENTS.stream().filter(HudElement::isEnabled).count();
-		GlUtil.drawString(enabled + "/" + HudElement.ELEMENTS.size() + " enabled", new Point(SPACER, SPACER), Direction.NORTH_WEST, Color.WHITE);
+		int enabled = (int)HudElements.get().getRegistered().stream().filter(HudElement::isEnabled).count();
+		GlUtil.drawString(enabled + "/" + HudElements.get().getRegistered().size() + " enabled", new Point(SPACER, SPACER), Direction.NORTH_WEST, Color.WHITE);
 
 		String page = I18n.format("betterHud.menu.page", (paginator.getPageIndex() + 1) + "/" + paginator.getPageCount());
 		drawCenteredString(fontRenderer, page, width / 2, height - height / 16 - 13, Color.WHITE.getPacked());

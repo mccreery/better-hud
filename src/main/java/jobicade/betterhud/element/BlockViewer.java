@@ -20,6 +20,7 @@ import jobicade.betterhud.element.text.TextElement;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.network.InventoryNameQuery;
+import jobicade.betterhud.registry.HudElements;
 import jobicade.betterhud.util.GlUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
@@ -94,7 +95,7 @@ public class BlockViewer extends TextElement {
 
 	@Override
 	public boolean shouldRender(RenderGameOverlayEvent context) {
-		trace = Minecraft.getMinecraft().getRenderViewEntity().rayTrace(HudElement.GLOBAL.getBillboardDistance(), 1f);
+		trace = Minecraft.getMinecraft().getRenderViewEntity().rayTrace(HudElements.GLOBAL.getBillboardDistance(), 1f);
 
 		if(trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK) {
 			state = Minecraft.getMinecraft().world.getBlockState(trace.getBlockPos());
