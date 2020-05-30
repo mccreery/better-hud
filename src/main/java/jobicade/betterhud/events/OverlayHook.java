@@ -5,6 +5,11 @@ import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.registry.OverlayElements;
 import jobicade.betterhud.registry.SortField;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
+import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.renderer.GlStateManager.DestFactor;
+import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
@@ -60,6 +65,17 @@ public final class OverlayHook {
         BetterHud.MANAGER.reset(event.getResolution());
 
         for (OverlayElement element : OverlayElements.get().getRegistered(SortField.PRIORITY)) {
+            // Basic standard
+            GlStateManager.enableAlpha();
+            GlStateManager.enableBlend();
+            GlStateManager.disableDepth();
+            GlStateManager.enableTexture2D();
+
+            Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+            GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
+            GlStateManager.color(1.0f, 1.0f, 1.0f);
+            RenderHelper.disableStandardItemLighting();
+
             if (shouldRender(element, event)) {
                 Minecraft.getMinecraft().mcProfiler.startSection(element.getRegistryName().toString());
                 element.render(event);
@@ -86,8 +102,7 @@ public final class OverlayHook {
      * @return {@code true} if the event was canceled.
      */
     public static boolean mimicPre(RenderGameOverlayEvent parentEvent, ElementType elementType) {
-        // TODO load OpenGL state
-
+        //GlSnapshots.applyPreState(elementType);
         return MinecraftForge.EVENT_BUS.post(
             new RenderGameOverlayEvent.Pre(parentEvent, elementType));
     }
@@ -98,8 +113,7 @@ public final class OverlayHook {
      * {@code elementType}.
      */
     public static void mimicPost(RenderGameOverlayEvent parentEvent, ElementType elementType) {
-        // TODO load OpenGL state
-
+        //GlSnapshots.applyPostState(elementType);
         MinecraftForge.EVENT_BUS.post(
             new RenderGameOverlayEvent.Pre(parentEvent, elementType));
     }
