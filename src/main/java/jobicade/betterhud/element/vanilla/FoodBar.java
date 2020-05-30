@@ -31,7 +31,8 @@ public class FoodBar extends Bar {
 
 	@Override
 	public boolean shouldRender(RenderGameOverlayEvent context) {
-		return Minecraft.getMinecraft().playerController.shouldDrawHUD()
+		return super.shouldRender(context)
+			&& Minecraft.getMinecraft().playerController.shouldDrawHUD()
 			&& (!hideMount.get() || !Minecraft.getMinecraft().player.isRidingHorse())
 			&& !OverlayHook.mimicPre(context, ElementType.FOOD);
 	}

@@ -24,7 +24,8 @@ public class AirBar extends Bar {
 
 	@Override
 	public boolean shouldRender(RenderGameOverlayEvent context) {
-		return Minecraft.getMinecraft().playerController.shouldDrawHUD()
+		return super.shouldRender(context)
+			&& Minecraft.getMinecraft().playerController.shouldDrawHUD()
 			&& !OverlayHook.mimicPre(context, ElementType.AIR);
 	}
 
