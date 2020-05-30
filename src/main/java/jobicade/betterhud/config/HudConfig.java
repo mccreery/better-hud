@@ -4,8 +4,8 @@ import java.io.File;
 
 import net.minecraftforge.common.config.Configuration;
 import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.element.HudElement.SortType;
 import jobicade.betterhud.registry.HudElements;
+import jobicade.betterhud.registry.SortField;
 
 /**
  * Handles saving and loading config files through Forge's system. Note that
@@ -27,7 +27,7 @@ public class HudConfig extends Configuration {
 			element.settings.bindConfig(this);
 			element.settings.loadConfig();
 		}
-		HudElements.get().invalidateSorts(SortType.ENABLED);
+		HudElements.get().invalidateSorts(SortField.ENABLED);
 		HudElement.normalizePriority();
 
 		if(hasChanged()) save();

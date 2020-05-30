@@ -1,9 +1,9 @@
 package jobicade.betterhud.events;
 
 import jobicade.betterhud.BetterHud;
-import jobicade.betterhud.element.HudElement.SortType;
 import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.registry.OverlayElements;
+import jobicade.betterhud.registry.SortField;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -59,7 +59,7 @@ public final class OverlayHook {
         // TODO not here
         BetterHud.MANAGER.reset(event.getResolution());
 
-        for (OverlayElement element : OverlayElements.get().getRegistered(SortType.PRIORITY)) {
+        for (OverlayElement element : OverlayElements.get().getRegistered(SortField.PRIORITY)) {
             Minecraft.getMinecraft().mcProfiler.startSection(element.getRegistryName().toString());
 
             // TODO checks

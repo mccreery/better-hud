@@ -11,15 +11,14 @@ import com.google.common.collect.Lists;
 
 import jobicade.betterhud.config.ConfigManager;
 import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.element.HudElement.SortType;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.registry.HudElements;
+import jobicade.betterhud.registry.SortField;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.Paginator;
-import jobicade.betterhud.util.SortField;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 
@@ -42,7 +41,7 @@ public class GuiHudMenu extends GuiMenuScreen {
 	private final GuiActionButton nextPage = new GuiActionButton(I18n.format("betterHud.menu.nextPage"))
 		.setCallback(b -> {paginator.nextPage(); initGui();});
 
-	private SortField<HudElement<?>> sortCriteria = SortType.ALPHABETICAL;
+	private SortField sortCriteria = SortField.ALPHABETICAL;
 	private boolean descending;
 
 	public GuiHudMenu(ConfigManager configManager) {
@@ -51,7 +50,7 @@ public class GuiHudMenu extends GuiMenuScreen {
 		});
 	}
 
-	public SortField<HudElement<?>> getSortCriteria() {
+	public SortField getSortCriteria() {
 		return sortCriteria;
 	}
 
@@ -122,7 +121,7 @@ public class GuiHudMenu extends GuiMenuScreen {
 		buttonList.add(lastPage);
 		buttonList.add(nextPage);
 
-		List<GuiActionButton> indexerControls = getIndexControls(SortType.values());
+		List<GuiActionButton> indexerControls = getIndexControls(SortField.values());
 		Rect sortButton = new Rect(75, 20);
 		Rect bounds = sortButton.withWidth((sortButton.getWidth() + SPACER) * indexerControls.size() - SPACER).align(getOrigin().add(0, 58), Direction.NORTH);
 		sortButton = sortButton.move(bounds.getPosition());
@@ -139,7 +138,7 @@ public class GuiHudMenu extends GuiMenuScreen {
 			element.setEnabled(enabled);
 		}
 
-		HudElements.get().invalidateSorts(SortType.ENABLED);
+		HudElements.get().invalidateSorts(SortField.ENABLED);
 		initGui();
 	}
 
@@ -154,10 +153,10 @@ public class GuiHudMenu extends GuiMenuScreen {
 		drawCenteredString(fontRenderer, page, width / 2, height - height / 16 - 13, Color.WHITE.getPacked());
 	}
 
-	private List<GuiActionButton> getIndexControls(SortField<HudElement<?>>[] sortValues) {
+	private List<GuiActionButton> getIndexControls(SortField[] sortValues) {
 		List<GuiActionButton> buttons = new ArrayList<GuiActionButton>(sortValues.length);
 
-		for(SortField<HudElement<?>> sortValue : sortValues) {
+		for(SortField sortValue : sortValues) {
 			buttons.add(new SortButton(this, sortValue));
 		}
 		return buttons;
@@ -167,7 +166,7 @@ public class GuiHudMenu extends GuiMenuScreen {
 		return rows.computeIfAbsent(element, e -> new ButtonRow(this, e));
 	}
 
-	public void changeSort(SortField<HudElement<?>> sortCriteria) {
+	public void changeSort(SortField sortCriteria) {
 		if(this.sortCriteria == sortCriteria) {
 			descending = !descending;
 		} else {

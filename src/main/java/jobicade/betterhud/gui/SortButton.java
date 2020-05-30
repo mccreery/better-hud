@@ -1,14 +1,13 @@
 package jobicade.betterhud.gui;
 
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.registry.SortField;
+import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
-import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.geom.Point;
-import jobicade.betterhud.util.SortField;
 
 class SortButton extends GuiActionButton {
 	private static final ResourceLocation ARROW_TEXTURE = new ResourceLocation("textures/gui/resource_packs.png");
@@ -16,9 +15,9 @@ class SortButton extends GuiActionButton {
 	private static final Rect DOWN_TEXTURE = new Rect(82, 20, 11, 7);
 
 	private final GuiHudMenu callback;
-	SortField<HudElement<?>> sortValue;
+	SortField sortValue;
 
-	SortButton(GuiHudMenu callback, SortField<HudElement<?>> sortValue) {
+	SortButton(GuiHudMenu callback, SortField sortValue) {
 		super(I18n.format(sortValue.getUnlocalizedName()));
 
 		this.callback = callback;

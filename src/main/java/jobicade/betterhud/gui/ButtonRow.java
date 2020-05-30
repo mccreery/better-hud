@@ -9,9 +9,9 @@ import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.element.HudElement.SortType;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.registry.HudElements;
+import jobicade.betterhud.registry.SortField;
 import jobicade.betterhud.geom.Direction;
 
 class ButtonRow {
@@ -26,7 +26,7 @@ class ButtonRow {
 
 		toggle = new GuiActionButton("").setCallback(b -> {
 			element.setEnabled(!element.isEnabled());
-			HudElements.get().invalidateSorts(SortType.ENABLED);
+			HudElements.get().invalidateSorts(SortField.ENABLED);
 
 			if(Minecraft.getMinecraft().currentScreen != null) {
 				Minecraft.getMinecraft().currentScreen.initGui();

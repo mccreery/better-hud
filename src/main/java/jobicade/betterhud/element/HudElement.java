@@ -12,7 +12,7 @@ import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.proxy.ClientProxy;
 import jobicade.betterhud.registry.HudElements;
-import jobicade.betterhud.util.SortField;
+import jobicade.betterhud.registry.SortField;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -27,42 +27,6 @@ import net.minecraftforge.fml.common.versioning.VersionRange;
  * @param T context object passed to render methods.
  */
 public abstract class HudElement<T> {
-	public enum SortType implements SortField<HudElement<?>> {
-		ALPHABETICAL("alphabetical", false) {
-			@Override
-			public int compare(HudElement<?> a, HudElement<?> b) {
-				return a.getLocalizedName().compareTo(b.getLocalizedName());
-			}
-		}, ENABLED("enabled", false) {
-			@Override
-			public int compare(HudElement<?> a, HudElement<?> b) {
-				int compare = b.settings.get().compareTo(a.settings.get());
-				return compare != 0 ? compare : ALPHABETICAL.compare(a, b);
-			}
-		}, PRIORITY("priority", false) {
-			@Override
-			public int compare(HudElement<?> a, HudElement<?> b) {
-				int compare = a.settings.priority.get().compareTo(b.settings.priority.get());
-				return compare != 0 ? compare : ALPHABETICAL.compare(a, b);
-			}
-		};
-
-		private final String unlocalizedName;
-		private final boolean inverted;
-
-		SortType(String unlocalizedName, boolean inverted) {
-			this.unlocalizedName = "betterHud.menu." + unlocalizedName;
-			this.inverted = inverted;
-		}
-
-		public String getUnlocalizedName() {
-			return unlocalizedName;
-		}
-		public boolean isInverted() {
-			return inverted;
-		}
-	};
-
 	/** The settings saved to the config file for this element */
 	public final RootSetting settings;
 	protected final SettingPosition position;
@@ -206,7 +170,7 @@ public abstract class HudElement<T> {
 	/** Renders all elements for the current render event
 	 * @param event The current render event */
 	public static void renderAll(Event event) {
-		for(HudElement<?> element : HudElements.get().getRegistered(SortType.PRIORITY)) {
+		for(HudElement<?> element : HudElements.get().getRegistered(SortField.PRIORITY)) {
 			element.tryRender(event);
 		}
 	}
@@ -248,8 +212,8 @@ public abstract class HudElement<T> {
 	}
 
 	public static void normalizePriority() {
-		HudElements.get().invalidateSorts(SortType.PRIORITY);
-		List<HudElement<?>> prioritySort = HudElements.get().getRegistered(SortType.PRIORITY);
+		HudElements.get().invalidateSorts(SortField.PRIORITY);
+		List<HudElement<?>> prioritySort = HudElements.get().getRegistered(SortField.PRIORITY);
 
 		for(int i = 0; i < prioritySort.size(); i++) {
 			prioritySort.get(i).settings.priority.set(i);

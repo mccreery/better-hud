@@ -7,7 +7,6 @@ import java.util.Map;
 
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.element.HudElement.SortType;
 import jobicade.betterhud.util.Sorter;
 import net.minecraft.util.ResourceLocation;
 
@@ -46,7 +45,7 @@ public abstract class HudRegistry<T extends HudElement<?>> {
     }
 
     public final List<T> getRegistered() {
-        return getRegistered(SortType.ALPHABETICAL);
+        return getRegistered(SortField.ALPHABETICAL);
     }
 
     public final List<T> getRegistered(Comparator<? super T> comparator) {
