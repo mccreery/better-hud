@@ -60,12 +60,11 @@ public final class OverlayHook {
         BetterHud.MANAGER.reset(event.getResolution());
 
         for (OverlayElement element : OverlayElements.get().getRegistered(SortField.PRIORITY)) {
-            Minecraft.getMinecraft().mcProfiler.startSection(element.getRegistryName().toString());
-
-            // TODO checks
-            element.render(event);
-
-            Minecraft.getMinecraft().mcProfiler.endSection();
+            if (shouldRender(element, event)) {
+                Minecraft.getMinecraft().mcProfiler.startSection(element.getRegistryName().toString());
+                element.render(event);
+                Minecraft.getMinecraft().mcProfiler.endSection();
+            }
         }
     }
 
