@@ -4,9 +4,11 @@ import static jobicade.betterhud.BetterHud.SPACER;
 
 import java.util.List;
 
+import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingChoose;
+import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.registry.OverlayElements;
@@ -18,6 +20,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public class HealIndicator extends OverlayElement {
+	private SettingPosition position;
 	private SettingChoose mode;
 
 	@Override
@@ -35,6 +38,7 @@ public class HealIndicator extends OverlayElement {
 	@Override
 	protected void addSettings(List<Setting<?>> settings) {
 		super.addSettings(settings);
+		settings.add(position = new SettingPosition(DirectionOptions.NONE, DirectionOptions.NONE));
 		settings.add(new Legend("misc"));
 		settings.add(mode = new SettingChoose(2));
 	}

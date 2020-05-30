@@ -7,11 +7,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
-import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.settings.SettingSlider;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
@@ -38,7 +36,7 @@ public class Coordinates extends TextElement {
 	}
 
 	public Coordinates() {
-		super("coordinates", new SettingPosition(DirectionOptions.TOP_BOTTOM, DirectionOptions.NONE));
+		super("coordinates");
 	}
 
 	@Override

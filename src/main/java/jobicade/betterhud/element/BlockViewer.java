@@ -47,19 +47,21 @@ import net.minecraftforge.fml.common.versioning.VersionRange;
  * @see BetterHud#onBlockBreak(net.minecraftforge.event.world.BlockEvent.BreakEvent)
  */
 public class BlockViewer extends TextElement {
+	private SettingPosition position;
 	private SettingBoolean showBlock, showIds, invNames;
 	private RayTraceResult trace;
 	private IBlockState state;
 	private ItemStack stack;
 
 	public BlockViewer() {
-		super("blockViewer", new SettingPosition(DirectionOptions.I, DirectionOptions.WEST_EAST));
+		super("blockViewer");
 	}
 
 	@Override
 	protected void addSettings(List<Setting<?>> settings) {
 		super.addSettings(settings);
 
+		settings.add(position = new SettingPosition(DirectionOptions.I, DirectionOptions.WEST_EAST));
 		settings.add(new Legend("misc"));
 		settings.add(showBlock = new SettingBoolean("showItem").setValuePrefix(SettingBoolean.VISIBLE));
 		settings.add(showIds = new SettingBoolean("showIds").setValuePrefix(SettingBoolean.VISIBLE));

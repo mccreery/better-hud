@@ -22,6 +22,8 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public class ArrowCount extends OverlayElement {
 	private static final ItemStack ARROW = new ItemStack(Items.ARROW, 1);
+
+	private SettingPosition position;
 	private SettingBoolean overlay;
 
 	@Override
@@ -34,13 +36,14 @@ public class ArrowCount extends OverlayElement {
 	}
 
 	public ArrowCount() {
-		super("arrowCount", new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.NONE));
-		position.setEnableOn(() -> !overlay.get());
+		super("arrowCount");
 	}
 
 	@Override
 	protected void addSettings(List<Setting<?>> settings) {
 		super.addSettings(settings);
+		settings.add(position = new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.NONE));
+		position.setEnableOn(() -> !overlay.get());
 		settings.add(overlay = new SettingBoolean("overlay"));
 	}
 

@@ -18,15 +18,17 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
 public class Experience extends OverrideElement {
+	private SettingPosition position;
 	private SettingBoolean hideMount;
 
 	public Experience() {
-		super("experience", new SettingPosition(DirectionOptions.BAR, DirectionOptions.NORTH_SOUTH));
+		super("experience");
 	}
 
 	@Override
 	protected void addSettings(List<Setting<?>> settings) {
 		super.addSettings(settings);
+		settings.add(position = new SettingPosition(DirectionOptions.BAR, DirectionOptions.NORTH_SOUTH));
 		settings.add(hideMount = new SettingBoolean("hideMount"));
 	}
 

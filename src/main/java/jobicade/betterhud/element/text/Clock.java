@@ -6,12 +6,10 @@ import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingChoose;
-import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.geom.Direction;
 
 public abstract class Clock extends TextElement {
@@ -19,7 +17,7 @@ public abstract class Clock extends TextElement {
 	private SettingChoose dateType;
 
 	public Clock(String name) {
-		super(name, new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.WEST_EAST));
+		super(name);
 		border = true;
 	}
 

@@ -6,11 +6,9 @@ import static jobicade.betterhud.BetterHud.SPACER;
 import java.util.Arrays;
 import java.util.List;
 
-import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingChoose;
-import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import net.minecraft.client.Minecraft;
@@ -30,7 +28,7 @@ public class Distance extends TextElement {
 	}
 
 	public Distance() {
-		super("distance", new SettingPosition(DirectionOptions.X, DirectionOptions.WEST_EAST));
+		super("distance");
 	}
 
 	@Override

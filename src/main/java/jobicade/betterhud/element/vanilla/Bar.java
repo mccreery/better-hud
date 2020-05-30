@@ -17,18 +17,20 @@ import net.minecraft.client.gui.Gui;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public abstract class Bar extends OverrideElement {
+	protected SettingPosition position;
 	protected SettingChoose side;
 
 	private StatBar<? super EntityPlayerSP> bar;
 
 	public Bar(String name, StatBar<? super EntityPlayerSP> bar) {
-		super(name, new SettingPosition(DirectionOptions.BAR, DirectionOptions.CORNERS));
+		super(name);
 		this.bar = bar;
 	}
 
 	@Override
 	protected void addSettings(List<Setting<?>> settings) {
 		super.addSettings(settings);
+		settings.add(position = new SettingPosition(DirectionOptions.BAR, DirectionOptions.CORNERS));
 		settings.add(side = new SettingChoose("side", "west", "east") {
 			@Override
 			public boolean enabled() {

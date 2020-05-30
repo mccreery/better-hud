@@ -27,6 +27,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 public class ArmorBars extends EquipmentDisplay {
 	public static final String NAME = "armor_bars";
 
+	private SettingPosition position;
 	private SettingChoose barType;
 	private SettingBoolean alwaysVisible;
 
@@ -40,13 +41,14 @@ public class ArmorBars extends EquipmentDisplay {
 	}
 
 	public ArmorBars() {
-		super("armorBars", new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.WEST_EAST));
+		super("armorBars");
 		setRegistryName(NAME);
 	}
 
 	@Override
 	protected void addSettings(List<Setting<?>> settings) {
 		super.addSettings(settings);
+		settings.add(position = new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.WEST_EAST));
 		settings.add(barType = new SettingChoose("bars", "visible.off", "smallBars", "largeBars"));
 		settings.add(alwaysVisible = new SettingBoolean("alwaysVisible"));
 	}

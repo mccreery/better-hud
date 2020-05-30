@@ -1,6 +1,9 @@
 package jobicade.betterhud.element.vanilla;
 
+import java.util.List;
+
 import jobicade.betterhud.element.settings.DirectionOptions;
+import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
@@ -13,9 +16,17 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
 public class Hotbar extends OverrideElement {
+	private SettingPosition position;
+
 	public Hotbar() {
-		super("hotbar", new SettingPosition(DirectionOptions.TOP_BOTTOM, DirectionOptions.NONE));
+		super("hotbar");
 		position.setEdge(true).setPostSpacer(2);
+	}
+
+	@Override
+	protected void addSettings(List<Setting<?>> settings) {
+		super.addSettings(settings);
+		settings.add(position = new SettingPosition(DirectionOptions.TOP_BOTTOM, DirectionOptions.NONE));
 	}
 
 	@Override

@@ -27,6 +27,7 @@ import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class PickupCount extends OverlayElement {
+	private SettingPosition position;
 	private SettingSlider maxStacks, fadeAfter;
 	public final List<StackNode> stacks = new ArrayList<>();
 
@@ -40,7 +41,7 @@ public class PickupCount extends OverlayElement {
 	}
 
 	public PickupCount() {
-		super("itemPickup", new SettingPosition(DirectionOptions.X, DirectionOptions.CORNERS));
+		super("itemPickup");
 		setServerDependency("[1.4-beta,1.4.1),(1.4.1,]");
 	}
 
@@ -52,6 +53,7 @@ public class PickupCount extends OverlayElement {
 	@Override
 	protected void addSettings(List<Setting<?>> settings) {
 		super.addSettings(settings);
+		settings.add(position = new SettingPosition(DirectionOptions.X, DirectionOptions.CORNERS));
 		settings.add(fadeAfter = new SettingSlider("fadeAfter", 20, 600, 20).setDisplayScale(0.05).setUnlocalizedValue("betterHud.hud.seconds"));
 		settings.add(maxStacks = new SettingSlider("maxStacks", 1, 11, 1) {
 			@Override

@@ -28,13 +28,16 @@ import net.minecraft.scoreboard.Scoreboard;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public class Sidebar extends OverlayElement {
+	private SettingPosition position;
+
 	public Sidebar() {
-		super("scoreboard", new SettingPosition(DirectionOptions.LEFT_RIGHT, DirectionOptions.WEST_EAST));
+		super("scoreboard");
 	}
 
 	@Override
 	protected void addSettings(List<Setting<?>> settings) {
 		super.addSettings(settings);
+		settings.add(position = new SettingPosition(DirectionOptions.LEFT_RIGHT, DirectionOptions.WEST_EAST));
 	}
 
 	@Override

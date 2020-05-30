@@ -18,21 +18,19 @@ import jobicade.betterhud.util.GlUtil;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public abstract class TextElement extends OverlayElement {
+	protected SettingPosition position;
 	private SettingColor color;
 
 	protected boolean border = false;
 
 	public TextElement(String name) {
-		this(name, new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.CORNERS));
-	}
-
-	public TextElement(String name, SettingPosition position) {
-		super(name, position);
+		super(name);
 	}
 
 	@Override
 	protected void addSettings(List<Setting<?>> settings) {
 		super.addSettings(settings);
+		settings.add(position = new SettingPosition(DirectionOptions.TOP_BOTTOM, DirectionOptions.CORNERS));
 		settings.add(color = new SettingColor("color"));
 	}
 

@@ -31,12 +31,12 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
 public class Crosshair extends OverrideElement {
+	private SettingPosition position;
 	private SettingBoolean attackIndicator;
 	private SettingChoose indicatorType;
 
 	public Crosshair() {
-		super("crosshair", new SettingPosition(DirectionOptions.I, DirectionOptions.NONE));
-
+		super("crosshair");
 		position.setEnableOn(() -> attackIndicator.get());
 	}
 
@@ -44,6 +44,7 @@ public class Crosshair extends OverrideElement {
 	protected void addSettings(List<Setting<?>> settings) {
 		super.addSettings(settings);
 
+		settings.add(position = new SettingPosition(DirectionOptions.I, DirectionOptions.NONE));
 		settings.add(attackIndicator = new SettingBoolean(null) {
 			@Override
 			public Boolean get() {

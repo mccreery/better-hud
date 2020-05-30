@@ -6,7 +6,6 @@ import java.util.List;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingChoose;
-import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.settings.SettingWarnings;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.MathUtil;
@@ -20,8 +19,8 @@ public abstract class EquipmentDisplay extends OverlayElement {
 	private SettingChoose durabilityMode;
 	private SettingBoolean showUndamaged;
 
-	protected EquipmentDisplay(String name, SettingPosition position) {
-		super(name, position);
+	protected EquipmentDisplay(String name) {
+		super(name);
 	}
 
 	@Override

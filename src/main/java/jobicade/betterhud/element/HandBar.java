@@ -17,6 +17,7 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public class HandBar extends EquipmentDisplay {
+	private SettingPosition position;
 	private SettingBoolean showItem, offHand, showBars, showNonTools;
 
 	@Override
@@ -31,12 +32,13 @@ public class HandBar extends EquipmentDisplay {
 	}
 
 	public HandBar() {
-		super("handBar", new SettingPosition(DirectionOptions.BAR, DirectionOptions.NORTH_SOUTH));
+		super("handBar");
 	}
 
 	@Override
 	protected void addSettings(List<Setting<?>> settings) {
 		super.addSettings(settings);
+		settings.add(position = new SettingPosition(DirectionOptions.BAR, DirectionOptions.NORTH_SOUTH));
 		settings.add(new Legend("misc"));
 		settings.add(showItem = new SettingBoolean("showItem").setValuePrefix(SettingBoolean.VISIBLE));
 		settings.add(showBars = new SettingBoolean("bars"));

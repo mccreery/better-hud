@@ -33,15 +33,17 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public class PotionBar extends OverlayElement {
 	public static final ResourceLocation INVENTORY = new ResourceLocation("textures/gui/container/inventory.png");
 
+	private SettingPosition position;
 	private SettingBoolean showDuration;
 
 	public PotionBar() {
-		super("potionBar", new SettingPosition(DirectionOptions.X, DirectionOptions.CORNERS));
+		super("potionBar");
 	}
 
 	@Override
 	protected void addSettings(List<Setting<?>> settings) {
 		super.addSettings(settings);
+		settings.add(position = new SettingPosition(DirectionOptions.X, DirectionOptions.CORNERS));
 		settings.add(showDuration = new SettingBoolean("duration").setValuePrefix(SettingBoolean.VISIBLE));
 	}
 

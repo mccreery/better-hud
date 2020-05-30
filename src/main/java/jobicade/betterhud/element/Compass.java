@@ -29,6 +29,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 public class Compass extends OverlayElement {
 	private static final String[] DIRECTIONS = { "S", "E", "N", "W" };
 
+	private SettingPosition position;
 	private SettingChoose mode, requireItem;
 	private SettingSlider directionScaling;
 	private SettingBoolean showNotches;
@@ -55,12 +56,13 @@ public class Compass extends OverlayElement {
 	}
 
 	public Compass() {
-		super("compass", new SettingPosition(DirectionOptions.TOP_BOTTOM, DirectionOptions.NORTH_SOUTH));
+		super("compass");
 	}
 
 	@Override
 	protected void addSettings(List<Setting<?>> settings) {
 		super.addSettings(settings);
+		settings.add(position = new SettingPosition(DirectionOptions.TOP_BOTTOM, DirectionOptions.NORTH_SOUTH));
 		settings.add(mode = new SettingChoose("mode", "visual", "text"));
 		settings.add(new Legend("misc"));
 		settings.add(directionScaling = new SettingPercentage("letterScale"));

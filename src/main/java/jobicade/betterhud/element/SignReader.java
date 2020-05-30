@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import jobicade.betterhud.element.settings.DirectionOptions;
+import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
@@ -23,6 +24,8 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 public class SignReader extends OverlayElement {
 	private static final ResourceLocation SIGN_TEXTURE = new ResourceLocation("textures/entity/sign.png");
 
+	private SettingPosition position;
+
 	@Override
 	public void loadDefaults() {
 		super.loadDefaults();
@@ -30,7 +33,13 @@ public class SignReader extends OverlayElement {
 	}
 
 	public SignReader() {
-		super("signReader", new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.NONE));
+		super("signReader");
+	}
+
+	@Override
+	protected void addSettings(List<Setting<?>> settings) {
+		super.addSettings(settings);
+		settings.add(position = new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.NONE));
 	}
 
 	@Override

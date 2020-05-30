@@ -5,10 +5,8 @@ import java.util.Arrays;
 import java.util.List;
 
 import jobicade.betterhud.BetterHud;
-import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.RootSetting;
 import jobicade.betterhud.element.settings.Setting;
-import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.proxy.ClientProxy;
 import jobicade.betterhud.registry.HudElements;
@@ -27,7 +25,6 @@ import net.minecraftforge.fml.common.versioning.VersionRange;
 public abstract class HudElement<T> {
 	/** The settings saved to the config file for this element */
 	public final RootSetting settings;
-	protected final SettingPosition position;
 
 	public boolean isEnabled() {
 		return settings.get();
@@ -38,12 +35,6 @@ public abstract class HudElement<T> {
 	}
 
 	protected HudElement(String name) {
-		this(name, new SettingPosition(DirectionOptions.NONE, DirectionOptions.NONE));
-	}
-
-	protected HudElement(String name, SettingPosition position) {
-		this.position = position;
-
 		List<Setting<?>> rootSettings = new ArrayList<>();
 		addSettings(rootSettings);
 		this.settings = new RootSetting(this, rootSettings);
@@ -124,9 +115,6 @@ public abstract class HudElement<T> {
 	 * @param settings The list of settings to add new settings to.
 	 */
 	protected void addSettings(List<Setting<?>> settings) {
-		if(position.getDirectionOptions() != DirectionOptions.NONE || position.getContentOptions() != DirectionOptions.NONE) {
-			settings.add(position);
-		}
 	}
 
     /**
