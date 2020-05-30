@@ -4,6 +4,7 @@ import static jobicade.betterhud.BetterHud.SPACER;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.function.BooleanSupplier;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -164,5 +165,11 @@ public class SettingDirection extends SettingAlignable<Direction> {
 			}
 		}
 		return I18n.format("betterHud.value." + name);
+	}
+
+	@Override
+	public SettingDirection setEnableOn(BooleanSupplier enableOn) {
+		super.setEnableOn(enableOn);
+		return this;
 	}
 }

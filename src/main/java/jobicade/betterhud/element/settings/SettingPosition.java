@@ -6,6 +6,7 @@ import static jobicade.betterhud.BetterHud.SPACER;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BooleanSupplier;
 
 import net.minecraft.client.gui.Gui;
 import jobicade.betterhud.geom.Direction;
@@ -44,33 +45,17 @@ public class SettingPosition extends SettingStub<Object> {
 	public SettingPosition(String name, DirectionOptions directionOptions, DirectionOptions contentOptions) {
 		super(name);
 
+		mode = new SettingChoose("position", "preset", "custom");
+		BooleanSupplier isPreset = () -> mode.getIndex() == 0;
+		BooleanSupplier isCustom = () -> mode.getIndex() == 1;
+
 		addChildren(
 			new Legend("position"),
-			mode = new SettingChoose("position", "preset", "custom"),
-			direction = new SettingDirection("direction", Direction.WEST, directionOptions) {
-				@Override
-				public boolean enabled() {
-					return mode.getIndex() == 0 && super.enabled();
-				}
-			}.setHorizontal(),
-			parent = new SettingElement("parent", Direction.CENTER) {
-				@Override
-				public boolean enabled() {
-					return mode.getIndex() == 1 && super.enabled();
-				}
-			},
-			anchor = new SettingDirection("anchor", Direction.WEST) {
-				@Override
-				public boolean enabled() {
-					return mode.getIndex() == 1 && super.enabled();
-				}
-			},
+			mode,
+			direction = new SettingDirection("direction", Direction.WEST, directionOptions).setEnableOn(isPreset).setHorizontal(),
+			parent = new SettingElement("parent", Direction.CENTER).setEnableOn(isCustom),
+			anchor = new SettingDirection("anchor", Direction.WEST).setEnableOn(isCustom),
 			alignment = new SettingDirection("alignment", Direction.CENTER) {
-				@Override
-				public boolean enabled() {
-					return mode.getIndex() == 1 && !lockAlignment.get() && super.enabled();
-				}
-
 				@Override
 				public void updateGuiParts(Collection<Setting<?>> settings) {
 					if(lockAlignment.get()) set(anchor.get());
@@ -79,35 +64,18 @@ public class SettingPosition extends SettingStub<Object> {
 			},
 			contentAlignment = new SettingDirection("contentAlignment", Direction.EAST, contentOptions) {
 				@Override
-				public boolean enabled() {
-					return mode.getIndex() == 1 && !lockContent.get() && super.enabled();
-				}
-
-				@Override
 				public void updateGuiParts(Collection<Setting<?>> settings) {
 					if(lockContent.get()) set(SettingPosition.this.alignment.get());
 					super.updateGuiParts(settings);
 				}
 			},
-			lockAlignment = new SettingLock("lockAlignment") {
-				@Override
-				public boolean enabled() {
-					return mode.getIndex() == 1 && super.enabled();
-				}
-			},
-			lockContent = new SettingLock("lockContent") {
-				@Override
-				public boolean enabled() {
-					return mode.getIndex() == 1 && super.enabled();
-				}
-			},
-			offset = new SettingAbsolutePosition("origin", this) {
-				@Override
-				public boolean enabled() {
-					return mode.getIndex() == 1 && super.enabled();
-				}
-			}
+			lockAlignment = new SettingLock("lockAlignment").setEnableOn(isCustom),
+			lockContent = new SettingLock("lockContent").setEnableOn(isCustom),
+			offset = new SettingAbsolutePosition("origin", this).setEnableOn(isCustom)
 		);
+
+		alignment.setEnableOn(() -> isCustom.getAsBoolean() && !lockAlignment.get());
+		contentAlignment.setEnableOn(() -> isCustom.getAsBoolean() && !lockContent.get());
 	}
 
 	public boolean isDirection(Direction direction) {

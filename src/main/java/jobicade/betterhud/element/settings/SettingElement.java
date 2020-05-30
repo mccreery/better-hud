@@ -3,6 +3,7 @@ package jobicade.betterhud.element.settings;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BooleanSupplier;
 
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.gui.GuiActionButton;
@@ -69,5 +70,11 @@ public class SettingElement extends SettingAlignable<HudElement<?>> {
 	@Override
 	public void updateGuiParts(Collection<Setting<?>> settings) {
 		button.enabled = enabled();
+	}
+
+	@Override
+	public SettingElement setEnableOn(BooleanSupplier enableOn) {
+		super.setEnableOn(enableOn);
+		return this;
 	}
 }

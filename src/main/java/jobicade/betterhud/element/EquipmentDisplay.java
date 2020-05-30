@@ -21,18 +21,8 @@ public abstract class EquipmentDisplay extends OverlayElement {
 		settings.addChildren(
 			showName = new SettingBoolean("showName"),
 			showDurability = new SettingBoolean("showDurability", Direction.WEST),
-			durabilityMode = new SettingChoose("durabilityFormat", Direction.EAST, "points", "percentage") {
-				@Override
-				public boolean enabled() {
-					return showDurability.get();
-				}
-			},
-			showUndamaged = new SettingBoolean("showUndamaged") {
-				@Override
-				public boolean enabled() {
-					return showDurability.get();
-				}
-			}.setValuePrefix("betterHud.value.visible"),
+			durabilityMode = new SettingChoose("durabilityFormat", Direction.EAST, "points", "percentage").setEnableOn(showDurability::get),
+			showUndamaged = new SettingBoolean("showUndamaged").setEnableOn(showDurability::get).setValuePrefix("betterHud.value.visible"),
 			warnings = new SettingWarnings("damageWarning")
 		);
 	}

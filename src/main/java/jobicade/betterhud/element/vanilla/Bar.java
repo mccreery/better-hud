@@ -25,12 +25,7 @@ public abstract class Bar extends OverlayElement {
 
 		settings.addChildren(
 			position = new SettingPosition(DirectionOptions.BAR, DirectionOptions.CORNERS),
-			side = new SettingChoose("side", "west", "east") {
-				@Override
-				public boolean enabled() {
-					return position.isDirection(Direction.SOUTH);
-				}
-			}
+			side = new SettingChoose("side", "west", "east").setEnableOn(() -> position.isDirection(Direction.SOUTH))
 		);
 	}
 

@@ -5,6 +5,7 @@ import static jobicade.betterhud.BetterHud.SPACER;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BooleanSupplier;
 
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -146,5 +147,11 @@ public class SettingAbsolutePosition extends Setting<Point> {
 		} else {
 			xUp.enabled = xDown.enabled = yUp.enabled = yDown.enabled = false;
 		}
+	}
+
+	@Override
+	public SettingAbsolutePosition setEnableOn(BooleanSupplier enableOn) {
+		super.setEnableOn(enableOn);
+		return this;
 	}
 }

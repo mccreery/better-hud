@@ -55,11 +55,6 @@ public class Crosshair extends OverlayElement {
 			}.setValuePrefix(SettingBoolean.VISIBLE).setUnlocalizedName("options.attackIndicator"),
 			indicatorType = new SettingChoose(null, 2) {
 				@Override
-				public boolean enabled() {
-					return super.enabled() && attackIndicator.get();
-				}
-
-				@Override
 				public int getIndex() {
 					return Math.max(Minecraft.getMinecraft().gameSettings.attackIndicator - 1, 0);
 				}
@@ -75,7 +70,7 @@ public class Crosshair extends OverlayElement {
 				protected String getUnlocalizedValue() {
 					return "options.attack." + modes[getIndex()];
 				}
-			}
+			}.setEnableOn(attackIndicator::get)
 		);
 	}
 

@@ -3,6 +3,7 @@ package jobicade.betterhud.element.settings;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BooleanSupplier;
 
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
@@ -80,6 +81,12 @@ public class SettingBoolean extends SettingAlignable<Boolean> implements IBoolea
 	@Override
 	public SettingBoolean setUnlocalizedName(String unlocalizedName) {
 		super.setUnlocalizedName(unlocalizedName);
+		return this;
+	}
+
+	@Override
+	public SettingBoolean setEnableOn(BooleanSupplier enableOn) {
+		super.setEnableOn(enableOn);
 		return this;
 	}
 }
