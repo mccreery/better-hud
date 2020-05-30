@@ -2,11 +2,8 @@ package jobicade.betterhud.element;
 
 import static jobicade.betterhud.BetterHud.SPACER;
 
-import java.util.List;
-
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Legend;
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.geom.Direction;
@@ -32,15 +29,14 @@ public class HealIndicator extends OverlayElement {
 	}
 
 	public HealIndicator() {
-		super("healIndicator");
-	}
+		setRegistryName("heal_indicator");
+		setUnlocalizedName("healIndicator");
 
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(position = new SettingPosition(DirectionOptions.NONE, DirectionOptions.NONE));
-		settings.add(new Legend("misc"));
-		settings.add(mode = new SettingChoose(2));
+		settings.addChildren(
+			position = new SettingPosition(DirectionOptions.NONE, DirectionOptions.NONE),
+			new Legend("misc"),
+			mode = new SettingChoose(2)
+		);
 	}
 
 	@Override

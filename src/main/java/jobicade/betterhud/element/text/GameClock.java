@@ -4,11 +4,9 @@ import java.text.DateFormat;
 import java.text.FieldPosition;
 import java.text.ParsePosition;
 import java.util.Date;
-import java.util.List;
 import java.util.TimeZone;
 
 import jobicade.betterhud.element.settings.DirectionOptions;
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.geom.Direction;
@@ -30,16 +28,14 @@ public class GameClock extends Clock {
 	private SettingChoose requireItem;
 
 	public GameClock() {
-		super("gameClock");
-		border = true;
-	}
+		setRegistryName("game_clock");
+		setUnlocalizedName("gameClock");
 
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(showDays = new SettingBoolean("showDays").setValuePrefix(SettingBoolean.VISIBLE));
-		settings.add(showSleepIndicator = new SettingBoolean("showSleepIndicator").setValuePrefix(SettingBoolean.VISIBLE));
-		settings.add(requireItem = new SettingChoose("requireItem", "disabled", "inventory", "hand"));
+		settings.addChildren(
+			showDays = new SettingBoolean("showDays").setValuePrefix(SettingBoolean.VISIBLE),
+			showSleepIndicator = new SettingBoolean("showSleepIndicator").setValuePrefix(SettingBoolean.VISIBLE),
+			requireItem = new SettingChoose("requireItem", "disabled", "inventory", "hand")
+		);
 	}
 
 	@Override

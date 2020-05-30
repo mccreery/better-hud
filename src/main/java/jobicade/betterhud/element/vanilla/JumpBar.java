@@ -2,10 +2,7 @@ package jobicade.betterhud.element.vanilla;
 
 import static jobicade.betterhud.BetterHud.MANAGER;
 
-import java.util.List;
-
 import jobicade.betterhud.element.settings.DirectionOptions;
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
@@ -19,13 +16,10 @@ public class JumpBar extends OverrideElement {
 	private SettingPosition position;
 
 	public JumpBar() {
-		super("jumpBar");
-	}
+		setRegistryName("jump_bar");
+		setUnlocalizedName("jumpBar");
 
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(position = new SettingPosition("position", DirectionOptions.BAR, DirectionOptions.NORTH_SOUTH));
+		settings.addChild(position = new SettingPosition("position", DirectionOptions.BAR, DirectionOptions.NORTH_SOUTH));
 	}
 
 	@Override

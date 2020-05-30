@@ -1,9 +1,7 @@
 package jobicade.betterhud.element;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingWarnings;
@@ -19,28 +17,24 @@ public abstract class EquipmentDisplay extends OverlayElement {
 	private SettingChoose durabilityMode;
 	private SettingBoolean showUndamaged;
 
-	protected EquipmentDisplay(String name) {
-		super(name);
-	}
-
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(showName = new SettingBoolean("showName"));
-		settings.add(showDurability = new SettingBoolean("showDurability", Direction.WEST));
-		settings.add(durabilityMode = new SettingChoose("durabilityFormat", Direction.EAST, "points", "percentage") {
-			@Override
-			public boolean enabled() {
-				return showDurability.get();
-			}
-		});
-		settings.add(showUndamaged = new SettingBoolean("showUndamaged") {
-			@Override
-			public boolean enabled() {
-				return showDurability.get();
-			}
-		}.setValuePrefix("betterHud.value.visible"));
-		settings.add(warnings = new SettingWarnings("damageWarning"));
+	public EquipmentDisplay() {
+		settings.addChildren(
+			showName = new SettingBoolean("showName"),
+			showDurability = new SettingBoolean("showDurability", Direction.WEST),
+			durabilityMode = new SettingChoose("durabilityFormat", Direction.EAST, "points", "percentage") {
+				@Override
+				public boolean enabled() {
+					return showDurability.get();
+				}
+			},
+			showUndamaged = new SettingBoolean("showUndamaged") {
+				@Override
+				public boolean enabled() {
+					return showDurability.get();
+				}
+			}.setValuePrefix("betterHud.value.visible"),
+			warnings = new SettingWarnings("damageWarning")
+		);
 	}
 
 	@Override

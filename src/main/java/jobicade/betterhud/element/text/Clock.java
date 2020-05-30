@@ -7,7 +7,6 @@ import java.util.Date;
 import java.util.List;
 
 import jobicade.betterhud.element.settings.Legend;
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.geom.Direction;
@@ -16,21 +15,16 @@ public abstract class Clock extends TextElement {
 	private SettingBoolean twentyFour, showSeconds, fullYear;
 	private SettingChoose dateType;
 
-	public Clock(String name) {
-		super(name);
+	public Clock() {
+		settings.addChildren(
+			new Legend("misc"),
+			twentyFour = new SettingBoolean("24hr"),
+			showSeconds = new SettingBoolean("showSeconds").setValuePrefix(SettingBoolean.VISIBLE),
+			dateType = new SettingChoose("dateType", "dmy", "mdy", "ymd"),
+			fullYear = new SettingBoolean("fullYear").setValuePrefix(SettingBoolean.VISIBLE)
+		);
+
 		border = true;
-	}
-
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-
-		settings.add(new Legend("misc"));
-		settings.add(twentyFour = new SettingBoolean("24hr"));
-		settings.add(showSeconds = new SettingBoolean("showSeconds").setValuePrefix(SettingBoolean.VISIBLE));
-
-		settings.add(dateType = new SettingChoose("dateType", "dmy", "mdy", "ymd"));
-		settings.add(fullYear = new SettingBoolean("fullYear").setValuePrefix(SettingBoolean.VISIBLE));
 	}
 
 	@Override

@@ -2,11 +2,8 @@ package jobicade.betterhud.element.vanilla;
 
 import static jobicade.betterhud.BetterHud.SPACER;
 
-import java.util.List;
-
 import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
@@ -22,13 +19,10 @@ public class Offhand extends OverlayElement {
 	private SettingPosition position;
 
 	public Offhand() {
-		super("offhand");
-	}
+		setRegistryName("offhand");
+		setUnlocalizedName("offhand");
 
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(position = new SettingPosition("position", DirectionOptions.BAR, DirectionOptions.NONE));
+		settings.addChild(position = new SettingPosition("position", DirectionOptions.BAR, DirectionOptions.NONE));
 	}
 
 	@Override

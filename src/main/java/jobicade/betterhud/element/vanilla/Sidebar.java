@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 
 import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
@@ -31,13 +30,10 @@ public class Sidebar extends OverlayElement {
 	private SettingPosition position;
 
 	public Sidebar() {
-		super("scoreboard");
-	}
+		setRegistryName("scoreboard");
+		setUnlocalizedName("scoreboard");
 
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(position = new SettingPosition(DirectionOptions.LEFT_RIGHT, DirectionOptions.WEST_EAST));
+		settings.addChild(position = new SettingPosition(DirectionOptions.LEFT_RIGHT, DirectionOptions.WEST_EAST));
 	}
 
 	@Override

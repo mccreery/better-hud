@@ -16,7 +16,8 @@ public class BiomeName extends TextElement {
 	}
 
 	public BiomeName() {
-		super("biome");
+		setRegistryName("biome");
+		setUnlocalizedName("biome");
 	}
 
 	@Override

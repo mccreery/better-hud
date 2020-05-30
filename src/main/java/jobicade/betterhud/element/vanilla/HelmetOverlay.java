@@ -19,7 +19,8 @@ public class HelmetOverlay extends OverrideElement {
 	private static final ResourceLocation PUMPKIN_BLUR_TEX_PATH = new ResourceLocation("textures/misc/pumpkinblur.png");
 
 	public HelmetOverlay() {
-		super("helmetOverlay");
+		setRegistryName("helmet_overlay");
+		setUnlocalizedName("helmetOverlay");
 	}
 
 	@Override

@@ -2,10 +2,7 @@ package jobicade.betterhud.element.vanilla;
 
 import static jobicade.betterhud.BetterHud.MANAGER;
 
-import java.util.List;
-
 import jobicade.betterhud.element.settings.DirectionOptions;
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.geom.Direction;
@@ -22,14 +19,13 @@ public class Experience extends OverrideElement {
 	private SettingBoolean hideMount;
 
 	public Experience() {
-		super("experience");
-	}
+		setRegistryName("experience");
+		setUnlocalizedName("experience");
 
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(position = new SettingPosition(DirectionOptions.BAR, DirectionOptions.NORTH_SOUTH));
-		settings.add(hideMount = new SettingBoolean("hideMount"));
+		settings.addChildren(
+			position = new SettingPosition(DirectionOptions.BAR, DirectionOptions.NORTH_SOUTH),
+			hideMount = new SettingBoolean("hideMount")
+		);
 	}
 
 	@Override

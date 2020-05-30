@@ -44,73 +44,70 @@ public class SettingPosition extends SettingStub<Object> {
 	public SettingPosition(String name, DirectionOptions directionOptions, DirectionOptions contentOptions) {
 		super(name);
 
-		add(new Legend("position"));
-		add(mode = new SettingChoose("position", "preset", "custom"));
+		addChildren(
+			new Legend("position"),
+			mode = new SettingChoose("position", "preset", "custom"),
+			direction = new SettingDirection("direction", Direction.WEST, directionOptions) {
+				@Override
+				public boolean enabled() {
+					return mode.getIndex() == 0 && super.enabled();
+				}
+			}.setHorizontal(),
+			parent = new SettingElement("parent", Direction.CENTER) {
+				@Override
+				public boolean enabled() {
+					return mode.getIndex() == 1 && super.enabled();
+				}
+			},
+			anchor = new SettingDirection("anchor", Direction.WEST) {
+				@Override
+				public boolean enabled() {
+					return mode.getIndex() == 1 && super.enabled();
+				}
+			},
+			alignment = new SettingDirection("alignment", Direction.CENTER) {
+				@Override
+				public boolean enabled() {
+					return mode.getIndex() == 1 && !lockAlignment.get() && super.enabled();
+				}
 
-		add(direction = new SettingDirection("direction", Direction.WEST, directionOptions) {
-			@Override
-			public boolean enabled() {
-				return mode.getIndex() == 0 && super.enabled();
-			}
-		}.setHorizontal());
+				@Override
+				public void updateGuiParts(Collection<Setting<?>> settings) {
+					if(lockAlignment.get()) set(anchor.get());
+					super.updateGuiParts(settings);
+				}
+			},
+			contentAlignment = new SettingDirection("contentAlignment", Direction.EAST, contentOptions) {
+				@Override
+				public boolean enabled() {
+					return mode.getIndex() == 1 && !lockContent.get() && super.enabled();
+				}
 
-		add(parent = new SettingElement("parent", Direction.CENTER) {
-			@Override
-			public boolean enabled() {
-				return mode.getIndex() == 1 && super.enabled();
+				@Override
+				public void updateGuiParts(Collection<Setting<?>> settings) {
+					if(lockContent.get()) set(SettingPosition.this.alignment.get());
+					super.updateGuiParts(settings);
+				}
+			},
+			lockAlignment = new SettingLock("lockAlignment") {
+				@Override
+				public boolean enabled() {
+					return mode.getIndex() == 1 && super.enabled();
+				}
+			},
+			lockContent = new SettingLock("lockContent") {
+				@Override
+				public boolean enabled() {
+					return mode.getIndex() == 1 && super.enabled();
+				}
+			},
+			offset = new SettingAbsolutePosition("origin", this) {
+				@Override
+				public boolean enabled() {
+					return mode.getIndex() == 1 && super.enabled();
+				}
 			}
-		});
-
-		add(anchor = new SettingDirection("anchor", Direction.WEST) {
-			@Override
-			public boolean enabled() {
-				return mode.getIndex() == 1 && super.enabled();
-			}
-		});
-		add(alignment = new SettingDirection("alignment", Direction.CENTER) {
-			@Override
-			public boolean enabled() {
-				return mode.getIndex() == 1 && !lockAlignment.get() && super.enabled();
-			}
-
-			@Override
-			public void updateGuiParts(Collection<Setting<?>> settings) {
-				if(lockAlignment.get()) set(anchor.get());
-				super.updateGuiParts(settings);
-			}
-		});
-		add(contentAlignment = new SettingDirection("contentAlignment", Direction.EAST, contentOptions) {
-			@Override
-			public boolean enabled() {
-				return mode.getIndex() == 1 && !lockContent.get() && super.enabled();
-			}
-
-			@Override
-			public void updateGuiParts(Collection<Setting<?>> settings) {
-				if(lockContent.get()) set(SettingPosition.this.alignment.get());
-				super.updateGuiParts(settings);
-			}
-		});
-
-		add(lockAlignment = new SettingLock("lockAlignment") {
-			@Override
-			public boolean enabled() {
-				return mode.getIndex() == 1 && super.enabled();
-			}
-		});
-		add(lockContent = new SettingLock("lockContent") {
-			@Override
-			public boolean enabled() {
-				return mode.getIndex() == 1 && super.enabled();
-			}
-		});
-
-		add(offset = new SettingAbsolutePosition("origin", this) {
-			@Override
-			public boolean enabled() {
-				return mode.getIndex() == 1 && super.enabled();
-			}
-		});
+		);
 	}
 
 	public boolean isDirection(Direction direction) {

@@ -11,11 +11,8 @@ import java.util.Map;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import jobicade.betterhud.BetterHud;
-import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Legend;
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
-import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.text.TextElement;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
@@ -47,36 +44,31 @@ import net.minecraftforge.fml.common.versioning.VersionRange;
  * @see BetterHud#onBlockBreak(net.minecraftforge.event.world.BlockEvent.BreakEvent)
  */
 public class BlockViewer extends TextElement {
-	private SettingPosition position;
 	private SettingBoolean showBlock, showIds, invNames;
 	private RayTraceResult trace;
 	private IBlockState state;
 	private ItemStack stack;
 
 	public BlockViewer() {
-		super("blockViewer");
-	}
+		setRegistryName("block_viewer");
+		setUnlocalizedName("blockViewer");
 
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
+		settings.addChildren(
+			new Legend("misc"),
+			showBlock = new SettingBoolean("showItem").setValuePrefix(SettingBoolean.VISIBLE),
+			showIds = new SettingBoolean("showIds").setValuePrefix(SettingBoolean.VISIBLE),
+			invNames = new SettingBoolean("invNames")
+		);
 
-		settings.add(position = new SettingPosition(DirectionOptions.I, DirectionOptions.WEST_EAST));
-		settings.add(new Legend("misc"));
-		settings.add(showBlock = new SettingBoolean("showItem").setValuePrefix(SettingBoolean.VISIBLE));
-		settings.add(showIds = new SettingBoolean("showIds").setValuePrefix(SettingBoolean.VISIBLE));
-		settings.add(invNames = new SettingBoolean("invNames") {
-			@Override
-			public boolean enabled() {
-				VersionRange versionRange;
-				try {
-					versionRange = VersionRange.createFromVersionSpec("[1.4-beta,)");
-				} catch (InvalidVersionSpecificationException e) {
-					throw new RuntimeException(e);
-				}
-
-				return super.enabled() && versionRange.containsVersion(BetterHud.getServerVersion());
+		invNames.setEnableOn(() -> {
+			VersionRange versionRange;
+			try {
+				versionRange = VersionRange.createFromVersionSpec("[1.4-beta,)");
+			} catch (InvalidVersionSpecificationException e) {
+				throw new RuntimeException(e);
 			}
+
+			return versionRange.containsVersion(BetterHud.getServerVersion());
 		});
 	}
 

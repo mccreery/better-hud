@@ -65,14 +65,21 @@ public abstract class Setting<T> implements IGetSet<T>, ISaveLoad {
 		return this;
 	}
 
-	protected void add(Setting<?> element) {
-		children.add(element);
-		element.parent = this;
+	public final void addChild(Setting<?> setting) {
+		children.add(setting);
+		setting.parent = this;
 	}
 
-	protected void addAll(Iterable<Setting<?>> children) {
-		for(Setting<?> child : children) {
-			add(child);
+	public final void addChildren(Iterable<Setting<?>> settings) {
+		for (Setting<?> setting : settings) {
+			addChild(setting);
+		}
+	}
+
+	@SafeVarargs
+	public final void addChildren(Setting<?>... settings) {
+		for (Setting<?> setting : settings) {
+			addChild(setting);
 		}
 	}
 
@@ -96,11 +103,13 @@ public abstract class Setting<T> implements IGetSet<T>, ISaveLoad {
 	/** @return {@code true} if this setting has a value to save */
 	protected boolean hasValue() {return name != null;}
 
+	// TODO make final to prevent enabled when parent isn't
 	/** @return {@code true} if this element and its ancestors are enabled */
 	public boolean enabled() {
 		return (parent == null || parent.enabled()) && enableOn.getAsBoolean();
 	}
 
+	// TODO does NOT need to be StringBuilder
 	/** Binds properties to elements for loading and saving */
 	protected final void bindConfig(HudConfig config, String category, StringBuilder path) {
 		if(hasValue()) {

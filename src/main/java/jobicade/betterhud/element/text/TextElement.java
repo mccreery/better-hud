@@ -5,7 +5,6 @@ import java.util.List;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingColor;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.geom.Direction;
@@ -23,15 +22,11 @@ public abstract class TextElement extends OverlayElement {
 
 	protected boolean border = false;
 
-	public TextElement(String name) {
-		super(name);
-	}
-
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(position = new SettingPosition(DirectionOptions.TOP_BOTTOM, DirectionOptions.CORNERS));
-		settings.add(color = new SettingColor("color"));
+	public TextElement() {
+		settings.addChildren(
+			position = new SettingPosition(DirectionOptions.TOP_BOTTOM, DirectionOptions.CORNERS),
+			color = new SettingColor("color")
+		);
 	}
 
 	public Color getColor() {

@@ -6,7 +6,6 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import jobicade.betterhud.element.settings.DirectionOptions;
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
@@ -33,13 +32,10 @@ public class SignReader extends OverlayElement {
 	}
 
 	public SignReader() {
-		super("signReader");
-	}
+		setRegistryName("sign_reader");
+		setUnlocalizedName("signReader");
 
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(position = new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.NONE));
+		settings.addChild(position = new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.NONE));
 	}
 
 	@Override

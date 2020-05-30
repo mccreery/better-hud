@@ -6,7 +6,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jobicade.betterhud.element.settings.DirectionOptions;
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.settings.SettingSlider;
 import jobicade.betterhud.geom.Direction;
@@ -41,26 +40,25 @@ public class PickupCount extends OverlayElement {
 	}
 
 	public PickupCount() {
-		super("itemPickup");
+		setRegistryName("item_pickup");
+		setUnlocalizedName("itemPickup");
 		setServerDependency("[1.4-beta,1.4.1),(1.4.1,]");
+
+		settings.addChildren(
+			position = new SettingPosition(DirectionOptions.X, DirectionOptions.CORNERS),
+			fadeAfter = new SettingSlider("fadeAfter", 20, 600, 20).setDisplayScale(0.05).setUnlocalizedValue("betterHud.hud.seconds"),
+			maxStacks = new SettingSlider("maxStacks", 1, 11, 1) {
+				@Override
+				public String getDisplayValue(double scaledValue) {
+					return scaledValue == getMaximum() ? I18n.format("betterHud.value.unlimited") : super.getDisplayValue(scaledValue);
+				}
+			}
+		);
 	}
 
 	@Override
 	public void init(FMLInitializationEvent event) {
 		MinecraftForge.EVENT_BUS.register(this);
-	}
-
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(position = new SettingPosition(DirectionOptions.X, DirectionOptions.CORNERS));
-		settings.add(fadeAfter = new SettingSlider("fadeAfter", 20, 600, 20).setDisplayScale(0.05).setUnlocalizedValue("betterHud.hud.seconds"));
-		settings.add(maxStacks = new SettingSlider("maxStacks", 1, 11, 1) {
-			@Override
-			public String getDisplayValue(double scaledValue) {
-				return scaledValue == getMaximum() ? I18n.format("betterHud.value.unlimited") : super.getDisplayValue(scaledValue);
-			}
-		});
 	}
 
 	/**

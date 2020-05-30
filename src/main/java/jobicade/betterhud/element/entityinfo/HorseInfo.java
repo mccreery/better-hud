@@ -1,10 +1,8 @@
 package jobicade.betterhud.element.entityinfo;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import jobicade.betterhud.BetterHud;
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.events.RenderMobInfoEvent;
 import jobicade.betterhud.geom.Direction;
@@ -30,15 +28,13 @@ public class HorseInfo extends EntityInfo {
 	}
 
 	public HorseInfo() {
-		super("horseInfo");
-	}
+		setRegistryName("horse_info");
+		setUnlocalizedName("horseInfo");
 
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-
-		settings.add(jump = new SettingBoolean("jump"));
-		settings.add(speed = new SettingBoolean("speed"));
+		settings.addChildren(
+			jump = new SettingBoolean("jump"),
+			speed = new SettingBoolean("speed")
+		);
 	}
 
 	@Override

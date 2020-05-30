@@ -2,10 +2,7 @@ package jobicade.betterhud.element.vanilla;
 
 import static jobicade.betterhud.BetterHud.MANAGER;
 
-import java.util.List;
-
 import jobicade.betterhud.element.settings.DirectionOptions;
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingPosition;
@@ -36,52 +33,48 @@ public class Crosshair extends OverrideElement {
 	private SettingChoose indicatorType;
 
 	public Crosshair() {
-		super("crosshair");
+		setRegistryName("crosshair");
+		setUnlocalizedName("crosshair");
 		position.setEnableOn(() -> attackIndicator.get());
-	}
 
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
+		settings.addChildren(
+			position = new SettingPosition(DirectionOptions.I, DirectionOptions.NONE),
+			attackIndicator = new SettingBoolean(null) {
+				@Override
+				public Boolean get() {
+					return Minecraft.getMinecraft().gameSettings.attackIndicator != 0;
+				}
 
-		settings.add(position = new SettingPosition(DirectionOptions.I, DirectionOptions.NONE));
-		settings.add(attackIndicator = new SettingBoolean(null) {
-			@Override
-			public Boolean get() {
-				return Minecraft.getMinecraft().gameSettings.attackIndicator != 0;
-			}
+				@Override
+				public void set(Boolean value) {
+					Minecraft.getMinecraft().gameSettings.attackIndicator = value ? indicatorType.getIndex() + 1 : 0;
+					Minecraft.getMinecraft().gameSettings.saveOptions();
+				}
+			}.setValuePrefix(SettingBoolean.VISIBLE).setUnlocalizedName("options.attackIndicator"),
+			indicatorType = new SettingChoose(null, 2) {
+				@Override
+				public boolean enabled() {
+					return super.enabled() && attackIndicator.get();
+				}
 
-			@Override
-			public void set(Boolean value) {
-				Minecraft.getMinecraft().gameSettings.attackIndicator = value ? indicatorType.getIndex() + 1 : 0;
-				Minecraft.getMinecraft().gameSettings.saveOptions();
-			}
-		});
-		attackIndicator.setValuePrefix(SettingBoolean.VISIBLE).setUnlocalizedName("options.attackIndicator");
+				@Override
+				public int getIndex() {
+					return Math.max(Minecraft.getMinecraft().gameSettings.attackIndicator - 1, 0);
+				}
 
-		settings.add(indicatorType = new SettingChoose(null, 2) {
-			@Override
-			public boolean enabled() {
-				return super.enabled() && attackIndicator.get();
-			}
+				@Override
+				public void setIndex(int index) {
+					if(index >= 0 && index < 2) {
+						Minecraft.getMinecraft().gameSettings.attackIndicator = attackIndicator.get() ? index + 1 : 0;
+					}
+				}
 
-			@Override
-			public int getIndex() {
-				return Math.max(Minecraft.getMinecraft().gameSettings.attackIndicator - 1, 0);
-			}
-
-			@Override
-			public void setIndex(int index) {
-				if(index >= 0 && index < 2) {
-					Minecraft.getMinecraft().gameSettings.attackIndicator = attackIndicator.get() ? index + 1 : 0;
+				@Override
+				protected String getUnlocalizedValue() {
+					return "options.attack." + modes[getIndex()];
 				}
 			}
-
-			@Override
-			protected String getUnlocalizedValue() {
-				return "options.attack." + modes[getIndex()];
-			}
-		});
+		);
 	}
 
 	@Override

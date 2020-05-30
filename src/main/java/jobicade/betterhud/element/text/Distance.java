@@ -7,7 +7,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import jobicade.betterhud.element.settings.Legend;
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
@@ -28,14 +27,13 @@ public class Distance extends TextElement {
 	}
 
 	public Distance() {
-		super("distance");
-	}
+		setRegistryName("distance");
+		setUnlocalizedName("distance");
 
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(new Legend("misc"));
-		settings.add(mode = new SettingChoose(3));
+		settings.addChildren(
+			new Legend("misc"),
+			mode = new SettingChoose(3)
+		);
 	}
 
 	@Override

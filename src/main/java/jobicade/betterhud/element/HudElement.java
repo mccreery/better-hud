@@ -1,12 +1,10 @@
 package jobicade.betterhud.element;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.settings.RootSetting;
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.proxy.ClientProxy;
 import jobicade.betterhud.registry.HudElements;
@@ -20,11 +18,15 @@ import net.minecraftforge.fml.common.versioning.Restriction;
 import net.minecraftforge.fml.common.versioning.VersionRange;
 
 /**
+ * Settings should be added in the constructor. An empty config file is
+ * valid, so the initial state of the settings must be valid.
+ *
  * @param T context object passed to render methods.
  */
 public abstract class HudElement<T> {
 	/** The settings saved to the config file for this element */
-	public final RootSetting settings;
+	// TODO NASTY PUBLICSES
+	public final RootSetting settings = new RootSetting(this);
 
 	public boolean isEnabled() {
 		return settings.get();
@@ -32,12 +34,6 @@ public abstract class HudElement<T> {
 
 	public void setEnabled(boolean value) {
 		settings.set(value);
-	}
-
-	protected HudElement(String name) {
-		List<Setting<?>> rootSettings = new ArrayList<>();
-		addSettings(rootSettings);
-		this.settings = new RootSetting(this, rootSettings);
 	}
 
 	private ResourceLocation registryName;
@@ -103,18 +99,6 @@ public abstract class HudElement<T> {
 
 	public final VersionRange getServerDependency() {
 		return serverDependency;
-	}
-
-	/**
-	 * Adds all the element-specific settings to the settings window.
-	 * Include {@code super.addSettings()} for all child classes.
-	 *
-	 * <p>Note that this method is called before instance initializers for the
-	 * child class, including member initializers, so look out for {@code null}s.
-	 *
-	 * @param settings The list of settings to add new settings to.
-	 */
-	protected void addSettings(List<Setting<?>> settings) {
 	}
 
     /**

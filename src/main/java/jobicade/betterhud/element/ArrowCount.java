@@ -1,9 +1,6 @@
 package jobicade.betterhud.element;
 
-import java.util.List;
-
 import jobicade.betterhud.element.settings.DirectionOptions;
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.events.OverlayHook;
@@ -36,15 +33,13 @@ public class ArrowCount extends OverlayElement {
 	}
 
 	public ArrowCount() {
-		super("arrowCount");
-	}
+		setRegistryName("arrow_count");
+		setUnlocalizedName("arrowCount");
 
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(position = new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.NONE));
-		position.setEnableOn(() -> !overlay.get());
-		settings.add(overlay = new SettingBoolean("overlay"));
+		settings.addChildren(
+			position = new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.NONE),
+			overlay = new SettingBoolean("overlay")
+		);
 	}
 
 	/** Note this method only cares about arrows which can be shot by a vanilla bow

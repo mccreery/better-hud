@@ -7,7 +7,10 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
 public class AirBar extends Bar {
 	public AirBar() {
-		super("airBar", new StatBarAir());
+		super(new StatBarAir());
+
+		setRegistryName("air_bar");
+		setUnlocalizedName("airBar");
 	}
 
 	@Override

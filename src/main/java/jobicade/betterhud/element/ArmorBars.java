@@ -1,9 +1,6 @@
 package jobicade.betterhud.element;
 
-import java.util.List;
-
 import jobicade.betterhud.element.settings.DirectionOptions;
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingPosition;
@@ -25,8 +22,6 @@ import net.minecraft.item.ItemStack;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public class ArmorBars extends EquipmentDisplay {
-	public static final String NAME = "armor_bars";
-
 	private SettingPosition position;
 	private SettingChoose barType;
 	private SettingBoolean alwaysVisible;
@@ -41,16 +36,14 @@ public class ArmorBars extends EquipmentDisplay {
 	}
 
 	public ArmorBars() {
-		super("armorBars");
-		setRegistryName(NAME);
-	}
+		setRegistryName("armor_bars");
+		setUnlocalizedName("armorBars");
 
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(position = new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.WEST_EAST));
-		settings.add(barType = new SettingChoose("bars", "visible.off", "smallBars", "largeBars"));
-		settings.add(alwaysVisible = new SettingBoolean("alwaysVisible"));
+		settings.addChildren(
+			position = new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.WEST_EAST),
+			barType = new SettingChoose("bars", "visible.off", "smallBars", "largeBars"),
+			alwaysVisible = new SettingBoolean("alwaysVisible")
+		);
 	}
 
 	@Override

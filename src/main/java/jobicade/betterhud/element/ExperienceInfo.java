@@ -4,7 +4,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jobicade.betterhud.element.settings.Legend;
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.text.TextElement;
 import jobicade.betterhud.geom.Direction;
@@ -30,15 +29,14 @@ public class ExperienceInfo extends TextElement {
 	}
 
 	public ExperienceInfo() {
-		super("experienceInfo");
-	}
+		setRegistryName("experience_info");
+		setUnlocalizedName("experienceInfo");
 
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(new Legend("misc"));
-		settings.add(total = new SettingBoolean("showTotalExp").setValuePrefix(SettingBoolean.VISIBLE));
-		settings.add(lifetime = new SettingBoolean("showLifetimeExp").setValuePrefix(SettingBoolean.VISIBLE));
+		settings.addChildren(
+			new Legend("misc"),
+			total = new SettingBoolean("showTotalExp").setValuePrefix(SettingBoolean.VISIBLE),
+			lifetime = new SettingBoolean("showLifetimeExp").setValuePrefix(SettingBoolean.VISIBLE)
+		);
 	}
 
 	@Override

@@ -1,8 +1,5 @@
 package jobicade.betterhud.element;
 
-import java.util.List;
-
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingPercentage;
 import jobicade.betterhud.element.settings.SettingSlider;
@@ -15,16 +12,15 @@ public class GlobalSettings extends HudElement<Object> {
 	private SettingBoolean debugMode;
 
 	public GlobalSettings() {
-		super("global");
-	}
+		// Not registered
+		setUnlocalizedName("global");
 
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(billboardScale = new SettingPercentage("billboardScale"));
-		settings.add(billboardDistance = new SettingSlider("rayDistance", 5, 200).setUnlocalizedValue("betterHud.hud.meters"));
-		settings.add(hideOnDebug = new SettingBoolean("hideOnDebug"));
-		settings.add(debugMode = new SettingBoolean("debugMode"));
+		settings.addChildren(
+			billboardScale = new SettingPercentage("billboardScale"),
+			billboardDistance = new SettingSlider("rayDistance", 5, 200).setUnlocalizedValue("betterHud.hud.meters"),
+			hideOnDebug = new SettingBoolean("hideOnDebug"),
+			debugMode = new SettingBoolean("debugMode")
+		);
 	}
 
 	public float getBillboardScale() {

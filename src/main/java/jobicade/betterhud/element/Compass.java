@@ -2,11 +2,8 @@ package jobicade.betterhud.element;
 
 import static jobicade.betterhud.BetterHud.SPACER;
 
-import java.util.List;
-
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Legend;
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingDirection;
@@ -56,18 +53,17 @@ public class Compass extends OverlayElement {
 	}
 
 	public Compass() {
-		super("compass");
-	}
+		setRegistryName("compass");
+		setUnlocalizedName("compass");
 
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(position = new SettingPosition(DirectionOptions.TOP_BOTTOM, DirectionOptions.NORTH_SOUTH));
-		settings.add(mode = new SettingChoose("mode", "visual", "text"));
-		settings.add(new Legend("misc"));
-		settings.add(directionScaling = new SettingPercentage("letterScale"));
-		settings.add(showNotches = new SettingBoolean("showNotches").setValuePrefix(SettingBoolean.VISIBLE));
-		settings.add(requireItem = new SettingChoose("requireItem", "disabled", "inventory", "hand"));
+		settings.addChildren(
+			position = new SettingPosition(DirectionOptions.TOP_BOTTOM, DirectionOptions.NORTH_SOUTH),
+			mode = new SettingChoose("mode", "visual", "text"),
+			new Legend("misc"),
+			directionScaling = new SettingPercentage("letterScale"),
+			showNotches = new SettingBoolean("showNotches").setValuePrefix(SettingBoolean.VISIBLE),
+			requireItem = new SettingChoose("requireItem", "disabled", "inventory", "hand")
+		);
 	}
 
 	private void drawBackground(Rect bounds) {

@@ -11,7 +11,6 @@ import java.util.stream.Stream;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.geom.Direction;
@@ -37,14 +36,13 @@ public class PotionBar extends OverlayElement {
 	private SettingBoolean showDuration;
 
 	public PotionBar() {
-		super("potionBar");
-	}
+		setRegistryName("potion_bar");
+		setUnlocalizedName("potionBar");
 
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(position = new SettingPosition(DirectionOptions.X, DirectionOptions.CORNERS));
-		settings.add(showDuration = new SettingBoolean("duration").setValuePrefix(SettingBoolean.VISIBLE));
+		settings.addChildren(
+			position = new SettingPosition(DirectionOptions.X, DirectionOptions.CORNERS),
+			showDuration = new SettingBoolean("duration").setValuePrefix(SettingBoolean.VISIBLE)
+		);
 	}
 
 	@Override

@@ -3,11 +3,8 @@ package jobicade.betterhud.element.entityinfo;
 import static jobicade.betterhud.BetterHud.MANAGER;
 import static jobicade.betterhud.BetterHud.SPACER;
 
-import java.util.List;
-
 import com.mojang.realmsclient.gui.ChatFormatting;
 
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingSlider;
 import jobicade.betterhud.events.RenderMobInfoEvent;
 import jobicade.betterhud.geom.Direction;
@@ -27,13 +24,10 @@ public class MobInfo extends EntityInfo {
 	private SettingSlider compress;
 
 	public MobInfo() {
-		super("mobInfo");
-	}
+		setRegistryName("mob_info");
+		setUnlocalizedName("mobInfo");
 
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(compress = new SettingSlider("compress", 0, 200, 20) {
+		settings.addChild(compress = new SettingSlider("compress", 0, 200, 20) {
 			@Override
 			public String getDisplayValue(double value) {
 				if(value == 0) {

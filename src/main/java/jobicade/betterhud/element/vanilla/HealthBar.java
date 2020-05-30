@@ -10,7 +10,10 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
 public class HealthBar extends Bar {
 	public HealthBar() {
-		super("health", new StatBarHealth());
+		super(new StatBarHealth());
+
+		setRegistryName("health");
+		setUnlocalizedName("health");
 	}
 
 	@Override

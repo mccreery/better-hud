@@ -70,4 +70,16 @@ public class SettingBoolean extends SettingAlignable<Boolean> implements IBoolea
 		toggler.enabled = enabled();
 		toggler.updateText(getUnlocalizedName(), unlocalizedValue, get());
 	}
+
+	@Override
+	public SettingBoolean setHidden() {
+		super.setHidden();
+		return this;
+	}
+
+	@Override
+	public SettingBoolean setUnlocalizedName(String unlocalizedName) {
+		super.setUnlocalizedName(unlocalizedName);
+		return this;
+	}
 }

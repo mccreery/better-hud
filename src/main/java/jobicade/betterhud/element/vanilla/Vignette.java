@@ -2,9 +2,6 @@ package jobicade.betterhud.element.vanilla;
 
 import static jobicade.betterhud.BetterHud.MANAGER;
 
-import java.util.List;
-
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
@@ -26,13 +23,10 @@ public class Vignette extends OverrideElement {
 	private float brightness = 1;
 
 	public Vignette() {
-		super("vignette");
-	}
+		setRegistryName("vignette");
+		setUnlocalizedName("vignette");
 
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(warnings = new SettingBoolean("warnings").setValuePrefix(SettingBoolean.VISIBLE));
+		settings.addChild(warnings = new SettingBoolean("warnings").setValuePrefix(SettingBoolean.VISIBLE));
 	}
 
 	@Override

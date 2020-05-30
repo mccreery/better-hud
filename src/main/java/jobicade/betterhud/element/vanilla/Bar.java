@@ -2,10 +2,7 @@ package jobicade.betterhud.element.vanilla;
 
 import static jobicade.betterhud.BetterHud.MANAGER;
 
-import java.util.List;
-
 import jobicade.betterhud.element.settings.DirectionOptions;
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.geom.Direction;
@@ -22,21 +19,18 @@ public abstract class Bar extends OverrideElement {
 
 	private StatBar<? super EntityPlayerSP> bar;
 
-	public Bar(String name, StatBar<? super EntityPlayerSP> bar) {
-		super(name);
+	public Bar(StatBar<? super EntityPlayerSP> bar) {
 		this.bar = bar;
-	}
 
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(position = new SettingPosition(DirectionOptions.BAR, DirectionOptions.CORNERS));
-		settings.add(side = new SettingChoose("side", "west", "east") {
-			@Override
-			public boolean enabled() {
-				return position.isDirection(Direction.SOUTH);
+		settings.addChildren(
+			position = new SettingPosition(DirectionOptions.BAR, DirectionOptions.CORNERS),
+			side = new SettingChoose("side", "west", "east") {
+				@Override
+				public boolean enabled() {
+					return position.isDirection(Direction.SOUTH);
+				}
 			}
-		});
+		);
 	}
 
 	@Override

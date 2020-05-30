@@ -1,26 +1,14 @@
 package jobicade.betterhud.element.settings;
 
-import java.util.List;
-
-import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.config.HudConfig;
-import jobicade.betterhud.util.IGetSet.IBoolean;
+import jobicade.betterhud.element.HudElement;
 
-public class RootSetting extends SettingStub<Boolean> implements IBoolean {
+public class RootSetting extends SettingStub<Boolean> {
 	private final HudElement<?> element;
-	private int priorityRank = 0;
 
-	public final SettingBoolean enabled = (SettingBoolean)new SettingBoolean("enabled").setHidden();
-
-	public final Setting<Integer> priority = new SettingStub<Integer>("priority") {
-		@Override public void set(Integer value) {priorityRank = value;}
-		@Override public Integer get() {return priorityRank;}
-
-		@Override public String save() {return String.valueOf(priorityRank);}
-		@Override public void load(String save) {priorityRank = Integer.parseInt(save);}
-
-		@Override protected boolean hasValue() {return true;}
-	}.setHidden();
+	private final SettingBoolean enabled = new SettingBoolean("enabled").setHidden();
+	// TODO nasty publicses
+	public final SettingInteger priority = new SettingInteger("priority").setHidden();
 
 	public final void bindConfig(HudConfig config) {
 		// TODO config file now using registry name
@@ -28,23 +16,20 @@ public class RootSetting extends SettingStub<Boolean> implements IBoolean {
 		bindConfig(config, element.getRegistryName().toString(), new StringBuilder());
 	}
 
-	public RootSetting(HudElement<?> element, List<Setting<?>> settings) {
+	public RootSetting(HudElement<?> element) {
 		super();
 		this.element = element;
 
-		add(enabled);
-		add(priority);
-		addAll(settings);
+		addChild(enabled);
+		addChild(priority);
 	}
 
-	@Override
-	public Boolean get() {
+	public boolean isEnabled() {
 		return enabled.get();
 	}
 
-	@Override
-	public void set(Boolean value) {
-		enabled.set(value);
+	public void setEnabled(boolean enabled) {
+		this.enabled.set(enabled);
 	}
 
 	@Override

@@ -8,10 +8,6 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.Event;
 
 public abstract class OverrideElement extends OverlayElement {
-	protected OverrideElement(String name) {
-		super(name);
-	}
-
 	protected abstract ElementType getType();
 
 	private static boolean safePost(Event event) {

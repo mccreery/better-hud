@@ -4,7 +4,6 @@ import java.util.Arrays;
 import java.util.List;
 
 import jobicade.betterhud.element.settings.Legend;
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.geom.Direction;
 import net.minecraft.client.Minecraft;
@@ -23,14 +22,13 @@ public class FullInvIndicator extends TextElement {
 	}
 
 	public FullInvIndicator() {
-		super("fullInvIndicator");
-	}
+		setRegistryName("full_inv_indicator");
+		setUnlocalizedName("fullInvIndicator");
 
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(new Legend("misc"));
-		settings.add(offHand = new SettingBoolean("offhand"));
+		settings.addChildren(
+			new Legend("misc"),
+			offHand = new SettingBoolean("offhand")
+		);
 	}
 
 	@Override

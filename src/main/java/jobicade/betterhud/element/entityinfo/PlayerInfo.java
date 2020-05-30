@@ -9,7 +9,6 @@ import java.util.stream.Collectors;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingSlider;
 import jobicade.betterhud.events.RenderMobInfoEvent;
 import jobicade.betterhud.geom.Direction;
@@ -34,13 +33,10 @@ public class PlayerInfo extends EntityInfo {
 	private SettingSlider tooltipLines;
 
 	public PlayerInfo() {
-		super("playerInfo");
-	}
+		setRegistryName("player_info");
+		setUnlocalizedName("playerInfo");
 
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(tooltipLines = new SettingSlider("tooltipLines", -1, 10, 1) {
+		settings.addChild(tooltipLines = new SettingSlider("tooltipLines", -1, 10, 1) {
 			@Override
 			public String getDisplayValue(double scaledValue) {
 				if(scaledValue == -1) {

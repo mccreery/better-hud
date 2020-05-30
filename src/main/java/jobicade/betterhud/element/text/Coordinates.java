@@ -8,7 +8,6 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import jobicade.betterhud.element.settings.Legend;
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingSlider;
 import jobicade.betterhud.geom.Direction;
@@ -36,15 +35,14 @@ public class Coordinates extends TextElement {
 	}
 
 	public Coordinates() {
-		super("coordinates");
-	}
+		setRegistryName("coordinates");
+		setUnlocalizedName("coordinates");
 
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(new Legend("misc"));
-		settings.add(spaced = new SettingBoolean("spaced"));
-		settings.add(decimalPlaces = new SettingSlider("precision", 0, 5, 1).setUnlocalizedValue("betterHud.value.places"));
+		settings.addChildren(
+			new Legend("misc"),
+			spaced = new SettingBoolean("spaced"),
+			decimalPlaces = new SettingSlider("precision", 0, 5, 1).setUnlocalizedValue("betterHud.value.places")
+		);
 	}
 
 	@Override

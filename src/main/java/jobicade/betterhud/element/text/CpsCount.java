@@ -5,18 +5,17 @@ import java.util.List;
 
 import org.lwjgl.input.Mouse;
 
+import jobicade.betterhud.element.settings.Legend;
+import jobicade.betterhud.element.settings.SettingBoolean;
+import jobicade.betterhud.element.settings.SettingSlider;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.util.MathUtil;
+import jobicade.betterhud.util.Tickable;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.InputEvent.MouseInputEvent;
-import jobicade.betterhud.element.settings.Legend;
-import jobicade.betterhud.element.settings.Setting;
-import jobicade.betterhud.element.settings.SettingBoolean;
-import jobicade.betterhud.element.settings.SettingSlider;
-import jobicade.betterhud.util.Tickable;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.util.MathUtil;
 
 public class CpsCount extends TextElement implements Tickable {
 	private SettingSlider timeoutMax;
@@ -33,16 +32,15 @@ public class CpsCount extends TextElement implements Tickable {
 	private float cps = 0;
 
 	public CpsCount() {
-		super("cps");
-	}
+		setRegistryName("cps");
+		setUnlocalizedName("cps");
 
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(new Legend("misc"));
-		settings.add(timeoutMax = new SettingSlider("timeout", 1, 10, 1).setUnlocalizedValue("betterHud.hud.seconds"));
-		settings.add(showBurst = new SettingBoolean("showBurst"));
-		settings.add(remember = new SettingBoolean("remember"));
+		settings.addChildren(
+			new Legend("misc"),
+			timeoutMax = new SettingSlider("timeout", 1, 10, 1).setUnlocalizedValue("betterHud.hud.seconds"),
+			showBurst = new SettingBoolean("showBurst"),
+			remember = new SettingBoolean("remember")
+		);
 	}
 
 	@Override

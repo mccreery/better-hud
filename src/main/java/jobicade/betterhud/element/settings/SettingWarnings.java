@@ -13,13 +13,13 @@ public class SettingWarnings extends SettingStub<Double[]> {
 	public SettingWarnings(String name, int warnings) {
 		super(name);
 
-		add(new Legend("damageWarning"));
+		addChild(new Legend("damageWarning"));
 
 		sliders = new SettingSlider[warnings];
 		for(int i = 0; i < sliders.length; i++) {
 			final int index = i;
 
-			add(sliders[i] = new SettingPercentage("warning." + String.valueOf(i+1)) {
+			addChild(sliders[i] = new SettingPercentage("warning." + String.valueOf(i+1)) {
 				@Override
 				public String getDisplayValue(double value) {
 					SettingSlider next = next();

@@ -7,7 +7,10 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
 public class RidingHealth extends Bar {
 	public RidingHealth() {
-		super("mountHealth", new StatBarMount());
+		super(new StatBarMount());
+
+		setRegistryName("mount_health");
+		setUnlocalizedName("mountHealth");
 	}
 
 	@Override
