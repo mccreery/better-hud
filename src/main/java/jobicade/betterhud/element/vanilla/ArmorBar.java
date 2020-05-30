@@ -25,7 +25,7 @@ public class ArmorBar extends Bar {
 	@Override
 	public boolean shouldRender(RenderGameOverlayEvent context) {
 		return Minecraft.getMinecraft().playerController.shouldDrawHUD()
-			&& OverlayHook.mimicPre(context, ElementType.ARMOR);
+			&& !OverlayHook.mimicPre(context, ElementType.ARMOR);
 	}
 
 	@Override

@@ -35,7 +35,7 @@ public class HelmetOverlay extends OverlayElement {
 	public boolean shouldRender(RenderGameOverlayEvent context) {
 		return Minecraft.getMinecraft().gameSettings.thirdPersonView == 0
 			&& !Minecraft.getMinecraft().player.inventory.armorItemInSlot(3).isEmpty()
-			&& OverlayHook.mimicPre(context, ElementType.HELMET);
+			&& !OverlayHook.mimicPre(context, ElementType.HELMET);
 	}
 
 	@Override

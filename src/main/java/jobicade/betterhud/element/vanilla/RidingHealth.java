@@ -25,7 +25,7 @@ public class RidingHealth extends Bar {
 	@Override
 	public boolean shouldRender(RenderGameOverlayEvent context) {
 		return Minecraft.getMinecraft().playerController.shouldDrawHUD()
-			&& OverlayHook.mimicPre(context, ElementType.HEALTHMOUNT);
+			&& !OverlayHook.mimicPre(context, ElementType.HEALTHMOUNT);
 	}
 
 	@Override

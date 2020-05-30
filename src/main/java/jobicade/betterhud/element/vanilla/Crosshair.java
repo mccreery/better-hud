@@ -87,7 +87,7 @@ public class Crosshair extends OverlayElement {
 	public boolean shouldRender(RenderGameOverlayEvent context) {
 		return Minecraft.getMinecraft().gameSettings.thirdPersonView == 0
 			&& (!Minecraft.getMinecraft().playerController.isSpectator() || canInteract())
-			&& OverlayHook.mimicPre(context, ElementType.CROSSHAIRS);
+			&& !OverlayHook.mimicPre(context, ElementType.CROSSHAIRS);
 	}
 
 	/** @return {@code true} if the player is looking at something that can be interacted with in spectator mode */

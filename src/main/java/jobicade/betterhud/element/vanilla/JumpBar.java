@@ -33,7 +33,7 @@ public class JumpBar extends OverlayElement {
 	@Override
 	public boolean shouldRender(RenderGameOverlayEvent context) {
 		return Minecraft.getMinecraft().player.isRidingHorse()
-			&& OverlayHook.mimicPre(context, ElementType.JUMPBAR);
+			&& !OverlayHook.mimicPre(context, ElementType.JUMPBAR);
 	}
 
 	@Override

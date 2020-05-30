@@ -37,7 +37,7 @@ public class HealthBar extends Bar {
 	@Override
 	public boolean shouldRender(RenderGameOverlayEvent context) {
 		return Minecraft.getMinecraft().playerController.shouldDrawHUD()
-			&& OverlayHook.mimicPre(context, ElementType.HEALTH);
+			&& !OverlayHook.mimicPre(context, ElementType.HEALTH);
 	}
 
 	@Override

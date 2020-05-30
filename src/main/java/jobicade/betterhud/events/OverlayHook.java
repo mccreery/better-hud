@@ -82,6 +82,8 @@ public final class OverlayHook {
      * Prepares OpenGL state and posts an appropriate event to mimic
      * {@link GuiIngameForge#renderGameOverlay(float)} just before rendering
      * {@code elementType}.
+     *
+     * @return {@code true} if the event was canceled.
      */
     public static boolean mimicPre(RenderGameOverlayEvent parentEvent, ElementType elementType) {
         // TODO load OpenGL state

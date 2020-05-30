@@ -23,7 +23,7 @@ public class PortalOverlay extends OverlayElement {
 	@Override
 	public boolean shouldRender(RenderGameOverlayEvent context) {
 		return getTimeInPortal(context.getPartialTicks()) > 0
-			&& OverlayHook.mimicPre(context, ElementType.PORTAL);
+			&& !OverlayHook.mimicPre(context, ElementType.PORTAL);
 	}
 
 	private float getTimeInPortal(float partialTicks) {

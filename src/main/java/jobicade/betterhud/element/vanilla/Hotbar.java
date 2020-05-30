@@ -34,7 +34,7 @@ public class Hotbar extends OverlayElement {
 	public boolean shouldRender(RenderGameOverlayEvent context) {
 		// TODO make it work correctly with spectator mode
 		return !Minecraft.getMinecraft().player.isSpectator()
-			&& OverlayHook.mimicPre(context, ElementType.HOTBAR);
+			&& !OverlayHook.mimicPre(context, ElementType.HOTBAR);
 	}
 
 	@Override

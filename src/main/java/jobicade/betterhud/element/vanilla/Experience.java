@@ -34,7 +34,7 @@ public class Experience extends OverlayElement {
 	public boolean shouldRender(RenderGameOverlayEvent context) {
 		return Minecraft.getMinecraft().playerController.shouldDrawHUD()
 			&& (!hideMount.get() || !Minecraft.getMinecraft().player.isRidingHorse())
-			&& OverlayHook.mimicPre(context, ElementType.EXPERIENCE);
+			&& !OverlayHook.mimicPre(context, ElementType.EXPERIENCE);
 	}
 
 	@Override

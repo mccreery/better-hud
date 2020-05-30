@@ -40,7 +40,7 @@ public class Vignette extends OverlayElement {
 	@Override
 	public boolean shouldRender(RenderGameOverlayEvent context) {
 		return Minecraft.isFancyGraphicsEnabled()
-			&& OverlayHook.mimicPre(context, ElementType.VIGNETTE);
+			&& !OverlayHook.mimicPre(context, ElementType.VIGNETTE);
 	}
 
 	@Override
