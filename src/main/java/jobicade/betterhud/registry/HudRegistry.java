@@ -52,4 +52,13 @@ public abstract class HudRegistry<T extends HudElement<?>> {
     public final List<T> getRegistered(Comparator<? super T> comparator) {
         return sorter.getSortedData(comparator);
     }
+
+    @SafeVarargs
+    public final void invalidateSorts(Comparator<?>... comparators) {
+        sorter.markDirty(comparators);
+
+        if (parentRegistry != null) {
+            parentRegistry.invalidateSorts(comparators);
+        }
+    }
 }

@@ -17,11 +17,11 @@ public class Sorter<T> {
 	}
 
 	@SafeVarargs
-	public final void markDirty(Comparator<T>... comparators) {
+	public final void markDirty(Comparator<?>... comparators) {
 		if(comparators.length == 0) {
 			sortedDataMap.clear();
 		} else {
-			for(Comparator<T> comparator : comparators) {
+			for(Comparator<?> comparator : comparators) {
 				sortedDataMap.remove(comparator);
 			}
 		}
