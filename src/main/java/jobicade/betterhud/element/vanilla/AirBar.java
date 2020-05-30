@@ -1,5 +1,7 @@
 package jobicade.betterhud.element.vanilla;
 
+import jobicade.betterhud.events.OverlayHook;
+import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.bars.StatBarAir;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -21,12 +23,15 @@ public class AirBar extends Bar {
 	}
 
 	@Override
-	protected ElementType getType() {
-		return ElementType.AIR;
+	public boolean shouldRender(RenderGameOverlayEvent context) {
+		return Minecraft.getMinecraft().playerController.shouldDrawHUD()
+			&& OverlayHook.mimicPre(context, ElementType.AIR);
 	}
 
 	@Override
-	public boolean shouldRender(RenderGameOverlayEvent context) {
-		return Minecraft.getMinecraft().playerController.shouldDrawHUD();
+	public Rect render(RenderGameOverlayEvent context) {
+		Rect rect = super.render(context);
+		OverlayHook.mimicPost(context, ElementType.AIR);
+		return rect;
 	}
 }

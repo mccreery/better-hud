@@ -1,18 +1,19 @@
 package jobicade.betterhud.element.vanilla;
 
+import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.events.OverlayHook;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.Textures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
-public class Hotbar extends OverrideElement {
+public class Hotbar extends OverlayElement {
 	private SettingPosition position;
 
 	public Hotbar() {
@@ -30,14 +31,10 @@ public class Hotbar extends OverrideElement {
 	}
 
 	@Override
-	protected ElementType getType() {
-		return ElementType.HOTBAR;
-	}
-
-	@Override
 	public boolean shouldRender(RenderGameOverlayEvent context) {
-		// TODO wut?
-		return !GuiIngameForge.renderHotbar;
+		// TODO make it work correctly with spectator mode
+		return !Minecraft.getMinecraft().player.isSpectator()
+			&& OverlayHook.mimicPre(context, ElementType.HOTBAR);
 	}
 
 	@Override
@@ -61,6 +58,7 @@ public class Hotbar extends OverrideElement {
 		}
 
 		Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+		OverlayHook.mimicPost(context, ElementType.HOTBAR);
 		return bounds;
 	}
 }

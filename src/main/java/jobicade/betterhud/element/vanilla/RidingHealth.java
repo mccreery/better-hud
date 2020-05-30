@@ -1,5 +1,7 @@
 package jobicade.betterhud.element.vanilla;
 
+import jobicade.betterhud.events.OverlayHook;
+import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.bars.StatBarMount;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -21,12 +23,15 @@ public class RidingHealth extends Bar {
 	}
 
 	@Override
-	protected ElementType getType() {
-		return ElementType.HEALTHMOUNT;
+	public boolean shouldRender(RenderGameOverlayEvent context) {
+		return Minecraft.getMinecraft().playerController.shouldDrawHUD()
+			&& OverlayHook.mimicPre(context, ElementType.HEALTHMOUNT);
 	}
 
 	@Override
-	public boolean shouldRender(RenderGameOverlayEvent context) {
-		return Minecraft.getMinecraft().playerController.shouldDrawHUD();
+	public Rect render(RenderGameOverlayEvent context) {
+		Rect rect = super.render(context);
+		OverlayHook.mimicPost(context, ElementType.HEALTHMOUNT);
+		return rect;
 	}
 }

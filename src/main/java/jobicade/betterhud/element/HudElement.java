@@ -135,8 +135,6 @@ public abstract class HudElement<T> {
 
 	private Rect lastBounds = Rect.empty();
 
-	protected void postRender(T context) {}
-
 	/** Renders all elements for the current render event
 	 * @param event The current render event */
 	public static void renderAll(Event event) {

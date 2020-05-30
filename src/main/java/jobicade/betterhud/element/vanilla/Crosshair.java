@@ -2,10 +2,12 @@ package jobicade.betterhud.element.vanilla;
 
 import static jobicade.betterhud.BetterHud.MANAGER;
 
+import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.events.OverlayHook;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -27,7 +29,7 @@ import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
-public class Crosshair extends OverrideElement {
+public class Crosshair extends OverlayElement {
 	private SettingPosition position;
 	private SettingBoolean attackIndicator;
 	private SettingChoose indicatorType;
@@ -87,14 +89,10 @@ public class Crosshair extends OverrideElement {
 	}
 
 	@Override
-	protected ElementType getType() {
-		return ElementType.CROSSHAIRS;
-	}
-
-	@Override
 	public boolean shouldRender(RenderGameOverlayEvent context) {
 		return Minecraft.getMinecraft().gameSettings.thirdPersonView == 0
-			&& (!Minecraft.getMinecraft().playerController.isSpectator() || canInteract());
+			&& (!Minecraft.getMinecraft().playerController.isSpectator() || canInteract())
+			&& OverlayHook.mimicPre(context, ElementType.CROSSHAIRS);
 	}
 
 	/** @return {@code true} if the player is looking at something that can be interacted with in spectator mode */
@@ -133,6 +131,8 @@ public class Crosshair extends OverrideElement {
 			GlUtil.blendFuncSafe(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
 			GlStateManager.disableAlpha();
 		}
+
+		OverlayHook.mimicPost(context, ElementType.CROSSHAIRS);
 		return bounds;
 	}
 

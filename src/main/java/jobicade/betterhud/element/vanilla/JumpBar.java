@@ -2,8 +2,10 @@ package jobicade.betterhud.element.vanilla;
 
 import static jobicade.betterhud.BetterHud.MANAGER;
 
+import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.events.OverlayHook;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.GlUtil;
@@ -12,7 +14,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
-public class JumpBar extends OverrideElement {
+public class JumpBar extends OverlayElement {
 	private SettingPosition position;
 
 	public JumpBar() {
@@ -30,7 +32,8 @@ public class JumpBar extends OverrideElement {
 
 	@Override
 	public boolean shouldRender(RenderGameOverlayEvent context) {
-		return Minecraft.getMinecraft().player.isRidingHorse();
+		return Minecraft.getMinecraft().player.isRidingHorse()
+			&& OverlayHook.mimicPre(context, ElementType.JUMPBAR);
 	}
 
 	@Override
@@ -52,11 +55,8 @@ public class JumpBar extends OverrideElement {
 		if(filled > 0) {
 			GlUtil.drawRect(bounds.withWidth(filled), new Rect(0, 89, filled, bounds.getHeight()));
 		}
-		return bounds;
-	}
 
-	@Override
-	protected ElementType getType() {
-		return ElementType.JUMPBAR;
+		OverlayHook.mimicPost(context, ElementType.JUMPBAR);
+		return bounds;
 	}
 }

@@ -2,6 +2,8 @@ package jobicade.betterhud.element.vanilla;
 
 import static jobicade.betterhud.BetterHud.MANAGER;
 
+import jobicade.betterhud.element.OverlayElement;
+import jobicade.betterhud.events.OverlayHook;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.MathUtil;
@@ -12,20 +14,16 @@ import net.minecraft.init.Blocks;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
-public class PortalOverlay extends OverrideElement {
+public class PortalOverlay extends OverlayElement {
 	public PortalOverlay() {
 		setRegistryName("portal");
 		setUnlocalizedName("portal");
 	}
 
 	@Override
-	protected ElementType getType() {
-		return ElementType.PORTAL;
-	}
-
-	@Override
 	public boolean shouldRender(RenderGameOverlayEvent context) {
-		return getTimeInPortal(context.getPartialTicks()) > 0;
+		return getTimeInPortal(context.getPartialTicks()) > 0
+			&& OverlayHook.mimicPre(context, ElementType.PORTAL);
 	}
 
 	private float getTimeInPortal(float partialTicks) {
@@ -52,6 +50,7 @@ public class PortalOverlay extends OverrideElement {
 		Rect screen = MANAGER.getScreen();
 		Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(0, 0, texture, screen.getWidth(), screen.getHeight());
 
+		OverlayHook.mimicPost(context, ElementType.PORTAL);
 		return null;
 	}
 }

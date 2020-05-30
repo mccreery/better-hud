@@ -84,10 +84,10 @@ public final class OverlayHook {
      * {@link GuiIngameForge#renderGameOverlay(float)} just before rendering
      * {@code elementType}.
      */
-    public static void mimicPre(RenderGameOverlayEvent parentEvent, ElementType elementType) {
+    public static boolean mimicPre(RenderGameOverlayEvent parentEvent, ElementType elementType) {
         // TODO load OpenGL state
 
-        MinecraftForge.EVENT_BUS.post(
+        return MinecraftForge.EVENT_BUS.post(
             new RenderGameOverlayEvent.Pre(parentEvent, elementType));
     }
 

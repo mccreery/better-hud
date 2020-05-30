@@ -2,6 +2,8 @@ package jobicade.betterhud.element.vanilla;
 
 import static jobicade.betterhud.BetterHud.MANAGER;
 
+import jobicade.betterhud.element.OverlayElement;
+import jobicade.betterhud.events.OverlayHook;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
@@ -15,7 +17,7 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
-public class HelmetOverlay extends OverrideElement {
+public class HelmetOverlay extends OverlayElement {
 	private static final ResourceLocation PUMPKIN_BLUR_TEX_PATH = new ResourceLocation("textures/misc/pumpkinblur.png");
 
 	public HelmetOverlay() {
@@ -30,13 +32,10 @@ public class HelmetOverlay extends OverrideElement {
 	}
 
 	@Override
-	protected ElementType getType() {
-		return ElementType.HELMET;
-	}
-
-	@Override
 	public boolean shouldRender(RenderGameOverlayEvent context) {
-		return Minecraft.getMinecraft().gameSettings.thirdPersonView == 0 && !Minecraft.getMinecraft().player.inventory.armorItemInSlot(3).isEmpty();
+		return Minecraft.getMinecraft().gameSettings.thirdPersonView == 0
+			&& !Minecraft.getMinecraft().player.inventory.armorItemInSlot(3).isEmpty()
+			&& OverlayHook.mimicPre(context, ElementType.HELMET);
 	}
 
 	@Override
@@ -51,6 +50,8 @@ public class HelmetOverlay extends OverrideElement {
 		} else {
 			item.renderHelmetOverlay(stack, Minecraft.getMinecraft().player, new ScaledResolution(Minecraft.getMinecraft()), context.getPartialTicks());
 		}
+
+		OverlayHook.mimicPost(context, ElementType.HELMET);
 		return MANAGER.getScreen();
 	}
 }
