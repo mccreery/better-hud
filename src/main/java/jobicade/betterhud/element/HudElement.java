@@ -33,7 +33,7 @@ public abstract class HudElement<T> {
 	}
 
 	public void setEnabled(boolean value) {
-		settings.set(value);
+		settings.setEnabled(value);
 	}
 
 	private ResourceLocation registryName;
