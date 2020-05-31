@@ -2,14 +2,16 @@ package jobicade.betterhud.events;
 
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.OverlayElement;
+import jobicade.betterhud.registry.HudElements;
 import jobicade.betterhud.registry.OverlayElements;
 import jobicade.betterhud.registry.SortField;
+import jobicade.betterhud.render.GlStateManagerManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
@@ -85,6 +87,10 @@ public final class OverlayHook {
         GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
         GlStateManager.color(1.0f, 1.0f, 1.0f);
         RenderHelper.disableStandardItemLighting();
+
+        if (HudElements.GLOBAL.isDebugMode()) {
+            GlStateManagerManager.fixCorruptFlags();
+        }
     }
 
     /**
