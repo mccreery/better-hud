@@ -121,21 +121,21 @@ public abstract class Setting<T> {
 	 */
 	public abstract void load(String save);
 
-	// TODO does NOT need to be StringBuilder
 	/** Binds properties to elements for loading and saving */
-	protected final void bindConfig(HudConfig config, String category, StringBuilder path) {
+	protected final void bindConfig(HudConfig config, String category, String path) {
 		if(hasValue()) {
-			property = getProperty(config, category, path.toString());
+			property = getProperty(config, category, path);
 		}
-		int length = path.length();
 
 		for(Setting<?> child : children) {
-			if(length > 0) path.append('.');
-			path.append(child.name);
+			String childPath;
+			if (path.isEmpty()) {
+				childPath = child.name;
+			} else {
+				childPath = path + "." + child.name;
+			}
 
-			child.bindConfig(config, category, path);
-
-			path.setLength(length);
+			child.bindConfig(config, category, childPath);
 		}
 	}
 
