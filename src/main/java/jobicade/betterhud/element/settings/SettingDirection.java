@@ -4,19 +4,18 @@ import static jobicade.betterhud.BetterHud.SPACER;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.function.BooleanSupplier;
 
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.gui.GuiActionButton;
+import jobicade.betterhud.gui.GuiElementSettings;
+import jobicade.betterhud.render.Color;
+import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
-import jobicade.betterhud.gui.GuiActionButton;
-import jobicade.betterhud.gui.GuiElementSettings;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.geom.Point;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.render.Color;
-import jobicade.betterhud.util.GlUtil;
 
 public class SettingDirection extends SettingAlignable<Direction, SettingDirection> {
 	private GuiActionButton[] toggles = new GuiActionButton[9];
@@ -170,12 +169,5 @@ public class SettingDirection extends SettingAlignable<Direction, SettingDirecti
 			}
 		}
 		return I18n.format("betterHud.value." + name);
-	}
-
-	// TODO
-	@Override
-	public SettingDirection setEnableOn(BooleanSupplier enableOn) {
-		super.setEnableOn(enableOn);
-		return this;
 	}
 }
