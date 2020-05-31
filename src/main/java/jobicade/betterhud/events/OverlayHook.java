@@ -75,6 +75,9 @@ public final class OverlayHook {
                 Minecraft.getMinecraft().mcProfiler.endSection();
             }
         }
+
+        GlStateManager.enableDepth();
+        MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(event, ElementType.ALL));
     }
 
     private static void loadGlState() {
