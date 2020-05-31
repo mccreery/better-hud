@@ -4,11 +4,16 @@ import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.gui.GuiElementSettings;
 import net.minecraft.client.gui.GuiButton;
 
-public class SettingInteger extends Setting<Integer> {
+public class SettingInteger extends Setting<Integer, SettingInteger> {
     private int priority;
 
     public SettingInteger(String name) {
         super(name);
+    }
+
+    @Override
+    protected SettingInteger getThis() {
+        return this;
     }
 
     @Override

@@ -17,12 +17,17 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 
-public class SettingElement extends SettingAlignable<HudElement<?>> {
+public class SettingElement extends SettingAlignable<HudElement<?>, SettingElement> {
 	private HudElement<?> value;
 	private GuiActionButton button;
 
 	public SettingElement(String name, Direction alignment) {
 		super(name, alignment);
+	}
+
+	@Override
+	protected SettingElement getThis() {
+		return this;
 	}
 
 	@Override
@@ -58,7 +63,7 @@ public class SettingElement extends SettingAlignable<HudElement<?>> {
 	}
 
 	@Override
-	public void getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Rect bounds) {
+	public void getGuiParts(List<Gui> parts, Map<Gui, Setting<?, ?>> callbacks, Rect bounds) {
 		String text = getLocalizedName() + ": " + (value != null ? value.getLocalizedName() : I18n.format("betterHud.value.none"));
 		button = new GuiActionButton(text);
 		button.setBounds(bounds);
@@ -68,7 +73,7 @@ public class SettingElement extends SettingAlignable<HudElement<?>> {
 	}
 
 	@Override
-	public void updateGuiParts(Collection<Setting<?>> settings) {
+	public void updateGuiParts(Collection<Setting<?, ?>> settings) {
 		button.enabled = enabled();
 	}
 

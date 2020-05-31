@@ -35,8 +35,8 @@ public class GuiElementSettings extends GuiMenuScreen {
 	private static final int REPEAT_SPEED_FAST = 10; // Rate of speed-up beyond 20/s
 
 	public HudElement<?> element;
-	private ArrayList<GuiTextField> textboxList = new ArrayList<GuiTextField>();
-	public HashMap<Gui, Setting<?>> callbacks = new HashMap<Gui, Setting<?>>();
+	private ArrayList<GuiTextField> textboxList = new ArrayList<>();
+	public HashMap<Gui, Setting<?, ?>> callbacks = new HashMap<>();
 
 	private Rect viewport;
 
@@ -76,7 +76,7 @@ public class GuiElementSettings extends GuiMenuScreen {
 		viewport = new Rect(width / 2 - 200, height / 16 + 40 + SPACER, 400, 0).withBottom(height - 20);
 		scrollbar = new GuiScrollbar(viewport, contentHeight);
 
-		for(Setting<?> setting : callbacks.values()) {
+		for(Setting<?, ?> setting : callbacks.values()) {
 			setting.updateGuiParts(callbacks.values());
 		}
 	}
@@ -93,7 +93,7 @@ public class GuiElementSettings extends GuiMenuScreen {
 			callbacks.get(button).actionPerformed(this, button);
 
 			// Notify the rest of the elements that a button has been pressed
-			for(Setting<?> setting : callbacks.values()) {
+			for(Setting<?, ?> setting : callbacks.values()) {
 				setting.updateGuiParts(callbacks.values());
 			}
 		} else {

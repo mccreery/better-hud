@@ -14,8 +14,13 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.IGetSet.IBoolean;
 
-public class SettingBoolean extends SettingAlignable<Boolean> implements IBoolean {
+public class SettingBoolean extends SettingAlignable<Boolean, SettingBoolean> implements IBoolean {
 	public static final String VISIBLE = "betterHud.value.visible";
+
+	@Override
+	protected SettingBoolean getThis() {
+		return this;
+	}
 
 	protected GuiActionButton toggler;
 	protected boolean value = false;
@@ -44,7 +49,7 @@ public class SettingBoolean extends SettingAlignable<Boolean> implements IBoolea
 	public void set(Boolean value) {this.value = value;}
 
 	@Override
-	public void getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Rect bounds) {
+	public void getGuiParts(List<Gui> parts, Map<Gui, Setting<?, ?>> callbacks, Rect bounds) {
 		toggler = new GuiActionButton("").setBounds(bounds).setCallback(b -> toggle());
 		parts.add(toggler);
 		callbacks.put(toggler, this);
@@ -66,7 +71,7 @@ public class SettingBoolean extends SettingAlignable<Boolean> implements IBoolea
 	}
 
 	@Override
-	public void updateGuiParts(Collection<Setting<?>> settings) {
+	public void updateGuiParts(Collection<Setting<?, ?>> settings) {
 		super.updateGuiParts(settings);
 		toggler.enabled = enabled();
 		toggler.updateText(getUnlocalizedName(), unlocalizedValue, get());

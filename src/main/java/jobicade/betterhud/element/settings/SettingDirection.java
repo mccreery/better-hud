@@ -18,7 +18,7 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
 
-public class SettingDirection extends SettingAlignable<Direction> {
+public class SettingDirection extends SettingAlignable<Direction, SettingDirection> {
 	private GuiActionButton[] toggles = new GuiActionButton[9];
 	private Rect bounds;
 
@@ -36,6 +36,11 @@ public class SettingDirection extends SettingAlignable<Direction> {
 		this.options = options;
 	}
 
+	@Override
+	protected SettingDirection getThis() {
+		return this;
+	}
+
 	public SettingDirection setHorizontal() {
 		horizontal = true;
 		setAlignment(Direction.WEST);
@@ -49,7 +54,7 @@ public class SettingDirection extends SettingAlignable<Direction> {
 	}
 
 	@Override
-	public SettingAlignable<Direction> setAlignment(Direction alignment) {
+	public SettingDirection setAlignment(Direction alignment) {
 		if(!horizontal) {
 			return super.setAlignment(alignment);
 		} else {
@@ -58,7 +63,7 @@ public class SettingDirection extends SettingAlignable<Direction> {
 	}
 
 	@Override
-	public void getGuiParts(java.util.List<Gui> parts, Map<Gui,Setting<?>> callbacks, Rect bounds) {
+	public void getGuiParts(java.util.List<Gui> parts, Map<Gui, Setting<?, ?>> callbacks, Rect bounds) {
 		this.bounds = bounds;
 
 		Rect radios = new Rect(60, 60).anchor(bounds, horizontal ? Direction.WEST : Direction.SOUTH);
@@ -90,7 +95,7 @@ public class SettingDirection extends SettingAlignable<Direction> {
 	}
 
 	@Override
-	public void updateGuiParts(Collection<Setting<?>> settings) {
+	public void updateGuiParts(Collection<Setting<?, ?>> settings) {
 		super.updateGuiParts(settings);
 		boolean enabled = enabled();
 
@@ -167,6 +172,7 @@ public class SettingDirection extends SettingAlignable<Direction> {
 		return I18n.format("betterHud.value." + name);
 	}
 
+	// TODO
 	@Override
 	public SettingDirection setEnableOn(BooleanSupplier enableOn) {
 		super.setEnableOn(enableOn);

@@ -3,21 +3,20 @@ package jobicade.betterhud.element.settings;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BooleanSupplier;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.gui.GuiElementSettings;
+import jobicade.betterhud.render.Color;
+import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
-import jobicade.betterhud.gui.GuiElementSettings;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.render.Color;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.geom.Point;
 
-public class SettingChoose extends SettingAlignable<String> {
+public class SettingChoose extends SettingAlignable<String, SettingChoose> {
 	protected GuiButton last, next, backing;
 	protected final String[] modes;
 
@@ -42,6 +41,11 @@ public class SettingChoose extends SettingAlignable<String> {
 
 		this.modes = modes;
 		this.length = modes.length;
+	}
+
+	@Override
+	protected SettingChoose getThis() {
+		return this;
 	}
 
 	public void setIndex(int index) {
@@ -89,7 +93,7 @@ public class SettingChoose extends SettingAlignable<String> {
 	@Override public void load(String save) {set(save);}
 
 	@Override
-	public void getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Rect bounds) {
+	public void getGuiParts(List<Gui> parts, Map<Gui, Setting<?, ?>> callbacks, Rect bounds) {
 		parts.add(backing = new GuiButton(2, bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), ""));
 		parts.add(last = new GuiButton(0, bounds.getLeft(), bounds.getY(), 20, bounds.getHeight(), "<"));
 		parts.add(next = new GuiButton(1, bounds.getRight() - 20, bounds.getY(), 20, bounds.getHeight(), ">"));
@@ -126,15 +130,7 @@ public class SettingChoose extends SettingAlignable<String> {
 	}
 
 	@Override
-	public void updateGuiParts(Collection<Setting<?>> settings) {
+	public void updateGuiParts(Collection<Setting<?, ?>> settings) {
 		last.enabled = next.enabled = enabled();
-	}
-
-	// TODO methods that return this should either not do that or return their
-	// real type instead of Setting
-	@Override
-	public SettingChoose setEnableOn(BooleanSupplier enableOn) {
-		super.setEnableOn(enableOn);
-		return this;
 	}
 }

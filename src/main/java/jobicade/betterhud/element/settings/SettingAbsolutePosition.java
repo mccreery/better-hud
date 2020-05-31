@@ -18,7 +18,7 @@ import jobicade.betterhud.gui.GuiUpDownButton;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Point;
 
-public class SettingAbsolutePosition extends Setting<Point> {
+public class SettingAbsolutePosition extends Setting<Point, SettingAbsolutePosition> {
 	public GuiTextField xBox, yBox;
 	public GuiButton pick;
 	private GuiButton xUp, xDown, yUp, yDown;
@@ -27,6 +27,11 @@ public class SettingAbsolutePosition extends Setting<Point> {
 
 	protected int x, y, cancelX, cancelY;
 	protected boolean isPicking = false;
+
+	@Override
+	protected SettingAbsolutePosition getThis() {
+		return this;
+	}
 
 	public boolean isPicking() {
 		return isPicking;
@@ -42,7 +47,7 @@ public class SettingAbsolutePosition extends Setting<Point> {
 	}
 
 	@Override
-	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Point origin) {
+	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?, ?>> callbacks, Point origin) {
 		parts.add(xBox = new GuiTextField(0, Minecraft.getMinecraft().fontRenderer, origin.getX() - 106, origin.getY() + 1, 80, 18));
 		xBox.setText(String.valueOf(x));
 		parts.add(yBox = new GuiTextField(0, Minecraft.getMinecraft().fontRenderer, origin.getX() + 2, origin.getY() + 1, 80, 18));
@@ -119,7 +124,7 @@ public class SettingAbsolutePosition extends Setting<Point> {
 	}
 
 	@Override
-	public void updateGuiParts(Collection<Setting<?>> settings) {
+	public void updateGuiParts(Collection<Setting<?, ?>> settings) {
 		super.updateGuiParts(settings);
 
 		boolean enabled = enabled();

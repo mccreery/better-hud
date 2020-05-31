@@ -23,9 +23,16 @@ import jobicade.betterhud.geom.Point;
  * the namespace of the parent's name
  *
  * @see IGetSet */
-public abstract class Setting<T> implements IGetSet<T>, ISaveLoad {
-	private Setting<?> parent = null;
-	protected final List<Setting<?>> children = new ArrayList<Setting<?>>();
+public abstract class Setting<T, U extends Setting<T, U>> implements IGetSet<T>, ISaveLoad {
+	/**
+	 * Used by fluent interface methods to ensure return type {@code T}. Should
+	 * only be implemented by concrete classes.
+	 * @return {@code this}
+	 */
+	protected abstract U getThis();
+
+	private Setting<?, ?> parent = null;
+	protected final List<Setting<?, ?>> children = new ArrayList<Setting<?, ?>>();
 	public final String name;
 
 	private Category category = Category.MISC;
@@ -46,39 +53,39 @@ public abstract class Setting<T> implements IGetSet<T>, ISaveLoad {
 		if(name != null) this.unlocalizedName = "betterHud.setting." + name;
 	}
 
-	public Setting<T> setCategory(Category category) {
+	public U setCategory(Category category) {
 		this.category = category;
-		return this;
+		return getThis();
 	}
 
 	public Category getCategory() {
 		return category;
 	}
 
-	public Setting<T> setEnableOn(BooleanSupplier enableOn) {
+	public U setEnableOn(BooleanSupplier enableOn) {
 		this.enableOn = enableOn;
-		return this;
+		return getThis();
 	}
 
-	public Setting<T> setHidden() {
+	public U setHidden() {
 		this.hidden = true;
-		return this;
+		return getThis();
 	}
 
-	public final void addChild(Setting<?> setting) {
+	public final void addChild(Setting<?, ?> setting) {
 		children.add(setting);
 		setting.parent = this;
 	}
 
-	public final void addChildren(Iterable<Setting<?>> settings) {
-		for (Setting<?> setting : settings) {
+	public final void addChildren(Iterable<Setting<?, ?>> settings) {
+		for (Setting<?, ?> setting : settings) {
 			addChild(setting);
 		}
 	}
 
 	@SafeVarargs
-	public final void addChildren(Setting<?>... settings) {
-		for (Setting<?> setting : settings) {
+	public final void addChildren(Setting<?, ?>... settings) {
+		for (Setting<?, ?> setting : settings) {
 			addChild(setting);
 		}
 	}
@@ -87,9 +94,9 @@ public abstract class Setting<T> implements IGetSet<T>, ISaveLoad {
 		return children.isEmpty();
 	}
 
-	public Setting<T> setUnlocalizedName(String unlocalizedName) {
+	public U setUnlocalizedName(String unlocalizedName) {
 		this.unlocalizedName = unlocalizedName;
-		return this;
+		return getThis();
 	}
 
 	public String getUnlocalizedName() {
@@ -116,7 +123,7 @@ public abstract class Setting<T> implements IGetSet<T>, ISaveLoad {
 		}
 		int length = path.length();
 
-		for(Setting<?> child : children) {
+		for(Setting<?, ?> child : children) {
 			if(length > 0) path.append('.');
 			path.append(child.name);
 
@@ -132,7 +139,7 @@ public abstract class Setting<T> implements IGetSet<T>, ISaveLoad {
 			load(property.getString());
 		}
 
-		for(Setting<?> child : children) {
+		for(Setting<?, ?> child : children) {
 			child.loadConfig();
 		}
 	}
@@ -147,7 +154,7 @@ public abstract class Setting<T> implements IGetSet<T>, ISaveLoad {
 			}
 		}
 
-		for(Setting<?> child : children) {
+		for(Setting<?, ?> child : children) {
 			child.saveConfig();
 		}
 	}
@@ -184,7 +191,7 @@ public abstract class Setting<T> implements IGetSet<T>, ISaveLoad {
 	 *
 	 * @param origin The top center point for GUI parts being added
 	 * @return The new origin directly below this setting's parts */
-	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Point origin) {
+	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?, ?>> callbacks, Point origin) {
 		return getGuiParts(parts, callbacks, origin, children);
 	}
 
@@ -195,9 +202,9 @@ public abstract class Setting<T> implements IGetSet<T>, ISaveLoad {
 	 * @param origin The top center point for GUI parts being added
 	 * @return The bottom center point of all {@code settings}
 	 * @see #getGuiParts(List, Map, Point) */
-	public static Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Point origin, List<Setting<?>> settings) {
+	public static Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?, ?>> callbacks, Point origin, List<Setting<?, ?>> settings) {
 		if(!settings.isEmpty()) {
-			for(Setting<?> setting : settings) {
+			for(Setting<?, ?> setting : settings) {
 				if(!setting.hidden) {
 					Point bottom = setting.getGuiParts(parts, callbacks, origin);
 
@@ -212,7 +219,7 @@ public abstract class Setting<T> implements IGetSet<T>, ISaveLoad {
 
 	/** Renders extra parts of this GUI */
 	public void draw() {
-		for(Setting<?> setting : children) {
+		for(Setting<?, ?> setting : children) {
 			setting.draw();
 		}
 	}
@@ -223,8 +230,8 @@ public abstract class Setting<T> implements IGetSet<T>, ISaveLoad {
 
 	/** Updates the GUI elements based on the state of other settings.
 	 * This is called when any button tied to a setting callback is pressed */
-	public void updateGuiParts(Collection<Setting<?>> settings) {
-		for(Setting<?> setting : children) {
+	public void updateGuiParts(Collection<Setting<?, ?>> settings) {
+		for(Setting<?, ?> setting : children) {
 			setting.updateGuiParts(settings);
 		}
 	}

@@ -1,6 +1,9 @@
 package jobicade.betterhud.element.settings;
 
 import net.minecraft.client.resources.I18n;
+
+import java.util.Collection;
+
 import jobicade.betterhud.geom.Direction;
 
 public class SettingWarnings extends SettingStub<Double[]> {
@@ -47,7 +50,7 @@ public class SettingWarnings extends SettingStub<Double[]> {
 				}
 
 				@Override
-				public void updateGuiParts(java.util.Collection<jobicade.betterhud.element.settings.Setting<?>> settings) {
+				public void updateGuiParts(Collection<Setting<?, ?>> settings) {
 					slider.updateDisplayString();
 				}
 			}.setAlignment((i & 1) == 1 ? Direction.EAST : Direction.WEST));

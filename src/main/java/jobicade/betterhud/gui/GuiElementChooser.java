@@ -13,9 +13,9 @@ public class GuiElementChooser extends GuiElements {
 	private final GuiScreen parent;
 	private final HudElement<?> element;
 
-	private final Setting<HudElement<?>> setting;
+	private final Setting<HudElement<?>, ?> setting;
 
-	public GuiElementChooser(GuiScreen parent, HudElement<?> element, Setting<HudElement<?>> setting) {
+	public GuiElementChooser(GuiScreen parent, HudElement<?> element, Setting<HudElement<?>, ?> setting) {
 		this.parent = parent;
 		this.element = element;
 		this.setting = setting;

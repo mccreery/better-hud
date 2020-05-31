@@ -14,7 +14,7 @@ import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.ISlider;
 import jobicade.betterhud.util.MathUtil;
 
-public class SettingSlider extends SettingAlignable<Double> implements ISlider {
+public class SettingSlider extends SettingAlignable<Double, SettingSlider> implements ISlider {
 	protected GuiSlider slider;
 	private final double min, max, interval;
 
@@ -23,6 +23,11 @@ public class SettingSlider extends SettingAlignable<Double> implements ISlider {
 
 	private double value;
 	private double displayScale = 1;
+
+	@Override
+	protected SettingSlider getThis() {
+		return this;
+	}
 
 	public SettingSlider(String name, double min, double max) {
 		this(name, min, max, -1);
@@ -81,7 +86,7 @@ public class SettingSlider extends SettingAlignable<Double> implements ISlider {
 	}
 
 	@Override
-	public void getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Rect bounds) {
+	public void getGuiParts(List<Gui> parts, Map<Gui, Setting<?, ?>> callbacks, Rect bounds) {
 		slider = new GuiSlider(0, bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), this);
 
 		parts.add(slider);

@@ -25,7 +25,7 @@ public class Legend extends SettingStub<Object> {
 	}
 
 	@Override
-	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Point origin) {
+	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?, ?>> callbacks, Point origin) {
 		GuiLegendLabel label = new GuiLegendLabel(0, origin.getX() - 150, origin.getY(), 300, Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT, Color.WHITE);
 		label.addLine("betterHud.group." + this.name);
 		parts.add(label);
