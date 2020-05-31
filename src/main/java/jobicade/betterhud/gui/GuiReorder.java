@@ -9,12 +9,12 @@ import java.util.List;
 import com.google.common.base.Predicates;
 
 import jobicade.betterhud.element.HudElement;
+import jobicade.betterhud.element.settings.SettingInteger;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.registry.HudElements;
 import jobicade.betterhud.registry.SortField;
-import jobicade.betterhud.util.IGetSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -63,7 +63,7 @@ public class GuiReorder extends GuiElements {
 				int i = elements.indexOf(selected) + offset;
 
 				if(i >= 0 && i < elements.size()) {
-					IGetSet.swap(selected.settings.priority, elements.get(i).settings.priority);
+					swapValues(selected.settings.priority, elements.get(i).settings.priority);
 					HudElements.get().invalidateSorts(SortField.PRIORITY);
 				}
 			} else {
@@ -72,6 +72,12 @@ public class GuiReorder extends GuiElements {
 				HudElements.get().invalidateSorts(SortField.PRIORITY);
 			}
 		}
+	}
+
+	private static void swapValues(SettingInteger a, SettingInteger b) {
+		int temp = a.get();
+		a.set(b.get());
+		b.set(temp);
 	}
 
 	private void select(HudElement<?> element) {

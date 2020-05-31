@@ -4,7 +4,12 @@ import net.minecraft.util.math.MathHelper;
 
 /** Interface representing a slider which maintains a minimum and maximum,
  * an interval between valid values and a current value */
-public interface ISlider extends IGetSet<Double> {
+public interface ISlider {
+    // TODO rename
+    Double get();
+
+    void set(Double value);
+
     /** @return the minimum of the slider's range */
     Double getMinimum();
 
