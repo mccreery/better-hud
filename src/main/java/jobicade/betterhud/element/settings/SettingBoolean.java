@@ -5,16 +5,15 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BooleanSupplier;
 
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.gui.GuiActionButton;
+import jobicade.betterhud.gui.GuiElementSettings;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraftforge.common.config.Property.Type;
-import jobicade.betterhud.gui.GuiActionButton;
-import jobicade.betterhud.gui.GuiElementSettings;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.util.IGetSet.IBoolean;
 
-public class SettingBoolean extends SettingAlignable<Boolean, SettingBoolean> implements IBoolean {
+public class SettingBoolean extends SettingAlignable<Boolean, SettingBoolean> {
 	public static final String VISIBLE = "betterHud.value.visible";
 
 	@Override
@@ -50,7 +49,7 @@ public class SettingBoolean extends SettingAlignable<Boolean, SettingBoolean> im
 
 	@Override
 	public void getGuiParts(List<Gui> parts, Map<Gui, Setting<?, ?>> callbacks, Rect bounds) {
-		toggler = new GuiActionButton("").setBounds(bounds).setCallback(b -> toggle());
+		toggler = new GuiActionButton("").setBounds(bounds).setCallback(b -> value = !value);
 		parts.add(toggler);
 		callbacks.put(toggler, this);
 	}

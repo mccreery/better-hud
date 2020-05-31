@@ -6,23 +6,25 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BooleanSupplier;
 
+import jobicade.betterhud.config.HudConfig;
+import jobicade.betterhud.element.HudElement;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.gui.GuiElementSettings;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.common.config.Property.Type;
-import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.gui.GuiElementSettings;
-import jobicade.betterhud.config.HudConfig;
-import jobicade.betterhud.util.IGetSet;
-import jobicade.betterhud.geom.Point;
 
 /** A setting for a {@link HudElement}. Child elements will be saved under
- * the namespace of the parent's name
- *
- * @see IGetSet */
-public abstract class Setting<T, U extends Setting<T, U>> implements IGetSet<T> {
+ * the namespace of the parent's name */
+public abstract class Setting<T, U extends Setting<T, U>> {
+	// TODO rename
+    public abstract T get();
+
+    public abstract void set(T value);
+
 	/**
 	 * Used by fluent interface methods to ensure return type {@code T}. Should
 	 * only be implemented by concrete classes.
