@@ -65,16 +65,7 @@ public final class OverlayHook {
         BetterHud.MANAGER.reset(event.getResolution());
 
         for (OverlayElement element : OverlayElements.get().getRegistered(SortField.PRIORITY)) {
-            // Basic standard
-            GlStateManager.enableAlpha();
-            GlStateManager.enableBlend();
-            GlStateManager.disableDepth();
-            GlStateManager.enableTexture2D();
-
-            Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
-            GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
-            GlStateManager.color(1.0f, 1.0f, 1.0f);
-            RenderHelper.disableStandardItemLighting();
+            loadGlState();
 
             if (shouldRender(element, event)) {
                 Minecraft.getMinecraft().mcProfiler.startSection(element.getRegistryName().toString());
@@ -82,6 +73,18 @@ public final class OverlayHook {
                 Minecraft.getMinecraft().mcProfiler.endSection();
             }
         }
+    }
+
+    private static void loadGlState() {
+        GlStateManager.enableAlpha();
+        GlStateManager.enableBlend();
+        GlStateManager.disableDepth();
+        GlStateManager.enableTexture2D();
+
+        Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+        GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
+        GlStateManager.color(1.0f, 1.0f, 1.0f);
+        RenderHelper.disableStandardItemLighting();
     }
 
     /**
