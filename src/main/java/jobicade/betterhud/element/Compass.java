@@ -53,8 +53,7 @@ public class Compass extends OverlayElement {
 	}
 
 	public Compass() {
-		setRegistryName("compass");
-		setUnlocalizedName("compass");
+		setName("compass");
 
 		settings.addChildren(
 			position = new SettingPosition(DirectionOptions.TOP_BOTTOM, DirectionOptions.NORTH_SOUTH),

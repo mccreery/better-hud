@@ -36,8 +36,7 @@ public class PotionBar extends OverlayElement {
 	private SettingBoolean showDuration;
 
 	public PotionBar() {
-		setRegistryName("potion_bar");
-		setUnlocalizedName("potionBar");
+		setName("potionBar");
 
 		settings.addChildren(
 			position = new SettingPosition(DirectionOptions.X, DirectionOptions.CORNERS),

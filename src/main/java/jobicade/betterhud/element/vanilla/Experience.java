@@ -21,8 +21,7 @@ public class Experience extends OverlayElement {
 	private SettingBoolean hideMount;
 
 	public Experience() {
-		setRegistryName("experience");
-		setUnlocalizedName("experience");
+		setName("experience");
 
 		settings.addChildren(
 			position = new SettingPosition(DirectionOptions.BAR, DirectionOptions.NORTH_SOUTH),

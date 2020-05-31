@@ -33,8 +33,7 @@ public class ArrowCount extends OverlayElement {
 	}
 
 	public ArrowCount() {
-		setRegistryName("arrow_count");
-		setUnlocalizedName("arrowCount");
+		setName("arrowCount");
 
 		settings.addChildren(
 			position = new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.NONE),

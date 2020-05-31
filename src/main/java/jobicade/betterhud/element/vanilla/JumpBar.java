@@ -18,8 +18,7 @@ public class JumpBar extends OverlayElement {
 	private SettingPosition position;
 
 	public JumpBar() {
-		setRegistryName("jump_bar");
-		setUnlocalizedName("jumpBar");
+		setName("jumpBar");
 
 		settings.addChild(position = new SettingPosition("position", DirectionOptions.BAR, DirectionOptions.NORTH_SOUTH));
 	}

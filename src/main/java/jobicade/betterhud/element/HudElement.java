@@ -10,7 +10,6 @@ import jobicade.betterhud.proxy.ClientProxy;
 import jobicade.betterhud.registry.HudElements;
 import jobicade.betterhud.registry.SortField;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.versioning.InvalidVersionSpecificationException;
@@ -24,6 +23,24 @@ import net.minecraftforge.fml.common.versioning.VersionRange;
  * @param T context object passed to render methods.
  */
 public abstract class HudElement<T> {
+	private String name;
+
+	public final void setName(String name) {
+		this.name = name;
+	}
+
+	public final String getName() {
+		return name;
+	}
+
+	public final String getUnlocalizedName() {
+		return "betterHud.element." + name;
+	}
+
+	public final String getLocalizedName() {
+		return I18n.format(getUnlocalizedName());
+	}
+
 	/** The settings saved to the config file for this element */
 	// TODO NASTY PUBLICSES
 	public final RootSetting settings = new RootSetting(this);
@@ -34,44 +51,6 @@ public abstract class HudElement<T> {
 
 	public void setEnabled(boolean value) {
 		settings.setEnabled(value);
-	}
-
-	private ResourceLocation registryName;
-
-	public final void setRegistryName(String name) {
-		setRegistryName(new ResourceLocation(name));
-	}
-
-	public final void setRegistryName(String domain, String path) {
-		setRegistryName(new ResourceLocation(domain, path));
-	}
-
-	public final void setRegistryName(ResourceLocation name) {
-		registryName = name;
-	}
-
-	public final ResourceLocation getRegistryName() {
-		return registryName;
-	}
-
-	private String unlocalizedName;
-
-	/**
-	 * @param name The unlocalizedname without prefix {@code hud.}.
-	 */
-	public final void setUnlocalizedName(String name) {
-		unlocalizedName = "hud." + name;
-	}
-
-	/**
-	 * @return The unlocalized name including prefix {@code hud.}.
-	 */
-	public final String getUnlocalizedName() {
-		return unlocalizedName;
-	}
-
-	public final String getLocalizedName() {
-		return I18n.format(getUnlocalizedName());
 	}
 
 	private static final VersionRange DEFAULT_SERVER_DEPENDENCY

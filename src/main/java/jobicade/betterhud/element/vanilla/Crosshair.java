@@ -35,8 +35,7 @@ public class Crosshair extends OverlayElement {
 	private SettingChoose indicatorType;
 
 	public Crosshair() {
-		setRegistryName("crosshair");
-		setUnlocalizedName("crosshair");
+		setName("crosshair");
 
 		settings.addChildren(
 			position = new SettingPosition(DirectionOptions.I, DirectionOptions.NONE),

@@ -29,8 +29,7 @@ public class ExperienceInfo extends TextElement {
 	}
 
 	public ExperienceInfo() {
-		setRegistryName("experience_info");
-		setUnlocalizedName("experienceInfo");
+		setName("experienceInfo");
 
 		settings.addChildren(
 			new Legend("misc"),

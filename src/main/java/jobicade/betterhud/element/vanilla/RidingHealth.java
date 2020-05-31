@@ -11,8 +11,7 @@ public class RidingHealth extends Bar {
 	public RidingHealth() {
 		super(new StatBarMount());
 
-		setRegistryName("mount_health");
-		setUnlocalizedName("mountHealth");
+		setName("mountHealth");
 	}
 
 	@Override

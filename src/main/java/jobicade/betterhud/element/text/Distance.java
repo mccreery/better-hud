@@ -27,8 +27,7 @@ public class Distance extends TextElement {
 	}
 
 	public Distance() {
-		setRegistryName("distance");
-		setUnlocalizedName("distance");
+		setName("distance");
 
 		settings.addChildren(
 			new Legend("misc"),

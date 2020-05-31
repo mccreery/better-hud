@@ -14,8 +14,7 @@ public class HealthBar extends Bar {
 	public HealthBar() {
 		super(new StatBarHealth());
 
-		setRegistryName("health");
-		setUnlocalizedName("health");
+		setName("health");
 	}
 
 	@Override

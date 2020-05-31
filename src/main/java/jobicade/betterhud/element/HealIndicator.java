@@ -29,8 +29,7 @@ public class HealIndicator extends OverlayElement {
 	}
 
 	public HealIndicator() {
-		setRegistryName("heal_indicator");
-		setUnlocalizedName("healIndicator");
+		setName("healIndicator");
 
 		settings.addChildren(
 			position = new SettingPosition(DirectionOptions.NONE, DirectionOptions.NONE),

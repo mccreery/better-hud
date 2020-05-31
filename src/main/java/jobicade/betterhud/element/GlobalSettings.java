@@ -12,8 +12,7 @@ public class GlobalSettings extends HudElement<Object> {
 	private SettingBoolean debugMode;
 
 	public GlobalSettings() {
-		setRegistryName("global");
-		setUnlocalizedName("global");
+		setName("global");
 
 		settings.addChildren(
 			billboardScale = new SettingPercentage("billboardScale"),

@@ -30,8 +30,7 @@ public class Sidebar extends OverlayElement {
 	private SettingPosition position;
 
 	public Sidebar() {
-		setRegistryName("scoreboard");
-		setUnlocalizedName("scoreboard");
+		setName("scoreboard");
 
 		settings.addChild(position = new SettingPosition(DirectionOptions.LEFT_RIGHT, DirectionOptions.WEST_EAST));
 	}

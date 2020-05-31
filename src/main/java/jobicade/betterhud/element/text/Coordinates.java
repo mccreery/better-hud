@@ -35,8 +35,7 @@ public class Coordinates extends TextElement {
 	}
 
 	public Coordinates() {
-		setRegistryName("coordinates");
-		setUnlocalizedName("coordinates");
+		setName("coordinates");
 
 		settings.addChildren(
 			new Legend("misc"),

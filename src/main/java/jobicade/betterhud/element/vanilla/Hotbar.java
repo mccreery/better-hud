@@ -17,8 +17,7 @@ public class Hotbar extends OverlayElement {
 	private SettingPosition position;
 
 	public Hotbar() {
-		setRegistryName("hotbar");
-		setUnlocalizedName("hotbar");
+		setName("hotbar");
 
 		settings.addChild(position = new SettingPosition(DirectionOptions.TOP_BOTTOM, DirectionOptions.NONE));
 		position.setEdge(true).setPostSpacer(2);

@@ -24,8 +24,7 @@ public class MobInfo extends EntityInfo {
 	private SettingSlider compress;
 
 	public MobInfo() {
-		setRegistryName("mob_info");
-		setUnlocalizedName("mobInfo");
+		setName("mobInfo");
 
 		settings.addChild(compress = new SettingSlider("compress", 0, 200, 20) {
 			@Override

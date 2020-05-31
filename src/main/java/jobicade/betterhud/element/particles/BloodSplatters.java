@@ -12,8 +12,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class BloodSplatters extends ParticleOverlay {
 	public BloodSplatters() {
-		setRegistryName("blood_splatters");
-		setUnlocalizedName("bloodSplatters");
+		setName("bloodSplatters");
 	}
 
 	@Override

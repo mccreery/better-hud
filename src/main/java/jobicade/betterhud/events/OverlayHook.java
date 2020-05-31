@@ -70,7 +70,7 @@ public final class OverlayHook {
             loadGlState();
 
             if (shouldRender(element, event)) {
-                Minecraft.getMinecraft().mcProfiler.startSection(element.getRegistryName().toString());
+                Minecraft.getMinecraft().mcProfiler.startSection(element.getName().toString());
                 element.render(event);
                 Minecraft.getMinecraft().mcProfiler.endSection();
             }

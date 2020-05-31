@@ -22,8 +22,7 @@ public class FullInvIndicator extends TextElement {
 	}
 
 	public FullInvIndicator() {
-		setRegistryName("full_inv_indicator");
-		setUnlocalizedName("fullInvIndicator");
+		setName("fullInvIndicator");
 
 		settings.addChildren(
 			new Legend("misc"),

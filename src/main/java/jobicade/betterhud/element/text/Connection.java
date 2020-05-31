@@ -34,8 +34,7 @@ public class Connection extends TextElement {
 	}
 
 	public Connection() {
-		setRegistryName("connection");
-		setUnlocalizedName("connection");
+		setName("connection");
 
 		settings.addChildren(
 			new Legend("misc"),

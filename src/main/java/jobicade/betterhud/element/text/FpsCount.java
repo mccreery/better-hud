@@ -19,8 +19,7 @@ public class FpsCount extends TextElement {
 	}
 
 	public FpsCount() {
-		setRegistryName("fps_count");
-		setUnlocalizedName("fpsCount");
+		setName("fpsCount");
 
 		settings.addChild(numberOnly = new SettingBoolean("numberOnly"));
 	}

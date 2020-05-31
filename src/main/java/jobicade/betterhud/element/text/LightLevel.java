@@ -16,8 +16,7 @@ public class LightLevel extends TextElement {
 	}
 
 	public LightLevel() {
-		setRegistryName("light_level");
-		setUnlocalizedName("lightLevel");
+		setName("lightLevel");
 	}
 
 	@Override

@@ -11,8 +11,7 @@ public class ArmorBar extends Bar {
 	public ArmorBar() {
 		super(new StatBarArmor());
 
-		setRegistryName("armor");
-		setUnlocalizedName("armor");
+		setName("armor");
 	}
 
 	@Override

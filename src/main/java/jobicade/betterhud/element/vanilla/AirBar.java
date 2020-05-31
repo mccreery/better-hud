@@ -11,8 +11,7 @@ public class AirBar extends Bar {
 	public AirBar() {
 		super(new StatBarAir());
 
-		setRegistryName("air_bar");
-		setUnlocalizedName("airBar");
+		setName("airBar");
 	}
 
 	@Override

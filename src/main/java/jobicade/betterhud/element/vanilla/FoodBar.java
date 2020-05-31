@@ -14,8 +14,7 @@ public class FoodBar extends Bar {
 	public FoodBar() {
 		super(new StatBarFood());
 
-		setRegistryName("food");
-		setUnlocalizedName("food");
+		setName("food");
 
 		settings.addChild(hideMount = new SettingBoolean("hideMount"));
 	}

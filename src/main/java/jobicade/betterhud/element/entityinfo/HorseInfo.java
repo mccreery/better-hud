@@ -28,8 +28,7 @@ public class HorseInfo extends EntityInfo {
 	}
 
 	public HorseInfo() {
-		setRegistryName("horse_info");
-		setUnlocalizedName("horseInfo");
+		setName("horseInfo");
 
 		settings.addChildren(
 			jump = new SettingBoolean("jump"),

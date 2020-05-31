@@ -32,8 +32,7 @@ public class CpsCount extends TextElement implements Tickable {
 	private float cps = 0;
 
 	public CpsCount() {
-		setRegistryName("cps");
-		setUnlocalizedName("cps");
+		setName("cps");
 
 		settings.addChildren(
 			new Legend("misc"),

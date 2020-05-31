@@ -28,8 +28,7 @@ public class GameClock extends Clock {
 	private SettingChoose requireItem;
 
 	public GameClock() {
-		setRegistryName("game_clock");
-		setUnlocalizedName("gameClock");
+		setName("gameClock");
 
 		settings.addChildren(
 			showDays = new SettingBoolean("showDays").setValuePrefix(SettingBoolean.VISIBLE),

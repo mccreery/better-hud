@@ -11,8 +11,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public class Saturation extends TextElement {
 	public Saturation() {
-		setRegistryName("saturation");
-		setUnlocalizedName("saturation");
+		setName("saturation");
 	}
 
 	@Override

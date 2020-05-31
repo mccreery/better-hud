@@ -8,11 +8,10 @@ import java.util.Map;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.util.Sorter;
-import net.minecraft.util.ResourceLocation;
 
 public abstract class HudRegistry<T extends HudElement<?>> {
     private final HudRegistry<? super T> parentRegistry;
-    private final Map<ResourceLocation, T> elements = new HashMap<>();
+    private final Map<String, T> elements = new HashMap<>();
     private final Sorter<T> sorter = new Sorter<>(elements.values());
 
     public HudRegistry(HudRegistry<? super T> parentRegistry) {
@@ -37,11 +36,11 @@ public abstract class HudRegistry<T extends HudElement<?>> {
             parentRegistry.register(element);
         }
 
-        if (element.getRegistryName() == null) {
+        if (element.getName() == null) {
             throw new IllegalArgumentException("null registry key");
         }
 
-        if (elements.put(element.getRegistryName(), element) != null) {
+        if (elements.put(element.getName(), element) != null) {
             BetterHud.getLogger().warn("Duplicate registry key \"%s\" overwritten");
         }
 
