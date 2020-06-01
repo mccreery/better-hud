@@ -105,17 +105,34 @@ public class SettingAbsolutePosition extends Setting<Point> {
 	}
 
 	@Override
-	public String save() {
+	public String getStringValue() {
 		return x + ", " + y;
 	}
 
 	@Override
-	public void load(String val) {
+	public void loadStringValue(String val) {
 		int comma = val.indexOf(',');
-		int x = Integer.parseInt(val.substring(0, comma).trim());
-		int y = Integer.parseInt(val.substring(comma + 1).trim());
+
+		if (comma == -1) {
+			//return false;
+		}
+
+		int x, y;
+		try {
+			x = Integer.parseInt(val.substring(0, comma).trim());
+			y = Integer.parseInt(val.substring(comma + 1).trim());
+		} catch (NumberFormatException e) {
+			//return false;
+			return;
+		}
 
 		set(new Point(x, y));
+	}
+
+	@Override
+	public void loadDefaultValue() {
+		x = 0;
+		y = 0;
 	}
 
 	@Override

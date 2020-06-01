@@ -85,8 +85,13 @@ public class SettingChoose extends SettingAlignable<String> {
 		return index < modes.length ? modes[index] : String.valueOf(index);
 	}
 
-	@Override public String save() {return get();}
-	@Override public void load(String save) {set(save);}
+	@Override public String getStringValue() {return get();}
+	@Override public void loadStringValue(String save) {set(save);}
+
+	@Override
+	public void loadDefaultValue() {
+		index = 0;
+	}
 
 	@Override
 	public void getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Rect bounds) {

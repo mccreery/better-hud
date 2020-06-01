@@ -112,17 +112,22 @@ public class SettingDirection extends SettingAlignable<Direction> {
 	}
 
 	@Override
-	public String save() {
+	public String getStringValue() {
 		return value != null ? value.name() : "null";
 	}
 
 	@Override
-	public void load(String save) {
+	public void loadStringValue(String save) {
 		try {
 			set(Direction.valueOf(save));
 		} catch(IllegalArgumentException e) {
 			set(null);
 		}
+	}
+
+	@Override
+	public void loadDefaultValue() {
+		value = options.apply(Direction.NORTH_WEST);
 	}
 
 	@Override
