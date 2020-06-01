@@ -235,6 +235,7 @@ public abstract class Setting<T, U extends Setting<T, U>> implements ISetting {
 		}
 	}
 
+	// TODO why here?
 	/** Passed on from the element's setting screen when a GuiButton for this setting is pressed.
 	 * @param button The GuiButton that was pressed. */
 	public abstract void actionPerformed(GuiElementSettings gui, GuiButton button);

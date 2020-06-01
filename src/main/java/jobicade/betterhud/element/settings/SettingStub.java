@@ -19,6 +19,7 @@ public class SettingStub<T> extends Setting<T, SettingStub<T>> {
 	@Override public T get() {return null;}
 	@Override public void set(T value) {}
 	@Override public String getStringValue() {return null;}
+	@Override public String getDefaultValue() {return null;}
 	@Override public void loadStringValue(String save) {}
 	@Override public void loadDefaultValue() {}
 	@Override public void actionPerformed(GuiElementSettings gui, GuiButton button) {}

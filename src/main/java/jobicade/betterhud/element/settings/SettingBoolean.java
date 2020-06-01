@@ -74,6 +74,11 @@ public class SettingBoolean extends SettingAlignable<Boolean, SettingBoolean> {
 	}
 
 	@Override
+	public String getDefaultValue() {
+		return "false";
+	}
+
+	@Override
 	public void loadStringValue(String stringValue) {
 		stringValue = stringValue.trim();
 

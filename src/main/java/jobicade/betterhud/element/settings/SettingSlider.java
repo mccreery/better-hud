@@ -116,6 +116,11 @@ public class SettingSlider extends SettingAlignable<Double, SettingSlider> imple
 	}
 
 	@Override
+	public String getDefaultValue() {
+		return String.valueOf(getMinimum());
+	}
+
+	@Override
 	public void loadStringValue(String save) {
 		set(Double.valueOf(save));
 
