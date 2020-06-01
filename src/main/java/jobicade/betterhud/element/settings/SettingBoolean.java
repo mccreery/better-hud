@@ -44,8 +44,17 @@ public class SettingBoolean extends SettingAlignable<Boolean, SettingBoolean> {
 		return Type.BOOLEAN;
 	}
 
-	public Boolean get() {return enabled() && value;}
-	public void set(Boolean value) {this.value = value;}
+	@Override
+	public Boolean get() {
+		// TODO does it make sense to test enabled here?
+		return enabled() && value;
+	}
+
+	@Override
+	public void set(Boolean value) {
+		this.value = value;
+		//return true;
+	}
 
 	@Override
 	public void getGuiParts(List<Gui> parts, Map<Gui, Setting<?, ?>> callbacks, Rect bounds) {
@@ -60,13 +69,28 @@ public class SettingBoolean extends SettingAlignable<Boolean, SettingBoolean> {
 	}
 
 	@Override
-	public String save() {
-		return get().toString();
+	public String getStringValue() {
+		return String.valueOf(value);
 	}
 
 	@Override
-	public void load(String save) {
-		set(Boolean.valueOf(save));
+	public void loadStringValue(String stringValue) {
+		stringValue = stringValue.trim();
+
+		if ("true".equalsIgnoreCase(stringValue)) {
+			value = true;
+			//return true;
+		} else if ("false".equalsIgnoreCase(stringValue)) {
+			value = false;
+			//return true;
+		} else {
+			//return false;
+		}
+	}
+
+	@Override
+	public void loadDefaultValue() {
+		value = false;
 	}
 
 	@Override
