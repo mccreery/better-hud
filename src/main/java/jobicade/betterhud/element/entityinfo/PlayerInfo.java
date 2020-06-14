@@ -33,7 +33,7 @@ public class PlayerInfo extends EntityInfo {
 	private SettingSlider tooltipLines;
 
 	public PlayerInfo() {
-		setName("playerInfo");
+		super("playerInfo");
 
 		settings.addChild(tooltipLines = new SettingSlider("tooltipLines", -1, 10, 1) {
 			@Override

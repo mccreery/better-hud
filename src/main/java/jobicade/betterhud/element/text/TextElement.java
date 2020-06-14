@@ -22,7 +22,9 @@ public abstract class TextElement extends OverlayElement {
 
 	protected boolean border = false;
 
-	public TextElement() {
+	public TextElement(String name) {
+		super(name);
+
 		settings.addChildren(
 			position = new SettingPosition(DirectionOptions.TOP_BOTTOM, DirectionOptions.CORNERS),
 			color = new SettingColor("color")

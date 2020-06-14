@@ -40,7 +40,7 @@ public class PickupCount extends OverlayElement {
 	}
 
 	public PickupCount() {
-		setName("itemPickup");
+		super("itemPickup");
 		setServerDependency("[1.4-beta,1.4.1),(1.4.1,]");
 
 		settings.addChildren(

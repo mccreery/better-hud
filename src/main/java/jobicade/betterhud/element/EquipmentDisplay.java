@@ -17,7 +17,9 @@ public abstract class EquipmentDisplay extends OverlayElement {
 	private SettingChoose durabilityMode;
 	private SettingBoolean showUndamaged;
 
-	public EquipmentDisplay() {
+	public EquipmentDisplay(String name) {
+		super(name);
+
 		settings.addChildren(
 			showName = new SettingBoolean("showName"),
 			showDurability = new SettingBoolean("showDurability", Direction.WEST),

@@ -17,7 +17,8 @@ public abstract class ParticleOverlay extends OverlayElement implements Tickable
 	protected SettingChoose density;
 	protected final List<Particle> particles = new CopyOnWriteArrayList<Particle>();
 
-	public ParticleOverlay() {
+	public ParticleOverlay(String name) {
+		super(name);
 		settings.addChild(density = new SettingChoose("density", "sparse", "normal", "dense", "denser"));
 	}
 

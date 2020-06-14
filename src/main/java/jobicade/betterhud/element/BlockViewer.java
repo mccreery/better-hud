@@ -50,7 +50,7 @@ public class BlockViewer extends TextElement {
 	private ItemStack stack;
 
 	public BlockViewer() {
-		setName("blockViewer");
+		super("blockViewer");
 
 		settings.addChildren(
 			new Legend("misc"),

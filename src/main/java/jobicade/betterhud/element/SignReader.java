@@ -32,7 +32,7 @@ public class SignReader extends OverlayElement {
 	}
 
 	public SignReader() {
-		setName("signReader");
+		super("signReader");
 
 		settings.addChild(position = new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.NONE));
 	}

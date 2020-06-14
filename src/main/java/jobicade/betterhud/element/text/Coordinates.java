@@ -35,7 +35,7 @@ public class Coordinates extends TextElement {
 	}
 
 	public Coordinates() {
-		setName("coordinates");
+		super("coordinates");
 
 		settings.addChildren(
 			new Legend("misc"),

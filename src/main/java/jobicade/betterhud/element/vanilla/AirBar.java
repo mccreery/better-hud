@@ -9,9 +9,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
 public class AirBar extends Bar {
 	public AirBar() {
-		super(new StatBarAir());
-
-		setName("airBar");
+		super("airBar", new StatBarAir());
 	}
 
 	@Override

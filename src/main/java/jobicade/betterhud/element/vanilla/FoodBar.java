@@ -12,9 +12,7 @@ public class FoodBar extends Bar {
 	private SettingBoolean hideMount;
 
 	public FoodBar() {
-		super(new StatBarFood());
-
-		setName("food");
+		super("food", new StatBarFood());
 
 		settings.addChild(hideMount = new SettingBoolean("hideMount"));
 	}

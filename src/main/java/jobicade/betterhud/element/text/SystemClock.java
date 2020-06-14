@@ -4,7 +4,7 @@ import java.util.Date;
 
 public class SystemClock extends Clock {
 	public SystemClock() {
-		setName("systemClock");
+		super("systemClock");
 	}
 
 	@Override

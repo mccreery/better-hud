@@ -36,7 +36,7 @@ public class ArmorBars extends EquipmentDisplay {
 	}
 
 	public ArmorBars() {
-		setName("armorBars");
+		super("armorBars");
 
 		settings.addChildren(
 			position = new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.WEST_EAST),

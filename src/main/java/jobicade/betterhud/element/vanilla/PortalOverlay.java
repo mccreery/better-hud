@@ -16,7 +16,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
 public class PortalOverlay extends OverlayElement {
 	public PortalOverlay() {
-		setName("portal");
+		super("portal");
 	}
 
 	@Override

@@ -36,7 +36,7 @@ public class PotionBar extends OverlayElement {
 	private SettingBoolean showDuration;
 
 	public PotionBar() {
-		setName("potionBar");
+		super("potionBar");
 
 		settings.addChildren(
 			position = new SettingPosition(DirectionOptions.X, DirectionOptions.CORNERS),

@@ -28,7 +28,7 @@ public class GameClock extends Clock {
 	private SettingChoose requireItem;
 
 	public GameClock() {
-		setName("gameClock");
+		super("gameClock");
 
 		settings.addChildren(
 			showDays = new SettingBoolean("showDays").setValuePrefix(SettingBoolean.VISIBLE),
