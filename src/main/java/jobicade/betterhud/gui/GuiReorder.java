@@ -14,6 +14,7 @@ import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.registry.HudElements;
+import jobicade.betterhud.registry.OverlayElements;
 import jobicade.betterhud.registry.SortField;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
@@ -139,8 +140,7 @@ public class GuiReorder extends GuiElements {
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
 		hovered = getHoveredElement(mouseX, mouseY, Predicates.alwaysFalse());
 
-		// TODO OverlayElements only
-		for(HudElement<?> element : HudElements.get().getRegistered()) {
+		for(HudElement<?> element : OverlayElements.get().getRegistered()) {
 			Rect bounds = element.getLastBounds();
 
 			if(!bounds.isEmpty()) {
