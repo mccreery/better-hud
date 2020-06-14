@@ -1,6 +1,7 @@
 package jobicade.betterhud.element.vanilla;
 
 import jobicade.betterhud.element.settings.SettingBoolean;
+import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.bars.StatBarFood;
 import net.minecraft.client.Minecraft;
@@ -27,17 +28,17 @@ public class FoodBar extends Bar {
 	}
 
 	@Override
-	public boolean shouldRender(RenderGameOverlayEvent context) {
+	public boolean shouldRender(OverlayContext context) {
 		return super.shouldRender(context)
 			&& Minecraft.getMinecraft().playerController.shouldDrawHUD()
 			&& (!hideMount.get() || !Minecraft.getMinecraft().player.isRidingHorse())
-			&& !MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(context, ElementType.FOOD));
+			&& !MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(context.getEvent(), ElementType.FOOD));
 	}
 
 	@Override
-	public Rect render(RenderGameOverlayEvent context) {
+	public Rect render(OverlayContext context) {
 		Rect rect = super.render(context);
-		MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(context, ElementType.FOOD));
+		MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(context.getEvent(), ElementType.FOOD));
 		return rect;
 	}
 }

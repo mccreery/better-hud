@@ -8,6 +8,7 @@ import java.util.List;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.settings.SettingSlider;
+import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -20,7 +21,6 @@ import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.items.ItemHandlerHelper;
@@ -110,7 +110,7 @@ public class PickupCount extends OverlayElement {
 	}
 
 	@Override
-	public Rect render(RenderGameOverlayEvent context) {
+	public Rect render(OverlayContext context) {
 		List<StackNode> stacks = getStacks();
 		Rect bounds;
 

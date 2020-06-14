@@ -65,13 +65,14 @@ public final class OverlayHook {
     private static void renderGameOverlay(RenderGameOverlayEvent event) {
         // TODO not here
         BetterHud.MANAGER.reset(event.getResolution());
+        OverlayContext context = new OverlayContext(event, BetterHud.MANAGER);
 
         for (OverlayElement element : OverlayElements.get().getRegistered(SortField.PRIORITY)) {
             loadGlState();
 
-            if (shouldRender(element, event)) {
+            if (shouldRender(element, context)) {
                 Minecraft.getMinecraft().mcProfiler.startSection(element.getName());
-                element.render(event);
+                element.render(context);
                 Minecraft.getMinecraft().mcProfiler.endSection();
             }
         }
@@ -100,7 +101,7 @@ public final class OverlayHook {
      * @return {@code true} if all conditions for rendering {@code hudElement}
      * are currently satisfied.
      */
-    public static boolean shouldRender(OverlayElement hudElement, RenderGameOverlayEvent context) {
+    public static boolean shouldRender(OverlayElement hudElement, OverlayContext context) {
         return hudElement.getServerDependency().containsVersion(BetterHud.getServerVersion())
             && hudElement.isEnabled()
             && hudElement.shouldRender(context);
