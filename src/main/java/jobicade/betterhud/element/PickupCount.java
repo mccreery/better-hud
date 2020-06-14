@@ -6,9 +6,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jobicade.betterhud.element.settings.DirectionOptions;
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.settings.SettingSlider;
+import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -23,12 +23,10 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.Event;
-import net.minecraftforge.fml.common.versioning.InvalidVersionSpecificationException;
-import net.minecraftforge.fml.common.versioning.VersionRange;
 import net.minecraftforge.items.ItemHandlerHelper;
 
-public class PickupCount extends HudElement {
+public class PickupCount extends OverlayElement {
+	private SettingPosition position;
 	private SettingSlider maxStacks, fadeAfter;
 	public final List<StackNode> stacks = new ArrayList<>();
 
@@ -42,33 +40,24 @@ public class PickupCount extends HudElement {
 	}
 
 	public PickupCount() {
-		super("itemPickup", new SettingPosition(DirectionOptions.X, DirectionOptions.CORNERS));
+		super("itemPickup");
+		setServerDependency("[1.4-beta,1.4.1),(1.4.1,]");
+
+		settings.addChildren(
+			position = new SettingPosition(DirectionOptions.X, DirectionOptions.CORNERS),
+			fadeAfter = new SettingSlider("fadeAfter", 20, 600, 20).setDisplayScale(0.05).setUnlocalizedValue("betterHud.hud.seconds"),
+			maxStacks = new SettingSlider("maxStacks", 1, 11, 1) {
+				@Override
+				public String getDisplayValue(double scaledValue) {
+					return scaledValue == getMaximum() ? I18n.format("betterHud.value.unlimited") : super.getDisplayValue(scaledValue);
+				}
+			}
+		);
 	}
 
 	@Override
 	public void init(FMLInitializationEvent event) {
 		MinecraftForge.EVENT_BUS.register(this);
-	}
-
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(fadeAfter = new SettingSlider("fadeAfter", 20, 600, 20).setDisplayScale(0.05).setUnlocalizedValue("betterHud.hud.seconds"));
-		settings.add(maxStacks = new SettingSlider("maxStacks", 1, 11, 1) {
-			@Override
-			public String getDisplayValue(double scaledValue) {
-				return scaledValue == getMaximum() ? I18n.format("betterHud.value.unlimited") : super.getDisplayValue(scaledValue);
-			}
-		});
-	}
-
-	@Override
-	public VersionRange getServerDependency() {
-		try {
-			return VersionRange.createFromVersionSpec("[1.4-beta,1.4.1),(1.4.1,]");
-		} catch (InvalidVersionSpecificationException e) {
-			throw new RuntimeException(e);
-		}
 	}
 
 	/**
@@ -121,7 +110,7 @@ public class PickupCount extends HudElement {
 	}
 
 	@Override
-	public Rect render(Event event) {
+	public Rect render(OverlayContext context) {
 		List<StackNode> stacks = getStacks();
 		Rect bounds;
 

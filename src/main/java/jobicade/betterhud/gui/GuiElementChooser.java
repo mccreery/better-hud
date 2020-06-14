@@ -7,14 +7,15 @@ import net.minecraft.client.gui.GuiScreen;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.registry.HudElements;
 
 public class GuiElementChooser extends GuiElements {
 	private final GuiScreen parent;
-	private final HudElement element;
+	private final HudElement<?> element;
 
-	private final Setting<HudElement> setting;
+	private final Setting<HudElement<?>> setting;
 
-	public GuiElementChooser(GuiScreen parent, HudElement element, Setting<HudElement> setting) {
+	public GuiElementChooser(GuiScreen parent, HudElement<?> element, Setting<HudElement<?>> setting) {
 		this.parent = parent;
 		this.element = element;
 		this.setting = setting;
@@ -35,12 +36,12 @@ public class GuiElementChooser extends GuiElements {
 
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		HudElement selected = getHoveredElement(mouseX, mouseY, (HudElement element) -> {
+		HudElement<?> selected = getHoveredElement(mouseX, mouseY, (HudElement<?> element) -> {
 			return element == this.element;
 		});
 		setting.set(selected);
 
-		for(HudElement element : HudElement.ELEMENTS) {
+		for(HudElement<?> element : HudElements.get().getRegistered()) {
 			Rect bounds = element.getLastBounds();
 
 			if(!bounds.isEmpty()) {

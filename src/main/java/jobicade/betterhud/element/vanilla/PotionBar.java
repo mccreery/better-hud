@@ -9,11 +9,11 @@ import java.util.List;
 import java.util.stream.Stream;
 
 import jobicade.betterhud.BetterHud;
-import jobicade.betterhud.element.HudElement;
+import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -28,22 +28,21 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
-public class PotionBar extends HudElement {
+public class PotionBar extends OverlayElement {
 	public static final ResourceLocation INVENTORY = new ResourceLocation("textures/gui/container/inventory.png");
 
+	private SettingPosition position;
 	private SettingBoolean showDuration;
 
 	public PotionBar() {
-		super("potionBar", new SettingPosition(DirectionOptions.X, DirectionOptions.CORNERS));
-	}
+		super("potionBar");
 
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(showDuration = new SettingBoolean("duration").setValuePrefix(SettingBoolean.VISIBLE));
+		settings.addChildren(
+			position = new SettingPosition(DirectionOptions.X, DirectionOptions.CORNERS),
+			showDuration = new SettingBoolean("duration").setValuePrefix(SettingBoolean.VISIBLE)
+		);
 	}
 
 	@Override
@@ -59,18 +58,19 @@ public class PotionBar extends HudElement {
 
 	@SubscribeEvent
 	public void onRenderTick(RenderGameOverlayEvent.Pre event) {
+		// TODO use same method as other vanilla elements not canceling
 		if (BetterHud.getProxy().isModEnabled() && event.getType() == ElementType.POTION_ICONS) {
 			event.setCanceled(true);
 		}
 	}
 
 	@Override
-	public boolean shouldRender(Event event) {
-		return super.shouldRender(event) && !Minecraft.getMinecraft().player.getActivePotionEffects().isEmpty();
+	public boolean shouldRender(OverlayContext context) {
+		return !Minecraft.getMinecraft().player.getActivePotionEffects().isEmpty();
 	}
 
 	@Override
-	public Rect render(Event event) {
+	public Rect render(OverlayContext context) {
 		Boxed grid = getGrid();
 
 		Rect bounds = new Rect(grid.getPreferredSize());

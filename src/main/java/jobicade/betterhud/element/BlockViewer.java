@@ -1,7 +1,7 @@
 package jobicade.betterhud.element;
 
-import static jobicade.betterhud.BetterHud.SPACER;
 import static jobicade.betterhud.BetterHud.MANAGER;
+import static jobicade.betterhud.BetterHud.SPACER;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -10,6 +10,16 @@ import java.util.Map;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
 
+import jobicade.betterhud.BetterHud;
+import jobicade.betterhud.element.settings.Legend;
+import jobicade.betterhud.element.settings.SettingBoolean;
+import jobicade.betterhud.element.text.TextElement;
+import jobicade.betterhud.events.OverlayContext;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.network.InventoryNameQuery;
+import jobicade.betterhud.registry.HudElements;
+import jobicade.betterhud.util.GlUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.state.IBlockState;
 import net.minecraft.client.Minecraft;
@@ -24,23 +34,11 @@ import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IWorldNameable;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraftforge.fml.common.versioning.InvalidVersionSpecificationException;
 import net.minecraftforge.fml.common.versioning.VersionRange;
-import jobicade.betterhud.BetterHud;
-import jobicade.betterhud.element.settings.DirectionOptions;
-import jobicade.betterhud.element.settings.Legend;
-import jobicade.betterhud.element.settings.Setting;
-import jobicade.betterhud.element.settings.SettingBoolean;
-import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.element.text.TextElement;
-import jobicade.betterhud.network.InventoryNameQuery;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.util.GlUtil;
 
 /**
  * @see BetterHud#onBlockBreak(net.minecraftforge.event.world.BlockEvent.BreakEvent)
@@ -52,28 +50,24 @@ public class BlockViewer extends TextElement {
 	private ItemStack stack;
 
 	public BlockViewer() {
-		super("blockViewer", new SettingPosition(DirectionOptions.I, DirectionOptions.WEST_EAST));
-	}
+		super("blockViewer");
 
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
+		settings.addChildren(
+			new Legend("misc"),
+			showBlock = new SettingBoolean("showItem").setValuePrefix(SettingBoolean.VISIBLE),
+			showIds = new SettingBoolean("showIds").setValuePrefix(SettingBoolean.VISIBLE),
+			invNames = new SettingBoolean("invNames")
+		);
 
-		settings.add(new Legend("misc"));
-		settings.add(showBlock = new SettingBoolean("showItem").setValuePrefix(SettingBoolean.VISIBLE));
-		settings.add(showIds = new SettingBoolean("showIds").setValuePrefix(SettingBoolean.VISIBLE));
-		settings.add(invNames = new SettingBoolean("invNames") {
-			@Override
-			public boolean enabled() {
-				VersionRange versionRange;
-				try {
-					versionRange = VersionRange.createFromVersionSpec("[1.4-beta,)");
-				} catch (InvalidVersionSpecificationException e) {
-					throw new RuntimeException(e);
-				}
-
-				return super.enabled() && versionRange.containsVersion(BetterHud.getServerVersion());
+		invNames.setEnableOn(() -> {
+			VersionRange versionRange;
+			try {
+				versionRange = VersionRange.createFromVersionSpec("[1.4-beta,)");
+			} catch (InvalidVersionSpecificationException e) {
+				throw new RuntimeException(e);
 			}
+
+			return versionRange.containsVersion(BetterHud.getServerVersion());
 		});
 	}
 
@@ -93,10 +87,8 @@ public class BlockViewer extends TextElement {
 	}
 
 	@Override
-	public boolean shouldRender(Event event) {
-		if(!super.shouldRender(event)) return false;
-
-		trace = Minecraft.getMinecraft().getRenderViewEntity().rayTrace(HudElement.GLOBAL.getBillboardDistance(), 1f);
+	public boolean shouldRender(OverlayContext context) {
+		trace = Minecraft.getMinecraft().getRenderViewEntity().rayTrace(HudElements.GLOBAL.getBillboardDistance(), 1f);
 
 		if(trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK) {
 			state = Minecraft.getMinecraft().world.getBlockState(trace.getBlockPos());
@@ -137,9 +129,9 @@ public class BlockViewer extends TextElement {
 	}
 
 	@Override
-	public Rect render(Event event) {
+	public Rect render(OverlayContext context) {
 		GlStateManager.disableDepth();
-		return super.render(event);
+		return super.render(context);
 	}
 
 	@Override

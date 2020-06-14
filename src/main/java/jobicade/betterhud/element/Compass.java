@@ -2,33 +2,31 @@ package jobicade.betterhud.element;
 
 import static jobicade.betterhud.BetterHud.SPACER;
 
-import java.util.List;
-
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Legend;
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingDirection;
 import jobicade.betterhud.element.settings.SettingPercentage;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.settings.SettingSlider;
-import jobicade.betterhud.util.GlUtil;
+import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
+import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fml.common.eventhandler.Event;
 
-public class Compass extends HudElement {
+public class Compass extends OverlayElement {
 	private static final String[] DIRECTIONS = { "S", "E", "N", "W" };
 
+	private SettingPosition position;
 	private SettingChoose mode, requireItem;
 	private SettingSlider directionScaling;
 	private SettingBoolean showNotches;
@@ -55,17 +53,16 @@ public class Compass extends HudElement {
 	}
 
 	public Compass() {
-		super("compass", new SettingPosition(DirectionOptions.TOP_BOTTOM, DirectionOptions.NORTH_SOUTH));
-	}
+		super("compass");
 
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(mode = new SettingChoose("mode", "visual", "text"));
-		settings.add(new Legend("misc"));
-		settings.add(directionScaling = new SettingPercentage("letterScale"));
-		settings.add(showNotches = new SettingBoolean("showNotches").setValuePrefix(SettingBoolean.VISIBLE));
-		settings.add(requireItem = new SettingChoose("requireItem", "disabled", "inventory", "hand"));
+		settings.addChildren(
+			position = new SettingPosition(DirectionOptions.TOP_BOTTOM, DirectionOptions.NORTH_SOUTH),
+			mode = new SettingChoose("mode", "visual", "text"),
+			new Legend("misc"),
+			directionScaling = new SettingPercentage("letterScale"),
+			showNotches = new SettingBoolean("showNotches").setValuePrefix(SettingBoolean.VISIBLE),
+			requireItem = new SettingChoose("requireItem", "disabled", "inventory", "hand")
+		);
 	}
 
 	private void drawBackground(Rect bounds) {
@@ -125,9 +122,7 @@ public class Compass extends HudElement {
 	}
 
 	@Override
-	public boolean shouldRender(Event event) {
-		if(!super.shouldRender(event)) return false;
-
+	public boolean shouldRender(OverlayContext context) {
 		switch(requireItem.getIndex()) {
 			case 1:
 				return Minecraft.getMinecraft().player.inventory.hasItemStack(new ItemStack(Items.COMPASS));
@@ -155,7 +150,7 @@ public class Compass extends HudElement {
 	}
 
 	@Override
-	public Rect render(Event event) {
+	public Rect render(OverlayContext context) {
 		Rect bounds;
 
 		if(mode.getIndex() == 0) {

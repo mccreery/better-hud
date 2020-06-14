@@ -1,25 +1,21 @@
 package jobicade.betterhud.element.vanilla;
 
-import java.util.List;
-
-import net.minecraft.client.Minecraft;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.fml.common.eventhandler.Event;
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
+import jobicade.betterhud.events.OverlayContext;
+import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.bars.StatBarFood;
+import net.minecraft.client.Minecraft;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.common.MinecraftForge;
 
 public class FoodBar extends Bar {
 	private SettingBoolean hideMount;
 
 	public FoodBar() {
 		super("food", new StatBarFood());
-	}
 
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(hideMount = new SettingBoolean("hideMount"));
+		settings.addChild(hideMount = new SettingBoolean("hideMount"));
 	}
 
 	@Override
@@ -32,14 +28,17 @@ public class FoodBar extends Bar {
 	}
 
 	@Override
-	protected ElementType getType() {
-		return ElementType.FOOD;
+	public boolean shouldRender(OverlayContext context) {
+		return super.shouldRender(context)
+			&& Minecraft.getMinecraft().playerController.shouldDrawHUD()
+			&& (!hideMount.get() || !Minecraft.getMinecraft().player.isRidingHorse())
+			&& !MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(context.getEvent(), ElementType.FOOD));
 	}
 
 	@Override
-	public boolean shouldRender(Event event) {
-		return Minecraft.getMinecraft().playerController.shouldDrawHUD()
-			&& (!hideMount.get() || !Minecraft.getMinecraft().player.isRidingHorse())
-			&& super.shouldRender(event);
+	public Rect render(OverlayContext context) {
+		Rect rect = super.render(context);
+		MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(context.getEvent(), ElementType.FOOD));
+		return rect;
 	}
 }

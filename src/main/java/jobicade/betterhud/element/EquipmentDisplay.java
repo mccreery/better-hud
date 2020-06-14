@@ -1,47 +1,32 @@
 package jobicade.betterhud.element;
 
 import java.util.ArrayList;
-import java.util.List;
 
-import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingChoose;
-import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.settings.SettingWarnings;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.MathUtil;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.item.ItemStack;
 
-public abstract class EquipmentDisplay extends HudElement {
+public abstract class EquipmentDisplay extends OverlayElement {
 	private SettingBoolean showName;
 	private SettingBoolean showDurability;
 	private SettingWarnings warnings;
 	private SettingChoose durabilityMode;
 	private SettingBoolean showUndamaged;
 
-	protected EquipmentDisplay(String name, SettingPosition position) {
-		super(name, position);
-	}
+	public EquipmentDisplay(String name) {
+		super(name);
 
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(showName = new SettingBoolean("showName"));
-		settings.add(showDurability = new SettingBoolean("showDurability", Direction.WEST));
-		settings.add(durabilityMode = new SettingChoose("durabilityFormat", Direction.EAST, "points", "percentage") {
-			@Override
-			public boolean enabled() {
-				return showDurability.get();
-			}
-		});
-		settings.add(showUndamaged = new SettingBoolean("showUndamaged") {
-			@Override
-			public boolean enabled() {
-				return showDurability.get();
-			}
-		}.setValuePrefix("betterHud.value.visible"));
-		settings.add(warnings = new SettingWarnings("damageWarning"));
+		settings.addChildren(
+			showName = new SettingBoolean("showName"),
+			showDurability = new SettingBoolean("showDurability", Direction.WEST),
+			durabilityMode = new SettingChoose("durabilityFormat", Direction.EAST, "points", "percentage").setEnableOn(showDurability::get),
+			showUndamaged = new SettingBoolean("showUndamaged").setEnableOn(showDurability::get).setValuePrefix("betterHud.value.visible"),
+			warnings = new SettingWarnings("damageWarning")
+		);
 	}
 
 	@Override

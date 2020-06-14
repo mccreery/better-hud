@@ -3,11 +3,13 @@ package jobicade.betterhud.element.settings;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BooleanSupplier;
 
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.gui.GuiActionButton;
 import jobicade.betterhud.gui.GuiElementChooser;
 import jobicade.betterhud.gui.GuiElementSettings;
+import jobicade.betterhud.registry.HudElements;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import net.minecraft.client.Minecraft;
@@ -15,8 +17,8 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 
-public class SettingElement extends SettingAlignable<HudElement> {
-	private HudElement value;
+public class SettingElement extends SettingAlignable<HudElement<?>> {
+	private HudElement<?> value;
 	private GuiActionButton button;
 
 	public SettingElement(String name, Direction alignment) {
@@ -24,29 +26,23 @@ public class SettingElement extends SettingAlignable<HudElement> {
 	}
 
 	@Override
-	public HudElement get() {
+	public HudElement<?> get() {
 		return value;
 	}
 
 	@Override
-	public void set(HudElement value) {
+	public void set(HudElement<?> value) {
 		this.value = value;
 	}
 
 	@Override
 	public String save() {
-		return value != null ? value.getUnlocalizedName() : "null";
+		return value != null ? value.getName() : "null";
 	}
 
 	@Override
 	public void load(String save) {
-		for(HudElement element : HudElement.ELEMENTS) {
-			if(element.getUnlocalizedName().equals(save)) {
-				value = element;
-				return;
-			}
-		}
-		value = null;
+		value = HudElements.get().getRegistered(save);
 	}
 
 	@Override
@@ -67,5 +63,11 @@ public class SettingElement extends SettingAlignable<HudElement> {
 	@Override
 	public void updateGuiParts(Collection<Setting<?>> settings) {
 		button.enabled = enabled();
+	}
+
+	@Override
+	public SettingElement setEnableOn(BooleanSupplier enableOn) {
+		super.setEnableOn(enableOn);
+		return this;
 	}
 }

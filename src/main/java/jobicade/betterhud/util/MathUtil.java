@@ -20,6 +20,10 @@ import net.minecraft.util.math.MathHelper;
 public final class MathUtil {
 	private MathUtil() {}
 
+	public static float lerp(float a, float b, float t) {
+		return a * (1.0f - t) + b * t;
+	}
+
 	/** @param dividend The left-hand argument of the division
 	 * @param divisor The right-hand argument of the division
 	 * @return The ceiling of the quotient ({@code dividend / divisor}) */

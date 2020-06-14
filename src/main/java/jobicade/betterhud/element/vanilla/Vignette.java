@@ -2,13 +2,12 @@ package jobicade.betterhud.element.vanilla;
 
 import static jobicade.betterhud.BetterHud.MANAGER;
 
-import java.util.List;
-
-import jobicade.betterhud.element.settings.Setting;
+import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.SettingBoolean;
-import jobicade.betterhud.util.GlUtil;
+import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
+import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
@@ -16,10 +15,11 @@ import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.border.WorldBorder;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.common.MinecraftForge;
 
-public class Vignette extends OverrideElement {
+public class Vignette extends OverlayElement {
 	private static final ResourceLocation VIGNETTE_TEX_PATH = new ResourceLocation("textures/misc/vignette.png");
 
 	private SettingBoolean warnings;
@@ -27,12 +27,8 @@ public class Vignette extends OverrideElement {
 
 	public Vignette() {
 		super("vignette");
-	}
 
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(warnings = new SettingBoolean("warnings").setValuePrefix(SettingBoolean.VISIBLE));
+		settings.addChild(warnings = new SettingBoolean("warnings").setValuePrefix(SettingBoolean.VISIBLE));
 	}
 
 	@Override
@@ -42,17 +38,13 @@ public class Vignette extends OverrideElement {
 	}
 
 	@Override
-	protected ElementType getType() {
-		return ElementType.VIGNETTE;
+	public boolean shouldRender(OverlayContext context) {
+		return Minecraft.isFancyGraphicsEnabled()
+			&& !MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(context.getEvent(), ElementType.VIGNETTE));
 	}
 
 	@Override
-	public boolean shouldRender(Event event) {
-		return Minecraft.isFancyGraphicsEnabled() && super.shouldRender(event);
-	}
-
-	@Override
-	protected Rect render(Event event) {
+	public Rect render(OverlayContext context) {
 		WorldBorder border = Minecraft.getMinecraft().world.getWorldBorder();
 
 		float distance = (float)border.getClosestDistance(Minecraft.getMinecraft().player);
@@ -84,6 +76,8 @@ public class Vignette extends OverrideElement {
 
 		Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
 		GlUtil.blendFuncSafe(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
+
+		MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(context.getEvent(), ElementType.VIGNETTE));
 		return null;
 	}
 

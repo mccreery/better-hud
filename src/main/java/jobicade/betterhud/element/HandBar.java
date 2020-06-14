@@ -1,22 +1,20 @@
 package jobicade.betterhud.element;
 
-import java.util.List;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Legend;
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.render.Color;
+import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
+import net.minecraft.client.Minecraft;
+import net.minecraft.item.ItemStack;
 
 public class HandBar extends EquipmentDisplay {
+	private SettingPosition position;
 	private SettingBoolean showItem, offHand, showBars, showNonTools;
 
 	@Override
@@ -31,17 +29,16 @@ public class HandBar extends EquipmentDisplay {
 	}
 
 	public HandBar() {
-		super("handBar", new SettingPosition(DirectionOptions.BAR, DirectionOptions.NORTH_SOUTH));
-	}
+		super("handBar");
 
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(new Legend("misc"));
-		settings.add(showItem = new SettingBoolean("showItem").setValuePrefix(SettingBoolean.VISIBLE));
-		settings.add(showBars = new SettingBoolean("bars"));
-		settings.add(offHand = new SettingBoolean("offhand"));
-		settings.add(showNonTools = new SettingBoolean("showNonTools").setValuePrefix("betterHud.value.nonTools"));
+		settings.addChildren(
+			position = new SettingPosition(DirectionOptions.BAR, DirectionOptions.NORTH_SOUTH),
+			new Legend("misc"),
+			showItem = new SettingBoolean("showItem").setValuePrefix(SettingBoolean.VISIBLE),
+			showBars = new SettingBoolean("bars"),
+			offHand = new SettingBoolean("offhand"),
+			showNonTools = new SettingBoolean("showNonTools").setValuePrefix("betterHud.value.nonTools")
+		);
 	}
 
 	public void renderBar(ItemStack stack, int x, int y) {
@@ -77,7 +74,7 @@ public class HandBar extends EquipmentDisplay {
 	}
 
 	@Override
-	public Rect render(Event event) {
+	public Rect render(OverlayContext context) {
 		Rect bounds = position.applyTo(new Rect(180, offHand.get() ? 41 : 18));
 		renderBar(Minecraft.getMinecraft().player.getHeldItemMainhand(), bounds.getX(), bounds.getBottom() - 18);
 

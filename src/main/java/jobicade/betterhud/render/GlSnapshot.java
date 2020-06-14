@@ -1,16 +1,15 @@
 package jobicade.betterhud.render;
 
 import java.nio.FloatBuffer;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.Map;
+import java.util.EnumSet;
 import java.util.Objects;
+import java.util.Set;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
-import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GL14;
 
+import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 
@@ -19,18 +18,54 @@ import net.minecraft.client.renderer.GlStateManager.SourceFactor;
  * Can be used to check that a state has not changed between two points.
  */
 public class GlSnapshot {
-    private final Map<Flag, Boolean> flags = new EnumMap<>(Flag.class);
     private final Color color;
     private final int texture;
     private final BlendFunc blendFunc;
+    private final Set<GlFlag> flags;
 
     public GlSnapshot() {
-        for(Flag flag : Flag.values()) {
-            this.flags.put(flag, flag.isEnabled());
+        color = getCurrentColor();
+        texture = getCurrentTexture();
+        blendFunc = getCurrentBlendFunc();
+
+        flags = EnumSet.noneOf(GlFlag.class);
+
+        for (GlFlag flag : GlFlag.values()) {
+            if (flag.isEnabled()) {
+                flags.add(flag);
+            }
         }
-        this.color = getCurrentColor();
-        this.texture = getCurrentTexture();
-        this.blendFunc = getCurrentBlendFunc();
+    }
+
+    public GlSnapshot(Color color, int texture, BlendFunc blendFunc, GlFlag... flags) {
+        this.color = color;
+        this.texture = texture;
+        this.blendFunc = blendFunc;
+
+        if (flags.length == 0) {
+            this.flags = EnumSet.noneOf(GlFlag.class);
+        } else {
+            this.flags = EnumSet.of(flags[0], flags);
+        }
+    }
+
+    public void apply() {
+        GlStateManager.color(
+            color.getRed() / 255.0f,
+            color.getGreen() / 255.0f,
+            color.getBlue() / 255.0f);
+
+        GlStateManager.bindTexture(texture);
+
+        GlStateManager.tryBlendFuncSeparate(
+            blendFunc.getSrcFactor(),
+            blendFunc.getDstFactor(),
+            blendFunc.getSrcFactorAlpha(),
+            blendFunc.getDstFactorAlpha());
+
+        for (GlFlag flag : GlFlag.values()) {
+            flag.setEnabled(flags.contains(flag));
+        }
     }
 
     private Color getCurrentColor() {
@@ -57,22 +92,6 @@ public class GlSnapshot {
         int dstFactorAlpha = GL11.glGetInteger(GL14.GL_BLEND_DST_ALPHA);
 
         return new BlendFunc(srcFactor, dstFactor, srcFactorAlpha, dstFactorAlpha);
-    }
-
-    public Map<Flag, Boolean> getFlags() {
-        return Collections.unmodifiableMap(flags);
-    }
-
-    public Color getColor() {
-        return color;
-    }
-
-    public int getTexture() {
-        return texture;
-    }
-
-    public BlendFunc getBlendFunc() {
-        return blendFunc;
     }
 
     @Override
@@ -102,11 +121,11 @@ public class GlSnapshot {
         private final SourceFactor srcFactorAlpha;
         private final DestFactor dstFactorAlpha;
 
-        private BlendFunc(int srcFactor, int dstFactor, int srcFactorAlpha, int dstFactorAlpha) {
+        public BlendFunc(int srcFactor, int dstFactor, int srcFactorAlpha, int dstFactorAlpha) {
             this(getSrcFactor(srcFactor), getDstFactor(dstFactor), getSrcFactor(srcFactorAlpha), getDstFactor(dstFactorAlpha));
         }
 
-        private BlendFunc(SourceFactor srcFactor, DestFactor dstFactor, SourceFactor srcFactorAlpha, DestFactor dstFactorAlpha) {
+        public BlendFunc(SourceFactor srcFactor, DestFactor dstFactor, SourceFactor srcFactorAlpha, DestFactor dstFactorAlpha) {
             this.srcFactor = srcFactor;
             this.dstFactor = dstFactor;
             this.srcFactorAlpha = srcFactorAlpha;
@@ -151,35 +170,6 @@ public class GlSnapshot {
         @Override
         public String toString() {
             return String.format("{src: %s, dst: %s, srcAlpha: %s, dstAlpha: %s}", srcFactor, dstFactor, srcFactorAlpha, dstFactorAlpha);
-        }
-    }
-
-    public enum Flag {
-        ALPHA_TEST(GL11.GL_ALPHA_TEST),
-        BLEND(GL11.GL_BLEND),
-        DEPTH_TEST(GL11.GL_DEPTH_TEST),
-        LIGHTING(GL11.GL_LIGHTING),
-        TEXTURE_2D(GL11.GL_TEXTURE_2D),
-        COLOR_MATERIAL(GL11.GL_COLOR_MATERIAL),
-        RESCALE_NORMAL(GL12.GL_RESCALE_NORMAL),
-
-        LIGHT_0(GL11.GL_LIGHT0),
-        LIGHT_1(GL11.GL_LIGHT1),
-        LIGHT_2(GL11.GL_LIGHT2),
-        LIGHT_3(GL11.GL_LIGHT3),
-        LIGHT_4(GL11.GL_LIGHT4),
-        LIGHT_5(GL11.GL_LIGHT5),
-        LIGHT_6(GL11.GL_LIGHT6),
-        LIGHT_7(GL11.GL_LIGHT7);
-
-        private final int code;
-
-        Flag(int code) {
-            this.code = code;
-        }
-
-        public boolean isEnabled() {
-            return GL11.glIsEnabled(code);
         }
     }
 }

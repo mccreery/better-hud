@@ -1,20 +1,26 @@
 package jobicade.betterhud.element.vanilla;
 
+import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.Textures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraftforge.client.GuiIngameForge;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.common.MinecraftForge;
 
-public class Hotbar extends OverrideElement {
+public class Hotbar extends OverlayElement {
+	private SettingPosition position;
+
 	public Hotbar() {
-		super("hotbar", new SettingPosition(DirectionOptions.TOP_BOTTOM, DirectionOptions.NONE));
+		super("hotbar");
+
+		settings.addChild(position = new SettingPosition(DirectionOptions.TOP_BOTTOM, DirectionOptions.NONE));
 		position.setEdge(true).setPostSpacer(2);
 	}
 
@@ -25,17 +31,14 @@ public class Hotbar extends OverrideElement {
 	}
 
 	@Override
-	protected ElementType getType() {
-		return ElementType.HOTBAR;
+	public boolean shouldRender(OverlayContext context) {
+		// TODO make it work correctly with spectator mode
+		return !Minecraft.getMinecraft().player.isSpectator()
+			&& !MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(context.getEvent(), ElementType.HOTBAR));
 	}
 
 	@Override
-	public boolean shouldRender(Event event) {
-		return !GuiIngameForge.renderHotbar && super.shouldRender(event);
-	}
-
-	@Override
-	protected Rect render(Event event) {
+	public Rect render(OverlayContext context) {
 		Rect barTexture = new Rect(182, 22);
 		Rect bounds = position.applyTo(new Rect(barTexture));
 
@@ -44,7 +47,7 @@ public class Hotbar extends OverrideElement {
 
 		Rect slot = bounds.grow(-3).withWidth(16);
 
-		float partialTicks = getPartialTicks(event);
+		float partialTicks = context.getPartialTicks();
 		for(int i = 0; i < 9; i++, slot = slot.translate(Direction.EAST.scale(20))) {
 			if(i == Minecraft.getMinecraft().player.inventory.currentItem) {
 				Minecraft.getMinecraft().getTextureManager().bindTexture(Textures.WIDGETS);
@@ -55,6 +58,7 @@ public class Hotbar extends OverrideElement {
 		}
 
 		Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+		MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(context.getEvent(), ElementType.HOTBAR));
 		return bounds;
 	}
 }

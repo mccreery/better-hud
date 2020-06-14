@@ -1,15 +1,11 @@
 package jobicade.betterhud.element;
 
-import java.util.List;
-
-import net.minecraftforge.fml.common.eventhandler.Event;
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingPercentage;
 import jobicade.betterhud.element.settings.SettingSlider;
 import jobicade.betterhud.geom.Rect;
 
-public class GlobalSettings extends HudElement {
+public class GlobalSettings extends HudElement<Object> {
 	private SettingPercentage billboardScale;
 	private SettingSlider billboardDistance;
 	private SettingBoolean hideOnDebug;
@@ -17,16 +13,13 @@ public class GlobalSettings extends HudElement {
 
 	public GlobalSettings() {
 		super("global");
-		ELEMENTS.remove(this);
-	}
 
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(billboardScale = new SettingPercentage("billboardScale"));
-		settings.add(billboardDistance = new SettingSlider("rayDistance", 5, 200).setUnlocalizedValue("betterHud.hud.meters"));
-		settings.add(hideOnDebug = new SettingBoolean("hideOnDebug"));
-		settings.add(debugMode = new SettingBoolean("debugMode"));
+		settings.addChildren(
+			billboardScale = new SettingPercentage("billboardScale"),
+			billboardDistance = new SettingSlider("rayDistance", 5, 200).setUnlocalizedValue("betterHud.hud.meters"),
+			hideOnDebug = new SettingBoolean("hideOnDebug"),
+			debugMode = new SettingBoolean("debugMode")
+		);
 	}
 
 	public float getBillboardScale() {
@@ -54,6 +47,8 @@ public class GlobalSettings extends HudElement {
 		hideOnDebug.set(true);
 	}
 
-	@Override public boolean shouldRender(Event event) {return false;}
-	@Override public Rect render(Event event) {return null;}
+	@Override
+	public Rect render(Object context) {
+		return null;
+	}
 }

@@ -4,24 +4,21 @@ import java.text.DateFormat;
 import java.text.FieldPosition;
 import java.text.ParsePosition;
 import java.util.Date;
-import java.util.List;
 import java.util.TimeZone;
 
+import jobicade.betterhud.element.settings.DirectionOptions;
+import jobicade.betterhud.element.settings.SettingBoolean;
+import jobicade.betterhud.element.settings.SettingChoose;
+import jobicade.betterhud.events.OverlayContext;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.WorldProvider.WorldSleepResult;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.fml.common.eventhandler.Event;
-import jobicade.betterhud.element.settings.DirectionOptions;
-import jobicade.betterhud.element.settings.Setting;
-import jobicade.betterhud.element.settings.SettingBoolean;
-import jobicade.betterhud.element.settings.SettingChoose;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.geom.Point;
 
 public class GameClock extends Clock {
 	private static final ItemStack BED = new ItemStack(Items.BED, 1, 14);
@@ -32,15 +29,12 @@ public class GameClock extends Clock {
 
 	public GameClock() {
 		super("gameClock");
-		border = true;
-	}
 
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(showDays = new SettingBoolean("showDays").setValuePrefix(SettingBoolean.VISIBLE));
-		settings.add(showSleepIndicator = new SettingBoolean("showSleepIndicator").setValuePrefix(SettingBoolean.VISIBLE));
-		settings.add(requireItem = new SettingChoose("requireItem", "disabled", "inventory", "hand"));
+		settings.addChildren(
+			showDays = new SettingBoolean("showDays").setValuePrefix(SettingBoolean.VISIBLE),
+			showSleepIndicator = new SettingBoolean("showSleepIndicator").setValuePrefix(SettingBoolean.VISIBLE),
+			requireItem = new SettingChoose("requireItem", "disabled", "inventory", "hand")
+		);
 	}
 
 	@Override
@@ -58,9 +52,7 @@ public class GameClock extends Clock {
 	}
 
 	@Override
-	public boolean shouldRender(Event event) {
-		if(!super.shouldRender(event)) return false;
-
+	public boolean shouldRender(OverlayContext context) {
 		switch(requireItem.getIndex()) {
 			case 1:
 				return Minecraft.getMinecraft().player.inventory.hasItemStack(new ItemStack(Items.CLOCK));
@@ -72,11 +64,10 @@ public class GameClock extends Clock {
 	}
 
 	@Override
-	public Rect render(Event event) {
-		Rect bounds = super.render(event);
-		float partialTicks = ((RenderGameOverlayEvent)event).getPartialTicks();
+	public Rect render(OverlayContext context) {
+		Rect bounds = super.render(context);
 
-		if(showSleepIndicator(partialTicks)) {
+		if(showSleepIndicator(context.getPartialTicks())) {
 			Direction bedAnchor = DirectionOptions.WEST_EAST.apply(position.getContentAlignment().mirrorCol());
 			Rect bed = new Rect(16, 16).anchor(bounds, bedAnchor);
 

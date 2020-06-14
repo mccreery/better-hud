@@ -2,21 +2,26 @@ package jobicade.betterhud.element.vanilla;
 
 import static jobicade.betterhud.BetterHud.SPACER;
 
-import jobicade.betterhud.element.HudElement;
+import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.registry.OverlayElements;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.Textures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHandSide;
-import net.minecraftforge.fml.common.eventhandler.Event;
 
-public class Offhand extends HudElement {
+public class Offhand extends OverlayElement {
+	private SettingPosition position;
+
 	public Offhand() {
-		super("offhand", new SettingPosition("position", DirectionOptions.BAR, DirectionOptions.NONE));
+		super("offhand");
+
+		settings.addChild(position = new SettingPosition("position", DirectionOptions.BAR, DirectionOptions.NONE));
 	}
 
 	@Override
@@ -26,12 +31,12 @@ public class Offhand extends HudElement {
 	}
 
 	@Override
-	public boolean shouldRender(Event event) {
-		return !Minecraft.getMinecraft().player.getHeldItemOffhand().isEmpty() && super.shouldRender(event);
+	public boolean shouldRender(OverlayContext context) {
+		return !Minecraft.getMinecraft().player.getHeldItemOffhand().isEmpty();
 	}
 
 	@Override
-	protected Rect render(Event event) {
+	public Rect render(OverlayContext context) {
 		ItemStack offhandStack = Minecraft.getMinecraft().player.getHeldItemOffhand();
 		EnumHandSide offhandSide = Minecraft.getMinecraft().player.getPrimaryHand().opposite();
 		Direction offhand = offhandSide == EnumHandSide.RIGHT ? Direction.EAST : Direction.WEST;
@@ -40,7 +45,7 @@ public class Offhand extends HudElement {
 		Rect texture = new Rect(24, 23, 22, 22);
 
 		if(position.isDirection(Direction.SOUTH)) {
-			bounds = bounds.align(HudElement.HOTBAR.getLastBounds().grow(SPACER).getAnchor(offhand), offhand.mirrorCol());
+			bounds = bounds.align(OverlayElements.HOTBAR.getLastBounds().grow(SPACER).getAnchor(offhand), offhand.mirrorCol());
 		} else {
 			bounds = position.applyTo(bounds);
 		}
@@ -48,7 +53,7 @@ public class Offhand extends HudElement {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(Textures.WIDGETS);
 		GlUtil.drawRect(bounds, texture);
 
-		GlUtil.renderHotbarItem(bounds.translate(3, 3), offhandStack, getPartialTicks(event));
+		GlUtil.renderHotbarItem(bounds.translate(3, 3), offhandStack, context.getPartialTicks());
 		return bounds;
 	}
 }

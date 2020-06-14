@@ -2,39 +2,32 @@ package jobicade.betterhud.element.vanilla;
 
 import static jobicade.betterhud.BetterHud.MANAGER;
 
-import java.util.List;
-
+import jobicade.betterhud.element.OverlayElement;
+import jobicade.betterhud.element.settings.DirectionOptions;
+import jobicade.betterhud.element.settings.SettingChoose;
+import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.events.OverlayContext;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.util.bars.StatBar;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.Gui;
-import net.minecraftforge.fml.common.eventhandler.Event;
-import jobicade.betterhud.element.settings.DirectionOptions;
-import jobicade.betterhud.element.settings.Setting;
-import jobicade.betterhud.element.settings.SettingChoose;
-import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.util.bars.StatBar;
 
-public abstract class Bar extends OverrideElement {
+public abstract class Bar extends OverlayElement {
+	protected SettingPosition position;
 	protected SettingChoose side;
 
 	private StatBar<? super EntityPlayerSP> bar;
 
 	public Bar(String name, StatBar<? super EntityPlayerSP> bar) {
-		super(name, new SettingPosition(DirectionOptions.BAR, DirectionOptions.CORNERS));
+		super(name);
 		this.bar = bar;
-	}
 
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(side = new SettingChoose("side", "west", "east") {
-			@Override
-			public boolean enabled() {
-				return position.isDirection(Direction.SOUTH);
-			}
-		});
+		settings.addChildren(
+			position = new SettingPosition(DirectionOptions.BAR, DirectionOptions.CORNERS),
+			side = new SettingChoose("side", "west", "east").setEnableOn(() -> position.isDirection(Direction.SOUTH))
+		);
 	}
 
 	@Override
@@ -44,9 +37,9 @@ public abstract class Bar extends OverrideElement {
 	}
 
 	@Override
-	public boolean shouldRender(Event event) {
+	public boolean shouldRender(OverlayContext context) {
 		bar.setHost(Minecraft.getMinecraft().player);
-		return super.shouldRender(event) && bar.shouldRender();
+		return bar.shouldRender();
 	}
 
 	/** @return {@link Direction#WEST} or {@link Direction#EAST} */
@@ -59,7 +52,7 @@ public abstract class Bar extends OverrideElement {
 	}
 
 	@Override
-	protected Rect render(Event event) {
+	public Rect render(OverlayContext context) {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
 		Direction contentAlignment = getContentAlignment();
 

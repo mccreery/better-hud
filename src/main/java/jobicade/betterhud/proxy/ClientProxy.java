@@ -8,9 +8,10 @@ import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.config.ConfigManager;
 import jobicade.betterhud.config.HudConfig;
 import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.element.HudElement.SortType;
-import jobicade.betterhud.events.RenderEvents;
 import jobicade.betterhud.gui.GuiHudMenu;
+import jobicade.betterhud.registry.HudElements;
+import jobicade.betterhud.registry.HudRegistryEvent;
+import jobicade.betterhud.registry.SortField;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
@@ -30,6 +31,8 @@ public class ClientProxy implements HudSidedProxy {
     public void preInit(FMLPreInitializationEvent event) {
         Path configPath = event.getSuggestedConfigurationFile().toPath();
 
+        MinecraftForge.EVENT_BUS.post(new HudRegistryEvent());
+
         // Order is important: initialising config manager loads settings
         HudElement.loadAllDefaults();
         configManager = new ConfigManager(configPath, configPath.resolveSibling(BetterHud.MODID));
@@ -42,7 +45,8 @@ public class ClientProxy implements HudSidedProxy {
         if(manager instanceof IReloadableResourceManager) {
             IReloadableResourceManager reloadableManager = (IReloadableResourceManager)manager;
 
-            reloadableManager.registerReloadListener(m -> HudElement.SORTER.markDirty(SortType.ALPHABETICAL));
+            // Language dictates alphabetical order
+            reloadableManager.registerReloadListener(m -> HudElements.get().invalidateSorts(SortField.ALPHABETICAL));
             reloadableManager.registerReloadListener(configManager);
         } else {
             BetterHud.getLogger().warn("Unable to register alphabetical sort update on language change");
@@ -50,14 +54,14 @@ public class ClientProxy implements HudSidedProxy {
 
         ClientRegistry.registerKeyBinding(menuKey);
         MinecraftForge.EVENT_BUS.register(this);
-        MinecraftForge.EVENT_BUS.register(new RenderEvents());
+        //MinecraftForge.EVENT_BUS.register(new RenderEvents()); // TODO remove entirely
         HudElement.initAll(event);
     }
 
     @Override
     public boolean isModEnabled() {
-        return HudElement.GLOBAL.isEnabledAndSupported() && !(
-            HudElement.GLOBAL.hideOnDebug()
+        return HudElements.GLOBAL.isEnabled() && !(
+            HudElements.GLOBAL.hideOnDebug()
             && Minecraft.getMinecraft().gameSettings.showDebugInfo
         );
     }

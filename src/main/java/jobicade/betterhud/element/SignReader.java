@@ -7,6 +7,7 @@ import java.util.stream.Stream;
 
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -18,10 +19,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.TileEntitySign;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraftforge.fml.common.eventhandler.Event;
 
-public class SignReader extends HudElement {
+public class SignReader extends OverlayElement {
 	private static final ResourceLocation SIGN_TEXTURE = new ResourceLocation("textures/entity/sign.png");
+
+	private SettingPosition position;
 
 	@Override
 	public void loadDefaults() {
@@ -30,16 +32,18 @@ public class SignReader extends HudElement {
 	}
 
 	public SignReader() {
-		super("signReader", new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.NONE));
+		super("signReader");
+
+		settings.addChild(position = new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.NONE));
 	}
 
 	@Override
-	public boolean shouldRender(Event event) {
+	public boolean shouldRender(OverlayContext context) {
 		return getSign() != null;
 	}
 
 	@Override
-	public Rect render(Event event) {
+	public Rect render(OverlayContext context) {
 		Rect bounds = position.applyTo(new Rect(96, 48));
 
 		Minecraft.getMinecraft().getTextureManager().bindTexture(SIGN_TEXTURE);

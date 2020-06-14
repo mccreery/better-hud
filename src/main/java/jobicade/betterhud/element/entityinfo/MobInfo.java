@@ -3,25 +3,21 @@ package jobicade.betterhud.element.entityinfo;
 import static jobicade.betterhud.BetterHud.MANAGER;
 import static jobicade.betterhud.BetterHud.SPACER;
 
-import java.util.List;
-
 import com.mojang.realmsclient.gui.ChatFormatting;
 
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingSlider;
 import jobicade.betterhud.events.RenderMobInfoEvent;
-import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.util.MathUtil;
-import jobicade.betterhud.util.bars.StatBarHealth;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
+import jobicade.betterhud.util.GlUtil;
+import jobicade.betterhud.util.MathUtil;
+import jobicade.betterhud.util.bars.StatBarHealth;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
-import net.minecraftforge.fml.common.eventhandler.Event;
 
 public class MobInfo extends EntityInfo {
 	private final StatBarHealth bar = new StatBarHealth();
@@ -29,12 +25,8 @@ public class MobInfo extends EntityInfo {
 
 	public MobInfo() {
 		super("mobInfo");
-	}
 
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(compress = new SettingSlider("compress", 0, 200, 20) {
+		settings.addChild(compress = new SettingSlider("compress", 0, 200, 20) {
 			@Override
 			public String getDisplayValue(double value) {
 				if(value == 0) {
@@ -54,8 +46,8 @@ public class MobInfo extends EntityInfo {
 	}
 
 	@Override
-	public Rect render(Event event) {
-		EntityLivingBase entity = ((RenderMobInfoEvent)event).getEntity();
+	public Rect render(RenderMobInfoEvent context) {
+		EntityLivingBase entity = context.getEntity();
 		bar.setHost(entity);
 		bar.setCompressThreshold(compress.getInt());
 

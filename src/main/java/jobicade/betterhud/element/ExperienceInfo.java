@@ -3,17 +3,17 @@ package jobicade.betterhud.element;
 import java.util.ArrayList;
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.Legend;
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.text.TextElement;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.render.Color;
+import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.registry.OverlayElements;
+import jobicade.betterhud.render.Color;
+import jobicade.betterhud.util.GlUtil;
+import net.minecraft.client.Minecraft;
 
 public class ExperienceInfo extends TextElement {
 	private SettingBoolean total;
@@ -30,23 +30,21 @@ public class ExperienceInfo extends TextElement {
 
 	public ExperienceInfo() {
 		super("experienceInfo");
+
+		settings.addChildren(
+			new Legend("misc"),
+			total = new SettingBoolean("showTotalExp").setValuePrefix(SettingBoolean.VISIBLE),
+			lifetime = new SettingBoolean("showLifetimeExp").setValuePrefix(SettingBoolean.VISIBLE)
+		);
 	}
 
 	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(new Legend("misc"));
-		settings.add(total = new SettingBoolean("showTotalExp").setValuePrefix(SettingBoolean.VISIBLE));
-		settings.add(lifetime = new SettingBoolean("showLifetimeExp").setValuePrefix(SettingBoolean.VISIBLE));
+	public boolean shouldRender(OverlayContext context) {
+		return Minecraft.getMinecraft().playerController.gameIsSurvivalOrAdventure();
 	}
 
 	@Override
-	public boolean shouldRender(Event event) {
-		return super.shouldRender(event) && Minecraft.getMinecraft().playerController.gameIsSurvivalOrAdventure();
-	}
-
-	@Override
-	public Rect render(Event event) {
+	public Rect render(OverlayContext context) {
 		int fullBar = getExperienceWithinLevel(Minecraft.getMinecraft().player.experienceLevel);
 
 		int has = (int)(Minecraft.getMinecraft().player.experience * fullBar);
@@ -55,7 +53,7 @@ public class ExperienceInfo extends TextElement {
 		String hasDisplay = String.valueOf(has);
 		String neededDisplay = String.valueOf(needed);
 
-		Rect bar = EXPERIENCE.getLastBounds();
+		Rect bar = OverlayElements.EXPERIENCE.getLastBounds();
 
 		Point text = new Rect(GlUtil.getStringSize(hasDisplay).sub(0, 2)).anchor(bar, Direction.WEST).getPosition();
 		GlUtil.drawBorderedString(hasDisplay, text.getX(), text.getY(), Color.WHITE);
@@ -63,7 +61,7 @@ public class ExperienceInfo extends TextElement {
 		text = new Rect(GlUtil.getStringSize(neededDisplay).sub(0, 2)).anchor(bar, Direction.EAST).getPosition();
 		GlUtil.drawBorderedString(neededDisplay, text.getX(), text.getY(), Color.WHITE);
 
-		return super.render(event);
+		return super.render(context);
 	}
 
 	/** @param level The player's current level

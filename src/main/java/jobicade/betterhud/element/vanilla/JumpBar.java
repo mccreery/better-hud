@@ -2,19 +2,26 @@ package jobicade.betterhud.element.vanilla;
 
 import static jobicade.betterhud.BetterHud.MANAGER;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.GlUtil;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.Gui;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.common.MinecraftForge;
 
-public class JumpBar extends OverrideElement {
+public class JumpBar extends OverlayElement {
+	private SettingPosition position;
+
 	public JumpBar() {
-		super("jumpBar", new SettingPosition("position", DirectionOptions.BAR, DirectionOptions.NORTH_SOUTH));
+		super("jumpBar");
+
+		settings.addChild(position = new SettingPosition("position", DirectionOptions.BAR, DirectionOptions.NORTH_SOUTH));
 	}
 
 	@Override
@@ -24,12 +31,13 @@ public class JumpBar extends OverrideElement {
 	}
 
 	@Override
-	public boolean shouldRender(Event event) {
-		return Minecraft.getMinecraft().player.isRidingHorse() && super.shouldRender(event);
+	public boolean shouldRender(OverlayContext context) {
+		return Minecraft.getMinecraft().player.isRidingHorse()
+			&& !MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(context.getEvent(), ElementType.JUMPBAR));
 	}
 
 	@Override
-	protected Rect render(Event event) {
+	public Rect render(OverlayContext context) {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
 
 		Rect bounds = new Rect(182, 5);
@@ -47,11 +55,8 @@ public class JumpBar extends OverrideElement {
 		if(filled > 0) {
 			GlUtil.drawRect(bounds.withWidth(filled), new Rect(0, 89, filled, bounds.getHeight()));
 		}
-		return bounds;
-	}
 
-	@Override
-	protected ElementType getType() {
-		return ElementType.JUMPBAR;
+		MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(context.getEvent(), ElementType.JUMPBAR));
+		return bounds;
 	}
 }

@@ -1,25 +1,26 @@
 package jobicade.betterhud.element;
 
-import java.util.List;
-
+import jobicade.betterhud.element.settings.DirectionOptions;
+import jobicade.betterhud.element.settings.SettingBoolean;
+import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.events.OverlayContext;
+import jobicade.betterhud.events.OverlayHook;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.registry.OverlayElements;
+import jobicade.betterhud.render.Color;
+import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemArrow;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.eventhandler.Event;
-import jobicade.betterhud.element.settings.DirectionOptions;
-import jobicade.betterhud.element.settings.Setting;
-import jobicade.betterhud.element.settings.SettingBoolean;
-import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.render.Color;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.geom.Point;
 
-public class ArrowCount extends HudElement {
+public class ArrowCount extends OverlayElement {
 	private static final ItemStack ARROW = new ItemStack(Items.ARROW, 1);
+
+	private SettingPosition position;
 	private SettingBoolean overlay;
 
 	@Override
@@ -32,14 +33,14 @@ public class ArrowCount extends HudElement {
 	}
 
 	public ArrowCount() {
-		super("arrowCount", new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.NONE));
-		position.setEnableOn(() -> !overlay.get());
-	}
+		super("arrowCount");
 
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(overlay = new SettingBoolean("overlay"));
+		settings.addChildren(
+			position = new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.NONE),
+			overlay = new SettingBoolean("overlay")
+		);
+
+		position.setEnableOn(() -> !overlay.get());
 	}
 
 	/** Note this method only cares about arrows which can be shot by a vanilla bow
@@ -59,18 +60,16 @@ public class ArrowCount extends HudElement {
 	}
 
 	@Override
-	public boolean shouldRender(Event event) {
-		if(!super.shouldRender(event)) return false;
-
+	public boolean shouldRender(OverlayContext context) {
 		ItemStack stack = Minecraft.getMinecraft().player.getHeldItemOffhand();
 		boolean offhandHeld = stack != null && stack.getItem() == Items.BOW;
 
 		if(overlay.get()) {
-			if(HudElement.OFFHAND.isEnabledAndSupported() && offhandHeld) {
+			if (OverlayHook.shouldRender(OverlayElements.OFFHAND, context) && offhandHeld) {
 				return true;
 			}
 
-			if(HudElement.HOTBAR.isEnabledAndSupported()) {
+			if (OverlayHook.shouldRender(OverlayElements.HOTBAR, context)) {
 				for(int i = 0; i < 9; i++) {
 					stack = Minecraft.getMinecraft().player.inventory.getStackInSlot(i);
 
@@ -89,11 +88,11 @@ public class ArrowCount extends HudElement {
 	}
 
 	@Override
-	public Rect render(Event event) {
+	public Rect render(OverlayContext context) {
 		int totalArrows = arrowCount(Minecraft.getMinecraft().player);
 
 		if(overlay.get()) {
-			Rect stackRect = new Rect(16, 16).anchor(HOTBAR.getLastBounds().grow(-3), Direction.WEST);
+			Rect stackRect = new Rect(16, 16).anchor(OverlayElements.HOTBAR.getLastBounds().grow(-3), Direction.WEST);
 
 			for(int i = 0; i < 9; i++) {
 				ItemStack stack = Minecraft.getMinecraft().player.inventory.getStackInSlot(i);
@@ -107,7 +106,7 @@ public class ArrowCount extends HudElement {
 			ItemStack stack = Minecraft.getMinecraft().player.inventory.getStackInSlot(40);
 
 			if(stack != null && stack.getItem() == Items.BOW) {
-				drawCounter(new Rect(OFFHAND.getLastBounds().getPosition().add(3, 3), new Point(16, 16)), totalArrows);
+				drawCounter(new Rect(OverlayElements.OFFHAND.getLastBounds().getPosition().add(3, 3), new Point(16, 16)), totalArrows);
 			}
 			return Rect.empty();
 		} else {

@@ -3,6 +3,7 @@ package jobicade.betterhud.network;
 import java.io.IOException;
 
 import io.netty.buffer.ByteBuf;
+import jobicade.betterhud.registry.OverlayElements;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.math.BlockPos;
@@ -11,7 +12,6 @@ import net.minecraft.world.IWorldNameable;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import jobicade.betterhud.element.HudElement;
 
 public abstract class InventoryNameQuery implements IMessage {
 	private BlockPos pos = null;
@@ -101,7 +101,7 @@ public abstract class InventoryNameQuery implements IMessage {
 		public IMessage onMessage(Response message, MessageContext ctx) {
 			//System.out.println("Received block response " + message.getBlockPos() + " for name " + message.getInventoryName());
 
-			HudElement.BLOCK_VIEWER.onNameReceived(message.getBlockPos(), message.getInventoryName());
+			OverlayElements.BLOCK_VIEWER.onNameReceived(message.getBlockPos(), message.getInventoryName());
 			return null;
 		}
 	}

@@ -7,22 +7,24 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.google.common.collect.Lists;
+
 import jobicade.betterhud.config.ConfigManager;
 import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.element.HudElement.SortType;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.registry.HudElements;
+import jobicade.betterhud.registry.SortField;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.Paginator;
-import jobicade.betterhud.util.SortField;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 
 public class GuiHudMenu extends GuiMenuScreen {
-	private final Map<HudElement, ButtonRow> rows = new HashMap<HudElement, ButtonRow>(HudElement.ELEMENTS.size());
-	final Paginator<HudElement> paginator = new Paginator<HudElement>();
+	private final Map<HudElement<?>, ButtonRow> rows = new HashMap<>();
+	final Paginator<HudElement<?>> paginator = new Paginator<>();
 
 	private final GuiActionButton returnToGame = new GuiActionButton(I18n.format("menu.returnToGame")).setCallback(b -> Minecraft.getMinecraft().displayGuiScreen(null));
 	private final GuiActionButton toggleAll = new GuiActionButton("").setCallback(b -> setAll(!allEnabled()));
@@ -30,7 +32,7 @@ public class GuiHudMenu extends GuiMenuScreen {
 
 	private final GuiActionButton resetDefaults = new GuiActionButton(I18n.format("betterHud.menu.saveLoad"));
 
-	private final ButtonRow globalRow = new ButtonRow(this, HudElement.GLOBAL);
+	private final ButtonRow globalRow = new ButtonRow(this, HudElements.GLOBAL);
 
 	private final GuiActionButton lastPage = new GuiActionButton(I18n.format("betterHud.menu.lastPage"))
 		.setCallback(b -> {paginator.previousPage(); initGui();});
@@ -38,7 +40,7 @@ public class GuiHudMenu extends GuiMenuScreen {
 	private final GuiActionButton nextPage = new GuiActionButton(I18n.format("betterHud.menu.nextPage"))
 		.setCallback(b -> {paginator.nextPage(); initGui();});
 
-	private SortField<HudElement> sortCriteria = SortType.ALPHABETICAL;
+	private SortField sortCriteria = SortField.ALPHABETICAL;
 	private boolean descending;
 
 	public GuiHudMenu(ConfigManager configManager) {
@@ -47,7 +49,7 @@ public class GuiHudMenu extends GuiMenuScreen {
 		});
 	}
 
-	public SortField<HudElement> getSortCriteria() {
+	public SortField getSortCriteria() {
 		return sortCriteria;
 	}
 
@@ -56,18 +58,24 @@ public class GuiHudMenu extends GuiMenuScreen {
 	}
 
 	private boolean allEnabled() {
-		return HudElement.ELEMENTS.stream().allMatch(e -> e.get());
+		return HudElements.get().getRegistered().stream().allMatch(HudElement::isEnabled);
 	}
 
 	public void initGui() {
 		setTitle(I18n.format("betterHud.menu.hudSettings"));
-		paginator.setData(HudElement.SORTER.getSortedData(sortCriteria, descending ^ sortCriteria.isInverted()));
+
+		List<HudElement<?>> pageData = HudElements.get().getRegistered(sortCriteria);
+		if (descending != sortCriteria.isInverted()) {
+			pageData = Lists.reverse(pageData);
+		}
+
+		paginator.setData(pageData);
 		paginator.setPageSize(Math.max(1, (int) Math.floor((height / 8 * 7 - 134) / 24)));
 
 		addDefaultButtons();
 		Rect buttonRect = new Rect(170, 20).align(getOrigin().add(0, 82), Direction.NORTH);
 
-		for(HudElement element : paginator.getPage()) {
+		for(HudElement<?> element : paginator.getPage()) {
 			ButtonRow row = getRow(element);
 			buttonList.addAll(row.getButtons());
 
@@ -112,7 +120,7 @@ public class GuiHudMenu extends GuiMenuScreen {
 		buttonList.add(lastPage);
 		buttonList.add(nextPage);
 
-		List<GuiActionButton> indexerControls = getIndexControls(SortType.values());
+		List<GuiActionButton> indexerControls = getIndexControls(SortField.values());
 		Rect sortButton = new Rect(75, 20);
 		Rect bounds = sortButton.withWidth((sortButton.getWidth() + SPACER) * indexerControls.size() - SPACER).align(getOrigin().add(0, 58), Direction.NORTH);
 		sortButton = sortButton.move(bounds.getPosition());
@@ -125,11 +133,11 @@ public class GuiHudMenu extends GuiMenuScreen {
 	}
 
 	private void setAll(boolean enabled) {
-		for(HudElement element : HudElement.ELEMENTS) {
-			element.set(enabled);
+		for(HudElement<?> element : HudElements.get().getRegistered()) {
+			element.setEnabled(enabled);
 		}
 
-		HudElement.SORTER.markDirty(SortType.ENABLED);
+		HudElements.get().invalidateSorts(SortField.ENABLED);
 		initGui();
 	}
 
@@ -137,27 +145,27 @@ public class GuiHudMenu extends GuiMenuScreen {
 	public void drawScreen(int mouseX, int mouseY, float p_73863_3_) {
 		super.drawScreen(mouseX, mouseY, p_73863_3_);
 
-		int enabled = (int)HudElement.ELEMENTS.stream().filter(HudElement::get).count();
-		GlUtil.drawString(enabled + "/" + HudElement.ELEMENTS.size() + " enabled", new Point(SPACER, SPACER), Direction.NORTH_WEST, Color.WHITE);
+		int enabled = (int)HudElements.get().getRegistered().stream().filter(HudElement::isEnabled).count();
+		GlUtil.drawString(enabled + "/" + HudElements.get().getRegistered().size() + " enabled", new Point(SPACER, SPACER), Direction.NORTH_WEST, Color.WHITE);
 
 		String page = I18n.format("betterHud.menu.page", (paginator.getPageIndex() + 1) + "/" + paginator.getPageCount());
 		drawCenteredString(fontRenderer, page, width / 2, height - height / 16 - 13, Color.WHITE.getPacked());
 	}
 
-	private List<GuiActionButton> getIndexControls(SortField<HudElement>[] sortValues) {
+	private List<GuiActionButton> getIndexControls(SortField[] sortValues) {
 		List<GuiActionButton> buttons = new ArrayList<GuiActionButton>(sortValues.length);
 
-		for(SortField<HudElement> sortValue : sortValues) {
+		for(SortField sortValue : sortValues) {
 			buttons.add(new SortButton(this, sortValue));
 		}
 		return buttons;
 	}
 
-	private ButtonRow getRow(HudElement element) {
+	private ButtonRow getRow(HudElement<?> element) {
 		return rows.computeIfAbsent(element, e -> new ButtonRow(this, e));
 	}
 
-	public void changeSort(SortField<HudElement> sortCriteria) {
+	public void changeSort(SortField sortCriteria) {
 		if(this.sortCriteria == sortCriteria) {
 			descending = !descending;
 		} else {

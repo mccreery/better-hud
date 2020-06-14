@@ -3,6 +3,7 @@ package jobicade.betterhud.element.settings;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.BooleanSupplier;
 
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -127,5 +128,13 @@ public class SettingChoose extends SettingAlignable<String> {
 	@Override
 	public void updateGuiParts(Collection<Setting<?>> settings) {
 		last.enabled = next.enabled = enabled();
+	}
+
+	// TODO methods that return this should either not do that or return their
+	// real type instead of Setting
+	@Override
+	public SettingChoose setEnableOn(BooleanSupplier enableOn) {
+		super.setEnableOn(enableOn);
+		return this;
 	}
 }

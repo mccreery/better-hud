@@ -34,7 +34,7 @@ public class GuiElementSettings extends GuiMenuScreen {
 	private static final int REPEAT_SPEED	   = 20; // Rate of speed-up to 20/s
 	private static final int REPEAT_SPEED_FAST = 10; // Rate of speed-up beyond 20/s
 
-	public HudElement element;
+	public HudElement<?> element;
 	private ArrayList<GuiTextField> textboxList = new ArrayList<GuiTextField>();
 	public HashMap<Gui, Setting<?>> callbacks = new HashMap<Gui, Setting<?>>();
 
@@ -45,7 +45,7 @@ public class GuiElementSettings extends GuiMenuScreen {
 
 	private int repeatTimer = 0;
 
-	public GuiElementSettings(HudElement element, GuiScreen prev) {
+	public GuiElementSettings(HudElement<?> element, GuiScreen prev) {
 		this.element = element;
 		done.setCallback(b -> Minecraft.getMinecraft().displayGuiScreen(prev));
 	}

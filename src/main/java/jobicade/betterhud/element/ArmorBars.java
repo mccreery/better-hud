@@ -1,30 +1,28 @@
 package jobicade.betterhud.element;
 
-import java.util.List;
-
+import jobicade.betterhud.element.settings.DirectionOptions;
+import jobicade.betterhud.element.settings.SettingBoolean;
+import jobicade.betterhud.element.settings.SettingChoose;
+import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.events.OverlayContext;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.geom.Size;
+import jobicade.betterhud.render.Boxed;
+import jobicade.betterhud.render.DefaultBoxed;
+import jobicade.betterhud.render.Grid;
+import jobicade.betterhud.render.Label;
+import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.eventhandler.Event;
-import jobicade.betterhud.element.settings.Setting;
-import jobicade.betterhud.element.settings.SettingBoolean;
-import jobicade.betterhud.element.settings.SettingChoose;
-import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.geom.Size;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.element.settings.DirectionOptions;
-import jobicade.betterhud.render.Boxed;
-import jobicade.betterhud.render.DefaultBoxed;
-import jobicade.betterhud.render.Grid;
-import jobicade.betterhud.render.Label;
-import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.geom.Point;
 
 public class ArmorBars extends EquipmentDisplay {
+	private SettingPosition position;
 	private SettingChoose barType;
 	private SettingBoolean alwaysVisible;
 
@@ -38,19 +36,17 @@ public class ArmorBars extends EquipmentDisplay {
 	}
 
 	public ArmorBars() {
-		super("armorBars", new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.WEST_EAST));
+		super("armorBars");
+
+		settings.addChildren(
+			position = new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.WEST_EAST),
+			barType = new SettingChoose("bars", "visible.off", "smallBars", "largeBars"),
+			alwaysVisible = new SettingBoolean("alwaysVisible")
+		);
 	}
 
 	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(barType = new SettingChoose("bars", "visible.off", "smallBars", "largeBars"));
-		settings.add(alwaysVisible = new SettingBoolean("alwaysVisible"));
-	}
-
-	@Override
-	public boolean shouldRender(Event event) {
-		if(!super.shouldRender(event)) return false;
+	public boolean shouldRender(OverlayContext context) {
 		if(alwaysVisible.get()) return true;
 
 		for(int i = 0; i < 4; i++) {
@@ -62,7 +58,7 @@ public class ArmorBars extends EquipmentDisplay {
 	}
 
 	@Override
-	public Rect render(Event event) {
+	public Rect render(OverlayContext context) {
 		Grid<Boxed> grid = new Grid<>(new Point(1, 4)).setStretch(true);
 
 		for(int i = 0; i < 4; i++) {

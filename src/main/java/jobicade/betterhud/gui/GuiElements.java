@@ -3,16 +3,17 @@ package jobicade.betterhud.gui;
 import java.util.function.Predicate;
 
 import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.registry.OverlayElements;
 import jobicade.betterhud.render.Color;
+import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.gui.GuiScreen;
 
 public abstract class GuiElements extends GuiScreen {
-	protected static HudElement getHoveredElement(int mouseX, int mouseY, Predicate<HudElement> ignore) {
-		HudElement result = null;
+	protected static HudElement<?> getHoveredElement(int mouseX, int mouseY, Predicate<HudElement<?>> ignore) {
+		HudElement<?> result = null;
 
-		for(HudElement element : HudElement.ELEMENTS) {
+		for(HudElement<?> element : OverlayElements.get().getRegistered()) {
 			if(!ignore.test(element)) {
 				Rect bounds = element.getLastBounds();
 

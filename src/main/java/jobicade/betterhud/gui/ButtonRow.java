@@ -7,24 +7,26 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.resources.I18n;
+import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.element.HudElement.SortType;
 import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.registry.HudElements;
+import jobicade.betterhud.registry.SortField;
 import jobicade.betterhud.geom.Direction;
 
 class ButtonRow {
-	private final HudElement element;
+	private final HudElement<?> element;
 	private final GuiActionButton toggle;
 	private final GuiActionButton options;
 
 	private Rect bounds;
 
-	public ButtonRow(GuiScreen callback, HudElement element) {
+	public ButtonRow(GuiScreen callback, HudElement<?> element) {
 		this.element = element;
 
 		toggle = new GuiActionButton("").setCallback(b -> {
-			element.toggle();
-			HudElement.SORTER.markDirty(SortType.ENABLED);
+			element.setEnabled(!element.isEnabled());
+			HudElements.get().invalidateSorts(SortField.ENABLED);
 
 			if(Minecraft.getMinecraft().currentScreen != null) {
 				Minecraft.getMinecraft().currentScreen.initGui();
@@ -50,14 +52,15 @@ class ButtonRow {
 	}
 
 	public ButtonRow update() {
-		boolean supported = element.isSupportedByServer();
+		boolean supported = element.getServerDependency()
+			.containsVersion(BetterHud.getServerVersion());
 
 		toggle.enabled = supported;
-		toggle.glowing = element.get();
-		toggle.updateText(element.getUnlocalizedName(), "options", element.get());
+		toggle.glowing = element.isEnabled();
+		toggle.updateText(element.getUnlocalizedName(), "options", element.isEnabled());
 		toggle.setTooltip(toggle.enabled ? null : I18n.format("betterHud.menu.unsupported"));
 
-		options.enabled = supported && element.get() && !element.settings.isEmpty();
+		options.enabled = supported && element.isEnabled() && !element.settings.isEmpty();
 
 		return this;
 	}
