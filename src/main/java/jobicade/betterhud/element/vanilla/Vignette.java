@@ -4,7 +4,6 @@ import static jobicade.betterhud.BetterHud.MANAGER;
 
 import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.SettingBoolean;
-import jobicade.betterhud.events.OverlayHook;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
@@ -17,6 +16,7 @@ import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.border.WorldBorder;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.common.MinecraftForge;
 
 public class Vignette extends OverlayElement {
 	private static final ResourceLocation VIGNETTE_TEX_PATH = new ResourceLocation("textures/misc/vignette.png");
@@ -39,7 +39,7 @@ public class Vignette extends OverlayElement {
 	@Override
 	public boolean shouldRender(RenderGameOverlayEvent context) {
 		return Minecraft.isFancyGraphicsEnabled()
-			&& !OverlayHook.mimicPre(context, ElementType.VIGNETTE);
+			&& !MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(context, ElementType.VIGNETTE));
 	}
 
 	@Override
@@ -76,7 +76,7 @@ public class Vignette extends OverlayElement {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
 		GlUtil.blendFuncSafe(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
 
-		OverlayHook.mimicPost(context, ElementType.VIGNETTE);
+		MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(context, ElementType.VIGNETTE));
 		return null;
 	}
 

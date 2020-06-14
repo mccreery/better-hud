@@ -105,28 +105,4 @@ public final class OverlayHook {
             && hudElement.isEnabled()
             && hudElement.shouldRender(context);
     }
-
-    /**
-     * Prepares OpenGL state and posts an appropriate event to mimic
-     * {@link GuiIngameForge#renderGameOverlay(float)} just before rendering
-     * {@code elementType}.
-     *
-     * @return {@code true} if the event was canceled.
-     */
-    public static boolean mimicPre(RenderGameOverlayEvent parentEvent, ElementType elementType) {
-        //GlSnapshots.applyPreState(elementType);
-        return MinecraftForge.EVENT_BUS.post(
-            new RenderGameOverlayEvent.Pre(parentEvent, elementType));
-    }
-
-    /**
-     * Prepares OpenGL state and posts an appropriate event to mimic
-     * {@link GuiIngameForge#renderGameOverlay(float)} just after rendering
-     * {@code elementType}.
-     */
-    public static void mimicPost(RenderGameOverlayEvent parentEvent, ElementType elementType) {
-        //GlSnapshots.applyPostState(elementType);
-        MinecraftForge.EVENT_BUS.post(
-            new RenderGameOverlayEvent.Pre(parentEvent, elementType));
-    }
 }
