@@ -5,8 +5,8 @@ public interface ISetting {
     String getName();
     Iterable<? extends ISetting> getChildren();
 
+    boolean hasValue();
     String getStringValue();
-
     String getDefaultValue();
 
 	/**
@@ -16,6 +16,5 @@ public interface ISetting {
      * @return {@code true} if the value was updated.
 	 */
     void loadStringValue(String stringValue);
-
     void loadDefaultValue();
 }

@@ -110,6 +110,11 @@ public class SettingAbsolutePosition extends Setting<Point, SettingAbsolutePosit
 	}
 
 	@Override
+	public boolean hasValue() {
+		return true;
+	}
+
+	@Override
 	public String getStringValue() {
 		return x + ", " + y;
 	}

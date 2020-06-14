@@ -23,7 +23,11 @@ public class SettingStub<T> extends Setting<T, SettingStub<T>> {
 	@Override public void loadStringValue(String save) {}
 	@Override public void loadDefaultValue() {}
 	@Override public void actionPerformed(GuiElementSettings gui, GuiButton button) {}
-	@Override protected boolean hasValue() {return false;}
+
+	@Override
+	public boolean hasValue() {
+		return false;
+	}
 
 	@Override
 	protected SettingStub<T> getThis() {

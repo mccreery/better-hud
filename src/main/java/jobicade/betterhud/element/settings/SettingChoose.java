@@ -41,6 +41,15 @@ public class SettingChoose extends SettingAlignable<String, SettingChoose> {
 
 		this.modes = modes;
 		this.length = modes.length;
+
+		if (length == 0) {
+			throw new IllegalArgumentException("modes cannot be empty");
+		}
+
+		setDelegates(
+			() -> modes[index],
+			mode -> index = ArrayUtils.indexOf(modes, mode)
+		);
 	}
 
 	@Override
@@ -90,13 +99,18 @@ public class SettingChoose extends SettingAlignable<String, SettingChoose> {
 	}
 
 	@Override
+	public boolean hasValue() {
+		return true;
+	}
+
+	@Override
 	public String getStringValue() {
 		return get();
 	}
 
 	@Override
 	public String getDefaultValue() {
-		return "0";
+		return modes[0];
 	}
 
 	@Override

@@ -41,6 +41,11 @@ public class SettingElement extends SettingAlignable<HudElement<?>, SettingEleme
 	}
 
 	@Override
+	public boolean hasValue() {
+		return true;
+	}
+
+	@Override
 	public String getStringValue() {
 		// TODO use registry names to be consistent with new config file format
 		return value != null ? value.getUnlocalizedName() : "null";

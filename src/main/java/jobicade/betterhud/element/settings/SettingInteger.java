@@ -28,6 +28,11 @@ public class SettingInteger extends Setting<Integer, SettingInteger> {
     }
 
     @Override
+    public boolean hasValue() {
+        return true;
+    }
+
+    @Override
     public String getStringValue() {
         return String.valueOf(priority);
     }

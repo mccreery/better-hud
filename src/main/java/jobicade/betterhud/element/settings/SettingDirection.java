@@ -116,6 +116,11 @@ public class SettingDirection extends SettingAlignable<Direction, SettingDirecti
 	}
 
 	@Override
+	public boolean hasValue() {
+		return true;
+	}
+
+	@Override
 	public String getStringValue() {
 		return value != null ? value.name() : "null";
 	}

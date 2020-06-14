@@ -111,6 +111,11 @@ public class SettingSlider extends SettingAlignable<Double, SettingSlider> imple
 	}
 
 	@Override
+	public boolean hasValue() {
+		return true;
+	}
+
+	@Override
 	public String getStringValue() {
 		return get().toString();
 	}
