@@ -7,7 +7,6 @@ import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.events.OverlayHook;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -28,6 +27,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.common.MinecraftForge;
 
 public class Crosshair extends OverlayElement {
 	private SettingPosition position;
@@ -86,7 +86,7 @@ public class Crosshair extends OverlayElement {
 	public boolean shouldRender(RenderGameOverlayEvent context) {
 		return Minecraft.getMinecraft().gameSettings.thirdPersonView == 0
 			&& (!Minecraft.getMinecraft().playerController.isSpectator() || canInteract())
-			&& !OverlayHook.mimicPre(context, ElementType.CROSSHAIRS);
+			&& !MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(context, ElementType.CROSSHAIRS));
 	}
 
 	/** @return {@code true} if the player is looking at something that can be interacted with in spectator mode */
@@ -126,7 +126,7 @@ public class Crosshair extends OverlayElement {
 			GlStateManager.disableAlpha();
 		}
 
-		OverlayHook.mimicPost(context, ElementType.CROSSHAIRS);
+		MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(context, ElementType.CROSSHAIRS));
 		return bounds;
 	}
 
