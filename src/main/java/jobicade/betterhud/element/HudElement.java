@@ -27,11 +27,12 @@ public abstract class HudElement<T> {
 
 	/**
 	 * @param name The name used for config and localization.
-	 * Must not be {@code null}.
+	 * Must not be {@code null} or equal to the string {@code "null"}.
 	 */
 	public HudElement(String name) {
-		if (name == null) {
-			throw new IllegalArgumentException("name cannot be null");
+		if (name == null || name.equals("null")) {
+			throw new IllegalArgumentException("Invalid name. "
+				+ "Must not be null or equal to the string \"null\"");
 		}
 
 		this.name = name;
