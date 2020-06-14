@@ -1,5 +1,6 @@
 package jobicade.betterhud.element.vanilla;
 
+import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.bars.StatBarArmor;
 import net.minecraft.client.Minecraft;
@@ -20,16 +21,16 @@ public class ArmorBar extends Bar {
 	}
 
 	@Override
-	public boolean shouldRender(RenderGameOverlayEvent context) {
+	public boolean shouldRender(OverlayContext context) {
 		return super.shouldRender(context)
 			&& Minecraft.getMinecraft().playerController.shouldDrawHUD()
-			&& !MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(context, ElementType.ARMOR));
+			&& !MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(context.getEvent(), ElementType.ARMOR));
 	}
 
 	@Override
-	public Rect render(RenderGameOverlayEvent context) {
+	public Rect render(OverlayContext context) {
 		Rect rect = super.render(context);
-		MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(context, ElementType.ARMOR));
+		MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(context.getEvent(), ElementType.ARMOR));
 		return rect;
 	}
 }

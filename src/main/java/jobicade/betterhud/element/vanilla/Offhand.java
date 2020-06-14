@@ -5,6 +5,7 @@ import static jobicade.betterhud.BetterHud.SPACER;
 import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.registry.OverlayElements;
@@ -13,7 +14,6 @@ import jobicade.betterhud.util.Textures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHandSide;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public class Offhand extends OverlayElement {
 	private SettingPosition position;
@@ -31,12 +31,12 @@ public class Offhand extends OverlayElement {
 	}
 
 	@Override
-	public boolean shouldRender(RenderGameOverlayEvent context) {
+	public boolean shouldRender(OverlayContext context) {
 		return !Minecraft.getMinecraft().player.getHeldItemOffhand().isEmpty();
 	}
 
 	@Override
-	public Rect render(RenderGameOverlayEvent context) {
+	public Rect render(OverlayContext context) {
 		ItemStack offhandStack = Minecraft.getMinecraft().player.getHeldItemOffhand();
 		EnumHandSide offhandSide = Minecraft.getMinecraft().player.getPrimaryHand().opposite();
 		Direction offhand = offhandSide == EnumHandSide.RIGHT ? Direction.EAST : Direction.WEST;

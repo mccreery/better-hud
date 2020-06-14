@@ -8,12 +8,12 @@ import java.util.List;
 
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.SettingChoose;
+import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public class Distance extends TextElement {
 	private SettingChoose mode;
@@ -50,7 +50,7 @@ public class Distance extends TextElement {
 	}
 
 	@Override
-	protected Rect render(RenderGameOverlayEvent context, List<String> text) {
+	protected Rect render(OverlayContext context, List<String> text) {
 		border = mode.getIndex() == 2;
 		return super.render(context, text);
 	}

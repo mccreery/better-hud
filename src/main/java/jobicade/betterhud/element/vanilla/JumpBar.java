@@ -5,6 +5,7 @@ import static jobicade.betterhud.BetterHud.MANAGER;
 import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.GlUtil;
@@ -30,13 +31,13 @@ public class JumpBar extends OverlayElement {
 	}
 
 	@Override
-	public boolean shouldRender(RenderGameOverlayEvent context) {
+	public boolean shouldRender(OverlayContext context) {
 		return Minecraft.getMinecraft().player.isRidingHorse()
-			&& !MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(context, ElementType.JUMPBAR));
+			&& !MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(context.getEvent(), ElementType.JUMPBAR));
 	}
 
 	@Override
-	public Rect render(RenderGameOverlayEvent context) {
+	public Rect render(OverlayContext context) {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
 
 		Rect bounds = new Rect(182, 5);
@@ -55,7 +56,7 @@ public class JumpBar extends OverlayElement {
 			GlUtil.drawRect(bounds.withWidth(filled), new Rect(0, 89, filled, bounds.getHeight()));
 		}
 
-		MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(context, ElementType.JUMPBAR));
+		MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(context.getEvent(), ElementType.JUMPBAR));
 		return bounds;
 	}
 }

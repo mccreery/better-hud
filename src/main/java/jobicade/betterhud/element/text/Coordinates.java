@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingSlider;
+import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -18,7 +19,6 @@ import jobicade.betterhud.render.Grid;
 import jobicade.betterhud.render.Label;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public class Coordinates extends TextElement {
 	private SettingBoolean spaced;
@@ -45,7 +45,7 @@ public class Coordinates extends TextElement {
 	}
 
 	@Override
-	public Rect render(RenderGameOverlayEvent context, List<String> text) {
+	public Rect render(OverlayContext context, List<String> text) {
 		if(!spaced.get() || !position.isDirection(Direction.NORTH) && !position.isDirection(Direction.SOUTH)) {
 			return super.render(context, text);
 		}

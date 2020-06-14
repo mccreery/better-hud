@@ -10,6 +10,7 @@ import jobicade.betterhud.element.settings.SettingDirection;
 import jobicade.betterhud.element.settings.SettingPercentage;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.settings.SettingSlider;
+import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -21,7 +22,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public class Compass extends OverlayElement {
 	private static final String[] DIRECTIONS = { "S", "E", "N", "W" };
@@ -122,7 +122,7 @@ public class Compass extends OverlayElement {
 	}
 
 	@Override
-	public boolean shouldRender(RenderGameOverlayEvent context) {
+	public boolean shouldRender(OverlayContext context) {
 		switch(requireItem.getIndex()) {
 			case 1:
 				return Minecraft.getMinecraft().player.inventory.hasItemStack(new ItemStack(Items.COMPASS));
@@ -150,7 +150,7 @@ public class Compass extends OverlayElement {
 	}
 
 	@Override
-	public Rect render(RenderGameOverlayEvent context) {
+	public Rect render(OverlayContext context) {
 		Rect bounds;
 
 		if(mode.getIndex() == 0) {

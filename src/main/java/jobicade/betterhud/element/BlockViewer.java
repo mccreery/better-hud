@@ -14,6 +14,7 @@ import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.text.TextElement;
+import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.network.InventoryNameQuery;
@@ -31,7 +32,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IWorldNameable;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
@@ -87,7 +87,7 @@ public class BlockViewer extends TextElement {
 	}
 
 	@Override
-	public boolean shouldRender(RenderGameOverlayEvent context) {
+	public boolean shouldRender(OverlayContext context) {
 		trace = Minecraft.getMinecraft().getRenderViewEntity().rayTrace(HudElements.GLOBAL.getBillboardDistance(), 1f);
 
 		if(trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK) {
@@ -129,7 +129,7 @@ public class BlockViewer extends TextElement {
 	}
 
 	@Override
-	public Rect render(RenderGameOverlayEvent context) {
+	public Rect render(OverlayContext context) {
 		GlStateManager.disableDepth();
 		return super.render(context);
 	}

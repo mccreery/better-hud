@@ -4,6 +4,7 @@ import static jobicade.betterhud.BetterHud.MANAGER;
 
 import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.SettingBoolean;
+import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
@@ -37,13 +38,13 @@ public class Vignette extends OverlayElement {
 	}
 
 	@Override
-	public boolean shouldRender(RenderGameOverlayEvent context) {
+	public boolean shouldRender(OverlayContext context) {
 		return Minecraft.isFancyGraphicsEnabled()
-			&& !MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(context, ElementType.VIGNETTE));
+			&& !MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(context.getEvent(), ElementType.VIGNETTE));
 	}
 
 	@Override
-	public Rect render(RenderGameOverlayEvent context) {
+	public Rect render(OverlayContext context) {
 		WorldBorder border = Minecraft.getMinecraft().world.getWorldBorder();
 
 		float distance = (float)border.getClosestDistance(Minecraft.getMinecraft().player);
@@ -76,7 +77,7 @@ public class Vignette extends OverlayElement {
 		Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
 		GlUtil.blendFuncSafe(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
 
-		MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(context, ElementType.VIGNETTE));
+		MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(context.getEvent(), ElementType.VIGNETTE));
 		return null;
 	}
 

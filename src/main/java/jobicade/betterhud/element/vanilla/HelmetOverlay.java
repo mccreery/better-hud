@@ -3,6 +3,7 @@ package jobicade.betterhud.element.vanilla;
 import static jobicade.betterhud.BetterHud.MANAGER;
 
 import jobicade.betterhud.element.OverlayElement;
+import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
@@ -31,14 +32,14 @@ public class HelmetOverlay extends OverlayElement {
 	}
 
 	@Override
-	public boolean shouldRender(RenderGameOverlayEvent context) {
+	public boolean shouldRender(OverlayContext context) {
 		return Minecraft.getMinecraft().gameSettings.thirdPersonView == 0
 			&& !Minecraft.getMinecraft().player.inventory.armorItemInSlot(3).isEmpty()
-			&& !MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(context, ElementType.HELMET));
+			&& !MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(context.getEvent(), ElementType.HELMET));
 	}
 
 	@Override
-	public Rect render(RenderGameOverlayEvent context) {
+	public Rect render(OverlayContext context) {
 		ItemStack stack = Minecraft.getMinecraft().player.inventory.armorItemInSlot(3);
 		Item item = stack.getItem();
 
@@ -50,7 +51,7 @@ public class HelmetOverlay extends OverlayElement {
 			item.renderHelmetOverlay(stack, Minecraft.getMinecraft().player, new ScaledResolution(Minecraft.getMinecraft()), context.getPartialTicks());
 		}
 
-		MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(context, ElementType.HELMET));
+		MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(context.getEvent(), ElementType.HELMET));
 		return MANAGER.getScreen();
 	}
 }

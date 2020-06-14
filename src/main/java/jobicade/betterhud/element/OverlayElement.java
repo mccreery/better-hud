@@ -1,8 +1,8 @@
 package jobicade.betterhud.element;
 
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import jobicade.betterhud.events.OverlayContext;
 
-public abstract class OverlayElement extends HudElement<RenderGameOverlayEvent> {
+public abstract class OverlayElement extends HudElement<OverlayContext> {
     public OverlayElement(String name) {
         super(name);
     }

@@ -13,6 +13,7 @@ import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -57,18 +58,19 @@ public class PotionBar extends OverlayElement {
 
 	@SubscribeEvent
 	public void onRenderTick(RenderGameOverlayEvent.Pre event) {
+		// TODO use same method as other vanilla elements not canceling
 		if (BetterHud.getProxy().isModEnabled() && event.getType() == ElementType.POTION_ICONS) {
 			event.setCanceled(true);
 		}
 	}
 
 	@Override
-	public boolean shouldRender(RenderGameOverlayEvent context) {
+	public boolean shouldRender(OverlayContext context) {
 		return !Minecraft.getMinecraft().player.getActivePotionEffects().isEmpty();
 	}
 
 	@Override
-	public Rect render(RenderGameOverlayEvent context) {
+	public Rect render(OverlayContext context) {
 		Boxed grid = getGrid();
 
 		Rect bounds = new Rect(grid.getPreferredSize());
