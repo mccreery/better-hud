@@ -6,6 +6,8 @@ import java.util.Map;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraftforge.client.GuiIngameForge;
 
+// TODO refactor to avoid reset methods over a standard constructor
+// TODO track bounds here instead of in HudElement
 public class LayoutManager {
 	public static final int SPACER = 5;
 
