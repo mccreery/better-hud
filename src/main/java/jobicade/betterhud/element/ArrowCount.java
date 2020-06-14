@@ -39,6 +39,8 @@ public class ArrowCount extends OverlayElement {
 			position = new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.NONE),
 			overlay = new SettingBoolean("overlay")
 		);
+
+		position.setEnableOn(() -> !overlay.get());
 	}
 
 	/** Note this method only cares about arrows which can be shot by a vanilla bow
