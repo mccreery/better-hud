@@ -11,8 +11,6 @@ public class RootSetting extends SettingStub<Boolean> {
 	public final SettingInteger priority = new SettingInteger("priority").setHidden();
 
 	public final void bindConfig(HudConfig config) {
-		// TODO config file now using registry name
-		// e.g. armorBars --> betterhud:armor_bars
 		bindConfig(config, element.getName(), new StringBuilder());
 	}
 

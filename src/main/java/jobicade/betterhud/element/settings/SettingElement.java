@@ -37,19 +37,12 @@ public class SettingElement extends SettingAlignable<HudElement<?>> {
 
 	@Override
 	public String save() {
-		// TODO use registry names to be consistent with new config file format
-		return value != null ? value.getUnlocalizedName() : "null";
+		return value != null ? value.getName() : "null";
 	}
 
 	@Override
 	public void load(String save) {
-		for(HudElement<?> element : HudElements.get().getRegistered()) {
-			if(element.getUnlocalizedName().equals(save)) {
-				value = element;
-				return;
-			}
-		}
-		value = null;
+		value = HudElements.get().getRegistered(save);
 	}
 
 	@Override
