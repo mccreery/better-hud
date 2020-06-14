@@ -28,7 +28,7 @@ public class HorseInfo extends EntityInfo {
 	}
 
 	public HorseInfo() {
-		setName("horseInfo");
+		super("horseInfo");
 
 		settings.addChildren(
 			jump = new SettingBoolean("jump"),

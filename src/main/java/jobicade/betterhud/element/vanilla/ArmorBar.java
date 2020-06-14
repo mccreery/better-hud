@@ -9,9 +9,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
 public class ArmorBar extends Bar {
 	public ArmorBar() {
-		super(new StatBarArmor());
-
-		setName("armor");
+		super("armor", new StatBarArmor());
 	}
 
 	@Override

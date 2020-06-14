@@ -25,7 +25,7 @@ public class Vignette extends OverlayElement {
 	private float brightness = 1;
 
 	public Vignette() {
-		setName("vignette");
+		super("vignette");
 
 		settings.addChild(warnings = new SettingBoolean("warnings").setValuePrefix(SettingBoolean.VISIBLE));
 	}

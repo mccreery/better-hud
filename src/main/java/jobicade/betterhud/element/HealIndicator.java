@@ -29,7 +29,7 @@ public class HealIndicator extends OverlayElement {
 	}
 
 	public HealIndicator() {
-		setName("healIndicator");
+		super("healIndicator");
 
 		settings.addChildren(
 			position = new SettingPosition(DirectionOptions.NONE, DirectionOptions.NONE),

@@ -22,7 +22,7 @@ public class FullInvIndicator extends TextElement {
 	}
 
 	public FullInvIndicator() {
-		setName("fullInvIndicator");
+		super("fullInvIndicator");
 
 		settings.addChildren(
 			new Legend("misc"),

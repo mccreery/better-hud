@@ -19,7 +19,7 @@ public class Offhand extends OverlayElement {
 	private SettingPosition position;
 
 	public Offhand() {
-		setName("offhand");
+		super("offhand");
 
 		settings.addChild(position = new SettingPosition("position", DirectionOptions.BAR, DirectionOptions.NONE));
 	}

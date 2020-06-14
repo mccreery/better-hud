@@ -29,7 +29,7 @@ public class HandBar extends EquipmentDisplay {
 	}
 
 	public HandBar() {
-		setName("handBar");
+		super("handBar");
 
 		settings.addChildren(
 			position = new SettingPosition(DirectionOptions.BAR, DirectionOptions.NORTH_SOUTH),

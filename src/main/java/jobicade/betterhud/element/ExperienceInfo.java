@@ -29,7 +29,7 @@ public class ExperienceInfo extends TextElement {
 	}
 
 	public ExperienceInfo() {
-		setName("experienceInfo");
+		super("experienceInfo");
 
 		settings.addChildren(
 			new Legend("misc"),

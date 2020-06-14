@@ -20,7 +20,8 @@ public abstract class Bar extends OverlayElement {
 
 	private StatBar<? super EntityPlayerSP> bar;
 
-	public Bar(StatBar<? super EntityPlayerSP> bar) {
+	public Bar(String name, StatBar<? super EntityPlayerSP> bar) {
+		super(name);
 		this.bar = bar;
 
 		settings.addChildren(

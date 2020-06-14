@@ -16,7 +16,7 @@ public class BiomeName extends TextElement {
 	}
 
 	public BiomeName() {
-		setName("biome");
+		super("biome");
 	}
 
 	@Override
