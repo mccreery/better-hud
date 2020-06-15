@@ -1,5 +1,10 @@
 # Changelog
 
+## [1.4.3] - 2020-06-15
+### Fixed
+- Game crash on first startup (no config file, #95)
+- Settings from config file overridden by default settings (#97)
+
 ## [1.4.2] - 2020-05-22
 ### Changed
 - Pickup count not supported when connected to a 1.4.1 server (see bug below)
