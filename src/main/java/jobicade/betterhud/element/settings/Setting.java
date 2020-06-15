@@ -19,11 +19,27 @@ import net.minecraftforge.common.config.ConfigCategory;
 import net.minecraftforge.common.config.Property;
 import net.minecraftforge.common.config.Property.Type;
 
-/** A setting for a {@link HudElement}. Child elements will be saved under
- * the namespace of the parent's name */
+/**
+ * A setting for a {@link HudElement}. Child elements will be saved under
+ * the namespace of the parent's name.
+ *
+ * <p>Settings use a variant of the "Curiously Recurring Template Pattern"
+ * (CRTP), which is originally a C++ patttern. In this case a similar idea is
+ * used to support a fluent interface that doesn't lose specificity after each
+ * method. Without this, chaining {@code .setA(5).setB(6)} fails if {@code setA}
+ * is a method of the superclass and {@code setB} is a method of the subclass,
+ * and the final return value has to be casted unless no superclass methods are
+ * called.
+ *
+ * <p>One side effect of the pattern is that all the fluent interface methods
+ * return the first concrete class in the heirarchy (which specifies {@code U}).
+ * Further subclasses should be avoided (e.g. mark final) or fall back on
+ * casting.
+ */
 public abstract class Setting<T, U extends Setting<T, U>> implements ISetting {
 	private T value;
 
+	// Delegates allow pass-through settings since concrete classes are final
 	private Supplier<T> getDelegate;
 	private Consumer<T> setDelegate;
 
