@@ -4,6 +4,7 @@ import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -19,7 +20,6 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.item.ItemArmor;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public class ArmorBars extends EquipmentDisplay {
 	private SettingPosition position;
@@ -36,7 +36,7 @@ public class ArmorBars extends EquipmentDisplay {
 	}
 
 	public ArmorBars() {
-		setName("armorBars");
+		super("armorBars");
 
 		settings.addChildren(
 			position = new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.WEST_EAST),
@@ -46,7 +46,7 @@ public class ArmorBars extends EquipmentDisplay {
 	}
 
 	@Override
-	public boolean shouldRender(RenderGameOverlayEvent context) {
+	public boolean shouldRender(OverlayContext context) {
 		if(alwaysVisible.get()) return true;
 
 		for(int i = 0; i < 4; i++) {
@@ -58,7 +58,7 @@ public class ArmorBars extends EquipmentDisplay {
 	}
 
 	@Override
-	public Rect render(RenderGameOverlayEvent context) {
+	public Rect render(OverlayContext context) {
 		Grid<Boxed> grid = new Grid<>(new Point(1, 4)).setStretch(true);
 
 		for(int i = 0; i < 4; i++) {

@@ -65,16 +65,20 @@ public final class OverlayHook {
     private static void renderGameOverlay(RenderGameOverlayEvent event) {
         // TODO not here
         BetterHud.MANAGER.reset(event.getResolution());
+        OverlayContext context = new OverlayContext(event, BetterHud.MANAGER);
 
         for (OverlayElement element : OverlayElements.get().getRegistered(SortField.PRIORITY)) {
             loadGlState();
 
-            if (shouldRender(element, event)) {
-                Minecraft.getMinecraft().mcProfiler.startSection(element.getName().toString());
-                element.render(event);
+            if (shouldRender(element, context)) {
+                Minecraft.getMinecraft().mcProfiler.startSection(element.getName());
+                element.render(context);
                 Minecraft.getMinecraft().mcProfiler.endSection();
             }
         }
+
+        GlStateManager.enableDepth();
+        MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(event, ElementType.ALL));
     }
 
     private static void loadGlState() {
@@ -97,33 +101,9 @@ public final class OverlayHook {
      * @return {@code true} if all conditions for rendering {@code hudElement}
      * are currently satisfied.
      */
-    public static boolean shouldRender(OverlayElement hudElement, RenderGameOverlayEvent context) {
+    public static boolean shouldRender(OverlayElement hudElement, OverlayContext context) {
         return hudElement.getServerDependency().containsVersion(BetterHud.getServerVersion())
             && hudElement.isEnabled()
             && hudElement.shouldRender(context);
-    }
-
-    /**
-     * Prepares OpenGL state and posts an appropriate event to mimic
-     * {@link GuiIngameForge#renderGameOverlay(float)} just before rendering
-     * {@code elementType}.
-     *
-     * @return {@code true} if the event was canceled.
-     */
-    public static boolean mimicPre(RenderGameOverlayEvent parentEvent, ElementType elementType) {
-        //GlSnapshots.applyPreState(elementType);
-        return MinecraftForge.EVENT_BUS.post(
-            new RenderGameOverlayEvent.Pre(parentEvent, elementType));
-    }
-
-    /**
-     * Prepares OpenGL state and posts an appropriate event to mimic
-     * {@link GuiIngameForge#renderGameOverlay(float)} just after rendering
-     * {@code elementType}.
-     */
-    public static void mimicPost(RenderGameOverlayEvent parentEvent, ElementType elementType) {
-        //GlSnapshots.applyPostState(elementType);
-        MinecraftForge.EVENT_BUS.post(
-            new RenderGameOverlayEvent.Pre(parentEvent, elementType));
     }
 }

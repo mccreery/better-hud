@@ -6,6 +6,7 @@ import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.registry.OverlayElements;
@@ -14,7 +15,6 @@ import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.Textures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public class HealIndicator extends OverlayElement {
 	private SettingPosition position;
@@ -29,7 +29,7 @@ public class HealIndicator extends OverlayElement {
 	}
 
 	public HealIndicator() {
-		setName("healIndicator");
+		super("healIndicator");
 
 		settings.addChildren(
 			position = new SettingPosition(DirectionOptions.NONE, DirectionOptions.NONE),
@@ -39,7 +39,7 @@ public class HealIndicator extends OverlayElement {
 	}
 
 	@Override
-	public Rect render(RenderGameOverlayEvent context) {
+	public Rect render(OverlayContext context) {
 			String healIndicator = I18n.format("betterHud.hud.healIndicator");
 			Rect bounds = mode.getIndex() == 0 ? new Rect(Minecraft.getMinecraft().fontRenderer.getStringWidth(healIndicator), Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT) : new Rect(9, 9);
 
@@ -61,7 +61,7 @@ public class HealIndicator extends OverlayElement {
 
 	/** @see net.minecraft.util.FoodStats#onUpdate(net.minecraft.entity.player.EntityPlayer) */
 	@Override
-	public boolean shouldRender(RenderGameOverlayEvent context) {
+	public boolean shouldRender(OverlayContext context) {
 		return Minecraft.getMinecraft().playerController.gameIsSurvivalOrAdventure()
 			&& Minecraft.getMinecraft().world.getGameRules().getBoolean("naturalRegeneration")
 			&& Minecraft.getMinecraft().player.getFoodStats().getFoodLevel() >= 18

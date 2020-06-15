@@ -34,7 +34,7 @@ public class Connection extends TextElement {
 	}
 
 	public Connection() {
-		setName("connection");
+		super("connection");
 
 		settings.addChildren(
 			new Legend("misc"),

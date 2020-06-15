@@ -3,6 +3,7 @@ package jobicade.betterhud.element;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.events.OverlayHook;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
@@ -15,7 +16,6 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemArrow;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public class ArrowCount extends OverlayElement {
 	private static final ItemStack ARROW = new ItemStack(Items.ARROW, 1);
@@ -33,12 +33,14 @@ public class ArrowCount extends OverlayElement {
 	}
 
 	public ArrowCount() {
-		setName("arrowCount");
+		super("arrowCount");
 
 		settings.addChildren(
 			position = new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.NONE),
 			overlay = new SettingBoolean("overlay")
 		);
+
+		position.setEnableOn(() -> !overlay.get());
 	}
 
 	/** Note this method only cares about arrows which can be shot by a vanilla bow
@@ -58,7 +60,7 @@ public class ArrowCount extends OverlayElement {
 	}
 
 	@Override
-	public boolean shouldRender(RenderGameOverlayEvent context) {
+	public boolean shouldRender(OverlayContext context) {
 		ItemStack stack = Minecraft.getMinecraft().player.getHeldItemOffhand();
 		boolean offhandHeld = stack != null && stack.getItem() == Items.BOW;
 
@@ -86,7 +88,7 @@ public class ArrowCount extends OverlayElement {
 	}
 
 	@Override
-	public Rect render(RenderGameOverlayEvent context) {
+	public Rect render(OverlayContext context) {
 		int totalArrows = arrowCount(Minecraft.getMinecraft().player);
 
 		if(overlay.get()) {

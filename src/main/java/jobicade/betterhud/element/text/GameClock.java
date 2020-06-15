@@ -9,6 +9,7 @@ import java.util.TimeZone;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingChoose;
+import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -18,7 +19,6 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
 import net.minecraft.world.WorldProvider.WorldSleepResult;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public class GameClock extends Clock {
 	private static final ItemStack BED = new ItemStack(Items.BED, 1, 14);
@@ -28,7 +28,7 @@ public class GameClock extends Clock {
 	private SettingChoose requireItem;
 
 	public GameClock() {
-		setName("gameClock");
+		super("gameClock");
 
 		settings.addChildren(
 			showDays = new SettingBoolean("showDays").setValuePrefix(SettingBoolean.VISIBLE),
@@ -52,7 +52,7 @@ public class GameClock extends Clock {
 	}
 
 	@Override
-	public boolean shouldRender(RenderGameOverlayEvent context) {
+	public boolean shouldRender(OverlayContext context) {
 		switch(requireItem.getIndex()) {
 			case 1:
 				return Minecraft.getMinecraft().player.inventory.hasItemStack(new ItemStack(Items.CLOCK));
@@ -64,7 +64,7 @@ public class GameClock extends Clock {
 	}
 
 	@Override
-	public Rect render(RenderGameOverlayEvent context) {
+	public Rect render(OverlayContext context) {
 		Rect bounds = super.render(context);
 
 		if(showSleepIndicator(context.getPartialTicks())) {

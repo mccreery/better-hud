@@ -7,6 +7,7 @@ import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingColor;
 import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -14,7 +15,6 @@ import jobicade.betterhud.render.Color;
 import jobicade.betterhud.render.Grid;
 import jobicade.betterhud.render.Label;
 import jobicade.betterhud.util.GlUtil;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public abstract class TextElement extends OverlayElement {
 	protected SettingPosition position;
@@ -22,7 +22,9 @@ public abstract class TextElement extends OverlayElement {
 
 	protected boolean border = false;
 
-	public TextElement() {
+	public TextElement(String name) {
+		super(name);
+
 		settings.addChildren(
 			position = new SettingPosition(DirectionOptions.TOP_BOTTOM, DirectionOptions.CORNERS),
 			color = new SettingColor("color")
@@ -54,12 +56,12 @@ public abstract class TextElement extends OverlayElement {
 	}
 
 	@Override
-	public Rect render(RenderGameOverlayEvent context) {
+	public Rect render(OverlayContext context) {
 		List<String> text = getText();
 		return text == null || text.isEmpty() ? null : render(context, text);
 	}
 
-	protected Rect render(RenderGameOverlayEvent event, List<String> text) {
+	protected Rect render(OverlayContext event, List<String> text) {
 		Grid<Label> grid = new Grid<Label>(new Point(1, text.size()))
 			.setGutter(new Point(2, 2));
 

@@ -23,12 +23,24 @@ import net.minecraftforge.fml.common.versioning.VersionRange;
  * @param T context object passed to render methods.
  */
 public abstract class HudElement<T> {
-	private String name;
+	private final String name;
 
-	public final void setName(String name) {
+	/**
+	 * @param name The name used for config and localization.
+	 * Must not be {@code null} or equal to the string {@code "null"}.
+	 */
+	public HudElement(String name) {
+		if (name == null || name.equals("null")) {
+			throw new IllegalArgumentException("Invalid name. "
+				+ "Must not be null or equal to the string \"null\"");
+		}
+
 		this.name = name;
 	}
 
+	/**
+	 * The name is not {@code null}.
+	 */
 	public final String getName() {
 		return name;
 	}

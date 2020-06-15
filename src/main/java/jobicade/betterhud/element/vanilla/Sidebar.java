@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -24,24 +25,23 @@ import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Scoreboard;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public class Sidebar extends OverlayElement {
 	private SettingPosition position;
 
 	public Sidebar() {
-		setName("scoreboard");
+		super("scoreboard");
 
 		settings.addChild(position = new SettingPosition(DirectionOptions.LEFT_RIGHT, DirectionOptions.WEST_EAST));
 	}
 
 	@Override
-	public boolean shouldRender(RenderGameOverlayEvent context) {
+	public boolean shouldRender(OverlayContext context) {
 		return getObjective(Minecraft.getMinecraft().player) != null;
 	}
 
 	@Override
-	public Rect render(RenderGameOverlayEvent context) {
+	public Rect render(OverlayContext context) {
 		ScoreObjective objective = getObjective(Minecraft.getMinecraft().player);
 		List<Score> scores = getScores(objective);
 

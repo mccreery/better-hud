@@ -15,7 +15,9 @@ public abstract class Clock extends TextElement {
 	private SettingBoolean twentyFour, showSeconds, fullYear;
 	private SettingChoose dateType;
 
-	public Clock() {
+	public Clock(String name) {
+		super(name);
+
 		settings.addChildren(
 			new Legend("misc"),
 			twentyFour = new SettingBoolean("24hr"),

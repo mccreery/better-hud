@@ -6,6 +6,7 @@ import java.util.List;
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.text.TextElement;
+import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -13,7 +14,6 @@ import jobicade.betterhud.registry.OverlayElements;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public class ExperienceInfo extends TextElement {
 	private SettingBoolean total;
@@ -29,7 +29,7 @@ public class ExperienceInfo extends TextElement {
 	}
 
 	public ExperienceInfo() {
-		setName("experienceInfo");
+		super("experienceInfo");
 
 		settings.addChildren(
 			new Legend("misc"),
@@ -39,12 +39,12 @@ public class ExperienceInfo extends TextElement {
 	}
 
 	@Override
-	public boolean shouldRender(RenderGameOverlayEvent context) {
+	public boolean shouldRender(OverlayContext context) {
 		return Minecraft.getMinecraft().playerController.gameIsSurvivalOrAdventure();
 	}
 
 	@Override
-	public Rect render(RenderGameOverlayEvent context) {
+	public Rect render(OverlayContext context) {
 		int fullBar = getExperienceWithinLevel(Minecraft.getMinecraft().player.experienceLevel);
 
 		int has = (int)(Minecraft.getMinecraft().player.experience * fullBar);

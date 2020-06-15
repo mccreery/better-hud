@@ -6,7 +6,7 @@ import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.events.OverlayHook;
+import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -15,13 +15,14 @@ import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.common.MinecraftForge;
 
 public class Experience extends OverlayElement {
 	private SettingPosition position;
 	private SettingBoolean hideMount;
 
 	public Experience() {
-		setName("experience");
+		super("experience");
 
 		settings.addChildren(
 			position = new SettingPosition(DirectionOptions.BAR, DirectionOptions.NORTH_SOUTH),
@@ -30,10 +31,10 @@ public class Experience extends OverlayElement {
 	}
 
 	@Override
-	public boolean shouldRender(RenderGameOverlayEvent context) {
+	public boolean shouldRender(OverlayContext context) {
 		return Minecraft.getMinecraft().playerController.shouldDrawHUD()
 			&& (!hideMount.get() || !Minecraft.getMinecraft().player.isRidingHorse())
-			&& !OverlayHook.mimicPre(context, ElementType.EXPERIENCE);
+			&& !MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(context.getEvent(), ElementType.EXPERIENCE));
 	}
 
 	@Override
@@ -44,7 +45,7 @@ public class Experience extends OverlayElement {
 	}
 
 	@Override
-	public Rect render(RenderGameOverlayEvent context) {
+	public Rect render(OverlayContext context) {
 		Rect bgTexture = new Rect(0, 64, 182, 5);
 		Rect fgTexture = new Rect(0, 69, 182, 5);
 
@@ -65,7 +66,7 @@ public class Experience extends OverlayElement {
 			GlUtil.drawBorderedString(numberText, numberPosition.getX(), numberPosition.getY(), new Color(128, 255, 32));
 		}
 
-		OverlayHook.mimicPost(context, ElementType.EXPERIENCE);
+		MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(context.getEvent(), ElementType.EXPERIENCE));
 		return barRect;
 	}
 }

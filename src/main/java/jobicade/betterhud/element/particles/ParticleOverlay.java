@@ -7,17 +7,18 @@ import java.util.concurrent.CopyOnWriteArrayList;
 
 import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.SettingChoose;
+import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.events.OverlayHook;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.Tickable;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 
 public abstract class ParticleOverlay extends OverlayElement implements Tickable {
 	protected SettingChoose density;
 	protected final List<Particle> particles = new CopyOnWriteArrayList<Particle>();
 
-	public ParticleOverlay() {
+	public ParticleOverlay(String name) {
+		super(name);
 		settings.addChild(density = new SettingChoose("density", "sparse", "normal", "dense", "denser"));
 	}
 
@@ -47,7 +48,7 @@ public abstract class ParticleOverlay extends OverlayElement implements Tickable
 	}
 
 	@Override
-	public Rect render(RenderGameOverlayEvent context) {
+	public Rect render(OverlayContext context) {
 		for(Particle particle : particles) {
 			particle.render(context.getPartialTicks());
 		}
@@ -55,7 +56,7 @@ public abstract class ParticleOverlay extends OverlayElement implements Tickable
 	}
 
 	@Override
-	public boolean shouldRender(RenderGameOverlayEvent context) {
+	public boolean shouldRender(OverlayContext context) {
 		return !particles.isEmpty();
 	}
 }

@@ -11,7 +11,7 @@ public class RootSetting extends SettingStub<Boolean> {
 	public final SettingInteger priority = new SettingInteger("priority").setHidden();
 
 	public final void bindConfig(HudConfig config) {
-		bindConfig(config, element.getName().toString(), "");
+		bindConfig(config, element.getName(), "");
 	}
 
 	public RootSetting(HudElement<?> element) {

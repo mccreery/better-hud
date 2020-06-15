@@ -7,7 +7,7 @@ import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.events.OverlayHook;
+import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -28,6 +28,7 @@ import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.common.MinecraftForge;
 
 public class Crosshair extends OverlayElement {
 	private SettingPosition position;
@@ -35,7 +36,7 @@ public class Crosshair extends OverlayElement {
 	private SettingChoose indicatorType;
 
 	public Crosshair() {
-		setName("crosshair");
+		super("crosshair");
 
 		settings.addChildren(
 			position = new SettingPosition(DirectionOptions.I, DirectionOptions.NONE),
@@ -83,10 +84,10 @@ public class Crosshair extends OverlayElement {
 	}
 
 	@Override
-	public boolean shouldRender(RenderGameOverlayEvent context) {
+	public boolean shouldRender(OverlayContext context) {
 		return Minecraft.getMinecraft().gameSettings.thirdPersonView == 0
 			&& (!Minecraft.getMinecraft().playerController.isSpectator() || canInteract())
-			&& !OverlayHook.mimicPre(context, ElementType.CROSSHAIRS);
+			&& !MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(context.getEvent(), ElementType.CROSSHAIRS));
 	}
 
 	/** @return {@code true} if the player is looking at something that can be interacted with in spectator mode */
@@ -104,7 +105,7 @@ public class Crosshair extends OverlayElement {
 	}
 
 	@Override
-	public Rect render(RenderGameOverlayEvent context) {
+	public Rect render(OverlayContext context) {
 		Rect bounds = null;
 
 		if(Minecraft.getMinecraft().gameSettings.showDebugInfo && !Minecraft.getMinecraft().gameSettings.reducedDebugInfo && !Minecraft.getMinecraft().player.hasReducedDebug()) {
@@ -126,7 +127,7 @@ public class Crosshair extends OverlayElement {
 			GlStateManager.disableAlpha();
 		}
 
-		OverlayHook.mimicPost(context, ElementType.CROSSHAIRS);
+		MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(context.getEvent(), ElementType.CROSSHAIRS));
 		return bounds;
 	}
 

@@ -23,9 +23,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 
 public class GuiHudMenu extends GuiMenuScreen {
-	// TODO complexity from initial capacity
-	private final Map<HudElement<?>, ButtonRow> rows = new HashMap<HudElement<?>, ButtonRow>(HudElements.get().getRegistered().size());
-	final Paginator<HudElement<?>> paginator = new Paginator<HudElement<?>>();
+	private final Map<HudElement<?>, ButtonRow> rows = new HashMap<>();
+	final Paginator<HudElement<?>> paginator = new Paginator<>();
 
 	private final GuiActionButton returnToGame = new GuiActionButton(I18n.format("menu.returnToGame")).setCallback(b -> Minecraft.getMinecraft().displayGuiScreen(null));
 	private final GuiActionButton toggleAll = new GuiActionButton("").setCallback(b -> setAll(!allEnabled()));

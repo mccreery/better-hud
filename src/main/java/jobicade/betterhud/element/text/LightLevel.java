@@ -16,7 +16,7 @@ public class LightLevel extends TextElement {
 	}
 
 	public LightLevel() {
-		setName("lightLevel");
+		super("lightLevel");
 	}
 
 	@Override

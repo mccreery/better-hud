@@ -10,7 +10,7 @@ import jobicade.betterhud.util.MathUtil;
 
 public class WaterDrops extends ParticleOverlay {
 	public WaterDrops() {
-		setName("waterDrops");
+		super("waterDrops");
 	}
 
 	private boolean wasUnderwaterLastTick = false;

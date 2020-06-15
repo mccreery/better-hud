@@ -5,10 +5,10 @@ import java.util.List;
 
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.SettingBoolean;
+import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.geom.Direction;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 
 public class FullInvIndicator extends TextElement {
 	private SettingBoolean offHand;
@@ -22,7 +22,7 @@ public class FullInvIndicator extends TextElement {
 	}
 
 	public FullInvIndicator() {
-		setName("fullInvIndicator");
+		super("fullInvIndicator");
 
 		settings.addChildren(
 			new Legend("misc"),
@@ -36,7 +36,7 @@ public class FullInvIndicator extends TextElement {
 	}
 
 	@Override
-	public boolean shouldRender(RenderGameOverlayEvent context) {
+	public boolean shouldRender(OverlayContext context) {
 		return Minecraft.getMinecraft().player.inventory.getFirstEmptyStack() == -1 &&
 			(!offHand.get() || !Minecraft.getMinecraft().player.inventory.offHandInventory.get(0).isEmpty());
 	}

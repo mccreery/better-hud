@@ -58,13 +58,7 @@ public class SettingElement extends SettingAlignable<HudElement<?>, SettingEleme
 
 	@Override
 	public void loadStringValue(String save) {
-		for(HudElement<?> element : HudElements.get().getRegistered()) {
-			if(element.getUnlocalizedName().equals(save)) {
-				value = element;
-				return;
-			}
-		}
-		value = null;
+		value = HudElements.get().getRegistered(save);
 	}
 
 	@Override
