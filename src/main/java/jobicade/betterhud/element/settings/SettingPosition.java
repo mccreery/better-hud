@@ -57,14 +57,14 @@ public class SettingPosition extends SettingStub {
 			anchor = new SettingDirection("anchor", Direction.WEST).setEnableOn(isCustom),
 			alignment = new SettingDirection("alignment", Direction.CENTER) {
 				@Override
-				public void updateGuiParts(Collection<Setting<?>> settings) {
+				public void updateGuiParts(Collection<Setting> settings) {
 					if(lockAlignment.get()) set(anchor.get());
 					super.updateGuiParts(settings);
 				}
 			},
 			contentAlignment = new SettingDirection("contentAlignment", Direction.EAST, contentOptions) {
 				@Override
-				public void updateGuiParts(Collection<Setting<?>> settings) {
+				public void updateGuiParts(Collection<Setting> settings) {
 					if(lockContent.get()) set(SettingPosition.this.alignment.get());
 					super.updateGuiParts(settings);
 				}
@@ -172,7 +172,7 @@ public class SettingPosition extends SettingStub {
 	}
 
 	@Override
-	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Point origin) {
+	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Point origin) {
 		Point lockOffset = new Point(30 + SPACER, 173);
 
 		lockAlignment.setRect(new Rect(20, 10).align(origin.add(lockOffset.withX(-lockOffset.getX())), Direction.EAST));

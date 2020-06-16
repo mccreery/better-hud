@@ -62,7 +62,7 @@ public class SettingDirection extends SettingAlignable<SettingDirection> {
 	}
 
 	@Override
-	public void getGuiParts(java.util.List<Gui> parts, Map<Gui, Setting<?>> callbacks, Rect bounds) {
+	public void getGuiParts(java.util.List<Gui> parts, Map<Gui, Setting> callbacks, Rect bounds) {
 		this.bounds = bounds;
 
 		Rect radios = new Rect(60, 60).anchor(bounds, horizontal ? Direction.WEST : Direction.SOUTH);
@@ -94,7 +94,7 @@ public class SettingDirection extends SettingAlignable<SettingDirection> {
 	}
 
 	@Override
-	public void updateGuiParts(Collection<Setting<?>> settings) {
+	public void updateGuiParts(Collection<Setting> settings) {
 		super.updateGuiParts(settings);
 		boolean enabled = enabled();
 

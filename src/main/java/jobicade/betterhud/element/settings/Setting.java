@@ -34,16 +34,9 @@ import net.minecraftforge.common.config.Property.Type;
  * Further subclasses should be avoided (e.g. mark final) or fall back on
  * casting.
  */
-public abstract class Setting<T extends Setting<T>> implements ISetting {
-	/**
-	 * Used by fluent interface methods to ensure return type {@code T}. Should
-	 * only be implemented by concrete classes.
-	 * @return {@code this}
-	 */
-	protected abstract T getThis();
-
-	private Setting<?> parent = null;
-	protected final List<Setting<?>> children = new ArrayList<Setting<?>>();
+public abstract class Setting {
+	private Setting parent = null;
+	protected final List<Setting> children = new ArrayList<>();
 	public final String name;
 
 	private Category category = Category.MISC;
@@ -64,49 +57,48 @@ public abstract class Setting<T extends Setting<T>> implements ISetting {
 		if(name != null) this.unlocalizedName = "betterHud.setting." + name;
 	}
 
-	@Override
 	public String getName() {
 		return name;
 	}
 
-	@Override
-	public Iterable<? extends ISetting> getChildren() {
+	public Iterable<Setting> getChildren() {
 		return children;
-	}
-
-	public T setCategory(Category category) {
-		this.category = category;
-		return getThis();
 	}
 
 	public Category getCategory() {
 		return category;
 	}
 
-	public T setEnableOn(BooleanSupplier enableOn) {
+	// Upcasting fluent interface without covariance
+
+	public Setting setCategory(Category category) {
+		this.category = category;
+		return this;
+	}
+
+	public Setting setEnableOn(BooleanSupplier enableOn) {
 		this.enableOn = enableOn;
-		return getThis();
+		return this;
 	}
 
-	public T setHidden() {
+	public Setting setHidden() {
 		this.hidden = true;
-		return getThis();
+		return this;
 	}
 
-	public final void addChild(Setting<?> setting) {
+	public final void addChild(Setting setting) {
 		children.add(setting);
 		setting.parent = this;
 	}
 
-	public final void addChildren(Iterable<Setting<?>> settings) {
-		for (Setting<?> setting : settings) {
+	public final void addChildren(Iterable<Setting> settings) {
+		for (Setting setting : settings) {
 			addChild(setting);
 		}
 	}
 
-	@SafeVarargs
-	public final void addChildren(Setting<?>... settings) {
-		for (Setting<?> setting : settings) {
+	public final void addChildren(Setting... settings) {
+		for (Setting setting : settings) {
 			addChild(setting);
 		}
 	}
@@ -115,9 +107,9 @@ public abstract class Setting<T extends Setting<T>> implements ISetting {
 		return children.isEmpty();
 	}
 
-	public T setUnlocalizedName(String unlocalizedName) {
+	public Setting setUnlocalizedName(String unlocalizedName) {
 		this.unlocalizedName = unlocalizedName;
-		return getThis();
+		return this;
 	}
 
 	public String getUnlocalizedName() {
@@ -139,7 +131,7 @@ public abstract class Setting<T extends Setting<T>> implements ISetting {
 			property = getProperty(config, category, path);
 		}
 
-		for(Setting<?> child : children) {
+		for(Setting child : children) {
 			String childPath;
 			if (path.isEmpty()) {
 				childPath = child.name;
@@ -157,7 +149,7 @@ public abstract class Setting<T extends Setting<T>> implements ISetting {
 			loadStringValue(property.getString());
 		}
 
-		for(Setting<?> child : children) {
+		for(Setting child : children) {
 			child.loadConfig();
 		}
 	}
@@ -172,7 +164,7 @@ public abstract class Setting<T extends Setting<T>> implements ISetting {
 			}
 		}
 
-		for(Setting<?> child : children) {
+		for(Setting child : children) {
 			child.saveConfig();
 		}
 	}
@@ -209,7 +201,7 @@ public abstract class Setting<T extends Setting<T>> implements ISetting {
 	 *
 	 * @param origin The top center point for GUI parts being added
 	 * @return The new origin directly below this setting's parts */
-	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Point origin) {
+	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Point origin) {
 		return getGuiParts(parts, callbacks, origin, children);
 	}
 
@@ -220,9 +212,9 @@ public abstract class Setting<T extends Setting<T>> implements ISetting {
 	 * @param origin The top center point for GUI parts being added
 	 * @return The bottom center point of all {@code settings}
 	 * @see #getGuiParts(List, Map, Point) */
-	public static Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Point origin, List<Setting<?>> settings) {
+	public static Point getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Point origin, List<Setting> settings) {
 		if(!settings.isEmpty()) {
-			for(Setting<?> setting : settings) {
+			for(Setting setting : settings) {
 				if(!setting.hidden) {
 					Point bottom = setting.getGuiParts(parts, callbacks, origin);
 
@@ -237,7 +229,7 @@ public abstract class Setting<T extends Setting<T>> implements ISetting {
 
 	/** Renders extra parts of this GUI */
 	public void draw() {
-		for(Setting<?> setting : children) {
+		for(Setting setting : children) {
 			setting.draw();
 		}
 	}
@@ -249,11 +241,24 @@ public abstract class Setting<T extends Setting<T>> implements ISetting {
 
 	/** Updates the GUI elements based on the state of other settings.
 	 * This is called when any button tied to a setting callback is pressed */
-	public void updateGuiParts(Collection<Setting<?>> settings) {
-		for(Setting<?> setting : children) {
+	public void updateGuiParts(Collection<Setting> settings) {
+		for(Setting setting : children) {
 			setting.updateGuiParts(settings);
 		}
 	}
+
+    public abstract boolean hasValue();
+    public abstract String getStringValue();
+    public abstract String getDefaultValue();
+
+	/**
+	 * If {@code stringValue} is valid, sets the value accordingly.
+     *
+	 * @param stringValue A string as generated by {@link #getStringValue()}.
+     * @return {@code true} if the value was updated.
+	 */
+    public abstract void loadStringValue(String stringValue);
+    public abstract void loadDefaultValue();
 
 	public enum Category {
 		MISC("misc"), POSITION("position");

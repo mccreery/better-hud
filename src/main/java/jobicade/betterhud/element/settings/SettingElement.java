@@ -69,7 +69,7 @@ public class SettingElement extends SettingAlignable<SettingElement> {
 	}
 
 	@Override
-	public void getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Rect bounds) {
+	public void getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Rect bounds) {
 		String text = getLocalizedName() + ": " + (value != null ? value.getLocalizedName() : I18n.format("betterHud.value.none"));
 		button = new GuiActionButton(text);
 		button.setBounds(bounds);
@@ -79,7 +79,7 @@ public class SettingElement extends SettingAlignable<SettingElement> {
 	}
 
 	@Override
-	public void updateGuiParts(Collection<Setting<?>> settings) {
+	public void updateGuiParts(Collection<Setting> settings) {
 		button.enabled = enabled();
 	}
 }

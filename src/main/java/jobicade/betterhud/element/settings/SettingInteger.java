@@ -4,7 +4,7 @@ import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.gui.GuiElementSettings;
 import net.minecraft.client.gui.GuiButton;
 
-public class SettingInteger extends Setting<SettingInteger> {
+public class SettingInteger extends FluentSetting<SettingInteger> {
     private int value;
 
     public SettingInteger(String name) {

@@ -50,7 +50,7 @@ public class SettingWarnings extends SettingStub {
 				}
 
 				@Override
-				public void updateGuiParts(Collection<Setting<?>> settings) {
+				public void updateGuiParts(Collection<Setting> settings) {
 					slider.updateDisplayString();
 				}
 			}.setAlignment((i & 1) == 1 ? Direction.EAST : Direction.WEST));

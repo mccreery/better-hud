@@ -86,7 +86,7 @@ public class SettingSlider extends SettingAlignable<SettingSlider> implements IS
 	}
 
 	@Override
-	public void getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Rect bounds) {
+	public void getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Rect bounds) {
 		slider = new GuiSlider(0, bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), this);
 
 		parts.add(slider);
