@@ -175,7 +175,7 @@ public abstract class HudElement<T> {
 		List<HudElement<?>> prioritySort = HudElements.get().getRegistered(SortField.PRIORITY);
 
 		for(int i = 0; i < prioritySort.size(); i++) {
-			prioritySort.get(i).settings.priority.set(i);
+			prioritySort.get(i).settings.setPriority(i);
 		}
 	}
 
@@ -185,6 +185,6 @@ public abstract class HudElement<T> {
 	 * and to allow for future expansion */
 	public void loadDefaults() {
 		setEnabled(true);
-		settings.priority.set(0);
+		settings.setPriority(0);
 	}
 }

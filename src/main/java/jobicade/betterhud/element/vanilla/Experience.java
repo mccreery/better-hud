@@ -40,7 +40,7 @@ public class Experience extends OverlayElement {
 	@Override
 	public void loadDefaults() {
 		super.loadDefaults();
-		settings.priority.set(1);
+		settings.setPriority(1);
 		position.setPreset(Direction.SOUTH);
 	}
 

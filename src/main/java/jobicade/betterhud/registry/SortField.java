@@ -19,7 +19,7 @@ public enum SortField implements Comparator<HudElement<?>> {
 	}, PRIORITY("priority", false) {
 		@Override
 		public int compare(HudElement<?> a, HudElement<?> b) {
-			int compare = Integer.compare(a.settings.priority.get(), b.settings.priority.get());
+			int compare = Integer.compare(a.settings.getPriority(), b.settings.getPriority());
 			return compare != 0 ? compare : ALPHABETICAL.compare(a, b);
 		}
 	};

@@ -2,8 +2,7 @@ package jobicade.betterhud.element.settings;
 
 public class RootSetting extends SettingStub {
 	private final SettingBoolean enabled = new SettingBoolean("enabled").setHidden();
-	// TODO nasty publicses
-	public final SettingInteger priority = new SettingInteger("priority").setHidden();
+	private final SettingInteger priority = new SettingInteger("priority").setHidden();
 
 	public RootSetting() {
 		super();
@@ -18,6 +17,14 @@ public class RootSetting extends SettingStub {
 
 	public void setEnabled(boolean enabled) {
 		this.enabled.set(enabled);
+	}
+
+	public int getPriority() {
+		return priority.get();
+	}
+
+	public void setPriority(int priority) {
+		this.priority.set(priority);
 	}
 
 	@Override

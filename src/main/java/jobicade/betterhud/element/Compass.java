@@ -39,7 +39,7 @@ public class Compass extends OverlayElement {
 		directionScaling.set(0.5);
 		showNotches.set(true);
 		requireItem.setIndex(0);
-		settings.priority.set(-3);
+		settings.setPriority(-3);
 	}
 
 	private static final int[] notchX = new int[9];

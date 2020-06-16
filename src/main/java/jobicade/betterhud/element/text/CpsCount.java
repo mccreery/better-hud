@@ -50,7 +50,7 @@ public class CpsCount extends TextElement implements Tickable {
 		timeoutMax.set(3.0);
 		showBurst.set(true);
 		remember.set(false);
-		settings.priority.set(1);
+		settings.setPriority(1);
 	}
 
 	@Override

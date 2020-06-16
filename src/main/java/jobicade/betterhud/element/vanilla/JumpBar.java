@@ -27,7 +27,7 @@ public class JumpBar extends OverlayElement {
 	@Override
 	public void loadDefaults() {
 		super.loadDefaults();
-		settings.priority.set(2);
+		settings.setPriority(2);
 	}
 
 	@Override

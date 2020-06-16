@@ -16,7 +16,7 @@ public class RidingHealth extends Bar {
 	@Override
 	public void loadDefaults() {
 		super.loadDefaults();
-		settings.priority.set(5);
+		settings.setPriority(5);
 		side.setIndex(1);
 	}
 
