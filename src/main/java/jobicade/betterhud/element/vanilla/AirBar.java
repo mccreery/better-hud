@@ -16,7 +16,7 @@ public class AirBar extends Bar {
 	@Override
 	public void loadDefaults() {
 		super.loadDefaults();
-		settings.priority.set(4);
+		settings.setPriority(4);
 		side.setIndex(1);
 	}
 

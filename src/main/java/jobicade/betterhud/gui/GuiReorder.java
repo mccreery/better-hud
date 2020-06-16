@@ -9,7 +9,6 @@ import java.util.List;
 import com.google.common.base.Predicates;
 
 import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.element.settings.SettingInteger;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -64,21 +63,19 @@ public class GuiReorder extends GuiElements {
 				int i = elements.indexOf(selected) + offset;
 
 				if(i >= 0 && i < elements.size()) {
-					swapValues(selected.settings.priority, elements.get(i).settings.priority);
+					// Swap priority with selected
+					int priority = elements.get(i).settings.getPriority();
+					elements.get(i).settings.setPriority(selected.settings.getPriority());
+					selected.settings.setPriority(priority);
+
 					HudElements.get().invalidateSorts(SortField.PRIORITY);
 				}
 			} else {
-				selected.settings.priority.set(offset);
+				selected.settings.setPriority(offset);
 				HudElement.normalizePriority();
 				HudElements.get().invalidateSorts(SortField.PRIORITY);
 			}
 		}
-	}
-
-	private static void swapValues(SettingInteger a, SettingInteger b) {
-		int temp = a.get();
-		a.set(b.get());
-		b.set(temp);
 	}
 
 	private void select(HudElement<?> element) {

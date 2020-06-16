@@ -28,7 +28,7 @@ public class HelmetOverlay extends OverlayElement {
 	@Override
 	public void loadDefaults() {
 		super.loadDefaults();
-		settings.priority.set(Integer.MIN_VALUE);
+		settings.setPriority(Integer.MIN_VALUE);
 	}
 
 	@Override

@@ -25,7 +25,7 @@ public class ExperienceInfo extends TextElement {
 
 		total.set(false);
 		lifetime.set(false);
-		settings.priority.set(2);
+		settings.setPriority(2);
 	}
 
 	public ExperienceInfo() {

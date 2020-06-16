@@ -19,7 +19,7 @@ public class HealthBar extends Bar {
 	@Override
 	public void loadDefaults() {
 		super.loadDefaults();
-		settings.priority.set(3);
+		settings.setPriority(3);
 		side.setIndex(0);
 	}
 

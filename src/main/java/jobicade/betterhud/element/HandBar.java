@@ -25,7 +25,7 @@ public class HandBar extends EquipmentDisplay {
 		showItem.set(true);
 		showBars.set(true);
 		offHand.set(false);
-		settings.priority.set(100);
+		settings.setPriority(100);
 	}
 
 	public HandBar() {
