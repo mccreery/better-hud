@@ -69,8 +69,9 @@ public class SettingPosition extends SettingStub {
 					super.updateGuiParts(settings);
 				}
 			},
-			lockAlignment = new SettingLock("lockAlignment").setEnableOn(isCustom),
-			lockContent = new SettingLock("lockContent").setEnableOn(isCustom),
+			// TODO downcasting
+			lockAlignment = (SettingLock)new SettingLock("lockAlignment").setEnableOn(isCustom),
+			lockContent = (SettingLock)new SettingLock("lockContent").setEnableOn(isCustom),
 			offset = new SettingAbsolutePosition("origin", this).setEnableOn(isCustom)
 		);
 
