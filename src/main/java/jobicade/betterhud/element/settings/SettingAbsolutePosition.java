@@ -5,18 +5,17 @@ import static jobicade.betterhud.BetterHud.SPACER;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BooleanSupplier;
 
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.gui.GuiElementSettings;
+import jobicade.betterhud.gui.GuiOffsetChooser;
+import jobicade.betterhud.gui.GuiUpDownButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
-import jobicade.betterhud.gui.GuiElementSettings;
-import jobicade.betterhud.gui.GuiOffsetChooser;
-import jobicade.betterhud.gui.GuiUpDownButton;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.geom.Point;
 
 public class SettingAbsolutePosition extends Setting<Point, SettingAbsolutePosition> {
 	public GuiTextField xBox, yBox;
@@ -97,14 +96,12 @@ public class SettingAbsolutePosition extends Setting<Point, SettingAbsolutePosit
 		//pick.displayString = I18n.format("betterHud.menu.pick");
 	}
 
-	@Override
 	public void set(Point value) {
 		x = value.getX();
 		y = value.getY();
 		updateText();
 	}
 
-	@Override
 	public Point get() {
 		return new Point(x, y);
 	}

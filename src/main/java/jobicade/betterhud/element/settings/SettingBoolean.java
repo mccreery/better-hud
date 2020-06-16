@@ -21,9 +21,9 @@ public class SettingBoolean extends SettingAlignable<Boolean, SettingBoolean> {
 	}
 
 	protected GuiActionButton toggler;
-	protected boolean value = false;
-
 	private String unlocalizedValue = "options";
+
+	private boolean value = false;
 
 	public SettingBoolean(String name) {
 		this(name, Direction.CENTER);
@@ -31,6 +31,14 @@ public class SettingBoolean extends SettingAlignable<Boolean, SettingBoolean> {
 
 	public SettingBoolean(String name, Direction alignment) {
 		super(name, alignment);
+	}
+
+	public boolean get() {
+		return value;
+	}
+
+	public void set(boolean value) {
+		this.value = value;
 	}
 
 	public SettingBoolean setValuePrefix(String value) {
@@ -94,6 +102,6 @@ public class SettingBoolean extends SettingAlignable<Boolean, SettingBoolean> {
 	public void updateGuiParts(Collection<Setting<?, ?>> settings) {
 		super.updateGuiParts(settings);
 		toggler.enabled = enabled();
-		toggler.updateText(getUnlocalizedName(), unlocalizedValue, get());
+		toggler.updateText(getUnlocalizedName(), unlocalizedValue, value);
 	}
 }

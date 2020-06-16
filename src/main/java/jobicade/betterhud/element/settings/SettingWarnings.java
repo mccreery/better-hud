@@ -61,23 +61,22 @@ public class SettingWarnings extends SettingStub<Double[]> {
 		}
 	}
 
-	@Override
-	public void set(Double[] values) {
-		for(int i = 0; i < sliders.length; i++) {
-			if(values[i] >= 0) {
-				sliders[i].set(values[i]);
-			}
-		}
-	}
-
-	@Override
-	public Double[] get() {
-		Double[] values = new Double[sliders.length];
+	// TODO why double and float mixed
+	public double[] get() {
+		double[] values = new double[sliders.length];
 
 		for(int i = 0; i < sliders.length; i++) {
 			values[i] = sliders[i].get();
 		}
 		return values;
+	}
+
+	public void set(double... values) {
+		for(int i = 0; i < sliders.length; i++) {
+			if(values[i] >= 0) {
+				sliders[i].set(values[i]);
+			}
+		}
 	}
 
 	public int getWarning(float value) {

@@ -5,8 +5,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BooleanSupplier;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 import jobicade.betterhud.config.HudConfig;
 import jobicade.betterhud.element.HudElement;
@@ -37,34 +35,6 @@ import net.minecraftforge.common.config.Property.Type;
  * casting.
  */
 public abstract class Setting<T, U extends Setting<T, U>> implements ISetting {
-	private T value;
-
-	// Delegates allow pass-through settings since concrete classes are final
-	private Supplier<T> getDelegate;
-	private Consumer<T> setDelegate;
-
-	public final T get() {
-		if (getDelegate != null) {
-			return getDelegate.get();
-		} else {
-			return value;
-		}
-	}
-
-	public final void set(T value) {
-		if (setDelegate != null) {
-			setDelegate.accept(value);
-		} else {
-			this.value = value;
-		}
-	}
-
-	public final U setDelegates(Supplier<T> getDelegate, Consumer<T> setDelegate) {
-		this.getDelegate = getDelegate;
-		this.setDelegate = setDelegate;
-		return getThis();
-	}
-
 	/**
 	 * Used by fluent interface methods to ensure return type {@code T}. Should
 	 * only be implemented by concrete classes.

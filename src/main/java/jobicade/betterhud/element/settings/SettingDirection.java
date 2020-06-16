@@ -144,18 +144,12 @@ public class SettingDirection extends SettingAlignable<Direction, SettingDirecti
 		value = options.apply(Direction.NORTH_WEST);
 	}
 
-	@Override
 	public Direction get() {
 		return value;
 	}
 
-	@Override
 	public void set(Direction value) {
-		value = options.apply(value);
-
-		if(options.isValid(value)) {
-			this.value = value;
-		}
+		this.value = options.apply(value);
 	}
 
 	@Override

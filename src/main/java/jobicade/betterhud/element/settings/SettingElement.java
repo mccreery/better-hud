@@ -3,15 +3,14 @@ package jobicade.betterhud.element.settings;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BooleanSupplier;
 
 import jobicade.betterhud.element.HudElement;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.GuiActionButton;
 import jobicade.betterhud.gui.GuiElementChooser;
 import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.registry.HudElements;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.geom.Rect;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
@@ -30,12 +29,10 @@ public class SettingElement extends SettingAlignable<HudElement<?>, SettingEleme
 		return this;
 	}
 
-	@Override
 	public HudElement<?> get() {
 		return value;
 	}
 
-	@Override
 	public void set(HudElement<?> value) {
 		this.value = value;
 	}

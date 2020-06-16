@@ -38,7 +38,7 @@ public abstract class EquipmentDisplay extends OverlayElement {
 		durabilityMode.setIndex(0);
 		showUndamaged.set(true);
 
-		warnings.set(new Double[] {.45, .25, .1});
+		warnings.set(new double[] {.45, .25, .1});
 	}
 
 	protected boolean hasText() {

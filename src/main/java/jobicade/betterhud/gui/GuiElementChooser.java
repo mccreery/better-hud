@@ -2,20 +2,20 @@ package jobicade.betterhud.gui;
 
 import java.io.IOException;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
 import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.element.settings.Setting;
+import jobicade.betterhud.element.settings.SettingElement;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.registry.HudElements;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiScreen;
 
 public class GuiElementChooser extends GuiElements {
 	private final GuiScreen parent;
 	private final HudElement<?> element;
 
-	private final Setting<HudElement<?>, ?> setting;
+	private final SettingElement setting;
 
-	public GuiElementChooser(GuiScreen parent, HudElement<?> element, Setting<HudElement<?>, ?> setting) {
+	public GuiElementChooser(GuiScreen parent, HudElement<?> element, SettingElement setting) {
 		this.parent = parent;
 		this.element = element;
 		this.setting = setting;
