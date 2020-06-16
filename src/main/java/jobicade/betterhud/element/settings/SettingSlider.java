@@ -3,16 +3,15 @@ package jobicade.betterhud.element.settings;
 import java.util.List;
 import java.util.Map;
 
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.gui.GuiElementSettings;
+import jobicade.betterhud.gui.GuiSlider;
+import jobicade.betterhud.util.ISlider;
+import jobicade.betterhud.util.MathUtil;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
-import net.minecraftforge.common.config.Property.Type;
-import jobicade.betterhud.gui.GuiElementSettings;
-import jobicade.betterhud.gui.GuiSlider;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.util.ISlider;
-import jobicade.betterhud.util.MathUtil;
 
 public class SettingSlider extends SettingAlignable implements ISlider {
 	protected GuiSlider slider;
@@ -132,11 +131,6 @@ public class SettingSlider extends SettingAlignable implements ISlider {
 	@Override
 	public void loadDefaultValue() {
 		value = getMinimum();
-	}
-
-	@Override
-	protected Type getPropertyType() {
-		return Type.DOUBLE;
 	}
 
 	@Override public Double getMinimum() {return min;}

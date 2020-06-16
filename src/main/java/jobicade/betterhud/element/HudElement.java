@@ -55,7 +55,7 @@ public abstract class HudElement<T> {
 
 	/** The settings saved to the config file for this element */
 	// TODO NASTY PUBLICSES
-	public final RootSetting settings = new RootSetting(this);
+	public final RootSetting settings = new RootSetting();
 
 	public boolean isEnabled() {
 		return settings.isEnabled();
