@@ -10,7 +10,6 @@ import jobicade.betterhud.gui.GuiActionButton;
 import jobicade.betterhud.gui.GuiElementSettings;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
-import net.minecraftforge.common.config.Property.Type;
 
 public class SettingBoolean extends SettingAlignable<SettingBoolean> {
 	public static final String VISIBLE = "betterHud.value.visible";
@@ -44,11 +43,6 @@ public class SettingBoolean extends SettingAlignable<SettingBoolean> {
 	public SettingBoolean setValuePrefix(String value) {
 		this.unlocalizedValue = value;
 		return this;
-	}
-
-	@Override
-	protected Type getPropertyType() {
-		return Type.BOOLEAN;
 	}
 
 	@Override

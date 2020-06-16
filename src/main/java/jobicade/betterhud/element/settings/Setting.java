@@ -6,16 +6,12 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BooleanSupplier;
 
-import jobicade.betterhud.config.HudConfig;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.gui.GuiElementSettings;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
-import net.minecraftforge.common.config.ConfigCategory;
-import net.minecraftforge.common.config.Property;
-import net.minecraftforge.common.config.Property.Type;
 
 /**
  * A setting for a {@link HudElement}. Child elements will be saved under
@@ -40,9 +36,6 @@ public abstract class Setting {
 	public final String name;
 
 	private String unlocalizedName;
-
-	/** The config property associated with this setting */
-	private Property property;
 
 	/** Set to {@code true} to hide the setting from the GUI
 	 * @see #getGuiParts(List, Map, Point) */
@@ -112,74 +105,6 @@ public abstract class Setting {
 	/** @return {@code true} if this element and its ancestors are enabled */
 	public final boolean enabled() {
 		return (parent == null || parent.enabled()) && enableOn.getAsBoolean();
-	}
-
-	/** Binds properties to elements for loading and saving */
-	protected final void bindConfig(HudConfig config, String category, String path) {
-		if(hasValue()) {
-			property = getProperty(config, category, path);
-		}
-
-		for(Setting child : children) {
-			String childPath;
-			if (path.isEmpty()) {
-				childPath = child.name;
-			} else {
-				childPath = path + "." + child.name;
-			}
-
-			child.bindConfig(config, category, childPath);
-		}
-	}
-
-	/** Loads this setting and all its children */
-	public final void loadConfig() {
-		if(property != null) {
-			loadStringValue(property.getString());
-		}
-
-		for(Setting child : children) {
-			child.loadConfig();
-		}
-	}
-
-	/** Saves this setting and all its children to {@code config} */
-	public final void saveConfig() {
-		if(property != null) {
-			String save = getStringValue();
-
-			if(property.getString() != save) {
-				property.setValue(save);
-			}
-		}
-
-		for(Setting child : children) {
-			child.saveConfig();
-		}
-	}
-
-	protected Property getProperty(HudConfig config, String category, String path) {
-		ConfigCategory configCategory = config.getCategory(category);
-		Property property = null;
-		String save = getStringValue();
-
-		if(configCategory.containsKey(path)) {
-			property = configCategory.get(path);
-		}
-
-		if(property == null || property.getType() != getPropertyType()) {
-			property = new Property(path, getStringValue(), getPropertyType());
-			property.setValue(save);
-
-			configCategory.put(path, property);
-		}
-
-		property.setDefaultValue(save);
-		return property;
-	}
-
-	protected Type getPropertyType() {
-		return Type.STRING;
 	}
 
 	/** Populates {@code parts} with {@link Gui}s which should be added to the settings screen.<br>
