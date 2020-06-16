@@ -22,7 +22,7 @@ public class SettingLock extends SettingBoolean {
 
 	@Override
 	public void getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Rect bounds) {
-		toggler = new GuiTexturedButton(new Rect(0, 60, 20, 10)).setBounds(bounds).setCallback(b -> value = !value);
+		toggler = new GuiTexturedButton(new Rect(0, 60, 20, 10)).setBounds(bounds).setCallback(b -> set(!get()));
 		parts.add(toggler);
 		callbacks.put(toggler, this);
 	}

@@ -5,8 +5,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BooleanSupplier;
-import java.util.function.Consumer;
-import java.util.function.Supplier;
 
 import jobicade.betterhud.config.HudConfig;
 import jobicade.betterhud.element.HudElement;
@@ -24,34 +22,6 @@ import net.minecraftforge.common.config.Property.Type;
 public abstract class Setting<T> implements ISetting {
 	private Setting<?> parent = null;
 	protected final List<Setting<?>> children = new ArrayList<Setting<?>>();
-
-	private T value;
-
-	private Supplier<T> getDelegate;
-	private Consumer<T> setDelegate;
-
-	public final T get() {
-		if (getDelegate != null) {
-			return getDelegate.get();
-		} else {
-			return value;
-		}
-	}
-
-	public final void set(T value) {
-		if (setDelegate != null) {
-			setDelegate.accept(value);
-		} else {
-			this.value = value;
-		}
-	}
-
-	public final Setting<?> setDelegates(Supplier<T> getDelegate, Consumer<T> setDelegate) {
-		this.getDelegate = getDelegate;
-		this.setDelegate = setDelegate;
-		return this;
-	}
-
 	public final String name;
 
 	private Category category = Category.MISC;

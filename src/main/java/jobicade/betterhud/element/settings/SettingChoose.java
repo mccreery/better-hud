@@ -42,21 +42,26 @@ public class SettingChoose extends SettingAlignable<String> {
 
 		this.modes = modes;
 		this.length = modes.length;
+	}
 
-		setDelegates(
-			() -> modes[index],
-			mode -> index = ArrayUtils.indexOf(modes, mode)
-		);
+	public String get() {
+		return modes[index];
+	}
+
+	public void set(String mode) {
+		setIndex(ArrayUtils.indexOf(modes, mode));
+	}
+
+	public int getIndex() {
+		return index;
 	}
 
 	public void setIndex(int index) {
 		if(index >= 0 && index < length) {
 			this.index = index;
+		} else {
+			throw new IndexOutOfBoundsException("mode: " + index + ", max: " + (length - 1));
 		}
-	}
-
-	public int getIndex() {
-		return index;
 	}
 
 	public void last() {
@@ -75,19 +80,6 @@ public class SettingChoose extends SettingAlignable<String> {
 			index = 0;
 		}
 		setIndex(index);
-	}
-
-	@Override
-	public void set(String value) {
-		int index = ArrayUtils.indexOf(modes, value);
-		if(index == -1) index = Integer.parseUnsignedInt(value);
-
-		setIndex(index);
-	}
-
-	@Override
-	public String get() {
-		return index < modes.length ? modes[index] : String.valueOf(index);
 	}
 
 	@Override
