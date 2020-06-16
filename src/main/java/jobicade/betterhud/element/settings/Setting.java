@@ -24,8 +24,6 @@ public abstract class Setting implements ISetting {
 	protected final List<Setting> children = new ArrayList<>();
 	public final String name;
 
-	private Category category = Category.MISC;
-
 	private String unlocalizedName;
 
 	/** The config property associated with this setting */
@@ -50,15 +48,6 @@ public abstract class Setting implements ISetting {
 	@Override
 	public Iterable<? extends ISetting> getChildren() {
 		return children;
-	}
-
-	public Setting setCategory(Category category) {
-		this.category = category;
-		return this;
-	}
-
-	public Category getCategory() {
-		return category;
 	}
 
 	public Setting setEnableOn(BooleanSupplier enableOn) {
@@ -230,20 +219,6 @@ public abstract class Setting implements ISetting {
 	public void updateGuiParts(Collection<Setting> settings) {
 		for(Setting setting : children) {
 			setting.updateGuiParts(settings);
-		}
-	}
-
-	public enum Category {
-		MISC("misc"), POSITION("position");
-
-		private final String unlocalizedName;
-
-		Category(String unlocalizedName) {
-			this.unlocalizedName = unlocalizedName;
-		}
-
-		public String getUnlocalizedName() {
-			return "betterHud.group." + unlocalizedName;
 		}
 	}
 }
