@@ -2,7 +2,7 @@ package jobicade.betterhud.element.settings;
 
 import jobicade.betterhud.render.Color;
 
-public class SettingColor extends SettingStub<Color> {
+public class SettingColor extends SettingStub {
 	protected final SettingSlider red, green, blue;
 
 	public SettingColor(String name) {

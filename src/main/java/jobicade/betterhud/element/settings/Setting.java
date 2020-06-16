@@ -19,9 +19,9 @@ import net.minecraftforge.common.config.Property.Type;
 
 /** A setting for a {@link HudElement}. Child elements will be saved under
  * the namespace of the parent's name */
-public abstract class Setting<T> implements ISetting {
-	private Setting<?> parent = null;
-	protected final List<Setting<?>> children = new ArrayList<Setting<?>>();
+public abstract class Setting implements ISetting {
+	private Setting parent = null;
+	protected final List<Setting> children = new ArrayList<>();
 	public final String name;
 
 	private Category category = Category.MISC;
@@ -52,7 +52,7 @@ public abstract class Setting<T> implements ISetting {
 		return children;
 	}
 
-	public Setting<T> setCategory(Category category) {
+	public Setting setCategory(Category category) {
 		this.category = category;
 		return this;
 	}
@@ -61,30 +61,30 @@ public abstract class Setting<T> implements ISetting {
 		return category;
 	}
 
-	public Setting<T> setEnableOn(BooleanSupplier enableOn) {
+	public Setting setEnableOn(BooleanSupplier enableOn) {
 		this.enableOn = enableOn;
 		return this;
 	}
 
-	public Setting<T> setHidden() {
+	public Setting setHidden() {
 		this.hidden = true;
 		return this;
 	}
 
-	public final void addChild(Setting<?> setting) {
+	public final void addChild(Setting setting) {
 		children.add(setting);
 		setting.parent = this;
 	}
 
-	public final void addChildren(Iterable<Setting<?>> settings) {
-		for (Setting<?> setting : settings) {
+	public final void addChildren(Iterable<Setting> settings) {
+		for (Setting setting : settings) {
 			addChild(setting);
 		}
 	}
 
 	@SafeVarargs
-	public final void addChildren(Setting<?>... settings) {
-		for (Setting<?> setting : settings) {
+	public final void addChildren(Setting... settings) {
+		for (Setting setting : settings) {
 			addChild(setting);
 		}
 	}
@@ -93,7 +93,7 @@ public abstract class Setting<T> implements ISetting {
 		return children.isEmpty();
 	}
 
-	public Setting<T> setUnlocalizedName(String unlocalizedName) {
+	public Setting setUnlocalizedName(String unlocalizedName) {
 		this.unlocalizedName = unlocalizedName;
 		return this;
 	}
@@ -117,7 +117,7 @@ public abstract class Setting<T> implements ISetting {
 			property = getProperty(config, category, path);
 		}
 
-		for(Setting<?> child : children) {
+		for(Setting child : children) {
 			String childPath;
 			if (path.isEmpty()) {
 				childPath = child.name;
@@ -135,7 +135,7 @@ public abstract class Setting<T> implements ISetting {
 			loadStringValue(property.getString());
 		}
 
-		for(Setting<?> child : children) {
+		for(Setting child : children) {
 			child.loadConfig();
 		}
 	}
@@ -150,7 +150,7 @@ public abstract class Setting<T> implements ISetting {
 			}
 		}
 
-		for(Setting<?> child : children) {
+		for(Setting child : children) {
 			child.saveConfig();
 		}
 	}
@@ -187,7 +187,7 @@ public abstract class Setting<T> implements ISetting {
 	 *
 	 * @param origin The top center point for GUI parts being added
 	 * @return The new origin directly below this setting's parts */
-	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Point origin) {
+	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Point origin) {
 		return getGuiParts(parts, callbacks, origin, children);
 	}
 
@@ -198,9 +198,9 @@ public abstract class Setting<T> implements ISetting {
 	 * @param origin The top center point for GUI parts being added
 	 * @return The bottom center point of all {@code settings}
 	 * @see #getGuiParts(List, Map, Point) */
-	public static Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Point origin, List<Setting<?>> settings) {
+	public static Point getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Point origin, List<Setting> settings) {
 		if(!settings.isEmpty()) {
-			for(Setting<?> setting : settings) {
+			for(Setting setting : settings) {
 				if(!setting.hidden) {
 					Point bottom = setting.getGuiParts(parts, callbacks, origin);
 
@@ -215,7 +215,7 @@ public abstract class Setting<T> implements ISetting {
 
 	/** Renders extra parts of this GUI */
 	public void draw() {
-		for(Setting<?> setting : children) {
+		for(Setting setting : children) {
 			setting.draw();
 		}
 	}
@@ -227,8 +227,8 @@ public abstract class Setting<T> implements ISetting {
 
 	/** Updates the GUI elements based on the state of other settings.
 	 * This is called when any button tied to a setting callback is pressed */
-	public void updateGuiParts(Collection<Setting<?>> settings) {
-		for(Setting<?> setting : children) {
+	public void updateGuiParts(Collection<Setting> settings) {
+		for(Setting setting : children) {
 			setting.updateGuiParts(settings);
 		}
 	}

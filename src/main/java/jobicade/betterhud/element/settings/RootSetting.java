@@ -3,7 +3,7 @@ package jobicade.betterhud.element.settings;
 import jobicade.betterhud.config.HudConfig;
 import jobicade.betterhud.element.HudElement;
 
-public class RootSetting extends SettingStub<Boolean> {
+public class RootSetting extends SettingStub {
 	private final HudElement<?> element;
 
 	private final SettingBoolean enabled = new SettingBoolean("enabled").setHidden();

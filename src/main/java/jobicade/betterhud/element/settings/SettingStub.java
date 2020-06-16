@@ -7,7 +7,7 @@ import jobicade.betterhud.gui.GuiElementSettings;
 /** A default implementation of {@link Setting} which stores no value.<br>
  * It is used for settings which are for display only and which only store
  * the values of their children */
-public class SettingStub<T> extends Setting<T> {
+public class SettingStub extends Setting {
 	public SettingStub() {
 		this(null);
 	}

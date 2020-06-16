@@ -13,7 +13,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraftforge.common.config.Property.Type;
 
-public class SettingBoolean extends SettingAlignable<Boolean> {
+public class SettingBoolean extends SettingAlignable {
 	public static final String VISIBLE = "betterHud.value.visible";
 
 	protected GuiActionButton toggler;
@@ -48,7 +48,7 @@ public class SettingBoolean extends SettingAlignable<Boolean> {
 	}
 
 	@Override
-	public void getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Rect bounds) {
+	public void getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Rect bounds) {
 		toggler = new GuiActionButton("").setBounds(bounds).setCallback(b -> value = !value);
 		parts.add(toggler);
 		callbacks.put(toggler, this);
@@ -95,7 +95,7 @@ public class SettingBoolean extends SettingAlignable<Boolean> {
 	}
 
 	@Override
-	public void updateGuiParts(Collection<Setting<?>> settings) {
+	public void updateGuiParts(Collection<Setting> settings) {
 		super.updateGuiParts(settings);
 		toggler.enabled = enabled();
 		toggler.updateText(getUnlocalizedName(), unlocalizedValue, value);

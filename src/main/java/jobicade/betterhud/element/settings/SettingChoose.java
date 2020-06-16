@@ -17,7 +17,7 @@ import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.geom.Point;
 
-public class SettingChoose extends SettingAlignable<String> {
+public class SettingChoose extends SettingAlignable {
 	protected GuiButton last, next, backing;
 	protected final String[] modes;
 
@@ -108,7 +108,7 @@ public class SettingChoose extends SettingAlignable<String> {
 	}
 
 	@Override
-	public void getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Rect bounds) {
+	public void getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Rect bounds) {
 		parts.add(backing = new GuiButton(2, bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), ""));
 		parts.add(last = new GuiButton(0, bounds.getLeft(), bounds.getY(), 20, bounds.getHeight(), "<"));
 		parts.add(next = new GuiButton(1, bounds.getRight() - 20, bounds.getY(), 20, bounds.getHeight(), ">"));
@@ -145,7 +145,7 @@ public class SettingChoose extends SettingAlignable<String> {
 	}
 
 	@Override
-	public void updateGuiParts(Collection<Setting<?>> settings) {
+	public void updateGuiParts(Collection<Setting> settings) {
 		last.enabled = next.enabled = enabled();
 	}
 
