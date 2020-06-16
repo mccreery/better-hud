@@ -20,12 +20,6 @@ public abstract class FluentSetting<T extends FluentSetting<T>> extends Setting 
     // Fluent interface methods upgraded with covariant return type
 
     @Override
-    public T setCategory(Category category) {
-        super.setCategory(category);
-        return getThis();
-    }
-
-    @Override
     public T setEnableOn(BooleanSupplier enableOn) {
         super.setEnableOn(enableOn);
         return getThis();

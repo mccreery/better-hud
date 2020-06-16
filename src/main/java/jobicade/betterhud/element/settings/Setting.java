@@ -39,8 +39,6 @@ public abstract class Setting {
 	protected final List<Setting> children = new ArrayList<>();
 	public final String name;
 
-	private Category category = Category.MISC;
-
 	private String unlocalizedName;
 
 	/** The config property associated with this setting */
@@ -65,16 +63,7 @@ public abstract class Setting {
 		return children;
 	}
 
-	public Category getCategory() {
-		return category;
-	}
-
 	// Upcasting fluent interface without covariance
-
-	public Setting setCategory(Category category) {
-		this.category = category;
-		return this;
-	}
 
 	public Setting setEnableOn(BooleanSupplier enableOn) {
 		this.enableOn = enableOn;
@@ -259,18 +248,4 @@ public abstract class Setting {
 	 */
     public abstract void loadStringValue(String stringValue);
     public abstract void loadDefaultValue();
-
-	public enum Category {
-		MISC("misc"), POSITION("position");
-
-		private final String unlocalizedName;
-
-		Category(String unlocalizedName) {
-			this.unlocalizedName = unlocalizedName;
-		}
-
-		public String getUnlocalizedName() {
-			return "betterHud.group." + unlocalizedName;
-		}
-	}
 }
