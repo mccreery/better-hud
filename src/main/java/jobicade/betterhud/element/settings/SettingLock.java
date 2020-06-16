@@ -2,12 +2,11 @@ package jobicade.betterhud.element.settings;
 
 import java.util.List;
 import java.util.Map;
-import java.util.function.BooleanSupplier;
 
-import net.minecraft.client.gui.Gui;
-import jobicade.betterhud.gui.GuiTexturedButton;
-import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.gui.GuiTexturedButton;
+import net.minecraft.client.gui.Gui;
 
 public class SettingLock extends SettingBoolean {
 	private Rect bounds;
@@ -31,11 +30,5 @@ public class SettingLock extends SettingBoolean {
 	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?, ?>> callbacks, Point origin) {
 		getGuiParts(parts, callbacks, bounds);
 		return null;
-	}
-
-	@Override
-	public SettingLock setEnableOn(BooleanSupplier enableOn) {
-		super.setEnableOn(enableOn);
-		return this;
 	}
 }

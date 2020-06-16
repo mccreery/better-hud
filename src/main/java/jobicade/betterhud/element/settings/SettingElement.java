@@ -85,10 +85,4 @@ public class SettingElement extends SettingAlignable<HudElement<?>, SettingEleme
 	public void updateGuiParts(Collection<Setting<?, ?>> settings) {
 		button.enabled = enabled();
 	}
-
-	@Override
-	public SettingElement setEnableOn(BooleanSupplier enableOn) {
-		super.setEnableOn(enableOn);
-		return this;
-	}
 }

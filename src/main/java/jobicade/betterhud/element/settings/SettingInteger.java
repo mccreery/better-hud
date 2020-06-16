@@ -60,10 +60,4 @@ public class SettingInteger extends Setting<Integer, SettingInteger> {
     @Override
     public void actionPerformed(GuiElementSettings gui, GuiButton button) {
     }
-
-    @Override
-    public SettingInteger setHidden() {
-        super.setHidden();
-        return this;
-    }
 }

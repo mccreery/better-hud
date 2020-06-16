@@ -180,10 +180,4 @@ public class SettingAbsolutePosition extends Setting<Point, SettingAbsolutePosit
 			xUp.enabled = xDown.enabled = yUp.enabled = yDown.enabled = false;
 		}
 	}
-
-	@Override
-	public SettingAbsolutePosition setEnableOn(BooleanSupplier enableOn) {
-		super.setEnableOn(enableOn);
-		return this;
-	}
 }
