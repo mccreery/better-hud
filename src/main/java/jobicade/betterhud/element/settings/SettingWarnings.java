@@ -6,7 +6,7 @@ import java.util.Collection;
 
 import jobicade.betterhud.geom.Direction;
 
-public class SettingWarnings extends SettingStub<Double[]> {
+public class SettingWarnings extends SettingStub {
 	private final SettingSlider[] sliders;
 
 	public SettingWarnings(String name) {
@@ -50,7 +50,7 @@ public class SettingWarnings extends SettingStub<Double[]> {
 				}
 
 				@Override
-				public void updateGuiParts(Collection<Setting<?, ?>> settings) {
+				public void updateGuiParts(Collection<Setting<?>> settings) {
 					slider.updateDisplayString();
 				}
 			}.setAlignment((i & 1) == 1 ? Direction.EAST : Direction.WEST));

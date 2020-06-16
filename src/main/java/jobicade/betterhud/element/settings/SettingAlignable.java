@@ -10,7 +10,7 @@ import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 
-public abstract class SettingAlignable<T, U extends SettingAlignable<T, U>> extends Setting<T, U> {
+public abstract class SettingAlignable<T extends SettingAlignable<T>> extends Setting<T> {
 	protected Direction alignment;
 
 	public SettingAlignable(String name, Direction alignment) {
@@ -18,13 +18,13 @@ public abstract class SettingAlignable<T, U extends SettingAlignable<T, U>> exte
 		this.alignment = alignment;
 	}
 
-	public U setAlignment(Direction alignment) {
+	public T setAlignment(Direction alignment) {
 		this.alignment = alignment;
 		return getThis();
 	}
 
 	@Override
-	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?, ?>> callbacks, Point origin) {
+	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Point origin) {
 		origin = super.getGuiParts(parts, callbacks, origin);
 
 		Rect bounds = new Rect(getSize());
@@ -47,5 +47,5 @@ public abstract class SettingAlignable<T, U extends SettingAlignable<T, U>> exte
 	}
 
 	/** @see Setting#getGuiParts(List, Map, Point) */
-	public abstract void getGuiParts(List<Gui> parts, Map<Gui, Setting<?, ?>> callbacks, Rect bounds);
+	public abstract void getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Rect bounds);
 }

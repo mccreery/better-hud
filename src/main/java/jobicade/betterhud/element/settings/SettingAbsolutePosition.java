@@ -17,7 +17,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 
-public class SettingAbsolutePosition extends Setting<Point, SettingAbsolutePosition> {
+public class SettingAbsolutePosition extends Setting<SettingAbsolutePosition> {
 	public GuiTextField xBox, yBox;
 	public GuiButton pick;
 	private GuiButton xUp, xDown, yUp, yDown;
@@ -46,7 +46,7 @@ public class SettingAbsolutePosition extends Setting<Point, SettingAbsolutePosit
 	}
 
 	@Override
-	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?, ?>> callbacks, Point origin) {
+	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Point origin) {
 		parts.add(xBox = new GuiTextField(0, Minecraft.getMinecraft().fontRenderer, origin.getX() - 106, origin.getY() + 1, 80, 18));
 		xBox.setText(String.valueOf(x));
 		parts.add(yBox = new GuiTextField(0, Minecraft.getMinecraft().fontRenderer, origin.getX() + 2, origin.getY() + 1, 80, 18));
@@ -148,7 +148,7 @@ public class SettingAbsolutePosition extends Setting<Point, SettingAbsolutePosit
 	}
 
 	@Override
-	public void updateGuiParts(Collection<Setting<?, ?>> settings) {
+	public void updateGuiParts(Collection<Setting<?>> settings) {
 		super.updateGuiParts(settings);
 
 		boolean enabled = enabled();
