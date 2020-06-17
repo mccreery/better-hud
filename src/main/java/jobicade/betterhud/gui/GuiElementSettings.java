@@ -5,13 +5,13 @@ import static jobicade.betterhud.BetterHud.SPACER;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.List;
 
 import org.lwjgl.input.Keyboard;
 import org.lwjgl.opengl.GL11;
 
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
+import jobicade.betterhud.element.settings.IGuiController;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
@@ -36,7 +36,7 @@ public class GuiElementSettings extends GuiMenuScreen {
 
 	public HudElement<?> element;
 	private ArrayList<GuiTextField> textboxList = new ArrayList<>();
-	public HashMap<Gui, Setting> callbacks = new HashMap<>();
+	public HashMap<Gui, IGuiController> callbacks = new HashMap<>();
 
 	private Rect viewport;
 
@@ -60,24 +60,34 @@ public class GuiElementSettings extends GuiMenuScreen {
 		Keyboard.enableRepeatEvents(true);
 		done.setBounds(new Rect(200, 20).align(getOrigin(), Direction.NORTH));
 
-		List<Gui> parts = new ArrayList<Gui>();
-		int contentHeight = element.settings.getGuiParts(parts, callbacks, new Point(width / 2, SPACER)).getY();
-
-		for(Gui gui : parts) {
-			if(gui instanceof GuiButton) {
-				buttonList.add((GuiButton)gui);
-			} else if(gui instanceof GuiLabel) {
-				labelList.add((GuiLabel)gui);
-			} else if(gui instanceof GuiTextField) {
-				textboxList.add((GuiTextField)gui);
-			}
-		}
+		int contentHeight = populateGui(element.settings, new Point(width / 2, SPACER));
 
 		viewport = new Rect(width / 2 - 200, height / 16 + 40 + SPACER, 400, 0).withBottom(height - 20);
 		scrollbar = new GuiScrollbar(viewport, contentHeight);
 
-		for(Setting setting : callbacks.values()) {
-			setting.updateGuiParts(callbacks.values());
+		otherUpdate();
+	}
+
+	private int populateGui(Setting setting, Point topAnchor) {
+		if (setting.isHidden()) {
+			return 0;
+		}
+		int height = 0;
+
+		for (Setting childSetting : setting.getChildren()) {
+			height += populateGui(childSetting, topAnchor.add(0, height));
+		}
+
+		IGuiController controller = setting.getGuiController();
+		if (controller != null) {
+			height += controller.populateGui(topAnchor.add(0, height), new Populator(controller));
+		}
+		return height;
+	}
+
+	private void otherUpdate() {
+		for (IGuiController controller : callbacks.values()) {
+			controller.otherUpdate();
 		}
 	}
 
@@ -90,12 +100,8 @@ public class GuiElementSettings extends GuiMenuScreen {
 	@Override
 	protected void actionPerformed(GuiButton button) {
 		if(callbacks.containsKey(button)) {
-			callbacks.get(button).actionPerformed(this, button);
-
-			// Notify the rest of the elements that a button has been pressed
-			for(Setting setting : callbacks.values()) {
-				setting.updateGuiParts(callbacks.values());
-			}
+			callbacks.get(button).actionPerformed(button);
+			otherUpdate();
 		} else {
 			super.actionPerformed(button);
 		}
@@ -131,7 +137,8 @@ public class GuiElementSettings extends GuiMenuScreen {
 			field.textboxKeyTyped(typedChar, keyCode);
 
 			if(callbacks.containsKey(field)) {
-				callbacks.get(field).updateGuiParts(callbacks.values());
+				callbacks.get(field).textboxKeyTyped(typedChar, keyCode);
+				otherUpdate();
 			}
 		}
 	}
@@ -234,5 +241,31 @@ public class GuiElementSettings extends GuiMenuScreen {
 		drawVerticalLine(x, y, textY - SPACER, Color.WHITE.getPacked());
 		drawVerticalLine(x, y + (height + fontRenderer.FONT_HEIGHT) / 2 + SPACER, y + height, Color.WHITE.getPacked());
 		fontRenderer.drawString(String.valueOf(this.height), x, textY, Color.WHITE.getPacked());
+	}
+
+	private class Populator implements IGuiController.Populator {
+		private final IGuiController controller;
+
+		private Populator(IGuiController controller) {
+			this.controller = controller;
+		}
+
+		@Override
+		public void addButton(GuiButton button) {
+			buttonList.add(button);
+			callbacks.put(button, controller);
+		}
+
+		@Override
+		public void addLabel(GuiLabel label) {
+			labelList.add(label);
+			callbacks.put(label, controller);
+		}
+
+		@Override
+		public void addTextField(GuiTextField textField) {
+			textboxList.add(textField);
+			callbacks.put(textField, controller);
+		}
 	}
 }

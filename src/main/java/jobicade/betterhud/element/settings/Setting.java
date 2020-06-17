@@ -65,6 +65,10 @@ public abstract class Setting {
 		return this;
 	}
 
+	public boolean isHidden() {
+		return hidden;
+	}
+
 	public final void addChild(Setting setting) {
 		children.add(setting);
 		setting.parent = this;
@@ -144,6 +148,14 @@ public abstract class Setting {
 	 * or {@code null} otherwise.
 	 */
 	public IStringSetting getStringSetting() {
+		return null;
+	}
+
+	/**
+	 * @return A GUI controller if this setting provides a GUI
+	 * or {@code null} otherwise.
+	 */
+	public IGuiController getGuiController() {
 		return null;
 	}
 }
