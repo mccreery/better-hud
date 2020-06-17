@@ -26,12 +26,12 @@ public class SettingDirection extends SettingAlignable<SettingDirection> impleme
 	private final DirectionOptions options;
 	private Direction value;
 
-	public SettingDirection(String name, Direction alignment) {
-		this(name, alignment, DirectionOptions.ALL);
+	public SettingDirection(String name) {
+		this(name, DirectionOptions.ALL);
 	}
 
-	public SettingDirection(String name, Direction alignment, DirectionOptions options) {
-		super(name, alignment);
+	public SettingDirection(String name, DirectionOptions options) {
+		super(name);
 		this.options = options;
 	}
 

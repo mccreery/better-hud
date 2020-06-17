@@ -11,11 +11,10 @@ import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 
 public abstract class SettingAlignable<T extends SettingAlignable<T>> extends FluentSetting<T> {
-	protected Direction alignment;
+	protected Direction alignment = Direction.CENTER;
 
-	public SettingAlignable(String name, Direction alignment) {
+	public SettingAlignable(String name) {
 		super(name);
-		this.alignment = alignment;
 	}
 
 	public T setAlignment(Direction alignment) {

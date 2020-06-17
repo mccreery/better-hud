@@ -23,11 +23,7 @@ public class SettingChoose extends SettingAlignable<SettingChoose> implements IS
 	private int index = 0;
 
 	public SettingChoose(String name, String... modes) {
-		this(name, Direction.CENTER, modes);
-	}
-
-	public SettingChoose(String name, Direction alignment, String... modes) {
-		super(name, alignment);
+		super(name);
 
 		if (modes.length == 0) {
 			throw new IllegalArgumentException("modes cannot be empty");

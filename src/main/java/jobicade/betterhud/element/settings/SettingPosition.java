@@ -52,23 +52,23 @@ public class SettingPosition extends Setting {
 		addChildren(
 			new Legend("position"),
 			mode,
-			direction = new SettingDirection("direction", Direction.WEST, directionOptions).setEnableOn(isPreset).setHorizontal(),
-			parent = new SettingElement("parent", Direction.CENTER).setEnableOn(isCustom),
-			anchor = new SettingDirection("anchor", Direction.WEST).setEnableOn(isCustom),
-			alignment = new SettingDirection("alignment", Direction.CENTER) {
+			direction = new SettingDirection("direction", directionOptions).setAlignment(Direction.WEST).setEnableOn(isPreset).setHorizontal(),
+			parent = new SettingElement("parent").setEnableOn(isCustom),
+			anchor = new SettingDirection("anchor").setAlignment(Direction.WEST).setEnableOn(isCustom),
+			alignment = new SettingDirection("alignment") {
 				@Override
 				public void updateGuiParts(Collection<Setting> settings) {
 					if(lockAlignment.get()) set(anchor.get());
 					super.updateGuiParts(settings);
 				}
 			},
-			contentAlignment = new SettingDirection("contentAlignment", Direction.EAST, contentOptions) {
+			contentAlignment = new SettingDirection("contentAlignment", contentOptions) {
 				@Override
 				public void updateGuiParts(Collection<Setting> settings) {
 					if(lockContent.get()) set(SettingPosition.this.alignment.get());
 					super.updateGuiParts(settings);
 				}
-			},
+			}.setAlignment(Direction.EAST),
 			// TODO downcasting
 			lockAlignment = (SettingLock)new SettingLock("lockAlignment").setEnableOn(isCustom),
 			lockContent = (SettingLock)new SettingLock("lockContent").setEnableOn(isCustom),

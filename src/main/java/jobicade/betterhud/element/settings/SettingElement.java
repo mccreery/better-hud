@@ -5,7 +5,6 @@ import java.util.List;
 import java.util.Map;
 
 import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.GuiActionButton;
 import jobicade.betterhud.gui.GuiElementChooser;
@@ -20,8 +19,8 @@ public class SettingElement extends SettingAlignable<SettingElement> implements 
 	private HudElement<?> value;
 	private GuiActionButton button;
 
-	public SettingElement(String name, Direction alignment) {
-		super(name, alignment);
+	public SettingElement(String name) {
+		super(name);
 	}
 
 	@Override

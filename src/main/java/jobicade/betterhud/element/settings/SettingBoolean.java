@@ -4,7 +4,6 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.GuiActionButton;
 import jobicade.betterhud.gui.GuiElementSettings;
@@ -25,11 +24,7 @@ public class SettingBoolean extends SettingAlignable<SettingBoolean> implements 
 	private boolean value = false;
 
 	public SettingBoolean(String name) {
-		this(name, Direction.CENTER);
-	}
-
-	public SettingBoolean(String name, Direction alignment) {
-		super(name, alignment);
+		super(name);
 	}
 
 	public boolean get() {

@@ -33,7 +33,7 @@ public class SettingSlider extends SettingAlignable<SettingSlider> implements IS
 	}
 
 	public SettingSlider(String name, double min, double max, double interval) {
-		super(name, Direction.CENTER);
+		super(name);
 		this.min = min;
 		this.max = max;
 		this.interval = interval;
