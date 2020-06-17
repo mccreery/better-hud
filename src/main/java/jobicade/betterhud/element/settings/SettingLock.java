@@ -30,7 +30,7 @@ public class SettingLock extends SettingBoolean {
 	@Override
 	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Point origin) {
 		getGuiParts(parts, callbacks, bounds);
-		return null;
+		return origin;
 	}
 
 	@Override
