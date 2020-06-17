@@ -5,8 +5,6 @@ package jobicade.betterhud.element.settings;
  * {@link Setting#getStringSetting()} lets these settings describe themselves.
  */
 public interface IStringSetting {
-    String getName();
-
     String getStringValue();
     String getDefaultValue();
 

@@ -4,9 +4,11 @@ import java.io.File;
 import java.util.HashMap;
 import java.util.Map;
 
+import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.IStringSetting;
 import jobicade.betterhud.element.settings.Setting;
+import jobicade.betterhud.element.settings.SettingValueException;
 import jobicade.betterhud.registry.HudElements;
 import jobicade.betterhud.registry.SortField;
 import net.minecraftforge.common.config.Configuration;
@@ -26,7 +28,11 @@ public class HudConfig extends Configuration {
 		super.load();
 
 		for (Map.Entry<IStringSetting, Property> entry : getPropertyMap().entrySet()) {
-			entry.getKey().loadStringValue(entry.getValue().getString());
+			try {
+				entry.getKey().loadStringValue(entry.getValue().getString());
+			} catch (SettingValueException e) {
+				BetterHud.getLogger().error("Parsing " + entry.getValue().getName() + "=" + entry.getValue().getString(), e);
+			}
 		}
 
 		HudElements.get().invalidateSorts(SortField.ENABLED);

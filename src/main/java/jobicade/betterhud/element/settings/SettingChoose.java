@@ -1,5 +1,6 @@
 package jobicade.betterhud.element.settings;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -41,7 +42,11 @@ public class SettingChoose extends SettingAlignable<SettingChoose> implements IS
 	}
 
 	public void set(String mode) {
-		setIndex(ArrayUtils.indexOf(modes, mode));
+		try {
+			setIndex(ArrayUtils.indexOf(modes, mode));
+		} catch (IndexOutOfBoundsException e) {
+			throw new IllegalArgumentException("Invalid mode " + mode + ". Valid modes are " + Arrays.toString(modes));
+		}
 	}
 
 	public int getIndex() {
@@ -80,8 +85,12 @@ public class SettingChoose extends SettingAlignable<SettingChoose> implements IS
 	}
 
 	@Override
-	public void loadStringValue(String save) {
-		set(save);
+	public void loadStringValue(String save) throws SettingValueException {
+		try {
+			set(save);
+		} catch (IllegalArgumentException e) {
+			throw new SettingValueException(e);
+		}
 	}
 
 	@Override
