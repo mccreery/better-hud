@@ -72,7 +72,7 @@ public class SettingSlider extends SettingAlignable<SettingSlider> implements IS
 
 	@Override
 	public String getDisplayString() {
-		return I18n.format("betterHud.setting." + name) + ": " + getDisplayValue(get() * displayScale);
+		return getLocalizedName() + ": " + getDisplayValue(get() * displayScale);
 	}
 
 	public String getDisplayValue(double scaledValue) {
