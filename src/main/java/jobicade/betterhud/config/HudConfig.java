@@ -71,12 +71,12 @@ public class HudConfig extends Configuration {
 			} else {
 				pathPrefix = pathPrefix + "." + name;
 			}
-		}
 
-		IStringSetting stringSetting = setting.getStringSetting();
-		if (stringSetting != null) {
-			Property property = get(category, pathPrefix, stringSetting.getDefaultValue());
-			map.put(stringSetting, property);
+			IStringSetting stringSetting = setting.getStringSetting();
+			if (stringSetting != null) {
+				Property property = get(category, pathPrefix, stringSetting.getDefaultValue());
+				map.put(stringSetting, property);
+			}
 		}
 
 		for (Setting childSetting : setting.getChildren()) {
