@@ -21,7 +21,7 @@ public class SettingWarnings extends Setting {
 		for (int i = 0; i < sliders.length; i++) {
 			final int index = i;
 
-			addChild(sliders[i] = new SettingPercentage("warning." + String.valueOf(i + 1)) {
+			addChild(sliders[i] = new SettingSlider("warning." + String.valueOf(i + 1), 0, 1) {
 				@Override
 				public String getDisplayValue(double value) {
 					SettingSlider next = next();
@@ -53,7 +53,7 @@ public class SettingWarnings extends Setting {
 				public void updateGuiParts(Collection<Setting> settings) {
 					slider.updateDisplayString();
 				}
-			}.setAlignment((i & 1) == 1 ? Direction.EAST : Direction.WEST));
+			}.setDisplayPercent().setAlignment((i & 1) == 1 ? Direction.EAST : Direction.WEST));
 		}
 
 		if ((sliders.length & 1) == 1) {

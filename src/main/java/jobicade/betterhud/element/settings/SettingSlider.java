@@ -42,6 +42,12 @@ public class SettingSlider extends SettingAlignable<SettingSlider> implements IS
 		set(getMinimum());
 	}
 
+	public SettingSlider setDisplayPercent() {
+		return setUnlocalizedValue("betterHud.value.percent")
+			.setDisplayScale(100)
+			.setDisplayPlaces(0);
+	}
+
 	private void updateDisplayPlaces() {
 		int places = interval != -1
 			&& interval * displayScale == (int)(interval * displayScale) ? 0 : 1;

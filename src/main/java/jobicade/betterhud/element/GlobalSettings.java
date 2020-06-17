@@ -1,12 +1,11 @@
 package jobicade.betterhud.element;
 
 import jobicade.betterhud.element.settings.SettingBoolean;
-import jobicade.betterhud.element.settings.SettingPercentage;
 import jobicade.betterhud.element.settings.SettingSlider;
 import jobicade.betterhud.geom.Rect;
 
 public class GlobalSettings extends HudElement<Object> {
-	private SettingPercentage billboardScale;
+	private SettingSlider billboardScale;
 	private SettingSlider billboardDistance;
 	private SettingBoolean hideOnDebug;
 	private SettingBoolean debugMode;
@@ -15,7 +14,7 @@ public class GlobalSettings extends HudElement<Object> {
 		super("global");
 
 		settings.addChildren(
-			billboardScale = new SettingPercentage("billboardScale"),
+			billboardScale = new SettingSlider("billboardScale", 0, 1).setDisplayPercent(),
 			billboardDistance = new SettingSlider("rayDistance", 5, 200).setUnlocalizedValue("betterHud.hud.meters"),
 			hideOnDebug = new SettingBoolean("hideOnDebug"),
 			debugMode = new SettingBoolean("debugMode")
