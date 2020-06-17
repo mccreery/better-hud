@@ -24,7 +24,7 @@ public class RootSetting extends Setting {
 	}
 
 	public void setPriority(int priority) {
-		this.setPriority(priority);
+		this.priority.set(priority);
 	}
 
 	@Override
