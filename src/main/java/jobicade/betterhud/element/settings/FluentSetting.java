@@ -30,10 +30,4 @@ public abstract class FluentSetting<T extends FluentSetting<T>> extends Setting 
         super.setHidden();
         return getThis();
     }
-
-    @Override
-    public T setUnlocalizedName(String unlocalizedName) {
-        super.setUnlocalizedName(unlocalizedName);
-        return getThis();
-    }
 }

@@ -20,9 +20,14 @@ public class Legend extends Setting {
 	}
 
 	@Override
+	public String getUnlocalizedName() {
+		return "betterHud.group." + getName();
+	}
+
+	@Override
 	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Point origin) {
 		GuiLegendLabel label = new GuiLegendLabel(0, origin.getX() - 150, origin.getY(), 300, Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT, Color.WHITE);
-		label.addLine("betterHud.group." + this.name);
+		label.addLine(getUnlocalizedName());
 		parts.add(label);
 
 		return origin.add(0, Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT + SPACER);
