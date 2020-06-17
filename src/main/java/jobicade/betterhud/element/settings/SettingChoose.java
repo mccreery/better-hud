@@ -21,16 +21,6 @@ public class SettingChoose extends SettingAlignable<SettingChoose> implements IS
 	protected final String[] modes;
 
 	private int index = 0;
-	private int length;
-
-	public SettingChoose(int length) {
-		this("mode", length);
-	}
-
-	public SettingChoose(String name, int length) {
-		this(name);
-		this.length = length;
-	}
 
 	public SettingChoose(String name, String... modes) {
 		this(name, Direction.CENTER, modes);
@@ -39,12 +29,10 @@ public class SettingChoose extends SettingAlignable<SettingChoose> implements IS
 	public SettingChoose(String name, Direction alignment, String... modes) {
 		super(name, alignment);
 
-		this.modes = modes;
-		this.length = modes.length;
-
-		if (length == 0) {
+		if (modes.length == 0) {
 			throw new IllegalArgumentException("modes cannot be empty");
 		}
+		this.modes = modes;
 	}
 
 	@Override
@@ -65,29 +53,19 @@ public class SettingChoose extends SettingAlignable<SettingChoose> implements IS
 	}
 
 	public void setIndex(int index) {
-		if(index >= 0 && index < length) {
+		if(index >= 0 && index < modes.length) {
 			this.index = index;
 		} else {
-			throw new IndexOutOfBoundsException("mode: " + index + ", max: " + (length - 1));
+			throw new IndexOutOfBoundsException("Index: " + index + ", Size: " + modes.length);
 		}
 	}
 
-	public void last() {
-		int index = getIndex();
-
-		if(index == 0) {
-			index = length;
-		}
-		setIndex(--index);
+	public void setPrev() {
+		index = Math.floorMod(index - 1, modes.length);
 	}
 
-	public void next() {
-		int index = getIndex() + 1;
-
-		if(index == length) {
-			index = 0;
-		}
-		setIndex(index);
+	public void setNext() {
+		index = Math.floorMod(index + 1, modes.length);
 	}
 
 	@Override
@@ -126,8 +104,15 @@ public class SettingChoose extends SettingAlignable<SettingChoose> implements IS
 		callbacks.put(next, this);
 	}
 
+	private String valuePrefix = "betterHud.value.";
+
+	public SettingChoose setValuePrefix(String valuePrefix) {
+		this.valuePrefix = valuePrefix;
+		return this;
+	}
+
 	protected String getUnlocalizedValue() {
-		return "betterHud.value." + modes[getIndex()];
+		return valuePrefix + modes[getIndex()];
 	}
 
 	protected String getLocalizedValue() {
@@ -148,8 +133,11 @@ public class SettingChoose extends SettingAlignable<SettingChoose> implements IS
 
 	@Override
 	public void actionPerformed(GuiElementSettings gui, GuiButton button) {
-		if(button.id == 0) last();
-		else next();
+		if (button.id == 0) {
+			setPrev();
+		} else {
+			setNext();
+		}
 	}
 
 	@Override

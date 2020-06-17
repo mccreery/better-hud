@@ -63,7 +63,7 @@ public class Crosshair extends OverlayElement {
 					Minecraft.getMinecraft().gameSettings.saveOptions();
 				}
 			}.setValuePrefix(SettingBoolean.VISIBLE),
-			indicatorType = new SettingChoose(null, 2) {
+			indicatorType = new SettingChoose(null, "1", "2") {
 				@Override
 				public int getIndex() {
 					return Math.max(Minecraft.getMinecraft().gameSettings.attackIndicator - 1, 0);
@@ -75,12 +75,7 @@ public class Crosshair extends OverlayElement {
 						Minecraft.getMinecraft().gameSettings.attackIndicator = attackIndicator.get() ? index + 1 : 0;
 					}
 				}
-
-				@Override
-				protected String getUnlocalizedValue() {
-					return "options.attack." + modes[getIndex()];
-				}
-			}.setEnableOn(attackIndicator::get)
+			}.setValuePrefix("options.attack.").setEnableOn(attackIndicator::get)
 		);
 		position.setEnableOn(() -> attackIndicator.get());
 	}

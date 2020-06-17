@@ -34,7 +34,7 @@ public class HealIndicator extends OverlayElement {
 		settings.addChildren(
 			position = new SettingPosition(DirectionOptions.NONE, DirectionOptions.NONE),
 			new Legend("misc"),
-			mode = new SettingChoose(2)
+			mode = new SettingChoose("mode", "1", "2")
 		);
 	}
 
