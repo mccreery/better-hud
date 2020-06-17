@@ -44,8 +44,7 @@ public class SettingElement extends SettingAlignable<SettingElement> {
 
 	@Override
 	public String getStringValue() {
-		// TODO use registry names to be consistent with new config file format
-		return value != null ? value.getUnlocalizedName() : "null";
+		return value != null ? value.getName() : "null";
 	}
 
 	@Override
