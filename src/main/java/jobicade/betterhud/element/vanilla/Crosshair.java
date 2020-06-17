@@ -63,7 +63,7 @@ public class Crosshair extends OverlayElement {
 					Minecraft.getMinecraft().gameSettings.saveOptions();
 				}
 			}.setValuePrefix(SettingBoolean.VISIBLE),
-			indicatorType = new SettingChoose(null, "1", "2") {
+			indicatorType = new SettingChoose(null, "mode1", "mode2") {
 				@Override
 				public int getIndex() {
 					return Math.max(Minecraft.getMinecraft().gameSettings.attackIndicator - 1, 0);

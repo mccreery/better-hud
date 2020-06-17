@@ -93,7 +93,10 @@
 #betterHud.value.visible.off=Hidden
 
 #betterHud.setting.mode=Mode
-#betterHud.value.mode=Type %s
+# Generic modes
+#betterHud.value.mode1=Mode 1
+#betterHud.value.mode2=Mode 2
+#betterHud.value.mode3=Mode 3
 
 #betterHud.setting.position=Position
 #betterHud.value.preset=Preset

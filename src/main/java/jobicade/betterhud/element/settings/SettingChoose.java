@@ -121,13 +121,7 @@ public class SettingChoose extends SettingAlignable<SettingChoose> implements IS
 	}
 
 	protected String getLocalizedValue() {
-		int index = getIndex();
-
-		if(index >= 0 && index < modes.length) {
-			return I18n.format(getUnlocalizedValue());
-		} else {
-			return I18n.format("betterHud.value.mode", index);
-		}
+		return I18n.format(getUnlocalizedValue());
 	}
 
 	@Override

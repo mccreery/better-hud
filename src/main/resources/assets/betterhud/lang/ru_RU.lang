@@ -93,7 +93,10 @@ betterHud.value.visible.on=Видимый
 betterHud.value.visible.off=Скрытый
 
 betterHud.setting.mode=Режим
-betterHud.value.mode=Тип %s
+# Generic modes
+#betterHud.value.mode1=Mode 1
+#betterHud.value.mode2=Mode 2
+#betterHud.value.mode3=Mode 3
 
 betterHud.setting.position=Позиция
 betterHud.value.preset=Задать
@@ -247,3 +250,6 @@ betterHud.hud.holding=Удерживание: %s
 betterHud.hud.saturation=Насыщение: %s
 betterHud.hud.unknownBlock=Неизвестный блок
 betterHud.hud.facing=Облицовка: %s (%s)
+
+# Unmapped lines
+betterHud.value.mode=Тип %s
