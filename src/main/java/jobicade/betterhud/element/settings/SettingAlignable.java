@@ -31,7 +31,7 @@ public abstract class SettingAlignable<T extends SettingAlignable<T>> extends Fl
 		bounds = bounds.anchor(new Rect(getAlignmentWidth(), bounds.getHeight()).align(origin, Direction.NORTH), alignment);
 
 		getGuiParts(parts, callbacks, bounds);
-		return shouldBreak() ? origin.withY(bounds.getBottom() + SPACER) : null;
+		return shouldBreak() ? origin.withY(bounds.getBottom() + SPACER) : origin;
 	}
 
 	protected int getAlignmentWidth() {

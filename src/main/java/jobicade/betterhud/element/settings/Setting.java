@@ -99,38 +99,23 @@ public abstract class Setting {
 		return (parent == null || parent.enabled()) && enableOn.getAsBoolean();
 	}
 
-	/** Populates {@code parts} with {@link Gui}s which should be added to the settings screen.<br>
+	/**
+	 * Populates {@code parts} with {@link Gui}s which should be added to the settings screen.<br>
 	 * Also populates {@code callbacks} with {@link #keyTyped(char, int)} and {@link #actionPerformed(GuiElementSettings, GuiButton)} callbacks.
 	 *
 	 * <p>The minimum implementation (in {@link Setting#getGuiParts(List, Map, Point)})
 	 * populates {@code parts} and {@code callbacks} with those of the element's children
 	 *
-	 * @param origin The top center point for GUI parts being added
-	 * @return The new origin directly below this setting's parts */
-	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Point origin) {
-		return getGuiParts(parts, callbacks, origin, children);
-	}
-
-	/** Populates {@code parts} and {@code callbacks} by calling
-	 * {@link #getGuiParts(List, Map, Point)} on the given {@code settings},
-	 * and maintaining {@code y} between them
-	 *
-	 * @param origin The top center point for GUI parts being added
-	 * @return The bottom center point of all {@code settings}
-	 * @see #getGuiParts(List, Map, Point) */
-	public static Point getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Point origin, List<Setting> settings) {
-		if(!settings.isEmpty()) {
-			for(Setting setting : settings) {
-				if(!setting.hidden) {
-					Point bottom = setting.getGuiParts(parts, callbacks, origin);
-
-					if(bottom != null) {
-						origin = bottom;
-					}
-				}
+	 * @param topAnchor The top center anchor for GUI parts being added
+	 * @return The bottom center anchor directly below this setting's parts
+	 */
+	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Point topAnchor) {
+		for (Setting setting : children) {
+			if (!setting.hidden) {
+				topAnchor = setting.getGuiParts(parts, callbacks, topAnchor);
 			}
 		}
-		return origin;
+		return topAnchor;
 	}
 
 	/** Renders extra parts of this GUI */
