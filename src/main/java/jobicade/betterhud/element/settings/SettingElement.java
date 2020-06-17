@@ -16,7 +16,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 
-public class SettingElement extends SettingAlignable<SettingElement> {
+public class SettingElement extends SettingAlignable<SettingElement> implements IStringSetting {
 	private HudElement<?> value;
 	private GuiActionButton button;
 
@@ -38,8 +38,8 @@ public class SettingElement extends SettingAlignable<SettingElement> {
 	}
 
 	@Override
-	public boolean hasValue() {
-		return true;
+	public IStringSetting getStringSetting() {
+		return this;
 	}
 
 	@Override

@@ -14,14 +14,9 @@ import net.minecraft.client.resources.I18n;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.render.Color;
 
-public class Legend extends SettingStub {
+public class Legend extends Setting {
 	public Legend(String name) {
 		super(name);
-	}
-
-	@Override
-	public boolean hasValue() {
-		return false;
 	}
 
 	@Override

@@ -13,7 +13,7 @@ import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 
-public class SettingPosition extends SettingStub {
+public class SettingPosition extends Setting {
 	private boolean edge = false;
 	private int postSpacer = SPACER;
 

@@ -5,6 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import jobicade.betterhud.element.HudElement;
+import jobicade.betterhud.element.settings.IStringSetting;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.registry.HudElements;
 import jobicade.betterhud.registry.SortField;
@@ -24,7 +25,7 @@ public class HudConfig extends Configuration {
 	public void load() {
 		super.load();
 
-		for (Map.Entry<Setting, Property> entry : getPropertyMap().entrySet()) {
+		for (Map.Entry<IStringSetting, Property> entry : getPropertyMap().entrySet()) {
 			entry.getKey().loadStringValue(entry.getValue().getString());
 		}
 
@@ -37,7 +38,7 @@ public class HudConfig extends Configuration {
 	}
 
 	public void saveSettings() {
-		for (Map.Entry<Setting, Property> entry : getPropertyMap().entrySet()) {
+		for (Map.Entry<IStringSetting, Property> entry : getPropertyMap().entrySet()) {
 			entry.getValue().set(entry.getKey().getStringValue());
 		}
 
@@ -46,8 +47,8 @@ public class HudConfig extends Configuration {
 		}
 	}
 
-	private Map<Setting, Property> getPropertyMap() {
-		Map<Setting, Property> propertyMap = new HashMap<>();
+	private Map<IStringSetting, Property> getPropertyMap() {
+		Map<IStringSetting, Property> propertyMap = new HashMap<>();
 
 		for (HudElement<?> element : HudElements.get().getRegistered()) {
 			mapProperties(propertyMap, element.settings, element.getName(), "");
@@ -55,7 +56,7 @@ public class HudConfig extends Configuration {
 		return propertyMap;
 	}
 
-	private void mapProperties(Map<Setting, Property> map, Setting setting, String category, String pathPrefix) {
+	private void mapProperties(Map<IStringSetting, Property> map, Setting setting, String category, String pathPrefix) {
 		String name = setting.getName();
 
 		if (name != null && !name.isEmpty()) {
@@ -66,9 +67,10 @@ public class HudConfig extends Configuration {
 			}
 		}
 
-		if (setting.hasValue()) {
-			Property property = get(category, pathPrefix, setting.getDefaultValue());
-			map.put(setting, property);
+		IStringSetting stringSetting = setting.getStringSetting();
+		if (stringSetting != null) {
+			Property property = get(category, pathPrefix, stringSetting.getDefaultValue());
+			map.put(stringSetting, property);
 		}
 
 		for (Setting childSetting : setting.getChildren()) {

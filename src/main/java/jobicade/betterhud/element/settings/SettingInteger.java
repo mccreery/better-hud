@@ -4,7 +4,7 @@ import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.gui.GuiElementSettings;
 import net.minecraft.client.gui.GuiButton;
 
-public class SettingInteger extends FluentSetting<SettingInteger> {
+public class SettingInteger extends FluentSetting<SettingInteger> implements IStringSetting {
     private int value;
 
     public SettingInteger(String name) {
@@ -25,8 +25,8 @@ public class SettingInteger extends FluentSetting<SettingInteger> {
     }
 
     @Override
-    public boolean hasValue() {
-        return true;
+    public IStringSetting getStringSetting() {
+        return this;
     }
 
     @Override

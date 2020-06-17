@@ -16,7 +16,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 
-public class SettingChoose extends SettingAlignable<SettingChoose> {
+public class SettingChoose extends SettingAlignable<SettingChoose> implements IStringSetting {
 	protected GuiButton last, next, backing;
 	protected final String[] modes;
 
@@ -91,8 +91,8 @@ public class SettingChoose extends SettingAlignable<SettingChoose> {
 	}
 
 	@Override
-	public boolean hasValue() {
-		return true;
+	public IStringSetting getStringSetting() {
+		return this;
 	}
 
 	@Override

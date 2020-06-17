@@ -17,7 +17,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 
-public class SettingDirection extends SettingAlignable<SettingDirection> {
+public class SettingDirection extends SettingAlignable<SettingDirection> implements IStringSetting {
 	private GuiActionButton[] toggles = new GuiActionButton[9];
 	private Rect bounds;
 
@@ -116,8 +116,8 @@ public class SettingDirection extends SettingAlignable<SettingDirection> {
 	}
 
 	@Override
-	public boolean hasValue() {
-		return true;
+	public IStringSetting getStringSetting() {
+		return this;
 	}
 
 	@Override

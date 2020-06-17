@@ -13,7 +13,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 
-public class SettingSlider extends SettingAlignable<SettingSlider> implements ISlider {
+public class SettingSlider extends SettingAlignable<SettingSlider> implements ISlider, IStringSetting {
 	protected GuiSlider slider;
 	private final double min, max, interval;
 
@@ -110,8 +110,8 @@ public class SettingSlider extends SettingAlignable<SettingSlider> implements IS
 	}
 
 	@Override
-	public boolean hasValue() {
-		return true;
+	public IStringSetting getStringSetting() {
+		return this;
 	}
 
 	@Override

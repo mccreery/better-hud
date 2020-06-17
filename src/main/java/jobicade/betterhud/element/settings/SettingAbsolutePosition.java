@@ -17,7 +17,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 
-public class SettingAbsolutePosition extends FluentSetting<SettingAbsolutePosition> {
+public class SettingAbsolutePosition extends FluentSetting<SettingAbsolutePosition> implements IStringSetting {
 	public GuiTextField xBox, yBox;
 	public GuiButton pick;
 	private GuiButton xUp, xDown, yUp, yDown;
@@ -107,8 +107,8 @@ public class SettingAbsolutePosition extends FluentSetting<SettingAbsolutePositi
 	}
 
 	@Override
-	public boolean hasValue() {
-		return true;
+	public IStringSetting getStringSetting() {
+		return this;
 	}
 
 	@Override

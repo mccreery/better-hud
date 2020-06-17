@@ -11,7 +11,7 @@ import jobicade.betterhud.gui.GuiElementSettings;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 
-public class SettingBoolean extends SettingAlignable<SettingBoolean> {
+public class SettingBoolean extends SettingAlignable<SettingBoolean> implements IStringSetting {
 	public static final String VISIBLE = "betterHud.value.visible";
 
 	@Override
@@ -58,8 +58,8 @@ public class SettingBoolean extends SettingAlignable<SettingBoolean> {
 	}
 
 	@Override
-	public boolean hasValue() {
-		return true;
+	public IStringSetting getStringSetting() {
+		return this;
 	}
 
 	@Override
