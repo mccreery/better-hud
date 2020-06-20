@@ -31,7 +31,6 @@ import net.minecraft.client.resources.I18n;
  * casting.
  */
 public abstract class Setting {
-	private final String name;
 	private Setting parent = null;
 	protected final List<Setting> children = new ArrayList<>();
 
@@ -39,10 +38,12 @@ public abstract class Setting {
 	 * @see #getGuiParts(List, Map, Point) */
 	private boolean hidden = false;
 
-	private BooleanSupplier enableOn = () -> true;
+	private final String name;
+	private final BooleanSupplier enableCheck;
 
-	public Setting(String name) {
+	protected Setting(String name, BooleanSupplier enableCheck) {
 		this.name = name;
+		this.enableCheck = enableCheck;
 	}
 
 	public String getName() {
@@ -51,18 +52,6 @@ public abstract class Setting {
 
 	public Iterable<Setting> getChildren() {
 		return children;
-	}
-
-	// Upcasting fluent interface without covariance
-
-	public Setting setEnableOn(BooleanSupplier enableOn) {
-		this.enableOn = enableOn;
-		return this;
-	}
-
-	public Setting setHidden() {
-		this.hidden = true;
-		return this;
 	}
 
 	public boolean isHidden() {
@@ -100,7 +89,7 @@ public abstract class Setting {
 
 	/** @return {@code true} if this element and its ancestors are enabled */
 	public final boolean enabled() {
-		return (parent == null || parent.enabled()) && enableOn.getAsBoolean();
+		return (parent == null || parent.enabled()) && enableCheck.getAsBoolean();
 	}
 
 	/**
@@ -157,5 +146,27 @@ public abstract class Setting {
 	 */
 	public IGuiController getGuiController() {
 		return null;
+	}
+
+	protected static abstract class Builder<T extends Setting, U extends Builder<T, U>> {
+		public abstract U getThis();
+		public abstract T build();
+
+		protected final String name;
+		protected Builder(String name) {
+			this.name = name;
+		}
+
+		protected BooleanSupplier enableCheck = () -> true;
+		public U setEnableCheck(BooleanSupplier enableCheck) {
+			this.enableCheck = enableCheck;
+			return getThis();
+		}
+
+		protected boolean hidden;
+		public U setHidden() {
+			this.hidden = true;
+			return getThis();
+		}
 	}
 }
