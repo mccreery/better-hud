@@ -3,7 +3,6 @@ package jobicade.betterhud.element.settings;
 import java.util.List;
 import java.util.Map;
 
-import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.gui.GuiSlider;
@@ -13,67 +12,28 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 
-public class SettingSlider extends SettingAlignable<SettingSlider> implements ISlider, IStringSetting {
+public class SettingSlider extends SettingAlignable implements ISlider, IStringSetting {
 	protected GuiSlider slider;
-	private final double min, max, interval;
 
-	private int displayPlaces;
-	private String unlocalizedValue;
+	private final double min;
+	private final double max;
+	private final double interval;
+	private final double displayScale;
+	private final int displayPlaces;
+	private final String unlocalizedValue;
 
 	private double value;
-	private double displayScale = 1;
 
-	@Override
-	protected SettingSlider getThis() {
-		return this;
-	}
+	private SettingSlider(Builder builder) {
+		super(builder);
+		min = builder.min;
+		max = builder.max;
+		interval = builder.interval;
+		displayScale = builder.displayScale;
+		displayPlaces = builder.displayPlaces;
+		unlocalizedValue = builder.unlocalizedValue;
 
-	public SettingSlider(String name, double min, double max) {
-		this(name, min, max, -1);
-	}
-
-	public SettingSlider(String name, double min, double max, double interval) {
-		super(name);
-		this.min = min;
-		this.max = max;
-		this.interval = interval;
-
-		updateDisplayPlaces();
-		set(getMinimum());
-	}
-
-	public SettingSlider setDisplayPercent() {
-		return setUnlocalizedValue("betterHud.value.percent")
-			.setDisplayScale(100)
-			.setDisplayPlaces(0);
-	}
-
-	private void updateDisplayPlaces() {
-		int places = interval != -1
-			&& interval * displayScale == (int)(interval * displayScale) ? 0 : 1;
-		setDisplayPlaces(places);
-	}
-
-	public SettingSlider setAlignment(Direction alignment) {
-		this.alignment = alignment;
-		return this;
-	}
-
-	public SettingSlider setDisplayScale(double displayScale) {
-		this.displayScale = displayScale;
-		updateDisplayPlaces();
-
-		return this;
-	}
-
-	public SettingSlider setDisplayPlaces(int displayPlaces) {
-		this.displayPlaces = displayPlaces;
-		return this;
-	}
-
-	public SettingSlider setUnlocalizedValue(String unlocalizedValue) {
-		this.unlocalizedValue = unlocalizedValue;
-		return this;
+		value = min;
 	}
 
 	@Override
@@ -147,4 +107,73 @@ public class SettingSlider extends SettingAlignable<SettingSlider> implements IS
 	@Override public Double getMinimum() {return min;}
 	@Override public Double getMaximum() {return max;}
 	@Override public Double getInterval() {return interval;}
+
+	public static final class Builder extends SettingAlignable.Builder<SettingSlider, Builder> {
+		public Builder(String name) {
+			super(name);
+		}
+
+		@Override
+		protected Builder getThis() {
+			return this;
+		}
+
+		@Override
+		public SettingSlider build() {
+			return new SettingSlider(this);
+		}
+
+		private double min = 0;
+		private double max = 1;
+		public Builder setRange(int min, int max) {
+			this.min = min;
+			this.max = max;
+			return this;
+		}
+
+		private double interval = -1;
+		public Builder setInterval(double interval) {
+			this.interval = interval;
+			setAutomaticDisplayPlaces();
+			return this;
+		}
+
+		private double displayScale = 1;
+		public Builder setDisplayScale(double displayScale) {
+			this.displayScale = displayScale;
+			setAutomaticDisplayPlaces();
+			return this;
+		}
+
+		private void setAutomaticDisplayPlaces() {
+			if (!customDisplayPlaces) {
+				if (MathUtil.isIntegral(interval * displayScale)) {
+					displayPlaces = 0;
+				} else {
+					displayPlaces = 1;
+				}
+			}
+		}
+
+		private int displayPlaces = 1;
+		private boolean customDisplayPlaces;
+
+		public Builder setDisplayPlaces(int displayPlaces) {
+			this.displayPlaces = displayPlaces;
+			this.customDisplayPlaces = true;
+			return this;
+		}
+
+		private String unlocalizedValue;
+		public Builder setUnlocalizedValue(String unlocalizedValue) {
+			this.unlocalizedValue = unlocalizedValue;
+			return this;
+		}
+
+		public Builder setDisplayPercent() {
+			return setUnlocalizedValue("betterHud.value.percent")
+				.setDisplayScale(100)
+				.setDisplayPlaces(0);
+		}
+	}
 }

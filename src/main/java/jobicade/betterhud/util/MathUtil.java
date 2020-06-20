@@ -20,6 +20,14 @@ import net.minecraft.util.math.MathHelper;
 public final class MathUtil {
 	private MathUtil() {}
 
+	public static boolean isIntegral(float x) {
+		return x == (long)x;
+	}
+
+	public static boolean isIntegral(double x) {
+		return x == (long)x;
+	}
+
 	public static float lerp(float a, float b, float t) {
 		return a * (1.0f - t) + b * t;
 	}
