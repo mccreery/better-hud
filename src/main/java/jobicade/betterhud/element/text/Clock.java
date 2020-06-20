@@ -20,10 +20,10 @@ public abstract class Clock extends TextElement {
 
 		settings.addChildren(
 			new Legend("misc"),
-			twentyFour = new SettingBoolean("24hr"),
-			showSeconds = new SettingBoolean("showSeconds").setValuePrefix(SettingBoolean.VISIBLE),
+			twentyFour = new SettingBoolean.Builder("24hr").build(),
+			showSeconds = new SettingBoolean.Builder("showSeconds").setValuePrefix(SettingBoolean.VISIBLE).build(),
 			dateType = new SettingChoose("dateType", "dmy", "mdy", "ymd"),
-			fullYear = new SettingBoolean("fullYear").setValuePrefix(SettingBoolean.VISIBLE)
+			fullYear = new SettingBoolean.Builder("fullYear").setValuePrefix(SettingBoolean.VISIBLE).build()
 		);
 
 		border = true;

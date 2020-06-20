@@ -34,16 +34,14 @@ public abstract class Setting {
 	private Setting parent = null;
 	protected final List<Setting> children = new ArrayList<>();
 
-	/** Set to {@code true} to hide the setting from the GUI
-	 * @see #getGuiParts(List, Map, Point) */
-	private boolean hidden = false;
-
 	private final String name;
 	private final BooleanSupplier enableCheck;
+	private final boolean hidden;
 
-	protected Setting(String name, BooleanSupplier enableCheck) {
-		this.name = name;
-		this.enableCheck = enableCheck;
+	protected Setting(Builder<?, ?> builder) {
+		this.name = builder.name;
+		this.enableCheck = builder.enableCheck;
+		this.hidden = builder.hidden;
 	}
 
 	public String getName() {
@@ -149,21 +147,21 @@ public abstract class Setting {
 	}
 
 	protected static abstract class Builder<T extends Setting, U extends Builder<T, U>> {
-		public abstract U getThis();
+		protected abstract U getThis();
 		public abstract T build();
 
-		protected final String name;
+		private final String name;
 		protected Builder(String name) {
 			this.name = name;
 		}
 
-		protected BooleanSupplier enableCheck = () -> true;
+		private BooleanSupplier enableCheck = () -> true;
 		public U setEnableCheck(BooleanSupplier enableCheck) {
 			this.enableCheck = enableCheck;
 			return getThis();
 		}
 
-		protected boolean hidden;
+		private boolean hidden;
 		public U setHidden() {
 			this.hidden = true;
 			return getThis();

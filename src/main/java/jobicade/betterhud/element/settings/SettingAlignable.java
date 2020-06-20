@@ -10,16 +10,13 @@ import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 
-public abstract class SettingAlignable<T extends SettingAlignable<T>> extends FluentSetting<T> {
-	protected Direction alignment = Direction.CENTER;
+public abstract class SettingAlignable extends Setting {
+	// TODO why protected?
+	protected final Direction alignment;
 
-	public SettingAlignable(String name) {
-		super(name);
-	}
-
-	public T setAlignment(Direction alignment) {
-		this.alignment = alignment;
-		return getThis();
+	protected SettingAlignable(Builder<?, ?> builder) {
+		super(builder);
+		this.alignment = builder.alignment;
 	}
 
 	@Override
@@ -47,4 +44,16 @@ public abstract class SettingAlignable<T extends SettingAlignable<T>> extends Fl
 
 	/** @see Setting#getGuiParts(List, Map, Point) */
 	public abstract void getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Rect bounds);
+
+	protected static abstract class Builder<T extends SettingAlignable, U extends Builder<T, U>> extends Setting.Builder<T, U> {
+		protected Builder(String name) {
+			super(name);
+		}
+
+		protected Direction alignment;
+		public U setAlignment(Direction alignment) {
+			this.alignment = alignment;
+			return getThis();
+		}
+	}
 }

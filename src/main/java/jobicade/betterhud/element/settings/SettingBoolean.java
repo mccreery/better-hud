@@ -10,21 +10,17 @@ import jobicade.betterhud.gui.GuiElementSettings;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 
-public class SettingBoolean extends SettingAlignable<SettingBoolean> implements IStringSetting {
+public class SettingBoolean extends SettingAlignable implements IStringSetting {
 	public static final String VISIBLE = "betterHud.value.visible";
 
-	@Override
-	protected SettingBoolean getThis() {
-		return this;
-	}
-
 	protected GuiActionButton toggler;
-	private String unlocalizedValue = "options";
+	private final String unlocalizedValue;
 
 	private boolean value = false;
 
-	public SettingBoolean(String name) {
-		super(name);
+	private SettingBoolean(Builder builder) {
+		super(builder);
+		unlocalizedValue = builder.unlocalizedValue;
 	}
 
 	public boolean get() {
@@ -33,11 +29,6 @@ public class SettingBoolean extends SettingAlignable<SettingBoolean> implements 
 
 	public void set(boolean value) {
 		this.value = value;
-	}
-
-	public SettingBoolean setValuePrefix(String value) {
-		this.unlocalizedValue = value;
-		return this;
 	}
 
 	@Override
@@ -92,5 +83,27 @@ public class SettingBoolean extends SettingAlignable<SettingBoolean> implements 
 		super.updateGuiParts(settings);
 		toggler.enabled = enabled();
 		toggler.updateText(getUnlocalizedName(), unlocalizedValue, value);
+	}
+
+	public static final class Builder extends SettingAlignable.Builder<SettingBoolean, Builder> {
+		public Builder(String name) {
+			super(name);
+		}
+
+		@Override
+		protected Builder getThis() {
+			return this;
+		}
+
+		@Override
+		public SettingBoolean build() {
+			return new SettingBoolean(this);
+		}
+
+		private String unlocalizedValue;
+		public Builder setValuePrefix(String value) {
+			this.unlocalizedValue = value;
+			return this;
+		}
 	}
 }
