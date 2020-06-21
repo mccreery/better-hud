@@ -4,6 +4,7 @@ import static jobicade.betterhud.BetterHud.SPACER;
 
 import java.util.Collection;
 import java.util.Map;
+import java.util.function.Supplier;
 
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
@@ -23,6 +24,7 @@ public class SettingDirection extends SettingAlignable implements IStringSetting
 
 	private final DirectionOptions options;
 	private final boolean horizontal;
+	private final Supplier<Direction> directionLock;
 
 	private Direction value;
 
@@ -30,6 +32,7 @@ public class SettingDirection extends SettingAlignable implements IStringSetting
 		super(builder);
 		this.options = builder.options;
 		this.horizontal = builder.horizontal;
+		this.directionLock = builder.directionLock;
 	}
 
 	@Override
@@ -72,6 +75,14 @@ public class SettingDirection extends SettingAlignable implements IStringSetting
 	@Override
 	public void updateGuiParts(Collection<Setting> settings) {
 		super.updateGuiParts(settings);
+
+		if (directionLock != null) {
+			Direction lockedDirection = directionLock.get();
+
+			if (lockedDirection != null) {
+				set(lockedDirection);
+			}
+		}
 		boolean enabled = enabled();
 
 		for(GuiActionButton button : toggles) {
@@ -185,6 +196,12 @@ public class SettingDirection extends SettingAlignable implements IStringSetting
 		public Builder setHorizontal() {
 			horizontal = true;
 			setAlignment(Direction.WEST);
+			return this;
+		}
+
+		private Supplier<Direction> directionLock;
+		public Builder setDirectionLock(Supplier<Direction> directionLock) {
+			this.directionLock = directionLock;
 			return this;
 		}
 

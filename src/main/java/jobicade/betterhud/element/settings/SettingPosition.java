@@ -3,15 +3,14 @@ package jobicade.betterhud.element.settings;
 import static jobicade.betterhud.BetterHud.MANAGER;
 import static jobicade.betterhud.BetterHud.SPACER;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BooleanSupplier;
 
-import net.minecraft.client.gui.Gui;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
+import net.minecraft.client.gui.Gui;
 
 public class SettingPosition extends Setting {
 	private boolean edge = false;
@@ -55,27 +54,19 @@ public class SettingPosition extends Setting {
 			direction = SettingDirection.builder("direction").setOptions(directionOptions).setAlignment(Direction.WEST).setEnableCheck(isPreset).setHorizontal().build(),
 			parent = SettingElement.builder("parent").setEnableCheck(isCustom).build(),
 			anchor = SettingDirection.builder("anchor").setAlignment(Direction.WEST).setEnableCheck(isCustom).build(),
-			alignment = new SettingDirection("alignment") {
-				@Override
-				public void updateGuiParts(Collection<Setting> settings) {
-					if(lockAlignment.get()) set(anchor.get());
-					super.updateGuiParts(settings);
-				}
-			},
-			contentAlignment = new SettingDirection("contentAlignment", contentOptions) {
-				@Override
-				public void updateGuiParts(Collection<Setting> settings) {
-					if(lockContent.get()) set(SettingPosition.this.alignment.get());
-					super.updateGuiParts(settings);
-				}
-			}.setAlignment(Direction.EAST),
 			lockAlignment = SettingLock.builder("lockAlignment").setEnableCheck(isCustom).build(),
 			lockContent = SettingLock.builder("lockContent").setEnableCheck(isCustom).build(),
+			alignment = SettingDirection.builder("alignment")
+				.setEnableCheck(() -> isCustom.getAsBoolean() && !lockAlignment.get())
+				.setDirectionLock(() -> lockAlignment.get() ? anchor.get() : null)
+				.build(),
+			contentAlignment = SettingDirection.builder("contentAlignment")
+				.setEnableCheck(() -> isCustom.getAsBoolean() && !lockContent.get())
+				.setDirectionLock(() -> lockContent.get() ? alignment.get() : null)
+				.setAlignment(Direction.EAST)
+				.build(),
 			offset = SettingAbsolutePosition.builder("origin").setParentSetting(this).setEnableCheck(isCustom).build()
 		);
-
-		alignment.setEnableOn(() -> isCustom.getAsBoolean() && !lockAlignment.get());
-		contentAlignment.setEnableOn(() -> isCustom.getAsBoolean() && !lockContent.get());
 	}
 
 	public boolean isDirection(Direction direction) {
