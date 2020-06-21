@@ -38,6 +38,13 @@ public abstract class Setting {
 	private final BooleanSupplier enableCheck;
 	private final boolean hidden;
 
+	// No-builder constructor for all defaults
+	protected Setting(String name) {
+		this.name = name;
+		enableCheck = null;
+		hidden = false;
+	}
+
 	protected Setting(Builder<?, ?> builder) {
 		this.name = builder.name;
 		this.enableCheck = builder.enableCheck;
