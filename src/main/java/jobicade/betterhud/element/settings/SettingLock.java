@@ -11,8 +11,8 @@ import net.minecraft.client.gui.Gui;
 public class SettingLock extends SettingBoolean {
 	private Rect bounds;
 
-	public SettingLock(String name) {
-		super(name);
+	private SettingLock(SettingBoolean.Builder<?> builder) {
+		super(builder);
 	}
 
 	public void setRect(Rect bounds) {
@@ -30,5 +30,9 @@ public class SettingLock extends SettingBoolean {
 	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Point origin) {
 		getGuiParts(parts, callbacks, bounds);
 		return origin;
+	}
+
+	public static SettingBoolean.Builder<? extends SettingLock> builder(String name) {
+		return new SettingBoolean.Builder<SettingLock>(name, SettingLock::new);
 	}
 }

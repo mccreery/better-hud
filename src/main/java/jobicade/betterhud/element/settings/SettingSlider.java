@@ -108,8 +108,12 @@ public class SettingSlider extends SettingAlignable implements ISlider, IStringS
 	@Override public Double getMaximum() {return max;}
 	@Override public Double getInterval() {return interval;}
 
+	public static Builder builder(String name) {
+		return new Builder(name);
+	}
+
 	public static final class Builder extends SettingAlignable.Builder<SettingSlider, Builder> {
-		public Builder(String name) {
+		protected Builder(String name) {
 			super(name);
 		}
 

@@ -3,6 +3,7 @@ package jobicade.betterhud.element.settings;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
+import java.util.function.Function;
 
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.GuiActionButton;
@@ -18,7 +19,7 @@ public class SettingBoolean extends SettingAlignable implements IStringSetting {
 
 	private boolean value = false;
 
-	private SettingBoolean(Builder builder) {
+	protected SettingBoolean(Builder<?> builder) {
 		super(builder);
 		unlocalizedValue = builder.unlocalizedValue;
 	}
@@ -85,25 +86,32 @@ public class SettingBoolean extends SettingAlignable implements IStringSetting {
 		toggler.updateText(getUnlocalizedName(), unlocalizedValue, value);
 	}
 
-	public static final class Builder extends SettingAlignable.Builder<SettingBoolean, Builder> {
-		public Builder(String name) {
+	public static Builder<? extends SettingBoolean> builder(String name) {
+		return new Builder<>(name, SettingBoolean::new);
+	}
+
+	public static class Builder<T extends SettingBoolean> extends SettingAlignable.Builder<T, Builder<T>> {
+		private final Function<Builder<T>, T> buildFunc;
+
+		protected Builder(String name, Function<Builder<T>, T> buildFunc) {
 			super(name);
-		}
-
-		@Override
-		protected Builder getThis() {
-			return this;
-		}
-
-		@Override
-		public SettingBoolean build() {
-			return new SettingBoolean(this);
+			this.buildFunc = buildFunc;
 		}
 
 		private String unlocalizedValue;
-		public Builder setValuePrefix(String value) {
+		public Builder<T> setValuePrefix(String value) {
 			this.unlocalizedValue = value;
+			return getThis();
+		}
+
+		@Override
+		protected Builder<T> getThis() {
 			return this;
+		}
+
+		@Override
+		public T build() {
+			return buildFunc.apply(this);
 		}
 	}
 }
