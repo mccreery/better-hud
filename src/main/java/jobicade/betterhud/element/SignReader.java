@@ -34,7 +34,7 @@ public class SignReader extends OverlayElement {
 	public SignReader() {
 		super("signReader");
 
-		settings.addChild(position = new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.NONE));
+		settings.addChild(position = SettingPosition.builder("position").setDirectionOptions(DirectionOptions.CORNERS).build());
 	}
 
 	@Override

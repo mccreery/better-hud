@@ -26,7 +26,10 @@ public abstract class TextElement extends OverlayElement {
 		super(name);
 
 		settings.addChildren(
-			position = new SettingPosition(DirectionOptions.TOP_BOTTOM, DirectionOptions.CORNERS),
+			position = SettingPosition.builder("position")
+				.setDirectionOptions(DirectionOptions.TOP_BOTTOM)
+				.setContentOptions(DirectionOptions.CORNERS)
+				.build(),
 			color = SettingColor.builder("color").build()
 		);
 	}

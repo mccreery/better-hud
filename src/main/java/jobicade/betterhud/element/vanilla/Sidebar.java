@@ -32,7 +32,10 @@ public class Sidebar extends OverlayElement {
 	public Sidebar() {
 		super("scoreboard");
 
-		settings.addChild(position = new SettingPosition(DirectionOptions.LEFT_RIGHT, DirectionOptions.WEST_EAST));
+		settings.addChild(position = SettingPosition.builder("position")
+			.setDirectionOptions(DirectionOptions.LEFT_RIGHT)
+			.setContentOptions(DirectionOptions.WEST_EAST)
+			.build());
 	}
 
 	@Override

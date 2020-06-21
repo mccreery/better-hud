@@ -32,7 +32,10 @@ public class HandBar extends EquipmentDisplay {
 		super("handBar");
 
 		settings.addChildren(
-			position = new SettingPosition(DirectionOptions.BAR, DirectionOptions.NORTH_SOUTH),
+			position = SettingPosition.builder("position")
+				.setDirectionOptions(DirectionOptions.BAR)
+				.setContentOptions(DirectionOptions.NORTH_SOUTH)
+				.build(),
 			new Legend("misc"),
 			showItem = SettingBoolean.builder("showItem").setValuePrefix(SettingBoolean.VISIBLE).build(),
 			showBars = SettingBoolean.builder("bars").build(),

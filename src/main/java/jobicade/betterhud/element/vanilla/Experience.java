@@ -25,7 +25,10 @@ public class Experience extends OverlayElement {
 		super("experience");
 
 		settings.addChildren(
-			position = new SettingPosition(DirectionOptions.BAR, DirectionOptions.NORTH_SOUTH),
+			position = SettingPosition.builder("position")
+				.setDirectionOptions(DirectionOptions.BAR)
+				.setContentOptions(DirectionOptions.NORTH_SOUTH)
+				.build(),
 			hideMount = SettingBoolean.builder("hideMount").build()
 		);
 	}

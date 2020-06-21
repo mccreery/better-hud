@@ -40,7 +40,10 @@ public class PotionBar extends OverlayElement {
 		super("potionBar");
 
 		settings.addChildren(
-			position = new SettingPosition(DirectionOptions.X, DirectionOptions.CORNERS),
+			position = SettingPosition.builder("position")
+				.setDirectionOptions(DirectionOptions.X)
+				.setContentOptions(DirectionOptions.CORNERS)
+				.build(),
 			showDuration = SettingBoolean.builder("duration").setValuePrefix(SettingBoolean.VISIBLE).build()
 		);
 	}

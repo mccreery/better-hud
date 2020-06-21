@@ -13,8 +13,8 @@ import jobicade.betterhud.geom.Rect;
 import net.minecraft.client.gui.Gui;
 
 public class SettingPosition extends Setting {
-	private boolean edge = false;
-	private int postSpacer = SPACER;
+	private final boolean edge;
+	private final int postSpacer;
 
 	private final SettingChoose mode;
 
@@ -25,33 +25,25 @@ public class SettingPosition extends Setting {
 	private final SettingDirection anchor, alignment, contentAlignment;
 	private final SettingLock lockAlignment, lockContent;
 
-	public DirectionOptions getDirectionOptions() {
-		return direction.getOptions();
-	}
-
-	public DirectionOptions getContentOptions() {
-		return contentAlignment.getOptions();
-	}
-
-	public SettingPosition(DirectionOptions directionOptions, DirectionOptions contentOptions) {
-		this("position", directionOptions, contentOptions);
-	}
-
-	public SettingPosition(String name) {
-		this(name, DirectionOptions.ALL, DirectionOptions.ALL);
-	}
-
-	public SettingPosition(String name, DirectionOptions directionOptions, DirectionOptions contentOptions) {
-		super(name);
+	public SettingPosition(Builder builder) {
+		super(builder);
 
 		mode = SettingChoose.builder("position", "preset", "custom").build();
 		BooleanSupplier isPreset = () -> mode.getIndex() == 0;
 		BooleanSupplier isCustom = () -> mode.getIndex() == 1;
 
+		edge = builder.edge;
+		postSpacer = builder.postSpacer;
+
 		addChildren(
 			new Legend("position"),
 			mode,
-			direction = SettingDirection.builder("direction").setOptions(directionOptions).setAlignment(Direction.WEST).setEnableCheck(isPreset).setHorizontal().build(),
+			direction = SettingDirection.builder("direction")
+				.setOptions(builder.directionOptions)
+				.setAlignment(Direction.WEST)
+				.setEnableCheck(isPreset)
+				.setHorizontal()
+				.build(),
 			parent = SettingElement.builder("parent").setEnableCheck(isCustom).build(),
 			anchor = SettingDirection.builder("anchor").setAlignment(Direction.WEST).setEnableCheck(isCustom).build(),
 			lockAlignment = SettingLock.builder("lockAlignment").setEnableCheck(isCustom).build(),
@@ -61,12 +53,21 @@ public class SettingPosition extends Setting {
 				.setDirectionLock(() -> lockAlignment.get() ? anchor.get() : null)
 				.build(),
 			contentAlignment = SettingDirection.builder("contentAlignment")
+				.setOptions(builder.contentOptions)
 				.setEnableCheck(() -> isCustom.getAsBoolean() && !lockContent.get())
 				.setDirectionLock(() -> lockContent.get() ? alignment.get() : null)
 				.setAlignment(Direction.EAST)
 				.build(),
 			offset = SettingAbsolutePosition.builder("origin").setParentSetting(this).setEnableCheck(isCustom).build()
 		);
+	}
+
+	public DirectionOptions getDirectionOptions() {
+		return direction.getOptions();
+	}
+
+	public DirectionOptions getContentOptions() {
+		return contentAlignment.getOptions();
 	}
 
 	public boolean isDirection(Direction direction) {
@@ -115,16 +116,6 @@ public class SettingPosition extends Setting {
 		return isCustom() ? contentAlignment.get() : contentAlignment.getOptions().apply(direction.get());
 	}
 
-	public SettingPosition setEdge(boolean edge) {
-		this.edge = edge;
-		return this;
-	}
-
-	public SettingPosition setPostSpacer(int postSpacer) {
-		this.postSpacer = postSpacer;
-		return this;
-	}
-
 	/** Moves the given bounds to the correct location and returns them */
 	public Rect applyTo(Rect bounds) {
 		if(isCustom()) {
@@ -170,5 +161,49 @@ public class SettingPosition extends Setting {
 		lockContent.setRect(new Rect(20, 10).align(origin.add(lockOffset), Direction.WEST));
 
 		return super.getGuiParts(parts, callbacks, origin);
+	}
+
+	public static Builder builder(String name) {
+		return new Builder(name);
+	}
+
+	public static final class Builder extends Setting.Builder<SettingPosition, Builder> {
+		protected Builder(String name) {
+			super(name);
+		}
+
+		@Override
+		protected Builder getThis() {
+			return this;
+		}
+
+		@Override
+		public SettingPosition build() {
+			return new SettingPosition(this);
+		}
+
+		private boolean edge;
+		public Builder setEdge() {
+			edge = true;
+			return this;
+		}
+
+		private int postSpacer = SPACER;
+		public Builder setPostSpacer(int postSpacer) {
+			this.postSpacer = postSpacer;
+			return this;
+		}
+
+		private DirectionOptions directionOptions = DirectionOptions.ALL;
+		public Builder setDirectionOptions(DirectionOptions directionOptions) {
+			this.directionOptions = directionOptions;
+			return this;
+		}
+
+		private DirectionOptions contentOptions = DirectionOptions.NONE;
+		public Builder setContentOptions(DirectionOptions contentOptions) {
+			this.contentOptions = contentOptions;
+			return this;
+		}
 	}
 }

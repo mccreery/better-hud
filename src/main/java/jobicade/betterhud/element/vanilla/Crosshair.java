@@ -5,7 +5,6 @@ import static jobicade.betterhud.BetterHud.MANAGER;
 import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.IStringSetting;
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingPosition;
@@ -47,7 +46,6 @@ public class Crosshair extends OverlayElement {
 			.setValuePrefix("options.attack.").setEnableCheck(attackIndicator::get);
 
 		settings.addChildren(
-			position = new SettingPosition(DirectionOptions.I, DirectionOptions.NONE),
 			attackIndicator = new SettingBoolean(builder) {
 				@Override
 				public IStringSetting getStringSetting() {
@@ -82,9 +80,12 @@ public class Crosshair extends OverlayElement {
 						Minecraft.getMinecraft().gameSettings.attackIndicator = attackIndicator.get() ? index + 1 : 0;
 					}
 				}
-			}
+			},
+			position = SettingPosition.builder("position")
+				.setDirectionOptions(DirectionOptions.I)
+				.setEnableCheck(attackIndicator::get)
+				.build()
 		);
-		position.setEnableOn(() -> attackIndicator.get());
 	}
 
 	@Override

@@ -55,7 +55,10 @@ public class Compass extends OverlayElement {
 		super("compass");
 
 		settings.addChildren(
-			position = new SettingPosition(DirectionOptions.TOP_BOTTOM, DirectionOptions.NORTH_SOUTH),
+			position = SettingPosition.builder("position")
+				.setDirectionOptions(DirectionOptions.TOP_BOTTOM)
+				.setContentOptions(DirectionOptions.NORTH_SOUTH)
+				.build(),
 			mode = SettingChoose.builder("mode", "visual", "text").build(),
 			new Legend("misc"),
 			directionScaling = SettingSlider.builder("letterScale").setDisplayPercent().build(),

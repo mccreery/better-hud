@@ -36,11 +36,12 @@ public class ArrowCount extends OverlayElement {
 		super("arrowCount");
 
 		settings.addChildren(
-			position = new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.NONE),
-			overlay = SettingBoolean.builder("overlay").build()
+			overlay = SettingBoolean.builder("overlay").build(),
+			position = SettingPosition.builder("position")
+				.setDirectionOptions(DirectionOptions.CORNERS)
+				.setEnableCheck(() -> !overlay.get())
+				.build()
 		);
-
-		position.setEnableOn(() -> !overlay.get());
 	}
 
 	/** Note this method only cares about arrows which can be shot by a vanilla bow

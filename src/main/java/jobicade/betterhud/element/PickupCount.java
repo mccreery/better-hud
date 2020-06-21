@@ -48,7 +48,10 @@ public class PickupCount extends OverlayElement {
 			.setInterval(1);
 
 		settings.addChildren(
-			position = new SettingPosition(DirectionOptions.X, DirectionOptions.CORNERS),
+			position = SettingPosition.builder("position")
+				.setDirectionOptions(DirectionOptions.X)
+				.setContentOptions(DirectionOptions.CORNERS)
+				.build(),
 			fadeAfter = SettingSlider.builder("fadeAfter").setRange(20, 600).setInterval(20).setDisplayScale(0.05).setUnlocalizedValue("betterHud.hud.seconds").build(),
 			maxStacks = new SettingSlider(builder) {
 				@Override
