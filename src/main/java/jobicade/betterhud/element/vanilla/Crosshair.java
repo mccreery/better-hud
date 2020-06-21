@@ -39,14 +39,11 @@ public class Crosshair extends OverlayElement {
 	public Crosshair() {
 		super("crosshair");
 
-		SettingBoolean.Builder<?> builder = SettingBoolean.builder("attackIndicator")
-			.setValuePrefix(SettingBoolean.VISIBLE);
-
-		SettingChoose.Builder builder2 = SettingChoose.builder(null, "mode1", "mode2")
-			.setValuePrefix("options.attack.").setEnableCheck(attackIndicator::get);
-
 		settings.addChildren(
-			attackIndicator = new SettingBoolean(builder) {
+			attackIndicator = new SettingBoolean(
+				SettingBoolean.builder("attackIndicator")
+					.setValuePrefix(SettingBoolean.VISIBLE)
+			) {
 				@Override
 				public IStringSetting getStringSetting() {
 					return null;
@@ -68,7 +65,11 @@ public class Crosshair extends OverlayElement {
 					Minecraft.getMinecraft().gameSettings.saveOptions();
 				}
 			},
-			indicatorType = new SettingChoose(builder2) {
+			indicatorType = new SettingChoose(
+				SettingChoose.builder(null, "mode1", "mode2")
+					.setValuePrefix("options.attack.")
+					.setEnableCheck(attackIndicator::get)
+			) {
 				@Override
 				public int getIndex() {
 					return Math.max(Minecraft.getMinecraft().gameSettings.attackIndicator - 1, 0);
