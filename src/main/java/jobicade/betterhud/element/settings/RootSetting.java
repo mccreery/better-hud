@@ -5,7 +5,7 @@ public class RootSetting extends Setting {
 	private final SettingInteger priority = new SettingInteger("priority").setHidden();
 
 	public RootSetting() {
-		super(null);
+		super((String)null);
 
 		addChild(enabled);
 		addChild(priority);

@@ -90,7 +90,7 @@ public class SettingBoolean extends SettingAlignable implements IStringSetting {
 		return new Builder<>(name, SettingBoolean::new);
 	}
 
-	public static class Builder<T extends SettingBoolean> extends SettingAlignable.Builder<T, Builder<T>> {
+	public static final class Builder<T extends SettingBoolean> extends SettingAlignable.Builder<T, Builder<T>> {
 		private final Function<Builder<T>, T> buildFunc;
 
 		protected Builder(String name, Function<Builder<T>, T> buildFunc) {

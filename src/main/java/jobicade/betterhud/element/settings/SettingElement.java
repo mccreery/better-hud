@@ -15,17 +15,12 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 
-public class SettingElement extends SettingAlignable<SettingElement> implements IStringSetting {
+public class SettingElement extends SettingAlignable implements IStringSetting {
 	private HudElement<?> value;
 	private GuiActionButton button;
 
-	public SettingElement(String name) {
-		super(name);
-	}
-
-	@Override
-	protected SettingElement getThis() {
-		return this;
+	public SettingElement(Builder builder) {
+		super(builder);
 	}
 
 	public HudElement<?> get() {
@@ -79,5 +74,21 @@ public class SettingElement extends SettingAlignable<SettingElement> implements 
 	@Override
 	public void updateGuiParts(Collection<Setting> settings) {
 		button.enabled = enabled();
+	}
+
+	public static final class Builder extends SettingAlignable.Builder<SettingElement, Builder> {
+		protected Builder(String name) {
+			super(name);
+		}
+
+		@Override
+		protected Builder getThis() {
+			return this;
+		}
+
+		@Override
+		public SettingElement build() {
+			return new SettingElement(this);
+		}
 	}
 }

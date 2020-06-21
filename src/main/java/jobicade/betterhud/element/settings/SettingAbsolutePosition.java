@@ -17,7 +17,7 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 
-public class SettingAbsolutePosition extends FluentSetting<SettingAbsolutePosition> implements IStringSetting {
+public class SettingAbsolutePosition extends Setting implements IStringSetting {
 	public GuiTextField xBox, yBox;
 	public GuiButton pick;
 	private GuiButton xUp, xDown, yUp, yDown;
@@ -27,22 +27,13 @@ public class SettingAbsolutePosition extends FluentSetting<SettingAbsolutePositi
 	protected int x, y, cancelX, cancelY;
 	protected boolean isPicking = false;
 
-	@Override
-	protected SettingAbsolutePosition getThis() {
-		return this;
-	}
-
 	public boolean isPicking() {
 		return isPicking;
 	}
 
-	public SettingAbsolutePosition(String name) {
-		this(name, null);
-	}
-
-	public SettingAbsolutePosition(String name, SettingPosition position) {
-		super(name);
-		this.position = position;
+	private SettingAbsolutePosition(Builder builder) {
+		super(builder);
+		this.position = builder.parentSetting;
 	}
 
 	@Override
@@ -175,6 +166,32 @@ public class SettingAbsolutePosition extends FluentSetting<SettingAbsolutePositi
 			}
 		} else {
 			xUp.enabled = xDown.enabled = yUp.enabled = yDown.enabled = false;
+		}
+	}
+
+	public static Builder builder(String name) {
+		return new Builder(name);
+	}
+
+	public static final class Builder extends Setting.Builder<SettingAbsolutePosition, Builder> {
+		protected Builder(String name) {
+			super(name);
+		}
+
+		@Override
+		protected Builder getThis() {
+			return this;
+		}
+
+		@Override
+		public SettingAbsolutePosition build() {
+			return new SettingAbsolutePosition(this);
+		}
+
+		private SettingPosition parentSetting;
+		public Builder setParentSetting(SettingPosition parentSetting) {
+			this.parentSetting = parentSetting;
+			return this;
 		}
 	}
 }

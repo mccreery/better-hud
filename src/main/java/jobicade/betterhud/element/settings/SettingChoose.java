@@ -17,24 +17,18 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 
-public class SettingChoose extends SettingAlignable<SettingChoose> implements IStringSetting {
+public class SettingChoose extends SettingAlignable implements IStringSetting {
 	protected GuiButton last, next, backing;
 	protected final String[] modes;
 
 	private int index = 0;
 
-	public SettingChoose(String name, String... modes) {
-		super(name);
+	private final String valuePrefix;
 
-		if (modes.length == 0) {
-			throw new IllegalArgumentException("modes cannot be empty");
-		}
-		this.modes = modes;
-	}
-
-	@Override
-	protected SettingChoose getThis() {
-		return this;
+	private SettingChoose(Builder builder) {
+		super(builder);
+		modes = builder.modes;
+		valuePrefix = builder.valuePrefix;
 	}
 
 	public String get() {
@@ -109,13 +103,6 @@ public class SettingChoose extends SettingAlignable<SettingChoose> implements IS
 		callbacks.put(next, this);
 	}
 
-	private String valuePrefix = "betterHud.value.";
-
-	public SettingChoose setValuePrefix(String valuePrefix) {
-		this.valuePrefix = valuePrefix;
-		return this;
-	}
-
 	protected String getUnlocalizedValue() {
 		return valuePrefix + modes[getIndex()];
 	}
@@ -142,5 +129,38 @@ public class SettingChoose extends SettingAlignable<SettingChoose> implements IS
 	@Override
 	public void updateGuiParts(Collection<Setting> settings) {
 		last.enabled = next.enabled = enabled();
+	}
+
+	public static Builder builder(String name, String... modes) {
+		return new Builder(name, modes);
+	}
+
+	public static final class Builder extends SettingAlignable.Builder<SettingChoose, Builder> {
+		private final String[] modes;
+
+		protected Builder(String name, String[] modes) {
+			super(name);
+
+			if (modes.length == 0) {
+				throw new IllegalArgumentException("modes cannot be empty");
+			}
+			this.modes = modes;
+		}
+
+		@Override
+		protected Builder getThis() {
+			return this;
+		}
+
+		@Override
+		public SettingChoose build() {
+			return new SettingChoose(this);
+		}
+
+		private String valuePrefix = "betterHud.value.";
+		public Builder setValuePrefix(String valuePrefix) {
+			this.valuePrefix = valuePrefix;
+			return this;
+		}
 	}
 }

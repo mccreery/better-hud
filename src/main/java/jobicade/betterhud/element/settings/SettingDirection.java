@@ -17,48 +17,24 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 
-public class SettingDirection extends SettingAlignable<SettingDirection> implements IStringSetting {
+public class SettingDirection extends SettingAlignable implements IStringSetting {
 	private GuiActionButton[] toggles = new GuiActionButton[9];
 	private Rect bounds;
 
-	private boolean horizontal = false;
-
 	private final DirectionOptions options;
+	private final boolean horizontal;
+
 	private Direction value;
 
-	public SettingDirection(String name) {
-		this(name, DirectionOptions.ALL);
-	}
-
-	public SettingDirection(String name, DirectionOptions options) {
-		super(name);
-		this.options = options;
-	}
-
-	@Override
-	protected SettingDirection getThis() {
-		return this;
-	}
-
-	public SettingDirection setHorizontal() {
-		horizontal = true;
-		setAlignment(Direction.WEST);
-
-		return this;
+	private SettingDirection(Builder builder) {
+		super(builder);
+		this.options = builder.options;
+		this.horizontal = builder.horizontal;
 	}
 
 	@Override
 	protected int getAlignmentWidth() {
 		return horizontal ? 150 : 240;
-	}
-
-	@Override
-	public SettingDirection setAlignment(Direction alignment) {
-		if(!horizontal) {
-			return super.setAlignment(alignment);
-		} else {
-			return this;
-		}
 	}
 
 	@Override
@@ -178,5 +154,43 @@ public class SettingDirection extends SettingAlignable<SettingDirection> impleme
 			}
 		}
 		return I18n.format("betterHud.value." + name);
+	}
+
+	public static final class Builder extends SettingAlignable.Builder<SettingDirection, Builder> {
+		protected Builder(String name) {
+			super(name);
+		}
+
+		@Override
+		protected Builder getThis() {
+			return this;
+		}
+
+		@Override
+		public SettingDirection build() {
+			return new SettingDirection(this);
+		}
+
+		private DirectionOptions options = DirectionOptions.ALL;
+		public Builder setOptions(DirectionOptions options) {
+			this.options = options;
+			return this;
+		}
+
+		private boolean horizontal;
+		public Builder setHorizontal() {
+			horizontal = true;
+			setAlignment(Direction.WEST);
+			return this;
+		}
+
+		@Override
+		public Builder setAlignment(Direction alignment) {
+			if(!horizontal) {
+				return super.setAlignment(alignment);
+			} else {
+				return this;
+			}
+		}
 	}
 }
