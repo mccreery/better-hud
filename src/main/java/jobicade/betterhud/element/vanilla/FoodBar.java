@@ -15,7 +15,7 @@ public class FoodBar extends Bar {
 	public FoodBar() {
 		super("food", new StatBarFood());
 
-		settings.addChild(hideMount = new SettingBoolean("hideMount"));
+		settings.addChild(hideMount = SettingBoolean.builder("hideMount").build());
 	}
 
 	@Override

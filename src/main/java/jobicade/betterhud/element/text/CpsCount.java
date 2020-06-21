@@ -36,9 +36,9 @@ public class CpsCount extends TextElement implements Tickable {
 
 		settings.addChildren(
 			new Legend("misc"),
-			timeoutMax = new SettingSlider("timeout", 1, 10, 1).setUnlocalizedValue("betterHud.hud.seconds"),
-			showBurst = new SettingBoolean("showBurst"),
-			remember = new SettingBoolean("remember")
+			timeoutMax = SettingSlider.builder("timeout").setRange(1, 10).setInterval(1).setUnlocalizedValue("betterHud.hud.seconds").build(),
+			showBurst = SettingBoolean.builder("showBurst").build(),
+			remember = SettingBoolean.builder("remember").build()
 		);
 	}
 

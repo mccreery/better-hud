@@ -39,8 +39,8 @@ public class Coordinates extends TextElement {
 
 		settings.addChildren(
 			new Legend("misc"),
-			spaced = new SettingBoolean("spaced"),
-			decimalPlaces = new SettingSlider("precision", 0, 5, 1).setUnlocalizedValue("betterHud.value.places")
+			spaced = SettingBoolean.builder("spaced").build(),
+			decimalPlaces = SettingSlider.builder("precision").setRange(0, 5).setInterval(1).setUnlocalizedValue("betterHud.value.places").build()
 		);
 	}
 

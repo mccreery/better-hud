@@ -26,7 +26,7 @@ public class FullInvIndicator extends TextElement {
 
 		settings.addChildren(
 			new Legend("misc"),
-			offHand = new SettingBoolean("offhand")
+			offHand = SettingBoolean.builder("offhand").build()
 		);
 	}
 

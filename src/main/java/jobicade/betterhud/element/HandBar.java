@@ -34,10 +34,10 @@ public class HandBar extends EquipmentDisplay {
 		settings.addChildren(
 			position = new SettingPosition(DirectionOptions.BAR, DirectionOptions.NORTH_SOUTH),
 			new Legend("misc"),
-			showItem = new SettingBoolean("showItem").setValuePrefix(SettingBoolean.VISIBLE),
-			showBars = new SettingBoolean("bars"),
-			offHand = new SettingBoolean("offhand"),
-			showNonTools = new SettingBoolean("showNonTools").setValuePrefix("betterHud.value.nonTools")
+			showItem = SettingBoolean.builder("showItem").setValuePrefix(SettingBoolean.VISIBLE).build(),
+			showBars = SettingBoolean.builder("bars").build(),
+			offHand = SettingBoolean.builder("offhand").build(),
+			showNonTools = SettingBoolean.builder("showNonTools").setValuePrefix("betterHud.value.nonTools").build()
 		);
 	}
 

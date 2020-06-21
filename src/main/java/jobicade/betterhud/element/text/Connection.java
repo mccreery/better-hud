@@ -38,9 +38,9 @@ public class Connection extends TextElement {
 
 		settings.addChildren(
 			new Legend("misc"),
-			playerCount = new SettingBoolean("playerCount").setValuePrefix(SettingBoolean.VISIBLE),
-			showIp = new SettingBoolean("showIp"),
-			latency = new SettingBoolean("latency")
+			playerCount = SettingBoolean.builder("playerCount").setValuePrefix(SettingBoolean.VISIBLE).build(),
+			showIp = SettingBoolean.builder("showIp").build(),
+			latency = SettingBoolean.builder("latency").build()
 		);
 	}
 

@@ -27,7 +27,7 @@ public abstract class TextElement extends OverlayElement {
 
 		settings.addChildren(
 			position = new SettingPosition(DirectionOptions.TOP_BOTTOM, DirectionOptions.CORNERS),
-			color = new SettingColor("color")
+			color = SettingColor.builder("color").build()
 		);
 	}
 

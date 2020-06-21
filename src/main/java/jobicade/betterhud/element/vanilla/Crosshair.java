@@ -5,6 +5,7 @@ import static jobicade.betterhud.BetterHud.MANAGER;
 import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.IStringSetting;
+import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingPosition;
@@ -39,9 +40,15 @@ public class Crosshair extends OverlayElement {
 	public Crosshair() {
 		super("crosshair");
 
+		SettingBoolean.Builder<?> builder = SettingBoolean.builder("attackIndicator")
+			.setValuePrefix(SettingBoolean.VISIBLE);
+
+		SettingChoose.Builder builder2 = SettingChoose.builder(null, "mode1", "mode2")
+			.setValuePrefix("options.attack.").setEnableCheck(attackIndicator::get);
+
 		settings.addChildren(
 			position = new SettingPosition(DirectionOptions.I, DirectionOptions.NONE),
-			attackIndicator = new SettingBoolean("attackIndicator") {
+			attackIndicator = new SettingBoolean(builder) {
 				@Override
 				public IStringSetting getStringSetting() {
 					return null;
@@ -62,8 +69,8 @@ public class Crosshair extends OverlayElement {
 					Minecraft.getMinecraft().gameSettings.attackIndicator = value ? indicatorType.getIndex() + 1 : 0;
 					Minecraft.getMinecraft().gameSettings.saveOptions();
 				}
-			}.setValuePrefix(SettingBoolean.VISIBLE),
-			indicatorType = new SettingChoose(null, "mode1", "mode2") {
+			},
+			indicatorType = new SettingChoose(builder2) {
 				@Override
 				public int getIndex() {
 					return Math.max(Minecraft.getMinecraft().gameSettings.attackIndicator - 1, 0);
@@ -75,7 +82,7 @@ public class Crosshair extends OverlayElement {
 						Minecraft.getMinecraft().gameSettings.attackIndicator = attackIndicator.get() ? index + 1 : 0;
 					}
 				}
-			}.setValuePrefix("options.attack.").setEnableOn(attackIndicator::get)
+			}
 		);
 		position.setEnableOn(() -> attackIndicator.get());
 	}

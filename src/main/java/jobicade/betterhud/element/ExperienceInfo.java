@@ -33,8 +33,8 @@ public class ExperienceInfo extends TextElement {
 
 		settings.addChildren(
 			new Legend("misc"),
-			total = new SettingBoolean("showTotalExp").setValuePrefix(SettingBoolean.VISIBLE),
-			lifetime = new SettingBoolean("showLifetimeExp").setValuePrefix(SettingBoolean.VISIBLE)
+			total = SettingBoolean.builder("showTotalExp").setValuePrefix(SettingBoolean.VISIBLE).build(),
+			lifetime = SettingBoolean.builder("showLifetimeExp").setValuePrefix(SettingBoolean.VISIBLE).build()
 		);
 	}
 

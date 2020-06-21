@@ -31,7 +31,7 @@ public class Distance extends TextElement {
 
 		settings.addChildren(
 			new Legend("misc"),
-			mode = new SettingChoose("mode", "mode1", "mode2", "mode3")
+			mode = SettingChoose.builder("mode", "mode1", "mode2", "mode3").build()
 		);
 	}
 

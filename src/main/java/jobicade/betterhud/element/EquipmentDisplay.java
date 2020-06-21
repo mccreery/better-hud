@@ -21,10 +21,10 @@ public abstract class EquipmentDisplay extends OverlayElement {
 		super(name);
 
 		settings.addChildren(
-			showName = new SettingBoolean("showName"),
-			showDurability = new SettingBoolean("showDurability").setAlignment(Direction.WEST),
-			durabilityMode = new SettingChoose("durabilityFormat", "points", "percentage").setAlignment(Direction.EAST).setEnableOn(showDurability::get),
-			showUndamaged = new SettingBoolean("showUndamaged").setEnableOn(showDurability::get).setValuePrefix("betterHud.value.visible"),
+			showName = SettingBoolean.builder("showName").build(),
+			showDurability = SettingBoolean.builder("showDurability").setAlignment(Direction.WEST).build(),
+			durabilityMode = SettingChoose.builder("durabilityFormat", "points", "percentage").setAlignment(Direction.EAST).setEnableCheck(showDurability::get).build(),
+			showUndamaged = SettingBoolean.builder("showUndamaged").setEnableCheck(showDurability::get).setValuePrefix("betterHud.value.visible").build(),
 			warnings = new SettingWarnings("damageWarning")
 		);
 	}

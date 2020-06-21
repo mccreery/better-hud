@@ -37,7 +37,7 @@ public class ArrowCount extends OverlayElement {
 
 		settings.addChildren(
 			position = new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.NONE),
-			overlay = new SettingBoolean("overlay")
+			overlay = SettingBoolean.builder("overlay").build()
 		);
 
 		position.setEnableOn(() -> !overlay.get());

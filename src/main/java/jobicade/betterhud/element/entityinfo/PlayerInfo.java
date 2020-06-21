@@ -35,7 +35,11 @@ public class PlayerInfo extends EntityInfo {
 	public PlayerInfo() {
 		super("playerInfo");
 
-		settings.addChild(tooltipLines = new SettingSlider("tooltipLines", -1, 10, 1) {
+		SettingSlider.Builder builder = SettingSlider.builder("tooltipLines")
+			.setRange(-1, 10)
+			.setInterval(1);
+
+		tooltipLines = new SettingSlider(builder) {
 			@Override
 			public String getDisplayValue(double scaledValue) {
 				if(scaledValue == -1) {
@@ -44,7 +48,8 @@ public class PlayerInfo extends EntityInfo {
 					return super.getDisplayValue(scaledValue);
 				}
 			}
-		});
+		};
+		settings.addChild(tooltipLines);
 	}
 
 	@Override

@@ -25,7 +25,7 @@ public class SettingChoose extends SettingAlignable implements IStringSetting {
 
 	private final String valuePrefix;
 
-	private SettingChoose(Builder builder) {
+	protected SettingChoose(Builder builder) {
 		super(builder);
 		modes = builder.modes;
 		valuePrefix = builder.valuePrefix;

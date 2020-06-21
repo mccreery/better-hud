@@ -31,8 +31,8 @@ public class HorseInfo extends EntityInfo {
 		super("horseInfo");
 
 		settings.addChildren(
-			jump = new SettingBoolean("jump"),
-			speed = new SettingBoolean("speed")
+			jump = SettingBoolean.builder("jump").build(),
+			speed = SettingBoolean.builder("speed").build()
 		);
 	}
 

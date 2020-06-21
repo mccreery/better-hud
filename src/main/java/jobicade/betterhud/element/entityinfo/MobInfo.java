@@ -26,7 +26,11 @@ public class MobInfo extends EntityInfo {
 	public MobInfo() {
 		super("mobInfo");
 
-		settings.addChild(compress = new SettingSlider("compress", 0, 200, 20) {
+		SettingSlider.Builder builder = SettingSlider.builder("compress")
+			.setRange(0, 200)
+			.setInterval(20);
+
+		compress = new SettingSlider(builder) {
 			@Override
 			public String getDisplayValue(double value) {
 				if(value == 0) {
@@ -35,7 +39,8 @@ public class MobInfo extends EntityInfo {
 					return super.getDisplayValue(value);
 				}
 			}
-		});
+		};
+		settings.addChild(compress);
 	}
 
 	@Override

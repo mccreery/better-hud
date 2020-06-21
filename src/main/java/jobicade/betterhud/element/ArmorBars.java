@@ -40,8 +40,8 @@ public class ArmorBars extends EquipmentDisplay {
 
 		settings.addChildren(
 			position = new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.WEST_EAST),
-			barType = new SettingChoose("bars", "visible.off", "smallBars", "largeBars"),
-			alwaysVisible = new SettingBoolean("alwaysVisible")
+			barType = SettingChoose.builder("bars", "visible.off", "smallBars", "largeBars").build(),
+			alwaysVisible = SettingBoolean.builder("alwaysVisible").build()
 		);
 	}
 

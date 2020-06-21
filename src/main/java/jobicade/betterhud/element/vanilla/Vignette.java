@@ -28,7 +28,7 @@ public class Vignette extends OverlayElement {
 	public Vignette() {
 		super("vignette");
 
-		settings.addChild(warnings = new SettingBoolean("warnings").setValuePrefix(SettingBoolean.VISIBLE));
+		settings.addChild(warnings = SettingBoolean.builder("warnings").setValuePrefix(SettingBoolean.VISIBLE).build());
 	}
 
 	@Override

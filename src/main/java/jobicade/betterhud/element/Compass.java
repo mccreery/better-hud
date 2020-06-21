@@ -56,11 +56,11 @@ public class Compass extends OverlayElement {
 
 		settings.addChildren(
 			position = new SettingPosition(DirectionOptions.TOP_BOTTOM, DirectionOptions.NORTH_SOUTH),
-			mode = new SettingChoose("mode", "visual", "text"),
+			mode = SettingChoose.builder("mode", "visual", "text").build(),
 			new Legend("misc"),
-			directionScaling = new SettingSlider("letterScale", 0, 1).setDisplayPercent(),
-			showNotches = new SettingBoolean("showNotches").setValuePrefix(SettingBoolean.VISIBLE),
-			requireItem = new SettingChoose("requireItem", "disabled", "inventory", "hand")
+			directionScaling = SettingSlider.builder("letterScale").setDisplayPercent().build(),
+			showNotches = SettingBoolean.builder("showNotches").setValuePrefix(SettingBoolean.VISIBLE).build(),
+			requireItem = SettingChoose.builder("requireItem", "disabled", "inventory", "hand").build()
 		);
 	}
 

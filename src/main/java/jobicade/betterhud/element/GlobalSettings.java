@@ -14,10 +14,10 @@ public class GlobalSettings extends HudElement<Object> {
 		super("global");
 
 		settings.addChildren(
-			billboardScale = new SettingSlider("billboardScale", 0, 1).setDisplayPercent(),
-			billboardDistance = new SettingSlider("rayDistance", 5, 200).setUnlocalizedValue("betterHud.hud.meters"),
-			hideOnDebug = new SettingBoolean("hideOnDebug"),
-			debugMode = new SettingBoolean("debugMode")
+			billboardScale = SettingSlider.builder("billboardScale").setDisplayPercent().build(),
+			billboardDistance = SettingSlider.builder("rayDistance").setRange(5, 200).setUnlocalizedValue("betterHud.hud.meters").build(),
+			hideOnDebug = SettingBoolean.builder("hideOnDebug").build(),
+			debugMode = SettingBoolean.builder("debugMode").build()
 		);
 	}
 

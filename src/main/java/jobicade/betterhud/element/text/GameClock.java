@@ -31,9 +31,9 @@ public class GameClock extends Clock {
 		super("gameClock");
 
 		settings.addChildren(
-			showDays = new SettingBoolean("showDays").setValuePrefix(SettingBoolean.VISIBLE),
-			showSleepIndicator = new SettingBoolean("showSleepIndicator").setValuePrefix(SettingBoolean.VISIBLE),
-			requireItem = new SettingChoose("requireItem", "disabled", "inventory", "hand")
+			showDays = SettingBoolean.builder("showDays").setValuePrefix(SettingBoolean.VISIBLE).build(),
+			showSleepIndicator = SettingBoolean.builder("showSleepIndicator").setValuePrefix(SettingBoolean.VISIBLE).build(),
+			requireItem = SettingChoose.builder("requireItem", "disabled", "inventory", "hand").build()
 		);
 	}
 
