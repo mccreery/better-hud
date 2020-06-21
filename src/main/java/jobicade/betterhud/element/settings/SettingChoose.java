@@ -128,7 +128,7 @@ public class SettingChoose extends SettingAlignable implements IStringSetting {
 
 	@Override
 	public void updateGuiParts(Collection<Setting> settings) {
-		last.enabled = next.enabled = enabled();
+		last.enabled = next.enabled = isEnabled();
 	}
 
 	public static Builder builder(String name, String... modes) {

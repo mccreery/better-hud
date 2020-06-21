@@ -73,7 +73,7 @@ public class SettingElement extends SettingAlignable implements IStringSetting {
 
 	@Override
 	public void updateGuiParts(Collection<Setting> settings) {
-		button.enabled = enabled();
+		button.enabled = isEnabled();
 	}
 
 	public static Builder builder(String name) {

@@ -82,7 +82,7 @@ public class SettingBoolean extends SettingAlignable implements IStringSetting {
 	@Override
 	public void updateGuiParts(Collection<Setting> settings) {
 		super.updateGuiParts(settings);
-		toggler.enabled = enabled();
+		toggler.enabled = isEnabled();
 		toggler.updateText(getUnlocalizedName(), unlocalizedValue, value);
 	}
 

@@ -83,7 +83,7 @@ public class SettingDirection extends SettingAlignable implements IStringSetting
 				set(lockedDirection);
 			}
 		}
-		boolean enabled = enabled();
+		boolean enabled = isEnabled();
 
 		for(GuiActionButton button : toggles) {
 			button.glowing = value != null && button.id == value.ordinal();

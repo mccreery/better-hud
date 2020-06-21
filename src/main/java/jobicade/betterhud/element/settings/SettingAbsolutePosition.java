@@ -142,7 +142,7 @@ public class SettingAbsolutePosition extends Setting implements IStringSetting {
 	public void updateGuiParts(Collection<Setting> settings) {
 		super.updateGuiParts(settings);
 
-		boolean enabled = enabled();
+		boolean enabled = isEnabled();
 		xBox.setEnabled(enabled);
 		yBox.setEnabled(enabled);
 

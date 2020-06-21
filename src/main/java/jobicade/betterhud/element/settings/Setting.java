@@ -93,8 +93,8 @@ public abstract class Setting {
 	}
 
 	/** @return {@code true} if this element and its ancestors are enabled */
-	public final boolean enabled() {
-		return (parent == null || parent.enabled()) && enableCheck.getAsBoolean();
+	public final boolean isEnabled() {
+		return (parent == null || parent.isEnabled()) && enableCheck.getAsBoolean();
 	}
 
 	/**
