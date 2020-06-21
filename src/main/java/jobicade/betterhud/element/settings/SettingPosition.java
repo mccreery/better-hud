@@ -45,16 +45,16 @@ public class SettingPosition extends Setting {
 	public SettingPosition(String name, DirectionOptions directionOptions, DirectionOptions contentOptions) {
 		super(name);
 
-		mode = new SettingChoose("position", "preset", "custom");
+		mode = SettingChoose.builder("position", "preset", "custom").build();
 		BooleanSupplier isPreset = () -> mode.getIndex() == 0;
 		BooleanSupplier isCustom = () -> mode.getIndex() == 1;
 
 		addChildren(
 			new Legend("position"),
 			mode,
-			direction = new SettingDirection("direction", directionOptions).setAlignment(Direction.WEST).setEnableOn(isPreset).setHorizontal(),
-			parent = new SettingElement("parent").setEnableOn(isCustom),
-			anchor = new SettingDirection("anchor").setAlignment(Direction.WEST).setEnableOn(isCustom),
+			direction = SettingDirection.builder("direction").setOptions(directionOptions).setAlignment(Direction.WEST).setEnableCheck(isPreset).setHorizontal().build(),
+			parent = SettingElement.builder("parent").setEnableCheck(isCustom).build(),
+			anchor = SettingDirection.builder("anchor").setAlignment(Direction.WEST).setEnableCheck(isCustom).build(),
 			alignment = new SettingDirection("alignment") {
 				@Override
 				public void updateGuiParts(Collection<Setting> settings) {
@@ -69,10 +69,9 @@ public class SettingPosition extends Setting {
 					super.updateGuiParts(settings);
 				}
 			}.setAlignment(Direction.EAST),
-			// TODO downcasting
-			lockAlignment = (SettingLock)new SettingLock("lockAlignment").setEnableOn(isCustom),
-			lockContent = (SettingLock)new SettingLock("lockContent").setEnableOn(isCustom),
-			offset = new SettingAbsolutePosition("origin", this).setEnableOn(isCustom)
+			lockAlignment = SettingLock.builder("lockAlignment").setEnableCheck(isCustom).build(),
+			lockContent = SettingLock.builder("lockContent").setEnableCheck(isCustom).build(),
+			offset = SettingAbsolutePosition.builder("origin").setParentSetting(this).setEnableCheck(isCustom).build()
 		);
 
 		alignment.setEnableOn(() -> isCustom.getAsBoolean() && !lockAlignment.get());

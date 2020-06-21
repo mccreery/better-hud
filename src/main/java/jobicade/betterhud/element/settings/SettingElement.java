@@ -76,6 +76,10 @@ public class SettingElement extends SettingAlignable implements IStringSetting {
 		button.enabled = enabled();
 	}
 
+	public static Builder builder(String name) {
+		return new Builder(name);
+	}
+
 	public static final class Builder extends SettingAlignable.Builder<SettingElement, Builder> {
 		protected Builder(String name) {
 			super(name);

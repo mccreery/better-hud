@@ -156,6 +156,10 @@ public class SettingDirection extends SettingAlignable implements IStringSetting
 		return I18n.format("betterHud.value." + name);
 	}
 
+	public static Builder builder(String name) {
+		return new Builder(name);
+	}
+
 	public static final class Builder extends SettingAlignable.Builder<SettingDirection, Builder> {
 		protected Builder(String name) {
 			super(name);

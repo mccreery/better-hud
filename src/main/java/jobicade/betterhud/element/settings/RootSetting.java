@@ -1,8 +1,8 @@
 package jobicade.betterhud.element.settings;
 
 public class RootSetting extends Setting {
-	private final SettingBoolean enabled = new SettingBoolean("enabled").setHidden();
-	private final SettingInteger priority = new SettingInteger("priority").setHidden();
+	private final SettingBoolean enabled = SettingBoolean.builder("enabled").setHidden().build();
+	private final SettingInteger priority = SettingInteger.builder("priority").setHidden().build();
 
 	public RootSetting() {
 		super((String)null);

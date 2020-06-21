@@ -9,9 +9,9 @@ public class SettingColor extends Setting {
 		super(builder);
 
 		addChildren(
-			red = new SettingSlider("red", 0, 255, 1),
-			green = new SettingSlider("green", 0, 255, 1),
-			blue = new SettingSlider("blue", 0, 255, 1)
+			red = SettingSlider.builder("red").setRange(0, 255).setInterval(1).build(),
+			green = SettingSlider.builder("green").setRange(0, 255).setInterval(1).build(),
+			blue = SettingSlider.builder("blue").setRange(0, 255).setInterval(1).build()
 		);
 	}
 
