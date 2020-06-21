@@ -4,16 +4,11 @@ import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.gui.GuiElementSettings;
 import net.minecraft.client.gui.GuiButton;
 
-public class SettingInteger extends FluentSetting<SettingInteger> implements IStringSetting {
+public class SettingInteger extends Setting implements IStringSetting {
     private int value;
 
-    public SettingInteger(String name) {
-        super(name);
-    }
-
-    @Override
-    protected SettingInteger getThis() {
-        return this;
+    public SettingInteger(Builder builder) {
+        super(builder);
     }
 
     public int get() {
@@ -56,5 +51,25 @@ public class SettingInteger extends FluentSetting<SettingInteger> implements ISt
 
     @Override
     public void actionPerformed(GuiElementSettings gui, GuiButton button) {
+    }
+
+    public static Builder builder(String name) {
+        return new Builder(name);
+    }
+
+    public static class Builder extends Setting.Builder<SettingInteger, Builder> {
+        protected Builder(String name) {
+            super(name);
+        }
+
+        @Override
+        protected Builder getThis() {
+            return this;
+        }
+
+        @Override
+        public SettingInteger build() {
+            return new SettingInteger(this);
+        }
     }
 }
