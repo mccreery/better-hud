@@ -24,7 +24,7 @@ public class SettingSlider extends SettingAlignable implements ISlider, IStringS
 
 	private double value;
 
-	private SettingSlider(Builder builder) {
+	protected SettingSlider(Builder builder) {
 		super(builder);
 		min = builder.min;
 		max = builder.max;

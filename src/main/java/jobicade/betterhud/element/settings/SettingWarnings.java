@@ -21,7 +21,19 @@ public class SettingWarnings extends Setting {
 		for (int i = 0; i < sliders.length; i++) {
 			final int index = i;
 
-			addChild(sliders[i] = new SettingSlider("warning." + String.valueOf(i + 1), 0, 1) {
+			SettingSlider.Builder builder = SettingSlider.builder("warning." + String.valueOf(i + 1))
+				.setDisplayPercent()
+				.setAlignment((i & 1) == 1 ? Direction.EAST : Direction.WEST);
+
+			if ((i & 1) == 1) {
+				// Always align right for 2nd slider on line
+				builder.setAlignment(Direction.EAST);
+			} else if (i != sliders.length - 1) {
+				// Only align left if 2nd slider is present
+				builder.setAlignment(Direction.WEST);
+			}
+
+			sliders[i] = new SettingSlider(builder) {
 				@Override
 				public String getDisplayValue(double value) {
 					SettingSlider next = next();
@@ -53,11 +65,8 @@ public class SettingWarnings extends Setting {
 				public void updateGuiParts(Collection<Setting> settings) {
 					slider.updateDisplayString();
 				}
-			}.setDisplayPercent().setAlignment((i & 1) == 1 ? Direction.EAST : Direction.WEST));
-		}
-
-		if ((sliders.length & 1) == 1) {
-			sliders[sliders.length - 1].setAlignment(Direction.CENTER);
+			};
+			addChild(sliders[i]);
 		}
 	}
 
