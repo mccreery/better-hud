@@ -28,6 +28,11 @@ public class SettingInteger extends Setting<Integer> {
     }
 
     @Override
+    public String getDefaultValue() {
+        return "0";
+    }
+
+    @Override
     public void loadStringValue(String save) {
         try {
             priority = Integer.parseInt(save);

@@ -7,6 +7,8 @@ public interface ISetting {
 
     String getStringValue();
 
+    String getDefaultValue();
+
 	/**
 	 * If {@code stringValue} is valid, sets the value accordingly.
      *

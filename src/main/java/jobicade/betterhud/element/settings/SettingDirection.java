@@ -117,6 +117,11 @@ public class SettingDirection extends SettingAlignable<Direction> {
 	}
 
 	@Override
+	public String getDefaultValue() {
+		return "null";
+	}
+
+	@Override
 	public void loadStringValue(String save) {
 		try {
 			set(Direction.valueOf(save));
