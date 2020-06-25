@@ -5,6 +5,8 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BooleanSupplier;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
 
 import jobicade.betterhud.config.HudConfig;
 import jobicade.betterhud.element.HudElement;
@@ -23,10 +25,32 @@ public abstract class Setting<T> implements ISetting {
 	private Setting<?> parent = null;
 	protected final List<Setting<?>> children = new ArrayList<Setting<?>>();
 
-	// TODO rename
-	public abstract T get();
+	private T value;
 
-	public abstract void set(T value);
+	private Supplier<T> getDelegate;
+	private Consumer<T> setDelegate;
+
+	public final T get() {
+		if (getDelegate != null) {
+			return getDelegate.get();
+		} else {
+			return value;
+		}
+	}
+
+	public final void set(T value) {
+		if (setDelegate != null) {
+			setDelegate.accept(value);
+		} else {
+			this.value = value;
+		}
+	}
+
+	public final Setting<?> setDelegates(Supplier<T> getDelegate, Consumer<T> setDelegate) {
+		this.getDelegate = getDelegate;
+		this.setDelegate = setDelegate;
+		return this;
+	}
 
 	public final String name;
 
@@ -111,9 +135,6 @@ public abstract class Setting<T> implements ISetting {
 	public String getLocalizedName() {
 		return I18n.format(getUnlocalizedName());
 	}
-
-	/** @return {@code true} if this setting has a value to save */
-	protected boolean hasValue() {return name != null;}
 
 	/** @return {@code true} if this element and its ancestors are enabled */
 	public final boolean enabled() {

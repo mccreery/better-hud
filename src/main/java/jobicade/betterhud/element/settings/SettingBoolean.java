@@ -40,18 +40,6 @@ public class SettingBoolean extends SettingAlignable<Boolean> {
 	}
 
 	@Override
-	public Boolean get() {
-		// TODO does it make sense to test enabled here?
-		return enabled() && value;
-	}
-
-	@Override
-	public void set(Boolean value) {
-		this.value = value;
-		//return true;
-	}
-
-	@Override
 	public void getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Rect bounds) {
 		toggler = new GuiActionButton("").setBounds(bounds).setCallback(b -> value = !value);
 		parts.add(toggler);
@@ -61,6 +49,11 @@ public class SettingBoolean extends SettingAlignable<Boolean> {
 	@Override
 	public void actionPerformed(GuiElementSettings gui, GuiButton button) {
 		toggler.actionPerformed();
+	}
+
+	@Override
+	public boolean hasValue() {
+		return true;
 	}
 
 	@Override

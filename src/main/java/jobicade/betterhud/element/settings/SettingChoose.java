@@ -42,6 +42,11 @@ public class SettingChoose extends SettingAlignable<String> {
 
 		this.modes = modes;
 		this.length = modes.length;
+
+		setDelegates(
+			() -> modes[index],
+			mode -> index = ArrayUtils.indexOf(modes, mode)
+		);
 	}
 
 	public void setIndex(int index) {
@@ -86,13 +91,18 @@ public class SettingChoose extends SettingAlignable<String> {
 	}
 
 	@Override
+	public boolean hasValue() {
+		return true;
+	}
+
+	@Override
 	public String getStringValue() {
 		return get();
 	}
 
 	@Override
 	public String getDefaultValue() {
-		return "0";
+		return modes[0];
 	}
 
 	@Override
