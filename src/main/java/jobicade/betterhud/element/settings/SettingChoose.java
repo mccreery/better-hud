@@ -46,14 +46,26 @@ public class SettingChoose extends SettingAlignable {
 	}
 
 	public String get() {
-		return modes[index];
+		if (index < modes.length) {
+			return modes[index];
+		} else {
+			return String.valueOf(index);
+		}
 	}
 
 	public void set(String mode) {
 		try {
-			setIndex(ArrayUtils.indexOf(modes, mode));
-		} catch (IndexOutOfBoundsException e) {
-			throw new IllegalArgumentException("Invalid mode " + mode + ". Valid modes are " + Arrays.toString(modes));
+			int index = ArrayUtils.indexOf(modes, mode);
+			if (index == -1) {
+				index = Integer.parseInt(mode);
+			}
+			setIndex(index);
+		} catch (IndexOutOfBoundsException | NumberFormatException e) {
+			String[] allModes = Arrays.copyOf(modes, length);
+			for (int i = modes.length; i < length; i++) {
+				allModes[i] = String.valueOf(i);
+			}
+			throw new IllegalArgumentException("Invalid mode " + mode + ". Valid modes are " + Arrays.toString(allModes));
 		}
 	}
 
@@ -99,7 +111,11 @@ public class SettingChoose extends SettingAlignable {
 
 	@Override
 	public String getDefaultValue() {
-		return modes[0];
+		if (modes.length == 0) {
+			return "0";
+		} else {
+			return modes[0];
+		}
 	}
 
 	@Override
