@@ -6,7 +6,7 @@ import java.util.Map;
 
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.element.settings.ISetting;
+import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingValueException;
 import jobicade.betterhud.registry.HudElements;
 import jobicade.betterhud.registry.SortField;
@@ -26,7 +26,7 @@ public class HudConfig extends Configuration {
 	public void load() {
 		super.load();
 
-		for (Map.Entry<ISetting, Property> entry : getPropertyMap().entrySet()) {
+		for (Map.Entry<Setting, Property> entry : getPropertyMap().entrySet()) {
 			try {
 				entry.getKey().loadStringValue(entry.getValue().getString());
 			} catch (SettingValueException e) {
@@ -43,7 +43,7 @@ public class HudConfig extends Configuration {
 	}
 
 	public void saveSettings() {
-		for (Map.Entry<ISetting, Property> entry : getPropertyMap().entrySet()) {
+		for (Map.Entry<Setting, Property> entry : getPropertyMap().entrySet()) {
 			entry.getValue().set(entry.getKey().getStringValue());
 		}
 
@@ -52,8 +52,8 @@ public class HudConfig extends Configuration {
 		}
 	}
 
-	private Map<ISetting, Property> getPropertyMap() {
-		Map<ISetting, Property> propertyMap = new HashMap<>();
+	private Map<Setting, Property> getPropertyMap() {
+		Map<Setting, Property> propertyMap = new HashMap<>();
 
 		for (HudElement<?> element : HudElements.get().getRegistered()) {
 			mapProperties(propertyMap, element.settings, element.getName(), "");
@@ -61,7 +61,7 @@ public class HudConfig extends Configuration {
 		return propertyMap;
 	}
 
-	private void mapProperties(Map<ISetting, Property> map, ISetting setting, String category, String pathPrefix) {
+	private void mapProperties(Map<Setting, Property> map, Setting setting, String category, String pathPrefix) {
 		String name = setting.getName();
 
 		if (name != null && !name.isEmpty()) {
@@ -77,7 +77,7 @@ public class HudConfig extends Configuration {
 			}
 		}
 
-		for (ISetting childSetting : setting.getChildren()) {
+		for (Setting childSetting : setting.getChildren()) {
 			mapProperties(map, childSetting, category, pathPrefix);
 		}
 	}
