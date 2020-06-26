@@ -19,6 +19,7 @@ import java.util.stream.Stream;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
 
+import jobicade.betterhud.BetterHud;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
@@ -60,7 +61,10 @@ public class ConfigManager implements IResourceManagerReloadListener {
         }
 
         this.configPath = configPath;
-        this.reloadConfig();
+
+        if (Files.exists(configPath)) {
+            reloadConfig();
+        }
     }
 
     /**
@@ -107,6 +111,22 @@ public class ConfigManager implements IResourceManagerReloadListener {
     public void onResourceManagerReload(IResourceManager resourceManager) {
         this.resourceManager = resourceManager;
         this.internalConfigs = null;
+
+        if (!Files.exists(configPath)) {
+            // TODO enforce order instead of using first slot
+            streamInternalSlots()
+                .findFirst()
+                .ifPresent(this::copySafe);
+        }
+    }
+
+    private void copySafe(ConfigSlot slot) {
+        try {
+            slot.copyTo(configPath);
+            reloadConfig();
+        } catch (IOException e) {
+            BetterHud.getLogger().warn("Unable to copy default config file \"%s\"", configPath.getFileName());
+        }
     }
 
     /**
