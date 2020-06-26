@@ -14,13 +14,6 @@ public class ArmorBar extends Bar {
 	}
 
 	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-		settings.setPriority(4);
-		side.setIndex(0);
-	}
-
-	@Override
 	public boolean shouldRender(OverlayContext context) {
 		return super.shouldRender(context)
 			&& Minecraft.getMinecraft().playerController.shouldDrawHUD()

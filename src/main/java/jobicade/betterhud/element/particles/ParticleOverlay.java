@@ -42,12 +42,6 @@ public abstract class ParticleOverlay extends OverlayElement implements Tickable
 	}
 
 	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-		density.setIndex(1);
-	}
-
-	@Override
 	public Rect render(OverlayContext context) {
 		for(Particle particle : particles) {
 			particle.render(context.getPartialTicks());

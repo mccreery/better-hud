@@ -8,7 +8,6 @@ import org.lwjgl.input.Mouse;
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingSlider;
-import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.MathUtil;
 import jobicade.betterhud.util.Tickable;
 import net.minecraft.client.resources.I18n;
@@ -40,17 +39,6 @@ public class CpsCount extends TextElement implements Tickable {
 			showBurst = new SettingBoolean("showBurst"),
 			remember = new SettingBoolean("remember")
 		);
-	}
-
-	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-
-		position.setPreset(Direction.SOUTH_WEST);
-		timeoutMax.set(3.0);
-		showBurst.set(true);
-		remember.set(false);
-		settings.setPriority(1);
 	}
 
 	@Override

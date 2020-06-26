@@ -6,20 +6,11 @@ import java.util.List;
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.events.OverlayContext;
-import jobicade.betterhud.geom.Direction;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 
 public class FullInvIndicator extends TextElement {
 	private SettingBoolean offHand;
-
-	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-
-		position.setPreset(Direction.NORTH_EAST);
-		offHand.set(false);
-	}
 
 	public FullInvIndicator() {
 		super("fullInvIndicator");

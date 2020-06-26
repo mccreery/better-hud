@@ -26,12 +26,6 @@ public class HelmetOverlay extends OverlayElement {
 	}
 
 	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-		settings.setPriority(Integer.MIN_VALUE);
-	}
-
-	@Override
 	public boolean shouldRender(OverlayContext context) {
 		return Minecraft.getMinecraft().gameSettings.thirdPersonView == 0
 			&& !Minecraft.getMinecraft().player.inventory.armorItemInSlot(3).isEmpty()

@@ -25,12 +25,6 @@ public class JumpBar extends OverlayElement {
 	}
 
 	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-		settings.setPriority(2);
-	}
-
-	@Override
 	public boolean shouldRender(OverlayContext context) {
 		return Minecraft.getMinecraft().player.isRidingHorse()
 			&& !MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(context.getEvent(), ElementType.JUMPBAR));

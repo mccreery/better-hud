@@ -23,15 +23,6 @@ public class ArrowCount extends OverlayElement {
 	private SettingPosition position;
 	private SettingBoolean overlay;
 
-	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-
-		overlay.set(true);
-		position.setPreset(Direction.SOUTH_EAST);
-		settings.setPriority(1);
-	}
-
 	public ArrowCount() {
 		super("arrowCount");
 

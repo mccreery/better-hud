@@ -31,12 +31,6 @@ public abstract class Bar extends OverlayElement {
 	}
 
 	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-		position.setPreset(Direction.SOUTH);
-	}
-
-	@Override
 	public boolean shouldRender(OverlayContext context) {
 		bar.setHost(Minecraft.getMinecraft().player);
 		return bar.shouldRender();

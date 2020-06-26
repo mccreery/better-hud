@@ -6,15 +6,8 @@ import java.util.List;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.EnumSkyBlock;
-import jobicade.betterhud.geom.Direction;
 
 public class LightLevel extends TextElement {
-	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-		position.setPreset(Direction.SOUTH_EAST);
-	}
-
 	public LightLevel() {
 		super("lightLevel");
 	}

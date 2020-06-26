@@ -25,12 +25,6 @@ public class Hotbar extends OverlayElement {
 	}
 
 	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-		position.setPreset(Direction.SOUTH);
-	}
-
-	@Override
 	public boolean shouldRender(OverlayContext context) {
 		// TODO make it work correctly with spectator mode
 		return !Minecraft.getMinecraft().player.isSpectator()

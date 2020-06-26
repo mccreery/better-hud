@@ -32,12 +32,6 @@ public class Vignette extends OverlayElement {
 	}
 
 	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-		warnings.set(true);
-	}
-
-	@Override
 	public boolean shouldRender(OverlayContext context) {
 		return Minecraft.isFancyGraphicsEnabled()
 			&& !MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(context.getEvent(), ElementType.VIGNETTE));

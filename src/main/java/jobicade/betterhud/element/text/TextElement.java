@@ -35,14 +35,6 @@ public abstract class TextElement extends OverlayElement {
 		return color.get();
 	}
 
-	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-
-		position.setPreset(Direction.NORTH_EAST);
-		color.set(Color.WHITE);
-	}
-
 	protected Rect getPadding() {
 		return border ? Rect.createPadding(BetterHud.SPACER) : Rect.empty();
 	}

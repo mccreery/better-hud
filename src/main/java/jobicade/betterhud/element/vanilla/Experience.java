@@ -38,13 +38,6 @@ public class Experience extends OverlayElement {
 	}
 
 	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-		settings.setPriority(1);
-		position.setPreset(Direction.SOUTH);
-	}
-
-	@Override
 	public Rect render(OverlayContext context) {
 		Rect bgTexture = new Rect(0, 64, 182, 5);
 		Rect fgTexture = new Rect(0, 69, 182, 5);

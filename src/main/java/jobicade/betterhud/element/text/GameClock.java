@@ -38,15 +38,6 @@ public class GameClock extends Clock {
 	}
 
 	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-
-		showDays.set(true);
-		showSleepIndicator.set(false);
-		requireItem.setIndex(0);
-	}
-
-	@Override
 	protected Rect getMargin() {
 		return new Rect(0, 0, 21, 0).align(Point.zero(), position.getContentAlignment());
 	}

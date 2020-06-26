@@ -18,14 +18,6 @@ import net.minecraft.util.math.RayTraceResult;
 public class Distance extends TextElement {
 	private SettingChoose mode;
 
-	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-
-		position.setPreset(Direction.CENTER);
-		mode.setIndex(0);
-	}
-
 	public Distance() {
 		super("distance");
 

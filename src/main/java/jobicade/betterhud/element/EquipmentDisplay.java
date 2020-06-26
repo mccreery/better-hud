@@ -29,18 +29,6 @@ public abstract class EquipmentDisplay extends OverlayElement {
 		);
 	}
 
-	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-
-		showName.set(true);
-		showDurability.set(true);
-		durabilityMode.setIndex(0);
-		showUndamaged.set(true);
-
-		warnings.set(new double[] {.45, .25, .1});
-	}
-
 	protected boolean hasText() {
 		return showName.get() || showDurability.get();
 	}

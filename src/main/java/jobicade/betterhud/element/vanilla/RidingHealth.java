@@ -14,13 +14,6 @@ public class RidingHealth extends Bar {
 	}
 
 	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-		settings.setPriority(5);
-		side.setIndex(1);
-	}
-
-	@Override
 	public boolean shouldRender(OverlayContext context) {
 		return super.shouldRender(context)
 			&& Minecraft.getMinecraft().playerController.shouldDrawHUD()

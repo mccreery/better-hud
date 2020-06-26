@@ -20,14 +20,6 @@ public class HealIndicator extends OverlayElement {
 	private SettingPosition position;
 	private SettingChoose mode;
 
-	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-
-		position.setPreset(Direction.NORTH_WEST);
-		mode.setIndex(1);
-	}
-
 	public HealIndicator() {
 		super("healIndicator");
 

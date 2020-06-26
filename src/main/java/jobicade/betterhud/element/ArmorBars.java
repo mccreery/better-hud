@@ -26,15 +26,6 @@ public class ArmorBars extends EquipmentDisplay {
 	private SettingChoose barType;
 	private SettingBoolean alwaysVisible;
 
-	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-
-		barType.setIndex(2);
-		position.setPreset(Direction.NORTH_WEST);
-		alwaysVisible.set(false);
-	}
-
 	public ArmorBars() {
 		super("armorBars");
 

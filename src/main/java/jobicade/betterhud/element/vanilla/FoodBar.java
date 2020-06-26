@@ -19,15 +19,6 @@ public class FoodBar extends Bar {
 	}
 
 	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-
-		settings.setPriority(3);
-		side.setIndex(1);
-		hideMount.set(true);
-	}
-
-	@Override
 	public boolean shouldRender(OverlayContext context) {
 		return super.shouldRender(context)
 			&& Minecraft.getMinecraft().playerController.shouldDrawHUD()

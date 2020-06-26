@@ -29,12 +29,9 @@ public class ClientProxy implements HudSidedProxy {
 
     @Override
     public void preInit(FMLPreInitializationEvent event) {
-        Path configPath = event.getSuggestedConfigurationFile().toPath();
-
         MinecraftForge.EVENT_BUS.post(new HudRegistryEvent());
 
-        // Order is important: initialising config manager loads settings
-        HudElement.loadAllDefaults();
+        Path configPath = event.getSuggestedConfigurationFile().toPath();
         configManager = new ConfigManager(configPath, configPath.resolveSibling(BetterHud.MODID));
     }
 

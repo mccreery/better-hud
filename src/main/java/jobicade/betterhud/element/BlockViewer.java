@@ -77,16 +77,6 @@ public class BlockViewer extends TextElement {
 	}
 
 	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-
-		position.setPreset(Direction.NORTH);
-		showBlock.set(true);
-		showIds.set(false);
-		invNames.set(true);
-	}
-
-	@Override
 	public boolean shouldRender(OverlayContext context) {
 		trace = Minecraft.getMinecraft().getRenderViewEntity().rayTrace(HudElements.GLOBAL.getBillboardDistance(), 1f);
 

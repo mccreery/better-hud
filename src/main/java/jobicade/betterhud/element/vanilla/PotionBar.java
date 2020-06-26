@@ -46,12 +46,6 @@ public class PotionBar extends OverlayElement {
 	}
 
 	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-		position.setPreset(Direction.NORTH_WEST);
-	}
-
-	@Override
 	public void init(FMLInitializationEvent event) {
 		MinecraftForge.EVENT_BUS.register(this);
 	}

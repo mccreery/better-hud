@@ -25,12 +25,6 @@ public class Offhand extends OverlayElement {
 	}
 
 	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-		position.setPreset(Direction.SOUTH);
-	}
-
-	@Override
 	public boolean shouldRender(OverlayContext context) {
 		return !Minecraft.getMinecraft().player.getHeldItemOffhand().isEmpty();
 	}

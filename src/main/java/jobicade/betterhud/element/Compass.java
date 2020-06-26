@@ -30,17 +30,6 @@ public class Compass extends OverlayElement {
 	private SettingSlider directionScaling;
 	private SettingBoolean showNotches;
 
-	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-
-		position.setPreset(Direction.NORTH);
-		directionScaling.set(0.5);
-		showNotches.set(true);
-		requireItem.setIndex(0);
-		settings.setPriority(-3);
-	}
-
 	private static final int[] notchX = new int[9];
 
 	static {
