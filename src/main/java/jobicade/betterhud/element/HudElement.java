@@ -166,4 +166,16 @@ public abstract class HudElement<T> {
 			prioritySort.get(i).settings.setPriority(i);
 		}
 	}
+
+	// Each element must have exactly one instance
+
+	@Override
+	public final boolean equals(Object obj) {
+		return super.equals(obj);
+	}
+
+	@Override
+	public final int hashCode() {
+		return super.hashCode();
+	}
 }
