@@ -117,19 +117,25 @@ public class ConfigManager implements IResourceManagerReloadListener {
         this.internalConfigs = null;
 
         if (!Files.exists(configPath)) {
-            try {
-                IResource configsRes = resourceManager.getResource(CONFIGS_LOCATION);
-
-                try (InputStreamReader reader = new InputStreamReader(configsRes.getInputStream())) {
+            for (IResource config : getAllConfigs()) {
+                try (InputStreamReader reader = new InputStreamReader(config.getInputStream())) {
                     Configs configs = GSON.fromJson(reader, Configs.class);
                     ConfigSlot slot = new ResourceConfigSlot(configs.defaultConfig);
 
                     slot.copyTo(configPath);
                     reloadConfig();
+                } catch (IOException e) {
+                    BetterHud.getLogger().warn("Unable to load default config file", e);
                 }
-            } catch(IOException e) {
-                BetterHud.getLogger().warn("Unable to load default config file", e);
             }
+        }
+    }
+
+    private List<IResource> getAllConfigs() {
+        try {
+            return resourceManager.getAllResources(CONFIGS_LOCATION);
+        } catch (IOException e) {
+            throw new RuntimeException("Finding internal configs JSON", e);
         }
     }
 
