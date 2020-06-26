@@ -113,19 +113,20 @@ public class ConfigManager implements IResourceManagerReloadListener {
         this.internalConfigs = null;
 
         if (!Files.exists(configPath)) {
-            // TODO enforce order instead of using first slot
-            streamInternalSlots()
-                .findFirst()
-                .ifPresent(this::copySafe);
-        }
-    }
+            try {
+                IResource configsRes = resourceManager.getResource(CONFIGS_LOCATION);
 
-    private void copySafe(ConfigSlot slot) {
-        try {
-            slot.copyTo(configPath);
-            reloadConfig();
-        } catch (IOException e) {
-            BetterHud.getLogger().warn("Unable to copy default config file \"%s\"", configPath.getFileName());
+                try (InputStreamReader reader = new InputStreamReader(configsRes.getInputStream())) {
+                    Configs configs = gson.fromJson(reader, Configs.class);
+                    ResourceLocation defaultRes = new ResourceLocation(configs.defaultConfig);
+                    ConfigSlot slot = new ResourceConfigSlot(defaultRes);
+
+                    slot.copyTo(configPath);
+                    reloadConfig();
+                }
+            } catch(IOException e) {
+                BetterHud.getLogger().warn("Unable to load default config file", e);
+            }
         }
     }
 
@@ -169,8 +170,8 @@ public class ConfigManager implements IResourceManagerReloadListener {
 
     private Stream<ConfigSlot> streamJsonSlots(IResource resource) {
         try(Reader reader = new InputStreamReader(resource.getInputStream())) {
-            String[] paths = gson.fromJson(reader, String[].class);
-            return Arrays.stream(paths).map(path -> new ResourceConfigSlot(new ResourceLocation(path)));
+            Configs configs = gson.fromJson(reader, Configs.class);
+            return Arrays.stream(configs.configs).map(path -> new ResourceConfigSlot(new ResourceLocation(path)));
         } catch(IOException e) {
             return Stream.empty();
         }
@@ -206,5 +207,10 @@ public class ConfigManager implements IResourceManagerReloadListener {
     private static <T, U> Predicate<T> distinctBy(Function<? super T, U> key) {
         Set<U> seen = new HashSet<>();
         return t -> seen.add(key.apply(t));
+    }
+
+    private static final class Configs {
+        private String[] configs;
+        private String defaultConfig;
     }
 }

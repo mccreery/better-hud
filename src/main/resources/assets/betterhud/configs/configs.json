@@ -1,4 +1,7 @@
-[
-  "betterhud:configs/default.cfg",
-  "betterhud:configs/vanilla.cfg"
-]
+{
+  "configs": [
+    "betterhud:configs/default.cfg",
+    "betterhud:configs/vanilla.cfg"
+  ],
+  "defaultConfig": "betterhud:configs/default.cfg"
+}
