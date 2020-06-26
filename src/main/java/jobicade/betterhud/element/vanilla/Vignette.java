@@ -41,14 +41,14 @@ public class Vignette extends OverlayElement {
 	public Rect render(OverlayContext context) {
 		WorldBorder border = Minecraft.getMinecraft().world.getWorldBorder();
 
-		float distance = (float)border.getClosestDistance(Minecraft.getMinecraft().player);
-		float warningDistance = (float)getWarningDistance(border);
+		float f = 0;
+		if (warnings.get()) {
+			float distance = (float)border.getClosestDistance(Minecraft.getMinecraft().player);
+			float warningDistance = (float)getWarningDistance(border);
 
-		float f;
-		if(distance < warningDistance) {
-			f = 1 - distance / warningDistance;
-		} else {
-			f = 0;
+			if(distance < warningDistance) {
+				f = 1 - distance / warningDistance;
+			}
 		}
 
 		// Animate brightness
