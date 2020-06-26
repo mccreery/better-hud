@@ -8,7 +8,6 @@ import java.util.stream.Stream;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.events.OverlayContext;
-import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
@@ -24,12 +23,6 @@ public class SignReader extends OverlayElement {
 	private static final ResourceLocation SIGN_TEXTURE = new ResourceLocation("textures/entity/sign.png");
 
 	private SettingPosition position;
-
-	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-		position.setPreset(Direction.NORTH_WEST);
-	}
 
 	public SignReader() {
 		super("signReader");

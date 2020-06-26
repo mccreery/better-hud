@@ -158,18 +158,6 @@ public abstract class HudElement<T> {
 	 */
 	public void init(FMLInitializationEvent event) {}
 
-	// TODO refactor
-	/** Calls {@link #loadDefaults()} on all elements
-	 * @see #loadDefaults() */
-	public static void loadAllDefaults() {
-		HudElements.GLOBAL.loadDefaults();
-
-		for (HudElement<?> element : HudElements.get().getRegistered()) {
-			element.loadDefaults();
-		}
-		normalizePriority();
-	}
-
 	public static void normalizePriority() {
 		HudElements.get().invalidateSorts(SortField.PRIORITY);
 		List<HudElement<?>> prioritySort = HudElements.get().getRegistered(SortField.PRIORITY);
@@ -177,14 +165,5 @@ public abstract class HudElement<T> {
 		for(int i = 0; i < prioritySort.size(); i++) {
 			prioritySort.get(i).settings.setPriority(i);
 		}
-	}
-
-	/** Loads this element's default settings.<br>
-	 *
-	 * You should always call the {@code super} implementation to handle the default enabled value of {@code true}
-	 * and to allow for future expansion */
-	public void loadDefaults() {
-		setEnabled(true);
-		settings.setPriority(0);
 	}
 }

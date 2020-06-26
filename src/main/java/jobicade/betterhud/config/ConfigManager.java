@@ -18,7 +18,9 @@ import java.util.stream.Stream;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
+import jobicade.betterhud.BetterHud;
 import net.minecraft.client.resources.IResource;
 import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.resources.IResourceManagerReloadListener;
@@ -37,9 +39,12 @@ public class ConfigManager implements IResourceManagerReloadListener {
      */
     public static final ResourceLocation CONFIGS_LOCATION = new ResourceLocation(MODID, "configs/configs.json");
 
+    private static final Gson GSON = new GsonBuilder()
+        .registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer())
+        .create();
+
     private PathMatcher pathMatcher;
     private IResourceManager resourceManager;
-    private Gson gson = new Gson();
     private List<ConfigSlot> internalConfigs;
     private Path rootDirectory;
 
@@ -60,7 +65,10 @@ public class ConfigManager implements IResourceManagerReloadListener {
         }
 
         this.configPath = configPath;
-        this.reloadConfig();
+
+        if (Files.exists(configPath)) {
+            reloadConfig();
+        }
     }
 
     /**
@@ -107,6 +115,22 @@ public class ConfigManager implements IResourceManagerReloadListener {
     public void onResourceManagerReload(IResourceManager resourceManager) {
         this.resourceManager = resourceManager;
         this.internalConfigs = null;
+
+        if (!Files.exists(configPath)) {
+            try {
+                IResource configsRes = resourceManager.getResource(CONFIGS_LOCATION);
+
+                try (InputStreamReader reader = new InputStreamReader(configsRes.getInputStream())) {
+                    Configs configs = GSON.fromJson(reader, Configs.class);
+                    ConfigSlot slot = new ResourceConfigSlot(configs.defaultConfig);
+
+                    slot.copyTo(configPath);
+                    reloadConfig();
+                }
+            } catch(IOException e) {
+                BetterHud.getLogger().warn("Unable to load default config file", e);
+            }
+        }
     }
 
     /**
@@ -149,8 +173,8 @@ public class ConfigManager implements IResourceManagerReloadListener {
 
     private Stream<ConfigSlot> streamJsonSlots(IResource resource) {
         try(Reader reader = new InputStreamReader(resource.getInputStream())) {
-            String[] paths = gson.fromJson(reader, String[].class);
-            return Arrays.stream(paths).map(path -> new ResourceConfigSlot(new ResourceLocation(path)));
+            Configs configs = GSON.fromJson(reader, Configs.class);
+            return Arrays.stream(configs.configs).map(ResourceConfigSlot::new);
         } catch(IOException e) {
             return Stream.empty();
         }
@@ -186,5 +210,11 @@ public class ConfigManager implements IResourceManagerReloadListener {
     private static <T, U> Predicate<T> distinctBy(Function<? super T, U> key) {
         Set<U> seen = new HashSet<>();
         return t -> seen.add(key.apply(t));
+    }
+
+    // null members populated using reflection in GSON
+    private static final class Configs {
+        private final ResourceLocation[] configs = null;
+        private final ResourceLocation defaultConfig = null;
     }
 }

@@ -75,15 +75,6 @@ public class Crosshair extends OverlayElement {
 	}
 
 	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-
-		attackIndicator.set(true);
-		indicatorType.setIndex(0);
-		position.setPreset(Direction.CENTER);
-	}
-
-	@Override
 	public boolean shouldRender(OverlayContext context) {
 		return Minecraft.getMinecraft().gameSettings.thirdPersonView == 0
 			&& (!Minecraft.getMinecraft().playerController.isSpectator() || canInteract())

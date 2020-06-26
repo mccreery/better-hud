@@ -16,13 +16,6 @@ public class HealthBar extends Bar {
 		super("health", new StatBarHealth());
 	}
 
-	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-		settings.setPriority(3);
-		side.setIndex(0);
-	}
-
 	/** Used by {@link HealIndicator} */
 	public Direction getIndicatorSide() {
 		if(!position.isCustom() && DirectionOptions.CORNERS.isValid(position.getDirection())) {

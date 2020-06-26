@@ -19,15 +19,6 @@ public class Connection extends TextElement {
 	private String ip = "localServer";
 
 	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-
-		playerCount.set(true);
-		showIp.set(true);
-		latency.set(true);
-	}
-
-	@Override
 	public void init(FMLInitializationEvent event) {
 		super.init(event);
 		MinecraftForge.EVENT_BUS.register(this);

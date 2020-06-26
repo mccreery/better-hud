@@ -38,15 +38,6 @@ public class GlobalSettings extends HudElement<Object> {
 	}
 
 	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-
-		billboardScale.set(0.5);
-		billboardDistance.set(100.0);
-		hideOnDebug.set(true);
-	}
-
-	@Override
 	public Rect render(Object context) {
 		return null;
 	}

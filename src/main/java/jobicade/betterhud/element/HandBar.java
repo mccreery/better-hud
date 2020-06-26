@@ -17,17 +17,6 @@ public class HandBar extends EquipmentDisplay {
 	private SettingPosition position;
 	private SettingBoolean showItem, offHand, showBars, showNonTools;
 
-	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-
-		position.setPreset(Direction.SOUTH);
-		showItem.set(true);
-		showBars.set(true);
-		offHand.set(false);
-		settings.setPriority(100);
-	}
-
 	public HandBar() {
 		super("handBar");
 

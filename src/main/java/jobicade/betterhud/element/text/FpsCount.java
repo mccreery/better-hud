@@ -4,19 +4,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import jobicade.betterhud.element.settings.SettingBoolean;
-import jobicade.betterhud.geom.Direction;
 import net.minecraft.client.Minecraft;
 
 public class FpsCount extends TextElement {
 	private SettingBoolean numberOnly;
-
-	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-
-		position.setPreset(Direction.SOUTH_WEST);
-		numberOnly.set(false);
-	}
 
 	public FpsCount() {
 		super("fpsCount");

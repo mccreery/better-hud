@@ -24,16 +24,6 @@ public class Coordinates extends TextElement {
 	private SettingBoolean spaced;
 	private SettingSlider decimalPlaces;
 
-	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-
-		position.setPreset(Direction.NORTH);
-		spaced.set(true);
-		decimalPlaces.set(0);
-		settings.setPriority(-2);
-	}
-
 	public Coordinates() {
 		super("coordinates");
 

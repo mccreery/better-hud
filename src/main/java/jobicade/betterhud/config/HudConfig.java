@@ -54,6 +54,7 @@ public class HudConfig extends Configuration {
 
 	private Map<Setting, Property> getPropertyMap() {
 		Map<Setting, Property> propertyMap = new HashMap<>();
+		mapProperties(propertyMap, HudElements.GLOBAL.settings, HudElements.GLOBAL.getName(), "");
 
 		for (HudElement<?> element : HudElements.get().getRegistered()) {
 			mapProperties(propertyMap, element.settings, element.getName(), "");

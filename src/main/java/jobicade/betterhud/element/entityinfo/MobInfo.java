@@ -39,13 +39,6 @@ public class MobInfo extends EntityInfo {
 	}
 
 	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-		compress.set(40.0);
-		settings.setPriority(-1);
-	}
-
-	@Override
 	public Rect render(RenderMobInfoEvent context) {
 		EntityLivingBase entity = context.getEntity();
 		bar.setHost(entity);

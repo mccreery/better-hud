@@ -9,7 +9,6 @@ import java.util.List;
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingChoose;
-import jobicade.betterhud.geom.Direction;
 
 public abstract class Clock extends TextElement {
 	private SettingBoolean twentyFour, showSeconds, fullYear;
@@ -27,19 +26,6 @@ public abstract class Clock extends TextElement {
 		);
 
 		border = true;
-	}
-
-	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-
-		position.setPreset(Direction.NORTH_EAST);
-		twentyFour.set(false);
-		showSeconds.set(false);
-
-		dateType.setIndex(1);
-		fullYear.set(true);
-		settings.setPriority(-1);
 	}
 
 	protected DateFormat getTimeFormat() {

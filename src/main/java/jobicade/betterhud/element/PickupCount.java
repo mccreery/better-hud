@@ -30,15 +30,6 @@ public class PickupCount extends OverlayElement {
 	private SettingSlider maxStacks, fadeAfter;
 	public final List<StackNode> stacks = new ArrayList<>();
 
-	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-
-		position.setPreset(Direction.SOUTH_EAST);
-		fadeAfter.set(.5);
-		maxStacks.set(11);
-	}
-
 	public PickupCount() {
 		super("itemPickup");
 		setServerDependency("[1.4-beta,1.4.1),(1.4.1,]");

@@ -11,10 +11,4 @@ public class SystemClock extends Clock {
 	protected Date getDate() {
 		return new Date();
 	}
-
-	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-		setEnabled(false);
-	}
 }

@@ -19,15 +19,6 @@ public class ExperienceInfo extends TextElement {
 	private SettingBoolean total;
 	private SettingBoolean lifetime;
 
-	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-
-		total.set(false);
-		lifetime.set(false);
-		settings.setPriority(2);
-	}
-
 	public ExperienceInfo() {
 		super("experienceInfo");
 

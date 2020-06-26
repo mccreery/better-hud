@@ -19,14 +19,6 @@ import net.minecraft.entity.passive.EntityHorse;
 public class HorseInfo extends EntityInfo {
 	private SettingBoolean jump, speed;
 
-	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-
-		jump.set(true);
-		speed.set(true);
-	}
-
 	public HorseInfo() {
 		super("horseInfo");
 

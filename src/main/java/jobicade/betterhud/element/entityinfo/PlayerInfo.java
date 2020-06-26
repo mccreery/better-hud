@@ -112,10 +112,4 @@ public class PlayerInfo extends EntityInfo {
 			}
 		}
 	}
-
-	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-		tooltipLines.set(-1);
-	}
 }
