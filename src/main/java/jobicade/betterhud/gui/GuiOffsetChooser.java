@@ -28,7 +28,8 @@ public class GuiOffsetChooser extends GuiScreen {
 	@Override
 	protected void keyTyped(char typedChar, int keyCode) throws IOException {
 		if(keyCode == 1) {
-			setting.set(null);
+			// TODO test offset cancel
+			setting.setOffset(null);
 			Minecraft.getMinecraft().displayGuiScreen(parent);
 		}
 	}

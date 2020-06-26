@@ -39,7 +39,7 @@ public abstract class Clock extends TextElement {
 
 		dateType.setIndex(1);
 		fullYear.set(true);
-		settings.priority.set(-1);
+		settings.setPriority(-1);
 	}
 
 	protected DateFormat getTimeFormat() {

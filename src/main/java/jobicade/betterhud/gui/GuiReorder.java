@@ -15,7 +15,6 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.registry.HudElements;
 import jobicade.betterhud.registry.OverlayElements;
 import jobicade.betterhud.registry.SortField;
-import jobicade.betterhud.util.IGetSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiScreen;
@@ -64,11 +63,15 @@ public class GuiReorder extends GuiElements {
 				int i = elements.indexOf(selected) + offset;
 
 				if(i >= 0 && i < elements.size()) {
-					IGetSet.swap(selected.settings.priority, elements.get(i).settings.priority);
+					// Swap priority with selected
+					int priority = elements.get(i).settings.getPriority();
+					elements.get(i).settings.setPriority(selected.settings.getPriority());
+					selected.settings.setPriority(priority);
+
 					HudElements.get().invalidateSorts(SortField.PRIORITY);
 				}
 			} else {
-				selected.settings.priority.set(offset);
+				selected.settings.setPriority(offset);
 				HudElement.normalizePriority();
 				HudElements.get().invalidateSorts(SortField.PRIORITY);
 			}

@@ -29,7 +29,7 @@ public class ArrowCount extends OverlayElement {
 
 		overlay.set(true);
 		position.setPreset(Direction.SOUTH_EAST);
-		settings.priority.set(1);
+		settings.setPriority(1);
 	}
 
 	public ArrowCount() {

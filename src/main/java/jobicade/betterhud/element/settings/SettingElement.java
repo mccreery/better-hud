@@ -6,18 +6,18 @@ import java.util.Map;
 import java.util.function.BooleanSupplier;
 
 import jobicade.betterhud.element.HudElement;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.GuiActionButton;
 import jobicade.betterhud.gui.GuiElementChooser;
 import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.registry.HudElements;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.geom.Rect;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 
-public class SettingElement extends SettingAlignable<HudElement<?>> {
+public class SettingElement extends SettingAlignable {
 	private HudElement<?> value;
 	private GuiActionButton button;
 
@@ -25,24 +25,37 @@ public class SettingElement extends SettingAlignable<HudElement<?>> {
 		super(name, alignment);
 	}
 
-	@Override
 	public HudElement<?> get() {
 		return value;
 	}
 
-	@Override
 	public void set(HudElement<?> value) {
 		this.value = value;
 	}
 
 	@Override
-	public String save() {
+	public boolean hasValue() {
+		return true;
+	}
+
+	@Override
+	public String getStringValue() {
 		return value != null ? value.getName() : "null";
 	}
 
 	@Override
-	public void load(String save) {
+	public String getDefaultValue() {
+		return "null";
+	}
+
+	@Override
+	public void loadStringValue(String save) {
 		value = HudElements.get().getRegistered(save);
+	}
+
+	@Override
+	public void loadDefaultValue() {
+		value = null;
 	}
 
 	@Override
@@ -51,7 +64,7 @@ public class SettingElement extends SettingAlignable<HudElement<?>> {
 	}
 
 	@Override
-	public void getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Rect bounds) {
+	public void getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Rect bounds) {
 		String text = getLocalizedName() + ": " + (value != null ? value.getLocalizedName() : I18n.format("betterHud.value.none"));
 		button = new GuiActionButton(text);
 		button.setBounds(bounds);
@@ -61,7 +74,7 @@ public class SettingElement extends SettingAlignable<HudElement<?>> {
 	}
 
 	@Override
-	public void updateGuiParts(Collection<Setting<?>> settings) {
+	public void updateGuiParts(Collection<Setting> settings) {
 		button.enabled = enabled();
 	}
 

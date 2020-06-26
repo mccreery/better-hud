@@ -1,9 +1,11 @@
 package jobicade.betterhud.element.settings;
 
-import net.minecraft.client.resources.I18n;
-import jobicade.betterhud.geom.Direction;
+import java.util.Collection;
 
-public class SettingWarnings extends SettingStub<Double[]> {
+import jobicade.betterhud.geom.Direction;
+import net.minecraft.client.resources.I18n;
+
+public class SettingWarnings extends SettingStub {
 	private final SettingSlider[] sliders;
 
 	public SettingWarnings(String name) {
@@ -19,7 +21,7 @@ public class SettingWarnings extends SettingStub<Double[]> {
 		for(int i = 0; i < sliders.length; i++) {
 			final int index = i;
 
-			addChild(sliders[i] = new SettingPercentage("warning." + String.valueOf(i+1)) {
+			addChild(sliders[i] = new SettingSlider("warning." + String.valueOf(i + 1), 0, 1) {
 				@Override
 				public String getDisplayValue(double value) {
 					SettingSlider next = next();
@@ -47,10 +49,10 @@ public class SettingWarnings extends SettingStub<Double[]> {
 				}
 
 				@Override
-				public void updateGuiParts(java.util.Collection<jobicade.betterhud.element.settings.Setting<?>> settings) {
+				public void updateGuiParts(Collection<Setting> settings) {
 					slider.updateDisplayString();
 				}
-			}.setAlignment((i & 1) == 1 ? Direction.EAST : Direction.WEST));
+			}.setDisplayPercent().setAlignment((i & 1) == 1 ? Direction.EAST : Direction.WEST));
 		}
 
 		if((sliders.length & 1) == 1) {
@@ -58,23 +60,22 @@ public class SettingWarnings extends SettingStub<Double[]> {
 		}
 	}
 
-	@Override
-	public void set(Double[] values) {
-		for(int i = 0; i < sliders.length; i++) {
-			if(values[i] >= 0) {
-				sliders[i].set(values[i]);
-			}
-		}
-	}
-
-	@Override
-	public Double[] get() {
-		Double[] values = new Double[sliders.length];
+	// TODO why double and float mixed
+	public double[] get() {
+		double[] values = new double[sliders.length];
 
 		for(int i = 0; i < sliders.length; i++) {
 			values[i] = sliders[i].get();
 		}
 		return values;
+	}
+
+	public void set(double... values) {
+		for(int i = 0; i < sliders.length; i++) {
+			if(values[i] >= 0) {
+				sliders[i].set(values[i]);
+			}
+		}
 	}
 
 	public int getWarning(float value) {

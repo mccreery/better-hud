@@ -7,7 +7,6 @@ import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingDirection;
-import jobicade.betterhud.element.settings.SettingPercentage;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.settings.SettingSlider;
 import jobicade.betterhud.events.OverlayContext;
@@ -39,7 +38,7 @@ public class Compass extends OverlayElement {
 		directionScaling.set(0.5);
 		showNotches.set(true);
 		requireItem.setIndex(0);
-		settings.priority.set(-3);
+		settings.setPriority(-3);
 	}
 
 	private static final int[] notchX = new int[9];
@@ -59,7 +58,7 @@ public class Compass extends OverlayElement {
 			position = new SettingPosition(DirectionOptions.TOP_BOTTOM, DirectionOptions.NORTH_SOUTH),
 			mode = new SettingChoose("mode", "visual", "text"),
 			new Legend("misc"),
-			directionScaling = new SettingPercentage("letterScale"),
+			directionScaling = new SettingSlider("letterScale", 0, 1).setDisplayPercent(),
 			showNotches = new SettingBoolean("showNotches").setValuePrefix(SettingBoolean.VISIBLE),
 			requireItem = new SettingChoose("requireItem", "disabled", "inventory", "hand")
 		);

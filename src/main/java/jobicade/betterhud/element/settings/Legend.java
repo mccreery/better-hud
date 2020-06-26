@@ -14,18 +14,18 @@ import net.minecraft.client.resources.I18n;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.render.Color;
 
-public class Legend extends SettingStub<Object> {
+public class Legend extends SettingStub {
 	public Legend(String name) {
 		super(name);
 	}
 
 	@Override
-	protected boolean hasValue() {
+	public boolean hasValue() {
 		return false;
 	}
 
 	@Override
-	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Point origin) {
+	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Point origin) {
 		GuiLegendLabel label = new GuiLegendLabel(0, origin.getX() - 150, origin.getY(), 300, Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT, Color.WHITE);
 		label.addLine("betterHud.group." + this.name);
 		parts.add(label);

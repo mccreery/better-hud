@@ -42,12 +42,12 @@ public class Crosshair extends OverlayElement {
 			position = new SettingPosition(DirectionOptions.I, DirectionOptions.NONE),
 			attackIndicator = new SettingBoolean(null) {
 				@Override
-				public Boolean get() {
+				public boolean get() {
 					return Minecraft.getMinecraft().gameSettings.attackIndicator != 0;
 				}
 
 				@Override
-				public void set(Boolean value) {
+				public void set(boolean value) {
 					Minecraft.getMinecraft().gameSettings.attackIndicator = value ? indicatorType.getIndex() + 1 : 0;
 					Minecraft.getMinecraft().gameSettings.saveOptions();
 				}

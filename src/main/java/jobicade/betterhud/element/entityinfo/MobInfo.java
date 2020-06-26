@@ -42,7 +42,7 @@ public class MobInfo extends EntityInfo {
 	public void loadDefaults() {
 		super.loadDefaults();
 		compress.set(40.0);
-		settings.priority.set(-1);
+		settings.setPriority(-1);
 	}
 
 	@Override

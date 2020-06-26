@@ -1,5 +1,6 @@
 package jobicade.betterhud.element.settings;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -17,7 +18,7 @@ import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.geom.Point;
 
-public class SettingChoose extends SettingAlignable<String> {
+public class SettingChoose extends SettingAlignable {
 	protected GuiButton last, next, backing;
 	protected final String[] modes;
 
@@ -44,14 +45,40 @@ public class SettingChoose extends SettingAlignable<String> {
 		this.length = modes.length;
 	}
 
-	public void setIndex(int index) {
-		if(index >= 0 && index < length) {
-			this.index = index;
+	public String get() {
+		if (index < modes.length) {
+			return modes[index];
+		} else {
+			return String.valueOf(index);
+		}
+	}
+
+	public void set(String mode) {
+		try {
+			int index = ArrayUtils.indexOf(modes, mode);
+			if (index == -1) {
+				index = Integer.parseInt(mode);
+			}
+			setIndex(index);
+		} catch (IndexOutOfBoundsException | NumberFormatException e) {
+			String[] allModes = Arrays.copyOf(modes, length);
+			for (int i = modes.length; i < length; i++) {
+				allModes[i] = String.valueOf(i);
+			}
+			throw new IllegalArgumentException("Invalid mode " + mode + ". Valid modes are " + Arrays.toString(allModes));
 		}
 	}
 
 	public int getIndex() {
 		return index;
+	}
+
+	public void setIndex(int index) {
+		if(index >= 0 && index < length) {
+			this.index = index;
+		} else {
+			throw new IndexOutOfBoundsException("mode: " + index + ", max: " + (length - 1));
+		}
 	}
 
 	public void last() {
@@ -73,23 +100,40 @@ public class SettingChoose extends SettingAlignable<String> {
 	}
 
 	@Override
-	public void set(String value) {
-		int index = ArrayUtils.indexOf(modes, value);
-		if(index == -1) index = Integer.parseUnsignedInt(value);
-
-		setIndex(index);
+	public boolean hasValue() {
+		return true;
 	}
 
 	@Override
-	public String get() {
-		return index < modes.length ? modes[index] : String.valueOf(index);
+	public String getStringValue() {
+		return get();
 	}
 
-	@Override public String save() {return get();}
-	@Override public void load(String save) {set(save);}
+	@Override
+	public String getDefaultValue() {
+		if (modes.length == 0) {
+			return "0";
+		} else {
+			return modes[0];
+		}
+	}
 
 	@Override
-	public void getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Rect bounds) {
+	public void loadStringValue(String save) throws SettingValueException {
+		try {
+			set(save);
+		} catch (IllegalArgumentException e) {
+			throw new SettingValueException(e);
+		}
+	}
+
+	@Override
+	public void loadDefaultValue() {
+		index = 0;
+	}
+
+	@Override
+	public void getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Rect bounds) {
 		parts.add(backing = new GuiButton(2, bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), ""));
 		parts.add(last = new GuiButton(0, bounds.getLeft(), bounds.getY(), 20, bounds.getHeight(), "<"));
 		parts.add(next = new GuiButton(1, bounds.getRight() - 20, bounds.getY(), 20, bounds.getHeight(), ">"));
@@ -126,7 +170,7 @@ public class SettingChoose extends SettingAlignable<String> {
 	}
 
 	@Override
-	public void updateGuiParts(Collection<Setting<?>> settings) {
+	public void updateGuiParts(Collection<Setting> settings) {
 		last.enabled = next.enabled = enabled();
 	}
 

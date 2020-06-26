@@ -3,18 +3,17 @@ package jobicade.betterhud.element.settings;
 import java.util.List;
 import java.util.Map;
 
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.gui.GuiElementSettings;
+import jobicade.betterhud.gui.GuiSlider;
+import jobicade.betterhud.util.ISlider;
+import jobicade.betterhud.util.MathUtil;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
-import net.minecraftforge.common.config.Property.Type;
-import jobicade.betterhud.gui.GuiElementSettings;
-import jobicade.betterhud.gui.GuiSlider;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.util.ISlider;
-import jobicade.betterhud.util.MathUtil;
 
-public class SettingSlider extends SettingAlignable<Double> implements ISlider {
+public class SettingSlider extends SettingAlignable implements ISlider {
 	protected GuiSlider slider;
 	private final double min, max, interval;
 
@@ -36,6 +35,12 @@ public class SettingSlider extends SettingAlignable<Double> implements ISlider {
 
 		updateDisplayPlaces();
 		set(getMinimum());
+	}
+
+	public SettingSlider setDisplayPercent() {
+		return setUnlocalizedValue("betterHud.value.percent")
+			.setDisplayScale(100)
+			.setDisplayPlaces(0);
 	}
 
 	private void updateDisplayPlaces() {
@@ -81,7 +86,7 @@ public class SettingSlider extends SettingAlignable<Double> implements ISlider {
 	}
 
 	@Override
-	public void getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Rect bounds) {
+	public void getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Rect bounds) {
 		slider = new GuiSlider(0, bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), this);
 
 		parts.add(slider);
@@ -106,12 +111,22 @@ public class SettingSlider extends SettingAlignable<Double> implements ISlider {
 	}
 
 	@Override
-	public String save() {
+	public boolean hasValue() {
+		return true;
+	}
+
+	@Override
+	public String getStringValue() {
 		return get().toString();
 	}
 
 	@Override
-	public void load(String save) {
+	public String getDefaultValue() {
+		return String.valueOf(getMinimum());
+	}
+
+	@Override
+	public void loadStringValue(String save) {
 		set(Double.valueOf(save));
 
 		if(slider != null) {
@@ -120,8 +135,8 @@ public class SettingSlider extends SettingAlignable<Double> implements ISlider {
 	}
 
 	@Override
-	protected Type getPropertyType() {
-		return Type.DOUBLE;
+	public void loadDefaultValue() {
+		value = getMinimum();
 	}
 
 	@Override public Double getMinimum() {return min;}

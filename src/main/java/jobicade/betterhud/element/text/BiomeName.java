@@ -12,7 +12,7 @@ public class BiomeName extends TextElement {
 	public void loadDefaults() {
 		super.loadDefaults();
 		position.setPreset(Direction.NORTH);
-		settings.priority.set(-1);
+		settings.setPriority(-1);
 	}
 
 	public BiomeName() {

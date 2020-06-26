@@ -7,18 +7,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.BooleanSupplier;
 
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.gui.GuiElementSettings;
+import jobicade.betterhud.gui.GuiOffsetChooser;
+import jobicade.betterhud.gui.GuiUpDownButton;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
-import jobicade.betterhud.gui.GuiElementSettings;
-import jobicade.betterhud.gui.GuiOffsetChooser;
-import jobicade.betterhud.gui.GuiUpDownButton;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.geom.Point;
 
-public class SettingAbsolutePosition extends Setting<Point> {
+public class SettingAbsolutePosition extends Setting {
 	public GuiTextField xBox, yBox;
 	public GuiButton pick;
 	private GuiButton xUp, xDown, yUp, yDown;
@@ -42,7 +42,7 @@ public class SettingAbsolutePosition extends Setting<Point> {
 	}
 
 	@Override
-	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Point origin) {
+	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Point origin) {
 		parts.add(xBox = new GuiTextField(0, Minecraft.getMinecraft().fontRenderer, origin.getX() - 106, origin.getY() + 1, 80, 18));
 		xBox.setText(String.valueOf(x));
 		parts.add(yBox = new GuiTextField(0, Minecraft.getMinecraft().fontRenderer, origin.getX() + 2, origin.getY() + 1, 80, 18));
@@ -92,34 +92,59 @@ public class SettingAbsolutePosition extends Setting<Point> {
 		//pick.displayString = I18n.format("betterHud.menu.pick");
 	}
 
-	@Override
 	public void set(Point value) {
 		x = value.getX();
 		y = value.getY();
 		updateText();
 	}
 
-	@Override
 	public Point get() {
 		return new Point(x, y);
 	}
 
 	@Override
-	public String save() {
+	public boolean hasValue() {
+		return true;
+	}
+
+	@Override
+	public String getStringValue() {
 		return x + ", " + y;
 	}
 
 	@Override
-	public void load(String val) {
+	public String getDefaultValue() {
+		return "0, 0";
+	}
+
+	@Override
+	public void loadStringValue(String val) {
 		int comma = val.indexOf(',');
-		int x = Integer.parseInt(val.substring(0, comma).trim());
-		int y = Integer.parseInt(val.substring(comma + 1).trim());
+
+		if (comma == -1) {
+			//return false;
+		}
+
+		int x, y;
+		try {
+			x = Integer.parseInt(val.substring(0, comma).trim());
+			y = Integer.parseInt(val.substring(comma + 1).trim());
+		} catch (NumberFormatException e) {
+			//return false;
+			return;
+		}
 
 		set(new Point(x, y));
 	}
 
 	@Override
-	public void updateGuiParts(Collection<Setting<?>> settings) {
+	public void loadDefaultValue() {
+		x = 0;
+		y = 0;
+	}
+
+	@Override
+	public void updateGuiParts(Collection<Setting> settings) {
 		super.updateGuiParts(settings);
 
 		boolean enabled = enabled();

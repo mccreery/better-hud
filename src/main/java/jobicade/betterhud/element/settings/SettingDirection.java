@@ -18,7 +18,7 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
 
-public class SettingDirection extends SettingAlignable<Direction> {
+public class SettingDirection extends SettingAlignable {
 	private GuiActionButton[] toggles = new GuiActionButton[9];
 	private Rect bounds;
 
@@ -49,7 +49,7 @@ public class SettingDirection extends SettingAlignable<Direction> {
 	}
 
 	@Override
-	public SettingAlignable<Direction> setAlignment(Direction alignment) {
+	public SettingAlignable setAlignment(Direction alignment) {
 		if(!horizontal) {
 			return super.setAlignment(alignment);
 		} else {
@@ -58,7 +58,7 @@ public class SettingDirection extends SettingAlignable<Direction> {
 	}
 
 	@Override
-	public void getGuiParts(java.util.List<Gui> parts, Map<Gui,Setting<?>> callbacks, Rect bounds) {
+	public void getGuiParts(java.util.List<Gui> parts, Map<Gui,Setting> callbacks, Rect bounds) {
 		this.bounds = bounds;
 
 		Rect radios = new Rect(60, 60).anchor(bounds, horizontal ? Direction.WEST : Direction.SOUTH);
@@ -90,7 +90,7 @@ public class SettingDirection extends SettingAlignable<Direction> {
 	}
 
 	@Override
-	public void updateGuiParts(Collection<Setting<?>> settings) {
+	public void updateGuiParts(Collection<Setting> settings) {
 		super.updateGuiParts(settings);
 		boolean enabled = enabled();
 
@@ -112,12 +112,22 @@ public class SettingDirection extends SettingAlignable<Direction> {
 	}
 
 	@Override
-	public String save() {
+	public boolean hasValue() {
+		return true;
+	}
+
+	@Override
+	public String getStringValue() {
 		return value != null ? value.name() : "null";
 	}
 
 	@Override
-	public void load(String save) {
+	public String getDefaultValue() {
+		return "null";
+	}
+
+	@Override
+	public void loadStringValue(String save) {
 		try {
 			set(Direction.valueOf(save));
 		} catch(IllegalArgumentException e) {
@@ -126,17 +136,16 @@ public class SettingDirection extends SettingAlignable<Direction> {
 	}
 
 	@Override
+	public void loadDefaultValue() {
+		value = options.apply(Direction.NORTH_WEST);
+	}
+
 	public Direction get() {
 		return value;
 	}
 
-	@Override
 	public void set(Direction value) {
-		value = options.apply(value);
-
-		if(options.isValid(value)) {
-			this.value = value;
-		}
+		this.value = options.apply(value);
 	}
 
 	@Override

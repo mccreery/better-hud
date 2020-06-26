@@ -4,36 +4,49 @@ import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.gui.GuiElementSettings;
 import net.minecraft.client.gui.GuiButton;
 
-public class SettingInteger extends Setting<Integer> {
-    private int priority;
+public class SettingInteger extends Setting {
+    private int value;
 
     public SettingInteger(String name) {
         super(name);
     }
 
-    @Override
     public Integer get() {
-        return priority;
+        return value;
+    }
+
+    public void set(int value) {
+        this.value = value;
     }
 
     @Override
-    public void set(Integer value) {
-        priority = value;
+    public boolean hasValue() {
+        return true;
     }
 
     @Override
-    public String save() {
-        return String.valueOf(priority);
+    public String getStringValue() {
+        return String.valueOf(value);
     }
 
     @Override
-    public void load(String save) {
+    public String getDefaultValue() {
+        return "0";
+    }
+
+    @Override
+    public void loadStringValue(String save) {
         try {
-            priority = Integer.parseInt(save);
+            value = Integer.parseInt(save);
         } catch (NumberFormatException e) {
             BetterHud.getLogger().error(e);
-            priority = 0;
+            value = 0;
         }
+    }
+
+    @Override
+    public void loadDefaultValue() {
+        value = 0;
     }
 
     @Override
