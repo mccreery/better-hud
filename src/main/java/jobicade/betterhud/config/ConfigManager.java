@@ -18,6 +18,7 @@ import java.util.stream.Stream;
 
 import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 
 import jobicade.betterhud.BetterHud;
 import net.minecraft.client.resources.IResource;
@@ -38,9 +39,12 @@ public class ConfigManager implements IResourceManagerReloadListener {
      */
     public static final ResourceLocation CONFIGS_LOCATION = new ResourceLocation(MODID, "configs/configs.json");
 
+    private static final Gson GSON = new GsonBuilder()
+        .registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer())
+        .create();
+
     private PathMatcher pathMatcher;
     private IResourceManager resourceManager;
-    private Gson gson = new Gson();
     private List<ConfigSlot> internalConfigs;
     private Path rootDirectory;
 
@@ -117,9 +121,8 @@ public class ConfigManager implements IResourceManagerReloadListener {
                 IResource configsRes = resourceManager.getResource(CONFIGS_LOCATION);
 
                 try (InputStreamReader reader = new InputStreamReader(configsRes.getInputStream())) {
-                    Configs configs = gson.fromJson(reader, Configs.class);
-                    ResourceLocation defaultRes = new ResourceLocation(configs.defaultConfig);
-                    ConfigSlot slot = new ResourceConfigSlot(defaultRes);
+                    Configs configs = GSON.fromJson(reader, Configs.class);
+                    ConfigSlot slot = new ResourceConfigSlot(configs.defaultConfig);
 
                     slot.copyTo(configPath);
                     reloadConfig();
@@ -170,8 +173,8 @@ public class ConfigManager implements IResourceManagerReloadListener {
 
     private Stream<ConfigSlot> streamJsonSlots(IResource resource) {
         try(Reader reader = new InputStreamReader(resource.getInputStream())) {
-            Configs configs = gson.fromJson(reader, Configs.class);
-            return Arrays.stream(configs.configs).map(path -> new ResourceConfigSlot(new ResourceLocation(path)));
+            Configs configs = GSON.fromJson(reader, Configs.class);
+            return Arrays.stream(configs.configs).map(ResourceConfigSlot::new);
         } catch(IOException e) {
             return Stream.empty();
         }
@@ -209,8 +212,9 @@ public class ConfigManager implements IResourceManagerReloadListener {
         return t -> seen.add(key.apply(t));
     }
 
+    // null members populated using reflection in GSON
     private static final class Configs {
-        private String[] configs;
-        private String defaultConfig;
+        private final ResourceLocation[] configs = null;
+        private final ResourceLocation defaultConfig = null;
     }
 }
