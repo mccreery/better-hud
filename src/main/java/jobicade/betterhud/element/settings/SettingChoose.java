@@ -110,26 +110,12 @@ public class SettingChoose extends SettingAlignable {
 	}
 
 	@Override
-	public String getDefaultValue() {
-		if (modes.length == 0) {
-			return "0";
-		} else {
-			return modes[0];
-		}
-	}
-
-	@Override
 	public void loadStringValue(String save) throws SettingValueException {
 		try {
 			set(save);
 		} catch (IllegalArgumentException e) {
 			throw new SettingValueException(e);
 		}
-	}
-
-	@Override
-	public void loadDefaultValue() {
-		index = 0;
 	}
 
 	@Override

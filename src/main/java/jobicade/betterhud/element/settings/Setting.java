@@ -43,7 +43,6 @@ public abstract class Setting {
 
 	public abstract boolean hasValue();
 	public abstract String getStringValue();
-	public abstract String getDefaultValue();
 
 	/**
 	 * If {@code stringValue} is valid, sets the value accordingly.
@@ -52,7 +51,6 @@ public abstract class Setting {
 	 * @return {@code true} if the value was updated.
 	 */
 	public abstract void loadStringValue(String stringValue) throws SettingValueException;
-	public abstract void loadDefaultValue();
 
 	public Setting setEnableOn(BooleanSupplier enableOn) {
 		this.enableOn = enableOn;

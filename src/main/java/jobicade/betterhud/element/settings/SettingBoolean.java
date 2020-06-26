@@ -64,11 +64,6 @@ public class SettingBoolean extends SettingAlignable {
 	}
 
 	@Override
-	public String getDefaultValue() {
-		return "false";
-	}
-
-	@Override
 	public void loadStringValue(String stringValue) {
 		stringValue = stringValue.trim();
 
@@ -81,11 +76,6 @@ public class SettingBoolean extends SettingAlignable {
 		} else {
 			//return false;
 		}
-	}
-
-	@Override
-	public void loadDefaultValue() {
-		value = false;
 	}
 
 	@Override

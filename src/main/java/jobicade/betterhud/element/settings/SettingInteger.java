@@ -30,11 +30,6 @@ public class SettingInteger extends Setting {
     }
 
     @Override
-    public String getDefaultValue() {
-        return "0";
-    }
-
-    @Override
     public void loadStringValue(String save) {
         try {
             value = Integer.parseInt(save);
@@ -42,11 +37,6 @@ public class SettingInteger extends Setting {
             BetterHud.getLogger().error(e);
             value = 0;
         }
-    }
-
-    @Override
-    public void loadDefaultValue() {
-        value = 0;
     }
 
     @Override

@@ -73,7 +73,7 @@ public class HudConfig extends Configuration {
 			}
 
 			if (setting.hasValue()) {
-				Property property = get(category, pathPrefix, setting.getDefaultValue());
+				Property property = get(category, pathPrefix, setting.getStringValue());
 				map.put(setting, property);
 			}
 		}

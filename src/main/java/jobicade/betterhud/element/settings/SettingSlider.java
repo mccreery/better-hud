@@ -121,22 +121,12 @@ public class SettingSlider extends SettingAlignable implements ISlider {
 	}
 
 	@Override
-	public String getDefaultValue() {
-		return String.valueOf(getMinimum());
-	}
-
-	@Override
 	public void loadStringValue(String save) {
 		set(Double.valueOf(save));
 
 		if(slider != null) {
 			slider.updateDisplayString();
 		}
-	}
-
-	@Override
-	public void loadDefaultValue() {
-		value = getMinimum();
 	}
 
 	@Override public Double getMinimum() {return min;}

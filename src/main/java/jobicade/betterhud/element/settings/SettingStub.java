@@ -17,9 +17,7 @@ public class SettingStub extends Setting {
 	}
 
 	@Override public String getStringValue() {return null;}
-	@Override public String getDefaultValue() {return null;}
 	@Override public void loadStringValue(String save) {}
-	@Override public void loadDefaultValue() {}
 	@Override public void actionPerformed(GuiElementSettings gui, GuiButton button) {}
 	@Override public boolean hasValue() {return false;}
 }

@@ -113,11 +113,6 @@ public class SettingAbsolutePosition extends Setting {
 	}
 
 	@Override
-	public String getDefaultValue() {
-		return "0, 0";
-	}
-
-	@Override
 	public void loadStringValue(String val) {
 		int comma = val.indexOf(',');
 
@@ -135,12 +130,6 @@ public class SettingAbsolutePosition extends Setting {
 		}
 
 		set(new Point(x, y));
-	}
-
-	@Override
-	public void loadDefaultValue() {
-		x = 0;
-		y = 0;
 	}
 
 	@Override

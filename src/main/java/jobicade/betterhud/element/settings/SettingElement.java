@@ -44,18 +44,8 @@ public class SettingElement extends SettingAlignable {
 	}
 
 	@Override
-	public String getDefaultValue() {
-		return "null";
-	}
-
-	@Override
 	public void loadStringValue(String save) {
 		value = HudElements.get().getRegistered(save);
-	}
-
-	@Override
-	public void loadDefaultValue() {
-		value = null;
 	}
 
 	@Override
