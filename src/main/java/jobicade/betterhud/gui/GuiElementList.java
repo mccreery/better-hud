@@ -139,7 +139,7 @@ public class GuiElementList extends GuiScreen {
 
 	private Rect getListBounds(Rect viewport, GuiScrollbar scrollbar, Grid<ListItem> list) {
 		Point origin = viewport.getAnchor(Direction.NORTH).sub(0, scrollbar.getScroll() - SPACER);
-		return new Rect(list.getPreferredSize().withWidth(300)).align(origin, Direction.NORTH);
+		return new Rect(list.getPreferredSize().withWidth(200)).align(origin, Direction.NORTH);
 	}
 
 	@Override
