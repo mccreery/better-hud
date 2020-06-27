@@ -113,10 +113,10 @@ public class GuiElementList extends GuiScreen {
 
 	private void updateLists() {
 		disabledList = getList(HudElements.get().getDisabled());
-		disabledScroll.setContentHeight(disabledList.getPreferredSize().getHeight());
+		disabledScroll.setContentHeight(disabledList.getPreferredSize().getHeight() + SPACER * 2);
 
 		enabledList = getList(HudElements.get().getEnabled());
-		enabledScroll.setContentHeight(enabledList.getPreferredSize().getHeight());
+		enabledScroll.setContentHeight(enabledList.getPreferredSize().getHeight() + SPACER * 2);
 	}
 
 	private Grid<ListItem> getList(List<HudElement<?>> elements) {
