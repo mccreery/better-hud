@@ -3,6 +3,7 @@ package jobicade.betterhud.gui;
 import static jobicade.betterhud.BetterHud.SPACER;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -32,7 +33,8 @@ public class GuiElementList extends GuiScreen {
 	private Rect enabledViewport;
 	private Grid<ListItem> enabledList;
 
-	private HudElement<?> selected;
+	private List<Integer> disabledSelection = new ArrayList<>();
+	private List<Integer> enabledSelection = new ArrayList<>();
 
 	@Override
 	public void initGui() {
@@ -80,49 +82,40 @@ public class GuiElementList extends GuiScreen {
 	}
 
 	private void swapSelected() {
-		if (selected == null) {
-			return;
-		}
-
 		HudElements registry = HudElements.get();
-		List<HudElement<?>> enabled = registry.getEnabled();
-		List<HudElement<?>> disabled = registry.getDisabled();
 
-		int index = enabled.indexOf(selected);
-		if (index >= 0) {
-			registry.disableElement(selected);
-			checkSelection(enabled, index);
-		} else {
-			index = disabled.indexOf(selected);
-			registry.enableElement(selected);
-			checkSelection(disabled, index);
+		for (HudElement<?> element : getAll(registry.getDisabled(), disabledSelection)) {
+			registry.enableElement(element);
 		}
+		for (HudElement<?> element : getAll(registry.getEnabled(), enabledSelection)) {
+			registry.disableElement(element);
+		}
+
+		disabledSelection.clear();
+		enabledSelection.clear();
 		updateLists();
 	}
 
-	private void checkSelection(List<HudElement<?>> list, int selectedIndex) {
-		if (list.isEmpty()) {
-			selected = null;
-		} else {
-			if (selectedIndex >= list.size()) {
-				selectedIndex = list.size() - 1;
-			}
-			selected = list.get(selectedIndex);
-		}
+	private <T> List<T> getAll(List<? extends T> list, List<Integer> indices) {
+		return indices.stream().map(list::get).collect(Collectors.toList());
 	}
 
 	private void updateLists() {
-		disabledList = getList(HudElements.get().getDisabled());
+		disabledList = getList(HudElements.get().getDisabled(), disabledSelection);
 		disabledScroll.setContentHeight(disabledList.getPreferredSize().getHeight() + SPACER * 2);
 
-		enabledList = getList(HudElements.get().getEnabled());
+		enabledList = getList(HudElements.get().getEnabled(), enabledSelection);
 		enabledScroll.setContentHeight(enabledList.getPreferredSize().getHeight() + SPACER * 2);
 	}
 
-	private Grid<ListItem> getList(List<HudElement<?>> elements) {
-		List<ListItem> items = elements.stream().map(ListItem::new).collect(Collectors.toList());
+	private Grid<ListItem> getList(List<HudElement<?>> elements, List<Integer> selection) {
+		List<ListItem> items = new ArrayList<>(elements.size());
+		for (int i = 0; i < elements.size(); i++) {
+			items.add(new ListItem(elements.get(i), selection, i));
+		}
 		Grid<ListItem> grid = new Grid<>(new Point(1, items.size()), items);
 		grid.setStretch(true);
+
 		return grid;
 	}
 
@@ -142,9 +135,39 @@ public class GuiElementList extends GuiScreen {
 				Rect listBounds = getListBounds(viewport, scrollbar, list);
 
 				if(list.getCellBounds(listBounds, new Point(0, i)).contains(mouseX, mouseY)) {
-					selected = list.getSource().get(i).element;
+					addToSelection(list.getSource().get(i).selection, i);
 				}
 			}
+		}
+	}
+
+	private void addToSelection(List<Integer> selection, int index) {
+		if (!selection.isEmpty() && isShiftKeyDown()) {
+			int prevIndex = selection.get(selection.size() - 1);
+
+			if (prevIndex < index) {
+				for (int i = prevIndex + 1; i <= index; i++) {
+					toggleItem(selection, i);
+				}
+			} else {
+				for (int i = prevIndex - 1; i >= index; i--) {
+					toggleItem(selection, i);
+				}
+			}
+		} else {
+			if (!isCtrlKeyDown()) {
+				selection.clear();
+			}
+			toggleItem(selection, index);
+		}
+	}
+
+	/**
+	 * If the item is in the list, removes it. Otherwise adds it.
+	 */
+	private <T> void toggleItem(List<T> list, T item) {
+		if (!list.remove(item)) {
+			list.add(item);
 		}
 	}
 
@@ -195,11 +218,15 @@ public class GuiElementList extends GuiScreen {
 	}
 
 	private class ListItem extends DefaultBoxed {
-		private final HudElement<?> element;
+		private final List<Integer> selection;
+		private final int index;
+
 		private final Label label;
 
-		private ListItem(HudElement<?> element) {
-			this.element = element;
+		private ListItem(HudElement<?> element, List<Integer> selection, int index) {
+			this.selection = selection;
+			this.index = index;
+
 			label = new Label(element.getLocalizedName());
 		}
 
@@ -219,7 +246,7 @@ public class GuiElementList extends GuiScreen {
 
 		@Override
 		public void render() {
-			if(selected == element) {
+			if (selection.contains(index)) {
 				GlUtil.drawRect(bounds, new Color(48, 0, 0, 0));
 				GlUtil.drawBorderRect(bounds, new Color(160, 144, 144, 144));
 			}
