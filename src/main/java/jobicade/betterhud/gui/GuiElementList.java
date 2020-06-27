@@ -73,7 +73,8 @@ public class GuiElementList extends GuiScreen {
 		buttonList.add(downButton);
 
 		GuiActionButton configButton = new GuiTexturedButton(new Rect(40, 0, 20, 20))
-			.setBounds(new Rect(rightAnchor.getX(), rightAnchor.getY(), 20, 20));
+			.setBounds(new Rect(rightAnchor.getX(), rightAnchor.getY(), 20, 20))
+			.setCallback(b -> openSettings());
 		buttonList.add(configButton);
 
 		updateLists();
@@ -83,6 +84,14 @@ public class GuiElementList extends GuiScreen {
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button instanceof GuiActionButton) {
 			((GuiActionButton)button).actionPerformed();
+		}
+	}
+
+	private void openSettings() {
+		if (!enabledSelection.isEmpty()) {
+			int i = enabledSelection.get(enabledSelection.size() - 1);
+			HudElement<?> element = HudElements.get().getEnabled().get(i);
+			mc.displayGuiScreen(new GuiElementSettings(element, this));
 		}
 	}
 
