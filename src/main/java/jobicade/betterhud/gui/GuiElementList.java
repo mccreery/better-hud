@@ -74,9 +74,40 @@ public class GuiElementList extends GuiScreen {
 		} else {
 			switch (button.id) {
 				case 0: mc.displayGuiScreen(null); break;
-				case 1: break;
+				case 1: swapSelected(); break;
 			}
 		}
+	}
+
+	private void swapSelected() {
+		if (selected == null) {
+			return;
+		}
+
+		HudElements registry = HudElements.get();
+		List<HudElement<?>> enabled = registry.getEnabled();
+		List<HudElement<?>> disabled = registry.getDisabled();
+
+		int index = enabled.indexOf(selected);
+		if (index >= 0) {
+			registry.disableElement(selected);
+
+			if (enabled.isEmpty()) {
+				selected = null;
+			} else {
+				selected = enabled.get(Math.min(index, enabled.size() - 1));
+			}
+		} else {
+			index = disabled.indexOf(selected);
+			registry.enableElement(selected);
+
+			if (disabled.isEmpty()) {
+				selected = null;
+			} else {
+				selected = disabled.get(Math.min(index, disabled.size() - 1));
+			}
+		}
+		updateLists();
 	}
 
 	private void updateLists() {
