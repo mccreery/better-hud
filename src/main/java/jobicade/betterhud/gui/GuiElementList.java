@@ -4,8 +4,11 @@ import static jobicade.betterhud.BetterHud.SPACER;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.stream.Collectors;
+
+import com.google.common.collect.Ordering;
 
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Direction;
@@ -60,11 +63,13 @@ public class GuiElementList extends GuiScreen {
 
 		Point rightAnchor = enabledViewport.getAnchor(Direction.EAST).add(4, 0);
 		GuiActionButton upButton = new GuiTexturedButton(new Rect(60, 0, 20, 20))
-			.setBounds(new Rect(rightAnchor.getX(), rightAnchor.getY() - 44, 20, 20));
+			.setBounds(new Rect(rightAnchor.getX(), rightAnchor.getY() - 44, 20, 20))
+			.setCallback(b -> moveSelectionUp());
 		buttonList.add(upButton);
 
 		GuiActionButton downButton = new GuiTexturedButton(new Rect(80, 0, 20, 20))
-			.setBounds(new Rect(rightAnchor.getX(), rightAnchor.getY() - 22, 20, 20));
+			.setBounds(new Rect(rightAnchor.getX(), rightAnchor.getY() - 22, 20, 20))
+			.setCallback(b -> moveSelectionDown());
 		buttonList.add(downButton);
 
 		GuiActionButton configButton = new GuiTexturedButton(new Rect(40, 0, 20, 20))
@@ -94,6 +99,26 @@ public class GuiElementList extends GuiScreen {
 		disabledSelection.clear();
 		enabledSelection.clear();
 		updateLists();
+	}
+
+	private void moveSelectionUp() {
+		if (shiftLeft(HudElements.get().getEnabled(), enabledSelection)) {
+			updateLists();
+
+			for (int i = 0; i < enabledSelection.size(); i++) {
+				enabledSelection.set(i, enabledSelection.get(i) - 1);
+			}
+		}
+	}
+
+	private void moveSelectionDown() {
+		if (shiftRight(HudElements.get().getEnabled(), enabledSelection)) {
+			updateLists();
+
+			for (int i = 0; i < enabledSelection.size(); i++) {
+				enabledSelection.set(i, enabledSelection.get(i) + 1);
+			}
+		}
 	}
 
 	private <T> List<T> getAll(List<? extends T> list, List<Integer> indices) {
@@ -175,6 +200,46 @@ public class GuiElementList extends GuiScreen {
 	private <T> void toggleItem(List<T> list, T item) {
 		if (!list.remove(item)) {
 			list.add(item);
+		}
+	}
+
+	/**
+	 * Shifts the item corresponding to each index left by one. Fails if any of
+	 * the indices are 0.
+	 *
+	 * @return {@code true} if successful.
+	 */
+	private boolean shiftLeft(List<?> list, Iterable<Integer> indices) {
+		List<Integer> sortedIndices = Ordering.natural()
+			.immutableSortedCopy(indices);
+
+		if (sortedIndices.isEmpty() || sortedIndices.get(0) == 0) {
+			return false;
+		} else {
+			for (int i : sortedIndices) {
+				Collections.swap(list, i, i - 1);
+			}
+			return true;
+		}
+	}
+
+	/**
+	 * Shifts the item corresponding to each index right by one. Fails if any of
+	 * the indices are {@code list.size() - 1}.
+	 *
+	 * @return {@code true} if successful.
+	 */
+	private boolean shiftRight(List<?> list, Iterable<Integer> indices) {
+		List<Integer> sortedIndices = Ordering.natural().reverse()
+			.immutableSortedCopy(indices);
+
+		if (sortedIndices.isEmpty() || sortedIndices.get(0) == list.size() - 1) {
+			return false;
+		} else {
+			for (int i : sortedIndices) {
+				Collections.swap(list, i, i + 1);
+			}
+			return true;
 		}
 	}
 
