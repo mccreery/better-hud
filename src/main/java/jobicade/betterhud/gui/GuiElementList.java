@@ -155,6 +155,8 @@ public class GuiElementList extends GuiScreen {
 	}
 
 	private void drawViewport(Rect viewport, GuiScrollbar scrollbar, Grid<ListItem> list) {
+		GlUtil.drawRect(viewport, new Color(32, 0, 0, 0));
+
 		GlUtil.beginScissor(viewport, new ScaledResolution(Minecraft.getMinecraft()));
 		list.setBounds(getListBounds(viewport, scrollbar, list)).render();
 		GlUtil.endScissor();
