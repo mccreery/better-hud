@@ -39,6 +39,11 @@ public class GuiElementList extends GuiScreen {
 	private List<Integer> disabledSelection = new ArrayList<>();
 	private List<Integer> enabledSelection = new ArrayList<>();
 
+	private GuiActionButton swapButton;
+	private GuiActionButton upButton;
+	private GuiActionButton downButton;
+	private GuiActionButton configButton;
+
 	@Override
 	public void initGui() {
 		super.initGui();
@@ -56,23 +61,23 @@ public class GuiElementList extends GuiScreen {
 		buttonList.add(backButton);
 
 		Point center = disabledViewport.getAnchor(Direction.CENTER).add(enabledViewport.getAnchor(Direction.CENTER)).scale(0.5f, 0.5f);
-		GuiActionButton swapButton = new GuiActionButton("<>")
+		swapButton = new GuiActionButton("<>")
 			.setBounds(new Rect(center.getX() - 10, center.getY() - 10, 20, 20))
 			.setCallback(b -> swapSelected());
 		buttonList.add(swapButton);
 
 		Point rightAnchor = enabledViewport.getAnchor(Direction.EAST).add(4, 0);
-		GuiActionButton upButton = new GuiTexturedButton(new Rect(60, 0, 20, 20))
+		upButton = new GuiTexturedButton(new Rect(60, 0, 20, 20))
 			.setBounds(new Rect(rightAnchor.getX(), rightAnchor.getY() - 44, 20, 20))
 			.setCallback(b -> moveSelectionUp());
 		buttonList.add(upButton);
 
-		GuiActionButton downButton = new GuiTexturedButton(new Rect(80, 0, 20, 20))
+		downButton = new GuiTexturedButton(new Rect(80, 0, 20, 20))
 			.setBounds(new Rect(rightAnchor.getX(), rightAnchor.getY() - 22, 20, 20))
 			.setCallback(b -> moveSelectionDown());
 		buttonList.add(downButton);
 
-		GuiActionButton configButton = new GuiTexturedButton(new Rect(40, 0, 20, 20))
+		configButton = new GuiTexturedButton(new Rect(40, 0, 20, 20))
 			.setBounds(new Rect(rightAnchor.getX(), rightAnchor.getY(), 20, 20))
 			.setCallback(b -> openSettings());
 		buttonList.add(configButton);
@@ -85,6 +90,22 @@ public class GuiElementList extends GuiScreen {
 		if (button instanceof GuiActionButton) {
 			((GuiActionButton)button).actionPerformed();
 		}
+	}
+
+	/**
+	 * Checks if each button is enabled.
+	 */
+	private void checkButtons() {
+		swapButton.enabled = !disabledSelection.isEmpty() || !enabledSelection.isEmpty();
+
+		if (enabledSelection.isEmpty()) {
+			upButton.enabled = false;
+			downButton.enabled = false;
+		} else {
+			upButton.enabled = Collections.min(enabledSelection) != 0;
+			downButton.enabled = Collections.max(enabledSelection) != HudElements.get().getEnabled().size() - 1;
+		}
+		configButton.enabled = !enabledSelection.isEmpty();
 	}
 
 	private void openSettings() {
@@ -112,21 +133,19 @@ public class GuiElementList extends GuiScreen {
 
 	private void moveSelectionUp() {
 		if (shiftLeft(HudElements.get().getEnabled(), enabledSelection)) {
-			updateLists();
-
 			for (int i = 0; i < enabledSelection.size(); i++) {
 				enabledSelection.set(i, enabledSelection.get(i) - 1);
 			}
+			updateLists();
 		}
 	}
 
 	private void moveSelectionDown() {
 		if (shiftRight(HudElements.get().getEnabled(), enabledSelection)) {
-			updateLists();
-
 			for (int i = 0; i < enabledSelection.size(); i++) {
 				enabledSelection.set(i, enabledSelection.get(i) + 1);
 			}
+			updateLists();
 		}
 	}
 
@@ -140,6 +159,8 @@ public class GuiElementList extends GuiScreen {
 
 		enabledList = getList(HudElements.get().getEnabled(), enabledSelection);
 		enabledScroll.setContentHeight(enabledList.getPreferredSize().getHeight() + SPACER * 2);
+
+		checkButtons();
 	}
 
 	private Grid<ListItem> getList(List<HudElement<?>> elements, List<Integer> selection) {
@@ -179,6 +200,7 @@ public class GuiElementList extends GuiScreen {
 			if (!selectedAny) {
 				list.getSource().get(0).selection.clear();
 			}
+			checkButtons();
 		}
 	}
 
