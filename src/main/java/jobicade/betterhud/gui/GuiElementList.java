@@ -91,23 +91,24 @@ public class GuiElementList extends GuiScreen {
 		int index = enabled.indexOf(selected);
 		if (index >= 0) {
 			registry.disableElement(selected);
-
-			if (enabled.isEmpty()) {
-				selected = null;
-			} else {
-				selected = enabled.get(Math.min(index, enabled.size() - 1));
-			}
+			checkSelection(enabled, index);
 		} else {
 			index = disabled.indexOf(selected);
 			registry.enableElement(selected);
-
-			if (disabled.isEmpty()) {
-				selected = null;
-			} else {
-				selected = disabled.get(Math.min(index, disabled.size() - 1));
-			}
+			checkSelection(disabled, index);
 		}
 		updateLists();
+	}
+
+	private void checkSelection(List<HudElement<?>> list, int selectedIndex) {
+		if (list.isEmpty()) {
+			selected = null;
+		} else {
+			if (selectedIndex >= list.size()) {
+				selectedIndex = list.size() - 1;
+			}
+			selected = list.get(selectedIndex);
+		}
 	}
 
 	private void updateLists() {
