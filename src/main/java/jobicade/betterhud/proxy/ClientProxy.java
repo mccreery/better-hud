@@ -11,7 +11,6 @@ import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.gui.GuiHudMenu;
 import jobicade.betterhud.registry.HudElements;
 import jobicade.betterhud.registry.HudRegistryEvent;
-import jobicade.betterhud.registry.SortField;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
@@ -43,7 +42,7 @@ public class ClientProxy implements HudSidedProxy {
             IReloadableResourceManager reloadableManager = (IReloadableResourceManager)manager;
 
             // Language dictates alphabetical order
-            reloadableManager.registerReloadListener(m -> HudElements.get().invalidateSorts(SortField.ALPHABETICAL));
+            reloadableManager.registerReloadListener(m -> HudElements.get().sortDisabled());
             reloadableManager.registerReloadListener(configManager);
         } else {
             BetterHud.getLogger().warn("Unable to register alphabetical sort update on language change");
