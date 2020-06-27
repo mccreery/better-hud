@@ -57,6 +57,10 @@ public class GuiScrollbar extends Gui {
 		this.highlight = highlight;
 	}
 
+	public Rect getBounds() {
+		return bounds;
+	}
+
 	public int getScroll() {
 		return scroll;
 	}

@@ -130,13 +130,20 @@ public class GuiElementList extends GuiScreen {
 	}
 
 	private void mouseClicked(int mouseX, int mouseY, Rect viewport, GuiScrollbar scrollbar, Grid<ListItem> list) {
-		if(viewport.contains(mouseX, mouseY)) {
+		if(viewport.contains(mouseX, mouseY) && !scrollbar.getBounds().contains(mouseX, mouseY)) {
+			boolean selectedAny = false;
+
 			for(int i = 0; i < list.getSource().size(); i++) {
 				Rect listBounds = getListBounds(viewport, scrollbar, list);
 
 				if(list.getCellBounds(listBounds, new Point(0, i)).contains(mouseX, mouseY)) {
 					addToSelection(list.getSource().get(i).selection, i);
+					selectedAny = true;
 				}
+			}
+
+			if (!selectedAny) {
+				list.getSource().get(0).selection.clear();
 			}
 		}
 	}
