@@ -197,7 +197,7 @@ public class GuiElementList extends GuiScreen {
 				}
 			}
 
-			if (!selectedAny) {
+			if (!selectedAny && !list.getSource().isEmpty()) {
 				list.getSource().get(0).selection.clear();
 			}
 			checkButtons();
