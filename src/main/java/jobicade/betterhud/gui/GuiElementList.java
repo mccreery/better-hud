@@ -34,10 +34,6 @@ public class GuiElementList extends GuiScreen {
 
 	private HudElement<?> selected;
 
-	private GuiButton backButton;
-	private GuiButton swapButton;
-	private GuiButton upButton, downButton, configButton;
-
 	@Override
 	public void initGui() {
 		super.initGui();
@@ -49,21 +45,30 @@ public class GuiElementList extends GuiScreen {
 		enabledViewport = new Rect(200, 0).align(origin.add(14, 0), Direction.SOUTH_WEST).withBottom(height - 20);
 		enabledScroll = new GuiScrollbar(enabledViewport, 0);
 
-		backButton = new GuiButton(0, (width - 200) / 2, origin.getY() - 24, 200, 20, I18n.format("menu.returnToGame"));
+		GuiActionButton backButton = new GuiActionButton(I18n.format("menu.returnToGame"))
+			.setBounds(new Rect((width - 200) / 2, origin.getY() - 24, 200, 20))
+			.setCallback(b -> mc.displayGuiScreen(null));
+		buttonList.add(backButton);
 
 		Point center = disabledViewport.getAnchor(Direction.CENTER).add(enabledViewport.getAnchor(Direction.CENTER)).scale(0.5f, 0.5f);
-		swapButton = new GuiButton(1, center.getX() - 10, center.getY() - 10, 20, 20, "<>");
+		GuiActionButton swapButton = new GuiActionButton("<>")
+			.setBounds(new Rect(center.getX() - 10, center.getY() - 10, 20, 20))
+			.setCallback(b -> swapSelected());
+		buttonList.add(swapButton);
 
 		Point rightAnchor = enabledViewport.getAnchor(Direction.EAST).add(4, 0);
-		upButton = new GuiButton(2, rightAnchor.getX(), rightAnchor.getY() - 44, 20, 20, "Up");
-		downButton = new GuiButton(3, rightAnchor.getX(), rightAnchor.getY() - 22, 20, 20, "Down");
-		configButton = new GuiButton(4, rightAnchor.getX(), rightAnchor.getY(), 20, 20, "Config");
-
-		buttonList.add(backButton);
-		buttonList.add(swapButton);
+		GuiActionButton upButton = new GuiTexturedButton(new Rect(60, 0, 20, 20))
+			.setBounds(new Rect(rightAnchor.getX(), rightAnchor.getY() - 44, 20, 20));
 		buttonList.add(upButton);
+
+		GuiActionButton downButton = new GuiTexturedButton(new Rect(80, 0, 20, 20))
+			.setBounds(new Rect(rightAnchor.getX(), rightAnchor.getY() - 22, 20, 20));
 		buttonList.add(downButton);
+
+		GuiActionButton configButton = new GuiTexturedButton(new Rect(40, 0, 20, 20))
+			.setBounds(new Rect(rightAnchor.getX(), rightAnchor.getY(), 20, 20));
 		buttonList.add(configButton);
+
 		updateLists();
 	}
 
@@ -71,11 +76,6 @@ public class GuiElementList extends GuiScreen {
 	protected void actionPerformed(GuiButton button) throws IOException {
 		if (button instanceof GuiActionButton) {
 			((GuiActionButton)button).actionPerformed();
-		} else {
-			switch (button.id) {
-				case 0: mc.displayGuiScreen(null); break;
-				case 1: swapSelected(); break;
-			}
 		}
 	}
 
