@@ -302,9 +302,8 @@ public final class GlUtil {
 	}
 
 	public static void beginScissor(Rect scissorRect, ScaledResolution resolution) {
-		final Rect scaledRect = scissorRect
-			.withY(resolution.getScaledHeight() - scissorRect.getBottom())
-			.scale(resolution.getScaleFactor());
+		Rect scaledRect = scissorRect.scale(resolution.getScaleFactor());
+		scaledRect = scaledRect.withY(Minecraft.getMinecraft().displayHeight - scaledRect.getBottom());
 
 		GL11.glEnable(GL11.GL_SCISSOR_TEST);
 		GL11.glScissor(scaledRect.getX(), scaledRect.getY(), scaledRect.getWidth(), scaledRect.getHeight());
