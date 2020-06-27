@@ -43,10 +43,10 @@ public class GuiElementList extends GuiScreen {
 		super.initGui();
 		Point origin = new Point(width / 2, height / 16 + 20);
 
-		disabledViewport = new Rect(300, 0).align(origin.sub(14, 0), Direction.SOUTH_EAST).withBottom(height - 20);
+		disabledViewport = new Rect(200, 0).align(origin.sub(14, 0), Direction.SOUTH_EAST).withBottom(height - 20);
 		disabledScroll = new GuiScrollbar(disabledViewport, 0);
 
-		enabledViewport = new Rect(300, 0).align(origin.add(14, 0), Direction.SOUTH_WEST).withBottom(height - 20);
+		enabledViewport = new Rect(200, 0).align(origin.add(14, 0), Direction.SOUTH_WEST).withBottom(height - 20);
 		enabledScroll = new GuiScrollbar(enabledViewport, 0);
 
 		backButton = new GuiButton(0, (width - 200) / 2, origin.getY() - 24, 200, 20, I18n.format("menu.returnToGame"));
@@ -171,7 +171,7 @@ public class GuiElementList extends GuiScreen {
 
 	private Rect getListBounds(Rect viewport, GuiScrollbar scrollbar, Grid<ListItem> list) {
 		Point origin = viewport.getAnchor(Direction.NORTH).sub(0, scrollbar.getScroll() - SPACER);
-		return new Rect(list.getPreferredSize().withWidth(200)).align(origin, Direction.NORTH);
+		return new Rect(list.getPreferredSize().withWidth(150)).align(origin, Direction.NORTH);
 	}
 
 	@Override
