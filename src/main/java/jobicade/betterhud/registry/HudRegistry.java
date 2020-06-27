@@ -72,6 +72,14 @@ public abstract class HudRegistry<T extends HudElement<?>> {
     private final List<T> disabledElements = new ArrayList<>();
     private final List<T> enabledElements = new ArrayList<>();
 
+    public List<T> getDisabled() {
+        return disabledElements;
+    }
+
+    public List<T> getEnabled() {
+        return enabledElements;
+    }
+
     public final void enableElement(T element) {
         // Returns true if element was in disabled
         if (disabledElements.remove(element)) {

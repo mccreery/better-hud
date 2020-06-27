@@ -8,7 +8,7 @@ import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.config.ConfigManager;
 import jobicade.betterhud.config.HudConfig;
 import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.gui.GuiHudMenu;
+import jobicade.betterhud.gui.GuiElementList;
 import jobicade.betterhud.registry.HudElements;
 import jobicade.betterhud.registry.HudRegistryEvent;
 import net.minecraft.client.Minecraft;
@@ -70,7 +70,7 @@ public class ClientProxy implements HudSidedProxy {
     @SubscribeEvent
     public void onKey(KeyInputEvent event) {
         if (Minecraft.getMinecraft().inGameHasFocus && menuKey.isPressed()) {
-            Minecraft.getMinecraft().displayGuiScreen(new GuiHudMenu(configManager));
+            Minecraft.getMinecraft().displayGuiScreen(new GuiElementList());
         }
     }
 }
