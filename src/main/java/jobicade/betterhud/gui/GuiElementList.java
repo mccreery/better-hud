@@ -42,10 +42,13 @@ public class GuiElementList extends GuiMenuScreen {
 	private List<Integer> disabledSelection = new ArrayList<>();
 	private List<Integer> enabledSelection = new ArrayList<>();
 
-	private GuiActionButton swapButton;
 	private GuiActionButton upButton;
 	private GuiActionButton downButton;
 	private GuiActionButton configButton;
+
+	private GuiTexturedButton moveButton;
+	private GuiActionButton enableAllButton;
+	private GuiActionButton disableAllButton;
 
 	public GuiElementList(ConfigManager configManager) {
 		this.configManager = configManager;
@@ -77,28 +80,64 @@ public class GuiElementList extends GuiMenuScreen {
 		enabledViewport = new Rect(200, 0).align(getOrigin().add(14, 67), Direction.SOUTH_WEST).withBottom(height - 30);
 		enabledScroll = new GuiScrollbar(enabledViewport, 0);
 
-		Point center = disabledViewport.getAnchor(Direction.CENTER).add(enabledViewport.getAnchor(Direction.CENTER)).scale(0.5f, 0.5f);
-		swapButton = new GuiActionButton("<>")
-			.setBounds(new Rect(center.getX() - 10, center.getY() - 10, 20, 20))
-			.setCallback(b -> swapSelected());
-		buttonList.add(swapButton);
+		Point centerButtons = disabledViewport.getAnchor(Direction.EAST).add(SPACER, 0);
 
-		Point rightAnchor = enabledViewport.getAnchor(Direction.EAST).add(4, 0);
-		upButton = new GuiTexturedButton(new Rect(60, 0, 20, 20))
-			.setBounds(new Rect(rightAnchor.getX(), rightAnchor.getY() - 44, 20, 20))
-			.setCallback(b -> moveSelectionUp());
+		moveButton = new GuiTexturedButton(new Rect(120, 0, 20, 20));
+		moveButton.setBounds(new Rect(20, 20).align(centerButtons.add(0, -22), Direction.WEST));
+		moveButton.setCallback(b -> swapSelected());
+		buttonList.add(moveButton);
+
+		enableAllButton = new GuiTexturedButton(new Rect(160, 0, 20, 20));
+		enableAllButton.setBounds(new Rect(20, 20).align(centerButtons, Direction.WEST));
+		enableAllButton.setCallback(b -> enableAll());
+		buttonList.add(enableAllButton);
+
+		disableAllButton = new GuiTexturedButton(new Rect(140, 0, 20, 20));
+		disableAllButton.setBounds(new Rect(20, 20).align(centerButtons.add(0, 22), Direction.WEST));
+		disableAllButton.setCallback(b -> disableAll());
+		buttonList.add(disableAllButton);
+
+		Point rightButtons = enabledViewport.getAnchor(Direction.EAST).add(SPACER, 0);
+
+		upButton = new GuiTexturedButton(new Rect(60, 0, 20, 20));
+		upButton.setBounds(new Rect(20, 20).align(rightButtons.add(0, -22), Direction.WEST));
+		upButton.setCallback(b -> moveSelectionUp());
 		buttonList.add(upButton);
 
-		downButton = new GuiTexturedButton(new Rect(80, 0, 20, 20))
-			.setBounds(new Rect(rightAnchor.getX(), rightAnchor.getY() - 22, 20, 20))
-			.setCallback(b -> moveSelectionDown());
+		downButton = new GuiTexturedButton(new Rect(80, 0, 20, 20));
+		downButton.setBounds(new Rect(20, 20).align(rightButtons, Direction.WEST));
+		downButton.setCallback(b -> moveSelectionDown());
 		buttonList.add(downButton);
 
-		configButton = new GuiTexturedButton(new Rect(40, 0, 20, 20))
-			.setBounds(new Rect(rightAnchor.getX(), rightAnchor.getY(), 20, 20))
-			.setCallback(b -> openSettings());
+		configButton = new GuiTexturedButton(new Rect(40, 0, 20, 20));
+		configButton.setBounds(new Rect(20, 20).align(rightButtons.add(0, 22), Direction.WEST));
+		configButton.setCallback(b -> openSettings());
 		buttonList.add(configButton);
 
+		updateLists();
+	}
+
+	private void enableAll() {
+		List<HudElement<?>> disabled = new ArrayList<>(HudElements.get().getDisabled());
+
+		for (HudElement<?> element : disabled) {
+			HudElements.get().enableElement(element);
+		}
+
+		disabledSelection.clear();
+		enabledSelection.clear();
+		updateLists();
+	}
+
+	private void disableAll() {
+		List<HudElement<?>> enabled = new ArrayList<>(HudElements.get().getEnabled());
+
+		for (HudElement<?> element : enabled) {
+			HudElements.get().disableElement(element);
+		}
+
+		disabledSelection.clear();
+		enabledSelection.clear();
 		updateLists();
 	}
 
@@ -111,7 +150,18 @@ public class GuiElementList extends GuiMenuScreen {
 	 * Checks if each button is enabled.
 	 */
 	private void checkButtons() {
-		swapButton.enabled = !disabledSelection.isEmpty() || !enabledSelection.isEmpty();
+		enableAllButton.enabled = !HudElements.get().getDisabled().isEmpty();
+		disableAllButton.enabled = !HudElements.get().getEnabled().isEmpty();
+
+		if (!disabledSelection.isEmpty()) {
+			moveButton.enabled = true;
+			moveButton.setTexture(new Rect(120, 0, 20, 20));
+		} else if (!enabledSelection.isEmpty()) {
+			moveButton.enabled = true;
+			moveButton.setTexture(new Rect(100, 0, 20, 20));
+		} else {
+			moveButton.enabled = false;
+		}
 
 		if (enabledSelection.isEmpty()) {
 			upButton.enabled = false;
