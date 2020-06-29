@@ -29,7 +29,7 @@ public class GuiMenuScreen extends GuiScreen {
         return origin;
     }
 
-    public void setTitle(String title) {
+    protected void setTitle(String title) {
         this.title = title;
     }
 

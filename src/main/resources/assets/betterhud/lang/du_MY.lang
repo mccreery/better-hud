@@ -15,6 +15,7 @@
 #betterHud.menu.disableAll=Disable All
 #betterHud.menu.reorder=Reorder...
 #betterHud.menu.saveLoad=Save/Load...
+#betterHud.menu.modSettings=Mod Settings...
 #betterHud.menu.lastPage=Last Page
 #betterHud.menu.nextPage=Next Page
 #betterHud.menu.page=Page %s
@@ -32,6 +33,9 @@
 # Menu text
 #betterHud.menu.unsnap=Hold %s to disable snapping
 #betterHud.menu.unsupported=This element is not supported by the server
+#betterHud.menu.modifiers=[%s] Select multiple   [%s] Select range
+#betterHud.menu.enabledElements=Enabled Elements
+#betterHud.menu.disabledElements=Disabled Elements
 
 # Element names
 #betterHud.element.global=Better HUD

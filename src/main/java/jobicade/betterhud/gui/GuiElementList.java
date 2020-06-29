@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.Ordering;
 
+import jobicade.betterhud.config.ConfigManager;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
@@ -22,12 +23,13 @@ import jobicade.betterhud.render.Grid;
 import jobicade.betterhud.render.Label;
 import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.I18n;
+import net.minecraftforge.client.settings.KeyModifier;
 
-public class GuiElementList extends GuiScreen {
+public class GuiElementList extends GuiMenuScreen {
+	private final ConfigManager configManager;
+
 	private GuiScrollbar disabledScroll;
 	private Rect disabledViewport;
 	private Grid<ListItem> disabledList;
@@ -44,21 +46,35 @@ public class GuiElementList extends GuiScreen {
 	private GuiActionButton downButton;
 	private GuiActionButton configButton;
 
+	public GuiElementList(ConfigManager configManager) {
+		this.configManager = configManager;
+		setTitle(I18n.format("betterHud.menu.hudSettings"));
+	}
+
 	@Override
 	public void initGui() {
 		super.initGui();
-		Point origin = new Point(width / 2, height / 16 + 20);
-
-		disabledViewport = new Rect(200, 0).align(origin.sub(14, 0), Direction.SOUTH_EAST).withBottom(height - 20);
-		disabledScroll = new GuiScrollbar(disabledViewport, 0);
-
-		enabledViewport = new Rect(200, 0).align(origin.add(14, 0), Direction.SOUTH_WEST).withBottom(height - 20);
-		enabledScroll = new GuiScrollbar(enabledViewport, 0);
 
 		GuiActionButton backButton = new GuiActionButton(I18n.format("menu.returnToGame"))
-			.setBounds(new Rect((width - 200) / 2, origin.getY() - 24, 200, 20))
+			.setBounds(new Rect(200, 20).align(getOrigin(), Direction.NORTH))
 			.setCallback(b -> mc.displayGuiScreen(null));
+
+		GuiActionButton saveLoadButton = new GuiActionButton(I18n.format("betterHud.menu.saveLoad"))
+			.setBounds(new Rect(150, 20).align(getOrigin().add(-1, 22), Direction.NORTH_EAST))
+			.setCallback(b -> mc.displayGuiScreen(new GuiConfigSaves(configManager, this)));
+
+		GuiActionButton modSettingsButton = new GuiActionButton(I18n.format("betterHud.menu.modSettings"))
+			.setBounds(new Rect(150, 20).align(getOrigin().add(1, 22), Direction.NORTH_WEST));
+
 		buttonList.add(backButton);
+		buttonList.add(saveLoadButton);
+		buttonList.add(modSettingsButton);
+
+		disabledViewport = new Rect(200, 0).align(getOrigin().add(-14, 67), Direction.SOUTH_EAST).withBottom(height - 30);
+		disabledScroll = new GuiScrollbar(disabledViewport, 0);
+
+		enabledViewport = new Rect(200, 0).align(getOrigin().add(14, 67), Direction.SOUTH_WEST).withBottom(height - 30);
+		enabledScroll = new GuiScrollbar(enabledViewport, 0);
 
 		Point center = disabledViewport.getAnchor(Direction.CENTER).add(enabledViewport.getAnchor(Direction.CENTER)).scale(0.5f, 0.5f);
 		swapButton = new GuiActionButton("<>")
@@ -83,13 +99,6 @@ public class GuiElementList extends GuiScreen {
 		buttonList.add(configButton);
 
 		updateLists();
-	}
-
-	@Override
-	protected void actionPerformed(GuiButton button) throws IOException {
-		if (button instanceof GuiActionButton) {
-			((GuiActionButton)button).actionPerformed();
-		}
 	}
 
 	/**
@@ -302,7 +311,6 @@ public class GuiElementList extends GuiScreen {
 
 	@Override
 	public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-		drawDefaultBackground();
 		super.drawScreen(mouseX, mouseY, partialTicks);
 
 		drawViewport(disabledViewport, disabledScroll, disabledList);
@@ -310,6 +318,18 @@ public class GuiElementList extends GuiScreen {
 
 		drawViewport(enabledViewport, enabledScroll, enabledList);
 		enabledScroll.drawScrollbar(mouseX, mouseY);
+
+		String hint = I18n.format("betterHud.menu.modifiers",
+			KeyModifier.CONTROL.getLocalizedComboName(-100),
+			KeyModifier.SHIFT.getLocalizedComboName(-100));
+
+		drawCenteredString(fontRenderer, hint, width / 2, height - fontRenderer.FONT_HEIGHT - SPACER, 0xffffff);
+
+		Point p = disabledViewport.getAnchor(Direction.NORTH).sub(0, fontRenderer.FONT_HEIGHT + SPACER);
+		drawCenteredString(fontRenderer, I18n.format("betterHud.menu.disabledElements"), p.getX(), p.getY(), 0xffffff);
+
+		p = enabledViewport.getAnchor(Direction.NORTH).sub(0, fontRenderer.FONT_HEIGHT + SPACER);
+		drawCenteredString(fontRenderer, I18n.format("betterHud.menu.enabledElements"), p.getX(), p.getY(), 0xffffff);
 	}
 
 	private void drawViewport(Rect viewport, GuiScrollbar scrollbar, Grid<ListItem> list) {

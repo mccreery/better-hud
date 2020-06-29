@@ -15,6 +15,7 @@ betterHud.menu.enableAll=Ativar tudo
 betterHud.menu.disableAll=Desativar tudo
 betterHud.menu.reorder=Reordenar...
 betterHud.menu.saveLoad=Salvar/Carregar...
+#betterHud.menu.modSettings=Mod Settings...
 betterHud.menu.lastPage=Página anterior
 betterHud.menu.nextPage=Próxima página
 betterHud.menu.page=Página %s
@@ -32,6 +33,9 @@ betterHud.menu.moveBottom=Mover para o Fundo
 # Menu text
 betterHud.menu.unsnap=Pressione %s para desativar o snapping.
 betterHud.menu.unsupported=Este recurso não está disponível neste servidor.
+#betterHud.menu.modifiers=[%s] Select multiple   [%s] Select range
+#betterHud.menu.enabledElements=Enabled Elements
+#betterHud.menu.disabledElements=Disabled Elements
 
 # Element names
 betterHud.element.global=Better HUD

@@ -70,7 +70,7 @@ public class ClientProxy implements HudSidedProxy {
     @SubscribeEvent
     public void onKey(KeyInputEvent event) {
         if (Minecraft.getMinecraft().inGameHasFocus && menuKey.isPressed()) {
-            Minecraft.getMinecraft().displayGuiScreen(new GuiElementList());
+            Minecraft.getMinecraft().displayGuiScreen(new GuiElementList(configManager));
         }
     }
 }
