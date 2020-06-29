@@ -10,6 +10,7 @@ import java.util.stream.Collectors;
 
 import com.google.common.collect.Ordering;
 
+import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.config.ConfigManager;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Direction;
@@ -99,6 +100,11 @@ public class GuiElementList extends GuiMenuScreen {
 		buttonList.add(configButton);
 
 		updateLists();
+	}
+
+	@Override
+	public void onGuiClosed() {
+		BetterHud.getProxy().getConfig().saveSettings();
 	}
 
 	/**
