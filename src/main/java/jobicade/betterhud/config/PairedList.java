@@ -51,6 +51,14 @@ public final class PairedList<T> {
     }
 
     /**
+     * Enables all disabled items.
+     */
+    public void enableAll() {
+        enabled.addAll(disabled);
+        disabled.clear();
+    }
+
+    /**
      * Disables {@code item} unless it is already disabled.
      */
     public void disable(T item) {
@@ -58,5 +66,13 @@ public final class PairedList<T> {
         if (disabled.remove(item)) {
             enabled.add(item);
         }
+    }
+
+    /**
+     * Disables all enabled items.
+     */
+    public void disableAll() {
+        disabled.addAll(enabled);
+        enabled.clear();
     }
 }
