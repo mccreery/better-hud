@@ -22,8 +22,8 @@ public class HudConfig extends Configuration {
 		super(file);
 	}
 
-	private final PairedList<HudElement<?>> enabledList = new PairedList<>(HudElements.get().getRegistered());
-	public PairedList<HudElement<?>> getEnabledList() {
+	private final AddRemoveElementList enabledList = new AddRemoveElementList(HudElements.get().getRegistered());
+	public AddRemoveElementList getEnabledList() {
 		return enabledList;
 	}
 
@@ -31,13 +31,13 @@ public class HudConfig extends Configuration {
 	public void load() {
 		super.load();
 
-		enabledList.disableAll();
+		enabledList.removeAll();
 		String[] enabledNames = getStringList("enabledList", BetterHud.MODID, new String[0], "");
 		for (String name : enabledNames) {
 			HudElement<?> element = HudElements.get().getRegistered(name);
 
 			if (element != null) {
-				enabledList.enable(element);
+				enabledList.add(element);
 			}
 		}
 
