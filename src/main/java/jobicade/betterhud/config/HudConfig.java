@@ -22,9 +22,24 @@ public class HudConfig extends Configuration {
 		super(file);
 	}
 
+	private final PairedList<HudElement<?>> enabledList = new PairedList<>(HudElements.get().getRegistered());
+	public PairedList<HudElement<?>> getEnabledList() {
+		return enabledList;
+	}
+
 	@Override
 	public void load() {
 		super.load();
+
+		enabledList.disableAll();
+		String[] enabledNames = getStringList("enabledList", BetterHud.MODID, new String[0], "");
+		for (String name : enabledNames) {
+			HudElement<?> element = HudElements.get().getRegistered(name);
+
+			if (element != null) {
+				enabledList.enable(element);
+			}
+		}
 
 		for (Map.Entry<Setting, Property> entry : getPropertyMap().entrySet()) {
 			try {
