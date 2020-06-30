@@ -6,6 +6,7 @@ import java.util.List;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.settings.RootSetting;
 import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.gui.ElementCategory;
 import jobicade.betterhud.proxy.ClientProxy;
 import jobicade.betterhud.registry.HudElements;
 import jobicade.betterhud.registry.SortField;
@@ -164,6 +165,19 @@ public abstract class HudElement<T> {
 
 		for(int i = 0; i < prioritySort.size(); i++) {
 			prioritySort.get(i).settings.setPriority(i);
+		}
+	}
+
+	private ElementCategory category = ElementCategory.MISC;
+	public final ElementCategory getCategory() {
+		return category;
+	}
+
+	public final void setCategory(ElementCategory category) {
+		if (category != null) {
+			this.category = category;
+		} else {
+			throw new IllegalArgumentException("null");
 		}
 	}
 
