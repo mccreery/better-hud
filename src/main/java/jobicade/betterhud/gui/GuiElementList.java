@@ -17,6 +17,7 @@ import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Size;
+import jobicade.betterhud.registry.HudElements;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.render.DefaultBoxed;
 import jobicade.betterhud.render.Grid;
@@ -66,7 +67,8 @@ public class GuiElementList extends GuiMenuScreen {
 			.setCallback(b -> mc.displayGuiScreen(new GuiConfigSaves(configManager, this)));
 
 		GuiActionButton modSettingsButton = new GuiActionButton(I18n.format("betterHud.menu.modSettings"))
-			.setBounds(new Rect(150, 20).align(getOrigin().add(1, 22), Direction.NORTH_WEST));
+			.setBounds(new Rect(150, 20).align(getOrigin().add(1, 22), Direction.NORTH_WEST))
+			.setCallback(b -> mc.displayGuiScreen(new GuiElementSettings(HudElements.GLOBAL, this)));
 
 		buttonList.add(backButton);
 		buttonList.add(saveLoadButton);
