@@ -1,8 +1,11 @@
 package jobicade.betterhud.config;
 
 import java.io.File;
+import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.SortedSet;
 
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
@@ -22,24 +25,45 @@ public class HudConfig extends Configuration {
 		super(file);
 	}
 
-	private final ElementSelection enabled = new ElementSelection(HudElements.get().getRegistered());
-	public ElementSelection getEnabled() {
-		return enabled;
+	private SortedSet<HudElement<?>> available;
+	private List<HudElement<?>> selected;
+
+	public Collection<HudElement<?>> getAvailable() {
+		return available;
+	}
+
+	public Collection<HudElement<?>> getSelected() {
+		return selected;
+	}
+
+	/**
+	 * Moves an element from one collection to another if it is present in the
+	 * source and not present in the destination.
+	 *
+	 * @return {@code true} if the element was transferred.
+	 */
+	public static <T> boolean move(T element, Collection<?> from, Collection<T> to) {
+		if (from.contains(element) && !to.contains(element)) {
+			from.remove(element);
+			to.add(element);
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * Moves all elements from one collection to another.
+	 */
+	public static <T> void moveAll(Collection<? extends T> from, Collection<T> to) {
+		to.addAll(from);
+		from.clear();
 	}
 
 	@Override
 	public void load() {
 		super.load();
-
-		enabledList.removeAll();
-		String[] enabledNames = getStringList("enabledList", BetterHud.MODID, new String[0], "");
-		for (String name : enabledNames) {
-			HudElement<?> element = HudElements.get().getRegistered(name);
-
-			if (element != null) {
-				enabledList.add(element);
-			}
-		}
+		loadSelected();
 
 		for (Map.Entry<Setting, Property> entry : getPropertyMap().entrySet()) {
 			try {
@@ -54,6 +78,21 @@ public class HudConfig extends Configuration {
 
 		if (hasChanged()) {
 			save();
+		}
+	}
+
+	private void loadSelected() {
+		available.clear();
+		selected.clear();
+		available.addAll(HudElements.get().getRegistered());
+
+		String[] enabledNames = getStringList("enabledList", BetterHud.MODID, new String[0], "");
+		for (String name : enabledNames) {
+			HudElement<?> element = HudElements.get().getRegistered(name);
+
+			if (element != null) {
+				move(element, available, selected);
+			}
 		}
 	}
 
