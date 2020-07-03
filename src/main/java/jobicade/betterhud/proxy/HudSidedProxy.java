@@ -1,8 +1,11 @@
 package jobicade.betterhud.proxy;
 
 import java.nio.file.Path;
+import java.util.List;
 
 import jobicade.betterhud.config.HudConfig;
+import jobicade.betterhud.element.HudElement;
+import jobicade.betterhud.registry.HudRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
 
@@ -39,6 +42,13 @@ public interface HudSidedProxy {
      * @throws UnsupportedOperationException on the dedicated server.
      */
     default HudConfig getConfig() {
+        throw new UnsupportedOperationException();
+    }
+
+    /**
+     * @throws UnsupportedOperationException on the dedicated server.
+     */
+    default <T extends HudElement<?>> List<T> getEnabled(HudRegistry<T> registry) {
         throw new UnsupportedOperationException();
     }
 }

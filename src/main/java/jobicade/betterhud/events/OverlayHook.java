@@ -4,7 +4,6 @@ import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.registry.HudElements;
 import jobicade.betterhud.registry.OverlayElements;
-import jobicade.betterhud.registry.SortField;
 import jobicade.betterhud.render.GlStateManagerManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -67,7 +66,7 @@ public final class OverlayHook {
         BetterHud.MANAGER.reset(event.getResolution());
         OverlayContext context = new OverlayContext(event, BetterHud.MANAGER);
 
-        for (OverlayElement element : OverlayElements.get().getRegistered(SortField.PRIORITY)) {
+        for (OverlayElement element : BetterHud.getProxy().getEnabled(OverlayElements.get())) {
             loadGlState();
 
             if (shouldRender(element, context)) {

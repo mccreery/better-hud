@@ -1,6 +1,8 @@
 package jobicade.betterhud.proxy;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.lwjgl.input.Keyboard;
 
@@ -10,6 +12,7 @@ import jobicade.betterhud.config.HudConfig;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.gui.GuiElementList;
 import jobicade.betterhud.registry.HudElements;
+import jobicade.betterhud.registry.HudRegistry;
 import jobicade.betterhud.registry.HudRegistryEvent;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IReloadableResourceManager;
@@ -64,6 +67,21 @@ public class ClientProxy implements HudSidedProxy {
     @Override
     public HudConfig getConfig() {
         return configManager.getConfig();
+    }
+
+    @Override
+    public <T extends HudElement<?>> List<T> getEnabled(HudRegistry<T> registry) {
+        List<HudElement<?>> selected = getConfig().getSelected();
+
+        List<T> subclassSelected = new ArrayList<>();
+        for (HudElement<?> element : selected) {
+            T subclass = registry.getRegistered(element.getName());
+
+            if (subclass != null) {
+                subclassSelected.add(subclass);
+            }
+        }
+        return subclassSelected;
     }
 
     @SubscribeEvent
