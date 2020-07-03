@@ -8,7 +8,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 
 public class GuiTexturedButton extends GuiActionButton {
-	private final Rect disabled, inactive, active;
+	private Rect disabled, inactive, active;
 
 	public GuiTexturedButton(Rect disabled) {
 		this(disabled, disabled.getHeight());
@@ -40,6 +40,12 @@ public class GuiTexturedButton extends GuiActionButton {
 			case 1:
 			default: return inactive;
 		}
+	}
+
+	public void setTexture(Rect disabled) {
+		this.disabled = disabled;
+		this.inactive = disabled.withY(disabled.getY() + disabled.getHeight());
+		this.active = disabled.withY(disabled.getY() + disabled.getHeight() * 2);
 	}
 
 	/**

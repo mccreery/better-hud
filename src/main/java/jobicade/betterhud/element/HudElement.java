@@ -1,14 +1,14 @@
 package jobicade.betterhud.element;
 
 import java.util.Arrays;
-import java.util.List;
 
 import jobicade.betterhud.BetterHud;
-import jobicade.betterhud.element.settings.RootSetting;
+import jobicade.betterhud.element.settings.Setting;
+import jobicade.betterhud.element.settings.SettingStub;
 import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.gui.ElementCategory;
 import jobicade.betterhud.proxy.ClientProxy;
 import jobicade.betterhud.registry.HudElements;
-import jobicade.betterhud.registry.SortField;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.eventhandler.Event;
@@ -55,15 +55,7 @@ public abstract class HudElement<T> {
 
 	/** The settings saved to the config file for this element */
 	// TODO NASTY PUBLICSES
-	public final RootSetting settings = new RootSetting();
-
-	public boolean isEnabled() {
-		return settings.isEnabled();
-	}
-
-	public void setEnabled(boolean value) {
-		settings.setEnabled(value);
-	}
+	public final Setting settings = new SettingStub();
 
 	private static final VersionRange DEFAULT_SERVER_DEPENDENCY
 		= VersionRange.newRange(null, Arrays.asList(Restriction.EVERYTHING));
@@ -129,9 +121,10 @@ public abstract class HudElement<T> {
 	/** Renders all elements for the current render event
 	 * @param event The current render event */
 	public static void renderAll(Event event) {
-		for(HudElement<?> element : HudElements.get().getRegistered(SortField.PRIORITY)) {
+		// TODO remove
+		/*for(HudElement<?> element : HudElements.get().getRegistered(SortField.PRIORITY)) {
 			element.tryRender(event);
-		}
+		}*/
 	}
 
 	/** @return The last or appropriate bounds for this element.<br>
@@ -158,12 +151,28 @@ public abstract class HudElement<T> {
 	 */
 	public void init(FMLInitializationEvent event) {}
 
-	public static void normalizePriority() {
-		HudElements.get().invalidateSorts(SortField.PRIORITY);
-		List<HudElement<?>> prioritySort = HudElements.get().getRegistered(SortField.PRIORITY);
+	private ElementCategory category = ElementCategory.MISC;
+	public final ElementCategory getCategory() {
+		return category;
+	}
 
-		for(int i = 0; i < prioritySort.size(); i++) {
-			prioritySort.get(i).settings.setPriority(i);
+	public final void setCategory(ElementCategory category) {
+		if (category != null) {
+			this.category = category;
+		} else {
+			throw new IllegalArgumentException("null");
 		}
+	}
+
+	// Each element must have exactly one instance
+
+	@Override
+	public final boolean equals(Object obj) {
+		return super.equals(obj);
+	}
+
+	@Override
+	public final int hashCode() {
+		return super.hashCode();
 	}
 }
