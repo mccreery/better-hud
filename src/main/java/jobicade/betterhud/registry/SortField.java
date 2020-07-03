@@ -10,18 +10,6 @@ public enum SortField implements Comparator<HudElement<?>> {
 		public int compare(HudElement<?> a, HudElement<?> b) {
 			return a.getLocalizedName().compareTo(b.getLocalizedName());
 		}
-	}, ENABLED("enabled", false) {
-		@Override
-		public int compare(HudElement<?> a, HudElement<?> b) {
-			int compare = Boolean.compare(b.isEnabled(), a.isEnabled());
-			return compare != 0 ? compare : ALPHABETICAL.compare(a, b);
-		}
-	}, PRIORITY("priority", false) {
-		@Override
-		public int compare(HudElement<?> a, HudElement<?> b) {
-			int compare = Integer.compare(a.settings.getPriority(), b.settings.getPriority());
-			return compare != 0 ? compare : ALPHABETICAL.compare(a, b);
-		}
 	};
 
 	private final String unlocalizedName;

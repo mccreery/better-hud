@@ -58,7 +58,8 @@ public class ClientProxy implements HudSidedProxy {
 
     @Override
     public boolean isModEnabled() {
-        return HudElements.GLOBAL.isEnabled() && !(
+        // TODO disable the mod using a setting
+        return !(
             HudElements.GLOBAL.hideOnDebug()
             && Minecraft.getMinecraft().gameSettings.showDebugInfo
         );

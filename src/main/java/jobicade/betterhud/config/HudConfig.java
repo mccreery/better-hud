@@ -13,7 +13,6 @@ import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingValueException;
 import jobicade.betterhud.registry.HudElements;
-import jobicade.betterhud.registry.SortField;
 import jobicade.betterhud.util.SortedSetList;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
@@ -78,9 +77,6 @@ public class HudConfig extends Configuration {
 				BetterHud.getLogger().error("Parsing " + entry.getValue().getName() + "=" + entry.getValue().getString(), e);
 			}
 		}
-
-		HudElements.get().invalidateSorts(SortField.ENABLED);
-		HudElement.normalizePriority();
 
 		if (hasChanged()) {
 			save();

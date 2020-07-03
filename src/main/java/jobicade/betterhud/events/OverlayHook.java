@@ -102,7 +102,7 @@ public final class OverlayHook {
      */
     public static boolean shouldRender(OverlayElement hudElement, OverlayContext context) {
         return hudElement.getServerDependency().containsVersion(BetterHud.getServerVersion())
-            && hudElement.isEnabled()
+            && BetterHud.getProxy().getEnabled(OverlayElements.get()).contains(hudElement)
             && hudElement.shouldRender(context);
     }
 }
