@@ -14,6 +14,8 @@ import jobicade.betterhud.gui.GuiElementList;
 import jobicade.betterhud.registry.HudElements;
 import jobicade.betterhud.registry.HudRegistry;
 import jobicade.betterhud.registry.HudRegistryEvent;
+import jobicade.betterhud.registry.OverlayElements;
+import jobicade.betterhud.util.Tickable.Ticker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
@@ -52,7 +54,10 @@ public class ClientProxy implements HudSidedProxy {
 
         ClientRegistry.registerKeyBinding(menuKey);
         MinecraftForge.EVENT_BUS.register(this);
-        HudElement.initAll(event);
+
+        Ticker.FASTER.register(OverlayElements.BLOOD_SPLATTERS);
+        Ticker.FASTER.register(OverlayElements.WATER_DROPS);
+        Ticker.FAST.register(OverlayElements.CPS);
     }
 
     @Override

@@ -3,32 +3,14 @@ package jobicade.betterhud.element.particles;
 import java.util.ArrayList;
 import java.util.Collection;
 
-import net.minecraft.client.Minecraft;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.entity.living.LivingDamageEvent;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-
 public class BloodSplatters extends ParticleOverlay {
 	public BloodSplatters() {
 		super("bloodSplatters");
 	}
 
-	@Override
-	public void init(FMLInitializationEvent event) {
-		super.init(event);
-		MinecraftForge.EVENT_BUS.register(this);
-	}
-
-	@SubscribeEvent(priority = EventPriority.LOWEST)
-	public void onEntityDamage(LivingDamageEvent event) {
-		if(event.isCanceled() || !event.getEntity().equals(Minecraft.getMinecraft().player)) {
-			return;
-		}
-
+	public void onDamaged(int amount) {
 		int spawnMultiplier = (density.getIndex() + 1) * 4;
-		int count = spawnMultiplier * (int)event.getAmount();
+		int count = spawnMultiplier * amount;
 
 		if(count > 0) {
 			Collection<Particle> toSpawn = new ArrayList<>(count);

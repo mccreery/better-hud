@@ -32,11 +32,6 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
 import net.minecraft.world.IWorldNameable;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraftforge.fml.common.versioning.InvalidVersionSpecificationException;
 import net.minecraftforge.fml.common.versioning.VersionRange;
 
@@ -69,11 +64,6 @@ public class BlockViewer extends TextElement {
 
 			return versionRange.containsVersion(BetterHud.getServerVersion());
 		});
-	}
-
-	@Override
-	public void init(FMLInitializationEvent event) {
-		MinecraftForge.EVENT_BUS.register(this);
 	}
 
 	@Override
@@ -194,20 +184,14 @@ public class BlockViewer extends TextElement {
 		return String.format("%s(%s:%d/#%04d)", ChatFormatting.YELLOW, name, meta, id);
 	}
 
-	@SubscribeEvent
-	public void onPlayerDisconnected(ClientDisconnectionFromServerEvent event) {
-		nameCache.clear();
-	}
-
-	@SubscribeEvent
-	public void onPlayerChangeDimension(PlayerChangedDimensionEvent event) {
-		nameCache.clear();
-	}
-
 	public static final Map<BlockPos, ITextComponent> nameCache = new HashMap<BlockPos, ITextComponent>();
 
 	public void onNameReceived(BlockPos pos, ITextComponent name) {
 		nameCache.put(pos, name);
+	}
+
+	public void onChangeWorld() {
+		nameCache.clear();
 	}
 
 	/** If the client doesn't know the name of an inventory, this method

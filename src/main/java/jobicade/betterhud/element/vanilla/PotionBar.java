@@ -8,7 +8,6 @@ import java.util.Collections;
 import java.util.List;
 import java.util.stream.Stream;
 
-import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingBoolean;
@@ -24,11 +23,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class PotionBar extends OverlayElement {
 	public static final ResourceLocation INVENTORY = new ResourceLocation("textures/gui/container/inventory.png");
@@ -43,19 +37,6 @@ public class PotionBar extends OverlayElement {
 			position = new SettingPosition(DirectionOptions.X, DirectionOptions.CORNERS),
 			showDuration = new SettingBoolean("duration").setValuePrefix(SettingBoolean.VISIBLE)
 		);
-	}
-
-	@Override
-	public void init(FMLInitializationEvent event) {
-		MinecraftForge.EVENT_BUS.register(this);
-	}
-
-	@SubscribeEvent
-	public void onRenderTick(RenderGameOverlayEvent.Pre event) {
-		// TODO use same method as other vanilla elements not canceling
-		if (BetterHud.getProxy().isModEnabled() && event.getType() == ElementType.POTION_ICONS) {
-			event.setCanceled(true);
-		}
 	}
 
 	@Override

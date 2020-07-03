@@ -2,15 +2,11 @@ package jobicade.betterhud.element;
 
 import java.util.Arrays;
 
-import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingStub;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.ElementCategory;
-import jobicade.betterhud.proxy.ClientProxy;
-import jobicade.betterhud.registry.HudElements;
 import net.minecraft.client.resources.I18n;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.versioning.InvalidVersionSpecificationException;
 import net.minecraftforge.fml.common.versioning.Restriction;
 import net.minecraftforge.fml.common.versioning.VersionRange;
@@ -108,24 +104,6 @@ public abstract class HudElement<T> {
 	public Rect getLastBounds() {
 		return lastBounds;
 	}
-
-	/** Calls {@link #init(FMLInitializationEvent)} on all elements
-	 * @see #init(FMLInitializationEvent)
-	 * @see BetterHud#init(FMLInitializationEvent) */
-	public static void initAll(FMLInitializationEvent event) {
-		for(HudElement<?> element : HudElements.get().getRegistered()) {
-			element.init(event);
-		}
-	}
-
-	/**
-	 * Called for all elements during {@link FMLInitializationEvent} on the
-	 * physical client only. Elements registering themselves as event
-	 * subscribers can only use client-side events.
-	 *
-	 * @see ClientProxy#init(FMLInitializationEvent)
-	 */
-	public void init(FMLInitializationEvent event) {}
 
 	private ElementCategory category = ElementCategory.MISC;
 	public final ElementCategory getCategory() {

@@ -3,18 +3,12 @@ package jobicade.betterhud.element.text;
 import java.util.Arrays;
 import java.util.List;
 
-import org.lwjgl.input.Mouse;
-
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingSlider;
 import jobicade.betterhud.util.MathUtil;
 import jobicade.betterhud.util.Tickable;
 import net.minecraft.client.resources.I18n;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent.MouseInputEvent;
 
 public class CpsCount extends TextElement implements Tickable {
 	private SettingSlider timeoutMax;
@@ -41,17 +35,8 @@ public class CpsCount extends TextElement implements Tickable {
 		);
 	}
 
-	@Override
-	public void init(FMLInitializationEvent event) {
-		Ticker.FAST.register(this);
-		MinecraftForge.EVENT_BUS.register(this);
-	}
-
-	@SubscribeEvent
-	public void onClick(MouseInputEvent event) {
-		if(Mouse.getEventButton() != -1 && Mouse.getEventButtonState()) {
-			++clickHistory[i];
-		}
+	public void onClick() {
+		++clickHistory[i];
 	}
 
 	@Override

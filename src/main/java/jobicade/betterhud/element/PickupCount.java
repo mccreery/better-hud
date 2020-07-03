@@ -21,8 +21,6 @@ import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.items.ItemHandlerHelper;
 
 public class PickupCount extends OverlayElement {
@@ -44,11 +42,6 @@ public class PickupCount extends OverlayElement {
 				}
 			}
 		);
-	}
-
-	@Override
-	public void init(FMLInitializationEvent event) {
-		MinecraftForge.EVENT_BUS.register(this);
 	}
 
 	/**

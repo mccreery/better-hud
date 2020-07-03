@@ -11,7 +11,6 @@ import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.events.OverlayHook;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.Tickable;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 
 public abstract class ParticleOverlay extends OverlayElement implements Tickable {
 	protected SettingChoose density;
@@ -26,11 +25,6 @@ public abstract class ParticleOverlay extends OverlayElement implements Tickable
 	 * Default implementation kills dead particles */
 	protected void updateParticles() {
 		particles.removeIf(Particle::isDead);
-	}
-
-	@Override
-	public void init(FMLInitializationEvent event) {
-		Ticker.FASTER.register(this);
 	}
 
 	@Override
