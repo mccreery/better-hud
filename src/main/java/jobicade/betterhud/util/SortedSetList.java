@@ -44,6 +44,11 @@ public class SortedSetList<T> extends AbstractList<T> {
         return backingList.remove(o);
     }
 
+    @Override
+    public T remove(int index) {
+        return backingList.remove(index);
+    }
+
     public void sort() {
         backingList.sort(comparator);
     }
