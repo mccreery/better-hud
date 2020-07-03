@@ -1,11 +1,12 @@
 package jobicade.betterhud.config;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.SortedSet;
 
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
@@ -13,6 +14,7 @@ import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingValueException;
 import jobicade.betterhud.registry.HudElements;
 import jobicade.betterhud.registry.SortField;
+import jobicade.betterhud.util.SortedSetList;
 import net.minecraftforge.common.config.Configuration;
 import net.minecraftforge.common.config.Property;
 
@@ -25,14 +27,14 @@ public class HudConfig extends Configuration {
 		super(file);
 	}
 
-	private SortedSet<HudElement<?>> available;
+	private List<HudElement<?>> available;
 	private List<HudElement<?>> selected;
 
-	public Collection<HudElement<?>> getAvailable() {
+	public List<HudElement<?>> getAvailable() {
 		return available;
 	}
 
-	public Collection<HudElement<?>> getSelected() {
+	public List<HudElement<?>> getSelected() {
 		return selected;
 	}
 
@@ -82,8 +84,9 @@ public class HudConfig extends Configuration {
 	}
 
 	private void loadSelected() {
-		available.clear();
-		selected.clear();
+		available = new SortedSetList<>(new ArrayList<>(), Comparator.comparing(HudElement::getLocalizedName));
+		selected = new ArrayList<>();
+
 		available.addAll(HudElements.get().getRegistered());
 
 		String[] enabledNames = getStringList("enabledList", BetterHud.MODID, new String[0], "");
