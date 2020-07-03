@@ -4,6 +4,7 @@ import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.registry.HudElements;
 import jobicade.betterhud.registry.OverlayElements;
+import jobicade.betterhud.render.GlSnapshot;
 import jobicade.betterhud.render.GlStateManagerManager;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -25,6 +26,8 @@ public final class OverlayHook {
     // No instance
     private OverlayHook() {}
 
+    private static SnapshotTracker tracker;
+
     @SubscribeEvent(priority = EventPriority.HIGHEST)
     public static void preOverlayEarly(RenderGameOverlayEvent.Pre event) {
         // Only side effect is GuiIngameForge.left_height and right_height
@@ -39,12 +42,19 @@ public final class OverlayHook {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void preOverlayLate(RenderGameOverlayEvent.Pre event) {
         if (!event.isCanceled() && shouldRun(event)) {
+            if (tracker == null) {
+                tracker = new SnapshotTracker(BetterHud.getLogger());
+            }
+            GlSnapshot pre = new GlSnapshot();
+
             // Pre event is a valid parent as it just carries identical
             // information to its own parent
             renderGameOverlay(event);
             // Only cancel right before replacing vanilla HUD
             // Other mods get a chance to cancel the HUD altogether
             event.setCanceled(true);
+
+            tracker.step(pre, new GlSnapshot());
         }
     }
 
@@ -69,7 +79,7 @@ public final class OverlayHook {
         for (OverlayElement element : BetterHud.getProxy().getEnabled(OverlayElements.get())) {
             loadGlState();
 
-            if (shouldRender(element, context)) {
+            if (canRender(element, context)) {
                 Minecraft.getMinecraft().mcProfiler.startSection(element.getName());
                 element.render(context);
                 Minecraft.getMinecraft().mcProfiler.endSection();
@@ -96,13 +106,17 @@ public final class OverlayHook {
         }
     }
 
+    private static boolean canRender(OverlayElement hudElement, OverlayContext context) {
+        return hudElement.getServerDependency().containsVersion(BetterHud.getServerVersion())
+            && hudElement.shouldRender(context);
+    }
+
     /**
      * @return {@code true} if all conditions for rendering {@code hudElement}
      * are currently satisfied.
      */
     public static boolean shouldRender(OverlayElement hudElement, OverlayContext context) {
-        return hudElement.getServerDependency().containsVersion(BetterHud.getServerVersion())
-            && BetterHud.getProxy().getEnabled(OverlayElements.get()).contains(hudElement)
-            && hudElement.shouldRender(context);
+        return canRender(hudElement, context)
+            && BetterHud.getProxy().getEnabled(OverlayElements.get()).contains(hudElement);
     }
 }
