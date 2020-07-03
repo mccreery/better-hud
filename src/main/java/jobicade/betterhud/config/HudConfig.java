@@ -22,9 +22,9 @@ public class HudConfig extends Configuration {
 		super(file);
 	}
 
-	private final AddRemoveElementList enabledList = new AddRemoveElementList(HudElements.get().getRegistered());
-	public AddRemoveElementList getEnabledList() {
-		return enabledList;
+	private final ElementSelection enabled = new ElementSelection(HudElements.get().getRegistered());
+	public ElementSelection getEnabled() {
+		return enabled;
 	}
 
 	@Override
