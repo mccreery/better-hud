@@ -11,7 +11,6 @@ import jobicade.betterhud.proxy.ClientProxy;
 import jobicade.betterhud.registry.HudElements;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.versioning.InvalidVersionSpecificationException;
 import net.minecraftforge.fml.common.versioning.Restriction;
 import net.minecraftforge.fml.common.versioning.VersionRange;
@@ -101,31 +100,8 @@ public abstract class HudElement<T> {
 	 */
 	public abstract Rect render(T context);
 
-	/** Calls {@link #render(Event)} if the element
-	 * should be rendered and caches the bounds so they are available from {@link #getLastRect()} */
-	public final void tryRender(Event event) {
-		// TODO remove stub
-		/*if(shouldRender(event) && isEnabledAndSupported()) {
-			Minecraft.getMinecraft().mcProfiler.startSection(name);
-
-			lastBounds = render(event);
-			if(lastBounds == null) lastBounds = Rect.empty();
-			postRender(event);
-
-			Minecraft.getMinecraft().mcProfiler.endSection();
-		}*/
-	}
-
+	// TODO bounds never get set
 	private Rect lastBounds = Rect.empty();
-
-	/** Renders all elements for the current render event
-	 * @param event The current render event */
-	public static void renderAll(Event event) {
-		// TODO remove
-		/*for(HudElement<?> element : HudElements.get().getRegistered(SortField.PRIORITY)) {
-			element.tryRender(event);
-		}*/
-	}
 
 	/** @return The last or appropriate bounds for this element.<br>
 	 * {@link Rect#empty()} if the element has no appropriate bounds */

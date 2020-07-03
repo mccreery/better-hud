@@ -52,7 +52,6 @@ public class ClientProxy implements HudSidedProxy {
 
         ClientRegistry.registerKeyBinding(menuKey);
         MinecraftForge.EVENT_BUS.register(this);
-        //MinecraftForge.EVENT_BUS.register(new RenderEvents()); // TODO remove entirely
         HudElement.initAll(event);
     }
 
