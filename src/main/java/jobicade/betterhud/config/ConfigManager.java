@@ -129,6 +129,7 @@ public class ConfigManager implements IResourceManagerReloadListener {
                 }
             }
         }
+        config.sortAvailable();
     }
 
     private List<IResource> getAllConfigs() {

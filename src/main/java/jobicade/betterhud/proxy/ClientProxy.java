@@ -42,7 +42,6 @@ public class ClientProxy implements HudSidedProxy {
             IReloadableResourceManager reloadableManager = (IReloadableResourceManager)manager;
 
             // Language dictates alphabetical order
-            reloadableManager.registerReloadListener(m -> HudElements.get().sortDisabled());
             reloadableManager.registerReloadListener(configManager);
         } else {
             BetterHud.getLogger().warn("Unable to register alphabetical sort update on language change");

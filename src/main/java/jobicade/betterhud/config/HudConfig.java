@@ -27,7 +27,7 @@ public class HudConfig extends Configuration {
 		super(file);
 	}
 
-	private List<HudElement<?>> available;
+	private SortedSetList<HudElement<?>> available;
 	private List<HudElement<?>> selected;
 
 	public List<HudElement<?>> getAvailable() {
@@ -36,6 +36,10 @@ public class HudConfig extends Configuration {
 
 	public List<HudElement<?>> getSelected() {
 		return selected;
+	}
+
+	public void sortAvailable() {
+		available.sort();
 	}
 
 	/**
