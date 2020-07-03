@@ -6,18 +6,17 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import com.google.common.collect.Ordering;
 
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.config.ConfigManager;
+import jobicade.betterhud.config.HudConfig;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Size;
-import jobicade.betterhud.registry.HudElements;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.render.DefaultBoxed;
 import jobicade.betterhud.render.Grid;
@@ -39,8 +38,7 @@ public class GuiElementList extends GuiMenuScreen {
 	private Rect enabledViewport;
 	private Grid<ListItem> enabledList;
 
-	private List<Integer> disabledSelection = new ArrayList<>();
-	private List<Integer> enabledSelection = new ArrayList<>();
+	private List<HudElement<?>> selection = new ArrayList<>();
 
 	private GuiActionButton upButton;
 	private GuiActionButton downButton;
@@ -118,26 +116,14 @@ public class GuiElementList extends GuiMenuScreen {
 	}
 
 	private void enableAll() {
-		List<HudElement<?>> disabled = new ArrayList<>(HudElements.get().getDisabled());
-
-		for (HudElement<?> element : disabled) {
-			HudElements.get().enableElement(element);
-		}
-
-		disabledSelection.clear();
-		enabledSelection.clear();
+		HudConfig.moveAll(getDisabled(), getEnabled());
+		selection.clear();
 		updateLists();
 	}
 
 	private void disableAll() {
-		List<HudElement<?>> enabled = new ArrayList<>(HudElements.get().getEnabled());
-
-		for (HudElement<?> element : enabled) {
-			HudElements.get().disableElement(element);
-		}
-
-		disabledSelection.clear();
-		enabledSelection.clear();
+		HudConfig.moveAll(getEnabled(), getDisabled());
+		selection.clear();
 		updateLists();
 	}
 
@@ -150,89 +136,110 @@ public class GuiElementList extends GuiMenuScreen {
 	 * Checks if each button is enabled.
 	 */
 	private void checkButtons() {
-		enableAllButton.enabled = !HudElements.get().getDisabled().isEmpty();
-		disableAllButton.enabled = !HudElements.get().getEnabled().isEmpty();
+		enableAllButton.enabled = !getDisabled().isEmpty();
+		disableAllButton.enabled = !getEnabled().isEmpty();
 
-		if (!disabledSelection.isEmpty()) {
-			moveButton.enabled = true;
-			moveButton.setTexture(new Rect(120, 0, 20, 20));
-		} else if (!enabledSelection.isEmpty()) {
-			moveButton.enabled = true;
-			moveButton.setTexture(new Rect(100, 0, 20, 20));
-		} else {
-			moveButton.enabled = false;
-		}
+		upButton.enabled = false;
+		downButton.enabled = false;
+		configButton.enabled = false;
 
-		if (enabledSelection.isEmpty()) {
-			upButton.enabled = false;
-			downButton.enabled = false;
-		} else {
-			upButton.enabled = Collections.min(enabledSelection) != 0;
-			downButton.enabled = Collections.max(enabledSelection) != HudElements.get().getEnabled().size() - 1;
+		moveButton.enabled = !selection.isEmpty();
+		if (moveButton.enabled) {
+			HudElement<?> element = selection.get(0);
+
+			if (getEnabled().contains(element)) {
+				moveButton.setTexture(new Rect(100, 0, 20, 20));
+				configButton.enabled = true;
+
+				List<Integer> indices = getIndices(getEnabled(), selection);
+				upButton.enabled = Collections.min(indices) != 0;
+				downButton.enabled = Collections.max(indices) != getEnabled().size() - 1;
+			} else {
+				moveButton.setTexture(new Rect(120, 0, 20, 20));
+			}
 		}
-		configButton.enabled = !enabledSelection.isEmpty();
+	}
+
+	private List<HudElement<?>> getEnabled() {
+		return configManager.getConfig().getSelected();
+	}
+
+	private List<HudElement<?>> getDisabled() {
+		return configManager.getConfig().getAvailable();
+	}
+
+	private List<Integer> getIndices(List<?> list, List<?> subList) {
+		List<Integer> indices = new ArrayList<>(subList.size());
+
+		for (Object obj : subList) {
+			indices.add(list.indexOf(obj));
+		}
+		return indices;
 	}
 
 	private void openSettings() {
-		if (!enabledSelection.isEmpty()) {
-			int i = enabledSelection.get(enabledSelection.size() - 1);
-			HudElement<?> element = HudElements.get().getEnabled().get(i);
+		if (!selection.isEmpty()) {
+			HudElement<?> element = selection.get(selection.size() - 1);
 			mc.displayGuiScreen(new GuiElementSettings(element, this));
 		}
 	}
 
 	private void swapSelected() {
-		HudElements registry = HudElements.get();
+		if (!selection.isEmpty()) {
+			List<HudElement<?>> source, dest;
 
-		for (HudElement<?> element : getAll(registry.getDisabled(), disabledSelection)) {
-			registry.enableElement(element);
-		}
-		for (HudElement<?> element : getAll(registry.getEnabled(), enabledSelection)) {
-			registry.disableElement(element);
-		}
+			// All selection items are from the same list
+			if (getEnabled().contains(selection.get(0))) {
+				source = getEnabled();
+				dest = getDisabled();
+			} else {
+				source = getDisabled();
+				dest = getEnabled();
+			}
 
-		disabledSelection.clear();
-		enabledSelection.clear();
+			for (HudElement<?> element : selection) {
+				HudConfig.move(element, source, dest);
+			}
+		}
+		selection.clear();
 		updateLists();
 	}
 
 	private void moveSelectionUp() {
-		if (shiftLeft(HudElements.get().getEnabled(), enabledSelection)) {
-			for (int i = 0; i < enabledSelection.size(); i++) {
-				enabledSelection.set(i, enabledSelection.get(i) - 1);
-			}
+		List<Integer> indices = getIndices(getEnabled(), selection);
+
+		if (!indices.contains(-1)) {
+			shiftLeft(getEnabled(), indices);
 			updateLists();
 		}
 	}
 
 	private void moveSelectionDown() {
-		if (shiftRight(HudElements.get().getEnabled(), enabledSelection)) {
-			for (int i = 0; i < enabledSelection.size(); i++) {
-				enabledSelection.set(i, enabledSelection.get(i) + 1);
-			}
+		List<Integer> indices = getIndices(getEnabled(), selection);
+
+		if (!indices.contains(-1)) {
+			shiftRight(getEnabled(), indices);
 			updateLists();
 		}
 	}
 
-	private <T> List<T> getAll(List<? extends T> list, List<Integer> indices) {
-		return indices.stream().map(list::get).collect(Collectors.toList());
-	}
-
 	private void updateLists() {
-		disabledList = getList(HudElements.get().getDisabled(), disabledSelection);
+		disabledList = getList(getDisabled());
 		disabledScroll.setContentHeight(disabledList.getPreferredSize().getHeight() + SPACER * 2);
 
-		enabledList = getList(HudElements.get().getEnabled(), enabledSelection);
+		enabledList = getList(getEnabled());
 		enabledScroll.setContentHeight(enabledList.getPreferredSize().getHeight() + SPACER * 2);
 
 		checkButtons();
 	}
 
-	private Grid<ListItem> getList(List<HudElement<?>> elements, List<Integer> selection) {
+	private Grid<ListItem> getList(List<HudElement<?>> elements) {
 		List<ListItem> items = new ArrayList<>(elements.size());
-		for (int i = 0; i < elements.size(); i++) {
-			items.add(new ListItem(elements.get(i), selection, i));
+
+		for (HudElement<?> element : elements) {
+			items.add(new ListItem(element));
 		}
+
 		Grid<ListItem> grid = new Grid<>(new Point(1, items.size()), items);
 		grid.setStretch(true);
 
@@ -257,36 +264,49 @@ public class GuiElementList extends GuiMenuScreen {
 				Rect listBounds = getListBounds(viewport, scrollbar, list);
 
 				if(list.getCellBounds(listBounds, new Point(0, i)).contains(mouseX, mouseY)) {
-					addToSelection(list.getSource().get(i).selection, i);
+					addToSelection(list.getSource().get(i).element);
 					selectedAny = true;
 				}
 			}
 
 			if (!selectedAny && !list.getSource().isEmpty()) {
-				list.getSource().get(0).selection.clear();
+				selection.clear();
 			}
 			checkButtons();
 		}
 	}
 
-	private void addToSelection(List<Integer> selection, int index) {
+	private void addToSelection(HudElement<?> element) {
 		if (!selection.isEmpty() && isShiftKeyDown()) {
-			int prevIndex = selection.get(selection.size() - 1);
+			List<HudElement<?>> selectionSide = getSelectionSide();
+
+			int prevIndex = selectionSide.indexOf(selection.get(selection.size() - 1));
+			int index = selectionSide.indexOf(element);
 
 			if (prevIndex < index) {
 				for (int i = prevIndex + 1; i <= index; i++) {
-					toggleItem(selection, i);
+					toggleItem(selection, selectionSide.get(i));
 				}
 			} else {
 				for (int i = prevIndex - 1; i >= index; i--) {
-					toggleItem(selection, i);
+					toggleItem(selection, selectionSide.get(i));
 				}
 			}
 		} else {
 			if (!isCtrlKeyDown()) {
 				selection.clear();
 			}
-			toggleItem(selection, index);
+			toggleItem(selection, element);
+		}
+	}
+
+	private List<HudElement<?>> getSelectionSide() {
+		if (selection.isEmpty()) {
+			return null;
+		} else if (getEnabled().contains(selection.get(0))) {
+			return getEnabled();
+		} else {
+			return getDisabled();
 		}
 	}
 
@@ -397,15 +417,11 @@ public class GuiElementList extends GuiMenuScreen {
 	}
 
 	private class ListItem extends DefaultBoxed {
-		private final List<Integer> selection;
-		private final int index;
-
+		private final HudElement<?> element;
 		private final Label label;
 
-		private ListItem(HudElement<?> element, List<Integer> selection, int index) {
-			this.selection = selection;
-			this.index = index;
-
+		private ListItem(HudElement<?> element) {
+			this.element = element;
 			label = new Label(element.getLocalizedName());
 		}
 
@@ -425,7 +441,7 @@ public class GuiElementList extends GuiMenuScreen {
 
 		@Override
 		public void render() {
-			if (selection.contains(index)) {
+			if (selection.contains(element)) {
 				GlUtil.drawRect(bounds, new Color(48, 0, 0, 0));
 				GlUtil.drawBorderRect(bounds, new Color(160, 144, 144, 144));
 			}
