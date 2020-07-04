@@ -42,7 +42,7 @@ public class MobInfo extends BillboardElement {
 	public Rect render(BillboardContext context) {
 		EntityLivingBase entity = context.getPointedEntity();
 		bar.setHost(entity);
-		bar.setCompressThreshold(compress.getInt());
+		bar.setCompressThreshold((int)compress.getValue());
 
 		int health = MathUtil.getHealthForDisplay(entity.getHealth());
 		int maxHealth = MathUtil.getHealthForDisplay(entity.getMaxHealth());

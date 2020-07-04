@@ -42,11 +42,9 @@ public class CpsCount extends TextElement implements Tickable {
 	@Override
 	public void tick() {
 		// Tracker should start or is running
-		if(timeout < timeoutMax.get() || clickHistory[i] > 0) {
-			//System.out.println(clickHistory[i] + " clicks this second");
-
+		if(timeout < timeoutMax.getValue() || clickHistory[i] > 0) {
 			if(clickHistory[i] > 0) {
-				if(timeout == timeoutMax.get()) { // New burst
+				if(timeout == timeoutMax.getValue()) { // New burst
 					windowTotal = 0;
 					burstTotal = 0;
 					burstLength = 0;
@@ -59,11 +57,7 @@ public class CpsCount extends TextElement implements Tickable {
 
 				cps = (float)windowTotal / Math.min(++burstLength, clickHistory.length);
 				timeout = 0;
-
-				//System.out.println("Burst of " + burstLength + " seconds, total clicks " + windowTotal);
-			} else if(++timeout == timeoutMax.get()) {
-				//System.out.println("Burst complete.");
-				//System.out.println("Length " + burstLength + " seconds, total clicks " + windowTotal);
+			} else if(++timeout == timeoutMax.getValue()) {
 				return;
 			}
 			next();
@@ -83,7 +77,7 @@ public class CpsCount extends TextElement implements Tickable {
 
 	@Override
 	protected List<String> getText() {
-		float cps = timeout < timeoutMax.get() || remember.get() ? this.cps : 0;
+		float cps = timeout < timeoutMax.getValue() || remember.get() ? this.cps : 0;
 		String cpsDisplay = getLocalizedName() + ": " + MathUtil.formatToPlaces(cps, 1);
 
 		if(showBurst.get() && cps > 0) {

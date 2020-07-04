@@ -1,15 +1,15 @@
 package jobicade.betterhud.gui;
 
-import jobicade.betterhud.util.ISlider;
+import jobicade.betterhud.element.settings.SettingSlider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 
 public class GuiSlider extends GuiButton {
-	private final ISlider slider;
+	private final SettingSlider slider;
 	public boolean dragging;
 
-	public GuiSlider(int id, int x, int y, ISlider slider) {
+	public GuiSlider(int id, int x, int y, SettingSlider slider) {
 		this(id, x, y, 150, 20, slider);
 	}
 
@@ -17,14 +17,14 @@ public class GuiSlider extends GuiButton {
 		displayString = slider.getDisplayString();
 	}
 
-	public GuiSlider(int id, int x, int y, int width, int height, ISlider slider) {
+	public GuiSlider(int id, int x, int y, int width, int height, SettingSlider slider) {
 		super(id, x, y, width, height, "");
 		this.slider = slider;
 		updateDisplayString();
 	}
 
-	private void setNormalized(double value) {
-		slider.set(slider.getMinimum() + value * (slider.getMaximum() - slider.getMinimum()));
+	private void setNormalized(float value) {
+		slider.setValue(slider.getMinimum() + value * (slider.getMaximum() - slider.getMinimum()));
 		updateDisplayString();
 	}
 
@@ -42,9 +42,9 @@ public class GuiSlider extends GuiButton {
 		if(this.visible) {
 			if(this.dragging) {
 				int mouseOffset = mouseX - (x + 4);
-				setNormalized((double)mouseOffset / (width - 8));
+				setNormalized((float)mouseOffset / (width - 8));
 			}
-			int sliderOffset = (int)((slider.get() - slider.getMinimum()) / (slider.getMaximum() - slider.getMinimum()) * (width - 8));
+			int sliderOffset = (int)((slider.getValue() - slider.getMinimum()) / (slider.getMaximum() - slider.getMinimum()) * (width - 8));
 
 			Minecraft.getMinecraft().getTextureManager().bindTexture(BUTTON_TEXTURES);
 			this.drawTexturedModalRect(x + sliderOffset,     y,   0, 66, 4, 20);

@@ -64,7 +64,7 @@ public class PlayerInfo extends BillboardElement {
 			tooltip.add(I18n.format("betterHud.hud.holding", getStackName(held)));
 			getEnchantmentLines(held, tooltip);
 
-			int lines = tooltipLines.getInt();
+			int lines = (int)tooltipLines.getValue();
 			if(lines != -1 && lines < tooltip.size()) {
 				tooltip = tooltip.subList(0, lines);
 			}

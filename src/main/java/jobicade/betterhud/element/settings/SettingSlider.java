@@ -7,34 +7,63 @@ import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.gui.GuiSlider;
-import jobicade.betterhud.util.ISlider;
 import jobicade.betterhud.util.MathUtil;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.math.MathHelper;
 
-public class SettingSlider extends SettingAlignable implements ISlider {
-	protected GuiSlider slider;
-	private final double min, max, interval;
+public class SettingSlider extends SettingAlignable {
+	protected GuiSlider guiSlider;
 
 	private int displayPlaces;
 	private String unlocalizedValue;
 
-	private double value;
 	private double displayScale = 1;
 
-	public SettingSlider(String name, double min, double max) {
+	public SettingSlider(String name, float min, float max) {
 		this(name, min, max, -1);
 	}
 
-	public SettingSlider(String name, double min, double max, double interval) {
+	public SettingSlider(String name, float minimum, float maximum, float interval) {
 		super(name, Direction.CENTER);
-		this.min = min;
-		this.max = max;
+		this.minimum = minimum;
+		this.maximum = maximum;
 		this.interval = interval;
 
 		updateDisplayPlaces();
-		set(getMinimum());
+		setValue(getMinimum());
+	}
+
+	protected float value;
+	public float getValue() {
+		return value;
+	}
+
+	public void setValue(float value) {
+		if (getInterval() != -1) {
+			value = roundMultiple(value - getMinimum(), getInterval()) + getMinimum();
+		}
+		this.value = MathHelper.clamp(value, getMinimum(), getMaximum());
+	}
+
+	protected float roundMultiple(float x, float y) {
+		return Math.round(x / y) * y;
+	}
+
+	protected final float minimum;
+	public float getMinimum() {
+		return minimum;
+	}
+
+	protected final float maximum;
+	public float getMaximum() {
+		return maximum;
+	}
+
+	protected final float interval;
+	public float getInterval() {
+		return interval;
 	}
 
 	public SettingSlider setDisplayPercent() {
@@ -71,9 +100,8 @@ public class SettingSlider extends SettingAlignable implements ISlider {
 		return this;
 	}
 
-	@Override
 	public String getDisplayString() {
-		return I18n.format("betterHud.setting." + name) + ": " + getDisplayValue(get() * displayScale);
+		return I18n.format("betterHud.setting." + name) + ": " + getDisplayValue(getValue() * displayScale);
 	}
 
 	public String getDisplayValue(double scaledValue) {
@@ -87,28 +115,13 @@ public class SettingSlider extends SettingAlignable implements ISlider {
 
 	@Override
 	public void getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Rect bounds) {
-		slider = new GuiSlider(0, bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), this);
+		guiSlider = new GuiSlider(0, bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), this);
 
-		parts.add(slider);
-		callbacks.put(slider, this);
+		parts.add(guiSlider);
+		callbacks.put(guiSlider, this);
 	}
 
 	@Override public void actionPerformed(GuiElementSettings gui, GuiButton button) {}
-	@Override public Double get() {return value;}
-
-	public int getInt() {
-		return get().intValue();
-	}
-
-	@Override
-	public void set(Double value) {
-		this.value = normalize(value);
-		if(slider != null) slider.updateDisplayString();
-	}
-
-	public void set(int value) {
-		set((double)value);
-	}
 
 	@Override
 	public boolean hasValue() {
@@ -117,19 +130,15 @@ public class SettingSlider extends SettingAlignable implements ISlider {
 
 	@Override
 	public String getStringValue() {
-		return get().toString();
+		return String.valueOf(getValue());
 	}
 
 	@Override
 	public void loadStringValue(String save) {
-		set(Double.valueOf(save));
+		setValue(Float.valueOf(save));
 
-		if(slider != null) {
-			slider.updateDisplayString();
+		if(guiSlider != null) {
+			guiSlider.updateDisplayString();
 		}
 	}
-
-	@Override public Double getMinimum() {return min;}
-	@Override public Double getMaximum() {return max;}
-	@Override public Double getInterval() {return interval;}
 }

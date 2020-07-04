@@ -26,7 +26,7 @@ public class SettingWarnings extends SettingStub {
 				public String getDisplayValue(double value) {
 					SettingSlider next = next();
 
-					if(next == null || next.get() < get()) {
+					if(next == null || next.getValue() < getValue()) {
 						return super.getDisplayValue(value);
 					} else {
 						return I18n.format("betterHud.value.disabled");
@@ -34,13 +34,13 @@ public class SettingWarnings extends SettingStub {
 				}
 
 				@Override
-				public void set(Double value) {
+				public void setValue(float value) {
 					SettingSlider next = next();
-					super.set(next != null ? Math.max(value, next.get()) : value);
+					super.setValue(next != null ? Math.max(value, next.getValue()) : value);
 
 					for(int i = index - 1; i >= 0; i--) {
 						SettingSlider slider = sliders[i];
-						if(slider != null) slider.set(Math.max(slider.get(), get()));
+						if(slider != null) slider.setValue(Math.max(slider.getValue(), getValue()));
 					}
 				}
 
@@ -50,7 +50,7 @@ public class SettingWarnings extends SettingStub {
 
 				@Override
 				public void updateGuiParts(Collection<Setting> settings) {
-					slider.updateDisplayString();
+					guiSlider.updateDisplayString();
 				}
 			}.setDisplayPercent().setAlignment((i & 1) == 1 ? Direction.EAST : Direction.WEST));
 		}
@@ -60,27 +60,26 @@ public class SettingWarnings extends SettingStub {
 		}
 	}
 
-	// TODO why double and float mixed
-	public double[] get() {
-		double[] values = new double[sliders.length];
+	public float[] get() {
+		float[] values = new float[sliders.length];
 
 		for(int i = 0; i < sliders.length; i++) {
-			values[i] = sliders[i].get();
+			values[i] = sliders[i].getValue();
 		}
 		return values;
 	}
 
-	public void set(double... values) {
+	public void set(float... values) {
 		for(int i = 0; i < sliders.length; i++) {
 			if(values[i] >= 0) {
-				sliders[i].set(values[i]);
+				sliders[i].setValue(values[i]);
 			}
 		}
 	}
 
 	public int getWarning(float value) {
 		for(int i = sliders.length - 1; i >= 0; i--) {
-			if(value <= sliders[i].get()) return i + 1;
+			if(value <= sliders[i].getValue()) return i + 1;
 		}
 		return 0;
 	}

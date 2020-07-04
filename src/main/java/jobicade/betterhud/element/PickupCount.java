@@ -86,7 +86,7 @@ public class PickupCount extends OverlayElement {
 	private synchronized List<StackNode> getStacks() {
 		stacks.removeIf(StackNode::isDead);
 
-		int limit = maxStacks.getInt();
+		int limit = (int)maxStacks.getValue();
 		if(limit < 11 && limit < stacks.size()) {
 			stacks.subList(limit, stacks.size()).clear();
 		}
@@ -135,7 +135,7 @@ public class PickupCount extends OverlayElement {
 		}
 
 		private float getOpacity() {
-			return 1.0f - (Minecraft.getMinecraft().ingameGUI.getUpdateCounter() - updateCounter) / fadeAfter.get().floatValue();
+			return 1.0f - (Minecraft.getMinecraft().ingameGUI.getUpdateCounter() - updateCounter) / fadeAfter.getValue();
 		}
 
 		private boolean isDead() {

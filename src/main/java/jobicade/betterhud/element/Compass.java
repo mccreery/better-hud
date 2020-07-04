@@ -90,7 +90,7 @@ public class Compass extends OverlayElement {
 			double cos = Math.cos(angle);
 
 			Point letter = origin.add(-(int)(Math.sin(angle) * radius), 0);
-			double scale = 1 + directionScaling.get() * cos * 2;
+			double scale = 1 + directionScaling.getValue() * cos * 2;
 
 			GlStateManager.pushMatrix();
 

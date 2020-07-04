@@ -54,7 +54,7 @@ public class Coordinates extends TextElement {
 	@Override
 	protected List<String> getText() {
 		DecimalFormat format = new DecimalFormat();
-		format.setMaximumFractionDigits(decimalPlaces.get().intValue());
+		format.setMaximumFractionDigits((int)decimalPlaces.getValue());
 
 		String x = format.format(Minecraft.getMinecraft().player.posX);
 		String y = format.format(Minecraft.getMinecraft().player.posY);

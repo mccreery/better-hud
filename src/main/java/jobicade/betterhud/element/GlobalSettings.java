@@ -22,11 +22,11 @@ public class GlobalSettings extends HudElement<Object> {
 	}
 
 	public float getBillboardScale() {
-		return billboardScale.get().floatValue();
+		return billboardScale.getValue();
 	}
 
 	public float getBillboardDistance() {
-		return billboardDistance.get().floatValue();
+		return billboardDistance.getValue();
 	}
 
 	public boolean hideOnDebug() {
