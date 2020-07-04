@@ -6,7 +6,7 @@ import static jobicade.betterhud.BetterHud.SPACER;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import jobicade.betterhud.element.settings.SettingSlider;
-import jobicade.betterhud.events.RenderMobInfoEvent;
+import jobicade.betterhud.events.BillboardContext;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -19,7 +19,7 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 
-public class MobInfo extends EntityInfo {
+public class MobInfo extends BillboardElement {
 	private final StatBarHealth bar = new StatBarHealth();
 	private SettingSlider compress;
 
@@ -39,8 +39,8 @@ public class MobInfo extends EntityInfo {
 	}
 
 	@Override
-	public Rect render(RenderMobInfoEvent context) {
-		EntityLivingBase entity = context.getEntity();
+	public Rect render(BillboardContext context) {
+		EntityLivingBase entity = context.getPointedEntity();
 		bar.setHost(entity);
 		bar.setCompressThreshold(compress.getInt());
 

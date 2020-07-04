@@ -4,7 +4,7 @@ import java.util.ArrayList;
 
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.settings.SettingBoolean;
-import jobicade.betterhud.events.RenderMobInfoEvent;
+import jobicade.betterhud.events.BillboardContext;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -16,7 +16,7 @@ import jobicade.betterhud.util.MathUtil;
 import net.minecraft.entity.SharedMonsterAttributes;
 import net.minecraft.entity.passive.EntityHorse;
 
-public class HorseInfo extends EntityInfo {
+public class HorseInfo extends BillboardElement {
 	private SettingBoolean jump, speed;
 
 	public HorseInfo() {
@@ -29,14 +29,14 @@ public class HorseInfo extends EntityInfo {
 	}
 
 	@Override
-	public boolean shouldRender(RenderMobInfoEvent context) {
-		return context.getEntity() instanceof EntityHorse;
+	public boolean shouldRender(BillboardContext context) {
+		return context.getPointedEntity() instanceof EntityHorse;
 	}
 
 	@Override
-	public Rect render(RenderMobInfoEvent context) {
+	public Rect render(BillboardContext context) {
 		ArrayList<Label> infoParts = new ArrayList<Label>();
-		EntityHorse entity = (EntityHorse)context.getEntity();
+		EntityHorse entity = (EntityHorse)context.getPointedEntity();
 
 		if(jump.get()) {
 			infoParts.add(new Label(jump.getLocalizedName() + ": " + MathUtil.formatToPlaces(getJumpHeight(entity), 3) + "m"));

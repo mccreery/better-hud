@@ -1,7 +1,7 @@
 package jobicade.betterhud.registry;
 
 import jobicade.betterhud.BetterHud;
-import jobicade.betterhud.element.entityinfo.EntityInfo;
+import jobicade.betterhud.element.entityinfo.BillboardElement;
 import jobicade.betterhud.element.entityinfo.HorseInfo;
 import jobicade.betterhud.element.entityinfo.MobInfo;
 import jobicade.betterhud.element.entityinfo.PlayerInfo;
@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 @EventBusSubscriber(value = { Side.CLIENT }, modid = BetterHud.MODID)
-public class BillboardElements extends HudRegistry<EntityInfo> {
+public class BillboardElements extends HudRegistry<BillboardElement> {
     private BillboardElements() {
         super(HudElements.get());
     }

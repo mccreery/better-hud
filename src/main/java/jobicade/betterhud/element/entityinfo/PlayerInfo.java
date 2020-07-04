@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
 import jobicade.betterhud.element.settings.SettingSlider;
-import jobicade.betterhud.events.RenderMobInfoEvent;
+import jobicade.betterhud.events.BillboardContext;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -27,7 +27,7 @@ import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 
-public class PlayerInfo extends EntityInfo {
+public class PlayerInfo extends BillboardElement {
 	private StatBar<? super EntityPlayer> bar = new StatBarArmor();
 
 	private SettingSlider tooltipLines;
@@ -48,13 +48,13 @@ public class PlayerInfo extends EntityInfo {
 	}
 
 	@Override
-	public boolean shouldRender(RenderMobInfoEvent context) {
-		return context.getEntity() instanceof EntityPlayer;
+	public boolean shouldRender(BillboardContext context) {
+		return context.getPointedEntity() instanceof EntityPlayer;
 	}
 
 	@Override
-	public Rect render(RenderMobInfoEvent context) {
-		EntityPlayer player = (EntityPlayer)context.getEntity();
+	public Rect render(BillboardContext context) {
+		EntityPlayer player = (EntityPlayer)context.getPointedEntity();
 		bar.setHost(player);
 		List<String> tooltip = new ArrayList<String>();
 

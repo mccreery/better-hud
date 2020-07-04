@@ -3,7 +3,7 @@ package jobicade.betterhud.events;
 import java.util.List;
 
 import jobicade.betterhud.BetterHud;
-import jobicade.betterhud.element.entityinfo.EntityInfo;
+import jobicade.betterhud.element.entityinfo.BillboardElement;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.registry.BillboardElements;
 import jobicade.betterhud.registry.HudElements;
@@ -35,7 +35,7 @@ public class BillboardHook {
             Entity entity = getMouseOver(HudElements.GLOBAL.getBillboardDistance(), event.getPartialTicks());
 
             if(entity instanceof EntityLivingBase) {
-                renderMobInfo(new RenderMobInfoEvent(event, (EntityLivingBase)entity));
+                renderMobInfo(new BillboardContext(event, (EntityLivingBase)entity));
             }
         }
         Minecraft.getMinecraft().mcProfiler.endSection();
@@ -44,7 +44,7 @@ public class BillboardHook {
     /**
     * Renders mob info elements to the screen.
     */
-    private static void renderMobInfo(RenderMobInfoEvent event) {
+    private static void renderMobInfo(BillboardContext event) {
         BetterHud.MANAGER.reset(Point.zero());
 
         GlStateManager.disableDepth();
@@ -54,7 +54,7 @@ public class BillboardHook {
         Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
 
         GlStateManager.pushMatrix();
-        GlUtil.setupBillboard(event.getEntity(), event.getPartialTicks(), HudElements.GLOBAL.getBillboardScale());
+        GlUtil.setupBillboard(event.getPointedEntity(), event.getPartialTicks(), HudElements.GLOBAL.getBillboardScale());
 
         GlSnapshot pre = null;
         if (HudElements.GLOBAL.isDebugMode()) {
@@ -64,7 +64,7 @@ public class BillboardHook {
             pre = new GlSnapshot();
         }
 
-        for (EntityInfo element : BetterHud.getProxy().getEnabled(BillboardElements.get())) {
+        for (BillboardElement element : BetterHud.getProxy().getEnabled(BillboardElements.get())) {
             if (element.getServerDependency().containsVersion(BetterHud.getServerVersion())
                     && element.shouldRender(event)) {
                 Minecraft.getMinecraft().mcProfiler.startSection(element.getName());
