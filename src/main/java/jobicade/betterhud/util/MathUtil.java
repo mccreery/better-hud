@@ -48,7 +48,7 @@ public final class MathUtil {
      */
     public static int ceil(int x, int multiple) {
         if (multiple == 0) {
-            return x;
+            throw new IllegalArgumentException("multiple must not be 0");
         } else {
             multiple = Math.abs(multiple);
             return ceilDiv(x, multiple) * multiple;

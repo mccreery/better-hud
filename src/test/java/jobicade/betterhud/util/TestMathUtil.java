@@ -32,8 +32,8 @@ public class TestMathUtil {
 
     @Test
     public void testCeil() {
-        // Zero multiple is allowed
-        Assert.assertEquals(7, MathUtil.ceil(7, 0));
+        // Zero multiple is not allowed
+        Assert.assertThrows(IllegalArgumentException.class, () -> MathUtil.ceil(5, 0));
         // Positive multiple
         Assert.assertEquals(10, MathUtil.ceil(7, 10));
         Assert.assertEquals(10, MathUtil.ceil(10, 10));
