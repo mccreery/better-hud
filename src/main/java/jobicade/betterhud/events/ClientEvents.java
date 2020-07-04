@@ -34,7 +34,7 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
-    public static void onClick(MouseInputEvent event) {
+    public static void onClick(MouseInputEvent.Pre event) {
         if(Mouse.getEventButton() != -1 && Mouse.getEventButtonState()) {
             OverlayElements.CPS.onClick();
         }
