@@ -5,11 +5,11 @@ import org.lwjgl.input.Mouse;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.registry.OverlayElements;
 import net.minecraft.client.Minecraft;
-import net.minecraftforge.client.event.GuiScreenEvent.MouseInputEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.fml.common.gameevent.InputEvent.MouseInputEvent;
 import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
 import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
@@ -34,7 +34,7 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
-    public static void onClick(MouseInputEvent.Pre event) {
+    public static void onClick(MouseInputEvent event) {
         if(Mouse.getEventButton() != -1 && Mouse.getEventButtonState()) {
             OverlayElements.CPS.onClick();
         }
