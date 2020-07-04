@@ -12,12 +12,12 @@ import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.util.MathUtil;
 import jobicade.betterhud.util.bars.StatBarHealth;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.util.math.MathHelper;
 
 public class MobInfo extends BillboardElement {
     private final StatBarHealth bar = new StatBarHealth();
@@ -44,8 +44,8 @@ public class MobInfo extends BillboardElement {
         bar.setHost(entity);
         bar.setCompressThreshold((int)compress.getValue());
 
-        int health = MathUtil.getHealthForDisplay(entity.getHealth());
-        int maxHealth = MathUtil.getHealthForDisplay(entity.getMaxHealth());
+        int health = MathHelper.ceil(entity.getHealth());
+        int maxHealth = MathHelper.ceil(entity.getMaxHealth());
 
         String text = String.format("%s %s(%d/%d)", entity.getName(), ChatFormatting.GRAY, health, maxHealth);
 

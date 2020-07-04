@@ -11,8 +11,6 @@ import java.util.function.Predicate;
 
 import com.google.common.graph.Graph;
 
-import net.minecraft.util.math.MathHelper;
-
 public final class MathUtil {
     private MathUtil() {}
 
@@ -53,12 +51,6 @@ public final class MathUtil {
             multiple = Math.abs(multiple);
             return ceilDiv(x, multiple) * multiple;
         }
-    }
-
-    /** @return an {@code int} version of {@code health}
-     * for use in health bars */
-    public static int getHealthForDisplay(float health) {
-        return MathHelper.ceil(health);
     }
 
     /** Sorts the nodes of {@code graph} such that for each edge {@code (n, m)},
