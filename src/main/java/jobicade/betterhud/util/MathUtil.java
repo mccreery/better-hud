@@ -32,15 +32,18 @@ public final class MathUtil {
         return a * (1.0f - t) + b * t;
     }
 
-    /** @param dividend The left-hand argument of the division
-     * @param divisor The right-hand argument of the division
-     * @return The ceiling of the quotient ({@code dividend / divisor}) */
-    public static int ceilDiv(int dividend, int divisor) {
-        if(divisor < 0) {
-            dividend = -dividend;
-            divisor  = -divisor;
+    /**
+     * Performs integer division rounding towards positive infinity.
+     */
+    public static int ceilDiv(int x, int y) {
+        // Adapted from java.lang.Math.floorDiv
+        int r = x / y;
+
+        // if the signs are the same and modulo not zero, round up
+        if ((x ^ y) >= 0 && (r * y != x)) {
+            ++r;
         }
-        return (dividend + divisor - 1) / divisor;
+        return r;
     }
 
     /** @return The closest {@code y >= x} such that
