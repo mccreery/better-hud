@@ -6,7 +6,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.Predicate;
@@ -57,17 +56,6 @@ public final class MathUtil {
             multiple = Math.abs(multiple);
             return ceilDiv(x, multiple) * multiple;
         }
-    }
-
-    /** Avoids autoboxing to {@link Integer}
-     * @see Objects#hash(Object...) */
-    public static int hash(int... values) {
-        int hashCode = 1;
-
-        for(int x : values) {
-            hashCode = 31 * hashCode + x;
-        }
-        return hashCode;
     }
 
     private static final Random RANDOM = new Random();
