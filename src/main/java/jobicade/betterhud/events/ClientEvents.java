@@ -43,6 +43,7 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onPlayerDisconnected(ClientDisconnectionFromServerEvent event) {
         OverlayElements.BLOCK_VIEWER.onChangeWorld();
+        BetterHud.setServerVersion(null);
     }
 
     @SubscribeEvent
