@@ -6,14 +6,11 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Random;
 import java.util.Set;
 import java.util.function.Predicate;
 
 import com.google.common.graph.Graph;
 
-import jobicade.betterhud.geom.Point;
-import jobicade.betterhud.geom.Rect;
 import net.minecraft.util.math.MathHelper;
 
 public final class MathUtil {
@@ -56,53 +53,6 @@ public final class MathUtil {
             multiple = Math.abs(multiple);
             return ceilDiv(x, multiple) * multiple;
         }
-    }
-
-    private static final Random RANDOM = new Random();
-    private static Random currentRandom = RANDOM;
-
-    /** Changes the random instance for random functions
-     * @param random The random instance, or {@code null} to reset
-     *
-     * @see #randomRange(float, float)
-     * @see #randomRange(int, int)
-     * @see #randomPoint(Rect)
-     * @see #randomChance(float, Random) */
-    public static void setRandom(Random random) {
-        currentRandom = random != null ? random : RANDOM;
-    }
-
-    /** @param min The low end of the range (inclusive)
-     * @param max The high end of the range (exclusive)
-     * @return A random integer between the specified values */
-    public static int randomRange(int min, int max) {
-        if(min < max) {
-            return min + currentRandom.nextInt(max - min);
-        } else if(min == max) {
-            return min;
-        } else {
-            return max + currentRandom.nextInt(min - max);
-        }
-    }
-
-    /** @param min The low end of the range (inclusive)
-     * @param max The high end of the range (exclusive)
-     * @return A random float between the specified values */
-    public static float randomRange(float min, float max) {
-        return min + currentRandom.nextFloat() * (max - min);
-    }
-
-    /** @param bounds The range
-     * @return A random point within the bounds */
-    public static Point randomPoint(Rect bounds) {
-        return new Point(randomRange(bounds.getLeft(), bounds.getRight()),
-            randomRange(bounds.getTop(), bounds.getBottom()));
-    }
-
-    /** @param probability The chance to return {@code true}. Clamped to [0,1]
-     * @return {@code true} with a {@code probability} chance */
-    public static boolean randomChance(float probability) {
-        return currentRandom.nextFloat() < probability;
     }
 
     /** @return an {@code int} version of {@code health}

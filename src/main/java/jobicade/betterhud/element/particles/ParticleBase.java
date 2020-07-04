@@ -1,15 +1,17 @@
 package jobicade.betterhud.element.particles;
 
+import java.util.Random;
+
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.render.Color;
+import jobicade.betterhud.util.GlUtil;
+import jobicade.betterhud.util.RandomWrapper;
+import jobicade.betterhud.util.Textures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.util.MathUtil;
-import jobicade.betterhud.util.Textures;
-import jobicade.betterhud.geom.Point;
-import jobicade.betterhud.render.Color;
 
 public class ParticleBase implements Particle {
     protected Point position;
@@ -31,13 +33,15 @@ public class ParticleBase implements Particle {
     }
 
     public static ParticleBase createRandom() {
-        Point position = MathUtil.randomPoint(Particle.getScreen());
+        RandomWrapper random = new RandomWrapper(new Random());
 
-        float opacity = MathUtil.randomRange(0f, 0.5f);
-        float size = MathUtil.randomRange(2f, 6f);
-        float rotation = MathUtil.randomRange(0f, 360f);
+        Point position = random.nextPoint(Particle.getScreen());
 
-        int iconIndex = MathUtil.randomRange(0, 16);
+        float opacity = random.nextFloat(0, 0.5f);
+        float size = random.nextFloat(2, 6);
+        float rotation = random.nextFloat(0, 360);
+
+        int iconIndex = random.nextInt(16);
         return new ParticleBase(position, iconIndex, opacity, size, rotation);
     }
 
