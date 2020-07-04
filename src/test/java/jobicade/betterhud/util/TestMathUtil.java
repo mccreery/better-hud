@@ -29,4 +29,20 @@ public class TestMathUtil {
         Assert.assertEquals(-3, MathUtil.ceilDiv(-10, 3));
         Assert.assertEquals(-3, MathUtil.ceilDiv(10, -3));
     }
+
+    @Test
+    public void testCeil() {
+        // Zero multiple is allowed
+        Assert.assertEquals(7, MathUtil.ceil(7, 0));
+        // Positive multiple
+        Assert.assertEquals(10, MathUtil.ceil(7, 10));
+        Assert.assertEquals(10, MathUtil.ceil(10, 10));
+        Assert.assertEquals(0, MathUtil.ceil(-5, 10));
+        Assert.assertEquals(-10, MathUtil.ceil(-15, 10));
+        // Negative multiple is the same as positive multiple
+        Assert.assertEquals(10, MathUtil.ceil(7, -10));
+        Assert.assertEquals(10, MathUtil.ceil(10, -10));
+        Assert.assertEquals(0, MathUtil.ceil(-5, -10));
+        Assert.assertEquals(-10, MathUtil.ceil(-15, -10));
+    }
 }

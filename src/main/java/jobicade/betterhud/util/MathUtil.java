@@ -46,10 +46,17 @@ public final class MathUtil {
         return r;
     }
 
-    /** @return The closest {@code y >= x} such that
-     * {@code y} is a multiple of {@code multiple} */
+    /**
+     * @return The least integer that is a multiple of {@code multiple} and
+     * greater than or equal to {@code x}.
+     */
     public static int ceil(int x, int multiple) {
-        return ceilDiv(x, multiple) * multiple;
+        if (multiple == 0) {
+            return x;
+        } else {
+            multiple = Math.abs(multiple);
+            return ceilDiv(x, multiple) * multiple;
+        }
     }
 
     /** Avoids autoboxing to {@link Integer}
