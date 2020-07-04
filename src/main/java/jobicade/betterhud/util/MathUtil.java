@@ -20,7 +20,15 @@ import net.minecraft.util.math.MathHelper;
 public final class MathUtil {
     private MathUtil() {}
 
+    /**
+     * Performs linear interpolation.
+     *
+     * @param a The endpoint at {@code t == 0}.
+     * @param b The endpoint at {@code t == 1}.
+     * @param t Interpolation parameter. Can be outside {@code [0,1]}.
+     */
     public static float lerp(float a, float b, float t) {
+        // Higher precision than {a + (b - a) * t}
         return a * (1.0f - t) + b * t;
     }
 
