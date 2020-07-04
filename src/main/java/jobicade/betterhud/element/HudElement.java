@@ -90,9 +90,9 @@ public abstract class HudElement<T> {
 		return true;
 	}
 
-	// TODO specify return value when the element is full screen
 	/**
-	 * @return The bounding box containing the rendered element.
+	 * @return The bounding box containing the rendered element. The bounding
+	 * box of an element which is always fullscreen should be empty.
 	 */
 	public abstract Rect render(T context);
 
