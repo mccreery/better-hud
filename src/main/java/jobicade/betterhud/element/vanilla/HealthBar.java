@@ -12,30 +12,30 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
 
 public class HealthBar extends Bar {
-	public HealthBar() {
-		super("health", new StatBarHealth());
-	}
+    public HealthBar() {
+        super("health", new StatBarHealth());
+    }
 
-	/** Used by {@link HealIndicator} */
-	public Direction getIndicatorSide() {
-		if(!position.isCustom() && DirectionOptions.CORNERS.isValid(position.getDirection())) {
-			return getContentAlignment().mirrorCol();
-		} else {
-			return getContentAlignment();
-		}
-	}
+    /** Used by {@link HealIndicator} */
+    public Direction getIndicatorSide() {
+        if(!position.isCustom() && DirectionOptions.CORNERS.isValid(position.getDirection())) {
+            return getContentAlignment().mirrorCol();
+        } else {
+            return getContentAlignment();
+        }
+    }
 
-	@Override
-	public boolean shouldRender(OverlayContext context) {
-		return super.shouldRender(context)
-			&& Minecraft.getMinecraft().playerController.shouldDrawHUD()
-			&& !MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(context.getEvent(), ElementType.HEALTH));
-	}
+    @Override
+    public boolean shouldRender(OverlayContext context) {
+        return super.shouldRender(context)
+            && Minecraft.getMinecraft().playerController.shouldDrawHUD()
+            && !MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(context.getEvent(), ElementType.HEALTH));
+    }
 
-	@Override
-	public Rect render(OverlayContext context) {
-		Rect rect = super.render(context);
-		MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(context.getEvent(), ElementType.HEALTH));
-		return rect;
-	}
+    @Override
+    public Rect render(OverlayContext context) {
+        Rect rect = super.render(context);
+        MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(context.getEvent(), ElementType.HEALTH));
+        return rect;
+    }
 }

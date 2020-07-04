@@ -13,133 +13,133 @@ import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 
 public abstract class StatBar<T> extends DefaultBoxed {
-	protected int getMaximum() {
-		return 20;
-	}
+    protected int getMaximum() {
+        return 20;
+    }
 
-	protected T host;
-	protected Direction contentAlignment = Direction.NORTH_WEST;
+    protected T host;
+    protected Direction contentAlignment = Direction.NORTH_WEST;
 
-	public void setHost(T host) {
-		this.host = host;
-	}
+    public void setHost(T host) {
+        this.host = host;
+    }
 
-	public Direction getContentAlignment() {
-		return contentAlignment;
-	}
+    public Direction getContentAlignment() {
+        return contentAlignment;
+    }
 
-	public StatBar<T> setContentAlignment(Direction contentAlignment) {
-		this.contentAlignment = contentAlignment;
-		return this;
-	}
+    public StatBar<T> setContentAlignment(Direction contentAlignment) {
+        this.contentAlignment = contentAlignment;
+        return this;
+    }
 
-	protected boolean shouldCompress() {
-		return false;
-	}
+    protected boolean shouldCompress() {
+        return false;
+    }
 
-	protected abstract List<Rect> getIcons(int pointsIndex);
-	public boolean shouldRender() { return true; }
+    protected abstract List<Rect> getIcons(int pointsIndex);
+    public boolean shouldRender() { return true; }
 
-	protected int getIconBounce(int pointsIndex) {
-		return 0;
-	}
+    protected int getIconBounce(int pointsIndex) {
+        return 0;
+    }
 
-	protected int getRowSpacing() {
-		return getIconSize();
-	}
+    protected int getRowSpacing() {
+        return getIconSize();
+    }
 
-	protected int getIconSize() {
-		return 9;
-	}
+    protected int getIconSize() {
+        return 9;
+    }
 
-	protected int getRowPoints() {
-		return 20;
-	}
+    protected int getRowPoints() {
+        return 20;
+    }
 
-	/** @return Either {@link Direction#WEST}, {@link Direction#EAST} or {@code null}
-	 * depending on the natural direction of the icons on the spritesheet.
-	 *
-	 * <p>Icon sprites will be flipped horizontally if the native alignment
-	 * does not agree with the current alignment */
-	protected Direction getNativeAlignment() {
-		return null;
-	}
+    /** @return Either {@link Direction#WEST}, {@link Direction#EAST} or {@code null}
+     * depending on the natural direction of the icons on the spritesheet.
+     *
+     * <p>Icon sprites will be flipped horizontally if the native alignment
+     * does not agree with the current alignment */
+    protected Direction getNativeAlignment() {
+        return null;
+    }
 
-	@Override
-	public void render() {
-		if(!DirectionOptions.CORNERS.isValid(contentAlignment)) {
-			throw new IllegalArgumentException("Bar must start in a corner");
-		}
+    @Override
+    public void render() {
+        if(!DirectionOptions.CORNERS.isValid(contentAlignment)) {
+            throw new IllegalArgumentException("Bar must start in a corner");
+        }
 
-		Direction columnWise = contentAlignment.withRow(1).mirrorCol();
-		Rect icon = new Rect(getIconSize(), getIconSize()).anchor(bounds, contentAlignment);
-		Rect rowReturn = new Rect(icon);
+        Direction columnWise = contentAlignment.withRow(1).mirrorCol();
+        Rect icon = new Rect(getIconSize(), getIconSize()).anchor(bounds, contentAlignment);
+        Rect rowReturn = new Rect(icon);
 
-		final int max = getMaximum(), rowPoints = getRowPoints();
-		int rowSpacing = getRowSpacing();
-		if(contentAlignment.getRow() == 2) rowSpacing = -rowSpacing;
-		int i = 0;
+        final int max = getMaximum(), rowPoints = getRowPoints();
+        int rowSpacing = getRowSpacing();
+        if(contentAlignment.getRow() == 2) rowSpacing = -rowSpacing;
+        int i = 0;
 
-		Point textPosition = null;
-		String text = null;
+        Point textPosition = null;
+        String text = null;
 
-		if(shouldCompress()) {
-			int rows = (max - 1) / rowPoints;
-			i = rows * rowPoints;
+        if(shouldCompress()) {
+            int rows = (max - 1) / rowPoints;
+            i = rows * rowPoints;
 
-			for(int x = 0; x < rowPoints; x += 2, icon = icon.align(icon.getAnchor(Direction.CENTER), columnWise.mirrorCol())) {
-				drawIcon(x, icon, contentAlignment);
-			}
-			textPosition = icon.getAnchor(columnWise);
-			text = "x" + rows;
+            for(int x = 0; x < rowPoints; x += 2, icon = icon.align(icon.getAnchor(Direction.CENTER), columnWise.mirrorCol())) {
+                drawIcon(x, icon, contentAlignment);
+            }
+            textPosition = icon.getAnchor(columnWise);
+            text = "x" + rows;
 
-			rowReturn = rowReturn.translate(0, rowSpacing);
-			icon = rowReturn;
-		}
+            rowReturn = rowReturn.translate(0, rowSpacing);
+            icon = rowReturn;
+        }
 
-		for(; i < max; rowReturn = rowReturn.translate(0, rowSpacing), icon = rowReturn) {
-			for(int x = 0; x < rowPoints && i < max; i += 2, x += 2, icon = icon.anchor(icon.grow(-1), columnWise, true)) {
-				drawIcon(i, icon, contentAlignment);
-			}
-		}
+        for(; i < max; rowReturn = rowReturn.translate(0, rowSpacing), icon = rowReturn) {
+            for(int x = 0; x < rowPoints && i < max; i += 2, x += 2, icon = icon.anchor(icon.grow(-1), columnWise, true)) {
+                drawIcon(i, icon, contentAlignment);
+            }
+        }
 
-		if(text != null) {
-			GlUtil.drawString(text, textPosition, columnWise.mirrorCol(), Color.WHITE);
-		}
-	}
+        if(text != null) {
+            GlUtil.drawString(text, textPosition, columnWise.mirrorCol(), Color.WHITE);
+        }
+    }
 
-	protected void drawIcon(int i, Rect bounds, Direction contentAlignment) {
-		bounds = bounds.translate(0, getIconBounce(i));
+    protected void drawIcon(int i, Rect bounds, Direction contentAlignment) {
+        bounds = bounds.translate(0, getIconBounce(i));
 
-		for(Rect texture : getIcons(i)) {
-			if(texture != null) {
-				texture = ensureNative(texture, contentAlignment.withRow(1));
-				GlUtil.drawRect(bounds, texture);
-			}
-		}
-	}
+        for(Rect texture : getIcons(i)) {
+            if(texture != null) {
+                texture = ensureNative(texture, contentAlignment.withRow(1));
+                GlUtil.drawRect(bounds, texture);
+            }
+        }
+    }
 
-	protected Rect ensureNative(Rect texture, Direction alignment) {
-		Direction nativeAlignment = getNativeAlignment();
+    protected Rect ensureNative(Rect texture, Direction alignment) {
+        Direction nativeAlignment = getNativeAlignment();
 
-		if(nativeAlignment != null && nativeAlignment != alignment) {
-			return texture.scale(-1, 1).withX(texture.getRight());
-		} else {
-			return texture;
-		}
-	}
+        if(nativeAlignment != null && nativeAlignment != alignment) {
+            return texture.scale(-1, 1).withX(texture.getRight());
+        } else {
+            return texture;
+        }
+    }
 
-	@Override
-	public Size negotiateSize(Point size) {
-		int rowPoints = getRowPoints();
-		Size rowSize = new Size((getIconSize() - 1) * MathUtil.ceilDiv(rowPoints, 2) + 1, getIconSize());
+    @Override
+    public Size negotiateSize(Point size) {
+        int rowPoints = getRowPoints();
+        Size rowSize = new Size((getIconSize() - 1) * MathUtil.ceilDiv(rowPoints, 2) + 1, getIconSize());
 
-		int rows;
-		if(shouldCompress()) {
-			rows = 2;
-		} else {
-			rows = MathUtil.ceilDiv(getMaximum(), rowPoints);
-		}
-		return rowSize.add(0, (rows - 1) * getRowSpacing());
-	}
+        int rows;
+        if(shouldCompress()) {
+            rows = 2;
+        } else {
+            rows = MathUtil.ceilDiv(getMaximum(), rowPoints);
+        }
+        return rowSize.add(0, (rows - 1) * getRowSpacing());
+    }
 }

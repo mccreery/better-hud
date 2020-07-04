@@ -18,59 +18,59 @@ import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
 
 public class SettingElement extends SettingAlignable {
-	private HudElement<?> value;
-	private GuiActionButton button;
+    private HudElement<?> value;
+    private GuiActionButton button;
 
-	public SettingElement(String name, Direction alignment) {
-		super(name, alignment);
-	}
+    public SettingElement(String name, Direction alignment) {
+        super(name, alignment);
+    }
 
-	public HudElement<?> get() {
-		return value;
-	}
+    public HudElement<?> get() {
+        return value;
+    }
 
-	public void set(HudElement<?> value) {
-		this.value = value;
-	}
+    public void set(HudElement<?> value) {
+        this.value = value;
+    }
 
-	@Override
-	public boolean hasValue() {
-		return true;
-	}
+    @Override
+    public boolean hasValue() {
+        return true;
+    }
 
-	@Override
-	public String getStringValue() {
-		return value != null ? value.getName() : "null";
-	}
+    @Override
+    public String getStringValue() {
+        return value != null ? value.getName() : "null";
+    }
 
-	@Override
-	public void loadStringValue(String save) {
-		value = HudElements.get().getRegistered(save);
-	}
+    @Override
+    public void loadStringValue(String save) {
+        value = HudElements.get().getRegistered(save);
+    }
 
-	@Override
-	public void actionPerformed(GuiElementSettings gui, GuiButton button) {
-		Minecraft.getMinecraft().displayGuiScreen(new GuiElementChooser(gui, gui.element, this));
-	}
+    @Override
+    public void actionPerformed(GuiElementSettings gui, GuiButton button) {
+        Minecraft.getMinecraft().displayGuiScreen(new GuiElementChooser(gui, gui.element, this));
+    }
 
-	@Override
-	public void getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Rect bounds) {
-		String text = getLocalizedName() + ": " + (value != null ? value.getLocalizedName() : I18n.format("betterHud.value.none"));
-		button = new GuiActionButton(text);
-		button.setBounds(bounds);
+    @Override
+    public void getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Rect bounds) {
+        String text = getLocalizedName() + ": " + (value != null ? value.getLocalizedName() : I18n.format("betterHud.value.none"));
+        button = new GuiActionButton(text);
+        button.setBounds(bounds);
 
-		parts.add(button);
-		callbacks.put(button, this);
-	}
+        parts.add(button);
+        callbacks.put(button, this);
+    }
 
-	@Override
-	public void updateGuiParts(Collection<Setting> settings) {
-		button.enabled = enabled();
-	}
+    @Override
+    public void updateGuiParts(Collection<Setting> settings) {
+        button.enabled = enabled();
+    }
 
-	@Override
-	public SettingElement setEnableOn(BooleanSupplier enableOn) {
-		super.setEnableOn(enableOn);
-		return this;
-	}
+    @Override
+    public SettingElement setEnableOn(BooleanSupplier enableOn) {
+        super.setEnableOn(enableOn);
+        return this;
+    }
 }

@@ -15,44 +15,44 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
 
 public class Hotbar extends OverlayElement {
-	private SettingPosition position;
+    private SettingPosition position;
 
-	public Hotbar() {
-		super("hotbar");
+    public Hotbar() {
+        super("hotbar");
 
-		settings.addChild(position = new SettingPosition(DirectionOptions.TOP_BOTTOM, DirectionOptions.NONE));
-		position.setEdge(true).setPostSpacer(2);
-	}
+        settings.addChild(position = new SettingPosition(DirectionOptions.TOP_BOTTOM, DirectionOptions.NONE));
+        position.setEdge(true).setPostSpacer(2);
+    }
 
-	@Override
-	public boolean shouldRender(OverlayContext context) {
-		// TODO make it work correctly with spectator mode
-		return !Minecraft.getMinecraft().player.isSpectator()
-			&& !MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(context.getEvent(), ElementType.HOTBAR));
-	}
+    @Override
+    public boolean shouldRender(OverlayContext context) {
+        // TODO make it work correctly with spectator mode
+        return !Minecraft.getMinecraft().player.isSpectator()
+            && !MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(context.getEvent(), ElementType.HOTBAR));
+    }
 
-	@Override
-	public Rect render(OverlayContext context) {
-		Rect barTexture = new Rect(182, 22);
-		Rect bounds = position.applyTo(new Rect(barTexture));
+    @Override
+    public Rect render(OverlayContext context) {
+        Rect barTexture = new Rect(182, 22);
+        Rect bounds = position.applyTo(new Rect(barTexture));
 
-		Minecraft.getMinecraft().getTextureManager().bindTexture(Textures.WIDGETS);
-		GlUtil.drawRect(bounds, barTexture);
+        Minecraft.getMinecraft().getTextureManager().bindTexture(Textures.WIDGETS);
+        GlUtil.drawRect(bounds, barTexture);
 
-		Rect slot = bounds.grow(-3).withWidth(16);
+        Rect slot = bounds.grow(-3).withWidth(16);
 
-		float partialTicks = context.getPartialTicks();
-		for(int i = 0; i < 9; i++, slot = slot.translate(Direction.EAST.scale(20))) {
-			if(i == Minecraft.getMinecraft().player.inventory.currentItem) {
-				Minecraft.getMinecraft().getTextureManager().bindTexture(Textures.WIDGETS);
-				GlUtil.drawRect(slot.grow(4), new Rect(0, 22, 24, 24));
-			}
+        float partialTicks = context.getPartialTicks();
+        for(int i = 0; i < 9; i++, slot = slot.translate(Direction.EAST.scale(20))) {
+            if(i == Minecraft.getMinecraft().player.inventory.currentItem) {
+                Minecraft.getMinecraft().getTextureManager().bindTexture(Textures.WIDGETS);
+                GlUtil.drawRect(slot.grow(4), new Rect(0, 22, 24, 24));
+            }
 
-			GlUtil.renderHotbarItem(slot, Minecraft.getMinecraft().player.inventory.mainInventory.get(i), partialTicks);
-		}
+            GlUtil.renderHotbarItem(slot, Minecraft.getMinecraft().player.inventory.mainInventory.get(i), partialTicks);
+        }
 
-		Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
-		MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(context.getEvent(), ElementType.HOTBAR));
-		return bounds;
-	}
+        Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+        MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(context.getEvent(), ElementType.HOTBAR));
+        return bounds;
+    }
 }

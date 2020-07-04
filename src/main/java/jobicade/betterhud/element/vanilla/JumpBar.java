@@ -16,41 +16,41 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
 
 public class JumpBar extends OverlayElement {
-	private SettingPosition position;
+    private SettingPosition position;
 
-	public JumpBar() {
-		super("jumpBar");
+    public JumpBar() {
+        super("jumpBar");
 
-		settings.addChild(position = new SettingPosition("position", DirectionOptions.BAR, DirectionOptions.NORTH_SOUTH));
-	}
+        settings.addChild(position = new SettingPosition("position", DirectionOptions.BAR, DirectionOptions.NORTH_SOUTH));
+    }
 
-	@Override
-	public boolean shouldRender(OverlayContext context) {
-		return Minecraft.getMinecraft().player.isRidingHorse()
-			&& !MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(context.getEvent(), ElementType.JUMPBAR));
-	}
+    @Override
+    public boolean shouldRender(OverlayContext context) {
+        return Minecraft.getMinecraft().player.isRidingHorse()
+            && !MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(context.getEvent(), ElementType.JUMPBAR));
+    }
 
-	@Override
-	public Rect render(OverlayContext context) {
-		Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+    @Override
+    public Rect render(OverlayContext context) {
+        Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
 
-		Rect bounds = new Rect(182, 5);
-		if(!position.isCustom() && position.getDirection() == Direction.SOUTH) {
-			bounds = MANAGER.position(Direction.SOUTH, bounds, false, 1);
-		} else {
-			bounds = position.applyTo(bounds);
-		}
+        Rect bounds = new Rect(182, 5);
+        if(!position.isCustom() && position.getDirection() == Direction.SOUTH) {
+            bounds = MANAGER.position(Direction.SOUTH, bounds, false, 1);
+        } else {
+            bounds = position.applyTo(bounds);
+        }
 
-		float charge = Minecraft.getMinecraft().player.getHorseJumpPower();
-		int filled = (int)(charge * bounds.getWidth());
+        float charge = Minecraft.getMinecraft().player.getHorseJumpPower();
+        int filled = (int)(charge * bounds.getWidth());
 
-		GlUtil.drawRect(bounds, bounds.move(0, 84));
+        GlUtil.drawRect(bounds, bounds.move(0, 84));
 
-		if(filled > 0) {
-			GlUtil.drawRect(bounds.withWidth(filled), new Rect(0, 89, filled, bounds.getHeight()));
-		}
+        if(filled > 0) {
+            GlUtil.drawRect(bounds.withWidth(filled), new Rect(0, 89, filled, bounds.getHeight()));
+        }
 
-		MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(context.getEvent(), ElementType.JUMPBAR));
-		return bounds;
-	}
+        MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(context.getEvent(), ElementType.JUMPBAR));
+        return bounds;
+    }
 }

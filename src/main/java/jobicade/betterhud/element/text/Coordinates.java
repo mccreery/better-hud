@@ -21,52 +21,52 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 
 public class Coordinates extends TextElement {
-	private SettingBoolean spaced;
-	private SettingSlider decimalPlaces;
+    private SettingBoolean spaced;
+    private SettingSlider decimalPlaces;
 
-	public Coordinates() {
-		super("coordinates");
+    public Coordinates() {
+        super("coordinates");
 
-		settings.addChildren(
-			new Legend("misc"),
-			spaced = new SettingBoolean("spaced"),
-			decimalPlaces = new SettingSlider("precision", 0, 5, 1).setUnlocalizedValue("betterHud.value.places")
-		);
-	}
+        settings.addChildren(
+            new Legend("misc"),
+            spaced = new SettingBoolean("spaced"),
+            decimalPlaces = new SettingSlider("precision", 0, 5, 1).setUnlocalizedValue("betterHud.value.places")
+        );
+    }
 
-	@Override
-	public Rect render(OverlayContext context, List<String> text) {
-		if(!spaced.get() || !position.isDirection(Direction.NORTH) && !position.isDirection(Direction.SOUTH)) {
-			return super.render(context, text);
-		}
+    @Override
+    public Rect render(OverlayContext context, List<String> text) {
+        if(!spaced.get() || !position.isDirection(Direction.NORTH) && !position.isDirection(Direction.SOUTH)) {
+            return super.render(context, text);
+        }
 
-		Grid<Label> grid = new Grid<>(new Point(3, 1), text.stream().map(Label::new).collect(Collectors.toList()))
-			.setCellAlignment(position.getDirection()).setGutter(new Point(5, 5));
+        Grid<Label> grid = new Grid<>(new Point(3, 1), text.stream().map(Label::new).collect(Collectors.toList()))
+            .setCellAlignment(position.getDirection()).setGutter(new Point(5, 5));
 
-		Size size = grid.getPreferredSize();
-		if(size.getX() < 150) size = size.withX(150);
-		Rect bounds = MANAGER.position(position.getDirection(), new Rect(size));
+        Size size = grid.getPreferredSize();
+        if(size.getX() < 150) size = size.withX(150);
+        Rect bounds = MANAGER.position(position.getDirection(), new Rect(size));
 
-		grid.setBounds(bounds).render();
-		return bounds;
-	}
+        grid.setBounds(bounds).render();
+        return bounds;
+    }
 
-	@Override
-	protected List<String> getText() {
-		DecimalFormat format = new DecimalFormat();
-		format.setMaximumFractionDigits((int)decimalPlaces.getValue());
+    @Override
+    protected List<String> getText() {
+        DecimalFormat format = new DecimalFormat();
+        format.setMaximumFractionDigits((int)decimalPlaces.getValue());
 
-		String x = format.format(Minecraft.getMinecraft().player.posX);
-		String y = format.format(Minecraft.getMinecraft().player.posY);
-		String z = format.format(Minecraft.getMinecraft().player.posZ);
+        String x = format.format(Minecraft.getMinecraft().player.posX);
+        String y = format.format(Minecraft.getMinecraft().player.posY);
+        String z = format.format(Minecraft.getMinecraft().player.posZ);
 
-		if(spaced.get()) {
-			x = I18n.format("betterHud.hud.x", x);
-			y = I18n.format("betterHud.hud.y", y);
-			z = I18n.format("betterHud.hud.z", z);
-			return Arrays.asList(x, y, z);
-		} else {
-			return Arrays.asList(I18n.format("betterHud.hud.xyz", x, y, z));
-		}
-	}
+        if(spaced.get()) {
+            x = I18n.format("betterHud.hud.x", x);
+            y = I18n.format("betterHud.hud.y", y);
+            z = I18n.format("betterHud.hud.z", z);
+            return Arrays.asList(x, y, z);
+        } else {
+            return Arrays.asList(I18n.format("betterHud.hud.xyz", x, y, z));
+        }
+    }
 }

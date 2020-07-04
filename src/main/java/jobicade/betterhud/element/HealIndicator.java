@@ -17,46 +17,46 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 
 public class HealIndicator extends OverlayElement {
-	private SettingPosition position;
-	private SettingChoose mode;
+    private SettingPosition position;
+    private SettingChoose mode;
 
-	public HealIndicator() {
-		super("healIndicator");
+    public HealIndicator() {
+        super("healIndicator");
 
-		settings.addChildren(
-			position = new SettingPosition(DirectionOptions.NONE, DirectionOptions.NONE),
-			new Legend("misc"),
-			mode = new SettingChoose(2)
-		);
-	}
+        settings.addChildren(
+            position = new SettingPosition(DirectionOptions.NONE, DirectionOptions.NONE),
+            new Legend("misc"),
+            mode = new SettingChoose(2)
+        );
+    }
 
-	@Override
-	public Rect render(OverlayContext context) {
-			String healIndicator = I18n.format("betterHud.hud.healIndicator");
-			Rect bounds = mode.getIndex() == 0 ? new Rect(Minecraft.getMinecraft().fontRenderer.getStringWidth(healIndicator), Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT) : new Rect(9, 9);
+    @Override
+    public Rect render(OverlayContext context) {
+            String healIndicator = I18n.format("betterHud.hud.healIndicator");
+            Rect bounds = mode.getIndex() == 0 ? new Rect(Minecraft.getMinecraft().fontRenderer.getStringWidth(healIndicator), Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT) : new Rect(9, 9);
 
-			if(position.isCustom()) {
-				bounds = position.applyTo(bounds);
-			} else {
-				Direction side = OverlayElements.HEALTH.getIndicatorSide();
-				bounds = bounds.align(OverlayElements.HEALTH.getLastBounds().grow(SPACER, 0, SPACER, 0).getAnchor(side), side.mirrorCol());
-			}
+            if(position.isCustom()) {
+                bounds = position.applyTo(bounds);
+            } else {
+                Direction side = OverlayElements.HEALTH.getIndicatorSide();
+                bounds = bounds.align(OverlayElements.HEALTH.getLastBounds().grow(SPACER, 0, SPACER, 0).getAnchor(side), side.mirrorCol());
+            }
 
-			if(mode.getIndex() == 0) {
-				GlUtil.drawString(healIndicator, bounds.getPosition(), Direction.NORTH_WEST, Color.GREEN);
-			} else {
-				Minecraft.getMinecraft().getTextureManager().bindTexture(Textures.HUD_ICONS);
-				Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(bounds.getX(), bounds.getY(), 0, 80, 9, 9);
-			}
-			return bounds;
-	}
+            if(mode.getIndex() == 0) {
+                GlUtil.drawString(healIndicator, bounds.getPosition(), Direction.NORTH_WEST, Color.GREEN);
+            } else {
+                Minecraft.getMinecraft().getTextureManager().bindTexture(Textures.HUD_ICONS);
+                Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(bounds.getX(), bounds.getY(), 0, 80, 9, 9);
+            }
+            return bounds;
+    }
 
-	/** @see net.minecraft.util.FoodStats#onUpdate(net.minecraft.entity.player.EntityPlayer) */
-	@Override
-	public boolean shouldRender(OverlayContext context) {
-		return Minecraft.getMinecraft().playerController.gameIsSurvivalOrAdventure()
-			&& Minecraft.getMinecraft().world.getGameRules().getBoolean("naturalRegeneration")
-			&& Minecraft.getMinecraft().player.getFoodStats().getFoodLevel() >= 18
-			&& Minecraft.getMinecraft().player.shouldHeal();
-	}
+    /** @see net.minecraft.util.FoodStats#onUpdate(net.minecraft.entity.player.EntityPlayer) */
+    @Override
+    public boolean shouldRender(OverlayContext context) {
+        return Minecraft.getMinecraft().playerController.gameIsSurvivalOrAdventure()
+            && Minecraft.getMinecraft().world.getGameRules().getBoolean("naturalRegeneration")
+            && Minecraft.getMinecraft().player.getFoodStats().getFoodLevel() >= 18
+            && Minecraft.getMinecraft().player.shouldHeal();
+    }
 }

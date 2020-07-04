@@ -10,26 +10,26 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
 
 public class FoodBar extends Bar {
-	private SettingBoolean hideMount;
+    private SettingBoolean hideMount;
 
-	public FoodBar() {
-		super("food", new StatBarFood());
+    public FoodBar() {
+        super("food", new StatBarFood());
 
-		settings.addChild(hideMount = new SettingBoolean("hideMount"));
-	}
+        settings.addChild(hideMount = new SettingBoolean("hideMount"));
+    }
 
-	@Override
-	public boolean shouldRender(OverlayContext context) {
-		return super.shouldRender(context)
-			&& Minecraft.getMinecraft().playerController.shouldDrawHUD()
-			&& (!hideMount.get() || !Minecraft.getMinecraft().player.isRidingHorse())
-			&& !MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(context.getEvent(), ElementType.FOOD));
-	}
+    @Override
+    public boolean shouldRender(OverlayContext context) {
+        return super.shouldRender(context)
+            && Minecraft.getMinecraft().playerController.shouldDrawHUD()
+            && (!hideMount.get() || !Minecraft.getMinecraft().player.isRidingHorse())
+            && !MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(context.getEvent(), ElementType.FOOD));
+    }
 
-	@Override
-	public Rect render(OverlayContext context) {
-		Rect rect = super.render(context);
-		MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(context.getEvent(), ElementType.FOOD));
-		return rect;
-	}
+    @Override
+    public Rect render(OverlayContext context) {
+        Rect rect = super.render(context);
+        MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(context.getEvent(), ElementType.FOOD));
+        return rect;
+    }
 }

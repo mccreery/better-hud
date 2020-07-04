@@ -10,25 +10,25 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 
 public class FullInvIndicator extends TextElement {
-	private SettingBoolean offHand;
+    private SettingBoolean offHand;
 
-	public FullInvIndicator() {
-		super("fullInvIndicator");
+    public FullInvIndicator() {
+        super("fullInvIndicator");
 
-		settings.addChildren(
-			new Legend("misc"),
-			offHand = new SettingBoolean("offhand")
-		);
-	}
+        settings.addChildren(
+            new Legend("misc"),
+            offHand = new SettingBoolean("offhand")
+        );
+    }
 
-	@Override
-	protected List<String> getText() {
-		return Arrays.asList(I18n.format("betterHud.hud.fullInv"));
-	}
+    @Override
+    protected List<String> getText() {
+        return Arrays.asList(I18n.format("betterHud.hud.fullInv"));
+    }
 
-	@Override
-	public boolean shouldRender(OverlayContext context) {
-		return Minecraft.getMinecraft().player.inventory.getFirstEmptyStack() == -1 &&
-			(!offHand.get() || !Minecraft.getMinecraft().player.inventory.offHandInventory.get(0).isEmpty());
-	}
+    @Override
+    public boolean shouldRender(OverlayContext context) {
+        return Minecraft.getMinecraft().player.inventory.getFirstEmptyStack() == -1 &&
+            (!offHand.get() || !Minecraft.getMinecraft().player.inventory.offHandInventory.get(0).isEmpty());
+    }
 }

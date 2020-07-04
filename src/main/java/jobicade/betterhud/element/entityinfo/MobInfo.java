@@ -20,53 +20,53 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.EntityLivingBase;
 
 public class MobInfo extends BillboardElement {
-	private final StatBarHealth bar = new StatBarHealth();
-	private SettingSlider compress;
+    private final StatBarHealth bar = new StatBarHealth();
+    private SettingSlider compress;
 
-	public MobInfo() {
-		super("mobInfo");
+    public MobInfo() {
+        super("mobInfo");
 
-		settings.addChild(compress = new SettingSlider("compress", 0, 200, 20) {
-			@Override
-			public String getDisplayValue(double value) {
-				if(value == 0) {
-					return I18n.format("betterHud.value.never");
-				} else {
-					return super.getDisplayValue(value);
-				}
-			}
-		});
-	}
+        settings.addChild(compress = new SettingSlider("compress", 0, 200, 20) {
+            @Override
+            public String getDisplayValue(double value) {
+                if(value == 0) {
+                    return I18n.format("betterHud.value.never");
+                } else {
+                    return super.getDisplayValue(value);
+                }
+            }
+        });
+    }
 
-	@Override
-	public Rect render(BillboardContext context) {
-		EntityLivingBase entity = context.getPointedEntity();
-		bar.setHost(entity);
-		bar.setCompressThreshold((int)compress.getValue());
+    @Override
+    public Rect render(BillboardContext context) {
+        EntityLivingBase entity = context.getPointedEntity();
+        bar.setHost(entity);
+        bar.setCompressThreshold((int)compress.getValue());
 
-		int health = MathUtil.getHealthForDisplay(entity.getHealth());
-		int maxHealth = MathUtil.getHealthForDisplay(entity.getMaxHealth());
+        int health = MathUtil.getHealthForDisplay(entity.getHealth());
+        int maxHealth = MathUtil.getHealthForDisplay(entity.getMaxHealth());
 
-		String text = String.format("%s %s(%d/%d)", entity.getName(), ChatFormatting.GRAY, health, maxHealth);
+        String text = String.format("%s %s(%d/%d)", entity.getName(), ChatFormatting.GRAY, health, maxHealth);
 
-		Point size = GlUtil.getStringSize(text);
-		Point barSize = bar.getPreferredSize();
+        Point size = GlUtil.getStringSize(text);
+        Point barSize = bar.getPreferredSize();
 
-		if(barSize.getX() > size.getX()) {
-			size = new Point(barSize.getX(), size.getY() + barSize.getY());
-		} else {
-			size = size.add(0, barSize.getY());
-		}
+        if(barSize.getX() > size.getX()) {
+            size = new Point(barSize.getX(), size.getY() + barSize.getY());
+        } else {
+            size = size.add(0, barSize.getY());
+        }
 
-		Rect bounds = MANAGER.position(Direction.SOUTH, new Rect(size).grow(SPACER));
-		GlUtil.drawRect(bounds, Color.TRANSLUCENT);
-		bounds = bounds.grow(-SPACER);
+        Rect bounds = MANAGER.position(Direction.SOUTH, new Rect(size).grow(SPACER));
+        GlUtil.drawRect(bounds, Color.TRANSLUCENT);
+        bounds = bounds.grow(-SPACER);
 
-		GlUtil.drawString(text, bounds.getPosition(), Direction.NORTH_WEST, Color.WHITE);
-		Rect barRect = new Rect(barSize).anchor(bounds, Direction.SOUTH_WEST);
+        GlUtil.drawString(text, bounds.getPosition(), Direction.NORTH_WEST, Color.WHITE);
+        Rect barRect = new Rect(barSize).anchor(bounds, Direction.SOUTH_WEST);
 
-		Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
-		bar.setBounds(barRect).render();
-		return null;
-	}
+        Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+        bar.setBounds(barRect).render();
+        return null;
+    }
 }

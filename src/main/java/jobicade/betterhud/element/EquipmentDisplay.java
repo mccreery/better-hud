@@ -11,59 +11,59 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 
 public abstract class EquipmentDisplay extends OverlayElement {
-	private SettingBoolean showName;
-	private SettingBoolean showDurability;
-	private SettingWarnings warnings;
-	private SettingChoose durabilityMode;
-	private SettingBoolean showUndamaged;
+    private SettingBoolean showName;
+    private SettingBoolean showDurability;
+    private SettingWarnings warnings;
+    private SettingChoose durabilityMode;
+    private SettingBoolean showUndamaged;
 
-	public EquipmentDisplay(String name) {
-		super(name);
+    public EquipmentDisplay(String name) {
+        super(name);
 
-		settings.addChildren(
-			showName = new SettingBoolean("showName"),
-			showDurability = new SettingBoolean("showDurability", Direction.WEST),
-			durabilityMode = new SettingChoose("durabilityFormat", Direction.EAST, "points", "percentage").setEnableOn(showDurability::get),
-			showUndamaged = new SettingBoolean("showUndamaged").setEnableOn(showDurability::get).setValuePrefix("betterHud.value.visible"),
-			warnings = new SettingWarnings("damageWarning")
-		);
-	}
+        settings.addChildren(
+            showName = new SettingBoolean("showName"),
+            showDurability = new SettingBoolean("showDurability", Direction.WEST),
+            durabilityMode = new SettingChoose("durabilityFormat", Direction.EAST, "points", "percentage").setEnableOn(showDurability::get),
+            showUndamaged = new SettingBoolean("showUndamaged").setEnableOn(showDurability::get).setValuePrefix("betterHud.value.visible"),
+            warnings = new SettingWarnings("damageWarning")
+        );
+    }
 
-	protected boolean hasText() {
-		return showName.get() || showDurability.get();
-	}
+    protected boolean hasText() {
+        return showName.get() || showDurability.get();
+    }
 
-	protected boolean showDurability(ItemStack stack) {
-		return showDurability.get() && (showUndamaged.get() ? stack.isItemStackDamageable() : stack.isItemDamaged());
-	}
+    protected boolean showDurability(ItemStack stack) {
+        return showDurability.get() && (showUndamaged.get() ? stack.isItemStackDamageable() : stack.isItemDamaged());
+    }
 
-	protected String getText(ItemStack stack) {
-		if(!hasText() || stack.isEmpty()) return null;
-		ArrayList<String> parts = new ArrayList<String>();
+    protected String getText(ItemStack stack) {
+        if(!hasText() || stack.isEmpty()) return null;
+        ArrayList<String> parts = new ArrayList<String>();
 
-		if(this.showName.get()) {
-			parts.add(stack.getDisplayName());
-		}
+        if(this.showName.get()) {
+            parts.add(stack.getDisplayName());
+        }
 
-		int maxDurability = stack.getMaxDamage();
-		int durability = maxDurability - stack.getItemDamage();
+        int maxDurability = stack.getMaxDamage();
+        int durability = maxDurability - stack.getItemDamage();
 
-		float value = (float)durability / (float)maxDurability;
+        float value = (float)durability / (float)maxDurability;
 
-		if(showDurability(stack)) {
-			if(durabilityMode.getIndex() == 1) {
-				parts.add(MathUtil.formatToPlaces(value * 100, 1) + "%");
-			} else {
-				parts.add(durability + "/" + maxDurability);
-			}
-		}
+        if(showDurability(stack)) {
+            if(durabilityMode.getIndex() == 1) {
+                parts.add(MathUtil.formatToPlaces(value * 100, 1) + "%");
+            } else {
+                parts.add(durability + "/" + maxDurability);
+            }
+        }
 
-		String text = String.join(" - ", parts);
+        String text = String.join(" - ", parts);
 
-		if(stack.isItemStackDamageable()) {
-			int count = warnings.getWarning(value);
-			if(count > 0) text += ' ' + I18n.format("betterHud.setting.warning." + count);
-		}
-		return text;
-	}
+        if(stack.isItemStackDamageable()) {
+            int count = warnings.getWarning(value);
+            if(count > 0) text += ' ' + I18n.format("betterHud.setting.warning." + count);
+        }
+        return text;
+    }
 }

@@ -19,153 +19,153 @@ import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.resources.I18n;
 
 public class SettingAbsolutePosition extends Setting {
-	public GuiTextField xBox, yBox;
-	public GuiButton pick;
-	private GuiButton xUp, xDown, yUp, yDown;
+    public GuiTextField xBox, yBox;
+    public GuiButton pick;
+    private GuiButton xUp, xDown, yUp, yDown;
 
-	private final SettingPosition position;
+    private final SettingPosition position;
 
-	protected int x, y, cancelX, cancelY;
-	protected boolean isPicking = false;
+    protected int x, y, cancelX, cancelY;
+    protected boolean isPicking = false;
 
-	public boolean isPicking() {
-		return isPicking;
-	}
+    public boolean isPicking() {
+        return isPicking;
+    }
 
-	public SettingAbsolutePosition(String name) {
-		this(name, null);
-	}
+    public SettingAbsolutePosition(String name) {
+        this(name, null);
+    }
 
-	public SettingAbsolutePosition(String name, SettingPosition position) {
-		super(name);
-		this.position = position;
-	}
+    public SettingAbsolutePosition(String name, SettingPosition position) {
+        super(name);
+        this.position = position;
+    }
 
-	@Override
-	public Point getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Point origin) {
-		parts.add(xBox = new GuiTextField(0, Minecraft.getMinecraft().fontRenderer, origin.getX() - 106, origin.getY() + 1, 80, 18));
-		xBox.setText(String.valueOf(x));
-		parts.add(yBox = new GuiTextField(0, Minecraft.getMinecraft().fontRenderer, origin.getX() + 2, origin.getY() + 1, 80, 18));
-		yBox.setText(String.valueOf(y));
+    @Override
+    public Point getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Point origin) {
+        parts.add(xBox = new GuiTextField(0, Minecraft.getMinecraft().fontRenderer, origin.getX() - 106, origin.getY() + 1, 80, 18));
+        xBox.setText(String.valueOf(x));
+        parts.add(yBox = new GuiTextField(0, Minecraft.getMinecraft().fontRenderer, origin.getX() + 2, origin.getY() + 1, 80, 18));
+        yBox.setText(String.valueOf(y));
 
-		parts.add(xUp   = new GuiUpDownButton(true ).setBounds(new Rect(origin.getX() - 22, origin.getY(),      0, 0)).setId(0).setRepeat());
-		parts.add(xDown = new GuiUpDownButton(false).setBounds(new Rect(origin.getX() - 22, origin.getY() + 10, 0, 0)).setId(1).setRepeat());
-		parts.add(yUp   = new GuiUpDownButton(true ).setBounds(new Rect(origin.getX() + 86, origin.getY(),      0, 0)).setId(2).setRepeat());
-		parts.add(yDown = new GuiUpDownButton(false).setBounds(new Rect(origin.getX() + 86, origin.getY() + 10, 0, 0)).setId(3).setRepeat());
+        parts.add(xUp   = new GuiUpDownButton(true ).setBounds(new Rect(origin.getX() - 22, origin.getY(),      0, 0)).setId(0).setRepeat());
+        parts.add(xDown = new GuiUpDownButton(false).setBounds(new Rect(origin.getX() - 22, origin.getY() + 10, 0, 0)).setId(1).setRepeat());
+        parts.add(yUp   = new GuiUpDownButton(true ).setBounds(new Rect(origin.getX() + 86, origin.getY(),      0, 0)).setId(2).setRepeat());
+        parts.add(yDown = new GuiUpDownButton(false).setBounds(new Rect(origin.getX() + 86, origin.getY() + 10, 0, 0)).setId(3).setRepeat());
 
-		if(position != null) {
-			parts.add(pick = new GuiButton(4, origin.getX() - 100, origin.getY() + 22, 200, 20, I18n.format("betterHud.menu.pick")));
-			callbacks.put(pick, this);
-		}
+        if(position != null) {
+            parts.add(pick = new GuiButton(4, origin.getX() - 100, origin.getY() + 22, 200, 20, I18n.format("betterHud.menu.pick")));
+            callbacks.put(pick, this);
+        }
 
-		callbacks.put(xBox, this);
-		callbacks.put(yBox, this);
-		callbacks.put(xUp, this);
-		callbacks.put(xDown, this);
-		callbacks.put(yUp, this);
-		callbacks.put(yDown, this);
+        callbacks.put(xBox, this);
+        callbacks.put(yBox, this);
+        callbacks.put(xUp, this);
+        callbacks.put(xDown, this);
+        callbacks.put(yUp, this);
+        callbacks.put(yDown, this);
 
-		return origin.add(0, 42 + SPACER);
-	}
+        return origin.add(0, 42 + SPACER);
+    }
 
-	public void updateText() {
-		if(xBox != null && yBox != null) {
-			xBox.setText(String.valueOf(x));
-			yBox.setText(String.valueOf(y));
-		}
-	}
+    public void updateText() {
+        if(xBox != null && yBox != null) {
+            xBox.setText(String.valueOf(x));
+            yBox.setText(String.valueOf(y));
+        }
+    }
 
-	@Override
-	public void actionPerformed(GuiElementSettings gui, GuiButton button) {
-		switch(button.id) {
-			case 0: xBox.setText(String.valueOf(++x)); break;
-			case 1: xBox.setText(String.valueOf(--x)); break;
-			case 2: yBox.setText(String.valueOf(++y)); break;
-			case 3: yBox.setText(String.valueOf(--y)); break;
-			case 4: Minecraft.getMinecraft().displayGuiScreen(new GuiOffsetChooser(gui, position)); break;
-		}
-	}
+    @Override
+    public void actionPerformed(GuiElementSettings gui, GuiButton button) {
+        switch(button.id) {
+            case 0: xBox.setText(String.valueOf(++x)); break;
+            case 1: xBox.setText(String.valueOf(--x)); break;
+            case 2: yBox.setText(String.valueOf(++y)); break;
+            case 3: yBox.setText(String.valueOf(--y)); break;
+            case 4: Minecraft.getMinecraft().displayGuiScreen(new GuiOffsetChooser(gui, position)); break;
+        }
+    }
 
-	/** Forgets the original position and keeps the current picked position */
-	public void finishPicking() {
-		isPicking = false;
-		//pick.displayString = I18n.format("betterHud.menu.pick");
-	}
+    /** Forgets the original position and keeps the current picked position */
+    public void finishPicking() {
+        isPicking = false;
+        //pick.displayString = I18n.format("betterHud.menu.pick");
+    }
 
-	public void set(Point value) {
-		x = value.getX();
-		y = value.getY();
-		updateText();
-	}
+    public void set(Point value) {
+        x = value.getX();
+        y = value.getY();
+        updateText();
+    }
 
-	public Point get() {
-		return new Point(x, y);
-	}
+    public Point get() {
+        return new Point(x, y);
+    }
 
-	@Override
-	public boolean hasValue() {
-		return true;
-	}
+    @Override
+    public boolean hasValue() {
+        return true;
+    }
 
-	@Override
-	public String getStringValue() {
-		return x + ", " + y;
-	}
+    @Override
+    public String getStringValue() {
+        return x + ", " + y;
+    }
 
-	@Override
-	public void loadStringValue(String val) {
-		int comma = val.indexOf(',');
+    @Override
+    public void loadStringValue(String val) {
+        int comma = val.indexOf(',');
 
-		if (comma == -1) {
-			//return false;
-		}
+        if (comma == -1) {
+            //return false;
+        }
 
-		int x, y;
-		try {
-			x = Integer.parseInt(val.substring(0, comma).trim());
-			y = Integer.parseInt(val.substring(comma + 1).trim());
-		} catch (NumberFormatException e) {
-			//return false;
-			return;
-		}
+        int x, y;
+        try {
+            x = Integer.parseInt(val.substring(0, comma).trim());
+            y = Integer.parseInt(val.substring(comma + 1).trim());
+        } catch (NumberFormatException e) {
+            //return false;
+            return;
+        }
 
-		set(new Point(x, y));
-	}
+        set(new Point(x, y));
+    }
 
-	@Override
-	public void updateGuiParts(Collection<Setting> settings) {
-		super.updateGuiParts(settings);
+    @Override
+    public void updateGuiParts(Collection<Setting> settings) {
+        super.updateGuiParts(settings);
 
-		boolean enabled = enabled();
-		xBox.setEnabled(enabled);
-		yBox.setEnabled(enabled);
+        boolean enabled = enabled();
+        xBox.setEnabled(enabled);
+        yBox.setEnabled(enabled);
 
-		if(pick != null) pick.enabled = enabled;
+        if(pick != null) pick.enabled = enabled;
 
-		if(enabled) {
-			try {
-				x = Integer.parseInt(xBox.getText());
-				xUp.enabled = xDown.enabled = true;
-			} catch(NumberFormatException e) {
-				x = 0;
-				xUp.enabled = xDown.enabled = false;
-			}
+        if(enabled) {
+            try {
+                x = Integer.parseInt(xBox.getText());
+                xUp.enabled = xDown.enabled = true;
+            } catch(NumberFormatException e) {
+                x = 0;
+                xUp.enabled = xDown.enabled = false;
+            }
 
-			try {
-				y = Integer.parseInt(yBox.getText());
-				yUp.enabled = yDown.enabled = true;
-			} catch(NumberFormatException e) {
-				y = 0;
-				yUp.enabled = yDown.enabled = false;
-			}
-		} else {
-			xUp.enabled = xDown.enabled = yUp.enabled = yDown.enabled = false;
-		}
-	}
+            try {
+                y = Integer.parseInt(yBox.getText());
+                yUp.enabled = yDown.enabled = true;
+            } catch(NumberFormatException e) {
+                y = 0;
+                yUp.enabled = yDown.enabled = false;
+            }
+        } else {
+            xUp.enabled = xDown.enabled = yUp.enabled = yDown.enabled = false;
+        }
+    }
 
-	@Override
-	public SettingAbsolutePosition setEnableOn(BooleanSupplier enableOn) {
-		super.setEnableOn(enableOn);
-		return this;
-	}
+    @Override
+    public SettingAbsolutePosition setEnableOn(BooleanSupplier enableOn) {
+        super.setEnableOn(enableOn);
+        return this;
+    }
 }

@@ -8,19 +8,19 @@ import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.EnumSkyBlock;
 
 public class LightLevel extends TextElement {
-	public LightLevel() {
-		super("lightLevel");
-	}
+    public LightLevel() {
+        super("lightLevel");
+    }
 
-	@Override
-	protected List<String> getText() {
-		BlockPos position = new BlockPos(Minecraft.getMinecraft().player.posX, Minecraft.getMinecraft().player.posY, Minecraft.getMinecraft().player.posZ);
+    @Override
+    protected List<String> getText() {
+        BlockPos position = new BlockPos(Minecraft.getMinecraft().player.posX, Minecraft.getMinecraft().player.posY, Minecraft.getMinecraft().player.posZ);
 
-		int light = 0;
-		if(Minecraft.getMinecraft().world != null && Minecraft.getMinecraft().world.isBlockLoaded(position)) {
-			light = Minecraft.getMinecraft().world.getLightFor(EnumSkyBlock.SKY, position) - Minecraft.getMinecraft().world.calculateSkylightSubtracted(1.0F);
-			light = Math.max(light, Minecraft.getMinecraft().world.getLightFor(EnumSkyBlock.BLOCK, position));
-		}
-		return Arrays.asList(getLocalizedName() + ": " + light);
-	}
+        int light = 0;
+        if(Minecraft.getMinecraft().world != null && Minecraft.getMinecraft().world.isBlockLoaded(position)) {
+            light = Minecraft.getMinecraft().world.getLightFor(EnumSkyBlock.SKY, position) - Minecraft.getMinecraft().world.calculateSkylightSubtracted(1.0F);
+            light = Math.max(light, Minecraft.getMinecraft().world.getLightFor(EnumSkyBlock.BLOCK, position));
+        }
+        return Arrays.asList(getLocalizedName() + ": " + light);
+    }
 }

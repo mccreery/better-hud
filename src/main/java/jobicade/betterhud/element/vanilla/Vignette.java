@@ -20,79 +20,79 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
 
 public class Vignette extends OverlayElement {
-	private static final ResourceLocation VIGNETTE_TEX_PATH = new ResourceLocation("textures/misc/vignette.png");
+    private static final ResourceLocation VIGNETTE_TEX_PATH = new ResourceLocation("textures/misc/vignette.png");
 
-	private SettingBoolean warnings;
-	private float brightness = 1;
+    private SettingBoolean warnings;
+    private float brightness = 1;
 
-	public Vignette() {
-		super("vignette");
+    public Vignette() {
+        super("vignette");
 
-		settings.addChild(warnings = new SettingBoolean("warnings").setValuePrefix(SettingBoolean.VISIBLE));
-	}
+        settings.addChild(warnings = new SettingBoolean("warnings").setValuePrefix(SettingBoolean.VISIBLE));
+    }
 
-	@Override
-	public boolean shouldRender(OverlayContext context) {
-		return Minecraft.isFancyGraphicsEnabled()
-			&& !MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(context.getEvent(), ElementType.VIGNETTE));
-	}
+    @Override
+    public boolean shouldRender(OverlayContext context) {
+        return Minecraft.isFancyGraphicsEnabled()
+            && !MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(context.getEvent(), ElementType.VIGNETTE));
+    }
 
-	@Override
-	public Rect render(OverlayContext context) {
-		WorldBorder border = Minecraft.getMinecraft().world.getWorldBorder();
+    @Override
+    public Rect render(OverlayContext context) {
+        WorldBorder border = Minecraft.getMinecraft().world.getWorldBorder();
 
-		float f = 0;
-		if (warnings.get()) {
-			float distance = (float)border.getClosestDistance(Minecraft.getMinecraft().player);
-			float warningDistance = (float)getWarningDistance(border);
+        float f = 0;
+        if (warnings.get()) {
+            float distance = (float)border.getClosestDistance(Minecraft.getMinecraft().player);
+            float warningDistance = (float)getWarningDistance(border);
 
-			if(distance < warningDistance) {
-				f = 1 - distance / warningDistance;
-			}
-		}
+            if(distance < warningDistance) {
+                f = 1 - distance / warningDistance;
+            }
+        }
 
-		// Animate brightness
-		brightness = brightness + (MathHelper.clamp(1 - Minecraft.getMinecraft().player.getBrightness(), 0, 1) - brightness) / 100;
+        // Animate brightness
+        brightness = brightness + (MathHelper.clamp(1 - Minecraft.getMinecraft().player.getBrightness(), 0, 1) - brightness) / 100;
 
-		Color color;
-		if(f > 0) {
-			int shade = Math.round(f * 255.0f);
-			color = new Color(0, shade, shade);
-		} else {
-			int value = Math.round(brightness * 255.0f);
-			color = new Color(value, value, value);
-		}
+        Color color;
+        if(f > 0) {
+            int shade = Math.round(f * 255.0f);
+            color = new Color(0, shade, shade);
+        } else {
+            int value = Math.round(brightness * 255.0f);
+            color = new Color(value, value, value);
+        }
 
-		GlUtil.blendFuncSafe(SourceFactor.ZERO, DestFactor.ONE_MINUS_SRC_COLOR, SourceFactor.ONE, DestFactor.ZERO);
-		Minecraft.getMinecraft().getTextureManager().bindTexture(VIGNETTE_TEX_PATH);
+        GlUtil.blendFuncSafe(SourceFactor.ZERO, DestFactor.ONE_MINUS_SRC_COLOR, SourceFactor.ONE, DestFactor.ZERO);
+        Minecraft.getMinecraft().getTextureManager().bindTexture(VIGNETTE_TEX_PATH);
 
-		GlUtil.drawRect(MANAGER.getScreen(), new Rect(256, 256), color);
+        GlUtil.drawRect(MANAGER.getScreen(), new Rect(256, 256), color);
 
-		Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
-		GlUtil.blendFuncSafe(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
+        Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+        GlUtil.blendFuncSafe(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
 
-		MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(context.getEvent(), ElementType.VIGNETTE));
-		return null;
-	}
+        MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(context.getEvent(), ElementType.VIGNETTE));
+        return null;
+    }
 
-	/**
-	 * @return The distance from the world border at which a player will start
-	 * to see a warning.
-	 */
-	private double getWarningDistance(WorldBorder worldBorder) {
-		// The distance the border will move within the warning time
-		double warningTimeDistance = worldBorder.getResizeSpeed() // meters/millis
-			* worldBorder.getWarningTime() * 1000; // millis
+    /**
+     * @return The distance from the world border at which a player will start
+     * to see a warning.
+     */
+    private double getWarningDistance(WorldBorder worldBorder) {
+        // The distance the border will move within the warning time
+        double warningTimeDistance = worldBorder.getResizeSpeed() // meters/millis
+            * worldBorder.getWarningTime() * 1000; // millis
 
-		// Border cannot move further than the target size
-		double remainingResize = Math.abs(worldBorder.getTargetSize() - worldBorder.getDiameter());
-		warningTimeDistance = Math.min(warningTimeDistance, remainingResize);
+        // Border cannot move further than the target size
+        double remainingResize = Math.abs(worldBorder.getTargetSize() - worldBorder.getDiameter());
+        warningTimeDistance = Math.min(warningTimeDistance, remainingResize);
 
-		// Warn by distance and time
-		// The larger distance triggers a warning first
-		return Math.max(
-			worldBorder.getWarningDistance(),
-			warningTimeDistance
-		);
-	}
+        // Warn by distance and time
+        // The larger distance triggers a warning first
+        return Math.max(
+            worldBorder.getWarningDistance(),
+            warningTimeDistance
+        );
+    }
 }

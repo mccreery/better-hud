@@ -16,41 +16,41 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
 
 public class PortalOverlay extends OverlayElement {
-	public PortalOverlay() {
-		super("portal");
-	}
+    public PortalOverlay() {
+        super("portal");
+    }
 
-	@Override
-	public boolean shouldRender(OverlayContext context) {
-		return getTimeInPortal(context.getPartialTicks()) > 0
-			&& !MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(context.getEvent(), ElementType.PORTAL));
-	}
+    @Override
+    public boolean shouldRender(OverlayContext context) {
+        return getTimeInPortal(context.getPartialTicks()) > 0
+            && !MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(context.getEvent(), ElementType.PORTAL));
+    }
 
-	private float getTimeInPortal(float partialTicks) {
-		return MathUtil.lerp(
-			Minecraft.getMinecraft().player.prevTimeInPortal,
-			Minecraft.getMinecraft().player.timeInPortal, partialTicks);
-	}
+    private float getTimeInPortal(float partialTicks) {
+        return MathUtil.lerp(
+            Minecraft.getMinecraft().player.prevTimeInPortal,
+            Minecraft.getMinecraft().player.timeInPortal, partialTicks);
+    }
 
-	@Override
-	public Rect render(OverlayContext context) {
-		float timeInPortal = getTimeInPortal(context.getPartialTicks());
+    @Override
+    public Rect render(OverlayContext context) {
+        float timeInPortal = getTimeInPortal(context.getPartialTicks());
 
-		if(timeInPortal < 1) {
-			timeInPortal *= timeInPortal;
-			timeInPortal *= timeInPortal;
+        if(timeInPortal < 1) {
+            timeInPortal *= timeInPortal;
+            timeInPortal *= timeInPortal;
 
-			timeInPortal = timeInPortal * 0.8f + 0.2f;
-		}
+            timeInPortal = timeInPortal * 0.8f + 0.2f;
+        }
 
-		Color.WHITE.withAlpha(Math.round(timeInPortal * 255)).apply();
-		Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+        Color.WHITE.withAlpha(Math.round(timeInPortal * 255)).apply();
+        Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
 
-		TextureAtlasSprite texture = Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelShapes().getTexture(Blocks.PORTAL.getDefaultState());
-		Rect screen = MANAGER.getScreen();
-		Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(0, 0, texture, screen.getWidth(), screen.getHeight());
+        TextureAtlasSprite texture = Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelShapes().getTexture(Blocks.PORTAL.getDefaultState());
+        Rect screen = MANAGER.getScreen();
+        Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(0, 0, texture, screen.getWidth(), screen.getHeight());
 
-		MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(context.getEvent(), ElementType.PORTAL));
-		return null;
-	}
+        MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(context.getEvent(), ElementType.PORTAL));
+        return null;
+    }
 }

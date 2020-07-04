@@ -13,38 +13,38 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.Tickable;
 
 public abstract class ParticleOverlay extends OverlayElement implements Tickable {
-	protected SettingChoose density;
-	protected final List<Particle> particles = new CopyOnWriteArrayList<Particle>();
+    protected SettingChoose density;
+    protected final List<Particle> particles = new CopyOnWriteArrayList<Particle>();
 
-	public ParticleOverlay(String name) {
-		super(name);
-		settings.addChild(density = new SettingChoose("density", "sparse", "normal", "dense", "denser"));
-	}
+    public ParticleOverlay(String name) {
+        super(name);
+        settings.addChild(density = new SettingChoose("density", "sparse", "normal", "dense", "denser"));
+    }
 
-	/** Called each tick while enabled to spawn new particles.
-	 * Default implementation kills dead particles */
-	protected void updateParticles() {
-		particles.removeIf(Particle::isDead);
-	}
+    /** Called each tick while enabled to spawn new particles.
+     * Default implementation kills dead particles */
+    protected void updateParticles() {
+        particles.removeIf(Particle::isDead);
+    }
 
-	@Override
-	public void tick() {
-		if (OverlayHook.shouldRender(this, null)) {
-			particles.forEach(Particle::tick);
-			updateParticles();
-		}
-	}
+    @Override
+    public void tick() {
+        if (OverlayHook.shouldRender(this, null)) {
+            particles.forEach(Particle::tick);
+            updateParticles();
+        }
+    }
 
-	@Override
-	public Rect render(OverlayContext context) {
-		for(Particle particle : particles) {
-			particle.render(context.getPartialTicks());
-		}
-		return MANAGER.getScreen();
-	}
+    @Override
+    public Rect render(OverlayContext context) {
+        for(Particle particle : particles) {
+            particle.render(context.getPartialTicks());
+        }
+        return MANAGER.getScreen();
+    }
 
-	@Override
-	public boolean shouldRender(OverlayContext context) {
-		return !particles.isEmpty();
-	}
+    @Override
+    public boolean shouldRender(OverlayContext context) {
+        return !particles.isEmpty();
+    }
 }
