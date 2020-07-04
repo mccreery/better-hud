@@ -1,116 +1,116 @@
-tile.null.name=Bloco Desconhecido
+tile.null.name=Bloco desconhecido
 tile.endPortal.name=Portal do End
 
-key.betterHud.open=Abrir Menu do Better HUD
-key.betterHud.disable=Alternarr Better HUD
+key.betterHud.open=Abrir menu do Better HUD
+key.betterHud.disable=Alternar Better HUD
 
 # Generic Formatters
 betterHud.hud.meters=%sm
 betterHud.hud.seconds=%ss
 
 # Menu buttons
-betterHud.menu.hudSettings=Configurações do HUD
-betterHud.menu.settings=Configurações de %s
+betterHud.menu.hudSettings=Config. do HUD
+betterHud.menu.settings=Config. de %s
 betterHud.menu.enableAll=Ativar tudo
 betterHud.menu.disableAll=Desativar tudo
 betterHud.menu.reorder=Reordenar...
 betterHud.menu.saveLoad=Salvar/Carregar...
-#betterHud.menu.modSettings=Mod Settings...
-betterHud.menu.lastPage=Página anterior
-betterHud.menu.nextPage=Próxima página
-betterHud.menu.page=Página %s
+betterHud.menu.modSettings=Config. do mod...
+betterHud.menu.lastPage=Última página
+betterHud.menu.nextPage=Página seguinte
+betterHud.menu.page=Pág. %s
 betterHud.menu.pick=Selecionar
 
 betterHud.menu.alphabetical=A-Z
-betterHud.menu.enabled=Ativada
-betterHud.menu.priority=Ordem de Sorteio
+betterHud.menu.enabled=Sim
+betterHud.menu.priority=Ordenar
 
-betterHud.menu.moveTop=Mover para o Topo
-betterHud.menu.moveUp=Mover para Cima
-betterHud.menu.moveDown=Mover para Baixo
-betterHud.menu.moveBottom=Mover para o Fundo
+betterHud.menu.moveTop=Para o topo
+betterHud.menu.moveUp=Para cima
+betterHud.menu.moveDown=Para baixo
+betterHud.menu.moveBottom=Para o fundo
 
 # Menu text
-betterHud.menu.unsnap=Pressione %s para desativar o snapping.
-betterHud.menu.unsupported=Este recurso não está disponível neste servidor.
-#betterHud.menu.modifiers=[%s] Select multiple   [%s] Select range
-#betterHud.menu.enabledElements=Enabled Elements
-#betterHud.menu.disabledElements=Disabled Elements
+betterHud.menu.unsnap=Hold %s to disable snapping
+betterHud.menu.unsupported=Este elemento é incompatível com o servidor
+betterHud.menu.modifiers=[%s] Select multiple   [%s] Select range
+betterHud.menu.enabledElements=Recursos ativos
+betterHud.menu.disabledElements=Recursos inativos
 
 # Element names
 betterHud.element.global=Better HUD
 
-betterHud.element.armorBars=Módulo de armadura
+betterHud.element.armorBars=Armadura
 betterHud.element.arrowCount=Flechas
 betterHud.element.biome=Bioma
-betterHud.element.blockViewer=Visualizador de bloco
-betterHud.element.bloodSplatters=Respingos de sangue
-betterHud.element.breedIndicator=Ind. de reprodução
+betterHud.element.blockViewer=Bloco
+betterHud.element.bloodSplatters=Sangue
+betterHud.element.breedIndicator=Breed Indicator
 betterHud.element.compass=Bússola
 betterHud.element.connection=Conexão
 betterHud.element.coordinates=Coordenadas
 betterHud.element.cps=CPS
 betterHud.element.distance=Distância
-betterHud.element.enchantIndicator=Ind. de encantamento
-betterHud.element.experienceInfo=Info. de XP
+betterHud.element.enchantIndicator=Encantamento
+betterHud.element.experienceInfo=Experiência
 betterHud.element.fpsCount=FPS
-betterHud.element.fullInvIndicator=Ind. de inv. cheio
-betterHud.element.gameClock=Horário do jogo
-betterHud.element.handBar=Barra da mão
-betterHud.element.healIndicator=Ind. de cura
-betterHud.element.horseInfo=Info. do cavalo
-betterHud.element.itemPickup=Recolher itens
+betterHud.element.fullInvIndicator=Full Inv. Indicator
+betterHud.element.gameClock=Hora do jogo
+betterHud.element.handBar=Holding Bar
+betterHud.element.healIndicator=Cura
+betterHud.element.horseInfo=Cavalo
+betterHud.element.itemPickup=Item
 betterHud.element.lightLevel=Nível de luz
-betterHud.element.mobInfo=Info. do mob
-betterHud.element.playerInfo=Info. do jogador
-betterHud.element.potionBar=Poções
+betterHud.element.mobInfo=Criatura
+betterHud.element.playerInfo=Jogador
+betterHud.element.potionBar=Poção
 betterHud.element.saturation=Saturação
-betterHud.element.signReader=Leitor de placas
-betterHud.element.systemClock=Horário do sistema
-betterHud.element.waterDrops=Precipitação
+betterHud.element.signReader=Placa
+betterHud.element.systemClock=Hora do sistema
+betterHud.element.waterDrops=Gotas d'água
 
 # Vanilla elements
-betterHud.element.airBar=Barra de ar
-betterHud.element.armor=Módulo de armadura
-#betterHud.element.crosshair=Crosshair
-betterHud.element.experience=Barra de experiência
-betterHud.element.food=Barra de fome
-betterHud.element.health=Barra de saúde
-betterHud.element.helmetOverlay=Sobrep. do capacete
+betterHud.element.airBar=Ar
+betterHud.element.armor=Armadura
+betterHud.element.crosshair=Mira
+betterHud.element.experience=Experiência
+betterHud.element.food=Fome
+betterHud.element.health=Vida
+betterHud.element.helmetOverlay=Capacete
 betterHud.element.hotbar=Barra rápida
-betterHud.element.jumpBar=Barra de salto
-betterHud.element.mountHealth=Saúde
-betterHud.element.offhand=Mão Secundária
-betterHud.element.portal=Sobreposição de Portal
+betterHud.element.jumpBar=Salto
+betterHud.element.mountHealth=Montaria
+betterHud.element.offhand=Mão secundária
+betterHud.element.portal=Portal
 betterHud.element.scoreboard=Placar
 betterHud.element.vignette=Vinheta
 
 # Setting Groups
 betterHud.group.position=Posição
 betterHud.group.misc=Div.
-betterHud.group.damageWarning=Alertas de dano
+betterHud.group.damageWarning=Avisos de dano
 
 # Generic Settings
-betterHud.value.none=Nenhum
+betterHud.value.none=Nenhuma
 
-betterHud.value.visible.on=Visível
-betterHud.value.visible.off=Oculto
+betterHud.value.visible.on=Sim
+betterHud.value.visible.off=Não
 
 betterHud.setting.mode=Modo
 betterHud.value.mode=Tipo %s
 
 betterHud.setting.position=Posição
-betterHud.value.preset=Predefinição
+betterHud.value.preset=Modelo
 betterHud.value.custom=Personalizado
 
-betterHud.setting.positionType=Tipo de Posição
-betterHud.value.hotbar=Barra Rápida
+betterHud.setting.positionType=Tipo de posição
+betterHud.value.hotbar=Barra rápida
 
 betterHud.setting.direction=Direção
-betterHud.setting.parent=Origem
-betterHud.setting.anchor=Fixar
+betterHud.setting.parent=Parent
+betterHud.setting.anchor=Âncora
 betterHud.setting.alignment=Alinhamento
-betterHud.setting.contentAlignment=Alinhamento de Conteúdo
+betterHud.setting.contentAlignment=Ali. de contéudo
 betterHud.value.northWest=Noroeste
 betterHud.value.north=Norte
 betterHud.value.northEast=Nordeste
@@ -123,76 +123,76 @@ betterHud.value.southEast=Sudeste
 
 betterHud.value.percent=%s%%
 betterHud.setting.precision=Precisão
-betterHud.value.places=%s locais
+betterHud.value.places=%s lugares
 betterHud.setting.distance=Distância
-betterHud.setting.rayDistance=Distância do Traço de Raio
-betterHud.setting.hideOnDebug=Esconder Enquanto F3 é Aberto
-betterHud.setting.debugMode=Modo de Debug
-betterHud.setting.red=§cRed
-betterHud.setting.green=§aGreen
-betterHud.setting.blue=§1Blue
+betterHud.setting.rayDistance=Ray Trace Distance
+betterHud.setting.hideOnDebug=Ocultar ao depurar
+betterHud.setting.debugMode=Depuração
+betterHud.setting.red=§cVermelho
+betterHud.setting.green=§aVerde
+betterHud.setting.blue=§1Azul
 
 # Particles
 betterHud.setting.density=Densidade
-betterHud.value.sparse=Baixa
+betterHud.value.sparse=Pouca
 betterHud.value.normal=Normal
 betterHud.value.dense=Densa
-betterHud.value.denser=Mais densa
+betterHud.value.denser=Espessa
 
 # Equipment
 betterHud.setting.showItem=Item
 betterHud.setting.showName=Nome
-betterHud.setting.showDurability=Duração
-betterHud.setting.offhand=Mão Secundária
+betterHud.setting.showDurability=Durabilidade
+betterHud.setting.offhand=Mão secundária
 
-betterHud.setting.showNonTools=Mostrar Por
-betterHud.value.nonTools.off=Ferramentas Somente
-betterHud.value.nonTools.on=Todos os Itens
+betterHud.setting.showNonTools=Mostrar para
+betterHud.value.nonTools.off=Apenas ferramentas
+betterHud.value.nonTools.on=Todos os itens
 
 betterHud.setting.bars=Barras
-betterHud.value.smallBars=Barras curtas
-betterHud.value.largeBars=Barras longas
+betterHud.value.smallBars=Pequenas
+betterHud.value.largeBars=Grandes
 
 betterHud.setting.durabilityFormat=Formato
-betterHud.value.points=Danos em pontos
+betterHud.value.points=Pontos de dano
 betterHud.value.percentage=Porcentagem
-betterHud.setting.showUndamaged=Durabilidade Completa
+betterHud.setting.showUndamaged=Durabilidade completa
 
 betterHud.setting.warning.1=§c!§r
 betterHud.setting.warning.2=§c! !§r
 betterHud.setting.warning.3=§c! ! !§r
-betterHud.value.disabled=Desativado
+betterHud.value.disabled=Não
 
 # Block Viewer
-betterHud.setting.invNames=Nomes de inv.
+betterHud.setting.invNames=Nomes de inventário
 betterHud.setting.showIds=IDs
-#betterHud.setting.storeNbt=Store NBT in Stack
+betterHud.setting.storeNbt=Armazenar NBTs em stacks
 betterHud.setting.chunks=%s chunks
 
 # Compass
-betterHud.setting.letterScale=Ângulo
-betterHud.setting.showNotches=Posições
+betterHud.setting.letterScale=Perspectiva
+betterHud.setting.showNotches=Notches
 betterHud.setting.scale=Escala
-betterHud.setting.requireItem=Requere Item
-betterHud.value.inventory=No Inventário
-betterHud.value.hand=Na Mão
+betterHud.setting.requireItem=Requer item
+betterHud.value.inventory=No inventário
+betterHud.value.hand=Na mão
 
 # Clocks
 betterHud.setting.24hr=24 horas
 betterHud.setting.showSeconds=Segundos
 betterHud.setting.showDays=Dias
-#betterHud.setting.showSleepIndicator=Sleep Indicator
+betterHud.setting.showSleepIndicator=Sono
 betterHud.setting.fullYear=Ano inteiro
 
 betterHud.setting.dateType=Formato
-betterHud.value.dmy=D/M/A (GB)
-betterHud.value.mdy=M/D/A (EUA)
-betterHud.value.ymd=A/M/D
+betterHud.value.dmy=D/M/Y (Reino Unido)
+betterHud.value.mdy=M/D/Y (EUA)
+betterHud.value.ymd=Y/M/D
 betterHud.hud.day=Dia %s
 
 # Connection
 betterHud.setting.playerCount=Jogadores
-betterHud.setting.showIp=Endereço de IP
+betterHud.setting.showIp=Endereço IP
 betterHud.setting.latency=Latência
 
 betterHud.hud.player=1 jogador
@@ -208,46 +208,46 @@ betterHud.hud.z=Z: %s
 betterHud.hud.xyz=X: %s, Y: %s, Z: %s
 
 # Mob Info
-betterHud.setting.billboardScale=Escala do quadro
+betterHud.setting.billboardScale=Billboard Scale
 betterHud.setting.jump=Altura do salto
 betterHud.setting.speed=Velocidade
 betterHud.setting.players=Jogadores
-betterHud.setting.mobs=Mobs
+betterHud.setting.mobs=Criaturas
 
-betterHud.setting.compress=Comprimir acima de
+betterHud.setting.compress=Comprimir acima
 betterHud.value.never=Nunca
 betterHud.value.unlimited=Ilimitado
 
 # CPS Counter
 betterHud.setting.timeout=Tempo limite
-betterHud.setting.showBurst=Mostrar combo
-betterHud.setting.remember=Salvar combo
+betterHud.setting.showBurst=Show Burst
+betterHud.setting.remember=Remember Burst
 
 # Others
 betterHud.setting.alwaysVisible=Sempre visível
-betterHud.setting.disableDefault=Desativar padrões
-betterHud.setting.hideMount=Esconder Enquanto em Montaria
+betterHud.setting.disableDefault=Desativar padrão
+betterHud.setting.hideMount=Ocultar ao montar
 betterHud.setting.numberOnly=Apenas números
 betterHud.setting.overlay=Sobreposição
-betterHud.setting.showLifetimeExp=XP desde a morte
-betterHud.setting.showTotalExp=Total de XP
+betterHud.setting.showLifetimeExp=Exp. desde a morte
+betterHud.setting.showTotalExp=Exp. total
 betterHud.setting.spaced=Espaçado
-betterHud.setting.tooltipLines=Série de dicas
+betterHud.setting.tooltipLines=Linhas de descrição
 betterHud.setting.warnings=Avisos
 betterHud.setting.duration=Duração
-betterHud.value.text=Texto
+betterHud.value.text=Textual
 betterHud.value.visual=Visual
 
-betterHud.setting.maxStacks=Pilhas Máximas
-betterHud.setting.fadeAfter=Desaparecer Depois
+betterHud.setting.maxStacks=Máximo de stacks
+betterHud.setting.fadeAfter=Ocultar após
 
 betterHud.hud.biome=Bioma: %s
-betterHud.hud.burst=Combo: %s cliques em %ss
+betterHud.hud.burst=Burst: %s clicks over %ss
 betterHud.hud.distance.0=§a[§r%s§a]
-betterHud.hud.distance.1=%sm de distância
+betterHud.hud.distance.1=%sm away
 betterHud.hud.fullInv=Inventário cheio
 betterHud.hud.healIndicator=+
 betterHud.hud.holding=Segurando: %s
 betterHud.hud.saturation=Saturação: %s
 betterHud.hud.unknownBlock=Bloco desconhecido
-betterHud.hud.facing=Diante: %s (%s)
+betterHud.hud.facing=Direção: %s (%s)
