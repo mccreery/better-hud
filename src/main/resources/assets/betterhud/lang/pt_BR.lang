@@ -31,9 +31,9 @@ betterHud.menu.moveDown=Para baixo
 betterHud.menu.moveBottom=Para o fundo
 
 # Menu text
-betterHud.menu.unsnap=Hold %s to disable snapping
+betterHud.menu.unsnap=Segure %s para desativar o snapping
 betterHud.menu.unsupported=Este elemento é incompatível com o servidor
-betterHud.menu.modifiers=[%s] Select multiple   [%s] Select range
+betterHud.menu.modifiers=[%s] Selecionar vários   [%s] Selecionar alcance
 betterHud.menu.enabledElements=Recursos ativos
 betterHud.menu.disabledElements=Recursos inativos
 
@@ -45,7 +45,7 @@ betterHud.element.arrowCount=Flechas
 betterHud.element.biome=Bioma
 betterHud.element.blockViewer=Bloco
 betterHud.element.bloodSplatters=Sangue
-betterHud.element.breedIndicator=Breed Indicator
+betterHud.element.breedIndicator=Cria
 betterHud.element.compass=Bússola
 betterHud.element.connection=Conexão
 betterHud.element.coordinates=Coordenadas
@@ -54,7 +54,7 @@ betterHud.element.distance=Distância
 betterHud.element.enchantIndicator=Encantamento
 betterHud.element.experienceInfo=Experiência
 betterHud.element.fpsCount=FPS
-betterHud.element.fullInvIndicator=Full Inv. Indicator
+betterHud.element.fullInvIndicator=Inv. completa
 betterHud.element.gameClock=Hora do jogo
 betterHud.element.handBar=Holding Bar
 betterHud.element.healIndicator=Cura
@@ -107,7 +107,7 @@ betterHud.setting.positionType=Tipo de posição
 betterHud.value.hotbar=Barra rápida
 
 betterHud.setting.direction=Direção
-betterHud.setting.parent=Parent
+betterHud.setting.parent=Principal
 betterHud.setting.anchor=Âncora
 betterHud.setting.alignment=Alinhamento
 betterHud.setting.contentAlignment=Ali. de contéudo
@@ -125,7 +125,7 @@ betterHud.value.percent=%s%%
 betterHud.setting.precision=Precisão
 betterHud.value.places=%s lugares
 betterHud.setting.distance=Distância
-betterHud.setting.rayDistance=Ray Trace Distance
+betterHud.setting.rayDistance=Distância de ray trace
 betterHud.setting.hideOnDebug=Ocultar ao depurar
 betterHud.setting.debugMode=Depuração
 betterHud.setting.red=§cVermelho
@@ -208,7 +208,7 @@ betterHud.hud.z=Z: %s
 betterHud.hud.xyz=X: %s, Y: %s, Z: %s
 
 # Mob Info
-betterHud.setting.billboardScale=Billboard Scale
+betterHud.setting.billboardScale=Escala da caixa
 betterHud.setting.jump=Altura do salto
 betterHud.setting.speed=Velocidade
 betterHud.setting.players=Jogadores
@@ -220,8 +220,8 @@ betterHud.value.unlimited=Ilimitado
 
 # CPS Counter
 betterHud.setting.timeout=Tempo limite
-betterHud.setting.showBurst=Show Burst
-betterHud.setting.remember=Remember Burst
+betterHud.setting.showBurst=Mostrar burst
+betterHud.setting.remember=Lembrar do burst
 
 # Others
 betterHud.setting.alwaysVisible=Sempre visível
@@ -244,7 +244,7 @@ betterHud.setting.fadeAfter=Ocultar após
 betterHud.hud.biome=Bioma: %s
 betterHud.hud.burst=Burst: %s clicks over %ss
 betterHud.hud.distance.0=§a[§r%s§a]
-betterHud.hud.distance.1=%sm away
+betterHud.hud.distance.1=%sm de dist.
 betterHud.hud.fullInv=Inventário cheio
 betterHud.hud.healIndicator=+
 betterHud.hud.holding=Segurando: %s
