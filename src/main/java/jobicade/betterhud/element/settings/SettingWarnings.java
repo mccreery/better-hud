@@ -21,7 +21,8 @@ public class SettingWarnings extends SettingStub {
         for(int i = 0; i < sliders.length; i++) {
             final int index = i;
 
-            addChild(sliders[i] = new SettingSlider("warning." + String.valueOf(i + 1), 0, 1) {
+            // TODO make a named inner class
+            sliders[i] = new SettingSlider("warning." + String.valueOf(i + 1), 0, 1) {
                 @Override
                 public String getDisplayValue(double value) {
                     SettingSlider next = next();
@@ -52,12 +53,15 @@ public class SettingWarnings extends SettingStub {
                 public void updateGuiParts(Collection<Setting> settings) {
                     guiSlider.updateDisplayString();
                 }
-            }.setDisplayPercent().setAlignment((i & 1) == 1 ? Direction.EAST : Direction.WEST));
+            };
+            sliders[i].setDisplayPercent();
+            sliders[i].setAlignment((i & 1) == 1 ? Direction.EAST : Direction.WEST);
         }
 
         if((sliders.length & 1) == 1) {
             sliders[sliders.length - 1].setAlignment(Direction.CENTER);
         }
+        addChildren(sliders);
     }
 
     public float[] get() {

@@ -27,12 +27,13 @@ public class CpsCount extends TextElement implements Tickable {
     public CpsCount() {
         super("cps");
 
-        settings.addChildren(
-            new Legend("misc"),
-            timeoutMax = new SettingSlider("timeout", 1, 10, 1).setUnlocalizedValue("betterHud.hud.seconds"),
-            showBurst = new SettingBoolean("showBurst"),
-            remember = new SettingBoolean("remember")
-        );
+        timeoutMax = new SettingSlider("timeout", 1, 10, 1);
+        timeoutMax.setUnlocalizedValue("betterHud.hud.seconds");
+
+        showBurst = new SettingBoolean("showBurst");
+        remember = new SettingBoolean("remember");
+
+        settings.addChildren(new Legend("misc"), timeoutMax, showBurst, remember);
     }
 
     public void onClick() {

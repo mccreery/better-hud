@@ -31,10 +31,11 @@ public class PotionBar extends OverlayElement {
     public PotionBar() {
         super("potionBar");
 
-        settings.addChildren(
-            position = new SettingPosition(DirectionOptions.X, DirectionOptions.CORNERS),
-            showDuration = new SettingBoolean("duration").setValuePrefix(SettingBoolean.VISIBLE)
-        );
+        position = new SettingPosition(DirectionOptions.X, DirectionOptions.CORNERS);
+        showDuration = new SettingBoolean("duration");
+        showDuration.setValuePrefix(SettingBoolean.VISIBLE);
+
+        settings.addChildren(position, showDuration);
     }
 
     @Override

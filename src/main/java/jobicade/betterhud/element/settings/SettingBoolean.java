@@ -3,7 +3,6 @@ package jobicade.betterhud.element.settings;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BooleanSupplier;
 
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
@@ -36,9 +35,8 @@ public class SettingBoolean extends SettingAlignable {
         this.value = value;
     }
 
-    public SettingBoolean setValuePrefix(String value) {
+    public void setValuePrefix(String value) {
         this.unlocalizedValue = value;
-        return this;
     }
 
     @Override
@@ -83,23 +81,5 @@ public class SettingBoolean extends SettingAlignable {
         super.updateGuiParts(settings);
         toggler.enabled = enabled();
         toggler.updateText(getUnlocalizedName(), unlocalizedValue, value);
-    }
-
-    @Override
-    public SettingBoolean setHidden() {
-        super.setHidden();
-        return this;
-    }
-
-    @Override
-    public SettingBoolean setUnlocalizedName(String unlocalizedName) {
-        super.setUnlocalizedName(unlocalizedName);
-        return this;
-    }
-
-    @Override
-    public SettingBoolean setEnableOn(BooleanSupplier enableOn) {
-        super.setEnableOn(enableOn);
-        return this;
     }
 }

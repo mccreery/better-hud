@@ -20,8 +20,11 @@ public class Hotbar extends OverlayElement {
     public Hotbar() {
         super("hotbar");
 
-        settings.addChild(position = new SettingPosition(DirectionOptions.TOP_BOTTOM, DirectionOptions.NONE));
-        position.setEdge(true).setPostSpacer(2);
+        position = new SettingPosition(DirectionOptions.TOP_BOTTOM, DirectionOptions.NONE);
+        position.setEdge(true);
+        position.setPostSpacer(2);
+
+        settings.addChild(position);
     }
 
     @Override

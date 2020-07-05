@@ -38,40 +38,45 @@ public class Crosshair extends OverlayElement {
     public Crosshair() {
         super("crosshair");
 
-        settings.addChildren(
-            position = new SettingPosition(DirectionOptions.I, DirectionOptions.NONE),
-            attackIndicator = new SettingBoolean(null) {
-                @Override
-                public boolean get() {
-                    return Minecraft.getMinecraft().gameSettings.attackIndicator != 0;
-                }
+        position = new SettingPosition(DirectionOptions.I, DirectionOptions.NONE);
 
-                @Override
-                public void set(boolean value) {
-                    Minecraft.getMinecraft().gameSettings.attackIndicator = value ? indicatorType.getIndex() + 1 : 0;
-                    Minecraft.getMinecraft().gameSettings.saveOptions();
-                }
-            }.setValuePrefix(SettingBoolean.VISIBLE).setUnlocalizedName("options.attackIndicator"),
-            indicatorType = new SettingChoose(null, 2) {
-                @Override
-                public int getIndex() {
-                    return Math.max(Minecraft.getMinecraft().gameSettings.attackIndicator - 1, 0);
-                }
+        attackIndicator = new SettingBoolean(null) {
+            @Override
+            public boolean get() {
+                return Minecraft.getMinecraft().gameSettings.attackIndicator != 0;
+            }
 
-                @Override
-                public void setIndex(int index) {
-                    if(index >= 0 && index < 2) {
-                        Minecraft.getMinecraft().gameSettings.attackIndicator = attackIndicator.get() ? index + 1 : 0;
-                    }
-                }
+            @Override
+            public void set(boolean value) {
+                Minecraft.getMinecraft().gameSettings.attackIndicator = value ? indicatorType.getIndex() + 1 : 0;
+                Minecraft.getMinecraft().gameSettings.saveOptions();
+            }
+        };
+        attackIndicator.setValuePrefix(SettingBoolean.VISIBLE);
+        attackIndicator.setUnlocalizedName("options.attackIndicator");
+        position.setEnableOn(attackIndicator::get);
 
-                @Override
-                protected String getUnlocalizedValue() {
-                    return "options.attack." + modes[getIndex()];
+        indicatorType = new SettingChoose(null, 2) {
+            @Override
+            public int getIndex() {
+                return Math.max(Minecraft.getMinecraft().gameSettings.attackIndicator - 1, 0);
+            }
+
+            @Override
+            public void setIndex(int index) {
+                if(index >= 0 && index < 2) {
+                    Minecraft.getMinecraft().gameSettings.attackIndicator = attackIndicator.get() ? index + 1 : 0;
                 }
-            }.setEnableOn(attackIndicator::get)
-        );
-        position.setEnableOn(() -> attackIndicator.get());
+            }
+
+            @Override
+            protected String getUnlocalizedValue() {
+                return "options.attack." + modes[getIndex()];
+            }
+        };
+        indicatorType.setEnableOn(attackIndicator::get);
+
+        settings.addChildren(position, attackIndicator, indicatorType);
     }
 
     @Override

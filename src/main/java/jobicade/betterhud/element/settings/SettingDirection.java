@@ -4,19 +4,18 @@ import static jobicade.betterhud.BetterHud.SPACER;
 
 import java.util.Collection;
 import java.util.Map;
-import java.util.function.BooleanSupplier;
 
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.gui.GuiActionButton;
+import jobicade.betterhud.gui.GuiElementSettings;
+import jobicade.betterhud.render.Color;
+import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
-import jobicade.betterhud.gui.GuiActionButton;
-import jobicade.betterhud.gui.GuiElementSettings;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.geom.Point;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.render.Color;
-import jobicade.betterhud.util.GlUtil;
 
 public class SettingDirection extends SettingAlignable {
     private GuiActionButton[] toggles = new GuiActionButton[9];
@@ -36,11 +35,9 @@ public class SettingDirection extends SettingAlignable {
         this.options = options;
     }
 
-    public SettingDirection setHorizontal() {
+    public void setHorizontal() {
         horizontal = true;
         setAlignment(Direction.WEST);
-
-        return this;
     }
 
     @Override
@@ -49,11 +46,9 @@ public class SettingDirection extends SettingAlignable {
     }
 
     @Override
-    public SettingAlignable setAlignment(Direction alignment) {
-        if(!horizontal) {
-            return super.setAlignment(alignment);
-        } else {
-            return this;
+    public void setAlignment(Direction alignment) {
+        if (!horizontal) {
+            super.setAlignment(alignment);
         }
     }
 
@@ -164,11 +159,5 @@ public class SettingDirection extends SettingAlignable {
             }
         }
         return I18n.format("betterHud.value." + name);
-    }
-
-    @Override
-    public SettingDirection setEnableOn(BooleanSupplier enableOn) {
-        super.setEnableOn(enableOn);
-        return this;
     }
 }

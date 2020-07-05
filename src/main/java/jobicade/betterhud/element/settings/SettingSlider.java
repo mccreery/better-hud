@@ -66,10 +66,10 @@ public class SettingSlider extends SettingAlignable {
         return interval;
     }
 
-    public SettingSlider setDisplayPercent() {
-        return setUnlocalizedValue("betterHud.value.percent")
-            .setDisplayScale(100)
-            .setDisplayPlaces(0);
+    public void setDisplayPercent() {
+        setUnlocalizedValue("betterHud.value.percent");
+        setDisplayScale(100);
+        setDisplayPlaces(0);
     }
 
     private void updateDisplayPlaces() {
@@ -78,26 +78,17 @@ public class SettingSlider extends SettingAlignable {
         setDisplayPlaces(places);
     }
 
-    public SettingSlider setAlignment(Direction alignment) {
-        this.alignment = alignment;
-        return this;
-    }
-
-    public SettingSlider setDisplayScale(double displayScale) {
+    public void setDisplayScale(double displayScale) {
         this.displayScale = displayScale;
         updateDisplayPlaces();
-
-        return this;
     }
 
-    public SettingSlider setDisplayPlaces(int displayPlaces) {
+    public void setDisplayPlaces(int displayPlaces) {
         this.displayPlaces = displayPlaces;
-        return this;
     }
 
-    public SettingSlider setUnlocalizedValue(String unlocalizedValue) {
+    public void setUnlocalizedValue(String unlocalizedValue) {
         this.unlocalizedValue = unlocalizedValue;
-        return this;
     }
 
     public String getDisplayString() {
