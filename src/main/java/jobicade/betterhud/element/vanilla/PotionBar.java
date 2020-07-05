@@ -6,7 +6,6 @@ import static jobicade.betterhud.BetterHud.SPACER;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Stream;
 
 import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
@@ -18,7 +17,6 @@ import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Boxed;
 import jobicade.betterhud.render.Grid;
-import jobicade.betterhud.util.MathUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.potion.PotionEffect;
@@ -61,11 +59,19 @@ public class PotionBar extends OverlayElement {
     }
 
     private void populateEffects(List<PotionEffect> helpful, List<PotionEffect> harmful) {
-        Stream<PotionEffect> source = Minecraft.getMinecraft().player
-            .getActivePotionEffects().parallelStream()
-            .filter(e -> e.doesShowParticles() && e.getPotion().shouldRenderHUD(e));
+        Iterable<PotionEffect> activeEffects =  Minecraft.getMinecraft().player.getActivePotionEffects();
 
-        MathUtil.splitList(source::iterator, e -> e.getPotion().isBeneficial(), helpful, harmful);
+        for (PotionEffect effect : activeEffects) {
+            if (!effect.doesShowParticles() || !effect.getPotion().shouldRenderHUD(effect)) {
+                continue;
+            }
+
+            if (effect.getPotion().isBeneficial()) {
+                helpful.add(effect);
+            } else {
+                harmful.add(effect);
+            }
+        }
         helpful.sort(Collections.reverseOrder());
         harmful.sort(Collections.reverseOrder());
     }
