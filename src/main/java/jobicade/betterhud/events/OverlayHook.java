@@ -217,6 +217,7 @@ public final class OverlayHook {
         for (String line : stringList) {
             Label label = new Label(line);
             label.setBackground(new Color(0x90505050));
+            label.setShadow(false);
             labelList.add(label);
         }
         return labelList;
