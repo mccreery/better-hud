@@ -4,6 +4,7 @@ import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Size;
+import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.renderer.GlStateManager;
@@ -13,9 +14,18 @@ public class Label extends DefaultBoxed {
     private Size size;
     private boolean shadow = true;
     private Color color = Color.WHITE;
+    private Color background;
 
     public Label(String text) {
         setText(text);
+    }
+
+    public Color getBackground() {
+        return background;
+    }
+
+    public void setBackground(Color background) {
+        this.background = background;
     }
 
     public String getText() {
@@ -53,6 +63,10 @@ public class Label extends DefaultBoxed {
 
     @Override
     public void render() {
+        if (background != null) {
+            GlUtil.drawRect(bounds, background);
+        }
+
         /*
         * The font renderer for some reason ignores our request
         * and renders completely opaque if opacity < 4.
