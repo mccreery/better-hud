@@ -26,7 +26,8 @@ public class FoodBar extends Bar {
     public boolean shouldRender(OverlayContext context) {
         return OverlayHook.shouldRenderBars()
             && GuiIngameForge.renderFood
-            && !OverlayHook.pre(context.getEvent(), ElementType.FOOD);
+            && !OverlayHook.pre(context.getEvent(), ElementType.FOOD)
+            && super.shouldRender(context);
     }
 
     @Override
