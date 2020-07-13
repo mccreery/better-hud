@@ -30,7 +30,8 @@ public class Experience extends OverlayElement {
     public boolean shouldRender(OverlayContext context) {
         return GuiIngameForge.renderExperiance
             && !GuiIngameForge.renderJumpBar
-            && !OverlayHook.pre(context.getEvent(), ElementType.EXPERIENCE);
+            && !OverlayHook.pre(context.getEvent(), ElementType.EXPERIENCE)
+            && Minecraft.getMinecraft().playerController.gameIsSurvivalOrAdventure();
     }
 
     @Override
