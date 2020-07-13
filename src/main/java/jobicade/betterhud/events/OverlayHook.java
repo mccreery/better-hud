@@ -96,7 +96,7 @@ public final class OverlayHook {
     }
 
     private static void loadGlState() {
-        GlStateManager.enableAlpha();
+        GlStateManager.disableAlpha();
         GlStateManager.enableBlend();
         GlStateManager.disableDepth();
         GlStateManager.enableTexture2D();
