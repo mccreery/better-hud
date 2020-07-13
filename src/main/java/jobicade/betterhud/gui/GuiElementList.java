@@ -23,6 +23,7 @@ import jobicade.betterhud.render.DefaultBoxed;
 import jobicade.betterhud.render.Grid;
 import jobicade.betterhud.render.Label;
 import jobicade.betterhud.util.GlUtil;
+import jobicade.betterhud.util.Textures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.resources.I18n;
@@ -447,7 +448,20 @@ public class GuiElementList extends GuiMenuScreen {
                 GlUtil.drawRect(bounds, new Color(48, 0, 0, 0));
                 GlUtil.drawBorderRect(bounds, new Color(160, 144, 144, 144));
             }
-            label.setBounds(new Rect(label.getPreferredSize()).anchor(bounds, Direction.CENTER)).render();
+            label.setBounds(new Rect(label.getPreferredSize()).anchor(bounds, Direction.CENTER));
+
+            if (!element.getServerDependency().containsVersion(BetterHud.getServerVersion())) {
+                // 16 tall so remove 2 pixels on either side/4 in total
+                Rect warningBounds = new Rect(16, 16).anchor(bounds.grow(-2), Direction.WEST);
+
+                Minecraft.getMinecraft().getTextureManager().bindTexture(Textures.SETTINGS);
+                GlUtil.drawRect(warningBounds, new Rect(100, 60, 16, 16));
+
+                label.setColor(Color.GRAY);
+            } else {
+                label.setColor(Color.WHITE);
+            }
+            label.render();
         }
     }
 }
