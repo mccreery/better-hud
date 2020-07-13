@@ -47,10 +47,10 @@ public final class OverlayHook {
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void preOverlayLate(RenderGameOverlayEvent.Pre event) {
         if (!event.isCanceled() && shouldRun(event)) {
-            if (tracker == null) {
-                tracker = new SnapshotTracker(BetterHud.getLogger());
+            GlSnapshot pre = null;
+            if (HudElements.GLOBAL.isDebugMode()) {
+                pre = new GlSnapshot();
             }
-            GlSnapshot pre = new GlSnapshot();
 
             // Pre event is a valid parent as it just carries identical
             // information to its own parent
@@ -59,7 +59,12 @@ public final class OverlayHook {
             // Other mods get a chance to cancel the HUD altogether
             event.setCanceled(true);
 
-            tracker.step(pre, new GlSnapshot());
+            if (HudElements.GLOBAL.isDebugMode()) {
+                if (tracker == null) {
+                    tracker = new SnapshotTracker(BetterHud.getLogger());
+                }
+                tracker.step(pre, new GlSnapshot());
+            }
         }
     }
 
