@@ -49,7 +49,6 @@ public abstract class HudElement<T> {
     }
 
     /** The settings saved to the config file for this element */
-    // TODO NASTY PUBLICSES
     public final Setting settings = new SettingStub();
 
     private static final VersionRange DEFAULT_SERVER_DEPENDENCY

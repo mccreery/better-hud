@@ -14,7 +14,6 @@ import net.minecraft.client.gui.Gui;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
-// TODO make it work correctly with spectator mode
 public class Hotbar extends OverlayElement {
     private SettingPosition position;
 

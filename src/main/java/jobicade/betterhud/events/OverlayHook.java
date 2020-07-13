@@ -82,7 +82,6 @@ public final class OverlayHook {
      * Starting after the {@code Pre} event.
      */
     private static void renderGameOverlay(RenderGameOverlayEvent event) {
-        // TODO not here
         BetterHud.MANAGER.reset(event.getResolution());
         OverlayContext context = new OverlayContext(event, BetterHud.MANAGER);
 

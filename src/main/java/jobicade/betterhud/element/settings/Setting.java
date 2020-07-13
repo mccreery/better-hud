@@ -125,7 +125,6 @@ public abstract class Setting {
         }
     }
 
-    // TODO why here?
     /** Passed on from the element's setting screen when a GuiButton for this setting is pressed.
      * @param button The GuiButton that was pressed. */
     public abstract void actionPerformed(GuiElementSettings gui, GuiButton button);
