@@ -45,6 +45,7 @@ betterHud.element.arrowCount=Кол-во стрелок
 betterHud.element.biome=Биом
 betterHud.element.blockViewer=Просмотр блоков
 betterHud.element.bloodSplatters=Брызги крови
+#betterHud.element.bossHealth=Boss Health
 betterHud.element.breedIndicator=Показатель породы
 betterHud.element.compass=Компас
 betterHud.element.connection=Соединение
