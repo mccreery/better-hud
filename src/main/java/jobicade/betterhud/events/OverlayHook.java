@@ -86,7 +86,7 @@ public final class OverlayHook {
 
             if (canRender(element, context)) {
                 Minecraft.getMinecraft().mcProfiler.startSection(element.getName());
-                element.render(context);
+                element.setLastBounds(element.render(context));
                 Minecraft.getMinecraft().mcProfiler.endSection();
             }
         }

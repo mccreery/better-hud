@@ -96,13 +96,16 @@ public abstract class HudElement<T> {
      */
     public abstract Rect render(T context);
 
-    // TODO bounds never get set
     private Rect lastBounds = Rect.empty();
-
-    /** @return The last or appropriate bounds for this element.<br>
-     * {@link Rect#empty()} if the element has no appropriate bounds */
+    /**
+     * @return The most recent bounding box for parenting and relative layout.
+     */
     public Rect getLastBounds() {
         return lastBounds;
+    }
+
+    public void setLastBounds(Rect lastBounds) {
+        this.lastBounds = lastBounds;
     }
 
     private ElementCategory category = ElementCategory.MISC;
