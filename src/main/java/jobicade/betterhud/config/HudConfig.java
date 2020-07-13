@@ -22,6 +22,8 @@ import net.minecraftforge.common.config.Property;
  * actual settings are stored in each element's settings object.
  */
 public class HudConfig extends Configuration {
+    private static final String ENABLED_PROP = "enabledElements";
+
     public HudConfig(File file) {
         super(file);
     }
@@ -89,7 +91,7 @@ public class HudConfig extends Configuration {
 
         available.addAll(HudElements.get().getRegistered());
 
-        String[] enabledNames = getStringList("enabledList", BetterHud.MODID, new String[0], "");
+        String[] enabledNames = getStringList(ENABLED_PROP, BetterHud.MODID, new String[0], "");
         for (String name : enabledNames) {
             HudElement<?> element = HudElements.get().getRegistered(name);
 
@@ -100,6 +102,15 @@ public class HudConfig extends Configuration {
     }
 
     public void saveSettings() {
+        // Convert current selected elements to string list for loading
+        String[] enabledNames = new String[selected.size()];
+
+        for (int i = 0; i < selected.size(); i++) {
+            enabledNames[i] = selected.get(i).getName();
+        }
+        // Getting the list should create it
+        getStringList(ENABLED_PROP, BetterHud.MODID, enabledNames, "");
+
         for (Map.Entry<Setting, Property> entry : getPropertyMap().entrySet()) {
             entry.getValue().set(entry.getKey().getStringValue());
         }
