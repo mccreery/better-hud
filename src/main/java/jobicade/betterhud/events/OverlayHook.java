@@ -12,11 +12,13 @@ import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -118,5 +120,31 @@ public final class OverlayHook {
     public static boolean shouldRender(OverlayElement hudElement, OverlayContext context) {
         return canRender(hudElement, context)
             && BetterHud.getProxy().getEnabled(OverlayElements.get()).contains(hudElement);
+    }
+
+    /**
+     * @see GuiIngameForge#renderGameOverlay(float)
+     */
+    public static boolean shouldRenderBars() {
+        Minecraft mc = Minecraft.getMinecraft();
+
+        return mc.playerController.shouldDrawHUD()
+            && mc.getRenderViewEntity() instanceof EntityPlayer;
+    }
+
+    /**
+     * @see GuiIngameForge#pre(ElementType)
+     */
+    public static boolean pre(RenderGameOverlayEvent parentEvent, ElementType elementType) {
+        Event event = new RenderGameOverlayEvent.Pre(parentEvent, elementType);
+        return MinecraftForge.EVENT_BUS.post(event);
+    }
+
+    /**
+     * @see GuiIngameForge#post(ElementType)
+     */
+    public static boolean post(RenderGameOverlayEvent parentEvent, ElementType elementType) {
+        Event event = new RenderGameOverlayEvent.Post(parentEvent, elementType);
+        return MinecraftForge.EVENT_BUS.post(event);
     }
 }
