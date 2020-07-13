@@ -121,13 +121,11 @@ public class GuiElementList extends GuiMenuScreen {
 
     private void enableAll() {
         HudConfig.moveAll(getDisabled(), getEnabled());
-        selection.clear();
         updateLists();
     }
 
     private void disableAll() {
         HudConfig.moveAll(getEnabled(), getDisabled());
-        selection.clear();
         updateLists();
     }
 
@@ -205,7 +203,6 @@ public class GuiElementList extends GuiMenuScreen {
                 HudConfig.move(element, source, dest);
             }
         }
-        selection.clear();
         updateLists();
     }
 
