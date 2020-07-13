@@ -281,8 +281,11 @@ public class GuiElementList extends GuiMenuScreen {
         if (!selection.isEmpty() && isShiftKeyDown()) {
             List<HudElement<?>> selectionSide = getSelectionSide();
 
-            int prevIndex = selectionSide.indexOf(selection.get(selection.size() - 1));
             int index = selectionSide.indexOf(element);
+            if (index == -1) {
+                return;
+            }
+            int prevIndex = selectionSide.indexOf(selection.get(selection.size() - 1));
 
             if (prevIndex < index) {
                 for (int i = prevIndex + 1; i <= index; i++) {
@@ -296,6 +299,11 @@ public class GuiElementList extends GuiMenuScreen {
         } else {
             if (!isCtrlKeyDown()) {
                 selection.clear();
+            } else {
+                List<HudElement<?>> selectionSide = getSelectionSide();
+                if (selectionSide != null && !selectionSide.contains(element)) {
+                    return;
+                }
             }
             toggleItem(selection, element);
         }
