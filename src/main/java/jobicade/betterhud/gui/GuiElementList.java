@@ -26,6 +26,7 @@ import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.Textures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.client.settings.KeyModifier;
 
@@ -388,9 +389,19 @@ public class GuiElementList extends GuiMenuScreen {
         return new Rect(list.getPreferredSize().withWidth(150)).align(origin, Direction.NORTH);
     }
 
+    private int mouseX;
+    private int mouseY;
+
+    // Set to true to show an unsupported warning tooltip on top of the GUI
+    private boolean showWarning;
+
     @Override
     public void drawScreen(int mouseX, int mouseY, float partialTicks) {
         super.drawScreen(mouseX, mouseY, partialTicks);
+
+        this.mouseX = mouseX;
+        this.mouseY = mouseY;
+        showWarning = false;
 
         drawViewport(disabledViewport, disabledScroll, disabledList);
         disabledScroll.drawScrollbar(mouseX, mouseY);
@@ -409,6 +420,12 @@ public class GuiElementList extends GuiMenuScreen {
 
         p = enabledViewport.getAnchor(Direction.NORTH).sub(0, fontRenderer.FONT_HEIGHT + SPACER);
         drawCenteredString(fontRenderer, I18n.format("betterHud.menu.enabledElements"), p.getX(), p.getY(), 0xffffff);
+
+        if (showWarning) {
+            drawHoveringText(I18n.format("betterHud.menu.unsupported"), mouseX, mouseY);
+            // Side-effect is enabling item lighting
+            RenderHelper.disableStandardItemLighting();
+        }
     }
 
     private void drawViewport(Rect viewport, GuiScrollbar scrollbar, Grid<ListItem> list) {
@@ -451,6 +468,9 @@ public class GuiElementList extends GuiMenuScreen {
             label.setBounds(new Rect(label.getPreferredSize()).anchor(bounds, Direction.CENTER));
 
             if (!element.getServerDependency().containsVersion(BetterHud.getServerVersion())) {
+                if (bounds.contains(mouseX, mouseY)) {
+                    showWarning = true;
+                }
                 // 16 tall so remove 2 pixels on either side/4 in total
                 Rect warningBounds = new Rect(16, 16).anchor(bounds.grow(-2), Direction.WEST);
 
