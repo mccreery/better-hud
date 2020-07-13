@@ -38,6 +38,9 @@ public final class OverlayHook {
             // Pre-rendering hotbar so no left or right height yet
             GuiIngameForge.left_height = 0;
             GuiIngameForge.right_height = 0;
+
+            // Condition changes with "hide while riding" option
+            GuiIngameForge.renderFood = OverlayElements.FOOD_BAR.shouldRenderPrecheck();
         }
     }
 

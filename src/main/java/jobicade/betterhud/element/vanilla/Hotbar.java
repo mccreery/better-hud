@@ -4,16 +4,17 @@ import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.events.OverlayContext;
+import jobicade.betterhud.events.OverlayHook;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.Textures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.common.MinecraftForge;
 
+// TODO make it work correctly with spectator mode
 public class Hotbar extends OverlayElement {
     private SettingPosition position;
 
@@ -29,9 +30,8 @@ public class Hotbar extends OverlayElement {
 
     @Override
     public boolean shouldRender(OverlayContext context) {
-        // TODO make it work correctly with spectator mode
-        return !Minecraft.getMinecraft().player.isSpectator()
-            && !MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(context.getEvent(), ElementType.HOTBAR));
+        return GuiIngameForge.renderHotbar
+            && !OverlayHook.pre(context.getEvent(), ElementType.HOTBAR);
     }
 
     @Override
@@ -55,7 +55,7 @@ public class Hotbar extends OverlayElement {
         }
 
         Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
-        MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(context.getEvent(), ElementType.HOTBAR));
+        OverlayHook.post(context.getEvent(), ElementType.HOTBAR);
         return bounds;
     }
 }

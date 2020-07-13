@@ -2,12 +2,11 @@ package jobicade.betterhud.element.vanilla;
 
 import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.events.OverlayContext;
+import jobicade.betterhud.events.OverlayHook;
 import jobicade.betterhud.geom.Rect;
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.GuiIngameForge;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.common.MinecraftForge;
 
 public class BossHealth extends OverlayElement {
     public BossHealth() {
@@ -17,7 +16,7 @@ public class BossHealth extends OverlayElement {
     @Override
     public boolean shouldRender(OverlayContext context) {
         return GuiIngameForge.renderBossHealth
-            && !MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(context.getEvent(), ElementType.BOSSHEALTH));
+            && !OverlayHook.pre(context.getEvent(), ElementType.BOSSHEALTH);
     }
 
     @Override
@@ -26,7 +25,7 @@ public class BossHealth extends OverlayElement {
         // be determined and the bars cannot be moved
         Minecraft.getMinecraft().ingameGUI.getBossOverlay().renderBossHealth();
 
-        MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(context.getEvent(), ElementType.BOSSHEALTH));
+        OverlayHook.post(context.getEvent(), ElementType.BOSSHEALTH);
         return null;
     }
 }

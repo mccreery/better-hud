@@ -8,6 +8,7 @@ import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.events.OverlayContext;
+import jobicade.betterhud.events.OverlayHook;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -26,9 +27,8 @@ import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.common.MinecraftForge;
 
 public class Crosshair extends OverlayElement {
     private SettingPosition position;
@@ -81,9 +81,10 @@ public class Crosshair extends OverlayElement {
 
     @Override
     public boolean shouldRender(OverlayContext context) {
-        return Minecraft.getMinecraft().gameSettings.thirdPersonView == 0
-            && (!Minecraft.getMinecraft().playerController.isSpectator() || canInteract())
-            && !MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(context.getEvent(), ElementType.CROSSHAIRS));
+        return GuiIngameForge.renderCrosshairs
+            && !OverlayHook.pre(context.getEvent(), ElementType.CROSSHAIRS)
+            && Minecraft.getMinecraft().gameSettings.thirdPersonView == 0
+            && (!Minecraft.getMinecraft().playerController.isSpectator() || canInteract());
     }
 
     /** @return {@code true} if the player is looking at something that can be interacted with in spectator mode */
@@ -123,7 +124,7 @@ public class Crosshair extends OverlayElement {
             GlStateManager.disableAlpha();
         }
 
-        MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(context.getEvent(), ElementType.CROSSHAIRS));
+        OverlayHook.post(context.getEvent(), ElementType.CROSSHAIRS);
         return bounds;
     }
 
