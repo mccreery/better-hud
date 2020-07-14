@@ -5,8 +5,8 @@ key.betterHud.open=打开Better HUD菜单
 key.betterHud.disable=启用Better HUD
 
 # Generic Formatters
-betterHud.hud.meters=%sm
-betterHud.hud.seconds=%ss
+betterHud.hud.meters=%s米
+betterHud.hud.seconds=%s秒
 
 # Menu buttons
 betterHud.menu.hudSettings=HUD 配置
@@ -15,7 +15,6 @@ betterHud.menu.enableAll=启用全部
 betterHud.menu.disableAll=禁用全部
 betterHud.menu.reorder=纪录……
 betterHud.menu.saveLoad=保存/加载……
-betterHud.menu.modSettings=模组设置……
 betterHud.menu.lastPage=上一页
 betterHud.menu.nextPage=下一页
 betterHud.menu.page=%s 页
@@ -33,9 +32,6 @@ betterHud.menu.moveBottom=移到底部
 # Menu text
 betterHud.menu.unsnap=按住 %s 以禁用捕捉。
 betterHud.menu.unsupported=此元素不受服务器支持。
-betterHud.menu.modifiers=[%s] Select multiple   [%s] Select range
-betterHud.menu.enabledElements=启用元素
-betterHud.menu.disabledElements=禁用元素
 
 # Element names
 betterHud.element.global=Better HUD
