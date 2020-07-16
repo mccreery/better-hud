@@ -73,6 +73,7 @@ betterHud.element.waterDrops=Капли воды
 # Vanilla elements
 betterHud.element.airBar=Воздушная панель
 betterHud.element.armor=Панель брони
+#betterHud.element.chat=Chat
 betterHud.element.crosshair=Прицел
 betterHud.element.experience=Панель опыта
 betterHud.element.food=Панель голода

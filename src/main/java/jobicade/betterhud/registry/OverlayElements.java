@@ -26,6 +26,7 @@ import jobicade.betterhud.element.text.Saturation;
 import jobicade.betterhud.element.text.SystemClock;
 import jobicade.betterhud.element.vanilla.AirBar;
 import jobicade.betterhud.element.vanilla.ArmorBar;
+import jobicade.betterhud.element.vanilla.Chat;
 import jobicade.betterhud.element.vanilla.BossHealth;
 import jobicade.betterhud.element.vanilla.Crosshair;
 import jobicade.betterhud.element.vanilla.Experience;
@@ -64,6 +65,7 @@ public class OverlayElements extends HudRegistry<OverlayElement> {
     public static final BlockViewer BLOCK_VIEWER = new BlockViewer();
     public static final BloodSplatters BLOOD_SPLATTERS = new BloodSplatters();
     public static final BossHealth BOSS_HEALTH = new BossHealth();
+    public static final Chat CHAT = new Chat();
     public static final Compass COMPASS = new Compass();
     public static final Connection CONNECTION = new Connection();
     public static final Coordinates COORDINATES = new Coordinates();
@@ -106,6 +108,7 @@ public class OverlayElements extends HudRegistry<OverlayElement> {
             BLOCK_VIEWER,
             BLOOD_SPLATTERS,
             BOSS_HEALTH,
+            CHAT,
             COMPASS,
             CONNECTION,
             COORDINATES,
