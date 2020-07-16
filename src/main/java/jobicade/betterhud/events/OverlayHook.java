@@ -17,12 +17,15 @@ import jobicade.betterhud.render.Grid;
 import jobicade.betterhud.render.Label;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiPlayerTabOverlay;
 import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.util.StringUtils;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
@@ -85,6 +88,8 @@ public final class OverlayHook {
      * Starting after the {@code Pre} event.
      */
     private static void renderGameOverlay(RenderGameOverlayEvent event) {
+        final Minecraft mc = Minecraft.getMinecraft();
+
         // TODO not here
         BetterHud.MANAGER.reset(event.getResolution());
         OverlayContext context = new OverlayContext(event, BetterHud.MANAGER);
@@ -93,14 +98,15 @@ public final class OverlayHook {
             loadGlState();
 
             if (canRender(element, context)) {
-                Minecraft.getMinecraft().mcProfiler.startSection(element.getName());
+                mc.mcProfiler.startSection(element.getName());
                 element.render(context);
-                Minecraft.getMinecraft().mcProfiler.endSection();
+                mc.mcProfiler.endSection();
             }
         }
 
         renderHudText(event);
-        renderFpsGraph(event);
+        renderFpsGraph(mc, event);
+        renderPlayerList(mc, event);
 
         GlStateManager.enableDepth();
         MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(event, ElementType.ALL));
@@ -226,9 +232,7 @@ public final class OverlayHook {
     /**
      * @see GuiIngameForge#renderFPSGraph()
      */
-    private static void renderFpsGraph(RenderGameOverlayEvent event) {
-        Minecraft mc = Minecraft.getMinecraft();
-
+    private static void renderFpsGraph(Minecraft mc, RenderGameOverlayEvent event) {
         if (mc.gameSettings.showDebugInfo && mc.gameSettings.showLagometer) {
             Event preEvent = new RenderGameOverlayEvent.Pre(event, ElementType.FPS_GRAPH);
 
@@ -238,6 +242,32 @@ public final class OverlayHook {
                 Event postEvent = new RenderGameOverlayEvent.Post(event, ElementType.FPS_GRAPH);
                 MinecraftForge.EVENT_BUS.post(postEvent);
             }
+        }
+    }
+
+    /**
+     * @see GuiIngameForge#renderPlayerList(int, int)
+     */
+    private static void renderPlayerList(Minecraft mc, RenderGameOverlayEvent parentEvent) {
+        final ScaledResolution res = new ScaledResolution(mc);
+        final GuiPlayerTabOverlay tabList = mc.ingameGUI.getTabList();
+
+        ScoreObjective scoreobjective = mc.world.getScoreboard().getObjectiveInDisplaySlot(0);
+        NetHandlerPlayClient handler = mc.player.connection;
+
+        if (mc.gameSettings.keyBindPlayerList.isKeyDown() && (
+            !mc.isIntegratedServerRunning()
+            || handler.getPlayerInfoMap().size() > 1
+            || scoreobjective != null
+        )) {
+            tabList.updatePlayerList(true);
+
+            if (!MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(parentEvent, ElementType.PLAYER_LIST))) {
+                tabList.renderPlayerlist(res.getScaledWidth(), mc.world.getScoreboard(), scoreobjective);
+                MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(parentEvent, ElementType.PLAYER_LIST));
+            }
+        } else {
+            tabList.updatePlayerList(false);
         }
     }
 }
