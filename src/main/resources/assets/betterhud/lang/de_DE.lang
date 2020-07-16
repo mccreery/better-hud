@@ -72,6 +72,7 @@ betterHud.element.waterDrops=Wassertropfen
 # Vanilla elements
 #betterHud.element.airBar=Air Bar
 #betterHud.element.armor=Armor Bar
+#betterHud.element.chat=Chat
 #betterHud.element.crosshair=Crosshair
 #betterHud.element.experience=Experience Bar
 #betterHud.element.food=Hunger Bar

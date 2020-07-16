@@ -72,6 +72,7 @@ betterHud.element.waterDrops=Precipitação
 # Vanilla elements
 betterHud.element.airBar=Barra de ar
 betterHud.element.armor=Módulo de armadura
+#betterHud.element.chat=Chat
 #betterHud.element.crosshair=Crosshair
 betterHud.element.experience=Barra de experiência
 betterHud.element.food=Barra de fome
