@@ -4,6 +4,7 @@ import static jobicade.betterhud.BetterHud.MANAGER;
 
 import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.events.OverlayContext;
+import jobicade.betterhud.events.OverlayHook;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
@@ -14,9 +15,8 @@ import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.common.MinecraftForge;
 
 public class HelmetOverlay extends OverlayElement {
     private static final ResourceLocation PUMPKIN_BLUR_TEX_PATH = new ResourceLocation("textures/misc/pumpkinblur.png");
@@ -27,9 +27,10 @@ public class HelmetOverlay extends OverlayElement {
 
     @Override
     public boolean shouldRender(OverlayContext context) {
-        return Minecraft.getMinecraft().gameSettings.thirdPersonView == 0
-            && !Minecraft.getMinecraft().player.inventory.armorItemInSlot(3).isEmpty()
-            && !MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(context.getEvent(), ElementType.HELMET));
+        return GuiIngameForge.renderHelmet
+            && !OverlayHook.pre(context.getEvent(), ElementType.HELMET)
+            && Minecraft.getMinecraft().gameSettings.thirdPersonView == 0
+            && !Minecraft.getMinecraft().player.inventory.armorItemInSlot(3).isEmpty();
     }
 
     @Override
@@ -45,7 +46,7 @@ public class HelmetOverlay extends OverlayElement {
             item.renderHelmetOverlay(stack, Minecraft.getMinecraft().player, new ScaledResolution(Minecraft.getMinecraft()), context.getPartialTicks());
         }
 
-        MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(context.getEvent(), ElementType.HELMET));
+        OverlayHook.post(context.getEvent(), ElementType.HELMET);
         return MANAGER.getScreen();
     }
 }

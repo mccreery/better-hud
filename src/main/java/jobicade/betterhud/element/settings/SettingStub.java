@@ -3,7 +3,6 @@ package jobicade.betterhud.element.settings;
 import net.minecraft.client.gui.GuiButton;
 import jobicade.betterhud.gui.GuiElementSettings;
 
-// TODO I don't like it no sir
 /** A default implementation of {@link Setting} which stores no value.<br>
  * It is used for settings which are for display only and which only store
  * the values of their children */

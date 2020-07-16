@@ -25,6 +25,7 @@ import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Scoreboard;
+import net.minecraftforge.client.GuiIngameForge;
 
 public class Sidebar extends OverlayElement {
     private SettingPosition position;
@@ -37,7 +38,8 @@ public class Sidebar extends OverlayElement {
 
     @Override
     public boolean shouldRender(OverlayContext context) {
-        return getObjective(Minecraft.getMinecraft().player) != null;
+        return GuiIngameForge.renderObjective
+            && getObjective(Minecraft.getMinecraft().player) != null;
     }
 
     @Override

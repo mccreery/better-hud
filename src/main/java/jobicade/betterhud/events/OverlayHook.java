@@ -25,6 +25,7 @@ import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.util.StringUtils;
 import net.minecraftforge.client.GuiIngameForge;
@@ -52,16 +53,19 @@ public final class OverlayHook {
             // Pre-rendering hotbar so no left or right height yet
             GuiIngameForge.left_height = 0;
             GuiIngameForge.right_height = 0;
+
+            // Condition changes with "hide while riding" option
+            GuiIngameForge.renderFood = OverlayElements.FOOD_BAR.shouldRenderPrecheck();
         }
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void preOverlayLate(RenderGameOverlayEvent.Pre event) {
         if (!event.isCanceled() && shouldRun(event)) {
-            if (tracker == null) {
-                tracker = new SnapshotTracker(BetterHud.getLogger());
+            GlSnapshot pre = null;
+            if (HudElements.GLOBAL.isDebugMode()) {
+                pre = new GlSnapshot();
             }
-            GlSnapshot pre = new GlSnapshot();
 
             // Pre event is a valid parent as it just carries identical
             // information to its own parent
@@ -70,7 +74,12 @@ public final class OverlayHook {
             // Other mods get a chance to cancel the HUD altogether
             event.setCanceled(true);
 
-            tracker.step(pre, new GlSnapshot());
+            if (HudElements.GLOBAL.isDebugMode()) {
+                if (tracker == null) {
+                    tracker = new SnapshotTracker(BetterHud.getLogger());
+                }
+                tracker.step(pre, new GlSnapshot());
+            }
         }
     }
 
@@ -89,8 +98,6 @@ public final class OverlayHook {
      */
     private static void renderGameOverlay(RenderGameOverlayEvent event) {
         final Minecraft mc = Minecraft.getMinecraft();
-
-        // TODO not here
         BetterHud.MANAGER.reset(event.getResolution());
         OverlayContext context = new OverlayContext(event, BetterHud.MANAGER);
 
@@ -99,7 +106,7 @@ public final class OverlayHook {
 
             if (canRender(element, context)) {
                 mc.mcProfiler.startSection(element.getName());
-                element.render(context);
+                element.setLastBounds(element.render(context));
                 mc.mcProfiler.endSection();
             }
         }
@@ -113,7 +120,7 @@ public final class OverlayHook {
     }
 
     private static void loadGlState() {
-        GlStateManager.enableAlpha();
+        GlStateManager.disableAlpha();
         GlStateManager.enableBlend();
         GlStateManager.disableDepth();
         GlStateManager.enableTexture2D();
@@ -269,5 +276,31 @@ public final class OverlayHook {
         } else {
             tabList.updatePlayerList(false);
         }
+    }
+
+    /**
+     * @see GuiIngameForge#renderGameOverlay(float)
+     */
+    public static boolean shouldRenderBars() {
+        Minecraft mc = Minecraft.getMinecraft();
+
+        return mc.playerController.shouldDrawHUD()
+            && mc.getRenderViewEntity() instanceof EntityPlayer;
+    }
+
+    /**
+     * @see GuiIngameForge#pre(ElementType)
+     */
+    public static boolean pre(RenderGameOverlayEvent parentEvent, ElementType elementType) {
+        Event event = new RenderGameOverlayEvent.Pre(parentEvent, elementType);
+        return MinecraftForge.EVENT_BUS.post(event);
+    }
+
+    /**
+     * @see GuiIngameForge#post(ElementType)
+     */
+    public static boolean post(RenderGameOverlayEvent parentEvent, ElementType elementType) {
+        Event event = new RenderGameOverlayEvent.Post(parentEvent, elementType);
+        return MinecraftForge.EVENT_BUS.post(event);
     }
 }

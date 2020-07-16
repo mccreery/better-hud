@@ -45,6 +45,7 @@ betterHud.element.arrowCount=Anzahl Pfeile
 betterHud.element.biome=Biom
 betterHud.element.blockViewer=Block Betrachter
 betterHud.element.bloodSplatters=Blutspritzer
+#betterHud.element.bossHealth=Boss Health
 betterHud.element.breedIndicator=Zuchtanzeige
 betterHud.element.compass=Kompass
 betterHud.element.connection=Verbindung

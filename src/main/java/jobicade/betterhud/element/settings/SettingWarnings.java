@@ -19,47 +19,16 @@ public class SettingWarnings extends SettingStub {
 
         sliders = new SettingSlider[warnings];
         for(int i = 0; i < sliders.length; i++) {
-            final int index = i;
+            SettingSlider slider = new WarningSlider(i);
 
-            // TODO make a named inner class
-            sliders[i] = new SettingSlider("warning." + String.valueOf(i + 1), 0, 1) {
-                @Override
-                public String getDisplayValue(double value) {
-                    SettingSlider next = next();
-
-                    if(next == null || next.getValue() < getValue()) {
-                        return super.getDisplayValue(value);
-                    } else {
-                        return I18n.format("betterHud.value.disabled");
-                    }
-                }
-
-                @Override
-                public void setValue(float value) {
-                    SettingSlider next = next();
-                    super.setValue(next != null ? Math.max(value, next.getValue()) : value);
-
-                    for(int i = index - 1; i >= 0; i--) {
-                        SettingSlider slider = sliders[i];
-                        if(slider != null) slider.setValue(Math.max(slider.getValue(), getValue()));
-                    }
-                }
-
-                private SettingSlider next() {
-                    return index == sliders.length - 1 ? null : sliders[index + 1];
-                }
-
-                @Override
-                public void updateGuiParts(Collection<Setting> settings) {
-                    guiSlider.updateDisplayString();
-                }
-            };
-            sliders[i].setDisplayPercent();
-            sliders[i].setAlignment((i & 1) == 1 ? Direction.EAST : Direction.WEST);
-        }
-
-        if((sliders.length & 1) == 1) {
-            sliders[sliders.length - 1].setAlignment(Direction.CENTER);
+            if ((i & 1) == 1) {
+                slider.setAlignment(Direction.EAST);
+            } else if (i == sliders.length - 1) {
+                slider.setAlignment(Direction.CENTER);
+            } else {
+                slider.setAlignment(Direction.WEST);
+            }
+            sliders[i] = slider;
         }
         addChildren(sliders);
     }
@@ -86,5 +55,47 @@ public class SettingWarnings extends SettingStub {
             if(value <= sliders[i].getValue()) return i + 1;
         }
         return 0;
+    }
+
+    private final class WarningSlider extends SettingSlider {
+        private final int index;
+
+        private WarningSlider(int index) {
+            super("warning." + (index + 1), 0, 1);
+            this.index = index;
+
+            setDisplayPercent();
+        }
+
+        @Override
+        public String getDisplayValue(double value) {
+            SettingSlider next = next();
+
+            if(next == null || next.getValue() < getValue()) {
+                return super.getDisplayValue(value);
+            } else {
+                return I18n.format("betterHud.value.disabled");
+            }
+        }
+
+        @Override
+        public void setValue(float value) {
+            SettingSlider next = next();
+            super.setValue(next != null ? Math.max(value, next.getValue()) : value);
+
+            for(int i = index - 1; i >= 0; i--) {
+                SettingSlider slider = sliders[i];
+                if(slider != null) slider.setValue(Math.max(slider.getValue(), getValue()));
+            }
+        }
+
+        private SettingSlider next() {
+            return index == sliders.length - 1 ? null : sliders[index + 1];
+        }
+
+        @Override
+        public void updateGuiParts(Collection<Setting> settings) {
+            guiSlider.updateDisplayString();
+        }
     }
 }

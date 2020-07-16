@@ -26,7 +26,8 @@ public class Offhand extends OverlayElement {
 
     @Override
     public boolean shouldRender(OverlayContext context) {
-        return !Minecraft.getMinecraft().player.getHeldItemOffhand().isEmpty();
+        return !Minecraft.getMinecraft().player.getHeldItemOffhand().isEmpty()
+            && !Minecraft.getMinecraft().playerController.isSpectator();
     }
 
     @Override

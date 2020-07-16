@@ -45,6 +45,7 @@ betterHud.element.arrowCount=Flechas
 betterHud.element.biome=Bioma
 betterHud.element.blockViewer=Visualizador de bloco
 betterHud.element.bloodSplatters=Respingos de sangue
+#betterHud.element.bossHealth=Boss Health
 betterHud.element.breedIndicator=Ind. de reprodução
 betterHud.element.compass=Bússola
 betterHud.element.connection=Conexão

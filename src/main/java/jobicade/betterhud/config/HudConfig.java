@@ -89,7 +89,7 @@ public class HudConfig extends Configuration {
 
         available.addAll(HudElements.get().getRegistered());
 
-        String[] enabledNames = getStringList("enabledList", BetterHud.MODID, new String[0], "");
+        String[] enabledNames = getEnabledProperty().getStringList();
         for (String name : enabledNames) {
             HudElement<?> element = HudElements.get().getRegistered(name);
 
@@ -100,6 +100,14 @@ public class HudConfig extends Configuration {
     }
 
     public void saveSettings() {
+        // Convert current selected elements to string list for loading
+        String[] enabledNames = new String[selected.size()];
+
+        for (int i = 0; i < selected.size(); i++) {
+            enabledNames[i] = selected.get(i).getName();
+        }
+        getEnabledProperty().set(enabledNames);
+
         for (Map.Entry<Setting, Property> entry : getPropertyMap().entrySet()) {
             entry.getValue().set(entry.getKey().getStringValue());
         }
@@ -107,6 +115,10 @@ public class HudConfig extends Configuration {
         if (hasChanged()) {
             save();
         }
+    }
+
+    private Property getEnabledProperty() {
+        return get(BetterHud.MODID, "enabledElements", new String[0]);
     }
 
     private Map<Setting, Property> getPropertyMap() {

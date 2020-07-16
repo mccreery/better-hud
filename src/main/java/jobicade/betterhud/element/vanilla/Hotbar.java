@@ -4,15 +4,17 @@ import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.events.OverlayContext;
+import jobicade.betterhud.events.OverlayHook;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.Textures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraft.client.gui.GuiSpectator;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.common.MinecraftForge;
 
 public class Hotbar extends OverlayElement {
     private SettingPosition position;
@@ -29,13 +31,34 @@ public class Hotbar extends OverlayElement {
 
     @Override
     public boolean shouldRender(OverlayContext context) {
-        // TODO make it work correctly with spectator mode
-        return !Minecraft.getMinecraft().player.isSpectator()
-            && !MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(context.getEvent(), ElementType.HOTBAR));
+        final Minecraft mc = Minecraft.getMinecraft();
+
+        return GuiIngameForge.renderHotbar
+            && !OverlayHook.pre(context.getEvent(), ElementType.HOTBAR)
+            && (
+                !mc.playerController.isSpectator()
+                || mc.ingameGUI.getSpectatorGui().isMenuActive()
+            );
     }
 
     @Override
     public Rect render(OverlayContext context) {
+        final Minecraft mc = Minecraft.getMinecraft();
+
+        if (Minecraft.getMinecraft().playerController.isSpectator()) {
+            GuiSpectator spectator = mc.ingameGUI.getSpectatorGui();
+            ScaledResolution res = new ScaledResolution(mc);
+
+            spectator.renderTooltip(res, context.getPartialTicks());
+            spectator.renderSelectedItem(res);
+
+            return new Rect(182, 22).anchor(context.getLayoutManager().getScreen(), Direction.SOUTH);
+        } else {
+            return renderHotbar(context, mc);
+        }
+    }
+
+    private Rect renderHotbar(OverlayContext context, Minecraft mc) {
         Rect barTexture = new Rect(182, 22);
         Rect bounds = position.applyTo(new Rect(barTexture));
 
@@ -55,7 +78,7 @@ public class Hotbar extends OverlayElement {
         }
 
         Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
-        MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(context.getEvent(), ElementType.HOTBAR));
+        OverlayHook.post(context.getEvent(), ElementType.HOTBAR);
         return bounds;
     }
 }
