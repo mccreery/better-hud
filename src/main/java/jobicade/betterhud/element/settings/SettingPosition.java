@@ -49,33 +49,46 @@ public class SettingPosition extends SettingStub {
         BooleanSupplier isPreset = () -> mode.getIndex() == 0;
         BooleanSupplier isCustom = () -> mode.getIndex() == 1;
 
-        addChildren(
-            new Legend("position"),
-            mode,
-            direction = new SettingDirection("direction", Direction.WEST, directionOptions).setEnableOn(isPreset).setHorizontal(),
-            parent = new SettingElement("parent", Direction.CENTER).setEnableOn(isCustom),
-            anchor = new SettingDirection("anchor", Direction.WEST).setEnableOn(isCustom),
-            alignment = new SettingDirection("alignment", Direction.CENTER) {
-                @Override
-                public void updateGuiParts(Collection<Setting> settings) {
-                    if(lockAlignment.get()) set(anchor.get());
-                    super.updateGuiParts(settings);
-                }
-            },
-            contentAlignment = new SettingDirection("contentAlignment", Direction.EAST, contentOptions) {
-                @Override
-                public void updateGuiParts(Collection<Setting> settings) {
-                    if(lockContent.get()) set(SettingPosition.this.alignment.get());
-                    super.updateGuiParts(settings);
-                }
-            },
-            lockAlignment = new SettingLock("lockAlignment").setEnableOn(isCustom),
-            lockContent = new SettingLock("lockContent").setEnableOn(isCustom),
-            offset = new SettingAbsolutePosition("origin", this).setEnableOn(isCustom)
-        );
+        direction = new SettingDirection("direction", Direction.WEST, directionOptions);
+        direction.setEnableOn(isPreset);
+        direction.setHorizontal();
+
+        parent = new SettingElement("parent", Direction.CENTER);
+        parent.setEnableOn(isCustom);
+        anchor = new SettingDirection("anchor", Direction.WEST);
+        anchor.setEnableOn(isCustom);
+
+        alignment = new SettingDirection("alignment", Direction.CENTER) {
+            @Override
+            public void updateGuiParts(Collection<Setting> settings) {
+                if(lockAlignment.get()) set(anchor.get());
+                super.updateGuiParts(settings);
+            }
+        };
+
+        contentAlignment = new SettingDirection("contentAlignment", Direction.EAST, contentOptions) {
+            @Override
+            public void updateGuiParts(Collection<Setting> settings) {
+                if(lockContent.get()) set(SettingPosition.this.alignment.get());
+                super.updateGuiParts(settings);
+            }
+        };
+
+        lockAlignment = new SettingLock("lockAlignment");
+        lockAlignment.setEnableOn(isCustom);
+        lockContent = new SettingLock("lockContent");
+        lockContent.setEnableOn(isCustom);
+        offset = new SettingAbsolutePosition("origin", this);
+        offset.setEnableOn(isCustom);
 
         alignment.setEnableOn(() -> isCustom.getAsBoolean() && !lockAlignment.get());
         contentAlignment.setEnableOn(() -> isCustom.getAsBoolean() && !lockContent.get());
+
+        addChildren(
+            new Legend("position"),
+            mode, direction, parent, anchor, alignment, contentAlignment,
+            lockAlignment, lockContent, offset
+        );
     }
 
     public boolean isDirection(Direction direction) {
@@ -124,14 +137,12 @@ public class SettingPosition extends SettingStub {
         return isCustom() ? contentAlignment.get() : contentAlignment.getOptions().apply(direction.get());
     }
 
-    public SettingPosition setEdge(boolean edge) {
+    public void setEdge(boolean edge) {
         this.edge = edge;
-        return this;
     }
 
-    public SettingPosition setPostSpacer(int postSpacer) {
+    public void setPostSpacer(int postSpacer) {
         this.postSpacer = postSpacer;
-        return this;
     }
 
     /** Moves the given bounds to the correct location and returns them */

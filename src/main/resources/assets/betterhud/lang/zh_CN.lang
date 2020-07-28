@@ -45,6 +45,7 @@ betterHud.element.arrowCount=背包箭数量
 betterHud.element.biome=生物群系
 betterHud.element.blockViewer=方块显示
 betterHud.element.bloodSplatters=溅血
+#betterHud.element.bossHealth=Boss Health
 betterHud.element.breedIndicator=饲养繁殖指示器
 betterHud.element.compass=指南针
 betterHud.element.connection=服务器连接情况
@@ -72,6 +73,7 @@ betterHud.element.waterDrops=水滴
 # Vanilla elements
 #betterHud.element.airBar=Air Bar
 #betterHud.element.armor=Armor Bar
+#betterHud.element.chat=Chat
 #betterHud.element.crosshair=Crosshair
 #betterHud.element.experience=Experience Bar
 #betterHud.element.food=Hunger Bar

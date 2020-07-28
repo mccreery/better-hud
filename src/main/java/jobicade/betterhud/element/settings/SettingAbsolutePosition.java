@@ -5,7 +5,6 @@ import static jobicade.betterhud.BetterHud.SPACER;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BooleanSupplier;
 
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -161,11 +160,5 @@ public class SettingAbsolutePosition extends Setting {
         } else {
             xUp.enabled = xDown.enabled = yUp.enabled = yDown.enabled = false;
         }
-    }
-
-    @Override
-    public SettingAbsolutePosition setEnableOn(BooleanSupplier enableOn) {
-        super.setEnableOn(enableOn);
-        return this;
     }
 }

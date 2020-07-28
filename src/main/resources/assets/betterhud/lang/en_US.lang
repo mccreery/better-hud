@@ -45,6 +45,7 @@ betterHud.element.arrowCount=Arrow Count
 betterHud.element.biome=Biome
 betterHud.element.blockViewer=Block Viewer
 betterHud.element.bloodSplatters=Blood Splatters
+betterHud.element.bossHealth=Boss Health
 betterHud.element.breedIndicator=Breed Indicator
 betterHud.element.compass=Compass
 betterHud.element.connection=Connection
@@ -72,6 +73,7 @@ betterHud.element.waterDrops=Water Drops
 # Vanilla elements
 betterHud.element.airBar=Air Bar
 betterHud.element.armor=Armor Bar
+betterHud.element.chat=Chat
 betterHud.element.crosshair=Crosshair
 betterHud.element.experience=Experience Bar
 betterHud.element.food=Hunger Bar

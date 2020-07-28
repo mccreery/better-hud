@@ -1,22 +1,39 @@
 package jobicade.betterhud.events;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.OverlayElement;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.registry.HudElements;
 import jobicade.betterhud.registry.OverlayElements;
+import jobicade.betterhud.render.Color;
 import jobicade.betterhud.render.GlSnapshot;
 import jobicade.betterhud.render.GlStateManagerManager;
+import jobicade.betterhud.render.Grid;
+import jobicade.betterhud.render.Label;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.GuiPlayerTabOverlay;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.network.NetHandlerPlayClient;
 import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.GlStateManager.DestFactor;
 import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.RenderHelper;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.scoreboard.ScoreObjective;
+import net.minecraft.util.StringUtils;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.EventPriority;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
@@ -36,16 +53,19 @@ public final class OverlayHook {
             // Pre-rendering hotbar so no left or right height yet
             GuiIngameForge.left_height = 0;
             GuiIngameForge.right_height = 0;
+
+            // Condition changes with "hide while riding" option
+            GuiIngameForge.renderFood = OverlayElements.FOOD_BAR.shouldRenderPrecheck();
         }
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void preOverlayLate(RenderGameOverlayEvent.Pre event) {
         if (!event.isCanceled() && shouldRun(event)) {
-            if (tracker == null) {
-                tracker = new SnapshotTracker(BetterHud.getLogger());
+            GlSnapshot pre = null;
+            if (HudElements.GLOBAL.isDebugMode()) {
+                pre = new GlSnapshot();
             }
-            GlSnapshot pre = new GlSnapshot();
 
             // Pre event is a valid parent as it just carries identical
             // information to its own parent
@@ -54,7 +74,12 @@ public final class OverlayHook {
             // Other mods get a chance to cancel the HUD altogether
             event.setCanceled(true);
 
-            tracker.step(pre, new GlSnapshot());
+            if (HudElements.GLOBAL.isDebugMode()) {
+                if (tracker == null) {
+                    tracker = new SnapshotTracker(BetterHud.getLogger());
+                }
+                tracker.step(pre, new GlSnapshot());
+            }
         }
     }
 
@@ -72,7 +97,7 @@ public final class OverlayHook {
      * Starting after the {@code Pre} event.
      */
     private static void renderGameOverlay(RenderGameOverlayEvent event) {
-        // TODO not here
+        final Minecraft mc = Minecraft.getMinecraft();
         BetterHud.MANAGER.reset(event.getResolution());
         OverlayContext context = new OverlayContext(event, BetterHud.MANAGER);
 
@@ -80,18 +105,22 @@ public final class OverlayHook {
             loadGlState();
 
             if (canRender(element, context)) {
-                Minecraft.getMinecraft().mcProfiler.startSection(element.getName());
-                element.render(context);
-                Minecraft.getMinecraft().mcProfiler.endSection();
+                mc.mcProfiler.startSection(element.getName());
+                element.setLastBounds(element.render(context));
+                mc.mcProfiler.endSection();
             }
         }
+
+        renderHudText(event);
+        renderFpsGraph(mc, event);
+        renderPlayerList(mc, event);
 
         GlStateManager.enableDepth();
         MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(event, ElementType.ALL));
     }
 
     private static void loadGlState() {
-        GlStateManager.enableAlpha();
+        GlStateManager.disableAlpha();
         GlStateManager.enableBlend();
         GlStateManager.disableDepth();
         GlStateManager.enableTexture2D();
@@ -118,5 +147,160 @@ public final class OverlayHook {
     public static boolean shouldRender(OverlayElement hudElement, OverlayContext context) {
         return canRender(hudElement, context)
             && BetterHud.getProxy().getEnabled(OverlayElements.get()).contains(hudElement);
+    }
+
+    /**
+     * @see GuiIngameForge#renderHUDText(int, int)
+     */
+    private static void renderHudText(RenderGameOverlayEvent event) {
+        Minecraft mc = Minecraft.getMinecraft();
+        mc.mcProfiler.startSection("forgeHudText");
+
+        // Text event takes ArrayList, not List
+        ArrayList<String> leftList = new ArrayList<>();
+        ArrayList<String> rightList = new ArrayList<>();
+
+        String demoString = getDemoString(mc);
+        if (demoString != null) {
+            rightList.add(demoString);
+        }
+
+        if (mc.gameSettings.showDebugInfo) {
+            Event preEvent = new RenderGameOverlayEvent.Pre(event, ElementType.DEBUG);
+
+            if (!MinecraftForge.EVENT_BUS.post(preEvent)) {
+                GuiOverlayDebug2 overlay = new GuiOverlayDebug2(mc);
+                leftList.addAll(overlay.getDebugInfoLeft());
+                rightList.addAll(overlay.getDebugInfoRight());
+
+                Event postEvent = new RenderGameOverlayEvent.Post(event, ElementType.DEBUG);
+                MinecraftForge.EVENT_BUS.post(postEvent);
+            }
+        }
+
+        RenderGameOverlayEvent.Text textEvent = new RenderGameOverlayEvent.Text(
+            event, leftList, rightList);
+
+        if (!MinecraftForge.EVENT_BUS.post(textEvent)) {
+            renderLists(mc, leftList, rightList);
+        }
+
+        mc.mcProfiler.endSection();
+
+        Event postEvent = new RenderGameOverlayEvent.Post(event, ElementType.TEXT);
+        MinecraftForge.EVENT_BUS.post(postEvent);
+    }
+
+    // 5 days (gametime) and 25 seconds (realtime)
+    private static final long DEMO_TIME = 24000L * 5 + 500;
+
+    private static String getDemoString(Minecraft mc) {
+        if (mc.isDemo()) {
+            long time = mc.world.getTotalWorldTime();
+
+            if (time >= DEMO_TIME) {
+                return I18n.format("demo.demoExpired");
+            } else {
+                String elapsed = StringUtils.ticksToElapsedTime((int)(DEMO_TIME - time));
+                return I18n.format("demo.remainingTime", elapsed);
+            }
+        } else {
+            return null;
+        }
+    }
+
+    private static void renderLists(Minecraft mc, List<String> leftList, List<String> rightList) {
+        renderLabels(leftList, new Point(1, 1), Direction.NORTH_WEST);
+        Point rightAnchor = new Point(new ScaledResolution(mc).getScaledWidth() - 1, 1);
+        renderLabels(rightList, rightAnchor, Direction.NORTH_EAST);
+    }
+
+    private static void renderLabels(List<String> stringList, Point anchor, Direction corner) {
+        List<Label> labelList = getLabels(stringList);
+        Grid<?> grid = new Grid<>(new Point(1, labelList.size()), labelList);
+
+        grid.setCellAlignment(corner);
+        grid.setBounds(new Rect(grid.getPreferredSize()).align(anchor, corner));
+        grid.render();
+    }
+
+    private static List<Label> getLabels(List<String> stringList) {
+        List<Label> labelList = new ArrayList<>();
+
+        for (String line : stringList) {
+            Label label = new Label(line);
+            label.setBackground(new Color(0x90505050));
+            label.setShadow(false);
+            labelList.add(label);
+        }
+        return labelList;
+    }
+
+    /**
+     * @see GuiIngameForge#renderFPSGraph()
+     */
+    private static void renderFpsGraph(Minecraft mc, RenderGameOverlayEvent event) {
+        if (mc.gameSettings.showDebugInfo && mc.gameSettings.showLagometer) {
+            Event preEvent = new RenderGameOverlayEvent.Pre(event, ElementType.FPS_GRAPH);
+
+            if (!MinecraftForge.EVENT_BUS.post(preEvent)) {
+                new GuiOverlayDebug2(mc).renderLagometer();
+
+                Event postEvent = new RenderGameOverlayEvent.Post(event, ElementType.FPS_GRAPH);
+                MinecraftForge.EVENT_BUS.post(postEvent);
+            }
+        }
+    }
+
+    /**
+     * @see GuiIngameForge#renderPlayerList(int, int)
+     */
+    private static void renderPlayerList(Minecraft mc, RenderGameOverlayEvent parentEvent) {
+        final ScaledResolution res = new ScaledResolution(mc);
+        final GuiPlayerTabOverlay tabList = mc.ingameGUI.getTabList();
+
+        ScoreObjective scoreobjective = mc.world.getScoreboard().getObjectiveInDisplaySlot(0);
+        NetHandlerPlayClient handler = mc.player.connection;
+
+        if (mc.gameSettings.keyBindPlayerList.isKeyDown() && (
+            !mc.isIntegratedServerRunning()
+            || handler.getPlayerInfoMap().size() > 1
+            || scoreobjective != null
+        )) {
+            tabList.updatePlayerList(true);
+
+            if (!MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(parentEvent, ElementType.PLAYER_LIST))) {
+                tabList.renderPlayerlist(res.getScaledWidth(), mc.world.getScoreboard(), scoreobjective);
+                MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(parentEvent, ElementType.PLAYER_LIST));
+            }
+        } else {
+            tabList.updatePlayerList(false);
+        }
+    }
+
+    /**
+     * @see GuiIngameForge#renderGameOverlay(float)
+     */
+    public static boolean shouldRenderBars() {
+        Minecraft mc = Minecraft.getMinecraft();
+
+        return mc.playerController.shouldDrawHUD()
+            && mc.getRenderViewEntity() instanceof EntityPlayer;
+    }
+
+    /**
+     * @see GuiIngameForge#pre(ElementType)
+     */
+    public static boolean pre(RenderGameOverlayEvent parentEvent, ElementType elementType) {
+        Event event = new RenderGameOverlayEvent.Pre(parentEvent, elementType);
+        return MinecraftForge.EVENT_BUS.post(event);
+    }
+
+    /**
+     * @see GuiIngameForge#post(ElementType)
+     */
+    public static boolean post(RenderGameOverlayEvent parentEvent, ElementType elementType) {
+        Event event = new RenderGameOverlayEvent.Post(parentEvent, elementType);
+        return MinecraftForge.EVENT_BUS.post(event);
     }
 }

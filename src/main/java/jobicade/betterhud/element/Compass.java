@@ -43,14 +43,18 @@ public class Compass extends OverlayElement {
     public Compass() {
         super("compass");
 
-        settings.addChildren(
-            position = new SettingPosition(DirectionOptions.TOP_BOTTOM, DirectionOptions.NORTH_SOUTH),
-            mode = new SettingChoose("mode", "visual", "text"),
-            new Legend("misc"),
-            directionScaling = new SettingSlider("letterScale", 0, 1).setDisplayPercent(),
-            showNotches = new SettingBoolean("showNotches").setValuePrefix(SettingBoolean.VISIBLE),
-            requireItem = new SettingChoose("requireItem", "disabled", "inventory", "hand")
-        );
+        position = new SettingPosition(DirectionOptions.TOP_BOTTOM, DirectionOptions.NORTH_SOUTH);
+        mode = new SettingChoose("mode", "visual", "text");
+
+        directionScaling = new SettingSlider("letterScale", 0, 1);
+        directionScaling.setDisplayPercent();
+
+        showNotches = new SettingBoolean("showNotches");
+        showNotches.setValuePrefix(SettingBoolean.VISIBLE);
+
+        requireItem = new SettingChoose("requireItem", "disabled", "inventory", "hand");
+
+        settings.addChildren(position, mode, new Legend("misc"), directionScaling, showNotches, requireItem);
     }
 
     private void drawBackground(Rect bounds) {

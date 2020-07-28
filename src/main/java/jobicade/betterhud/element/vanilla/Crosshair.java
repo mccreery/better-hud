@@ -8,6 +8,7 @@ import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.events.OverlayContext;
+import jobicade.betterhud.events.OverlayHook;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -26,9 +27,8 @@ import net.minecraft.util.EnumHandSide;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.common.MinecraftForge;
 
 public class Crosshair extends OverlayElement {
     private SettingPosition position;
@@ -38,47 +38,53 @@ public class Crosshair extends OverlayElement {
     public Crosshair() {
         super("crosshair");
 
-        settings.addChildren(
-            position = new SettingPosition(DirectionOptions.I, DirectionOptions.NONE),
-            attackIndicator = new SettingBoolean(null) {
-                @Override
-                public boolean get() {
-                    return Minecraft.getMinecraft().gameSettings.attackIndicator != 0;
-                }
+        position = new SettingPosition(DirectionOptions.I, DirectionOptions.NONE);
 
-                @Override
-                public void set(boolean value) {
-                    Minecraft.getMinecraft().gameSettings.attackIndicator = value ? indicatorType.getIndex() + 1 : 0;
-                    Minecraft.getMinecraft().gameSettings.saveOptions();
-                }
-            }.setValuePrefix(SettingBoolean.VISIBLE).setUnlocalizedName("options.attackIndicator"),
-            indicatorType = new SettingChoose(null, 2) {
-                @Override
-                public int getIndex() {
-                    return Math.max(Minecraft.getMinecraft().gameSettings.attackIndicator - 1, 0);
-                }
+        attackIndicator = new SettingBoolean(null) {
+            @Override
+            public boolean get() {
+                return Minecraft.getMinecraft().gameSettings.attackIndicator != 0;
+            }
 
-                @Override
-                public void setIndex(int index) {
-                    if(index >= 0 && index < 2) {
-                        Minecraft.getMinecraft().gameSettings.attackIndicator = attackIndicator.get() ? index + 1 : 0;
-                    }
-                }
+            @Override
+            public void set(boolean value) {
+                Minecraft.getMinecraft().gameSettings.attackIndicator = value ? indicatorType.getIndex() + 1 : 0;
+                Minecraft.getMinecraft().gameSettings.saveOptions();
+            }
+        };
+        attackIndicator.setValuePrefix(SettingBoolean.VISIBLE);
+        attackIndicator.setUnlocalizedName("options.attackIndicator");
+        position.setEnableOn(attackIndicator::get);
 
-                @Override
-                protected String getUnlocalizedValue() {
-                    return "options.attack." + modes[getIndex()];
+        indicatorType = new SettingChoose(null, 2) {
+            @Override
+            public int getIndex() {
+                return Math.max(Minecraft.getMinecraft().gameSettings.attackIndicator - 1, 0);
+            }
+
+            @Override
+            public void setIndex(int index) {
+                if(index >= 0 && index < 2) {
+                    Minecraft.getMinecraft().gameSettings.attackIndicator = attackIndicator.get() ? index + 1 : 0;
                 }
-            }.setEnableOn(attackIndicator::get)
-        );
-        position.setEnableOn(() -> attackIndicator.get());
+            }
+
+            @Override
+            protected String getUnlocalizedValue() {
+                return "options.attack." + modes[getIndex()];
+            }
+        };
+        indicatorType.setEnableOn(attackIndicator::get);
+
+        settings.addChildren(position, attackIndicator, indicatorType);
     }
 
     @Override
     public boolean shouldRender(OverlayContext context) {
-        return Minecraft.getMinecraft().gameSettings.thirdPersonView == 0
-            && (!Minecraft.getMinecraft().playerController.isSpectator() || canInteract())
-            && !MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Pre(context.getEvent(), ElementType.CROSSHAIRS));
+        return GuiIngameForge.renderCrosshairs
+            && !OverlayHook.pre(context.getEvent(), ElementType.CROSSHAIRS)
+            && Minecraft.getMinecraft().gameSettings.thirdPersonView == 0
+            && (!Minecraft.getMinecraft().playerController.isSpectator() || canInteract());
     }
 
     /** @return {@code true} if the player is looking at something that can be interacted with in spectator mode */
@@ -118,7 +124,7 @@ public class Crosshair extends OverlayElement {
             GlStateManager.disableAlpha();
         }
 
-        MinecraftForge.EVENT_BUS.post(new RenderGameOverlayEvent.Post(context.getEvent(), ElementType.CROSSHAIRS));
+        OverlayHook.post(context.getEvent(), ElementType.CROSSHAIRS);
         return bounds;
     }
 

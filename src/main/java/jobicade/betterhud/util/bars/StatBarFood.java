@@ -2,12 +2,12 @@ package jobicade.betterhud.util.bars;
 
 import java.util.Random;
 
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.util.RandomWrapper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.EntityPlayer;
 import net.minecraft.init.MobEffects;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.util.MathUtil;
 
 public class StatBarFood extends StatBarBasic<EntityPlayer> {
     private final Random random = new Random();
@@ -38,7 +38,7 @@ public class StatBarFood extends StatBarBasic<EntityPlayer> {
     @Override
     protected int getIconBounce(int pointsIndex) {
         if(host.getFoodStats().getSaturationLevel() <= 0 && Minecraft.getMinecraft().ingameGUI.getUpdateCounter() % (getCurrent() * 3 + 1) == 0) {
-            return MathUtil.randomRange(-1, 2);
+            return new RandomWrapper(random).nextInt(-1, 2);
         } else {
             return 0;
         }
@@ -47,10 +47,6 @@ public class StatBarFood extends StatBarBasic<EntityPlayer> {
     @Override
     public void render() {
         random.setSeed(Minecraft.getMinecraft().ingameGUI.getUpdateCounter());
-        MathUtil.setRandom(random);
-
         super.render();
-
-        MathUtil.setRandom(null);
     }
 }

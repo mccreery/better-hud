@@ -4,13 +4,14 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.util.MathUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.entity.EntityLivingBase;
 import net.minecraft.init.MobEffects;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.util.MathUtil;
+import net.minecraft.util.math.MathHelper;
 
 public class StatBarHealth extends StatBar<EntityLivingBase> {
     private final Random random = new Random();
@@ -118,10 +119,10 @@ public class StatBarHealth extends StatBar<EntityLivingBase> {
 
         random.setSeed(newUpdateCounter);
 
-        maxHealth = MathUtil.getHealthForDisplay(host.getMaxHealth());
-        absorptionHealth = MathUtil.getHealthForDisplay(host.getAbsorptionAmount());
+        maxHealth = MathHelper.ceil(host.getMaxHealth());
+        absorptionHealth = MathHelper.ceil(host.getAbsorptionAmount());
 
-        int newHealth = MathUtil.getHealthForDisplay(host.getHealth());
+        int newHealth = MathHelper.ceil(host.getHealth());
 
         if(currentHealth <= 0 && newHealth > 0) {
             displayHealth = newHealth;

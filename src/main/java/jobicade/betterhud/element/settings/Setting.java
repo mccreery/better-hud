@@ -52,14 +52,12 @@ public abstract class Setting {
      */
     public abstract void loadStringValue(String stringValue) throws SettingValueException;
 
-    public Setting setEnableOn(BooleanSupplier enableOn) {
+    public void setEnableOn(BooleanSupplier enableOn) {
         this.enableOn = enableOn;
-        return this;
     }
 
-    public Setting setHidden() {
+    public void setHidden() {
         this.hidden = true;
-        return this;
     }
 
     public final void addChild(Setting setting) {
@@ -84,9 +82,8 @@ public abstract class Setting {
         return children.isEmpty();
     }
 
-    public Setting setUnlocalizedName(String unlocalizedName) {
+    public void setUnlocalizedName(String unlocalizedName) {
         this.unlocalizedName = unlocalizedName;
-        return this;
     }
 
     public String getUnlocalizedName() {
@@ -128,7 +125,6 @@ public abstract class Setting {
         }
     }
 
-    // TODO why here?
     /** Passed on from the element's setting screen when a GuiButton for this setting is pressed.
      * @param button The GuiButton that was pressed. */
     public abstract void actionPerformed(GuiElementSettings gui, GuiButton button);

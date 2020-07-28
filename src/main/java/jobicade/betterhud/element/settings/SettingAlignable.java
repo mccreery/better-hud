@@ -18,9 +18,8 @@ public abstract class SettingAlignable extends Setting {
         this.alignment = alignment;
     }
 
-    public SettingAlignable setAlignment(Direction alignment) {
+    public void setAlignment(Direction alignment) {
         this.alignment = alignment;
-        return this;
     }
 
     @Override

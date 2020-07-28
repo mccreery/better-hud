@@ -4,19 +4,18 @@ import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
-import java.util.function.BooleanSupplier;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.gui.GuiElementSettings;
+import jobicade.betterhud.render.Color;
+import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
-import jobicade.betterhud.gui.GuiElementSettings;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.render.Color;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.geom.Point;
 
 public class SettingChoose extends SettingAlignable {
     protected GuiButton last, next, backing;
@@ -158,13 +157,5 @@ public class SettingChoose extends SettingAlignable {
     @Override
     public void updateGuiParts(Collection<Setting> settings) {
         last.enabled = next.enabled = enabled();
-    }
-
-    // TODO methods that return this should either not do that or return their
-    // real type instead of Setting
-    @Override
-    public SettingChoose setEnableOn(BooleanSupplier enableOn) {
-        super.setEnableOn(enableOn);
-        return this;
     }
 }

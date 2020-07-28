@@ -2,11 +2,12 @@ package jobicade.betterhud.element.particles;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Random;
 
+import jobicade.betterhud.util.RandomWrapper;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.BlockPos;
-import jobicade.betterhud.util.MathUtil;
 
 public class WaterDrops extends ParticleOverlay {
     public WaterDrops() {
@@ -34,7 +35,8 @@ public class WaterDrops extends ParticleOverlay {
             }
 
             BlockPos camera = new BlockPos(Minecraft.getMinecraft().player.getPositionEyes(1));
-            if(Minecraft.getMinecraft().world.isRainingAt(camera) && MathUtil.randomChance(getParticleChance())) {
+            if (Minecraft.getMinecraft().world.isRainingAt(camera)
+                    && new RandomWrapper(new Random()).nextTrial(getParticleChance())) {
                 toSpawn.add(ParticleWater.createRandom());
             }
 
@@ -49,6 +51,6 @@ public class WaterDrops extends ParticleOverlay {
     }
 
     private int getParticleCount() {
-        return MathUtil.randomRange(0, (density.getIndex() + 1) * 20);
+        return new Random().nextInt((density.getIndex() + 1) * 20);
     }
 }

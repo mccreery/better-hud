@@ -5,12 +5,14 @@ import static jobicade.betterhud.BetterHud.MANAGER;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.events.OverlayContext;
-import jobicade.betterhud.events.OverlayHook;
 import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.registry.OverlayElements;
 import jobicade.betterhud.util.Tickable;
+import net.minecraft.client.Minecraft;
 
 public abstract class ParticleOverlay extends OverlayElement implements Tickable {
     protected SettingChoose density;
@@ -29,7 +31,8 @@ public abstract class ParticleOverlay extends OverlayElement implements Tickable
 
     @Override
     public void tick() {
-        if (OverlayHook.shouldRender(this, null)) {
+        if (BetterHud.getProxy().getEnabled(OverlayElements.get()).contains(this)
+                && Minecraft.getMinecraft().inGameHasFocus) {
             particles.forEach(Particle::tick);
             updateParticles();
         }
