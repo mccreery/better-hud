@@ -23,141 +23,145 @@ import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumFacing;
 
 public class Compass extends OverlayElement {
-	private static final String[] DIRECTIONS = { "S", "E", "N", "W" };
+    private static final String[] DIRECTIONS = { "S", "E", "N", "W" };
 
-	private SettingPosition position;
-	private SettingChoose mode, requireItem;
-	private SettingSlider directionScaling;
-	private SettingBoolean showNotches;
+    private SettingPosition position;
+    private SettingChoose mode, requireItem;
+    private SettingSlider directionScaling;
+    private SettingBoolean showNotches;
 
-	private static final int[] notchX = new int[9];
+    private static final int[] notchX = new int[9];
 
-	static {
-		int x = 0;
+    static {
+        int x = 0;
 
-		for(double i = 0.1; i <= 0.9; i += 0.1, x++) {
-			notchX[x] = (int) (Math.asin(i) / Math.PI * 180);
-		}
-	}
+        for(double i = 0.1; i <= 0.9; i += 0.1, x++) {
+            notchX[x] = (int) (Math.asin(i) / Math.PI * 180);
+        }
+    }
 
-	public Compass() {
-		super("compass");
+    public Compass() {
+        super("compass");
 
-		settings.addChildren(
-			position = new SettingPosition(DirectionOptions.TOP_BOTTOM, DirectionOptions.NORTH_SOUTH),
-			mode = new SettingChoose("mode", "visual", "text"),
-			new Legend("misc"),
-			directionScaling = new SettingSlider("letterScale", 0, 1).setDisplayPercent(),
-			showNotches = new SettingBoolean("showNotches").setValuePrefix(SettingBoolean.VISIBLE),
-			requireItem = new SettingChoose("requireItem", "disabled", "inventory", "hand")
-		);
-	}
+        position = new SettingPosition(DirectionOptions.TOP_BOTTOM, DirectionOptions.NORTH_SOUTH);
+        mode = new SettingChoose("mode", "visual", "text");
 
-	private void drawBackground(Rect bounds) {
-		GlUtil.drawRect(bounds, new Color(170, 0, 0, 0));
-		GlUtil.drawRect(bounds.grow(-50, 0, -50, 0), new Color(85, 85, 85, 85));
+        directionScaling = new SettingSlider("letterScale", 0, 1);
+        directionScaling.setDisplayPercent();
 
-		Direction alignment = position.getContentAlignment();
+        showNotches = new SettingBoolean("showNotches");
+        showNotches.setValuePrefix(SettingBoolean.VISIBLE);
 
-		Rect smallRect = bounds.grow(2);
-		Rect largeNotch = new Rect(1, 7);
+        requireItem = new SettingChoose("requireItem", "disabled", "inventory", "hand");
 
-		Rect smallNotch = new Rect(1, 6);
-		Rect largeRect = bounds.grow(0, 3, 0, 3);
+        settings.addChildren(position, mode, new Legend("misc"), directionScaling, showNotches, requireItem);
+    }
 
-		if(showNotches.get()) {
-			for(int loc : notchX) {
-				Rect notchTemp = smallNotch.anchor(smallRect, alignment);
-				GlUtil.drawRect(notchTemp.translate(loc, 0), Color.WHITE);
-				GlUtil.drawRect(notchTemp.translate(-loc, 0), Color.WHITE);
-			}
-		}
+    private void drawBackground(Rect bounds) {
+        GlUtil.drawRect(bounds, new Color(170, 0, 0, 0));
+        GlUtil.drawRect(bounds.grow(-50, 0, -50, 0), new Color(85, 85, 85, 85));
 
-		GlUtil.drawRect(largeNotch.anchor(largeRect, alignment.withCol(0)), Color.RED);
-		GlUtil.drawRect(largeNotch.anchor(largeRect, alignment.withCol(1)), Color.RED);
-		GlUtil.drawRect(largeNotch.anchor(largeRect, alignment.withCol(2)), Color.RED);
-	}
+        Direction alignment = position.getContentAlignment();
 
-	private void drawDirections(Rect bounds) {
-		float angle = (float)Math.toRadians(Minecraft.getMinecraft().player.rotationYaw);
+        Rect smallRect = bounds.grow(2);
+        Rect largeNotch = new Rect(1, 7);
 
-		float radius = bounds.getWidth() / 2 + SPACER;
-		boolean bottom = position.getContentAlignment() == Direction.SOUTH;
+        Rect smallNotch = new Rect(1, 6);
+        Rect largeRect = bounds.grow(0, 3, 0, 3);
 
-		Point origin = bounds.grow(-2).getAnchor(position.getContentAlignment());
+        if(showNotches.get()) {
+            for(int loc : notchX) {
+                Rect notchTemp = smallNotch.anchor(smallRect, alignment);
+                GlUtil.drawRect(notchTemp.translate(loc, 0), Color.WHITE);
+                GlUtil.drawRect(notchTemp.translate(-loc, 0), Color.WHITE);
+            }
+        }
 
-		for(int i = 0; i < 4; i++, angle += Math.PI / 2) {
-			double cos = Math.cos(angle);
+        GlUtil.drawRect(largeNotch.anchor(largeRect, alignment.withCol(0)), Color.RED);
+        GlUtil.drawRect(largeNotch.anchor(largeRect, alignment.withCol(1)), Color.RED);
+        GlUtil.drawRect(largeNotch.anchor(largeRect, alignment.withCol(2)), Color.RED);
+    }
 
-			Point letter = origin.add(-(int)(Math.sin(angle) * radius), 0);
-			double scale = 1 + directionScaling.get() * cos * 2;
+    private void drawDirections(Rect bounds) {
+        float angle = (float)Math.toRadians(Minecraft.getMinecraft().player.rotationYaw);
 
-			GlStateManager.pushMatrix();
+        float radius = bounds.getWidth() / 2 + SPACER;
+        boolean bottom = position.getContentAlignment() == Direction.SOUTH;
 
-			GlStateManager.translate(letter.getX(), letter.getY(), 0);
-			GlUtil.scale((float)scale);
+        Point origin = bounds.grow(-2).getAnchor(position.getContentAlignment());
 
-			Color color = i == 0 ? Color.BLUE : i == 2 ? Color.RED : Color.WHITE;
-			color = color.withAlpha((int)(((cos + 1) / 2) * 255));
+        for(int i = 0; i < 4; i++, angle += Math.PI / 2) {
+            double cos = Math.cos(angle);
 
-			// Super low alphas can render opaque for some reason
-			if(color.getAlpha() > 3) {
-				GlUtil.drawString(DIRECTIONS[i], Point.zero(), bottom ? Direction.SOUTH : Direction.NORTH, color);
-			}
+            Point letter = origin.add(-(int)(Math.sin(angle) * radius), 0);
+            double scale = 1 + directionScaling.getValue() * cos * 2;
 
-			GlStateManager.popMatrix();
-		}
-	}
+            GlStateManager.pushMatrix();
 
-	@Override
-	public boolean shouldRender(OverlayContext context) {
-		switch(requireItem.getIndex()) {
-			case 1:
-				return Minecraft.getMinecraft().player.inventory.hasItemStack(new ItemStack(Items.COMPASS));
-			case 2:
-				return Minecraft.getMinecraft().player.getHeldItemMainhand().getItem() == Items.COMPASS
-					|| Minecraft.getMinecraft().player.getHeldItemOffhand().getItem() == Items.COMPASS;
-		}
-		return true;
-	}
+            GlStateManager.translate(letter.getX(), letter.getY(), 0);
+            GlUtil.scale((float)scale);
 
-	public String getText() {
-		EnumFacing enumfacing = Minecraft.getMinecraft().player.getHorizontalFacing();
+            Color color = i == 0 ? Color.BLUE : i == 2 ? Color.RED : Color.WHITE;
+            color = color.withAlpha((int)(((cos + 1) / 2) * 255));
 
-		String coord;
-		Direction direction;
+            // Super low alphas can render opaque for some reason
+            if(color.getAlpha() > 3) {
+                GlUtil.drawString(DIRECTIONS[i], Point.zero(), bottom ? Direction.SOUTH : Direction.NORTH, color);
+            }
 
-		switch(enumfacing) {
-			case NORTH: coord = "-Z"; direction = Direction.NORTH; break;
-			case SOUTH: coord = "+Z"; direction = Direction.SOUTH; break;
-			case WEST: coord = "-X"; direction = Direction.WEST; break;
-			case EAST: coord = "+X"; direction = Direction.EAST; break;
-			default: return "?";
-		}
-		return I18n.format("betterHud.hud.facing", SettingDirection.localizeDirection(direction), coord);
-	}
+            GlStateManager.popMatrix();
+        }
+    }
 
-	@Override
-	public Rect render(OverlayContext context) {
-		Rect bounds;
+    @Override
+    public boolean shouldRender(OverlayContext context) {
+        switch(requireItem.getIndex()) {
+            case 1:
+                return Minecraft.getMinecraft().player.inventory.hasItemStack(new ItemStack(Items.COMPASS));
+            case 2:
+                return Minecraft.getMinecraft().player.getHeldItemMainhand().getItem() == Items.COMPASS
+                    || Minecraft.getMinecraft().player.getHeldItemOffhand().getItem() == Items.COMPASS;
+        }
+        return true;
+    }
 
-		if(mode.getIndex() == 0) {
-			bounds = position.applyTo(new Rect(180, 12));
+    public String getText() {
+        EnumFacing enumfacing = Minecraft.getMinecraft().player.getHorizontalFacing();
 
-			Minecraft.getMinecraft().mcProfiler.startSection("background");
-			drawBackground(bounds);
-			Minecraft.getMinecraft().mcProfiler.endStartSection("text");
-			drawDirections(bounds);
-			Minecraft.getMinecraft().mcProfiler.endSection();
-		} else {
-			String text = getText();
-			bounds = position.applyTo(new Rect(GlUtil.getStringSize(text)));
+        String coord;
+        Direction direction;
 
-			Minecraft.getMinecraft().mcProfiler.startSection("text");
-			GlUtil.drawString(text, bounds.getPosition(), Direction.NORTH_WEST, Color.WHITE);
-			Minecraft.getMinecraft().mcProfiler.endSection();
-		}
+        switch(enumfacing) {
+            case NORTH: coord = "-Z"; direction = Direction.NORTH; break;
+            case SOUTH: coord = "+Z"; direction = Direction.SOUTH; break;
+            case WEST: coord = "-X"; direction = Direction.WEST; break;
+            case EAST: coord = "+X"; direction = Direction.EAST; break;
+            default: return "?";
+        }
+        return I18n.format("betterHud.hud.facing", SettingDirection.localizeDirection(direction), coord);
+    }
 
-		return bounds;
-	}
+    @Override
+    public Rect render(OverlayContext context) {
+        Rect bounds;
+
+        if(mode.getIndex() == 0) {
+            bounds = position.applyTo(new Rect(180, 12));
+
+            Minecraft.getMinecraft().mcProfiler.startSection("background");
+            drawBackground(bounds);
+            Minecraft.getMinecraft().mcProfiler.endStartSection("text");
+            drawDirections(bounds);
+            Minecraft.getMinecraft().mcProfiler.endSection();
+        } else {
+            String text = getText();
+            bounds = position.applyTo(new Rect(GlUtil.getStringSize(text)));
+
+            Minecraft.getMinecraft().mcProfiler.startSection("text");
+            GlUtil.drawString(text, bounds.getPosition(), Direction.NORTH_WEST, Color.WHITE);
+            Minecraft.getMinecraft().mcProfiler.endSection();
+        }
+
+        return bounds;
+    }
 }

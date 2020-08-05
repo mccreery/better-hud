@@ -16,86 +16,87 @@ import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
 
 public class ExperienceInfo extends TextElement {
-	private SettingBoolean total;
-	private SettingBoolean lifetime;
+    private SettingBoolean total;
+    private SettingBoolean lifetime;
 
-	public ExperienceInfo() {
-		super("experienceInfo");
+    public ExperienceInfo() {
+        super("experienceInfo");
 
-		settings.addChildren(
-			new Legend("misc"),
-			total = new SettingBoolean("showTotalExp").setValuePrefix(SettingBoolean.VISIBLE),
-			lifetime = new SettingBoolean("showLifetimeExp").setValuePrefix(SettingBoolean.VISIBLE)
-		);
-	}
+        total = new SettingBoolean("showTotalExp");
+        total.setValuePrefix(SettingBoolean.VISIBLE);
+        lifetime = new SettingBoolean("showLifetimeExp");
+        lifetime.setValuePrefix(SettingBoolean.VISIBLE);
 
-	@Override
-	public boolean shouldRender(OverlayContext context) {
-		return Minecraft.getMinecraft().playerController.gameIsSurvivalOrAdventure();
-	}
+        settings.addChildren(new Legend("misc"), total, lifetime);
+    }
 
-	@Override
-	public Rect render(OverlayContext context) {
-		int fullBar = getExperienceWithinLevel(Minecraft.getMinecraft().player.experienceLevel);
+    @Override
+    public boolean shouldRender(OverlayContext context) {
+        return Minecraft.getMinecraft().playerController.gameIsSurvivalOrAdventure();
+    }
 
-		int has = (int)(Minecraft.getMinecraft().player.experience * fullBar);
-		int needed = fullBar - has;
+    @Override
+    public Rect render(OverlayContext context) {
+        int fullBar = getExperienceWithinLevel(Minecraft.getMinecraft().player.experienceLevel);
 
-		String hasDisplay = String.valueOf(has);
-		String neededDisplay = String.valueOf(needed);
+        int has = (int)(Minecraft.getMinecraft().player.experience * fullBar);
+        int needed = fullBar - has;
 
-		Rect bar = OverlayElements.EXPERIENCE.getLastBounds();
+        String hasDisplay = String.valueOf(has);
+        String neededDisplay = String.valueOf(needed);
 
-		Point text = new Rect(GlUtil.getStringSize(hasDisplay).sub(0, 2)).anchor(bar, Direction.WEST).getPosition();
-		GlUtil.drawBorderedString(hasDisplay, text.getX(), text.getY(), Color.WHITE);
+        Rect bar = OverlayElements.EXPERIENCE.getLastBounds();
 
-		text = new Rect(GlUtil.getStringSize(neededDisplay).sub(0, 2)).anchor(bar, Direction.EAST).getPosition();
-		GlUtil.drawBorderedString(neededDisplay, text.getX(), text.getY(), Color.WHITE);
+        Point text = new Rect(GlUtil.getStringSize(hasDisplay).sub(0, 2)).anchor(bar, Direction.WEST).getPosition();
+        GlUtil.drawBorderedString(hasDisplay, text.getX(), text.getY(), Color.WHITE);
 
-		return super.render(context);
-	}
+        text = new Rect(GlUtil.getStringSize(neededDisplay).sub(0, 2)).anchor(bar, Direction.EAST).getPosition();
+        GlUtil.drawBorderedString(neededDisplay, text.getX(), text.getY(), Color.WHITE);
 
-	/** @param level The player's current level
-	 * @return The total amount of experience in the current experience bar
-	 * @see <a href="https://minecraft.gamepedia.com/Experience#Leveling_up">Levelling Up</a> */
-	private static int getExperienceWithinLevel(int level) {
-		if (level >= 31) {
-			return 9 * level - 158;
-		} else if (level >= 16) {
-			return 5 * level - 38;
-		} else {
-			return 2 * level + 7;
-		}
-	}
+        return super.render(context);
+    }
 
-	/** @return The total amount of experience required to reach {@code level}
-	 * @see <a href="https://minecraft.gamepedia.com/Experience#Leveling_up">Levelling Up</a> */
-	private static int getExperienceToLevel(int level) {
-		/* Result is always integer despite real coefficients
-		 * because level and level^2 are either both odd or both even */
+    /** @param level The player's current level
+     * @return The total amount of experience in the current experience bar
+     * @see <a href="https://minecraft.gamepedia.com/Experience#Leveling_up">Levelling Up</a> */
+    private static int getExperienceWithinLevel(int level) {
+        if (level >= 31) {
+            return 9 * level - 158;
+        } else if (level >= 16) {
+            return 5 * level - 38;
+        } else {
+            return 2 * level + 7;
+        }
+    }
 
-		if(level >= 32) {
-			return (int)((4.5 * level - 162.5) * level) + 2220;
-		} else if(level >= 17) {
-			return (int)((2.5 * level - 40.5) * level) + 360;
-		} else {
-			return (level + 6) * level;
-		}
-	}
+    /** @return The total amount of experience required to reach {@code level}
+     * @see <a href="https://minecraft.gamepedia.com/Experience#Leveling_up">Levelling Up</a> */
+    private static int getExperienceToLevel(int level) {
+        /* Result is always integer despite real coefficients
+         * because level and level^2 are either both odd or both even */
 
-	@Override
-	protected List<String> getText() {
-		List<String> parts = new ArrayList<String>(2);
+        if(level >= 32) {
+            return (int)((4.5 * level - 162.5) * level) + 2220;
+        } else if(level >= 17) {
+            return (int)((2.5 * level - 40.5) * level) + 360;
+        } else {
+            return (level + 6) * level;
+        }
+    }
 
-		if(total.get()) {
-			int totalDisplay = getExperienceToLevel(Minecraft.getMinecraft().player.experienceLevel);
-			totalDisplay += Minecraft.getMinecraft().player.experience * getExperienceWithinLevel(Minecraft.getMinecraft().player.experienceLevel);
+    @Override
+    protected List<String> getText() {
+        List<String> parts = new ArrayList<String>(2);
 
-			parts.add(total.getLocalizedName() + ": "+ totalDisplay);
-		}
-		if(lifetime.get()) {
-			parts.add(lifetime.getLocalizedName() + ": " + Minecraft.getMinecraft().player.experienceTotal);
-		}
-		return parts;
-	}
+        if(total.get()) {
+            int totalDisplay = getExperienceToLevel(Minecraft.getMinecraft().player.experienceLevel);
+            totalDisplay += Minecraft.getMinecraft().player.experience * getExperienceWithinLevel(Minecraft.getMinecraft().player.experienceLevel);
+
+            parts.add(total.getLocalizedName() + ": "+ totalDisplay);
+        }
+        if(lifetime.get()) {
+            parts.add(lifetime.getLocalizedName() + ": " + Minecraft.getMinecraft().player.experienceTotal);
+        }
+        return parts;
+    }
 }

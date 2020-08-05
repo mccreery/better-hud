@@ -7,129 +7,129 @@ import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.gui.GuiSlider;
-import jobicade.betterhud.util.ISlider;
 import jobicade.betterhud.util.MathUtil;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.math.MathHelper;
 
-public class SettingSlider extends SettingAlignable implements ISlider {
-	protected GuiSlider slider;
-	private final double min, max, interval;
+public class SettingSlider extends SettingAlignable {
+    protected GuiSlider guiSlider;
 
-	private int displayPlaces;
-	private String unlocalizedValue;
+    private int displayPlaces;
+    private String unlocalizedValue;
 
-	private double value;
-	private double displayScale = 1;
+    private double displayScale = 1;
 
-	public SettingSlider(String name, double min, double max) {
-		this(name, min, max, -1);
-	}
+    public SettingSlider(String name, float min, float max) {
+        this(name, min, max, -1);
+    }
 
-	public SettingSlider(String name, double min, double max, double interval) {
-		super(name, Direction.CENTER);
-		this.min = min;
-		this.max = max;
-		this.interval = interval;
+    public SettingSlider(String name, float minimum, float maximum, float interval) {
+        super(name, Direction.CENTER);
+        this.minimum = minimum;
+        this.maximum = maximum;
+        this.interval = interval;
 
-		updateDisplayPlaces();
-		set(getMinimum());
-	}
+        updateDisplayPlaces();
+        setValue(getMinimum());
+    }
 
-	public SettingSlider setDisplayPercent() {
-		return setUnlocalizedValue("betterHud.value.percent")
-			.setDisplayScale(100)
-			.setDisplayPlaces(0);
-	}
+    protected float value;
+    public float getValue() {
+        return value;
+    }
 
-	private void updateDisplayPlaces() {
-		int places = interval != -1
-			&& interval * displayScale == (int)(interval * displayScale) ? 0 : 1;
-		setDisplayPlaces(places);
-	}
+    public void setValue(float value) {
+        if (getInterval() != -1) {
+            value = roundMultiple(value - getMinimum(), getInterval()) + getMinimum();
+        }
+        this.value = MathHelper.clamp(value, getMinimum(), getMaximum());
+    }
 
-	public SettingSlider setAlignment(Direction alignment) {
-		this.alignment = alignment;
-		return this;
-	}
+    protected float roundMultiple(float x, float y) {
+        return Math.round(x / y) * y;
+    }
 
-	public SettingSlider setDisplayScale(double displayScale) {
-		this.displayScale = displayScale;
-		updateDisplayPlaces();
+    protected final float minimum;
+    public float getMinimum() {
+        return minimum;
+    }
 
-		return this;
-	}
+    protected final float maximum;
+    public float getMaximum() {
+        return maximum;
+    }
 
-	public SettingSlider setDisplayPlaces(int displayPlaces) {
-		this.displayPlaces = displayPlaces;
-		return this;
-	}
+    protected final float interval;
+    public float getInterval() {
+        return interval;
+    }
 
-	public SettingSlider setUnlocalizedValue(String unlocalizedValue) {
-		this.unlocalizedValue = unlocalizedValue;
-		return this;
-	}
+    public void setDisplayPercent() {
+        setUnlocalizedValue("betterHud.value.percent");
+        setDisplayScale(100);
+        setDisplayPlaces(0);
+    }
 
-	@Override
-	public String getDisplayString() {
-		return I18n.format("betterHud.setting." + name) + ": " + getDisplayValue(get() * displayScale);
-	}
+    private void updateDisplayPlaces() {
+        int places = interval != -1
+            && interval * displayScale == (int)(interval * displayScale) ? 0 : 1;
+        setDisplayPlaces(places);
+    }
 
-	public String getDisplayValue(double scaledValue) {
-		String displayValue = MathUtil.formatToPlaces(scaledValue, displayPlaces);
+    public void setDisplayScale(double displayScale) {
+        this.displayScale = displayScale;
+        updateDisplayPlaces();
+    }
 
-		if(unlocalizedValue != null) {
-			displayValue = I18n.format(unlocalizedValue, displayValue);
-		}
-		return displayValue;
-	}
+    public void setDisplayPlaces(int displayPlaces) {
+        this.displayPlaces = displayPlaces;
+    }
 
-	@Override
-	public void getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Rect bounds) {
-		slider = new GuiSlider(0, bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), this);
+    public void setUnlocalizedValue(String unlocalizedValue) {
+        this.unlocalizedValue = unlocalizedValue;
+    }
 
-		parts.add(slider);
-		callbacks.put(slider, this);
-	}
+    public String getDisplayString() {
+        return I18n.format("betterHud.setting." + name) + ": " + getDisplayValue(getValue() * displayScale);
+    }
 
-	@Override public void actionPerformed(GuiElementSettings gui, GuiButton button) {}
-	@Override public Double get() {return value;}
+    public String getDisplayValue(double scaledValue) {
+        String displayValue = MathUtil.formatToPlaces(scaledValue, displayPlaces);
 
-	public int getInt() {
-		return get().intValue();
-	}
+        if(unlocalizedValue != null) {
+            displayValue = I18n.format(unlocalizedValue, displayValue);
+        }
+        return displayValue;
+    }
 
-	@Override
-	public void set(Double value) {
-		this.value = normalize(value);
-		if(slider != null) slider.updateDisplayString();
-	}
+    @Override
+    public void getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Rect bounds) {
+        guiSlider = new GuiSlider(0, bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), this);
 
-	public void set(int value) {
-		set((double)value);
-	}
+        parts.add(guiSlider);
+        callbacks.put(guiSlider, this);
+    }
 
-	@Override
-	public boolean hasValue() {
-		return true;
-	}
+    @Override public void actionPerformed(GuiElementSettings gui, GuiButton button) {}
 
-	@Override
-	public String getStringValue() {
-		return get().toString();
-	}
+    @Override
+    public boolean hasValue() {
+        return true;
+    }
 
-	@Override
-	public void loadStringValue(String save) {
-		set(Double.valueOf(save));
+    @Override
+    public String getStringValue() {
+        return String.valueOf(getValue());
+    }
 
-		if(slider != null) {
-			slider.updateDisplayString();
-		}
-	}
+    @Override
+    public void loadStringValue(String save) {
+        setValue(Float.valueOf(save));
 
-	@Override public Double getMinimum() {return min;}
-	@Override public Double getMaximum() {return max;}
-	@Override public Double getInterval() {return interval;}
+        if(guiSlider != null) {
+            guiSlider.updateDisplayString();
+        }
+    }
 }

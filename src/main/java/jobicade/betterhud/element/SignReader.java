@@ -20,57 +20,57 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
 
 public class SignReader extends OverlayElement {
-	private static final ResourceLocation SIGN_TEXTURE = new ResourceLocation("textures/entity/sign.png");
+    private static final ResourceLocation SIGN_TEXTURE = new ResourceLocation("textures/entity/sign.png");
 
-	private SettingPosition position;
+    private SettingPosition position;
 
-	public SignReader() {
-		super("signReader");
+    public SignReader() {
+        super("signReader");
 
-		settings.addChild(position = new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.NONE));
-	}
+        settings.addChild(position = new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.NONE));
+    }
 
-	@Override
-	public boolean shouldRender(OverlayContext context) {
-		return getSign() != null;
-	}
+    @Override
+    public boolean shouldRender(OverlayContext context) {
+        return getSign() != null;
+    }
 
-	@Override
-	public Rect render(OverlayContext context) {
-		Rect bounds = position.applyTo(new Rect(96, 48));
+    @Override
+    public Rect render(OverlayContext context) {
+        Rect bounds = position.applyTo(new Rect(96, 48));
 
-		Minecraft.getMinecraft().getTextureManager().bindTexture(SIGN_TEXTURE);
-		new Quad().setTexture(new Rect(2, 2, 24, 12).scale(4, 8)).setBounds(bounds).render();
+        Minecraft.getMinecraft().getTextureManager().bindTexture(SIGN_TEXTURE);
+        new Quad().setTexture(new Rect(2, 2, 24, 12).scale(4, 8)).setBounds(bounds).render();
 
-		List<Label> labels = Stream.of(getSign().signText)
-			.map(line -> new Label(line.getFormattedText()).setColor(Color.BLACK).setShadow(false))
-			.collect(Collectors.toList());
+        List<Label> labels = Stream.of(getSign().signText)
+            .map(line -> new Label(line.getFormattedText()).setColor(Color.BLACK).setShadow(false))
+            .collect(Collectors.toList());
 
-		Grid<Label> grid = new Grid<>(new Point(1, labels.size()), labels);
-		grid.setBounds(bounds.grow(-3)).render();
+        Grid<Label> grid = new Grid<>(new Point(1, labels.size()), labels);
+        grid.setBounds(bounds.grow(-3)).render();
 
-		return bounds;
-	}
+        return bounds;
+    }
 
-	/**
-	 * Finds the sign directly in the player's line of sight.
-	 *
-	 * @return The sign the player is looking at or {@code null} if the player
-	 * is not looking at a sign.
-	 */
-	private TileEntitySign getSign() {
-		// Sanity check, but can continue normally if null
-		if (Minecraft.getMinecraft() == null || Minecraft.getMinecraft().world == null) {
-			return null;
-		}
+    /**
+     * Finds the sign directly in the player's line of sight.
+     *
+     * @return The sign the player is looking at or {@code null} if the player
+     * is not looking at a sign.
+     */
+    private TileEntitySign getSign() {
+        // Sanity check, but can continue normally if null
+        if (Minecraft.getMinecraft() == null || Minecraft.getMinecraft().world == null) {
+            return null;
+        }
 
-		// Functional approach avoids long null check chain
-		return Optional.ofNullable(Minecraft.getMinecraft().getRenderViewEntity())
-			.map(entity -> entity.rayTrace(200, 1.0f))
-			.map(RayTraceResult::getBlockPos)
-			.map(Minecraft.getMinecraft().world::getTileEntity)
-			.filter(TileEntitySign.class::isInstance)
-			.map(TileEntitySign.class::cast)
-			.orElse(null);
-	}
+        // Functional approach avoids long null check chain
+        return Optional.ofNullable(Minecraft.getMinecraft().getRenderViewEntity())
+            .map(entity -> entity.rayTrace(200, 1.0f))
+            .map(RayTraceResult::getBlockPos)
+            .map(Minecraft.getMinecraft().world::getTileEntity)
+            .filter(TileEntitySign.class::isInstance)
+            .map(TileEntitySign.class::cast)
+            .orElse(null);
+    }
 }

@@ -6,22 +6,22 @@ import java.util.List;
 import jobicade.betterhud.geom.Rect;
 
 public abstract class StatBarBasic<T> extends StatBar<T> {
-	protected abstract Rect getIcon(IconType icon, int pointsIndex);
-	protected abstract int getCurrent();
+    protected abstract Rect getIcon(IconType icon, int pointsIndex);
+    protected abstract int getCurrent();
 
-	@Override
-	protected List<Rect> getIcons(int pointsIndex) {
-		List<Rect> textures = new ArrayList<>(2);
-		textures.add(getIcon(IconType.BACKGROUND, pointsIndex));
-		int current = getCurrent();
+    @Override
+    protected List<Rect> getIcons(int pointsIndex) {
+        List<Rect> textures = new ArrayList<>(2);
+        textures.add(getIcon(IconType.BACKGROUND, pointsIndex));
+        int current = getCurrent();
 
-		if(pointsIndex < current) {
-			textures.add(getIcon(pointsIndex + 1 < current ? IconType.FULL : IconType.HALF, pointsIndex));
-		}
-		return textures;
-	}
+        if(pointsIndex < current) {
+            textures.add(getIcon(pointsIndex + 1 < current ? IconType.FULL : IconType.HALF, pointsIndex));
+        }
+        return textures;
+    }
 
-	protected enum IconType {
-		BACKGROUND, HALF, FULL;
-	}
+    protected enum IconType {
+        BACKGROUND, HALF, FULL;
+    }
 }

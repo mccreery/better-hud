@@ -11,6 +11,10 @@ buildscript {
 apply plugin: 'net.minecraftforge.gradle.forge'
 sourceCompatibility = targetCompatibility = JavaVersion.VERSION_1_8
 
+dependencies {
+    testCompile 'junit:junit:4.13'
+}
+
 // Version information
 ext {
     mcVersion = '1.12.2'

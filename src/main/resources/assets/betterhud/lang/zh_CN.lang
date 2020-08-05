@@ -15,6 +15,7 @@ betterHud.menu.enableAll=启用全部
 betterHud.menu.disableAll=禁用全部
 betterHud.menu.reorder=纪录……
 betterHud.menu.saveLoad=保存/加载……
+#betterHud.menu.modSettings=Mod Settings...
 betterHud.menu.lastPage=上一页
 betterHud.menu.nextPage=下一页
 betterHud.menu.page=%s 页
@@ -32,6 +33,9 @@ betterHud.menu.moveBottom=移到底部
 # Menu text
 betterHud.menu.unsnap=按住 %s 以禁用捕捉。
 betterHud.menu.unsupported=此元素不受服务器支持。
+#betterHud.menu.modifiers=[%s] Select multiple   [%s] Select range
+#betterHud.menu.enabledElements=Enabled Elements
+#betterHud.menu.disabledElements=Disabled Elements
 
 # Element names
 betterHud.element.global=Better HUD
@@ -41,6 +45,7 @@ betterHud.element.arrowCount=背包箭数量
 betterHud.element.biome=生物群系
 betterHud.element.blockViewer=方块显示
 betterHud.element.bloodSplatters=溅血
+#betterHud.element.bossHealth=Boss Health
 betterHud.element.breedIndicator=饲养繁殖指示器
 betterHud.element.compass=指南针
 betterHud.element.connection=服务器连接情况
@@ -68,6 +73,7 @@ betterHud.element.waterDrops=水滴
 # Vanilla elements
 betterHud.element.airBar=空气栏
 betterHud.element.armor=盔甲栏
+#betterHud.element.chat=Chat
 betterHud.element.crosshair=十字准心
 betterHud.element.experience=经验栏
 betterHud.element.food=饥饿条
@@ -183,7 +189,7 @@ betterHud.setting.fullYear=年全称
 betterHud.setting.dateType=日期显示方式
 betterHud.value.dmy=日/月/年 (英式)
 betterHud.value.mdy=月/日/年 (美式)
-betterHud.value.ymd=年/月/日 
+betterHud.value.ymd=年/月/日
 betterHud.hud.day=第 %s天
 
 # Connection

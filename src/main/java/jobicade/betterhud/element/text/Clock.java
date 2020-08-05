@@ -11,53 +11,54 @@ import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingChoose;
 
 public abstract class Clock extends TextElement {
-	private SettingBoolean twentyFour, showSeconds, fullYear;
-	private SettingChoose dateType;
+    private SettingBoolean twentyFour, showSeconds, fullYear;
+    private SettingChoose dateType;
 
-	public Clock(String name) {
-		super(name);
+    public Clock(String name) {
+        super(name);
 
-		settings.addChildren(
-			new Legend("misc"),
-			twentyFour = new SettingBoolean("24hr"),
-			showSeconds = new SettingBoolean("showSeconds").setValuePrefix(SettingBoolean.VISIBLE),
-			dateType = new SettingChoose("dateType", "dmy", "mdy", "ymd"),
-			fullYear = new SettingBoolean("fullYear").setValuePrefix(SettingBoolean.VISIBLE)
-		);
+        twentyFour = new SettingBoolean("24hr");
+        showSeconds = new SettingBoolean("showSeconds");
+        showSeconds.setValuePrefix(SettingBoolean.VISIBLE);
 
-		border = true;
-	}
+        dateType = new SettingChoose("dateType", "dmy", "mdy", "ymd");
+        fullYear = new SettingBoolean("fullYear");
+        fullYear.setValuePrefix(SettingBoolean.VISIBLE);
 
-	protected DateFormat getTimeFormat() {
-		StringBuilder format = new StringBuilder();
-		format.append("HH:mm");
+        settings.addChildren(new Legend("misc"), twentyFour, showSeconds, dateType, fullYear);
+        border = true;
+    }
 
-		if(showSeconds.get()) {
-			format.append(":ss");
-		}
-		if(!twentyFour.get()) {
-			format.append(" a");
-			format.replace(0, 2, "hh");
-		}
-		return new SimpleDateFormat(format.toString());
-	}
+    protected DateFormat getTimeFormat() {
+        StringBuilder format = new StringBuilder();
+        format.append("HH:mm");
 
-	private static final String[] dateFormats = {"dd/MM/yy", "MM/dd/yy", "yy/MM/dd"};
-	private static final String[] dateFormatsFull = {"dd/MM/yyyy", "MM/dd/yyyy", "yyyy/MM/dd"};
+        if(showSeconds.get()) {
+            format.append(":ss");
+        }
+        if(!twentyFour.get()) {
+            format.append(" a");
+            format.replace(0, 2, "hh");
+        }
+        return new SimpleDateFormat(format.toString());
+    }
 
-	protected DateFormat getDateFormat() {
-		return new SimpleDateFormat((fullYear.get() ? dateFormatsFull : dateFormats)[dateType.getIndex()]);
-	}
+    private static final String[] dateFormats = {"dd/MM/yy", "MM/dd/yy", "yy/MM/dd"};
+    private static final String[] dateFormatsFull = {"dd/MM/yyyy", "MM/dd/yyyy", "yyyy/MM/dd"};
 
-	@Override
-	protected List<String> getText() {
-		Date date = getDate();
+    protected DateFormat getDateFormat() {
+        return new SimpleDateFormat((fullYear.get() ? dateFormatsFull : dateFormats)[dateType.getIndex()]);
+    }
 
-		return Arrays.asList(
-			getTimeFormat().format(date),
-			getDateFormat().format(date)
-		);
-	}
+    @Override
+    protected List<String> getText() {
+        Date date = getDate();
 
-	protected abstract Date getDate();
+        return Arrays.asList(
+            getTimeFormat().format(date),
+            getDateFormat().format(date)
+        );
+    }
+
+    protected abstract Date getDate();
 }

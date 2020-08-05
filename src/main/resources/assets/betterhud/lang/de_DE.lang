@@ -15,6 +15,7 @@ betterHud.menu.enableAll=Alle aktivieren
 betterHud.menu.disableAll=Alle deaktivieren
 #betterHud.menu.reorder=Reorder...
 #betterHud.menu.saveLoad=Save/Load...
+#betterHud.menu.modSettings=Mod Settings...
 betterHud.menu.lastPage=Letzte Seite
 betterHud.menu.nextPage=Nächste Seite
 betterHud.menu.page=Seite %s
@@ -32,6 +33,9 @@ betterHud.menu.alphabetical=A-Z
 # Menu text
 betterHud.menu.unsnap=Halten %s um schnappen zu deaktivieren
 betterHud.menu.unsupported=Dieses Element wird nicht vom Server unterstützt
+#betterHud.menu.modifiers=[%s] Select multiple   [%s] Select range
+#betterHud.menu.enabledElements=Enabled Elements
+#betterHud.menu.disabledElements=Disabled Elements
 
 # Element names
 betterHud.element.global=Better HUD
@@ -41,6 +45,7 @@ betterHud.element.arrowCount=Anzahl Pfeile
 betterHud.element.biome=Biom
 betterHud.element.blockViewer=Block Betrachter
 betterHud.element.bloodSplatters=Blutspritzer
+#betterHud.element.bossHealth=Boss Health
 betterHud.element.breedIndicator=Zuchtanzeige
 betterHud.element.compass=Kompass
 betterHud.element.connection=Verbindung
@@ -68,6 +73,7 @@ betterHud.element.waterDrops=Wassertropfen
 # Vanilla elements
 #betterHud.element.airBar=Air Bar
 #betterHud.element.armor=Armor Bar
+#betterHud.element.chat=Chat
 #betterHud.element.crosshair=Crosshair
 #betterHud.element.experience=Experience Bar
 #betterHud.element.food=Hunger Bar

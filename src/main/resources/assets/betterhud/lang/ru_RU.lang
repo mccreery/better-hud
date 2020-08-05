@@ -15,6 +15,7 @@ betterHud.menu.enableAll=Вкл. всё
 betterHud.menu.disableAll=Откл. всё
 betterHud.menu.reorder=Переупорядочить...
 betterHud.menu.saveLoad=Сохр./Загр...
+#betterHud.menu.modSettings=Mod Settings...
 betterHud.menu.lastPage=Последняя страница
 betterHud.menu.nextPage=След. страница
 betterHud.menu.page=Страница %s
@@ -32,6 +33,9 @@ betterHud.menu.moveBottom=Перемещать основание
 # Menu text
 betterHud.menu.unsnap=Удерживайте %s чтобы отключить замыкание
 betterHud.menu.unsupported=Этот элемент не поддерживается сервером
+#betterHud.menu.modifiers=[%s] Select multiple   [%s] Select range
+#betterHud.menu.enabledElements=Enabled Elements
+#betterHud.menu.disabledElements=Disabled Elements
 
 # Element names
 betterHud.element.global=Better HUD
@@ -41,6 +45,7 @@ betterHud.element.arrowCount=Кол-во стрелок
 betterHud.element.biome=Биом
 betterHud.element.blockViewer=Просмотр блоков
 betterHud.element.bloodSplatters=Брызги крови
+#betterHud.element.bossHealth=Boss Health
 betterHud.element.breedIndicator=Показатель породы
 betterHud.element.compass=Компас
 betterHud.element.connection=Соединение
@@ -68,6 +73,7 @@ betterHud.element.waterDrops=Капли воды
 # Vanilla elements
 betterHud.element.airBar=Воздушная панель
 betterHud.element.armor=Панель брони
+#betterHud.element.chat=Chat
 betterHud.element.crosshair=Прицел
 betterHud.element.experience=Панель опыта
 betterHud.element.food=Панель голода

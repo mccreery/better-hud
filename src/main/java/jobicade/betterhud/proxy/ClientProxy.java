@@ -1,6 +1,8 @@
 package jobicade.betterhud.proxy;
 
 import java.nio.file.Path;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.lwjgl.input.Keyboard;
 
@@ -8,10 +10,12 @@ import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.config.ConfigManager;
 import jobicade.betterhud.config.HudConfig;
 import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.gui.GuiHudMenu;
+import jobicade.betterhud.gui.GuiElementList;
 import jobicade.betterhud.registry.HudElements;
+import jobicade.betterhud.registry.HudRegistry;
 import jobicade.betterhud.registry.HudRegistryEvent;
-import jobicade.betterhud.registry.SortField;
+import jobicade.betterhud.registry.OverlayElements;
+import jobicade.betterhud.util.Tickable.Ticker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.IReloadableResourceManager;
 import net.minecraft.client.resources.IResourceManager;
@@ -43,7 +47,6 @@ public class ClientProxy implements HudSidedProxy {
             IReloadableResourceManager reloadableManager = (IReloadableResourceManager)manager;
 
             // Language dictates alphabetical order
-            reloadableManager.registerReloadListener(m -> HudElements.get().invalidateSorts(SortField.ALPHABETICAL));
             reloadableManager.registerReloadListener(configManager);
         } else {
             BetterHud.getLogger().warn("Unable to register alphabetical sort update on language change");
@@ -51,13 +54,15 @@ public class ClientProxy implements HudSidedProxy {
 
         ClientRegistry.registerKeyBinding(menuKey);
         MinecraftForge.EVENT_BUS.register(this);
-        //MinecraftForge.EVENT_BUS.register(new RenderEvents()); // TODO remove entirely
-        HudElement.initAll(event);
+
+        Ticker.FASTER.register(OverlayElements.BLOOD_SPLATTERS);
+        Ticker.FASTER.register(OverlayElements.WATER_DROPS);
+        Ticker.FAST.register(OverlayElements.CPS);
     }
 
     @Override
     public boolean isModEnabled() {
-        return HudElements.GLOBAL.isEnabled() && !(
+        return !(
             HudElements.GLOBAL.hideOnDebug()
             && Minecraft.getMinecraft().gameSettings.showDebugInfo
         );
@@ -68,10 +73,25 @@ public class ClientProxy implements HudSidedProxy {
         return configManager.getConfig();
     }
 
+    @Override
+    public <T extends HudElement<?>> List<T> getEnabled(HudRegistry<T> registry) {
+        List<HudElement<?>> selected = getConfig().getSelected();
+
+        List<T> subclassSelected = new ArrayList<>();
+        for (HudElement<?> element : selected) {
+            T subclass = registry.getRegistered(element.getName());
+
+            if (subclass != null) {
+                subclassSelected.add(subclass);
+            }
+        }
+        return subclassSelected;
+    }
+
     @SubscribeEvent
     public void onKey(KeyInputEvent event) {
         if (Minecraft.getMinecraft().inGameHasFocus && menuKey.isPressed()) {
-            Minecraft.getMinecraft().displayGuiScreen(new GuiHudMenu(configManager));
+            Minecraft.getMinecraft().displayGuiScreen(new GuiElementList(configManager));
         }
     }
 }

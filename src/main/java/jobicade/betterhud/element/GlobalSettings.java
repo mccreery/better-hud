@@ -5,40 +5,43 @@ import jobicade.betterhud.element.settings.SettingSlider;
 import jobicade.betterhud.geom.Rect;
 
 public class GlobalSettings extends HudElement<Object> {
-	private SettingSlider billboardScale;
-	private SettingSlider billboardDistance;
-	private SettingBoolean hideOnDebug;
-	private SettingBoolean debugMode;
+    private SettingSlider billboardScale;
+    private SettingSlider billboardDistance;
+    private SettingBoolean hideOnDebug;
+    private SettingBoolean debugMode;
 
-	public GlobalSettings() {
-		super("global");
+    public GlobalSettings() {
+        super("global");
 
-		settings.addChildren(
-			billboardScale = new SettingSlider("billboardScale", 0, 1).setDisplayPercent(),
-			billboardDistance = new SettingSlider("rayDistance", 5, 200).setUnlocalizedValue("betterHud.hud.meters"),
-			hideOnDebug = new SettingBoolean("hideOnDebug"),
-			debugMode = new SettingBoolean("debugMode")
-		);
-	}
+        billboardScale = new SettingSlider("billboardScale", 0, 1);
+        billboardScale.setDisplayPercent();
+        billboardDistance = new SettingSlider("rayDistance", 5, 200);
+        billboardDistance.setUnlocalizedValue("betterHud.hud.meters");
 
-	public float getBillboardScale() {
-		return billboardScale.get().floatValue();
-	}
+        hideOnDebug = new SettingBoolean("hideOnDebug");
+        debugMode = new SettingBoolean("debugMode");
 
-	public float getBillboardDistance() {
-		return billboardDistance.get().floatValue();
-	}
+        settings.addChildren(billboardScale, billboardDistance, hideOnDebug, debugMode);
+    }
 
-	public boolean hideOnDebug() {
-		return hideOnDebug.get();
-	}
+    public float getBillboardScale() {
+        return billboardScale.getValue();
+    }
 
-	public boolean isDebugMode() {
-		return debugMode.get();
-	}
+    public float getBillboardDistance() {
+        return billboardDistance.getValue();
+    }
 
-	@Override
-	public Rect render(Object context) {
-		return null;
-	}
+    public boolean hideOnDebug() {
+        return hideOnDebug.get();
+    }
+
+    public boolean isDebugMode() {
+        return debugMode.get();
+    }
+
+    @Override
+    public Rect render(Object context) {
+        return null;
+    }
 }
