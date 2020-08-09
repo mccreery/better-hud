@@ -6,7 +6,6 @@ import org.apache.maven.artifact.versioning.ArtifactVersion;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 
 import jobicade.betterhud.config.ConfigManager;
-import jobicade.betterhud.config.HudConfig;
 import jobicade.betterhud.config.HudConfigNew;
 import jobicade.betterhud.events.ClientEvents;
 import jobicade.betterhud.geom.LayoutManager;
@@ -16,6 +15,7 @@ import jobicade.betterhud.network.MessagePickup;
 import jobicade.betterhud.network.MessagePickupHandler;
 import jobicade.betterhud.network.MessageVersion;
 import jobicade.betterhud.proxy.HudSidedProxy;
+import jobicade.betterhud.registry.OverlayElements;
 import jobicade.betterhud.util.Tickable.Ticker;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResourceManager;
@@ -23,7 +23,6 @@ import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModLoadingContext;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.config.ModConfig;
@@ -115,6 +114,10 @@ public class BetterHud {
         } else {
             BetterHud.getLogger().warn("Unable to register alphabetical sort update on language change");
         }
+
+        Ticker.FASTER.register(OverlayElements.BLOOD_SPLATTERS);
+        Ticker.FASTER.register(OverlayElements.WATER_DROPS);
+        Ticker.FAST.register(OverlayElements.CPS);
     }
 
     /**

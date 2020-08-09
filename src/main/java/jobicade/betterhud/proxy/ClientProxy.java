@@ -53,9 +53,6 @@ public class ClientProxy implements HudSidedProxy {
         ClientRegistry.registerKeyBinding(menuKey);
         MinecraftForge.EVENT_BUS.register(this);
 
-        Ticker.FASTER.register(OverlayElements.BLOOD_SPLATTERS);
-        Ticker.FASTER.register(OverlayElements.WATER_DROPS);
-        Ticker.FAST.register(OverlayElements.CPS);
     }
 
     @Override
