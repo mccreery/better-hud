@@ -4,9 +4,9 @@ import java.util.ArrayList;
 
 import jobicade.betterhud.BetterHud;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+import net.minecraftforge.event.TickEvent.ClientTickEvent;
+import net.minecraftforge.event.TickEvent.Phase;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 
 /** A generic interface for something which responds to ticks */
 public interface Tickable {
@@ -82,7 +82,7 @@ public interface Tickable {
         @SubscribeEvent
         public void clientTick(ClientTickEvent event) {
             // Event called twice per tick, for start and end
-            if (event.phase == Phase.END && BetterHud.getProxy().isModEnabled()) {
+            if (event.phase == Phase.END && BetterHud.isModEnabled()) {
                 startTick();
             }
         }
