@@ -5,13 +5,13 @@ import java.util.EnumSet;
 import java.util.Objects;
 import java.util.Set;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
+import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
+
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL14;
-
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.GlStateManager.DestFactor;
-import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 
 /**
  * Data class containing a single immutable snapshot of the OpenGL state.
@@ -50,18 +50,19 @@ public class GlSnapshot {
     }
 
     public void apply() {
-        GlStateManager.color(
+        GlStateManager.color4f(
             color.getRed() / 255.0f,
             color.getGreen() / 255.0f,
-            color.getBlue() / 255.0f);
+            color.getBlue() / 255.0f,
+            1.0f);
 
         GlStateManager.bindTexture(texture);
 
-        GlStateManager.tryBlendFuncSeparate(
-            blendFunc.getSrcFactor(),
-            blendFunc.getDstFactor(),
-            blendFunc.getSrcFactorAlpha(),
-            blendFunc.getDstFactorAlpha());
+        GlStateManager.blendFuncSeparate(
+            blendFunc.getSrcFactor().param,
+            blendFunc.getDstFactor().param,
+            blendFunc.getSrcFactorAlpha().param,
+            blendFunc.getDstFactorAlpha().param);
 
         for (GlFlag flag : GlFlag.values()) {
             flag.setEnabled(flags.contains(flag));
@@ -70,7 +71,7 @@ public class GlSnapshot {
 
     private Color getCurrentColor() {
         FloatBuffer buf = BufferUtils.createFloatBuffer(16);
-        GL11.glGetFloat(GL11.GL_CURRENT_COLOR, buf);
+        GL11.glGetFloatv(GL11.GL_CURRENT_COLOR, buf);
 
         int red   = Math.round(buf.get(0) * 255.0f);
         int green = Math.round(buf.get(1) * 255.0f);
@@ -134,14 +135,14 @@ public class GlSnapshot {
 
         private static SourceFactor getSrcFactor(int factor) {
             for(SourceFactor srcFactor : SourceFactor.values()) {
-                if(srcFactor.factor == factor) return srcFactor;
+                if(srcFactor.param == factor) return srcFactor;
             }
             return null;
         }
 
         private static DestFactor getDstFactor(int factor) {
             for(DestFactor dstFactor : DestFactor.values()) {
-                if(dstFactor.factor == factor) return dstFactor;
+                if(dstFactor.param == factor) return dstFactor;
             }
             return null;
         }

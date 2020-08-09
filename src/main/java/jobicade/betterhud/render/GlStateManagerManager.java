@@ -1,7 +1,8 @@
 package jobicade.betterhud.render;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+
 import jobicade.betterhud.BetterHud;
-import net.minecraft.client.renderer.GlStateManager;
 
 public class GlStateManagerManager {
     private GlStateManagerManager() {}

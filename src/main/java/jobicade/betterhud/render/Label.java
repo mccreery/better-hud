@@ -1,13 +1,14 @@
 package jobicade.betterhud.render;
 
+import com.mojang.blaze3d.platform.GlStateManager;
+
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Size;
 import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.gui.AbstractGui;
 
 public class Label extends DefaultBoxed {
     private String text;
@@ -34,7 +35,7 @@ public class Label extends DefaultBoxed {
 
     public Label setText(String text) {
         this.text = text;
-        this.size = new Size(Minecraft.getMinecraft().fontRenderer.getStringWidth(text), Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT);
+        this.size = new Size(Minecraft.getInstance().fontRenderer.getStringWidth(text), Minecraft.getInstance().fontRenderer.FONT_HEIGHT);
         return this;
     }
 
@@ -74,11 +75,16 @@ public class Label extends DefaultBoxed {
         if(color.getAlpha() < 4) return;
 
         Point position = new Rect(size).anchor(bounds, Direction.CENTER).getPosition();
-        Minecraft.getMinecraft().fontRenderer.drawString(text, position.getX(), position.getY(), color.getPacked(), shadow);
+
+        if (shadow) {
+            Minecraft.getInstance().fontRenderer.drawStringWithShadow(text, position.getX(), position.getY(), color.getPacked());
+        } else {
+            Minecraft.getInstance().fontRenderer.drawString(text, position.getX(), position.getY(), color.getPacked());
+        }
 
         // Restore OpenGL state as expected
         Color.WHITE.apply();
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
-        GlStateManager.disableAlpha();
+        Minecraft.getInstance().getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
+        GlStateManager.disableAlphaTest();
     }
 }

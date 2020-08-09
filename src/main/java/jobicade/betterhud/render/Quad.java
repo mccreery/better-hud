@@ -1,7 +1,12 @@
 package jobicade.betterhud.render;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
+
+import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.platform.GlStateManager;
 
 import org.lwjgl.opengl.GL11;
 
@@ -10,7 +15,6 @@ import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Size;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
@@ -79,11 +83,12 @@ public class Quad extends DefaultBoxed {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuffer();
 
-        VertexFormat format = new VertexFormat();
+        List<VertexFormatElement> elements = new ArrayList<>(3);
+        elements.add(DefaultVertexFormats.POSITION_3F);
+        if(texture != null) elements.add(DefaultVertexFormats.TEX_2F);
+        if(hasColor) elements.add(DefaultVertexFormats.COLOR_4UB);
 
-        format.addElement(DefaultVertexFormats.POSITION_3F);
-        if(texture != null) format.addElement(DefaultVertexFormats.TEX_2F);
-        if(hasColor) format.addElement(DefaultVertexFormats.COLOR_4UB);
+        VertexFormat format = new VertexFormat(ImmutableList.copyOf(elements));
 
         builder.begin(GL11.GL_QUADS, format);
         addVertex(bounds, builder, Direction.SOUTH_WEST);
@@ -92,9 +97,9 @@ public class Quad extends DefaultBoxed {
         addVertex(bounds, builder, Direction.NORTH_WEST);
 
         if(texture == null) {
-            GlStateManager.disableTexture2D();
+            GlStateManager.disableTexture();
             tessellator.draw();
-            GlStateManager.enableTexture2D();
+            GlStateManager.enableTexture();
         } else {
             tessellator.draw();
         }
