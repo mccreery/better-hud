@@ -1,5 +1,7 @@
 package jobicade.betterhud;
 
+import java.util.function.Supplier;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.maven.artifact.versioning.ArtifactVersion;
@@ -10,7 +12,6 @@ import jobicade.betterhud.config.HudConfigNew;
 import jobicade.betterhud.events.ClientEvents;
 import jobicade.betterhud.geom.LayoutManager;
 import jobicade.betterhud.network.InventoryNameQuery;
-import jobicade.betterhud.network.MessageNotifyClientHandler;
 import jobicade.betterhud.network.MessagePickup;
 import jobicade.betterhud.network.MessagePickupHandler;
 import jobicade.betterhud.network.MessageVersion;
@@ -35,6 +36,7 @@ import net.minecraftforge.fml.config.ModConfig.Type;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 
@@ -88,15 +90,20 @@ public class BetterHud {
     private void setup(FMLCommonSetupEvent event) {
         setServerVersion(null);
 
-        // Message ID 0 reserved for ignored server presence message from [,1.4)
-        NET_WRAPPER.registerMessage(MessagePickupHandler.class, MessagePickup.class, 1, Side.CLIENT);
-        NET_WRAPPER.registerMessage(MessageNotifyClientHandler.class, MessageVersion.class, 2, Side.CLIENT);
+        int index = 0;
+        NET_WRAPPER.registerMessage(index++, MessagePickup.class, MessagePickup::encode, MessagePickup::new, new MessagePickupHandler());
+        NET_WRAPPER.registerMessage(index++, MessageVersion.class, MessageVersion::encode, MessageVersion::new, BetterHud::onServerVersion);
 
         // Used to update inventory names
-        NET_WRAPPER.registerMessage(InventoryNameQuery.ServerHandler.class, InventoryNameQuery.Request.class, 3, Side.SERVER);
-        NET_WRAPPER.registerMessage(InventoryNameQuery.ClientHandler.class, InventoryNameQuery.Response.class, 4, Side.CLIENT);
+        NET_WRAPPER.registerMessage(index++, InventoryNameQuery.Request.class, InventoryNameQuery.Request::encode, InventoryNameQuery.Request::new, InventoryNameQuery.Request::handle);
+        NET_WRAPPER.registerMessage(index++, InventoryNameQuery.Response.class, InventoryNameQuery.Response::encode, InventoryNameQuery.Response::new, InventoryNameQuery.Response::handle);
 
         Ticker.registerEvents();
+    }
+
+    public static void onServerVersion(MessageVersion message, Supplier<NetworkEvent.Context> context) {
+        getLogger().info("Server reported version " + message.version.getQualifier());
+        setServerVersion(message.version);
     }
 
     private void setupClient(FMLClientSetupEvent event) {

@@ -1,16 +1,13 @@
 package jobicade.betterhud.network;
 
+import java.util.function.Supplier;
+
 import jobicade.betterhud.BetterHud;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.network.NetworkEvent;
 
-public class MessageNotifyClientHandler implements IMessageHandler<MessageVersion, IMessage> {
-    @Override
-    public IMessage onMessage(MessageVersion message, MessageContext context) {
-        BetterHud.getLogger().info("Server reported version " + message.version.getVersionString());
-
+public class MessageNotifyClientHandler {
+    public static void onMessage(MessageVersion message, Supplier<NetworkEvent.Context> context) {
+        BetterHud.getLogger().info("Server reported version " + message.version.getQualifier());
         BetterHud.setServerVersion(message.version);
-        return null;
     }
 }

@@ -1,12 +1,11 @@
 package jobicade.betterhud.network;
 
-import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.versioning.ArtifactVersion;
-import net.minecraftforge.fml.common.versioning.DefaultArtifactVersion;
+import org.apache.maven.artifact.versioning.ArtifactVersion;
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 
-public class MessageVersion implements IMessage {
+import net.minecraft.network.PacketBuffer;
+
+public class MessageVersion {
     public ArtifactVersion version;
 
     public MessageVersion() {}
@@ -14,13 +13,11 @@ public class MessageVersion implements IMessage {
         this.version = version2;
     }
 
-    @Override
-    public void fromBytes(ByteBuf buf) {
-        this.version = new DefaultArtifactVersion(ByteBufUtils.readUTF8String(buf));
+    public MessageVersion(PacketBuffer packetBuffer) {
+        this(new DefaultArtifactVersion(packetBuffer.readString()));
     }
 
-    @Override
-    public void toBytes(ByteBuf buf) {
-        ByteBufUtils.writeUTF8String(buf, version.getVersionString());
+    public void encode(PacketBuffer packetBuffer) {
+        packetBuffer.writeString(version.getQualifier());
     }
 }

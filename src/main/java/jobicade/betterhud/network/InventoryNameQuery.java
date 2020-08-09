@@ -1,108 +1,68 @@
 package jobicade.betterhud.network;
 
-import java.io.IOException;
+import java.util.function.Supplier;
 
-import io.netty.buffer.ByteBuf;
+import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.registry.OverlayElements;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.INameable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.IWorldNameable;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
+import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fml.network.PacketDistributor;
 
-public abstract class InventoryNameQuery implements IMessage {
-    private BlockPos pos = null;
+public class InventoryNameQuery {
+    public static class Request {
+        public final BlockPos blockPos;
 
-    public InventoryNameQuery() {}
+        public Request(BlockPos blockPos) {
+            this.blockPos = blockPos;
+        }
 
-    public InventoryNameQuery(BlockPos pos) {
-        this.pos = pos;
-    }
+        public Request(PacketBuffer packetBuffer) {
+            this(packetBuffer.readBlockPos());
+        }
 
-    public BlockPos getBlockPos() {
-        return pos;
-    }
+        public void encode(PacketBuffer packetBuffer) {
+            packetBuffer.writeBlockPos(blockPos);
+        }
 
-    @Override
-    public void fromBytes(ByteBuf buf) {
-        PacketBuffer buffer = new PacketBuffer(buf);
-        pos = buffer.readBlockPos();
+        public void handle(Supplier<NetworkEvent.Context> contextSupplier) {
+            //System.out.println("Received block request " + message.getBlockPos());
+            NetworkEvent.Context context = contextSupplier.get();
 
-        fromBytes(buffer);
-    }
+            TileEntity tileEntity = context.getSender().getEntityWorld().getTileEntity(blockPos);
 
-    @Override
-    public void toBytes(ByteBuf buf) {
-        PacketBuffer buffer = new PacketBuffer(buf);
-        buffer.writeBlockPos(pos);
-
-        toBytes(buffer);
-    }
-
-    protected void fromBytes(PacketBuffer buf) {}
-    protected void toBytes(PacketBuffer buf) {}
-
-    public static class Request extends InventoryNameQuery {
-        public Request() {super();}
-
-        public Request(BlockPos pos) {
-            super(pos);
+            if (tileEntity instanceof INameable) {
+                ITextComponent inventoryName = ((INameable)tileEntity).getDisplayName();
+                BetterHud.NET_WRAPPER.send(PacketDistributor.PLAYER.with(context::getSender), new Response(blockPos, inventoryName));
+            }
         }
     }
 
     public static class Response extends InventoryNameQuery {
-        private ITextComponent name = null;
+        public final BlockPos blockPos;
+        public final ITextComponent inventoryName;
 
-        public Response() {super();}
-
-        public Response(BlockPos pos, ITextComponent name) {
-            super(pos);
-            this.name = name;
+        public Response(BlockPos blockPos, ITextComponent inventoryName) {
+            this.blockPos = blockPos;
+            this.inventoryName = inventoryName;
         }
 
-        public ITextComponent getInventoryName() {
-            return name;
+        public Response(PacketBuffer packetBuffer) {
+            this(packetBuffer.readBlockPos(), packetBuffer.readTextComponent());
         }
 
-        @Override
-        public void fromBytes(PacketBuffer buf) {
-            try {
-                name = buf.readTextComponent();
-            } catch(IOException e) {
-                e.printStackTrace();
-            }
+        public void encode(PacketBuffer packetBuffer) {
+            packetBuffer.writeBlockPos(blockPos);
+            packetBuffer.writeTextComponent(inventoryName);
         }
 
-        @Override
-        public void toBytes(PacketBuffer buf) {
-            buf.writeTextComponent(name);
-        }
-    }
-
-    public static class ServerHandler implements IMessageHandler<Request, Response> {
-        @Override
-        public Response onMessage(Request message, MessageContext ctx) {
-            //System.out.println("Received block request " + message.getBlockPos());
-            TileEntity tileEntity = ctx.getServerHandler().player.world.getTileEntity(message.getBlockPos());
-
-            if (tileEntity instanceof IWorldNameable) {
-                return new Response(message.getBlockPos(), tileEntity.getDisplayName());
-            } else {
-                return null;
-            }
-        }
-    }
-
-    public static class ClientHandler implements IMessageHandler<Response, IMessage> {
-        @Override
-        public IMessage onMessage(Response message, MessageContext ctx) {
+        public void handle(Supplier<NetworkEvent.Context> contextSupplier) {
             //System.out.println("Received block response " + message.getBlockPos() + " for name " + message.getInventoryName());
 
-            OverlayElements.BLOCK_VIEWER.onNameReceived(message.getBlockPos(), message.getInventoryName());
-            return null;
+            OverlayElements.BLOCK_VIEWER.onNameReceived(blockPos, inventoryName);
         }
     }
 }
