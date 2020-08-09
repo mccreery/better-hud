@@ -17,6 +17,8 @@ import jobicade.betterhud.network.MessagePickupHandler;
 import jobicade.betterhud.network.MessageVersion;
 import jobicade.betterhud.proxy.HudSidedProxy;
 import jobicade.betterhud.util.Tickable.Ticker;
+import net.minecraft.resources.IReloadableResourceManager;
+import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.ModContainer;
@@ -27,6 +29,7 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.config.ModConfig.ModConfigEvent;
 import net.minecraftforge.fml.config.ModConfig.Type;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.network.NetworkRegistry;
@@ -45,6 +48,7 @@ public class BetterHud {
 
     public BetterHud() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientEvents::setupClient);
 
         ModContainer container = ModLoadingContext.get().getActiveContainer();
@@ -101,6 +105,16 @@ public class BetterHud {
 
         Ticker.registerEvents();
         proxy.init(event);
+    }
+
+    private void setupClient(FMLClientSetupEvent event) {
+        IResourceManager resourceManager = event.getMinecraftSupplier().get().getResourceManager();
+
+        if(resourceManager instanceof IReloadableResourceManager) {
+            ((IReloadableResourceManager)resourceManager).addReloadListener(configManager);
+        } else {
+            BetterHud.getLogger().warn("Unable to register alphabetical sort update on language change");
+        }
     }
 
     /**

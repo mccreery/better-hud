@@ -12,6 +12,8 @@ import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executor;
 import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -21,9 +23,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 
 import jobicade.betterhud.BetterHud;
-import net.minecraft.client.resources.IResource;
-import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.client.resources.IResourceManagerReloadListener;
+import net.minecraft.profiler.IProfiler;
+import net.minecraft.resources.IFutureReloadListener;
+import net.minecraft.resources.IResource;
+import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -32,7 +35,7 @@ import net.minecraft.util.ResourceLocation;
  * {@code betterhud:configs/configs.json}, and outside the jar in the user's
  * config folder.
  */
-public class ConfigManager implements IResourceManagerReloadListener {
+public class ConfigManager implements IFutureReloadListener {
     /**
      * The resource location for lists of configs, where each entry is a resource
      * string. Configs from resource packs will stack, if used.
@@ -112,7 +115,9 @@ public class ConfigManager implements IResourceManagerReloadListener {
     }
 
     @Override
-    public void onResourceManagerReload(IResourceManager resourceManager) {
+    public CompletableFuture<Void> reload(IStage stage, IResourceManager resourceManager,
+            IProfiler preparationsProfiler, IProfiler reloadProfiler, Executor backgroundExecutor,
+            Executor gameExecutor) {
         this.resourceManager = resourceManager;
         this.internalConfigs = null;
 
@@ -130,6 +135,8 @@ public class ConfigManager implements IResourceManagerReloadListener {
             }
         }
         config.sortAvailable();
+
+        return CompletableFuture.completedFuture(null);
     }
 
     private List<IResource> getAllConfigs() {
