@@ -1,7 +1,7 @@
 package jobicade.betterhud.registry;
 
-import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.OverlayElement;
+import net.minecraftforge.eventbus.api.Event;
 
 /**
  * Posted on the client when Better HUD is ready to register elements.

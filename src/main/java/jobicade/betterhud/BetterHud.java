@@ -16,12 +16,14 @@ import jobicade.betterhud.network.MessagePickupHandler;
 import jobicade.betterhud.network.MessageVersion;
 import jobicade.betterhud.proxy.HudSidedProxy;
 import jobicade.betterhud.registry.HudElements;
+import jobicade.betterhud.registry.HudRegistryEvent;
 import jobicade.betterhud.registry.OverlayElements;
 import jobicade.betterhud.util.Tickable.Ticker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModContainer;
@@ -117,6 +119,8 @@ public class BetterHud {
         } else {
             BetterHud.getLogger().warn("Unable to register alphabetical sort update on language change");
         }
+
+        MinecraftForge.EVENT_BUS.post(new HudRegistryEvent());
 
         Ticker.FASTER.register(OverlayElements.BLOOD_SPLATTERS);
         Ticker.FASTER.register(OverlayElements.WATER_DROPS);
