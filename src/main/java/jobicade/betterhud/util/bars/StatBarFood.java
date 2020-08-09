@@ -6,10 +6,10 @@ import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.RandomWrapper;
 import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.potion.Effects;
 
-public class StatBarFood extends StatBarBasic<EntityPlayer> {
+public class StatBarFood extends StatBarBasic<PlayerEntity> {
     private final Random random = new Random();
 
     @Override
@@ -19,7 +19,7 @@ public class StatBarFood extends StatBarBasic<EntityPlayer> {
 
     @Override
     protected Rect getIcon(IconType icon, int pointsIndex) {
-        boolean hasHunger = host.isPotionActive(MobEffects.HUNGER);
+        boolean hasHunger = host.isPotionActive(Effects.HUNGER);
         int xOffset = hasHunger ? 88 : 52;
 
         switch(icon) {
@@ -37,7 +37,7 @@ public class StatBarFood extends StatBarBasic<EntityPlayer> {
 
     @Override
     protected int getIconBounce(int pointsIndex) {
-        if(host.getFoodStats().getSaturationLevel() <= 0 && Minecraft.getMinecraft().ingameGUI.getUpdateCounter() % (getCurrent() * 3 + 1) == 0) {
+        if(host.getFoodStats().getSaturationLevel() <= 0 && Minecraft.getInstance().ingameGUI.getTicks() % (getCurrent() * 3 + 1) == 0) {
             return new RandomWrapper(random).nextInt(-1, 2);
         } else {
             return 0;
@@ -46,7 +46,7 @@ public class StatBarFood extends StatBarBasic<EntityPlayer> {
 
     @Override
     public void render() {
-        random.setSeed(Minecraft.getMinecraft().ingameGUI.getUpdateCounter());
+        random.setSeed(Minecraft.getInstance().ingameGUI.getTicks());
         super.render();
     }
 }

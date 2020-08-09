@@ -8,12 +8,12 @@ import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.MathUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.MobEffects;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.potion.Effects;
 import net.minecraft.util.math.MathHelper;
 
-public class StatBarHealth extends StatBar<EntityLivingBase> {
+public class StatBarHealth extends StatBar<LivingEntity> {
     private final Random random = new Random();
 
     private int currentHealth, displayHealth, maxHealth, absorptionHealth;
@@ -22,7 +22,7 @@ public class StatBarHealth extends StatBar<EntityLivingBase> {
     private int regenCounter;
 
     @Override
-    public void setHost(EntityLivingBase host) {
+    public void setHost(LivingEntity host) {
         if(this.host != host) {
             currentHealth = 0;
         }
@@ -84,15 +84,15 @@ public class StatBarHealth extends StatBar<EntityLivingBase> {
         int fullX;
         if(pointsIndex >= maxHealth) {
             fullX = 160;
-        } else if(host.isPotionActive(MobEffects.POISON)) {
+        } else if(host.isPotionActive(Effects.POISON)) {
             fullX = 88;
-        } else if(host.isPotionActive(MobEffects.WITHER)) {
+        } else if(host.isPotionActive(Effects.WITHER)) {
             fullX = 124;
         } else {
             fullX = 52;
         }
 
-        int y = host.getEntityWorld().getWorldInfo().isHardcoreModeEnabled() ? 45 : 0;
+        int y = host.getEntityWorld().getWorldInfo().isHardcore() ? 45 : 0;
 
         if(flash % 6 >= 3) {
             icons.add(new Rect(25, y, 9, 9));
@@ -114,7 +114,7 @@ public class StatBarHealth extends StatBar<EntityLivingBase> {
 
     @Override
     public void render() {
-        int newUpdateCounter = Minecraft.getMinecraft().ingameGUI.getUpdateCounter();
+        int newUpdateCounter = Minecraft.getInstance().ingameGUI.getTicks();
         int updateDelta = newUpdateCounter - currentUpdateCounter;
 
         random.setSeed(newUpdateCounter);
@@ -139,7 +139,7 @@ public class StatBarHealth extends StatBar<EntityLivingBase> {
             if(flash <= 0) displayHealth = newHealth;
         }
 
-        if(host.isPotionActive(MobEffects.REGENERATION)) {
+        if(host.isPotionActive(Effects.REGENERATION)) {
             regenCounter += updateDelta * 2;
 
             if(regenCounter >= maxHealth + 30) {
@@ -152,7 +152,7 @@ public class StatBarHealth extends StatBar<EntityLivingBase> {
         currentHealth = newHealth;
         currentUpdateCounter = newUpdateCounter;
 
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+        Minecraft.getInstance().getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
         super.render();
     }
 }

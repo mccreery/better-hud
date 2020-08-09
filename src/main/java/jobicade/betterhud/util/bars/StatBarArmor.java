@@ -1,14 +1,13 @@
 package jobicade.betterhud.util.bars;
 
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraftforge.common.ForgeHooks;
-import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Rect;
+import net.minecraft.entity.player.PlayerEntity;
 
-public class StatBarArmor extends StatBarBasic<EntityPlayer> {
+public class StatBarArmor extends StatBarBasic<PlayerEntity> {
     @Override
     protected int getCurrent() {
-        return ForgeHooks.getTotalArmorValue(host);
+        return host.getTotalArmorValue();
     }
 
     @Override

@@ -3,13 +3,13 @@ package jobicade.betterhud.util.bars;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.MathHelper;
 
 public class StatBarMount extends StatBarBasic<Entity> {
     @Override
     public boolean shouldRender() {
-        return host.getRidingEntity() instanceof EntityLivingBase;
+        return host.getRidingEntity() instanceof LivingEntity;
     }
 
     @Override
@@ -24,12 +24,12 @@ public class StatBarMount extends StatBarBasic<Entity> {
 
     @Override
     protected int getCurrent() {
-        return MathHelper.ceil(((EntityLivingBase)host.getRidingEntity()).getHealth());
+        return MathHelper.ceil(((LivingEntity)host.getRidingEntity()).getHealth());
     }
 
     @Override
     protected int getMaximum() {
-        return MathHelper.ceil(((EntityLivingBase)host.getRidingEntity()).getMaxHealth());
+        return MathHelper.ceil(((LivingEntity)host.getRidingEntity()).getMaxHealth());
     }
 
     @Override
