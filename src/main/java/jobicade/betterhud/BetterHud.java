@@ -15,12 +15,15 @@ import jobicade.betterhud.network.MessagePickup;
 import jobicade.betterhud.network.MessagePickupHandler;
 import jobicade.betterhud.network.MessageVersion;
 import jobicade.betterhud.proxy.HudSidedProxy;
+import jobicade.betterhud.registry.HudElements;
 import jobicade.betterhud.registry.OverlayElements;
 import jobicade.betterhud.util.Tickable.Ticker;
+import net.minecraft.client.Minecraft;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
@@ -118,6 +121,13 @@ public class BetterHud {
         Ticker.FASTER.register(OverlayElements.BLOOD_SPLATTERS);
         Ticker.FASTER.register(OverlayElements.WATER_DROPS);
         Ticker.FAST.register(OverlayElements.CPS);
+    }
+
+    public static boolean isModEnabled() {
+        return DistExecutor.runForDist(() -> () -> !(
+            HudElements.GLOBAL.hideOnDebug()
+            && Minecraft.getInstance().gameSettings.showDebugInfo
+        ), () -> () -> false);
     }
 
     /**
