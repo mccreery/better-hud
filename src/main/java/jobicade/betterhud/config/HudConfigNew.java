@@ -5,6 +5,8 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.registry.HudElements;
@@ -12,6 +14,15 @@ import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 
 public class HudConfigNew {
+    public static final HudConfigNew CLIENT;
+    public static final ForgeConfigSpec CLIENT_SPEC;
+
+    static {
+        Pair<HudConfigNew, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(HudConfigNew::new);
+        CLIENT = specPair.getLeft();
+        CLIENT_SPEC = specPair.getRight();
+    }
+
     private final ConfigValue<List<? extends HudElement<?>>> enabled;
 
     private final Map<Setting, ConfigValue<String>> valueMap = new HashMap<>();
