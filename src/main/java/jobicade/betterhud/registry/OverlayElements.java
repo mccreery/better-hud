@@ -26,8 +26,8 @@ import jobicade.betterhud.element.text.Saturation;
 import jobicade.betterhud.element.text.SystemClock;
 import jobicade.betterhud.element.vanilla.AirBar;
 import jobicade.betterhud.element.vanilla.ArmorBar;
-import jobicade.betterhud.element.vanilla.Chat;
 import jobicade.betterhud.element.vanilla.BossHealth;
+import jobicade.betterhud.element.vanilla.Chat;
 import jobicade.betterhud.element.vanilla.Crosshair;
 import jobicade.betterhud.element.vanilla.Experience;
 import jobicade.betterhud.element.vanilla.FoodBar;
@@ -41,11 +41,11 @@ import jobicade.betterhud.element.vanilla.PotionBar;
 import jobicade.betterhud.element.vanilla.RidingHealth;
 import jobicade.betterhud.element.vanilla.Sidebar;
 import jobicade.betterhud.element.vanilla.Vignette;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
 
-@EventBusSubscriber(value = { Side.CLIENT }, modid = BetterHud.MODID)
+@EventBusSubscriber(modid = BetterHud.MODID, value = Dist.CLIENT)
 public class OverlayElements extends HudRegistry<OverlayElement> {
     private OverlayElements() {
         super(HudElements.get());

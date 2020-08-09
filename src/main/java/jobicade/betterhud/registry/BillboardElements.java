@@ -5,11 +5,11 @@ import jobicade.betterhud.element.entityinfo.BillboardElement;
 import jobicade.betterhud.element.entityinfo.HorseInfo;
 import jobicade.betterhud.element.entityinfo.MobInfo;
 import jobicade.betterhud.element.entityinfo.PlayerInfo;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.relauncher.Side;
 
-@EventBusSubscriber(value = { Side.CLIENT }, modid = BetterHud.MODID)
+@EventBusSubscriber(modid = BetterHud.MODID, value = Dist.CLIENT)
 public class BillboardElements extends HudRegistry<BillboardElement> {
     private BillboardElements() {
         super(HudElements.get());
