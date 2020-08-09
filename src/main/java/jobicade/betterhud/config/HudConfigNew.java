@@ -43,6 +43,10 @@ public class HudConfigNew {
         }
     }
 
+    public List<HudElement<?>> getSelected() {
+        throw new UnsupportedOperationException(); // TODO
+    }
+
     public void loadValues() {
         for (Map.Entry<Setting, ConfigValue<String>> entry : valueMap.entrySet()) {
             try {

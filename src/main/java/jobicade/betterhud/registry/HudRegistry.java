@@ -1,10 +1,13 @@
 package jobicade.betterhud.registry;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import jobicade.betterhud.BetterHud;
+import jobicade.betterhud.config.HudConfigNew;
 import jobicade.betterhud.element.HudElement;
 
 public abstract class HudRegistry<T extends HudElement<?>> {
@@ -45,5 +48,22 @@ public abstract class HudRegistry<T extends HudElement<?>> {
 
     public final T getRegistered(String name) {
         return elements.get(name);
+    }
+
+    /**
+     * @return The enabled elements filtered by this registry.
+     */
+    public List<T> getEnabled() {
+        List<HudElement<?>> selected = HudConfigNew.CLIENT.getSelected();
+
+        List<T> subclassSelected = new ArrayList<>();
+        for (HudElement<?> element : selected) {
+            T subclass = getRegistered(element.getName());
+
+            if (subclass != null) {
+                subclassSelected.add(subclass);
+            }
+        }
+        return subclassSelected;
     }
 }
