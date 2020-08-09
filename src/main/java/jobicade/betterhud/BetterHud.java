@@ -14,7 +14,6 @@ import jobicade.betterhud.network.MessageNotifyClientHandler;
 import jobicade.betterhud.network.MessagePickup;
 import jobicade.betterhud.network.MessagePickupHandler;
 import jobicade.betterhud.network.MessageVersion;
-import jobicade.betterhud.proxy.HudSidedProxy;
 import jobicade.betterhud.registry.HudElements;
 import jobicade.betterhud.registry.HudRegistryEvent;
 import jobicade.betterhud.registry.OverlayElements;
@@ -74,15 +73,6 @@ public class BetterHud {
         return logger;
     }
 
-    @SidedProxy(clientSide = "jobicade.betterhud.proxy.ClientProxy", serverSide = "jobicade.betterhud.proxy.ServerProxy")
-    private static HudSidedProxy proxy;
-    /**
-     * @return The singleton sided proxy instance.
-     */
-    public static HudSidedProxy getProxy() {
-        return proxy;
-    }
-
     public static final LayoutManager MANAGER = new LayoutManager();
 
     public static final int SPACER = 5;
@@ -97,7 +87,6 @@ public class BetterHud {
 
     private void setup(FMLCommonSetupEvent event) {
         setServerVersion(null);
-        proxy.preInit(event);
 
         // Message ID 0 reserved for ignored server presence message from [,1.4)
         NET_WRAPPER.registerMessage(MessagePickupHandler.class, MessagePickup.class, 1, Side.CLIENT);
@@ -108,7 +97,6 @@ public class BetterHud {
         NET_WRAPPER.registerMessage(InventoryNameQuery.ClientHandler.class, InventoryNameQuery.Response.class, 4, Side.CLIENT);
 
         Ticker.registerEvents();
-        proxy.init(event);
     }
 
     private void setupClient(FMLClientSetupEvent event) {
