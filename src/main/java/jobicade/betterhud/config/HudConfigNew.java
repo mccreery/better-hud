@@ -7,8 +7,10 @@ import java.util.Map;
 
 import org.apache.commons.lang3.tuple.Pair;
 
+import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.Setting;
+import jobicade.betterhud.element.settings.SettingValueException;
 import jobicade.betterhud.registry.HudElements;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
@@ -38,6 +40,17 @@ public class HudConfigNew {
             builder.push(element.getName());
             mapValues(builder, element.settings);
             builder.pop();
+        }
+    }
+
+    public void loadValues() {
+        for (Map.Entry<Setting, ConfigValue<String>> entry : valueMap.entrySet()) {
+            try {
+                entry.getKey().loadStringValue(entry.getValue().get());
+            } catch (SettingValueException e) {
+                String path = String.join(".", entry.getValue().getPath());
+                BetterHud.getLogger().error("Parsing " + path + "=" + entry.getValue().get(), e);
+            }
         }
     }
 

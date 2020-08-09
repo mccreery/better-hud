@@ -5,6 +5,9 @@ import org.apache.logging.log4j.Logger;
 import org.apache.maven.artifact.versioning.ArtifactVersion;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 
+import jobicade.betterhud.config.ConfigManager;
+import jobicade.betterhud.config.HudConfig;
+import jobicade.betterhud.config.HudConfigNew;
 import jobicade.betterhud.events.ClientEvents;
 import jobicade.betterhud.geom.LayoutManager;
 import jobicade.betterhud.network.InventoryNameQuery;
@@ -15,9 +18,15 @@ import jobicade.betterhud.network.MessageVersion;
 import jobicade.betterhud.proxy.HudSidedProxy;
 import jobicade.betterhud.util.Tickable.Ticker;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.ModContainer;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.config.ModConfig.ModConfigEvent;
+import net.minecraftforge.fml.config.ModConfig.Type;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.fml.network.NetworkRegistry;
@@ -31,9 +40,25 @@ public class BetterHud {
 
     private static ArtifactVersion serverVersion;
 
+    private static ModConfig config;
+    private static ConfigManager configManager;
+
     public BetterHud() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientEvents::setupClient);
+
+        ModContainer container = ModLoadingContext.get().getActiveContainer();
+        config = new ModConfig(Type.CLIENT, HudConfigNew.CLIENT_SPEC, container);
+        container.addConfig(config);
+
+        configManager = new ConfigManager(config.getFullPath(), config.getFullPath().resolveSibling(BetterHud.MODID));
+    }
+
+    @SubscribeEvent
+    public static void onConfig(ModConfigEvent event) {
+        if (event.getConfig() == config) {
+            HudConfigNew.CLIENT.loadValues();
+        }
     }
 
     private static final Logger logger = LogManager.getLogger();
