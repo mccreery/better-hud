@@ -29,8 +29,6 @@ import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
 
 public class ClientProxy implements HudSidedProxy {
     private ConfigManager configManager;
-    private KeyBinding menuKey = new KeyBinding("key.betterHud.open", Keyboard.KEY_U, "key.categories.misc");
-
     @Override
     public void preInit(FMLPreInitializationEvent event) {
         MinecraftForge.EVENT_BUS.post(new HudRegistryEvent());
@@ -86,12 +84,5 @@ public class ClientProxy implements HudSidedProxy {
             }
         }
         return subclassSelected;
-    }
-
-    @SubscribeEvent
-    public void onKey(KeyInputEvent event) {
-        if (Minecraft.getMinecraft().inGameHasFocus && menuKey.isPressed()) {
-            Minecraft.getMinecraft().displayGuiScreen(new GuiElementList(configManager));
-        }
     }
 }

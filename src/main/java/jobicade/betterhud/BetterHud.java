@@ -5,6 +5,7 @@ import org.apache.logging.log4j.Logger;
 import org.apache.maven.artifact.versioning.ArtifactVersion;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 
+import jobicade.betterhud.events.ClientEvents;
 import jobicade.betterhud.geom.LayoutManager;
 import jobicade.betterhud.network.InventoryNameQuery;
 import jobicade.betterhud.network.MessageNotifyClientHandler;
@@ -14,6 +15,7 @@ import jobicade.betterhud.network.MessageVersion;
 import jobicade.betterhud.proxy.HudSidedProxy;
 import jobicade.betterhud.util.Tickable.Ticker;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -31,6 +33,7 @@ public class BetterHud {
 
     public BetterHud() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientEvents::setupClient);
     }
 
     private static final Logger logger = LogManager.getLogger();

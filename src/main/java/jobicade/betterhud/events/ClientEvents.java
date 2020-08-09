@@ -1,22 +1,43 @@
 package jobicade.betterhud.events;
 
-import org.lwjgl.input.Mouse;
+import org.lwjgl.glfw.GLFW;
 
 import jobicade.betterhud.BetterHud;
+import jobicade.betterhud.config.ConfigManager;
+import jobicade.betterhud.gui.GuiElementList;
 import jobicade.betterhud.registry.OverlayElements;
+import net.java.games.input.Keyboard;
+import net.java.games.input.Mouse;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.settings.KeyBinding;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.InputEvent.KeyInputEvent;
+import net.minecraftforge.client.event.InputEvent.MouseInputEvent;
+import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent.PlayerChangedDimensionEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent.MouseInputEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientConnectedToServerEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
-import net.minecraftforge.fml.relauncher.Side;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
-@EventBusSubscriber(modid = BetterHud.MODID, value = Side.CLIENT)
+@EventBusSubscriber(modid = BetterHud.MODID, value = Dist.CLIENT)
 public class ClientEvents {
+    private static final KeyBinding menuKey = new KeyBinding("key.betterHud.open", GLFW.GLFW_KEY_U, "key.categories.misc");
+    private static final ConfigManager configManager = new ConfigManager();
+
+    public static void setupClient(FMLClientSetupEvent event) {
+        ClientRegistry.registerKeyBinding(menuKey);
+    }
+
+    @SubscribeEvent
+    public static void onClientTick(ClientTickEvent event) {
+        if (menuKey.isPressed()) {
+            Minecraft.getInstance().displayGuiScreen(new GuiElementList(configManager));
+        }
+    }
+
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onEntityDamage(LivingDamageEvent event) {
         if (!event.isCanceled() && event.getEntity().equals(Minecraft.getMinecraft().player)) {
