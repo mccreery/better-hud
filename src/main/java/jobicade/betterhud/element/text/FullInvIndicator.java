@@ -1,12 +1,13 @@
 package jobicade.betterhud.element.text;
 
+import static jobicade.betterhud.BetterHud.MC;
+
 import java.util.Arrays;
 import java.util.List;
 
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.events.OverlayContext;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 
 public class FullInvIndicator extends TextElement {
@@ -28,7 +29,7 @@ public class FullInvIndicator extends TextElement {
 
     @Override
     public boolean shouldRender(OverlayContext context) {
-        return Minecraft.getMinecraft().player.inventory.getFirstEmptyStack() == -1 &&
-            (!offHand.get() || !Minecraft.getMinecraft().player.inventory.offHandInventory.get(0).isEmpty());
+        return MC.player.inventory.getFirstEmptyStack() == -1 &&
+            (!offHand.get() || !MC.player.inventory.offHandInventory.get(0).isEmpty());
     }
 }

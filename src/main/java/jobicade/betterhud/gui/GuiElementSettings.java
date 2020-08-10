@@ -1,5 +1,6 @@
 package jobicade.betterhud.gui;
 
+import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 
 import java.io.IOException;
@@ -7,7 +8,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-import org.lwjgl.input.Keyboard;
+import com.mojang.blaze3d.platform.GlStateManager;
+
 import org.lwjgl.opengl.GL11;
 
 import jobicade.betterhud.BetterHud;
@@ -18,14 +20,13 @@ import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
-import net.minecraft.client.Minecraft;
+import net.java.games.input.Keyboard;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiLabel;
 import net.minecraft.client.gui.GuiScreen;
 import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
 import net.minecraftforge.common.MinecraftForge;
@@ -47,7 +48,7 @@ public class GuiElementSettings extends GuiMenuScreen {
 
     public GuiElementSettings(HudElement<?> element, GuiScreen prev) {
         this.element = element;
-        done.setCallback(b -> Minecraft.getMinecraft().displayGuiScreen(prev));
+        done.setCallback(b -> MC.displayGuiScreen(prev));
     }
 
     @Override
@@ -162,7 +163,7 @@ public class GuiElementSettings extends GuiMenuScreen {
             eventResult.playPressSound(this.mc.getSoundHandler());
             actionPerformed(eventResult);
 
-            if(this.equals(Minecraft.getMinecraft().currentScreen)) {
+            if(this.equals(MC.currentScreen)) {
                 MinecraftForge.EVENT_BUS.post(new ActionPerformedEvent.Post(this, done, buttonList));
             }
         }
@@ -186,8 +187,8 @@ public class GuiElementSettings extends GuiMenuScreen {
         drawDefaultBackground();
         drawTitle();
 
-        ScaledResolution resolution = new ScaledResolution(Minecraft.getMinecraft());
-        done.drawButton(Minecraft.getMinecraft(), mouseX, mouseY, partialTicks);
+        ScaledResolution resolution = new ScaledResolution(MC);
+        done.drawButton(MC, mouseX, mouseY, partialTicks);
 
         GlStateManager.pushMatrix();
         GlUtil.beginScissor(viewport, resolution);

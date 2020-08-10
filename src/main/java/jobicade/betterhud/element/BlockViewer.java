@@ -1,6 +1,7 @@
 package jobicade.betterhud.element;
 
 import static jobicade.betterhud.BetterHud.MANAGER;
+import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 
 import java.util.Arrays;
@@ -70,10 +71,10 @@ public class BlockViewer extends TextElement {
 
     @Override
     public boolean shouldRender(OverlayContext context) {
-        trace = Minecraft.getMinecraft().getRenderViewEntity().rayTrace(HudElements.GLOBAL.getBillboardDistance(), 1f);
+        trace = MC.getRenderViewEntity().rayTrace(HudElements.GLOBAL.getBillboardDistance(), 1f);
 
         if(trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK) {
-            state = Minecraft.getMinecraft().world.getBlockState(trace.getBlockPos());
+            state = MC.world.getBlockState(trace.getBlockPos());
             stack = getDisplayStack(trace, state);
             return true;
         } else {
@@ -91,7 +92,7 @@ public class BlockViewer extends TextElement {
 
     @Override
     protected Rect getPadding() {
-        int vPad = 20 - Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT;
+        int vPad = 20 - MC.fontRenderer.FONT_HEIGHT;
         int bottom = vPad / 2;
         Rect bounds = Rect.createPadding(5, vPad - bottom, 5, bottom);
 
@@ -138,7 +139,7 @@ public class BlockViewer extends TextElement {
      *
      * @see net.minecraftforge.common.ForgeHooks#onPickBlock(RayTraceResult, net.minecraft.entity.player.EntityPlayer, net.minecraft.world.World) */
     private ItemStack getDisplayStack(RayTraceResult trace, IBlockState state) {
-        ItemStack stack = state.getBlock().getPickBlock(state, trace, Minecraft.getMinecraft().world, trace.getBlockPos(), Minecraft.getMinecraft().player);
+        ItemStack stack = state.getBlock().getPickBlock(state, trace, MC.world, trace.getBlockPos(), MC.player);
 
         if(isStackEmpty(stack)) {
             // Pick block is disabled, however we can grab the information directly
@@ -163,7 +164,7 @@ public class BlockViewer extends TextElement {
         }
 
         if(invNames.get() && state.getBlock().hasTileEntity(state)) {
-            TileEntity tileEntity = Minecraft.getMinecraft().world.getTileEntity(trace.getBlockPos());
+            TileEntity tileEntity = MC.world.getTileEntity(trace.getBlockPos());
 
             if(tileEntity instanceof IWorldNameable) {
                 ITextComponent invName = ensureInvName(trace.getBlockPos());
@@ -210,7 +211,7 @@ public class BlockViewer extends TextElement {
         if(name != null) {
             return name;
         } else {
-            return Minecraft.getMinecraft().world.getTileEntity(pos).getDisplayName();
+            return MC.world.getTileEntity(pos).getDisplayName();
         }
     }
 

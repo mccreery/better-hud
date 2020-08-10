@@ -1,11 +1,12 @@
 package jobicade.betterhud.element.vanilla;
 
+import static jobicade.betterhud.BetterHud.MC;
+
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.events.OverlayHook;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.bars.StatBarFood;
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
@@ -19,7 +20,7 @@ public class FoodBar extends Bar {
     }
 
     public boolean shouldRenderPrecheck() {
-        return !(hideMount.get() && Minecraft.getMinecraft().player.isRiding());
+        return !(hideMount.get() && MC.player.isRiding());
     }
 
     @Override

@@ -1,7 +1,13 @@
 package jobicade.betterhud.events;
 
+import static jobicade.betterhud.BetterHud.MC;
+
 import java.util.ArrayList;
 import java.util.List;
+
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
+import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
 
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.OverlayElement;
@@ -20,9 +26,6 @@ import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiPlayerTabOverlay;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.network.NetHandlerPlayClient;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.GlStateManager.DestFactor;
-import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.EntityPlayer;
@@ -32,10 +35,10 @@ import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.common.eventhandler.Event;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.relauncher.Side;
 
 @EventBusSubscriber(value = { Side.CLIENT }, modid = BetterHud.MODID)
@@ -97,7 +100,7 @@ public final class OverlayHook {
      * Starting after the {@code Pre} event.
      */
     private static void renderGameOverlay(RenderGameOverlayEvent event) {
-        final Minecraft mc = Minecraft.getMinecraft();
+        final Minecraft mc = MC;
         BetterHud.MANAGER.reset(event.getResolution());
         OverlayContext context = new OverlayContext(event, BetterHud.MANAGER);
 
@@ -125,7 +128,7 @@ public final class OverlayHook {
         GlStateManager.disableDepth();
         GlStateManager.enableTexture2D();
 
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+        MC.getTextureManager().bindTexture(Gui.ICONS);
         GlStateManager.blendFunc(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA);
         GlStateManager.color(1.0f, 1.0f, 1.0f);
         RenderHelper.disableStandardItemLighting();
@@ -153,7 +156,7 @@ public final class OverlayHook {
      * @see GuiIngameForge#renderHUDText(int, int)
      */
     private static void renderHudText(RenderGameOverlayEvent event) {
-        Minecraft mc = Minecraft.getMinecraft();
+        Minecraft mc = MC;
         mc.mcProfiler.startSection("forgeHudText");
 
         // Text event takes ArrayList, not List
@@ -282,7 +285,7 @@ public final class OverlayHook {
      * @see GuiIngameForge#renderGameOverlay(float)
      */
     public static boolean shouldRenderBars() {
-        Minecraft mc = Minecraft.getMinecraft();
+        Minecraft mc = MC;
 
         return mc.playerController.shouldDrawHUD()
             && mc.getRenderViewEntity() instanceof EntityPlayer;

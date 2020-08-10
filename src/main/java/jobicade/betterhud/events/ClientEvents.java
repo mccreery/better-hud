@@ -1,17 +1,16 @@
 package jobicade.betterhud.events;
 
+import static jobicade.betterhud.BetterHud.MC;
+
 import org.lwjgl.glfw.GLFW;
 
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.config.ConfigManager;
 import jobicade.betterhud.gui.GuiElementList;
 import jobicade.betterhud.registry.OverlayElements;
-import net.java.games.input.Keyboard;
 import net.java.games.input.Mouse;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.client.event.InputEvent.KeyInputEvent;
 import net.minecraftforge.client.event.InputEvent.MouseInputEvent;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
@@ -34,13 +33,13 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onClientTick(ClientTickEvent event) {
         if (menuKey.isPressed()) {
-            Minecraft.getInstance().displayGuiScreen(new GuiElementList(configManager));
+            MC.displayGuiScreen(new GuiElementList(configManager));
         }
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onEntityDamage(LivingDamageEvent event) {
-        if (!event.isCanceled() && event.getEntity().equals(Minecraft.getMinecraft().player)) {
+        if (!event.isCanceled() && event.getEntity().equals(MC.player)) {
             OverlayElements.BLOOD_SPLATTERS.onDamaged((int)event.getAmount());
         }
     }

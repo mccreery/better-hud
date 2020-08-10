@@ -1,5 +1,7 @@
 package jobicade.betterhud.element;
 
+import static jobicade.betterhud.BetterHud.MC;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,7 +15,6 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.registry.OverlayElements;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
-import net.minecraft.client.Minecraft;
 
 public class ExperienceInfo extends TextElement {
     private SettingBoolean total;
@@ -32,14 +33,14 @@ public class ExperienceInfo extends TextElement {
 
     @Override
     public boolean shouldRender(OverlayContext context) {
-        return Minecraft.getMinecraft().playerController.gameIsSurvivalOrAdventure();
+        return MC.playerController.gameIsSurvivalOrAdventure();
     }
 
     @Override
     public Rect render(OverlayContext context) {
-        int fullBar = getExperienceWithinLevel(Minecraft.getMinecraft().player.experienceLevel);
+        int fullBar = getExperienceWithinLevel(MC.player.experienceLevel);
 
-        int has = (int)(Minecraft.getMinecraft().player.experience * fullBar);
+        int has = (int)(MC.player.experience * fullBar);
         int needed = fullBar - has;
 
         String hasDisplay = String.valueOf(has);
@@ -89,13 +90,13 @@ public class ExperienceInfo extends TextElement {
         List<String> parts = new ArrayList<String>(2);
 
         if(total.get()) {
-            int totalDisplay = getExperienceToLevel(Minecraft.getMinecraft().player.experienceLevel);
-            totalDisplay += Minecraft.getMinecraft().player.experience * getExperienceWithinLevel(Minecraft.getMinecraft().player.experienceLevel);
+            int totalDisplay = getExperienceToLevel(MC.player.experienceLevel);
+            totalDisplay += MC.player.experience * getExperienceWithinLevel(MC.player.experienceLevel);
 
             parts.add(total.getLocalizedName() + ": "+ totalDisplay);
         }
         if(lifetime.get()) {
-            parts.add(lifetime.getLocalizedName() + ": " + Minecraft.getMinecraft().player.experienceTotal);
+            parts.add(lifetime.getLocalizedName() + ": " + MC.player.experienceTotal);
         }
         return parts;
     }

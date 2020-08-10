@@ -1,6 +1,10 @@
 package jobicade.betterhud.element.vanilla;
 
 import static jobicade.betterhud.BetterHud.MANAGER;
+import static jobicade.betterhud.BetterHud.MC;
+
+import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
+import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
 
 import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.SettingBoolean;
@@ -11,8 +15,6 @@ import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.GlStateManager.DestFactor;
-import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.border.WorldBorder;
@@ -43,11 +45,11 @@ public class Vignette extends OverlayElement {
 
     @Override
     public Rect render(OverlayContext context) {
-        WorldBorder border = Minecraft.getMinecraft().world.getWorldBorder();
+        WorldBorder border = MC.world.getWorldBorder();
 
         float f = 0;
         if (warnings.get()) {
-            float distance = (float)border.getClosestDistance(Minecraft.getMinecraft().player);
+            float distance = (float)border.getClosestDistance(MC.player);
             float warningDistance = (float)getWarningDistance(border);
 
             if(distance < warningDistance) {
@@ -56,7 +58,7 @@ public class Vignette extends OverlayElement {
         }
 
         // Animate brightness
-        brightness = brightness + (MathHelper.clamp(1 - Minecraft.getMinecraft().player.getBrightness(), 0, 1) - brightness) / 100;
+        brightness = brightness + (MathHelper.clamp(1 - MC.player.getBrightness(), 0, 1) - brightness) / 100;
 
         Color color;
         if(f > 0) {
@@ -68,11 +70,11 @@ public class Vignette extends OverlayElement {
         }
 
         GlUtil.blendFuncSafe(SourceFactor.ZERO, DestFactor.ONE_MINUS_SRC_COLOR, SourceFactor.ONE, DestFactor.ZERO);
-        Minecraft.getMinecraft().getTextureManager().bindTexture(VIGNETTE_TEX_PATH);
+        MC.getTextureManager().bindTexture(VIGNETTE_TEX_PATH);
 
         GlUtil.drawRect(MANAGER.getScreen(), new Rect(256, 256), color);
 
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+        MC.getTextureManager().bindTexture(Gui.ICONS);
         GlUtil.blendFuncSafe(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
 
         OverlayHook.post(context.getEvent(), ElementType.VIGNETTE);

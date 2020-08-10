@@ -1,14 +1,16 @@
 package jobicade.betterhud.gui;
 
+import static jobicade.betterhud.BetterHud.MC;
+
+import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.realmsclient.gui.ChatFormatting;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.resources.I18n;
+import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
-import jobicade.betterhud.geom.Point;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.resources.I18n;
 
 public class GuiActionButton extends GuiButton {
     private ActionCallback callback;
@@ -70,7 +72,7 @@ public class GuiActionButton extends GuiButton {
     }
 
     protected void drawButton(Rect bounds, Point mousePosition, float partialTicks) {
-        super.drawButton(Minecraft.getMinecraft(), mousePosition.getX(), mousePosition.getY(), partialTicks);
+        super.drawButton(MC, mousePosition.getX(), mousePosition.getY(), partialTicks);
     }
 
     public void updateText(String name, String value) {
@@ -106,7 +108,7 @@ public class GuiActionButton extends GuiButton {
             GlStateManager.pushMatrix();
 
             GlStateManager.translate(0, 0, 1);
-            Minecraft.getMinecraft().currentScreen.drawHoveringText(tooltip, mouseX, mouseY);
+            MC.currentScreen.drawHoveringText(tooltip, mouseX, mouseY);
 
             GlStateManager.popMatrix();
             GlStateManager.disableDepth();

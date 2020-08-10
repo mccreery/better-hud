@@ -1,5 +1,6 @@
 package jobicade.betterhud.gui;
 
+import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 
 import java.io.IOException;
@@ -9,24 +10,23 @@ import java.util.stream.Collectors;
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.opengl.GL11;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.resources.I18n;
+import jobicade.betterhud.config.ConfigManager;
+import jobicade.betterhud.config.ConfigSlot;
+import jobicade.betterhud.config.FileConfigSlot;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Size;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.render.DefaultBoxed;
 import jobicade.betterhud.render.Grid;
 import jobicade.betterhud.render.Label;
-import jobicade.betterhud.config.ConfigManager;
-import jobicade.betterhud.config.ConfigSlot;
-import jobicade.betterhud.config.FileConfigSlot;
-import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.geom.Point;
+import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.resources.I18n;
 
 public class GuiConfigSaves extends GuiScreen {
     private GuiTextField name;
@@ -86,7 +86,7 @@ public class GuiConfigSaves extends GuiScreen {
         Point origin = new Point(width / 2, height / 16 + 20);
 
         buttonList.add(new GuiActionButton(I18n.format("gui.done"))
-            .setCallback(b -> Minecraft.getMinecraft().displayGuiScreen(previous))
+            .setCallback(b -> MC.displayGuiScreen(previous))
             .setBounds(new Rect(200, 20).align(origin, Direction.NORTH)));
 
         Rect textField = new Rect(150, 20);
@@ -188,7 +188,7 @@ public class GuiConfigSaves extends GuiScreen {
 
         name.drawTextBox();
 
-        Rect scissorRect = viewport.withY(height - viewport.getBottom()).scale(new ScaledResolution(Minecraft.getMinecraft()).getScaleFactor());
+        Rect scissorRect = viewport.withY(height - viewport.getBottom()).scale(new ScaledResolution(MC).getScaleFactor());
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
         GL11.glScissor(scissorRect.getX(), scissorRect.getY(), scissorRect.getWidth(), scissorRect.getHeight());
 

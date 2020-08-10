@@ -1,5 +1,7 @@
 package jobicade.betterhud.element;
 
+import static jobicade.betterhud.BetterHud.MC;
+
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingPosition;
@@ -52,7 +54,7 @@ public class ArrowCount extends OverlayElement {
 
     @Override
     public boolean shouldRender(OverlayContext context) {
-        ItemStack stack = Minecraft.getMinecraft().player.getHeldItemOffhand();
+        ItemStack stack = MC.player.getHeldItemOffhand();
         boolean offhandHeld = stack != null && stack.getItem() == Items.BOW;
 
         if(overlay.get()) {
@@ -62,7 +64,7 @@ public class ArrowCount extends OverlayElement {
 
             if (OverlayHook.shouldRender(OverlayElements.HOTBAR, context)) {
                 for(int i = 0; i < 9; i++) {
-                    stack = Minecraft.getMinecraft().player.inventory.getStackInSlot(i);
+                    stack = MC.player.inventory.getStackInSlot(i);
 
                     if(stack != null && stack.getItem() == Items.BOW) {
                         return true;
@@ -73,20 +75,20 @@ public class ArrowCount extends OverlayElement {
         } else if(offhandHeld) {
             return true;
         } else {
-            stack = Minecraft.getMinecraft().player.getHeldItemMainhand();
+            stack = MC.player.getHeldItemMainhand();
             return stack != null && stack.getItem() == Items.BOW;
         }
     }
 
     @Override
     public Rect render(OverlayContext context) {
-        int totalArrows = arrowCount(Minecraft.getMinecraft().player);
+        int totalArrows = arrowCount(MC.player);
 
         if(overlay.get()) {
             Rect stackRect = new Rect(16, 16).anchor(OverlayElements.HOTBAR.getLastBounds().grow(-3), Direction.WEST);
 
             for(int i = 0; i < 9; i++) {
-                ItemStack stack = Minecraft.getMinecraft().player.inventory.getStackInSlot(i);
+                ItemStack stack = MC.player.inventory.getStackInSlot(i);
 
                 if(stack != null && stack.getItem() == Items.BOW) {
                     drawCounter(stackRect, totalArrows);
@@ -94,7 +96,7 @@ public class ArrowCount extends OverlayElement {
                 stackRect = stackRect.withX(stackRect.getX() + 20);
             }
 
-            ItemStack stack = Minecraft.getMinecraft().player.inventory.getStackInSlot(40);
+            ItemStack stack = MC.player.inventory.getStackInSlot(40);
 
             if(stack != null && stack.getItem() == Items.BOW) {
                 drawCounter(new Rect(OverlayElements.OFFHAND.getLastBounds().getPosition().add(3, 3), new Point(16, 16)), totalArrows);

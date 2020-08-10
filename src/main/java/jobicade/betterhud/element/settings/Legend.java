@@ -1,5 +1,6 @@
 package jobicade.betterhud.element.settings;
 
+import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 
 import java.util.ArrayList;
@@ -7,12 +8,12 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.render.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiLabel;
 import net.minecraft.client.resources.I18n;
-import jobicade.betterhud.geom.Point;
-import jobicade.betterhud.render.Color;
 
 public class Legend extends SettingStub {
     public Legend(String name) {
@@ -26,11 +27,11 @@ public class Legend extends SettingStub {
 
     @Override
     public Point getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Point origin) {
-        GuiLegendLabel label = new GuiLegendLabel(0, origin.getX() - 150, origin.getY(), 300, Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT, Color.WHITE);
+        GuiLegendLabel label = new GuiLegendLabel(0, origin.getX() - 150, origin.getY(), 300, MC.fontRenderer.FONT_HEIGHT, Color.WHITE);
         label.addLine("betterHud.group." + this.name);
         parts.add(label);
 
-        return origin.add(0, Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT + SPACER);
+        return origin.add(0, MC.fontRenderer.FONT_HEIGHT + SPACER);
     }
 
     private static class GuiLegendLabel extends GuiLabel {
@@ -38,7 +39,7 @@ public class Legend extends SettingStub {
         protected final List<String> lines = new ArrayList<String>();
 
         public GuiLegendLabel(int id, int x, int y, int width, int height, Color color) {
-            super(Minecraft.getMinecraft().fontRenderer, id, x, y, width, height, color.getPacked());
+            super(MC.fontRenderer, id, x, y, width, height, color.getPacked());
             setCentered();
 
             this.color = color;
@@ -54,7 +55,7 @@ public class Legend extends SettingStub {
             int maxWidth = 0;
 
             for(String s : lines) {
-                int width = Minecraft.getMinecraft().fontRenderer.getStringWidth(s);
+                int width = MC.fontRenderer.getStringWidth(s);
                 if(width > maxWidth) maxWidth = width;
             }
 

@@ -1,5 +1,7 @@
 package jobicade.betterhud.element.vanilla;
 
+import static jobicade.betterhud.BetterHud.MC;
+
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -8,7 +10,6 @@ import jobicade.betterhud.render.Color;
 import jobicade.betterhud.render.DefaultBoxed;
 import jobicade.betterhud.render.Label;
 import jobicade.betterhud.render.Quad;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.inventory.GuiContainer;
 import net.minecraft.client.resources.I18n;
@@ -34,7 +35,7 @@ public class PotionIcon extends DefaultBoxed {
         Rect background = getIconBackground();
         Rect iconBounds = background.anchor(bounds, Direction.NORTH);
 
-        Minecraft.getMinecraft().getTextureManager().bindTexture(GuiContainer.INVENTORY_BACKGROUND);
+        MC.getTextureManager().bindTexture(GuiContainer.INVENTORY_BACKGROUND);
         new Quad().setTexture(background).setBounds(iconBounds).render();
 
         iconColor.apply();
@@ -46,7 +47,7 @@ public class PotionIcon extends DefaultBoxed {
 
             new Quad().setTexture(icon).setBounds(iconInnerBounds).render();
         }
-        potion.renderHUDEffect(iconBounds.getX(), iconBounds.getY(), effect, Minecraft.getMinecraft(), iconColor.getAlpha() / 255.0f);
+        potion.renderHUDEffect(iconBounds.getX(), iconBounds.getY(), effect, MC, iconColor.getAlpha() / 255.0f);
 
         String levelLabel = getLevelLabel();
         if(levelLabel != null) {
@@ -60,7 +61,7 @@ public class PotionIcon extends DefaultBoxed {
             label.setBounds(new Rect(label.getPreferredSize()).anchor(iconBounds.grow(2), Direction.SOUTH, true)).render();
         }
 
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+        MC.getTextureManager().bindTexture(Gui.ICONS);
         Color.WHITE.apply();
     }
 

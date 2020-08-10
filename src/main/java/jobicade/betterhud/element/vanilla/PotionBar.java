@@ -1,6 +1,7 @@
 package jobicade.betterhud.element.vanilla;
 
 import static jobicade.betterhud.BetterHud.MANAGER;
+import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 
 import java.util.ArrayList;
@@ -17,7 +18,6 @@ import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Boxed;
 import jobicade.betterhud.render.Grid;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.ResourceLocation;
@@ -40,7 +40,7 @@ public class PotionBar extends OverlayElement {
 
     @Override
     public boolean shouldRender(OverlayContext context) {
-        return !Minecraft.getMinecraft().player.getActivePotionEffects().isEmpty();
+        return !MC.player.getActivePotionEffects().isEmpty();
     }
 
     @Override
@@ -54,13 +54,13 @@ public class PotionBar extends OverlayElement {
             bounds = position.applyTo(bounds);
         }
         grid.setBounds(bounds).render();
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+        MC.getTextureManager().bindTexture(Gui.ICONS);
 
         return bounds;
     }
 
     private void populateEffects(List<PotionEffect> helpful, List<PotionEffect> harmful) {
-        Iterable<PotionEffect> activeEffects =  Minecraft.getMinecraft().player.getActivePotionEffects();
+        Iterable<PotionEffect> activeEffects =  MC.player.getActivePotionEffects();
 
         for (PotionEffect effect : activeEffects) {
             if (!effect.doesShowParticles() || !effect.getPotion().shouldRenderHUD(effect)) {

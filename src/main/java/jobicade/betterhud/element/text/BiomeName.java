@@ -1,9 +1,10 @@
 package jobicade.betterhud.element.text;
 
+import static jobicade.betterhud.BetterHud.MC;
+
 import java.util.Arrays;
 import java.util.List;
 
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.BlockPos;
 
 public class BiomeName extends TextElement {
@@ -13,8 +14,8 @@ public class BiomeName extends TextElement {
 
     @Override
     protected List<String> getText() {
-        BlockPos pos = new BlockPos((int)Minecraft.getMinecraft().player.posX, 0, (int)Minecraft.getMinecraft().player.posZ);
+        BlockPos pos = new BlockPos((int)MC.player.posX, 0, (int)MC.player.posZ);
 
-        return Arrays.asList(getLocalizedName() + ": " + Minecraft.getMinecraft().world.getBiomeForCoordsBody(pos).getBiomeName());
+        return Arrays.asList(getLocalizedName() + ": " + MC.world.getBiomeForCoordsBody(pos).getBiomeName());
     }
 }

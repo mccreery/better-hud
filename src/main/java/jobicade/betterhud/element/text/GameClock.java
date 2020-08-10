@@ -1,5 +1,7 @@
 package jobicade.betterhud.element.text;
 
+import static jobicade.betterhud.BetterHud.MC;
+
 import java.text.DateFormat;
 import java.text.FieldPosition;
 import java.text.ParsePosition;
@@ -14,10 +16,9 @@ import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.GlUtil;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 import net.minecraft.world.WorldProvider.WorldSleepResult;
 
 public class GameClock extends Clock {
@@ -50,10 +51,10 @@ public class GameClock extends Clock {
     public boolean shouldRender(OverlayContext context) {
         switch(requireItem.getIndex()) {
             case 1:
-                return Minecraft.getMinecraft().player.inventory.hasItemStack(new ItemStack(Items.CLOCK));
+                return MC.player.inventory.hasItemStack(new ItemStack(Items.CLOCK));
             case 2:
-                return Minecraft.getMinecraft().player.getHeldItemMainhand().getItem() == Items.CLOCK
-                    || Minecraft.getMinecraft().player.getHeldItemOffhand().getItem() == Items.CLOCK;
+                return MC.player.getHeldItemMainhand().getItem() == Items.CLOCK
+                    || MC.player.getHeldItemOffhand().getItem() == Items.CLOCK;
         }
         return true;
     }
@@ -73,19 +74,19 @@ public class GameClock extends Clock {
 
     private boolean showSleepIndicator(float partialTicks) {
         return showSleepIndicator.get()
-                && Minecraft.getMinecraft().world.provider.canSleepAt(Minecraft.getMinecraft().player, Minecraft.getMinecraft().player.getPosition()) == WorldSleepResult.ALLOW
+                && MC.world.provider.canSleepAt(MC.player, MC.player.getPosition()) == WorldSleepResult.ALLOW
                 // Taken from EntityPlayer#trySleep, ignores enemies and bed position
-                && !Minecraft.getMinecraft().player.isPlayerSleeping()
-                && Minecraft.getMinecraft().player.isEntityAlive()
-                && Minecraft.getMinecraft().world.provider.isSurfaceWorld()
+                && !MC.player.isPlayerSleeping()
+                && MC.player.isEntityAlive()
+                && MC.world.provider.isSurfaceWorld()
                 // World#isDayTime is server only
-                //&& !Minecraft.getMinecraft().world.isDaytime();
-                && Minecraft.getMinecraft().world.calculateSkylightSubtracted(partialTicks) >= 4;
+                //&& !MC.world.isDaytime();
+                && MC.world.calculateSkylightSubtracted(partialTicks) >= 4;
     }
 
     @Override
     protected Date getDate() {
-        long worldTime = Minecraft.getMinecraft().world.getWorldTime() + 6000;
+        long worldTime = MC.world.getWorldTime() + 6000;
 
         // Convert to milliseconds
         worldTime = Math.round(worldTime / 1000. * 3600.) * 1000;

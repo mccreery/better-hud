@@ -1,5 +1,6 @@
 package jobicade.betterhud.gui;
 
+import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 
 import java.io.IOException;
@@ -24,7 +25,6 @@ import jobicade.betterhud.render.Grid;
 import jobicade.betterhud.render.Label;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.Textures;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
@@ -436,7 +436,7 @@ public class GuiElementList extends GuiMenuScreen {
     private void drawViewport(Rect viewport, GuiScrollbar scrollbar, Grid<ListItem> list) {
         GlUtil.drawRect(viewport, new Color(32, 0, 0, 0));
 
-        GlUtil.beginScissor(viewport, new ScaledResolution(Minecraft.getMinecraft()));
+        GlUtil.beginScissor(viewport, new ScaledResolution(MC));
         list.setBounds(getListBounds(viewport, scrollbar, list)).render();
         GlUtil.endScissor();
     }
@@ -479,7 +479,7 @@ public class GuiElementList extends GuiMenuScreen {
                 // 16 tall so remove 2 pixels on either side/4 in total
                 Rect warningBounds = new Rect(16, 16).anchor(bounds.grow(-2), Direction.WEST);
 
-                Minecraft.getMinecraft().getTextureManager().bindTexture(Textures.SETTINGS);
+                MC.getTextureManager().bindTexture(Textures.SETTINGS);
                 GlUtil.drawRect(warningBounds, new Rect(100, 60, 16, 16));
 
                 label.setColor(Color.GRAY);

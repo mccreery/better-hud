@@ -1,5 +1,6 @@
 package jobicade.betterhud.element;
 
+import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 
 import jobicade.betterhud.element.settings.DirectionOptions;
@@ -83,7 +84,7 @@ public class Compass extends OverlayElement {
     }
 
     private void drawDirections(Rect bounds) {
-        float angle = (float)Math.toRadians(Minecraft.getMinecraft().player.rotationYaw);
+        float angle = (float)Math.toRadians(MC.player.rotationYaw);
 
         float radius = bounds.getWidth() / 2 + SPACER;
         boolean bottom = position.getContentAlignment() == Direction.SOUTH;
@@ -117,16 +118,16 @@ public class Compass extends OverlayElement {
     public boolean shouldRender(OverlayContext context) {
         switch(requireItem.getIndex()) {
             case 1:
-                return Minecraft.getMinecraft().player.inventory.hasItemStack(new ItemStack(Items.COMPASS));
+                return MC.player.inventory.hasItemStack(new ItemStack(Items.COMPASS));
             case 2:
-                return Minecraft.getMinecraft().player.getHeldItemMainhand().getItem() == Items.COMPASS
-                    || Minecraft.getMinecraft().player.getHeldItemOffhand().getItem() == Items.COMPASS;
+                return MC.player.getHeldItemMainhand().getItem() == Items.COMPASS
+                    || MC.player.getHeldItemOffhand().getItem() == Items.COMPASS;
         }
         return true;
     }
 
     public String getText() {
-        EnumFacing enumfacing = Minecraft.getMinecraft().player.getHorizontalFacing();
+        EnumFacing enumfacing = MC.player.getHorizontalFacing();
 
         String coord;
         Direction direction;
@@ -148,18 +149,18 @@ public class Compass extends OverlayElement {
         if(mode.getIndex() == 0) {
             bounds = position.applyTo(new Rect(180, 12));
 
-            Minecraft.getMinecraft().mcProfiler.startSection("background");
+            MC.mcProfiler.startSection("background");
             drawBackground(bounds);
-            Minecraft.getMinecraft().mcProfiler.endStartSection("text");
+            MC.mcProfiler.endStartSection("text");
             drawDirections(bounds);
-            Minecraft.getMinecraft().mcProfiler.endSection();
+            MC.mcProfiler.endSection();
         } else {
             String text = getText();
             bounds = position.applyTo(new Rect(GlUtil.getStringSize(text)));
 
-            Minecraft.getMinecraft().mcProfiler.startSection("text");
+            MC.mcProfiler.startSection("text");
             GlUtil.drawString(text, bounds.getPosition(), Direction.NORTH_WEST, Color.WHITE);
-            Minecraft.getMinecraft().mcProfiler.endSection();
+            MC.mcProfiler.endSection();
         }
 
         return bounds;

@@ -1,6 +1,7 @@
 package jobicade.betterhud.element.entityinfo;
 
 import static jobicade.betterhud.BetterHud.MANAGER;
+import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 
 import com.mojang.realmsclient.gui.ChatFormatting;
@@ -65,7 +66,7 @@ public class MobInfo extends BillboardElement {
         GlUtil.drawString(text, bounds.getPosition(), Direction.NORTH_WEST, Color.WHITE);
         Rect barRect = new Rect(barSize).anchor(bounds, Direction.SOUTH_WEST);
 
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+        MC.getTextureManager().bindTexture(Gui.ICONS);
         bar.setBounds(barRect).render();
         return null;
     }

@@ -1,5 +1,7 @@
 package jobicade.betterhud.config;
 
+import static jobicade.betterhud.BetterHud.MC;
+
 import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
@@ -26,7 +28,7 @@ public class ResourceConfigSlot implements ConfigSlot {
 
     @Override
     public void copyTo(Path dest) throws IOException {
-        Files.copy(Minecraft.getMinecraft().getResourceManager().getResource(path).getInputStream(), dest, StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(MC.getResourceManager().getResource(path).getInputStream(), dest, StandardCopyOption.REPLACE_EXISTING);
     }
 
     @Override

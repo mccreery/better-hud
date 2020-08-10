@@ -1,5 +1,7 @@
 package jobicade.betterhud.element;
 
+import static jobicade.betterhud.BetterHud.MC;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -39,7 +41,7 @@ public class SignReader extends OverlayElement {
     public Rect render(OverlayContext context) {
         Rect bounds = position.applyTo(new Rect(96, 48));
 
-        Minecraft.getMinecraft().getTextureManager().bindTexture(SIGN_TEXTURE);
+        MC.getTextureManager().bindTexture(SIGN_TEXTURE);
         new Quad().setTexture(new Rect(2, 2, 24, 12).scale(4, 8)).setBounds(bounds).render();
 
         List<Label> labels = Stream.of(getSign().signText)
@@ -60,15 +62,15 @@ public class SignReader extends OverlayElement {
      */
     private TileEntitySign getSign() {
         // Sanity check, but can continue normally if null
-        if (Minecraft.getMinecraft() == null || Minecraft.getMinecraft().world == null) {
+        if (MC == null || MC.world == null) {
             return null;
         }
 
         // Functional approach avoids long null check chain
-        return Optional.ofNullable(Minecraft.getMinecraft().getRenderViewEntity())
+        return Optional.ofNullable(MC.getRenderViewEntity())
             .map(entity -> entity.rayTrace(200, 1.0f))
             .map(RayTraceResult::getBlockPos)
-            .map(Minecraft.getMinecraft().world::getTileEntity)
+            .map(MC.world::getTileEntity)
             .filter(TileEntitySign.class::isInstance)
             .map(TileEntitySign.class::cast)
             .orElse(null);

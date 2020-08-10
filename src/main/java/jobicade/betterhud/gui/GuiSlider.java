@@ -1,5 +1,7 @@
 package jobicade.betterhud.gui;
 
+import static jobicade.betterhud.BetterHud.MC;
+
 import jobicade.betterhud.element.settings.SettingSlider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
@@ -46,10 +48,10 @@ public class GuiSlider extends GuiButton {
             }
             int sliderOffset = (int)((slider.getValue() - slider.getMinimum()) / (slider.getMaximum() - slider.getMinimum()) * (width - 8));
 
-            Minecraft.getMinecraft().getTextureManager().bindTexture(BUTTON_TEXTURES);
+            MC.getTextureManager().bindTexture(BUTTON_TEXTURES);
             this.drawTexturedModalRect(x + sliderOffset,     y,   0, 66, 4, 20);
             this.drawTexturedModalRect(x + sliderOffset + 4, y, 196, 66, 4, 20);
-            Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+            MC.getTextureManager().bindTexture(Gui.ICONS);
         }
     }
 

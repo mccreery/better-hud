@@ -1,10 +1,11 @@
 package jobicade.betterhud.gui;
 
+import static jobicade.betterhud.BetterHud.MC;
+
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.Textures;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 
 public class GuiTexturedButton extends GuiActionButton {
@@ -53,8 +54,8 @@ public class GuiTexturedButton extends GuiActionButton {
      */
     @Override
     protected void drawButton(Rect bounds, Point mousePosition, float partialTicks) {
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Textures.SETTINGS);
+        MC.getTextureManager().bindTexture(Textures.SETTINGS);
         GlUtil.drawRect(bounds, getTexture());
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+        MC.getTextureManager().bindTexture(Gui.ICONS);
     }
 }

@@ -1,10 +1,11 @@
 package jobicade.betterhud.element.text;
 
+import static jobicade.betterhud.BetterHud.MC;
+
 import java.util.Arrays;
 import java.util.List;
 
 import jobicade.betterhud.element.settings.SettingBoolean;
-import net.minecraft.client.Minecraft;
 
 public class FpsCount extends TextElement {
     private SettingBoolean numberOnly;
@@ -17,7 +18,7 @@ public class FpsCount extends TextElement {
 
     @Override
     protected List<String> getText() {
-        String fps = Minecraft.getMinecraft().debug.substring(0, Minecraft.getMinecraft().debug.indexOf(' '));
+        String fps = MC.debug.substring(0, MC.debug.indexOf(' '));
 
         if(!numberOnly.get()) {
             fps = getLocalizedName() + ": " + fps;

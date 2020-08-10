@@ -1,6 +1,10 @@
 package jobicade.betterhud.element.particles;
 
+import static jobicade.betterhud.BetterHud.MC;
+
 import java.util.Random;
+
+import com.mojang.blaze3d.platform.GlStateManager;
 
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
@@ -9,9 +13,7 @@ import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.RandomWrapper;
 import jobicade.betterhud.util.Textures;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.GlStateManager;
 
 public class ParticleBase implements Particle {
     protected Point position;
@@ -52,7 +54,7 @@ public class ParticleBase implements Particle {
 
     @Override
     public void render(float partialTicks) {
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Textures.HUD_ICONS);
+        MC.getTextureManager().bindTexture(Textures.HUD_ICONS);
         GlStateManager.pushMatrix();
 
         GlStateManager.translate(position.getX(), position.getY(), 0.0F);
@@ -64,7 +66,7 @@ public class ParticleBase implements Particle {
         GlUtil.drawRect(bounds, texture, color);
 
         GlStateManager.popMatrix();
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+        MC.getTextureManager().bindTexture(Gui.ICONS);
     }
 
     @Override

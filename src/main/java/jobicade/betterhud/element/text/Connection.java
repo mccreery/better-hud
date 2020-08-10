@@ -1,13 +1,14 @@
 package jobicade.betterhud.element.text;
 
+import static jobicade.betterhud.BetterHud.MC;
+
 import java.net.SocketAddress;
 import java.util.ArrayList;
 import java.util.List;
 
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.SettingBoolean;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.network.NetworkPlayerInfo;
+import net.minecraft.client.network.play.NetworkPlayerInfo;
 import net.minecraft.client.resources.I18n;
 
 public class Connection extends TextElement {
@@ -40,7 +41,7 @@ public class Connection extends TextElement {
         List<String> toRender = new ArrayList<String>(3);
 
         if(playerCount.get()) {
-            int players = Minecraft.getMinecraft().getConnection().getPlayerInfoMap().size();
+            int players = MC.getConnection().getPlayerInfoMap().size();
             String conn = I18n.format(players != 1 ? "betterHud.hud.players" : "betterHud.hud.player", players);
             toRender.add(conn);
         }
@@ -49,8 +50,8 @@ public class Connection extends TextElement {
             toRender.add(I18n.format(ip.equals("localServer") ? "betterHud.hud.localServer" : "betterHud.hud.ip", ip));
         }
 
-        if(latency.get() && Minecraft.getMinecraft().getCurrentServerData() != null) {
-            NetworkPlayerInfo info = Minecraft.getMinecraft().getConnection().getPlayerInfo(Minecraft.getMinecraft().player.getUniqueID());
+        if(latency.get() && MC.getCurrentServerData() != null) {
+            NetworkPlayerInfo info = MC.getConnection().getPlayerInfo(MC.player.getUniqueID());
 
             if(info != null) {
                 int ping = info.getResponseTime();

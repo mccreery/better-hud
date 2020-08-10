@@ -1,6 +1,7 @@
 package jobicade.betterhud.element.vanilla;
 
 import static jobicade.betterhud.BetterHud.MANAGER;
+import static jobicade.betterhud.BetterHud.MC;
 
 import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
@@ -10,7 +11,6 @@ import jobicade.betterhud.events.OverlayHook;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.GlUtil;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
@@ -32,7 +32,7 @@ public class JumpBar extends OverlayElement {
 
     @Override
     public Rect render(OverlayContext context) {
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+        MC.getTextureManager().bindTexture(Gui.ICONS);
 
         Rect bounds = new Rect(182, 5);
         if(!position.isCustom() && position.getDirection() == Direction.SOUTH) {
@@ -41,7 +41,7 @@ public class JumpBar extends OverlayElement {
             bounds = position.applyTo(bounds);
         }
 
-        float charge = Minecraft.getMinecraft().player.getHorseJumpPower();
+        float charge = MC.player.getHorseJumpPower();
         int filled = (int)(charge * bounds.getWidth());
 
         GlUtil.drawRect(bounds, bounds.move(0, 84));

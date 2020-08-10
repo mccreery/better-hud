@@ -1,5 +1,7 @@
 package jobicade.betterhud.element.vanilla;
 
+import static jobicade.betterhud.BetterHud.MC;
+
 import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
@@ -31,7 +33,7 @@ public class Hotbar extends OverlayElement {
 
     @Override
     public boolean shouldRender(OverlayContext context) {
-        final Minecraft mc = Minecraft.getMinecraft();
+        final Minecraft mc = MC;
 
         return GuiIngameForge.renderHotbar
             && !OverlayHook.pre(context.getEvent(), ElementType.HOTBAR)
@@ -43,9 +45,9 @@ public class Hotbar extends OverlayElement {
 
     @Override
     public Rect render(OverlayContext context) {
-        final Minecraft mc = Minecraft.getMinecraft();
+        final Minecraft mc = MC;
 
-        if (Minecraft.getMinecraft().playerController.isSpectator()) {
+        if (MC.playerController.isSpectator()) {
             GuiSpectator spectator = mc.ingameGUI.getSpectatorGui();
             ScaledResolution res = new ScaledResolution(mc);
 
@@ -62,22 +64,22 @@ public class Hotbar extends OverlayElement {
         Rect barTexture = new Rect(182, 22);
         Rect bounds = position.applyTo(new Rect(barTexture));
 
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Textures.WIDGETS);
+        MC.getTextureManager().bindTexture(Textures.WIDGETS);
         GlUtil.drawRect(bounds, barTexture);
 
         Rect slot = bounds.grow(-3).withWidth(16);
 
         float partialTicks = context.getPartialTicks();
         for(int i = 0; i < 9; i++, slot = slot.translate(Direction.EAST.scale(20))) {
-            if(i == Minecraft.getMinecraft().player.inventory.currentItem) {
-                Minecraft.getMinecraft().getTextureManager().bindTexture(Textures.WIDGETS);
+            if(i == MC.player.inventory.currentItem) {
+                MC.getTextureManager().bindTexture(Textures.WIDGETS);
                 GlUtil.drawRect(slot.grow(4), new Rect(0, 22, 24, 24));
             }
 
-            GlUtil.renderHotbarItem(slot, Minecraft.getMinecraft().player.inventory.mainInventory.get(i), partialTicks);
+            GlUtil.renderHotbarItem(slot, MC.player.inventory.mainInventory.get(i), partialTicks);
         }
 
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+        MC.getTextureManager().bindTexture(Gui.ICONS);
         OverlayHook.post(context.getEvent(), ElementType.HOTBAR);
         return bounds;
     }

@@ -1,10 +1,11 @@
 package jobicade.betterhud.element.vanilla;
 
+import static jobicade.betterhud.BetterHud.MC;
+
 import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.events.OverlayHook;
 import jobicade.betterhud.geom.Rect;
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
@@ -23,7 +24,7 @@ public class BossHealth extends OverlayElement {
     public Rect render(OverlayContext context) {
         // Vanilla stores current boss bars in a private map so the size cannot
         // be determined and the bars cannot be moved
-        Minecraft.getMinecraft().ingameGUI.getBossOverlay().renderBossHealth();
+        MC.ingameGUI.getBossOverlay().renderBossHealth();
 
         OverlayHook.post(context.getEvent(), ElementType.BOSSHEALTH);
         return null;

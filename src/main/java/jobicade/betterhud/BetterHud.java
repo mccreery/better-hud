@@ -51,6 +51,13 @@ public class BetterHud {
     private static ModConfig config;
     private static ConfigManager configManager;
 
+    /**
+     * Calling Minecraft.getInstance() in expressions causes a resource leak
+     * warning in some IDEs since Minecraft is {@link AutoCloseable}. This is
+     * false positive and using this field fixes it.
+     */
+    public static final Minecraft MC = Minecraft.getInstance();
+
     public BetterHud() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
@@ -125,7 +132,7 @@ public class BetterHud {
     public static boolean isModEnabled() {
         return DistExecutor.runForDist(() -> () -> !(
             HudElements.GLOBAL.hideOnDebug()
-            && Minecraft.getInstance().gameSettings.showDebugInfo
+            && MC.gameSettings.showDebugInfo
         ), () -> () -> false);
     }
 

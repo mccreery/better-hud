@@ -1,6 +1,7 @@
 package jobicade.betterhud.element.vanilla;
 
 import static jobicade.betterhud.BetterHud.MANAGER;
+import static jobicade.betterhud.BetterHud.MC;
 
 import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
@@ -10,7 +11,6 @@ import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.bars.StatBar;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.entity.EntityPlayerSP;
 import net.minecraft.client.gui.Gui;
 
@@ -34,7 +34,7 @@ public abstract class Bar extends OverlayElement {
 
     @Override
     public boolean shouldRender(OverlayContext context) {
-        bar.setHost(Minecraft.getMinecraft().player);
+        bar.setHost(MC.player);
         return bar.shouldRender();
     }
 
@@ -49,7 +49,7 @@ public abstract class Bar extends OverlayElement {
 
     @Override
     public Rect render(OverlayContext context) {
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+        MC.getTextureManager().bindTexture(Gui.ICONS);
         Direction contentAlignment = getContentAlignment();
 
         Rect bounds = new Rect(bar.getPreferredSize());

@@ -1,5 +1,6 @@
 package jobicade.betterhud.element.settings;
 
+import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 
 import java.util.Collection;
@@ -11,7 +12,6 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.gui.GuiOffsetChooser;
 import jobicade.betterhud.gui.GuiUpDownButton;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Gui;
 import net.minecraft.client.gui.GuiButton;
 import net.minecraft.client.gui.GuiTextField;
@@ -42,9 +42,9 @@ public class SettingAbsolutePosition extends Setting {
 
     @Override
     public Point getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Point origin) {
-        parts.add(xBox = new GuiTextField(0, Minecraft.getMinecraft().fontRenderer, origin.getX() - 106, origin.getY() + 1, 80, 18));
+        parts.add(xBox = new GuiTextField(0, MC.fontRenderer, origin.getX() - 106, origin.getY() + 1, 80, 18));
         xBox.setText(String.valueOf(x));
-        parts.add(yBox = new GuiTextField(0, Minecraft.getMinecraft().fontRenderer, origin.getX() + 2, origin.getY() + 1, 80, 18));
+        parts.add(yBox = new GuiTextField(0, MC.fontRenderer, origin.getX() + 2, origin.getY() + 1, 80, 18));
         yBox.setText(String.valueOf(y));
 
         parts.add(xUp   = new GuiUpDownButton(true ).setBounds(new Rect(origin.getX() - 22, origin.getY(),      0, 0)).setId(0).setRepeat());
@@ -81,7 +81,7 @@ public class SettingAbsolutePosition extends Setting {
             case 1: xBox.setText(String.valueOf(--x)); break;
             case 2: yBox.setText(String.valueOf(++y)); break;
             case 3: yBox.setText(String.valueOf(--y)); break;
-            case 4: Minecraft.getMinecraft().displayGuiScreen(new GuiOffsetChooser(gui, position)); break;
+            case 4: MC.displayGuiScreen(new GuiOffsetChooser(gui, position)); break;
         }
     }
 

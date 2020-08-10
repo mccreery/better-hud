@@ -1,6 +1,7 @@
 package jobicade.betterhud.element.vanilla;
 
 import static jobicade.betterhud.BetterHud.MANAGER;
+import static jobicade.betterhud.BetterHud.MC;
 
 import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
@@ -12,7 +13,6 @@ import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
-import net.minecraft.client.Minecraft;
 import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 
@@ -31,7 +31,7 @@ public class Experience extends OverlayElement {
         return GuiIngameForge.renderExperiance
             && !GuiIngameForge.renderJumpBar
             && !OverlayHook.pre(context.getEvent(), ElementType.EXPERIENCE)
-            && Minecraft.getMinecraft().playerController.gameIsSurvivalOrAdventure();
+            && MC.playerController.gameIsSurvivalOrAdventure();
     }
 
     @Override
@@ -46,10 +46,10 @@ public class Experience extends OverlayElement {
         } else {
             barRect = position.applyTo(barRect);
         }
-        GlUtil.drawTexturedProgressBar(barRect.getPosition(), bgTexture, fgTexture, Minecraft.getMinecraft().player.experience, Direction.EAST);
+        GlUtil.drawTexturedProgressBar(barRect.getPosition(), bgTexture, fgTexture, MC.player.experience, Direction.EAST);
 
-        if(Minecraft.getMinecraft().player.experienceLevel > 0) {
-            String numberText = String.valueOf(Minecraft.getMinecraft().player.experienceLevel);
+        if(MC.player.experienceLevel > 0) {
+            String numberText = String.valueOf(MC.player.experienceLevel);
             Point numberPosition = new Rect(GlUtil.getStringSize(numberText))
                 .anchor(barRect.grow(6), position.getContentAlignment().mirrorRow()).getPosition();
 

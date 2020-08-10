@@ -1,6 +1,7 @@
 package jobicade.betterhud.element.text;
 
 import static jobicade.betterhud.BetterHud.MANAGER;
+import static jobicade.betterhud.BetterHud.MC;
 
 import java.text.DecimalFormat;
 import java.util.Arrays;
@@ -17,7 +18,6 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Size;
 import jobicade.betterhud.render.Grid;
 import jobicade.betterhud.render.Label;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 
 public class Coordinates extends TextElement {
@@ -56,9 +56,9 @@ public class Coordinates extends TextElement {
         DecimalFormat format = new DecimalFormat();
         format.setMaximumFractionDigits((int)decimalPlaces.getValue());
 
-        String x = format.format(Minecraft.getMinecraft().player.posX);
-        String y = format.format(Minecraft.getMinecraft().player.posY);
-        String z = format.format(Minecraft.getMinecraft().player.posZ);
+        String x = format.format(MC.player.posX);
+        String y = format.format(MC.player.posY);
+        String z = format.format(MC.player.posZ);
 
         if(spaced.get()) {
             x = I18n.format("betterHud.hud.x", x);

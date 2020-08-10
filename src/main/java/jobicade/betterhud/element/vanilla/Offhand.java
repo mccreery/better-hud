@@ -1,5 +1,6 @@
 package jobicade.betterhud.element.vanilla;
 
+import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 
 import jobicade.betterhud.element.OverlayElement;
@@ -11,7 +12,6 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.registry.OverlayElements;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.Textures;
-import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.EnumHandSide;
 
@@ -26,14 +26,14 @@ public class Offhand extends OverlayElement {
 
     @Override
     public boolean shouldRender(OverlayContext context) {
-        return !Minecraft.getMinecraft().player.getHeldItemOffhand().isEmpty()
-            && !Minecraft.getMinecraft().playerController.isSpectator();
+        return !MC.player.getHeldItemOffhand().isEmpty()
+            && !MC.playerController.isSpectator();
     }
 
     @Override
     public Rect render(OverlayContext context) {
-        ItemStack offhandStack = Minecraft.getMinecraft().player.getHeldItemOffhand();
-        EnumHandSide offhandSide = Minecraft.getMinecraft().player.getPrimaryHand().opposite();
+        ItemStack offhandStack = MC.player.getHeldItemOffhand();
+        EnumHandSide offhandSide = MC.player.getPrimaryHand().opposite();
         Direction offhand = offhandSide == EnumHandSide.RIGHT ? Direction.EAST : Direction.WEST;
 
         Rect bounds = new Rect(22, 22);
@@ -45,7 +45,7 @@ public class Offhand extends OverlayElement {
             bounds = position.applyTo(bounds);
         }
 
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Textures.WIDGETS);
+        MC.getTextureManager().bindTexture(Textures.WIDGETS);
         GlUtil.drawRect(bounds, texture);
 
         GlUtil.renderHotbarItem(bounds.translate(3, 3), offhandStack, context.getPartialTicks());

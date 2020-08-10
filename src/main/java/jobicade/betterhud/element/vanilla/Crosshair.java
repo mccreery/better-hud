@@ -1,6 +1,11 @@
 package jobicade.betterhud.element.vanilla;
 
 import static jobicade.betterhud.BetterHud.MANAGER;
+import static jobicade.betterhud.BetterHud.MC;
+
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
+import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
 
 import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
@@ -15,10 +20,6 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.registry.OverlayElements;
 import jobicade.betterhud.util.GlUtil;
 import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.GlStateManager.DestFactor;
-import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.EntityLivingBase;
@@ -43,13 +44,13 @@ public class Crosshair extends OverlayElement {
         attackIndicator = new SettingBoolean(null) {
             @Override
             public boolean get() {
-                return Minecraft.getMinecraft().gameSettings.attackIndicator != 0;
+                return MC.gameSettings.attackIndicator != 0;
             }
 
             @Override
             public void set(boolean value) {
-                Minecraft.getMinecraft().gameSettings.attackIndicator = value ? indicatorType.getIndex() + 1 : 0;
-                Minecraft.getMinecraft().gameSettings.saveOptions();
+                MC.gameSettings.attackIndicator = value ? indicatorType.getIndex() + 1 : 0;
+                MC.gameSettings.saveOptions();
             }
         };
         attackIndicator.setValuePrefix(SettingBoolean.VISIBLE);
@@ -59,13 +60,13 @@ public class Crosshair extends OverlayElement {
         indicatorType = new SettingChoose(null, 2) {
             @Override
             public int getIndex() {
-                return Math.max(Minecraft.getMinecraft().gameSettings.attackIndicator - 1, 0);
+                return Math.max(MC.gameSettings.attackIndicator - 1, 0);
             }
 
             @Override
             public void setIndex(int index) {
                 if(index >= 0 && index < 2) {
-                    Minecraft.getMinecraft().gameSettings.attackIndicator = attackIndicator.get() ? index + 1 : 0;
+                    MC.gameSettings.attackIndicator = attackIndicator.get() ? index + 1 : 0;
                 }
             }
 
@@ -83,21 +84,21 @@ public class Crosshair extends OverlayElement {
     public boolean shouldRender(OverlayContext context) {
         return GuiIngameForge.renderCrosshairs
             && !OverlayHook.pre(context.getEvent(), ElementType.CROSSHAIRS)
-            && Minecraft.getMinecraft().gameSettings.thirdPersonView == 0
-            && (!Minecraft.getMinecraft().playerController.isSpectator() || canInteract());
+            && MC.gameSettings.thirdPersonView == 0
+            && (!MC.playerController.isSpectator() || canInteract());
     }
 
     /** @return {@code true} if the player is looking at something that can be interacted with in spectator mode */
     private boolean canInteract() {
-        if(Minecraft.getMinecraft().pointedEntity != null) {
+        if(MC.pointedEntity != null) {
             return true;
         } else {
-            RayTraceResult trace = Minecraft.getMinecraft().objectMouseOver;
+            RayTraceResult trace = MC.objectMouseOver;
             if(trace == null || trace.typeOfHit != Type.BLOCK) return false;
 
             BlockPos pos = trace.getBlockPos();
-            IBlockState state = Minecraft.getMinecraft().world.getBlockState(pos);
-            return state.getBlock().hasTileEntity(state) && Minecraft.getMinecraft().world.getTileEntity(pos) instanceof IInventory;
+            IBlockState state = MC.world.getBlockState(pos);
+            return state.getBlock().hasTileEntity(state) && MC.world.getTileEntity(pos) instanceof IInventory;
         }
     }
 
@@ -105,7 +106,7 @@ public class Crosshair extends OverlayElement {
     public Rect render(OverlayContext context) {
         Rect bounds = null;
 
-        if(Minecraft.getMinecraft().gameSettings.showDebugInfo && !Minecraft.getMinecraft().gameSettings.reducedDebugInfo && !Minecraft.getMinecraft().player.hasReducedDebug()) {
+        if(MC.gameSettings.showDebugInfo && !MC.gameSettings.reducedDebugInfo && !MC.player.hasReducedDebug()) {
             renderAxes(MANAGER.getScreen().getAnchor(Direction.CENTER), context.getPartialTicks());
         } else {
             Rect texture = new Rect(16, 16);
@@ -132,7 +133,7 @@ public class Crosshair extends OverlayElement {
         Rect bounds = indicatorType.getIndex() == 0 ? new Rect(16, 8) : new Rect(18, 18);
 
         if(position.isDirection(Direction.SOUTH)) {
-            Direction primary = Minecraft.getMinecraft().player.getPrimaryHand() == EnumHandSide.RIGHT ? Direction.EAST : Direction.WEST;
+            Direction primary = MC.player.getPrimaryHand() == EnumHandSide.RIGHT ? Direction.EAST : Direction.WEST;
             // Vanilla indicator is also offset by (1, 0) regardless of main hand
             bounds = bounds.align(OverlayElements.HOTBAR.getLastBounds().grow(5).getAnchor(primary), primary.mirrorCol()).translate(1, 0);
         } else if(position.isDirection(Direction.CENTER)) {
@@ -141,14 +142,14 @@ public class Crosshair extends OverlayElement {
             bounds = position.applyTo(bounds);
         }
 
-        float attackStrength = Minecraft.getMinecraft().player.getCooledAttackStrength(0);
+        float attackStrength = MC.player.getCooledAttackStrength(0);
 
         if(indicatorType.getIndex() == 0) {
             if(attackStrength >= 1) {
                 if (
-                    Minecraft.getMinecraft().pointedEntity instanceof EntityLivingBase
-                    && ((EntityLivingBase)Minecraft.getMinecraft().pointedEntity).isEntityAlive()
-                    && Minecraft.getMinecraft().player.getCooldownPeriod() > 5
+                    MC.pointedEntity instanceof EntityLivingBase
+                    && ((EntityLivingBase)MC.pointedEntity).isEntityAlive()
+                    && MC.player.getCooldownPeriod() > 5
                 ) {
                     GlUtil.drawRect(bounds.resize(16, 16), new Rect(68, 94, 16, 16));
                 }
@@ -166,7 +167,7 @@ public class Crosshair extends OverlayElement {
         GlStateManager.pushMatrix();
         GlStateManager.translate(center.getX(), center.getY(), 0);
 
-        Entity entity = Minecraft.getMinecraft().getRenderViewEntity();
+        Entity entity = MC.getRenderViewEntity();
         GlStateManager.rotate(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks, -1.0F, 0.0F, 0.0F);
         GlStateManager.rotate(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks, 0.0F, 1.0F, 0.0F);
         GlStateManager.scale(-1.0F, -1.0F, -1.0F);

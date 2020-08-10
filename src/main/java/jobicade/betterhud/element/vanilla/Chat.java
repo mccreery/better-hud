@@ -1,5 +1,9 @@
 package jobicade.betterhud.element.vanilla;
 
+import static jobicade.betterhud.BetterHud.MC;
+
+import com.mojang.blaze3d.platform.GlStateManager;
+
 import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
@@ -8,7 +12,6 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Size;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiNewChat;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
@@ -27,7 +30,7 @@ public class Chat extends OverlayElement {
 
     @Override
     public boolean shouldRender(OverlayContext context) {
-        final int fontHeight = Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT;
+        final int fontHeight = MC.fontRenderer.FONT_HEIGHT;
         bounds = position.applyTo(new Rect(getChatSize(getChatGui())));
 
         RenderGameOverlayEvent.Chat chatEvent = new RenderGameOverlayEvent.Chat(
@@ -48,7 +51,7 @@ public class Chat extends OverlayElement {
 
     @Override
     public Rect render(OverlayContext context) {
-        Minecraft mc = Minecraft.getMinecraft();
+        Minecraft mc = MC;
 
         GlStateManager.pushMatrix();
         GlStateManager.translate(bounds.getX(), bounds.getBottom() - mc.fontRenderer.FONT_HEIGHT, 0);
@@ -66,6 +69,6 @@ public class Chat extends OverlayElement {
     }
 
     private GuiNewChat getChatGui() {
-        return Minecraft.getMinecraft().ingameGUI.getChatGUI();
+        return MC.ingameGUI.getChatGUI();
     }
 }
