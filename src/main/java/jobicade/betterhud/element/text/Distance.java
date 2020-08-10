@@ -13,7 +13,7 @@ import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.BlockRayTraceResult;
 
 public class Distance extends TextElement {
     private SettingChoose mode;
@@ -49,10 +49,10 @@ public class Distance extends TextElement {
 
     @Override
     protected List<String> getText() {
-        RayTraceResult trace = MC.getRenderViewEntity().rayTrace(200, 1.0F);
+        BlockRayTraceResult trace = (BlockRayTraceResult)MC.getRenderViewEntity().pick(200, 1.0F, false);
 
         if(trace != null) {
-            long distance = Math.round(Math.sqrt(trace.getBlockPos().distanceSqToCenter(MC.player.posX, MC.player.posY, MC.player.posZ)));
+            long distance = Math.round(Math.sqrt(trace.getPos().distanceSq(MC.player.getPosX(), MC.player.getPosY(), MC.player.getPosZ(), true)));
 
             if(mode.getIndex() == 2) {
                 return Arrays.asList(String.valueOf(distance));

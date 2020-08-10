@@ -56,9 +56,9 @@ public class Coordinates extends TextElement {
         DecimalFormat format = new DecimalFormat();
         format.setMaximumFractionDigits((int)decimalPlaces.getValue());
 
-        String x = format.format(MC.player.posX);
-        String y = format.format(MC.player.posY);
-        String z = format.format(MC.player.posZ);
+        String x = format.format(MC.player.getPosX());
+        String y = format.format(MC.player.getPosY());
+        String z = format.format(MC.player.getPosZ());
 
         if(spaced.get()) {
             x = I18n.format("betterHud.hud.x", x);

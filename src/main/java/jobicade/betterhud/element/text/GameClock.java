@@ -19,10 +19,10 @@ import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.world.WorldProvider.WorldSleepResult;
+import net.minecraftforge.common.extensions.IForgeDimension.SleepResult;
 
 public class GameClock extends Clock {
-    private static final ItemStack BED = new ItemStack(Items.BED, 1, 14);
+    private static final ItemStack BED = new ItemStack(Items.RED_BED);
 
     private SettingBoolean showDays;
     private SettingBoolean showSleepIndicator;
@@ -74,19 +74,19 @@ public class GameClock extends Clock {
 
     private boolean showSleepIndicator(float partialTicks) {
         return showSleepIndicator.get()
-                && MC.world.provider.canSleepAt(MC.player, MC.player.getPosition()) == WorldSleepResult.ALLOW
+                && MC.world.dimension.canSleepAt(MC.player, MC.player.getPosition()) == SleepResult.ALLOW
                 // Taken from EntityPlayer#trySleep, ignores enemies and bed position
-                && !MC.player.isPlayerSleeping()
-                && MC.player.isEntityAlive()
-                && MC.world.provider.isSurfaceWorld()
+                && !MC.player.isSleeping()
+                && MC.player.isAlive()
+                && MC.world.dimension.isSurfaceWorld()
                 // World#isDayTime is server only
                 //&& !MC.world.isDaytime();
-                && MC.world.calculateSkylightSubtracted(partialTicks) >= 4;
+                && MC.world.getSkylightSubtracted() >= 4;
     }
 
     @Override
     protected Date getDate() {
-        long worldTime = MC.world.getWorldTime() + 6000;
+        long worldTime = MC.world.getDayTime() + 6000;
 
         // Convert to milliseconds
         worldTime = Math.round(worldTime / 1000. * 3600.) * 1000;
