@@ -51,6 +51,10 @@ public class BetterHud {
     private static ModConfig config;
     private static ConfigManager configManager;
 
+    public static ConfigManager getConfigManager() {
+        return configManager;
+    }
+
     /**
      * Calling Minecraft.getInstance() in expressions causes a resource leak
      * warning in some IDEs since Minecraft is {@link AutoCloseable}. This is

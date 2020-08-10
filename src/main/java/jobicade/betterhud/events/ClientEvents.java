@@ -5,12 +5,12 @@ import static jobicade.betterhud.BetterHud.MC;
 import org.lwjgl.glfw.GLFW;
 
 import jobicade.betterhud.BetterHud;
-import jobicade.betterhud.config.ConfigManager;
 import jobicade.betterhud.gui.GuiElementList;
 import jobicade.betterhud.registry.OverlayElements;
 import net.java.games.input.Mouse;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.InputEvent.MouseInputEvent;
 import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
@@ -24,7 +24,6 @@ import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 @EventBusSubscriber(modid = BetterHud.MODID, value = Dist.CLIENT)
 public class ClientEvents {
     private static final KeyBinding menuKey = new KeyBinding("key.betterHud.open", GLFW.GLFW_KEY_U, "key.categories.misc");
-    private static final ConfigManager configManager = new ConfigManager();
 
     public static void setupClient(FMLClientSetupEvent event) {
         ClientRegistry.registerKeyBinding(menuKey);
@@ -33,7 +32,7 @@ public class ClientEvents {
     @SubscribeEvent
     public static void onClientTick(ClientTickEvent event) {
         if (menuKey.isPressed()) {
-            MC.displayGuiScreen(new GuiElementList(configManager));
+            MC.displayGuiScreen(new GuiElementList(BetterHud.getConfigManager()));
         }
     }
 
@@ -45,23 +44,23 @@ public class ClientEvents {
     }
 
     @SubscribeEvent
-    public static void onConnect(ClientConnectedToServerEvent event) {
-        if(event.isLocal()) {
+    public static void onConnect(ClientPlayerNetworkEvent.LoggedInEvent event) {
+        if (event.getNetworkManager().isLocalChannel()) {
             OverlayElements.CONNECTION.setLocal();
         } else {
-            OverlayElements.CONNECTION.setRemote(event.getManager().getRemoteAddress());
+            OverlayElements.CONNECTION.setRemote(event.getNetworkManager().getRemoteAddress());
         }
     }
 
     @SubscribeEvent
     public static void onClick(MouseInputEvent event) {
-        if(Mouse.getEventButton() != -1 && Mouse.getEventButtonState()) {
+        if(event.getAction() == GLFW.GLFW_PRESS) {
             OverlayElements.CPS.onClick();
         }
     }
 
     @SubscribeEvent
-    public static void onPlayerDisconnected(ClientDisconnectionFromServerEvent event) {
+    public static void onPlayerDisconnected(ClientPlayerNetworkEvent.LoggedOutEvent event) {
         OverlayElements.BLOCK_VIEWER.onChangeWorld();
         BetterHud.setServerVersion(null);
     }
