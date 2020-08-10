@@ -1,6 +1,6 @@
 package jobicade.betterhud.geom;
 
-import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.MainWindow;
 
 /**
  * A special type of {@link Point} which represents a size, or difference
@@ -35,14 +35,8 @@ public class Size extends Point {
         super(point);
     }
 
-    /**
-     * Conversion constructor from scaled resolutions. Uses the scaled width
-     * and height to populate width and height.
-     *
-     * @param resolution The resolution to get width and height from.
-     */
-    public Size(ScaledResolution resolution) {
-        super(resolution);
+    public static Size getScaledSize(MainWindow mainWindow) {
+        return new Size(mainWindow.getScaledWidth(), mainWindow.getScaledHeight());
     }
 
     @Override
