@@ -4,8 +4,8 @@ import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.events.OverlayHook;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.bars.StatBarAir;
-import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.client.gui.ForgeIngameGui;
 
 public class AirBar extends Bar {
     public AirBar() {
@@ -15,7 +15,7 @@ public class AirBar extends Bar {
     @Override
     public boolean shouldRender(OverlayContext context) {
         return OverlayHook.shouldRenderBars()
-            && GuiIngameForge.renderAir
+            && ForgeIngameGui.renderAir
             && !OverlayHook.pre(context.getEvent(), ElementType.AIR)
             && super.shouldRender(context);
     }

@@ -4,8 +4,8 @@ import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.events.OverlayHook;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.bars.StatBarMount;
-import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.client.gui.ForgeIngameGui;
 
 public class RidingHealth extends Bar {
     public RidingHealth() {
@@ -15,7 +15,7 @@ public class RidingHealth extends Bar {
     @Override
     public boolean shouldRender(OverlayContext context) {
         return OverlayHook.shouldRenderBars()
-            && GuiIngameForge.renderHealthMount
+            && ForgeIngameGui.renderHealthMount
             && !OverlayHook.pre(context.getEvent(), ElementType.HEALTHMOUNT)
             && super.shouldRender(context);
     }

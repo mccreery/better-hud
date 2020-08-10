@@ -7,8 +7,8 @@ import jobicade.betterhud.events.OverlayHook;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.bars.StatBarHealth;
-import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.client.gui.ForgeIngameGui;
 
 public class HealthBar extends Bar {
     public HealthBar() {
@@ -27,7 +27,7 @@ public class HealthBar extends Bar {
     @Override
     public boolean shouldRender(OverlayContext context) {
         return OverlayHook.shouldRenderBars()
-            && GuiIngameForge.renderHealth
+            && ForgeIngameGui.renderHealth
             && !OverlayHook.pre(context.getEvent(), ElementType.HEALTH)
             && super.shouldRender(context);
     }

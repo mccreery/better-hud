@@ -12,11 +12,10 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.Textures;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiSpectator;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraftforge.client.GuiIngameForge;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.SpectatorGui;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.client.gui.ForgeIngameGui;
 
 public class Hotbar extends OverlayElement {
     private SettingPosition position;
@@ -35,10 +34,10 @@ public class Hotbar extends OverlayElement {
     public boolean shouldRender(OverlayContext context) {
         final Minecraft mc = MC;
 
-        return GuiIngameForge.renderHotbar
+        return ForgeIngameGui.renderHotbar
             && !OverlayHook.pre(context.getEvent(), ElementType.HOTBAR)
             && (
-                !mc.playerController.isSpectator()
+                !mc.playerController.isSpectatorMode()
                 || mc.ingameGUI.getSpectatorGui().isMenuActive()
             );
     }
@@ -47,12 +46,11 @@ public class Hotbar extends OverlayElement {
     public Rect render(OverlayContext context) {
         final Minecraft mc = MC;
 
-        if (MC.playerController.isSpectator()) {
-            GuiSpectator spectator = mc.ingameGUI.getSpectatorGui();
-            ScaledResolution res = new ScaledResolution(mc);
+        if (MC.playerController.isSpectatorMode()) {
+            SpectatorGui spectator = mc.ingameGUI.getSpectatorGui();
 
-            spectator.renderTooltip(res, context.getPartialTicks());
-            spectator.renderSelectedItem(res);
+            spectator.renderTooltip(context.getPartialTicks());
+            spectator.renderSelectedItem();
 
             return new Rect(182, 22).anchor(context.getLayoutManager().getScreen(), Direction.SOUTH);
         } else {
@@ -79,7 +77,7 @@ public class Hotbar extends OverlayElement {
             GlUtil.renderHotbarItem(slot, MC.player.inventory.mainInventory.get(i), partialTicks);
         }
 
-        MC.getTextureManager().bindTexture(Gui.ICONS);
+        MC.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
         OverlayHook.post(context.getEvent(), ElementType.HOTBAR);
         return bounds;
     }

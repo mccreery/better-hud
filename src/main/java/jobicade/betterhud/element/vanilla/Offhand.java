@@ -13,7 +13,7 @@ import jobicade.betterhud.registry.OverlayElements;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.Textures;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHandSide;
+import net.minecraft.util.HandSide;
 
 public class Offhand extends OverlayElement {
     private SettingPosition position;
@@ -27,14 +27,14 @@ public class Offhand extends OverlayElement {
     @Override
     public boolean shouldRender(OverlayContext context) {
         return !MC.player.getHeldItemOffhand().isEmpty()
-            && !MC.playerController.isSpectator();
+            && !MC.playerController.isSpectatorMode();
     }
 
     @Override
     public Rect render(OverlayContext context) {
         ItemStack offhandStack = MC.player.getHeldItemOffhand();
-        EnumHandSide offhandSide = MC.player.getPrimaryHand().opposite();
-        Direction offhand = offhandSide == EnumHandSide.RIGHT ? Direction.EAST : Direction.WEST;
+        HandSide offhandSide = MC.player.getPrimaryHand().opposite();
+        Direction offhand = offhandSide == HandSide.RIGHT ? Direction.EAST : Direction.WEST;
 
         Rect bounds = new Rect(22, 22);
         Rect texture = new Rect(24, 23, 22, 22);

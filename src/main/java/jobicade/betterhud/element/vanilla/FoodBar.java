@@ -7,8 +7,8 @@ import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.events.OverlayHook;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.bars.StatBarFood;
-import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.client.gui.ForgeIngameGui;
 
 public class FoodBar extends Bar {
     private SettingBoolean hideMount;
@@ -20,13 +20,13 @@ public class FoodBar extends Bar {
     }
 
     public boolean shouldRenderPrecheck() {
-        return !(hideMount.get() && MC.player.isRiding());
+        return !(hideMount.get() && MC.player.isPassenger());
     }
 
     @Override
     public boolean shouldRender(OverlayContext context) {
         return OverlayHook.shouldRenderBars()
-            && GuiIngameForge.renderFood
+            && ForgeIngameGui.renderFood
             && !OverlayHook.pre(context.getEvent(), ElementType.FOOD)
             && super.shouldRender(context);
     }

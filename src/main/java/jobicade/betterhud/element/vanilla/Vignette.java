@@ -14,12 +14,12 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.border.WorldBorder;
-import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.client.gui.ForgeIngameGui;
 
 public class Vignette extends OverlayElement {
     private static final ResourceLocation VIGNETTE_TEX_PATH = new ResourceLocation("textures/misc/vignette.png");
@@ -38,7 +38,7 @@ public class Vignette extends OverlayElement {
 
     @Override
     public boolean shouldRender(OverlayContext context) {
-        return GuiIngameForge.renderVignette
+        return ForgeIngameGui.renderVignette
             && Minecraft.isFancyGraphicsEnabled()
             && !OverlayHook.pre(context.getEvent(), ElementType.VIGNETTE);
     }
@@ -74,7 +74,7 @@ public class Vignette extends OverlayElement {
 
         GlUtil.drawRect(MANAGER.getScreen(), new Rect(256, 256), color);
 
-        MC.getTextureManager().bindTexture(Gui.ICONS);
+        MC.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
         GlUtil.blendFuncSafe(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
 
         OverlayHook.post(context.getEvent(), ElementType.VIGNETTE);

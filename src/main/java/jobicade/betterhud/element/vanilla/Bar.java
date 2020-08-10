@@ -11,16 +11,16 @@ import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.bars.StatBar;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.Gui;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.gui.AbstractGui;
 
 public abstract class Bar extends OverlayElement {
     protected SettingPosition position;
     protected SettingChoose side;
 
-    private StatBar<? super EntityPlayerSP> bar;
+    private StatBar<? super ClientPlayerEntity> bar;
 
-    public Bar(String name, StatBar<? super EntityPlayerSP> bar) {
+    public Bar(String name, StatBar<? super ClientPlayerEntity> bar) {
         super(name);
         this.bar = bar;
 
@@ -49,7 +49,7 @@ public abstract class Bar extends OverlayElement {
 
     @Override
     public Rect render(OverlayContext context) {
-        MC.getTextureManager().bindTexture(Gui.ICONS);
+        MC.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
         Direction contentAlignment = getContentAlignment();
 
         Rect bounds = new Rect(bar.getPreferredSize());

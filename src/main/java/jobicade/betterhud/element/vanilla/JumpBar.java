@@ -11,9 +11,9 @@ import jobicade.betterhud.events.OverlayHook;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.GlUtil;
-import net.minecraft.client.gui.Gui;
-import net.minecraftforge.client.GuiIngameForge;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.client.gui.ForgeIngameGui;
 
 public class JumpBar extends OverlayElement {
     private SettingPosition position;
@@ -26,13 +26,13 @@ public class JumpBar extends OverlayElement {
 
     @Override
     public boolean shouldRender(OverlayContext context) {
-        return GuiIngameForge.renderJumpBar
+        return ForgeIngameGui.renderJumpBar
             && !OverlayHook.pre(context.getEvent(), ElementType.JUMPBAR);
     }
 
     @Override
     public Rect render(OverlayContext context) {
-        MC.getTextureManager().bindTexture(Gui.ICONS);
+        MC.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
 
         Rect bounds = new Rect(182, 5);
         if(!position.isCustom() && position.getDirection() == Direction.SOUTH) {

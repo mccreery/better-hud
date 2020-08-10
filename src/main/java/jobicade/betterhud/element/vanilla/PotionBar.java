@@ -18,8 +18,8 @@ import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Boxed;
 import jobicade.betterhud.render.Grid;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.ResourceLocation;
 
 public class PotionBar extends OverlayElement {
@@ -54,15 +54,15 @@ public class PotionBar extends OverlayElement {
             bounds = position.applyTo(bounds);
         }
         grid.setBounds(bounds).render();
-        MC.getTextureManager().bindTexture(Gui.ICONS);
+        MC.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
 
         return bounds;
     }
 
-    private void populateEffects(List<PotionEffect> helpful, List<PotionEffect> harmful) {
-        Iterable<PotionEffect> activeEffects =  MC.player.getActivePotionEffects();
+    private void populateEffects(List<EffectInstance> helpful, List<EffectInstance> harmful) {
+        Iterable<EffectInstance> activeEffects =  MC.player.getActivePotionEffects();
 
-        for (PotionEffect effect : activeEffects) {
+        for (EffectInstance effect : activeEffects) {
             if (!effect.doesShowParticles() || !effect.getPotion().shouldRenderHUD(effect)) {
                 continue;
             }
@@ -77,14 +77,14 @@ public class PotionBar extends OverlayElement {
         harmful.sort(Collections.reverseOrder());
     }
 
-    private void fillRow(Grid<? super PotionIcon> grid, int row, List<PotionEffect> effects) {
+    private void fillRow(Grid<? super PotionIcon> grid, int row, List<EffectInstance> effects) {
         for(int i = 0; i < effects.size(); i++) {
             grid.setCell(new Point(i, row), new PotionIcon(effects.get(i), showDuration.get()));
         }
     }
 
     private Boxed getGrid() {
-        List<PotionEffect> helpful = new ArrayList<>(), harmful = new ArrayList<>();
+        List<EffectInstance> helpful = new ArrayList<>(), harmful = new ArrayList<>();
         populateEffects(helpful, harmful);
 
         int rows = 0;

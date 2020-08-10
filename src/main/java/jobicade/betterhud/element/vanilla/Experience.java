@@ -13,8 +13,8 @@ import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
-import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.client.gui.ForgeIngameGui;
 
 public class Experience extends OverlayElement {
     private SettingPosition position;
@@ -28,8 +28,8 @@ public class Experience extends OverlayElement {
 
     @Override
     public boolean shouldRender(OverlayContext context) {
-        return GuiIngameForge.renderExperiance
-            && !GuiIngameForge.renderJumpBar
+        return ForgeIngameGui.renderExperiance
+            && !ForgeIngameGui.renderJumpBar
             && !OverlayHook.pre(context.getEvent(), ElementType.EXPERIENCE)
             && MC.playerController.gameIsSurvivalOrAdventure();
     }

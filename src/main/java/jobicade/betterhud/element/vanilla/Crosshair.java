@@ -3,9 +3,9 @@ package jobicade.betterhud.element.vanilla;
 import static jobicade.betterhud.BetterHud.MANAGER;
 import static jobicade.betterhud.BetterHud.MC;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
 import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
+import com.mojang.blaze3d.systems.RenderSystem;
 
 import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
@@ -19,17 +19,17 @@ import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.registry.OverlayElements;
 import jobicade.betterhud.util.GlUtil;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.block.BlockState;
+import net.minecraft.client.renderer.ActiveRenderInfo;
+import net.minecraft.client.settings.AttackIndicatorStatus;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.util.EnumHandSide;
+import net.minecraft.util.HandSide;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.RayTraceResult.Type;
-import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.client.gui.ForgeIngameGui;
 
 public class Crosshair extends OverlayElement {
     private SettingPosition position;
@@ -44,12 +44,12 @@ public class Crosshair extends OverlayElement {
         attackIndicator = new SettingBoolean(null) {
             @Override
             public boolean get() {
-                return MC.gameSettings.attackIndicator != 0;
+                return MC.gameSettings.attackIndicator != AttackIndicatorStatus.OFF;
             }
 
             @Override
             public void set(boolean value) {
-                MC.gameSettings.attackIndicator = value ? indicatorType.getIndex() + 1 : 0;
+                MC.gameSettings.attackIndicator = AttackIndicatorStatus.byId(value ? indicatorType.getIndex() + 1 : 0);
                 MC.gameSettings.saveOptions();
             }
         };
@@ -60,13 +60,13 @@ public class Crosshair extends OverlayElement {
         indicatorType = new SettingChoose(null, 2) {
             @Override
             public int getIndex() {
-                return Math.max(MC.gameSettings.attackIndicator - 1, 0);
+                return Math.max(MC.gameSettings.attackIndicator.getId() - 1, 0);
             }
 
             @Override
             public void setIndex(int index) {
                 if(index >= 0 && index < 2) {
-                    MC.gameSettings.attackIndicator = attackIndicator.get() ? index + 1 : 0;
+                    MC.gameSettings.attackIndicator = AttackIndicatorStatus.byId(attackIndicator.get() ? index + 1 : 0);
                 }
             }
 
@@ -82,10 +82,10 @@ public class Crosshair extends OverlayElement {
 
     @Override
     public boolean shouldRender(OverlayContext context) {
-        return GuiIngameForge.renderCrosshairs
+        return ForgeIngameGui.renderCrosshairs
             && !OverlayHook.pre(context.getEvent(), ElementType.CROSSHAIRS)
             && MC.gameSettings.thirdPersonView == 0
-            && (!MC.playerController.isSpectator() || canInteract());
+            && (!MC.playerController.isSpectatorMode() || canInteract());
     }
 
     /** @return {@code true} if the player is looking at something that can be interacted with in spectator mode */
@@ -93,11 +93,11 @@ public class Crosshair extends OverlayElement {
         if(MC.pointedEntity != null) {
             return true;
         } else {
-            RayTraceResult trace = MC.objectMouseOver;
-            if(trace == null || trace.typeOfHit != Type.BLOCK) return false;
+            BlockRayTraceResult trace = (BlockRayTraceResult)MC.objectMouseOver;
+            if(trace == null || trace.getType() != RayTraceResult.Type.BLOCK) return false;
 
-            BlockPos pos = trace.getBlockPos();
-            IBlockState state = MC.world.getBlockState(pos);
+            BlockPos pos = trace.getPos();
+            BlockState state = MC.world.getBlockState(pos);
             return state.getBlock().hasTileEntity(state) && MC.world.getTileEntity(pos) instanceof IInventory;
         }
     }
@@ -114,15 +114,15 @@ public class Crosshair extends OverlayElement {
             // Vanilla crosshair is offset by (1, 1) for some reason
             Rect crosshair = new Rect(texture).anchor(MANAGER.getScreen(), Direction.CENTER).translate(1, 1);
 
-            GlStateManager.blendFunc(SourceFactor.ONE_MINUS_DST_COLOR, DestFactor.ONE_MINUS_SRC_COLOR);
-            GlStateManager.enableAlpha();
+            RenderSystem.blendFunc(SourceFactor.ONE_MINUS_DST_COLOR, DestFactor.ONE_MINUS_SRC_COLOR);
+            RenderSystem.enableAlphaTest();
             GlUtil.drawRect(crosshair, texture);
 
             if(attackIndicator.get()) {
                 bounds = renderAttackIndicator();
             }
             GlUtil.blendFuncSafe(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
-            GlStateManager.disableAlpha();
+            RenderSystem.disableAlphaTest();
         }
 
         OverlayHook.post(context.getEvent(), ElementType.CROSSHAIRS);
@@ -133,7 +133,7 @@ public class Crosshair extends OverlayElement {
         Rect bounds = indicatorType.getIndex() == 0 ? new Rect(16, 8) : new Rect(18, 18);
 
         if(position.isDirection(Direction.SOUTH)) {
-            Direction primary = MC.player.getPrimaryHand() == EnumHandSide.RIGHT ? Direction.EAST : Direction.WEST;
+            Direction primary = MC.player.getPrimaryHand() == HandSide.RIGHT ? Direction.EAST : Direction.WEST;
             // Vanilla indicator is also offset by (1, 0) regardless of main hand
             bounds = bounds.align(OverlayElements.HOTBAR.getLastBounds().grow(5).getAnchor(primary), primary.mirrorCol()).translate(1, 0);
         } else if(position.isDirection(Direction.CENTER)) {
@@ -147,8 +147,8 @@ public class Crosshair extends OverlayElement {
         if(indicatorType.getIndex() == 0) {
             if(attackStrength >= 1) {
                 if (
-                    MC.pointedEntity instanceof EntityLivingBase
-                    && ((EntityLivingBase)MC.pointedEntity).isEntityAlive()
+                    MC.pointedEntity instanceof LivingEntity
+                    && ((LivingEntity)MC.pointedEntity).isAlive()
                     && MC.player.getCooldownPeriod() > 5
                 ) {
                     GlUtil.drawRect(bounds.resize(16, 16), new Rect(68, 94, 16, 16));
@@ -164,15 +164,15 @@ public class Crosshair extends OverlayElement {
     }
 
     private void renderAxes(Point center, float partialTicks) {
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(center.getX(), center.getY(), 0);
+        RenderSystem.pushMatrix();
+        RenderSystem.translatef(center.getX(), center.getY(), MC.ingameGUI.getBlitOffset());
 
-        Entity entity = MC.getRenderViewEntity();
-        GlStateManager.rotate(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks, -1.0F, 0.0F, 0.0F);
-        GlStateManager.rotate(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks, 0.0F, 1.0F, 0.0F);
-        GlStateManager.scale(-1.0F, -1.0F, -1.0F);
-        OpenGlHelper.renderDirections(10);
+        ActiveRenderInfo activerenderinfo = MC.gameRenderer.getActiveRenderInfo();
+        RenderSystem.rotatef(activerenderinfo.getPitch(), -1.0F, 0.0F, 0.0F);
+        RenderSystem.rotatef(activerenderinfo.getYaw(), 0.0F, 1.0F, 0.0F);
+        RenderSystem.scalef(-1.0F, -1.0F, -1.0F);
+        RenderSystem.renderCrosshair(10);
 
-        GlStateManager.popMatrix();
+        RenderSystem.popMatrix();
     }
 }

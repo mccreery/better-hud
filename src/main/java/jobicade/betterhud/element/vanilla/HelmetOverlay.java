@@ -10,13 +10,12 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
 import net.minecraft.block.Blocks;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.client.GuiIngameForge;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.client.gui.ForgeIngameGui;
 
 public class HelmetOverlay extends OverlayElement {
     private static final ResourceLocation PUMPKIN_BLUR_TEX_PATH = new ResourceLocation("textures/misc/pumpkinblur.png");
@@ -27,7 +26,7 @@ public class HelmetOverlay extends OverlayElement {
 
     @Override
     public boolean shouldRender(OverlayContext context) {
-        return GuiIngameForge.renderHelmet
+        return ForgeIngameGui.renderHelmet
             && !OverlayHook.pre(context.getEvent(), ElementType.HELMET)
             && MC.gameSettings.thirdPersonView == 0
             && !MC.player.inventory.armorItemInSlot(3).isEmpty();
@@ -38,12 +37,12 @@ public class HelmetOverlay extends OverlayElement {
         ItemStack stack = MC.player.inventory.armorItemInSlot(3);
         Item item = stack.getItem();
 
-        if(item == Item.getItemFromBlock(Blocks.PUMPKIN)) {
+        if(item == Blocks.PUMPKIN.asItem()) {
             MC.getTextureManager().bindTexture(PUMPKIN_BLUR_TEX_PATH);
             GlUtil.drawRect(MANAGER.getScreen(), new Rect(256, 256), Color.RED);
-            MC.getTextureManager().bindTexture(Gui.ICONS);
+            MC.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
         } else {
-            item.renderHelmetOverlay(stack, MC.player, new ScaledResolution(MC), context.getPartialTicks());
+            item.renderHelmetOverlay(stack, MC.player, MC.getMainWindow().getScaledWidth(), MC.getMainWindow().getScaledHeight(), context.getPartialTicks());
         }
 
         OverlayHook.post(context.getEvent(), ElementType.HELMET);

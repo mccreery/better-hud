@@ -20,12 +20,14 @@ import jobicade.betterhud.render.Color;
 import jobicade.betterhud.render.Grid;
 import jobicade.betterhud.render.Label;
 import jobicade.betterhud.util.GlUtil;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Scoreboard;
-import net.minecraftforge.client.GuiIngameForge;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.client.gui.ForgeIngameGui;
+
 
 public class Sidebar extends OverlayElement {
     private SettingPosition position;
@@ -38,7 +40,7 @@ public class Sidebar extends OverlayElement {
 
     @Override
     public boolean shouldRender(OverlayContext context) {
-        return GuiIngameForge.renderObjective
+        return ForgeIngameGui.renderObjective
             && getObjective(MC.player) != null;
     }
 
@@ -47,15 +49,15 @@ public class Sidebar extends OverlayElement {
         ScoreObjective objective = getObjective(MC.player);
         List<Score> scores = getScores(objective);
 
-        Label title = new Label(objective.getDisplayName()).setShadow(false);
+        Label title = new Label(objective.getDisplayName().getFormattedText()).setShadow(false);
         List<Label> names  = new ArrayList<>(scores.size());
         List<Label> values = new ArrayList<>(scores.size());
 
         Color valueColor = new Color(255, 255, 55, 55);
 
         for(Score score : scores) {
-            String name = score.getPlayerName();
-            String formattedName = ScorePlayerTeam.formatPlayerName(objective.getScoreboard().getPlayersTeam(name), name);
+            ScorePlayerTeam scoreplayerteam = objective.getScoreboard().getPlayersTeam(score.getPlayerName());
+            String formattedName = ScorePlayerTeam.formatMemberName(scoreplayerteam, new StringTextComponent(score.getPlayerName())).getFormattedText();
             String points = String.valueOf(score.getScorePoints());
 
             names.add(new Label(formattedName).setShadow(false));
@@ -65,8 +67,8 @@ public class Sidebar extends OverlayElement {
         Grid<Label> namesGroup = new Grid<>(new Point(1, names.size()), names).setStretch(true).setCellAlignment(position.getContentAlignment().mirrorCol());
         Grid<Label> valuesGroup = new Grid<>(new Point(1, values.size()), values).setStretch(true).setCellAlignment(position.getContentAlignment());
 
-        int spaceWidth = MC.fontRenderer.getCharWidth(' ');
-        Size size = namesGroup.getPreferredSize().add(valuesGroup.getPreferredSize().getX() + spaceWidth * 2, 0);
+        float spaceWidth = MC.fontRenderer.getCharWidth(' ');
+        Size size = namesGroup.getPreferredSize().add(valuesGroup.getPreferredSize().getX() + Math.round(spaceWidth * 2), 0);
 
         int tWidth = title.getPreferredSize().getWidth();
         if(tWidth > size.getWidth()) size = size.withWidth(tWidth);
@@ -117,10 +119,10 @@ public class Sidebar extends OverlayElement {
      * @return The objective in the player's sidebar slot.
      * @see net.minecraft.client.gui.GuiIngame#renderGameOverlay(float)
      */
-    private ScoreObjective getObjective(EntityPlayer player) {
+    private ScoreObjective getObjective(PlayerEntity player) {
         Scoreboard scoreboard = player.getWorldScoreboard();
         ScoreObjective objective = null;
-        ScorePlayerTeam team = scoreboard.getPlayersTeam(MC.player.getName());
+        ScorePlayerTeam team = scoreboard.getPlayersTeam(MC.player.getName().getString());
 
         if(team != null) {
             int slot = team.getColor().getColorIndex();
