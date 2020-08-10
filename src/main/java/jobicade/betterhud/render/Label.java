@@ -1,6 +1,6 @@
 package jobicade.betterhud.render;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
@@ -85,6 +85,6 @@ public class Label extends DefaultBoxed {
         // Restore OpenGL state as expected
         Color.WHITE.apply();
         Minecraft.getInstance().getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
-        GlStateManager.disableAlphaTest();
+        RenderSystem.disableAlphaTest();
     }
 }

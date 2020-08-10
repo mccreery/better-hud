@@ -2,9 +2,9 @@ package jobicade.betterhud.util;
 
 import java.util.EnumSet;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
 import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
+import com.mojang.blaze3d.systems.RenderSystem;
 
 import org.lwjgl.opengl.GL11;
 
@@ -30,10 +30,10 @@ public final class GlUtil {
     /**
      * All axes default to {@code scale}
      *
-     * @see GlStateManager#scale(float, float, float)
+     * @see RenderSystem#scale(float, float, float)
      */
     public static void scale(float scale) {
-        GlStateManager.scalef(scale, scale, scale);
+        RenderSystem.scalef(scale, scale, scale);
     }
 
     /** @see Gui#drawRect(int, int, int, int, int) */
@@ -83,7 +83,7 @@ public final class GlUtil {
 
         Minecraft.getInstance().fontRenderer.drawString(text, x, y, color.getPacked());
         Color.WHITE.apply();
-        GlStateManager.disableAlphaTest();
+        RenderSystem.disableAlphaTest();
         Minecraft.getInstance().getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
     }
 
@@ -99,14 +99,14 @@ public final class GlUtil {
      * @see net.minecraft.client.renderer.RenderItem#renderItemAndEffectIntoGUI(ItemStack, int, int)
      * @see RenderHelper#disableStandardItemLighting() */
     public static void renderSingleItem(ItemStack stack, int x, int y) {
-        GlStateManager.enableDepthTest();
+        RenderSystem.enableDepthTest();
         RenderHelper.enableStandardItemLighting();
         Minecraft.getInstance().getItemRenderer().renderItemAndEffectIntoGUI(stack, x, y);
         RenderHelper.disableStandardItemLighting();
-        GlStateManager.disableDepthTest();
+        RenderSystem.disableDepthTest();
         Minecraft.getInstance().getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
         blendFuncSafe(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
-        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        RenderSystem.shadeModel(GL11.GL_SMOOTH);
     }
 
     /** Renders the item with hotbar animations.
@@ -116,19 +116,19 @@ public final class GlUtil {
         if(stack.isEmpty()) return;
         float animationTicks = stack.getAnimationsToGo() - partialTicks;
 
-        GlStateManager.enableDepthTest();
+        RenderSystem.enableDepthTest();
         RenderHelper.enableStandardItemLighting();
         if(animationTicks > 0) {
             float factor = 1 + animationTicks / 5;
 
-            GlStateManager.pushMatrix();
-            GlStateManager.translatef(bounds.getX() + 8, bounds.getY() + 12, 0);
-            GlStateManager.scalef(1 / factor, (factor + 1) / 2, 1);
-            GlStateManager.translatef(-(bounds.getX() + 8), -(bounds.getY() + 12), 0.0F);
+            RenderSystem.pushMatrix();
+            RenderSystem.translatef(bounds.getX() + 8, bounds.getY() + 12, 0);
+            RenderSystem.scalef(1 / factor, (factor + 1) / 2, 1);
+            RenderSystem.translatef(-(bounds.getX() + 8), -(bounds.getY() + 12), 0.0F);
 
             Minecraft.getInstance().getItemRenderer().renderItemAndEffectIntoGUI(Minecraft.getInstance().player, stack, bounds.getX(), bounds.getY());
 
-            GlStateManager.popMatrix();
+            RenderSystem.popMatrix();
         } else {
             Minecraft.getInstance().getItemRenderer().renderItemAndEffectIntoGUI(Minecraft.getInstance().player, stack, bounds.getX(), bounds.getY());
         }
@@ -137,11 +137,11 @@ public final class GlUtil {
 
         // Possible side-effects
         RenderHelper.disableStandardItemLighting();
-        GlStateManager.disableDepthTest();
-        GlStateManager.disableAlphaTest();
+        RenderSystem.disableDepthTest();
+        RenderSystem.disableAlphaTest();
         Minecraft.getInstance().getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
         GlUtil.blendFuncSafe(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
-        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        RenderSystem.shadeModel(GL11.GL_SMOOTH);
     }
 
     /**
@@ -185,15 +185,15 @@ public final class GlUtil {
         double dz = (entity.prevPosZ + (entity.getPosZ() - entity.prevPosZ) * partialTicks) - (Minecraft.getInstance().player.prevPosZ + (Minecraft.getInstance().player.getPosZ() - Minecraft.getInstance().player.prevPosZ) * partialTicks);
 
         dy += entity.getHeight() + 0.5;
-        GlStateManager.translated(dx, dy, dz);
+        RenderSystem.translated(dx, dy, dz);
 
         dy -= Minecraft.getInstance().player.getEyeHeight();
         float distance = (float)Math.sqrt(dx*dx + dy*dy + dz*dz);
         scale(distance * (scaleFactor + 0.5f) / 300f);
 
-        GlStateManager.rotatef(-Minecraft.getInstance().player.rotationYaw,  0, 1, 0);
-        GlStateManager.rotatef(Minecraft.getInstance().player.rotationPitch, 1, 0, 0);
-        GlStateManager.rotatef(180, 0, 0, 1);
+        RenderSystem.rotatef(-Minecraft.getInstance().player.rotationYaw,  0, 1, 0);
+        RenderSystem.rotatef(Minecraft.getInstance().player.rotationPitch, 1, 0, 0);
+        RenderSystem.rotatef(180, 0, 0, 1);
     }
 
     /** {@code progress} defaults to the durability of {@code stack}
@@ -269,8 +269,8 @@ public final class GlUtil {
     }
 
     /**
-     * Fixes a GlStateManager bug where calling {@link GlStateManager#blendFunc(SourceFactor, DestFactor)}
-     * causes a desync, and can ignore calls to {@link GlStateManager#tryBlendFuncSeparate(SourceFactor, DestFactor, SourceFactor, DestFactor)}
+     * Fixes a RenderSystem bug where calling {@link RenderSystem#blendFunc(SourceFactor, DestFactor)}
+     * causes a desync, and can ignore calls to {@link RenderSystem#tryBlendFuncSeparate(SourceFactor, DestFactor, SourceFactor, DestFactor)}
      * when the cache thinks srcFactorAlpha and dstFactorAlpha haven't been changed by blendFunc (they have).
      *
      * <p>Fix in vanilla: add these lines:
@@ -297,9 +297,9 @@ public final class GlUtil {
         // Get a factor which is distinct from both current and new factor
         SourceFactor dummyFactor = factors.iterator().next();
         // Ensure cache differs from our desired values
-        GlStateManager.blendFuncSeparate(dummyFactor.param, dstFactor.param, srcFactorAlpha.param, dstFactorAlpha.param);
+        RenderSystem.blendFuncSeparate(dummyFactor.param, dstFactor.param, srcFactorAlpha.param, dstFactorAlpha.param);
         // Guarantee cache updates correctly
-        GlStateManager.blendFuncSeparate(srcFactor.param, dstFactor.param, srcFactorAlpha.param, dstFactorAlpha.param);
+        RenderSystem.blendFuncSeparate(srcFactor.param, dstFactor.param, srcFactorAlpha.param, dstFactorAlpha.param);
     }
 
     public static void beginScissor(Rect scissorRect) {

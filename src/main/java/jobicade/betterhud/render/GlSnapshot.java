@@ -5,9 +5,9 @@ import java.util.EnumSet;
 import java.util.Objects;
 import java.util.Set;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
 import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
+import com.mojang.blaze3d.systems.RenderSystem;
 
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
@@ -50,19 +50,19 @@ public class GlSnapshot {
     }
 
     public void apply() {
-        GlStateManager.color4f(
+        RenderSystem.color4f(
             color.getRed() / 255.0f,
             color.getGreen() / 255.0f,
             color.getBlue() / 255.0f,
             1.0f);
 
-        GlStateManager.bindTexture(texture);
+        RenderSystem.bindTexture(texture);
 
-        GlStateManager.blendFuncSeparate(
-            blendFunc.getSrcFactor().param,
-            blendFunc.getDstFactor().param,
-            blendFunc.getSrcFactorAlpha().param,
-            blendFunc.getDstFactorAlpha().param);
+        RenderSystem.blendFuncSeparate(
+            blendFunc.getSrcFactor(),
+            blendFunc.getDstFactor(),
+            blendFunc.getSrcFactorAlpha(),
+            blendFunc.getDstFactorAlpha());
 
         for (GlFlag flag : GlFlag.values()) {
             flag.setEnabled(flags.contains(flag));
