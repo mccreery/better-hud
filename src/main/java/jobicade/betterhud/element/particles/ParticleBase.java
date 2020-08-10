@@ -4,7 +4,7 @@ import static jobicade.betterhud.BetterHud.MC;
 
 import java.util.Random;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
@@ -13,7 +13,7 @@ import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.RandomWrapper;
 import jobicade.betterhud.util.Textures;
-import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.AbstractGui;
 
 public class ParticleBase implements Particle {
     protected Point position;
@@ -55,18 +55,18 @@ public class ParticleBase implements Particle {
     @Override
     public void render(float partialTicks) {
         MC.getTextureManager().bindTexture(Textures.HUD_ICONS);
-        GlStateManager.pushMatrix();
+        RenderSystem.pushMatrix();
 
-        GlStateManager.translate(position.getX(), position.getY(), 0.0F);
-        GlStateManager.rotate(rotation, 0, 0, 1);
-        GlStateManager.scale(this.size, this.size, 1.0F);
+        RenderSystem.translatef(position.getX(), position.getY(), 0.0F);
+        RenderSystem.rotatef(rotation, 0, 0, 1);
+        RenderSystem.scalef(this.size, this.size, 1.0F);
 
         Color color = Color.WHITE.withAlpha(Math.round(opacity * 255));
         Rect bounds = texture.align(Point.zero(), Direction.CENTER);
         GlUtil.drawRect(bounds, texture, color);
 
-        GlStateManager.popMatrix();
-        MC.getTextureManager().bindTexture(Gui.ICONS);
+        RenderSystem.popMatrix();
+        MC.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
     }
 
     @Override

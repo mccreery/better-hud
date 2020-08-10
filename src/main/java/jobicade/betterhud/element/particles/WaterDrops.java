@@ -7,7 +7,6 @@ import java.util.Collection;
 import java.util.Random;
 
 import jobicade.betterhud.util.RandomWrapper;
-import net.minecraft.block.material.Material;
 import net.minecraft.util.math.BlockPos;
 
 public class WaterDrops extends ParticleOverlay {
@@ -19,7 +18,7 @@ public class WaterDrops extends ParticleOverlay {
 
     @Override
     protected void updateParticles() {
-        boolean isUnderwater = MC.player.isInsideOfMaterial(Material.WATER);
+        boolean isUnderwater = MC.player.isInWater();
 
         if(isUnderwater) {
             particles.clear();
@@ -35,7 +34,7 @@ public class WaterDrops extends ParticleOverlay {
                 }
             }
 
-            BlockPos camera = new BlockPos(MC.player.getPositionEyes(1));
+            BlockPos camera = new BlockPos(MC.player.getEyePosition(1));
             if (MC.world.isRainingAt(camera)
                     && new RandomWrapper(new Random()).nextTrial(getParticleChance())) {
                 toSpawn.add(ParticleWater.createRandom());
