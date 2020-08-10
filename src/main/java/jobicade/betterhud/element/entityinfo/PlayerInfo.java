@@ -23,12 +23,12 @@ import jobicade.betterhud.util.bars.StatBarArmor;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.player.EntityPlayer;
+import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.text.TextFormatting;
 
 public class PlayerInfo extends BillboardElement {
-    private StatBar<? super EntityPlayer> bar = new StatBarArmor();
+    private StatBar<? super PlayerEntity> bar = new StatBarArmor();
 
     private SettingSlider tooltipLines;
 
@@ -49,12 +49,12 @@ public class PlayerInfo extends BillboardElement {
 
     @Override
     public boolean shouldRender(BillboardContext context) {
-        return context.getPointedEntity() instanceof EntityPlayer;
+        return context.getPointedEntity() instanceof PlayerEntity;
     }
 
     @Override
     public Rect render(BillboardContext context) {
-        EntityPlayer player = (EntityPlayer)context.getPointedEntity();
+        PlayerEntity player = (PlayerEntity)context.getPointedEntity();
         bar.setHost(player);
         List<String> tooltip = new ArrayList<String>();
 
@@ -93,7 +93,7 @@ public class PlayerInfo extends BillboardElement {
         if(stack.hasDisplayName()) {
             builder.append(TextFormatting.ITALIC);
         }
-        if(stack.isItemEnchanted()) {
+        if(stack.isEnchanted()) {
             builder.append(TextFormatting.AQUA);
         } else {
             builder.append(TextFormatting.GRAY);
@@ -108,7 +108,7 @@ public class PlayerInfo extends BillboardElement {
 
         for(Map.Entry<Enchantment, Integer> enchantment : enchantments.entrySet()) {
             if(enchantment.getKey() != null && enchantment.getValue() > 0) {
-                dest.add(ChatFormatting.GRAY + enchantment.getKey().getTranslatedName(enchantment.getValue()));
+                dest.add(ChatFormatting.GRAY + enchantment.getKey().getDisplayName(enchantment.getValue()).getFormattedText());
             }
         }
     }

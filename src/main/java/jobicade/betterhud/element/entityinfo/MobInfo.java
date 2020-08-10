@@ -14,10 +14,9 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.bars.StatBarHealth;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.MathHelper;
 
 public class MobInfo extends BillboardElement {
@@ -41,7 +40,7 @@ public class MobInfo extends BillboardElement {
 
     @Override
     public Rect render(BillboardContext context) {
-        EntityLivingBase entity = context.getPointedEntity();
+        LivingEntity entity = context.getPointedEntity();
         bar.setHost(entity);
         bar.setCompressThreshold((int)compress.getValue());
 
@@ -66,7 +65,7 @@ public class MobInfo extends BillboardElement {
         GlUtil.drawString(text, bounds.getPosition(), Direction.NORTH_WEST, Color.WHITE);
         Rect barRect = new Rect(barSize).anchor(bounds, Direction.SOUTH_WEST);
 
-        MC.getTextureManager().bindTexture(Gui.ICONS);
+        MC.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
         bar.setBounds(barRect).render();
         return null;
     }
