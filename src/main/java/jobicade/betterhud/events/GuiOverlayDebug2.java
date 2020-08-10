@@ -3,11 +3,12 @@ package jobicade.betterhud.events;
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiOverlayDebug;
-import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.gui.overlay.DebugOverlayGui;
 
 // Not possible to reuse any code from vanilla or Forge without extending
-public class GuiOverlayDebug2 extends GuiOverlayDebug {
+// The vanilla implementation doesn't expose the left and right lists and
+// doesn't include the pie and help lines in the lists
+public class GuiOverlayDebug2 extends DebugOverlayGui {
     private final Minecraft mc;
 
     public GuiOverlayDebug2(Minecraft mc) {
@@ -15,16 +16,17 @@ public class GuiOverlayDebug2 extends GuiOverlayDebug {
         this.mc = mc;
     }
 
+    // This should not be used as a real GUI - it's only a wrapper
+    // to access the debug info
     @Override
-    public void renderDebugInfo(ScaledResolution scaledResolutionIn) {
+    public void render() {
         throw new UnsupportedOperationException();
     }
 
-    /**
-     * @see GuiOverlayDebug#renderDebugInfoLeft()
-     */
+    // made public
+    @Override
     public List<String> getDebugInfoLeft() {
-        List<String> list = call();
+        List<String> list = getDebugInfoLeft();
 
         list.add("");
         list.add("Debug: Pie [shift]: "
@@ -36,6 +38,7 @@ public class GuiOverlayDebug2 extends GuiOverlayDebug {
         return list;
     }
 
+    // made public
     @Override
     public List<String> getDebugInfoRight() {
         return super.getDebugInfoRight();
