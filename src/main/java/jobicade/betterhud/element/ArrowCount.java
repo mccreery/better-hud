@@ -13,11 +13,10 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.registry.OverlayElements;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.Items;
-import net.minecraft.item.ItemArrow;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ArrowItem;
 import net.minecraft.item.ItemStack;
+import net.minecraft.item.Items;
 
 public class ArrowCount extends OverlayElement {
     private static final ItemStack ARROW = new ItemStack(Items.ARROW, 1);
@@ -39,13 +38,13 @@ public class ArrowCount extends OverlayElement {
     /** Note this method only cares about arrows which can be shot by a vanilla bow
      * @return The number of arrows in the player's inventory
      * @see net.minecraft.item.ItemBow#isArrow(ItemStack) */
-    private int arrowCount(EntityPlayer player) {
+    private int arrowCount(PlayerEntity player) {
         int count = 0;
 
         for(int i = 0; i < player.inventory.getSizeInventory(); i++) {
             ItemStack stack = player.inventory.getStackInSlot(i);
 
-            if(stack != null && stack.getItem() instanceof ItemArrow) {
+            if(stack != null && stack.getItem() instanceof ArrowItem) {
                 count += stack.getCount();
             }
         }

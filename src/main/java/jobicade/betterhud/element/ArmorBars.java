@@ -16,12 +16,11 @@ import jobicade.betterhud.render.DefaultBoxed;
 import jobicade.betterhud.render.Grid;
 import jobicade.betterhud.render.Label;
 import jobicade.betterhud.util.GlUtil;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.item.ItemArmor;
+import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
 
 public class ArmorBars extends EquipmentDisplay {
     private SettingPosition position;
@@ -50,13 +49,23 @@ public class ArmorBars extends EquipmentDisplay {
         return false;
     }
 
+    /**
+     * @see PlayerContainer#ARMOR_SLOT_TEXTURES
+     */
+    private static final ResourceLocation[] ARMOR_SLOT_TEXTURES = new ResourceLocation[] {
+        PlayerContainer.EMPTY_ARMOR_SLOT_BOOTS,
+        PlayerContainer.EMPTY_ARMOR_SLOT_LEGGINGS,
+        PlayerContainer.EMPTY_ARMOR_SLOT_CHESTPLATE,
+        PlayerContainer.EMPTY_ARMOR_SLOT_HELMET
+    };
+
     @Override
     public Rect render(OverlayContext context) {
         Grid<Boxed> grid = new Grid<>(new Point(1, 4)).setStretch(true);
 
         for(int i = 0; i < 4; i++) {
             ItemStack stack = MC.player.inventory.armorItemInSlot(3-i);
-            TextureAtlasSprite empty = MC.getTextureMapBlocks().getAtlasSprite(ItemArmor.EMPTY_SLOT_NAMES[3-i]);
+            TextureAtlasSprite empty = MC.getAtlasSpriteGetter(PlayerContainer.LOCATION_BLOCKS_TEXTURE).apply(ARMOR_SLOT_TEXTURES[3-i]);
 
             grid.setCell(new Point(0, i), new SlotDisplay(stack, empty));
         }
@@ -97,9 +106,12 @@ public class ArmorBars extends EquipmentDisplay {
 
             Rect item = new Rect(16, 16).anchor(bounds, contentAlignment);
             if(stack.isEmpty()) {
-                MC.getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-                MC.ingameGUI.drawTexturedModalRect(item.getX(), item.getY(), empty, item.getWidth(), item.getHeight());
-                MC.getTextureManager().bindTexture(Gui.ICONS);
+                MC.getTextureManager().bindTexture(PlayerContainer.LOCATION_BLOCKS_TEXTURE);
+
+                // blit(x, y, z, width, height, sprite)
+                AbstractGui.blit(item.getX(), item.getY(), 0, item.getWidth(), item.getHeight(), empty);
+
+                MC.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
             } else {
                 GlUtil.renderSingleItem(stack, item.getPosition());
             }

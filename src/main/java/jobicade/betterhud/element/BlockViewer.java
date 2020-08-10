@@ -9,7 +9,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.realmsclient.gui.ChatFormatting;
+
+import org.apache.maven.artifact.versioning.InvalidVersionSpecificationException;
+import org.apache.maven.artifact.versioning.VersionRange;
 
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.settings.Legend;
@@ -22,27 +26,26 @@ import jobicade.betterhud.network.InventoryNameQuery;
 import jobicade.betterhud.registry.HudElements;
 import jobicade.betterhud.util.GlUtil;
 import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.init.Blocks;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
 import net.minecraft.item.ItemStack;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.INameable;
 import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.BlockRayTraceResult;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.IWorldNameable;
-import net.minecraftforge.fml.common.versioning.InvalidVersionSpecificationException;
-import net.minecraftforge.fml.common.versioning.VersionRange;
+import net.minecraft.util.text.TranslationTextComponent;
+import net.minecraftforge.registries.ForgeRegistries;
+import net.minecraftforge.registries.ForgeRegistry;
 
 /**
  * @see BetterHud#onBlockBreak(net.minecraftforge.event.world.BlockEvent.BreakEvent)
  */
 public class BlockViewer extends TextElement {
     private SettingBoolean showBlock, showIds, invNames;
-    private RayTraceResult trace;
-    private IBlockState state;
+    private BlockRayTraceResult trace;
+    private BlockState state;
     private ItemStack stack;
 
     public BlockViewer() {
@@ -71,10 +74,11 @@ public class BlockViewer extends TextElement {
 
     @Override
     public boolean shouldRender(OverlayContext context) {
-        trace = MC.getRenderViewEntity().rayTrace(HudElements.GLOBAL.getBillboardDistance(), 1f);
+        RayTraceResult traceResult = MC.getRenderViewEntity().pick(HudElements.GLOBAL.getBillboardDistance(), 1f, false);
 
-        if(trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK) {
-            state = MC.world.getBlockState(trace.getBlockPos());
+        if(trace != null && trace.getType() == RayTraceResult.Type.BLOCK) {
+            trace = (BlockRayTraceResult)traceResult;
+            state = MC.world.getBlockState(trace.getPos());
             stack = getDisplayStack(trace, state);
             return true;
         } else {
@@ -84,10 +88,14 @@ public class BlockViewer extends TextElement {
 
     @Override
     protected List<String> getText() {
-        String text = getBlockName(trace, state, stack);
-        if(showIds.get()) text += " " + getIdString(state);
+        ITextComponent text = getBlockName(trace, state, stack);
+        String textString = text.getFormattedText();
 
-        return Arrays.asList(text);
+        if(showIds.get()) {
+            textString += " " + getIdString(state);
+        }
+
+        return Arrays.asList(textString);
     }
 
     @Override
@@ -113,7 +121,7 @@ public class BlockViewer extends TextElement {
 
     @Override
     public Rect render(OverlayContext context) {
-        GlStateManager.disableDepth();
+        RenderSystem.disableDepthTest();
         return super.render(context);
     }
 
@@ -138,53 +146,48 @@ public class BlockViewer extends TextElement {
      * If the block has no {@link net.minecraft.item.ItemBlock}, it is impossible to create a stack.
      *
      * @see net.minecraftforge.common.ForgeHooks#onPickBlock(RayTraceResult, net.minecraft.entity.player.EntityPlayer, net.minecraft.world.World) */
-    private ItemStack getDisplayStack(RayTraceResult trace, IBlockState state) {
-        ItemStack stack = state.getBlock().getPickBlock(state, trace, MC.world, trace.getBlockPos(), MC.player);
+    private ItemStack getDisplayStack(BlockRayTraceResult trace, BlockState state) {
+        ItemStack stack = state.getBlock().getPickBlock(state, trace, MC.world, trace.getPos(), MC.player);
 
-        if(isStackEmpty(stack)) {
+        if(stack.isEmpty()) {
             // Pick block is disabled, however we can grab the information directly
-            stack = new ItemStack(state.getBlock(), state.getBlock().getMetaFromState(state));
-
-            if(isStackEmpty(stack)) { // There's no registered ItemBlock, no stack exists
-                return null;
-            }
+            return new ItemStack(state.getBlock());
         }
         return stack;
     }
 
     /** Chooses the best name for the given result and its related stack.
-     * @param stack The direct result of {@link #getDisplayStack(RayTraceResult, IBlockState)}. May be {@code null}
+     * @param stack The direct result of {@link #getDisplayStack(RayTraceResult, BlockState)}. May be {@code null}
      *
      * @see ItemStack#getDisplayName()
      * @see TileEntity#getDisplayName()
      * @see net.minecraft.item.ItemBlock#getUnlocalizedName(ItemStack) */
-    private String getBlockName(RayTraceResult trace, IBlockState state, ItemStack stack) {
+    private ITextComponent getBlockName(BlockRayTraceResult trace, BlockState state, ItemStack stack) {
         if(state.getBlock() == Blocks.END_PORTAL) {
-            return I18n.format("tile.endPortal.name");
+            return new TranslationTextComponent("tile.endPortal.name");
         }
 
         if(invNames.get() && state.getBlock().hasTileEntity(state)) {
-            TileEntity tileEntity = MC.world.getTileEntity(trace.getBlockPos());
+            TileEntity tileEntity = MC.world.getTileEntity(trace.getPos());
 
-            if(tileEntity instanceof IWorldNameable) {
-                ITextComponent invName = ensureInvName(trace.getBlockPos());
+            if(tileEntity instanceof INameable) {
+                ITextComponent invName = ensureInvName(trace.getPos());
 
                 if(invName != null) {
-                    return invName.getFormattedText();
+                    return invName;
                 }
             }
         }
 
-        return isStackEmpty(stack) ? state.getBlock().getLocalizedName() : stack.getDisplayName();
+        return isStackEmpty(stack) ? state.getBlock().getNameTextComponent() : stack.getDisplayName();
     }
 
     /** @return Information about the block's related IDs */
-    private String getIdString(IBlockState state) {
-        String name = Block.REGISTRY.getNameForObject(state.getBlock()).toString();
-        int id = Block.getIdFromBlock(state.getBlock());
-        int meta = state.getBlock().getMetaFromState(state);
+    private String getIdString(BlockState state) {
+        String name = ForgeRegistries.BLOCKS.getKey(state.getBlock()).toString();
+        int id = ((ForgeRegistry<Block>)ForgeRegistries.BLOCKS).getID(state.getBlock());
 
-        return String.format("%s(%s:%d/#%04d)", ChatFormatting.YELLOW, name, meta, id);
+        return String.format("%s(%s/#%04d)", ChatFormatting.YELLOW, name, id);
     }
 
     public static final Map<BlockPos, ITextComponent> nameCache = new HashMap<BlockPos, ITextComponent>();
@@ -211,7 +214,8 @@ public class BlockViewer extends TextElement {
         if(name != null) {
             return name;
         } else {
-            return MC.world.getTileEntity(pos).getDisplayName();
+            TileEntity tileEntity = MC.world.getTileEntity(pos);
+            return tileEntity instanceof INameable ? ((INameable)tileEntity).getDisplayName() : null;
         }
     }
 

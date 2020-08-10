@@ -16,10 +16,9 @@ import jobicade.betterhud.render.Color;
 import jobicade.betterhud.render.Grid;
 import jobicade.betterhud.render.Label;
 import jobicade.betterhud.render.Quad;
-import net.minecraft.client.Minecraft;
-import net.minecraft.tileentity.TileEntitySign;
+import net.minecraft.tileentity.SignTileEntity;
 import net.minecraft.util.ResourceLocation;
-import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.math.BlockRayTraceResult;
 
 public class SignReader extends OverlayElement {
     private static final ResourceLocation SIGN_TEXTURE = new ResourceLocation("textures/entity/sign.png");
@@ -60,7 +59,7 @@ public class SignReader extends OverlayElement {
      * @return The sign the player is looking at or {@code null} if the player
      * is not looking at a sign.
      */
-    private TileEntitySign getSign() {
+    private SignTileEntity getSign() {
         // Sanity check, but can continue normally if null
         if (MC == null || MC.world == null) {
             return null;
@@ -68,11 +67,11 @@ public class SignReader extends OverlayElement {
 
         // Functional approach avoids long null check chain
         return Optional.ofNullable(MC.getRenderViewEntity())
-            .map(entity -> entity.rayTrace(200, 1.0f))
-            .map(RayTraceResult::getBlockPos)
+            .map(entity -> entity.pick(200, 1.0f, false))
+            .map(result -> ((BlockRayTraceResult)result).getPos())
             .map(MC.world::getTileEntity)
-            .filter(TileEntitySign.class::isInstance)
-            .map(TileEntitySign.class::cast)
+            .filter(SignTileEntity.class::isInstance)
+            .map(SignTileEntity.class::cast)
             .orElse(null);
     }
 }

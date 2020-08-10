@@ -3,6 +3,8 @@ package jobicade.betterhud.element;
 import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.SettingBoolean;
@@ -16,12 +18,9 @@ import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
+import net.minecraft.item.Items;
 
 public class Compass extends OverlayElement {
     private static final String[] DIRECTIONS = { "S", "E", "N", "W" };
@@ -97,9 +96,9 @@ public class Compass extends OverlayElement {
             Point letter = origin.add(-(int)(Math.sin(angle) * radius), 0);
             double scale = 1 + directionScaling.getValue() * cos * 2;
 
-            GlStateManager.pushMatrix();
+            RenderSystem.pushMatrix();
 
-            GlStateManager.translate(letter.getX(), letter.getY(), 0);
+            RenderSystem.translatef(letter.getX(), letter.getY(), 0);
             GlUtil.scale((float)scale);
 
             Color color = i == 0 ? Color.BLUE : i == 2 ? Color.RED : Color.WHITE;
@@ -110,7 +109,7 @@ public class Compass extends OverlayElement {
                 GlUtil.drawString(DIRECTIONS[i], Point.zero(), bottom ? Direction.SOUTH : Direction.NORTH, color);
             }
 
-            GlStateManager.popMatrix();
+            RenderSystem.popMatrix();
         }
     }
 
@@ -127,7 +126,7 @@ public class Compass extends OverlayElement {
     }
 
     public String getText() {
-        EnumFacing enumfacing = MC.player.getHorizontalFacing();
+        net.minecraft.util.Direction enumfacing = MC.player.getHorizontalFacing();
 
         String coord;
         Direction direction;
@@ -149,18 +148,18 @@ public class Compass extends OverlayElement {
         if(mode.getIndex() == 0) {
             bounds = position.applyTo(new Rect(180, 12));
 
-            MC.mcProfiler.startSection("background");
+            MC.getProfiler().startSection("background");
             drawBackground(bounds);
-            MC.mcProfiler.endStartSection("text");
+            MC.getProfiler().endStartSection("text");
             drawDirections(bounds);
-            MC.mcProfiler.endSection();
+            MC.getProfiler().endSection();
         } else {
             String text = getText();
             bounds = position.applyTo(new Rect(GlUtil.getStringSize(text)));
 
-            MC.mcProfiler.startSection("text");
+            MC.getProfiler().startSection("text");
             GlUtil.drawString(text, bounds.getPosition(), Direction.NORTH_WEST, Color.WHITE);
-            MC.mcProfiler.endSection();
+            MC.getProfiler().endSection();
         }
 
         return bounds;

@@ -125,12 +125,12 @@ public class PickupCount extends OverlayElement {
 
         public StackNode(ItemStack stack) {
             this.stack = stack;
-            this.updateCounter = MC.ingameGUI.getUpdateCounter();
+            this.updateCounter = MC.ingameGUI.getTicks();
         }
 
         public void increaseStackSize(int size) {
             stack.setCount(stack.getCount() + size);
-            this.updateCounter = MC.ingameGUI.getUpdateCounter();
+            this.updateCounter = MC.ingameGUI.getTicks();
         }
 
         private Label getLabel() {
@@ -139,7 +139,7 @@ public class PickupCount extends OverlayElement {
         }
 
         private float getOpacity() {
-            return 1.0f - (MC.ingameGUI.getUpdateCounter() - updateCounter) / fadeAfter.getValue();
+            return 1.0f - (MC.ingameGUI.getTicks() - updateCounter) / fadeAfter.getValue();
         }
 
         private boolean isDead() {

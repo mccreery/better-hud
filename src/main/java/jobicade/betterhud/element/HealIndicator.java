@@ -15,6 +15,7 @@ import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.Textures;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.world.GameRules;
 
 public class HealIndicator extends OverlayElement {
     private SettingPosition position;
@@ -46,7 +47,7 @@ public class HealIndicator extends OverlayElement {
                 GlUtil.drawString(healIndicator, bounds.getPosition(), Direction.NORTH_WEST, Color.GREEN);
             } else {
                 MC.getTextureManager().bindTexture(Textures.HUD_ICONS);
-                MC.ingameGUI.drawTexturedModalRect(bounds.getX(), bounds.getY(), 0, 80, 9, 9);
+                MC.ingameGUI.blit(bounds.getX(), bounds.getY(), 0, 80, 9, 9);
             }
             return bounds;
     }
@@ -55,7 +56,7 @@ public class HealIndicator extends OverlayElement {
     @Override
     public boolean shouldRender(OverlayContext context) {
         return MC.playerController.gameIsSurvivalOrAdventure()
-            && MC.world.getGameRules().getBoolean("naturalRegeneration")
+            && MC.world.getGameRules().getBoolean(GameRules.NATURAL_REGENERATION)
             && MC.player.getFoodStats().getFoodLevel() >= 18
             && MC.player.shouldHeal();
     }
