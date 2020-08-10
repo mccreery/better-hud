@@ -1,15 +1,13 @@
 package jobicade.betterhud.element;
 
-import java.util.Arrays;
+import org.apache.maven.artifact.versioning.InvalidVersionSpecificationException;
+import org.apache.maven.artifact.versioning.VersionRange;
 
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingStub;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.ElementCategory;
 import net.minecraft.client.resources.I18n;
-import net.minecraftforge.fml.common.versioning.InvalidVersionSpecificationException;
-import net.minecraftforge.fml.common.versioning.Restriction;
-import net.minecraftforge.fml.common.versioning.VersionRange;
 
 /**
  * Settings should be added in the constructor. An empty config file is
@@ -51,8 +49,7 @@ public abstract class HudElement<T> {
     /** The settings saved to the config file for this element */
     public final Setting settings = new SettingStub();
 
-    private static final VersionRange DEFAULT_SERVER_DEPENDENCY
-        = VersionRange.newRange(null, Arrays.asList(Restriction.EVERYTHING));
+    private static final VersionRange DEFAULT_SERVER_DEPENDENCY = VersionRange.createFromVersion("1.0");
 
     private VersionRange serverDependency = DEFAULT_SERVER_DEPENDENCY;
 
