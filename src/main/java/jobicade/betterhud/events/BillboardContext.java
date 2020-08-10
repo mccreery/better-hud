@@ -1,13 +1,13 @@
 package jobicade.betterhud.events;
 
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 
 public final class BillboardContext {
     private final RenderWorldLastEvent event;
-    private final EntityLivingBase entity;
+    private final LivingEntity entity;
 
-    public BillboardContext(RenderWorldLastEvent event, EntityLivingBase entity) {
+    public BillboardContext(RenderWorldLastEvent event, LivingEntity entity) {
         this.event = event;
         this.entity = entity;
     }
@@ -20,7 +20,7 @@ public final class BillboardContext {
         return event.getPartialTicks();
     }
 
-    public EntityLivingBase getPointedEntity() {
+    public LivingEntity getPointedEntity() {
         return entity;
     }
 }
