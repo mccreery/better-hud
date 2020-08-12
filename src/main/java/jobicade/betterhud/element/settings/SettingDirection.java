@@ -9,16 +9,16 @@ import java.util.Map;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.gui.GuiActionButton;
 import jobicade.betterhud.gui.GuiElementSettings;
+import jobicade.betterhud.gui.SuperButton;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 
 public class SettingDirection extends SettingAlignable {
-    private GuiActionButton[] toggles = new GuiActionButton[9];
+    private SuperButton[] toggles = new SuperButton[9];
     private Rect bounds;
 
     private boolean horizontal = false;
@@ -53,16 +53,15 @@ public class SettingDirection extends SettingAlignable {
     }
 
     @Override
-    public void getGuiParts(java.util.List<Gui> parts, Map<Gui,Setting> callbacks, Rect bounds) {
+    public void getGuiParts(java.util.List<AbstractGui> parts, Map<AbstractGui,Setting> callbacks, Rect bounds) {
         this.bounds = bounds;
 
         Rect radios = new Rect(60, 60).anchor(bounds, horizontal ? Direction.WEST : Direction.SOUTH);
         Rect radio = new Rect(20, 20);
 
         for(Direction direction : Direction.values()) {
-            GuiActionButton button = new GuiActionButton("")
-                .setId(direction.ordinal())
-                .setBounds(radio.anchor(radios, direction));
+            SuperButton button = new SuperButton(b -> value = direction);
+            button.setBounds(radio.anchor(radios, direction));
 
             parts.add(button);
             callbacks.put(button, this);
@@ -80,8 +79,8 @@ public class SettingDirection extends SettingAlignable {
     }
 
     @Override
-    public void actionPerformed(GuiElementSettings gui, GuiButton button) {
-        value = Direction.values()[button.id];
+    public void actionPerformed(GuiElementSettings gui, Button button) {
+        button.onPress();
     }
 
     @Override
@@ -89,9 +88,12 @@ public class SettingDirection extends SettingAlignable {
         super.updateGuiParts(settings);
         boolean enabled = enabled();
 
-        for(GuiActionButton button : toggles) {
-            button.glowing = value != null && button.id == value.ordinal();
-            button.enabled = button.glowing || enabled && options.isValid(Direction.values()[button.id]);
+        for (int i = 0; i < toggles.length; i++) {
+            SuperButton button = toggles[i];
+
+            boolean forceHovered = value != null && i == value.ordinal();
+            button.setForceHovered(forceHovered);
+            button.active = forceHovered || enabled && options.isValid(Direction.values()[i]);
         }
     }
 

@@ -9,8 +9,8 @@ import java.util.function.BooleanSupplier;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.gui.GuiElementSettings;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 
 /** A setting for a {@link HudElement}. Child elements will be saved under
@@ -109,7 +109,7 @@ public abstract class Setting {
      * @param topAnchor The top center anchor for GUI parts being added
      * @return The bottom center anchor directly below this setting's parts
      */
-    public Point getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Point topAnchor) {
+    public Point getGuiParts(List<AbstractGui> parts, Map<AbstractGui, Setting> callbacks, Point topAnchor) {
         for (Setting setting : children) {
             if (!setting.hidden) {
                 topAnchor = setting.getGuiParts(parts, callbacks, topAnchor);
@@ -126,8 +126,10 @@ public abstract class Setting {
     }
 
     /** Passed on from the element's setting screen when a GuiButton for this setting is pressed.
-     * @param button The GuiButton that was pressed. */
-    public abstract void actionPerformed(GuiElementSettings gui, GuiButton button);
+     * @param button The GuiButton that was pressed.
+     * @deprecated Buttons have their own onPress method now. */
+    @Deprecated
+    public abstract void actionPerformed(GuiElementSettings gui, Button button);
 
     /** Updates the GUI elements based on the state of other settings.
      * This is called when any button tied to a setting callback is pressed */

@@ -6,11 +6,13 @@ import java.util.Arrays;
 import java.util.List;
 
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.realmsclient.gui.ChatFormatting;
 
 import jobicade.betterhud.geom.Rect;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.FontRenderer;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 
@@ -130,5 +132,22 @@ public class SuperButton extends Button {
 
     public boolean getRepeat() {
         return repeat;
+    }
+
+    public void setMessage(String name, String value) {
+        setMessage(name + ": " + value);
+    }
+
+    public void setMessage(String unlocalizedName, String valuePrefix, boolean value) {
+        String valueDisplay;
+
+        if(value) {
+            valueDisplay = ChatFormatting.GREEN + I18n.format(valuePrefix + ".on");
+        } else {
+            valueDisplay = ChatFormatting.RED + I18n.format(valuePrefix + ".off");
+        }
+
+        setMessage(I18n.format(unlocalizedName), valueDisplay);
+        forceHovered = value;
     }
 }

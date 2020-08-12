@@ -12,15 +12,15 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.gui.GuiOffsetChooser;
 import jobicade.betterhud.gui.GuiUpDownButton;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiTextField;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 
 public class SettingAbsolutePosition extends Setting {
-    public GuiTextField xBox, yBox;
-    public GuiButton pick;
-    private GuiButton xUp, xDown, yUp, yDown;
+    public TextFieldWidget xBox, yBox;
+    public Button pick;
+    private Button xUp, xDown, yUp, yDown;
 
     private final SettingPosition position;
 
@@ -41,10 +41,10 @@ public class SettingAbsolutePosition extends Setting {
     }
 
     @Override
-    public Point getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Point origin) {
-        parts.add(xBox = new GuiTextField(0, MC.fontRenderer, origin.getX() - 106, origin.getY() + 1, 80, 18));
+    public Point getGuiParts(List<AbstractGui> parts, Map<AbstractGui, Setting> callbacks, Point origin) {
+        parts.add(xBox = new TextFieldWidget(MC.fontRenderer, origin.getX() - 106, origin.getY() + 1, 80, 18, ""));
         xBox.setText(String.valueOf(x));
-        parts.add(yBox = new GuiTextField(0, MC.fontRenderer, origin.getX() + 2, origin.getY() + 1, 80, 18));
+        parts.add(yBox = new TextFieldWidget(MC.fontRenderer, origin.getX() + 2, origin.getY() + 1, 80, 18, ""));
         yBox.setText(String.valueOf(y));
 
         parts.add(xUp   = new GuiUpDownButton(true ).setBounds(new Rect(origin.getX() - 22, origin.getY(),      0, 0)).setId(0).setRepeat());
@@ -53,7 +53,7 @@ public class SettingAbsolutePosition extends Setting {
         parts.add(yDown = new GuiUpDownButton(false).setBounds(new Rect(origin.getX() + 86, origin.getY() + 10, 0, 0)).setId(3).setRepeat());
 
         if(position != null) {
-            parts.add(pick = new GuiButton(4, origin.getX() - 100, origin.getY() + 22, 200, 20, I18n.format("betterHud.menu.pick")));
+            parts.add(pick = new Button(origin.getX() - 100, origin.getY() + 22, 200, 20, I18n.format("betterHud.menu.pick")));
             callbacks.put(pick, this);
         }
 
@@ -75,7 +75,7 @@ public class SettingAbsolutePosition extends Setting {
     }
 
     @Override
-    public void actionPerformed(GuiElementSettings gui, GuiButton button) {
+    public void actionPerformed(GuiElementSettings gui, Button button) {
         switch(button.id) {
             case 0: xBox.setText(String.valueOf(++x)); break;
             case 1: xBox.setText(String.valueOf(--x)); break;
@@ -139,26 +139,26 @@ public class SettingAbsolutePosition extends Setting {
         xBox.setEnabled(enabled);
         yBox.setEnabled(enabled);
 
-        if(pick != null) pick.enabled = enabled;
+        if(pick != null) pick.active = enabled;
 
         if(enabled) {
             try {
                 x = Integer.parseInt(xBox.getText());
-                xUp.enabled = xDown.enabled = true;
+                xUp.active = xDown.active = true;
             } catch(NumberFormatException e) {
                 x = 0;
-                xUp.enabled = xDown.enabled = false;
+                xUp.active = xDown.active = false;
             }
 
             try {
                 y = Integer.parseInt(yBox.getText());
-                yUp.enabled = yDown.enabled = true;
+                yUp.active = yDown.active = true;
             } catch(NumberFormatException e) {
                 y = 0;
-                yUp.enabled = yDown.enabled = false;
+                yUp.active = yDown.active = false;
             }
         } else {
-            xUp.enabled = xDown.enabled = yUp.enabled = yDown.enabled = false;
+            xUp.active = xDown.active = yUp.active = yDown.active = false;
         }
     }
 }

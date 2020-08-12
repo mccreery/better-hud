@@ -5,10 +5,10 @@ import static jobicade.betterhud.BetterHud.SPACER;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.client.gui.Gui;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
+import net.minecraft.client.gui.AbstractGui;
 
 public abstract class SettingAlignable extends Setting {
     protected Direction alignment;
@@ -23,7 +23,7 @@ public abstract class SettingAlignable extends Setting {
     }
 
     @Override
-    public Point getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Point origin) {
+    public Point getGuiParts(List<AbstractGui> parts, Map<AbstractGui, Setting> callbacks, Point origin) {
         origin = super.getGuiParts(parts, callbacks, origin);
 
         Rect bounds = new Rect(getSize());
@@ -46,5 +46,5 @@ public abstract class SettingAlignable extends Setting {
     }
 
     /** @see Setting#getGuiParts(List, Map, Point) */
-    public abstract void getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Rect bounds);
+    public abstract void getGuiParts(List<AbstractGui> parts, Map<AbstractGui, Setting> callbacks, Rect bounds);
 }

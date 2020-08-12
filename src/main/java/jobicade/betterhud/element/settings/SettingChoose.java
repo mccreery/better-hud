@@ -13,12 +13,12 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 
 public class SettingChoose extends SettingAlignable {
-    protected GuiButton last, next, backing;
+    protected Button last, next, backing;
     protected final String[] modes;
 
     private int index = 0;
@@ -118,11 +118,11 @@ public class SettingChoose extends SettingAlignable {
     }
 
     @Override
-    public void getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Rect bounds) {
-        parts.add(backing = new GuiButton(2, bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), ""));
-        parts.add(last = new GuiButton(0, bounds.getLeft(), bounds.getY(), 20, bounds.getHeight(), "<"));
-        parts.add(next = new GuiButton(1, bounds.getRight() - 20, bounds.getY(), 20, bounds.getHeight(), ">"));
-        backing.enabled = false;
+    public void getGuiParts(List<AbstractGui> parts, Map<AbstractGui, Setting> callbacks, Rect bounds) {
+        parts.add(backing = new Button(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), "", b -> {}));
+        parts.add(last = new Button(bounds.getLeft(), bounds.getY(), 20, bounds.getHeight(), "<", b -> last()));
+        parts.add(next = new Button(bounds.getRight() - 20, bounds.getY(), 20, bounds.getHeight(), ">", b -> next()));
+        backing.active = false;
 
         callbacks.put(last, this);
         callbacks.put(next, this);
@@ -144,18 +144,17 @@ public class SettingChoose extends SettingAlignable {
 
     @Override
     public void draw() {
-        Point center = new Point(backing.x + backing.width / 2, backing.y + backing.height / 2);
+        Point center = new Point(backing.x + backing.getWidth() / 2, backing.y + backing.getHeight() / 2);
         GlUtil.drawString(getLocalizedValue(), center, Direction.CENTER, Color.WHITE);
     }
 
     @Override
-    public void actionPerformed(GuiElementSettings gui, GuiButton button) {
-        if(button.id == 0) last();
-        else next();
+    public void actionPerformed(GuiElementSettings gui, Button button) {
+        button.onPress();
     }
 
     @Override
     public void updateGuiParts(Collection<Setting> settings) {
-        last.enabled = next.enabled = enabled();
+        last.active = next.active = enabled();
     }
 }

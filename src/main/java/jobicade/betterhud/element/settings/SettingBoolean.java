@@ -6,15 +6,15 @@ import java.util.Map;
 
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.gui.GuiActionButton;
 import jobicade.betterhud.gui.GuiElementSettings;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiButton;
+import jobicade.betterhud.gui.SuperButton;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.widget.button.Button;
 
 public class SettingBoolean extends SettingAlignable {
     public static final String VISIBLE = "betterHud.value.visible";
 
-    protected GuiActionButton toggler;
+    protected SuperButton toggler;
     private String unlocalizedValue = "options";
 
     private boolean value = false;
@@ -40,15 +40,16 @@ public class SettingBoolean extends SettingAlignable {
     }
 
     @Override
-    public void getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Rect bounds) {
-        toggler = new GuiActionButton("").setBounds(bounds).setCallback(b -> value = !value);
+    public void getGuiParts(List<AbstractGui> parts, Map<AbstractGui, Setting> callbacks, Rect bounds) {
+        toggler = new SuperButton(b -> value = !value);
+        toggler.setBounds(bounds);
         parts.add(toggler);
         callbacks.put(toggler, this);
     }
 
     @Override
-    public void actionPerformed(GuiElementSettings gui, GuiButton button) {
-        toggler.actionPerformed();
+    public void actionPerformed(GuiElementSettings gui, Button button) {
+        toggler.onPress();
     }
 
     @Override
@@ -79,7 +80,7 @@ public class SettingBoolean extends SettingAlignable {
     @Override
     public void updateGuiParts(Collection<Setting> settings) {
         super.updateGuiParts(settings);
-        toggler.enabled = enabled();
-        toggler.updateText(getUnlocalizedName(), unlocalizedValue, value);
+        toggler.active = enabled();
+        toggler.setMessage(getUnlocalizedName(), unlocalizedValue, value);
     }
 }

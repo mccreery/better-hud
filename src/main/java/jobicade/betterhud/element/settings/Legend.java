@@ -3,16 +3,14 @@ package jobicade.betterhud.element.settings;
 import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.render.Color;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiLabel;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.resources.I18n;
 
 public class Legend extends SettingStub {
@@ -26,53 +24,32 @@ public class Legend extends SettingStub {
     }
 
     @Override
-    public Point getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Point origin) {
-        GuiLegendLabel label = new GuiLegendLabel(0, origin.getX() - 150, origin.getY(), 300, MC.fontRenderer.FONT_HEIGHT, Color.WHITE);
-        label.addLine("betterHud.group." + this.name);
-        parts.add(label);
+    public Point getGuiParts(List<AbstractGui> parts, Map<AbstractGui, Setting> callbacks, Point origin) {
+        String message = I18n.format("betterHud.group." + name);
+        parts.add(new LegendLabel(0, origin.getX() - 150, origin.getY(), 300, message, Color.WHITE));
 
         return origin.add(0, MC.fontRenderer.FONT_HEIGHT + SPACER);
     }
 
-    private static class GuiLegendLabel extends GuiLabel {
+    private static class LegendLabel extends Widget {
         protected final Color color;
-        protected final List<String> lines = new ArrayList<String>();
 
-        public GuiLegendLabel(int id, int x, int y, int width, int height, Color color) {
-            super(MC.fontRenderer, id, x, y, width, height, color.getPacked());
-            setCentered();
-
+        public LegendLabel(int x, int y, int width, int height, String message, Color color) {
+            super(x, y, width, height, message);
             this.color = color;
         }
 
         @Override
-        public void addLine(String line) {
-            super.addLine(line);
-            lines.add(I18n.format(line));
-        }
+        public void render(int mouseX, int mouseY, float partialTicks) {
+            if (visible) {
+                int blank = (MC.fontRenderer.getStringWidth(getMessage()) + BetterHud.SPACER * 2) / 2;
 
-        private int getMaxWidth(Collection<String> lines) {
-            int maxWidth = 0;
+                int cx = x + width / 2;
+                int cy = y + height / 2;
 
-            for(String s : lines) {
-                int width = MC.fontRenderer.getStringWidth(s);
-                if(width > maxWidth) maxWidth = width;
-            }
-
-            return maxWidth;
-        }
-
-        @Override
-        public void drawLabel(Minecraft mc, int mouseX, int mouseY) {
-            super.drawLabel(mc, mouseX, mouseY);
-
-            if(visible) {
-                int blank = getMaxWidth(lines) / 2 + 5;
-                int top = y + height / 2;
-                int center = x + width / 2;
-
-                drawRect(x, top, center - blank, top + 1, color.getPacked());
-                drawRect(center + blank, top, x + width, top + 1, color.getPacked());
+                this.drawCenteredString(MC.fontRenderer, getMessage(), cx, cy, color.getPacked());
+                fill(x, cy, cx - blank, cy + 1, color.getPacked());
+                fill(x, cy, cx - blank, cy + 1, color.getPacked());
             }
         }
     }

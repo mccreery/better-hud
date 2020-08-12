@@ -9,17 +9,17 @@ import java.util.Map;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.gui.GuiActionButton;
 import jobicade.betterhud.gui.GuiElementChooser;
 import jobicade.betterhud.gui.GuiElementSettings;
+import jobicade.betterhud.gui.SuperButton;
 import jobicade.betterhud.registry.HudElements;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 
 public class SettingElement extends SettingAlignable {
     private HudElement<?> value;
-    private GuiActionButton button;
+    private SuperButton button;
 
     public SettingElement(String name, Direction alignment) {
         super(name, alignment);
@@ -49,14 +49,15 @@ public class SettingElement extends SettingAlignable {
     }
 
     @Override
-    public void actionPerformed(GuiElementSettings gui, GuiButton button) {
-        MC.displayGuiScreen(new GuiElementChooser(gui, gui.element, this));
+    public void actionPerformed(GuiElementSettings gui, Button button) {
+        button.onPress();
     }
 
     @Override
-    public void getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Rect bounds) {
+    public void getGuiParts(List<AbstractGui> parts, Map<AbstractGui, Setting> callbacks, Rect bounds) {
         String text = getLocalizedName() + ": " + (value != null ? value.getLocalizedName() : I18n.format("betterHud.value.none"));
-        button = new GuiActionButton(text);
+        // TODO pass current gui into setting
+        button = new SuperButton(b -> MC.displayGuiScreen(new GuiElementChooser(MC.currentScreen, ((GuiElementSettings)MC.currentScreen).element, this)));
         button.setBounds(bounds);
 
         parts.add(button);
@@ -65,6 +66,6 @@ public class SettingElement extends SettingAlignable {
 
     @Override
     public void updateGuiParts(Collection<Setting> settings) {
-        button.enabled = enabled();
+        button.active = enabled();
     }
 }

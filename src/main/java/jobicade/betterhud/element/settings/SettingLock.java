@@ -3,12 +3,12 @@ package jobicade.betterhud.element.settings;
 import java.util.List;
 import java.util.Map;
 
-import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.gui.GuiTexturedButton;
-import net.minecraft.client.gui.Gui;
+import jobicade.betterhud.util.Textures;
+import net.minecraft.client.gui.AbstractGui;
 
 public class SettingLock extends SettingBoolean {
+    // Custom bounds overrides aligned bounds
     private Rect bounds;
 
     public SettingLock(String name) {
@@ -20,15 +20,13 @@ public class SettingLock extends SettingBoolean {
     }
 
     @Override
-    public void getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Rect bounds) {
-        toggler = new GuiTexturedButton(new Rect(0, 60, 20, 10)).setBounds(bounds).setCallback(b -> set(!get()));
-        parts.add(toggler);
-        callbacks.put(toggler, this);
+    public void getGuiParts(List<AbstractGui> parts, Map<AbstractGui, Setting> callbacks, Rect bounds) {
+        super.getGuiParts(parts, callbacks, this.bounds);
+        toggler.setTexture(Textures.SETTINGS, 0, 60, 20);
     }
 
     @Override
-    public Point getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Point origin) {
-        getGuiParts(parts, callbacks, bounds);
-        return origin;
+    protected boolean shouldBreak() {
+        return false;
     }
 }

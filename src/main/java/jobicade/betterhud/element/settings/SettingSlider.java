@@ -8,8 +8,8 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.gui.GuiSlider;
 import jobicade.betterhud.util.MathUtil;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.MathHelper;
 
@@ -105,14 +105,14 @@ public class SettingSlider extends SettingAlignable {
     }
 
     @Override
-    public void getGuiParts(List<Gui> parts, Map<Gui, Setting> callbacks, Rect bounds) {
+    public void getGuiParts(List<AbstractGui> parts, Map<AbstractGui, Setting> callbacks, Rect bounds) {
         guiSlider = new GuiSlider(0, bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), this);
 
         parts.add(guiSlider);
         callbacks.put(guiSlider, this);
     }
 
-    @Override public void actionPerformed(GuiElementSettings gui, GuiButton button) {}
+    @Override public void actionPerformed(GuiElementSettings gui, Button button) {}
 
     @Override
     public boolean hasValue() {
