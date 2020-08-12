@@ -4,11 +4,12 @@ import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
-import net.java.games.input.Mouse;
 import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.IGuiEventListener;
+import net.minecraft.client.gui.IRenderable;
 import net.minecraft.util.math.MathHelper;
 
-public class GuiScrollbar extends AbstractGui {
+public class GuiScrollbar extends AbstractGui implements IGuiEventListener, IRenderable {
     private final Rect bounds;
     private Rect grabber;
     private float scaleFactor;
@@ -107,7 +108,8 @@ public class GuiScrollbar extends AbstractGui {
         }
     }
 
-    public void drawScrollbar(int mouseX, int mouseY) {
+    @Override
+    public void render(int mouseX, int mouseY, float partialTicks) {
         GlUtil.drawRect(bounds, background);
 
         if(canScroll()) {
@@ -116,15 +118,18 @@ public class GuiScrollbar extends AbstractGui {
         }
     }
 
-    public void handleMouseInput() {
-        int scrollDelta = Mouse.getEventDWheel();
-
+    @Override
+    public boolean mouseScrolled(double mouseX, double mouseY, double scrollDelta) {
         if(canScroll() && !isScrolling() && scrollDelta != 0) {
             setScroll(scroll - (scrollDelta > 0 ? 20 : -20));
+            return true;
+        } else {
+            return false;
         }
     }
 
-    protected boolean mouseClicked(double mouseX, double mouseY, int button) {
+    @Override
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if(canScroll() && !isScrolling() && bounds.contains((int)mouseX, (int)mouseY)) {
             if(grabber.contains((int)mouseX, (int)mouseY)) {
                 clickOffset = (int)mouseY - grabber.getTop();
@@ -145,7 +150,9 @@ public class GuiScrollbar extends AbstractGui {
         }
     }
 
-    public void mouseReleased(int mouseX, int mouseY, int button) {
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
         clickOffset = -1;
+        return false;
     }
 }
