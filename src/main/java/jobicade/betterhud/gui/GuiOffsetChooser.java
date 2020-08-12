@@ -3,8 +3,6 @@ package jobicade.betterhud.gui;
 import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 
-import java.io.IOException;
-
 import org.lwjgl.glfw.GLFW;
 
 import jobicade.betterhud.element.settings.SettingPosition;
@@ -28,10 +26,13 @@ public class GuiOffsetChooser extends Screen {
     }
 
     @Override
-    protected void keyTyped(char typedChar, int keyCode) throws IOException {
-        if(keyCode == 1) {
+    public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
+        if (p_keyPressed_1_ == GLFW.GLFW_KEY_ESCAPE) {
             setting.setOffset(null);
             MC.displayGuiScreen(parent);
+            return true;
+        } else {
+            return super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
         }
     }
 

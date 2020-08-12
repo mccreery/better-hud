@@ -95,7 +95,7 @@ public class SettingWarnings extends SettingStub {
 
         @Override
         public void updateGuiParts(Collection<Setting> settings) {
-            guiSlider.updateDisplayString();
+            //guiSlider.updateDisplayString(); // TODO
         }
     }
 }

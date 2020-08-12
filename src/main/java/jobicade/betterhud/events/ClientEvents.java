@@ -7,7 +7,6 @@ import org.lwjgl.glfw.GLFW;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.gui.GuiElementList;
 import jobicade.betterhud.registry.OverlayElements;
-import net.java.games.input.Mouse;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
