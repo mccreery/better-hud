@@ -14,7 +14,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.MathHelper;
 
 public class SettingSlider extends SettingAlignable {
-    protected GuiSlider guiSlider;
+    //protected GuiSlider guiSlider; // TODO
 
     private int displayPlaces;
     private String unlocalizedValue;
@@ -106,7 +106,7 @@ public class SettingSlider extends SettingAlignable {
 
     @Override
     public void getGuiParts(List<AbstractGui> parts, Map<AbstractGui, Setting> callbacks, Rect bounds) {
-        guiSlider = new GuiSlider(0, bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), this);
+        GuiSlider guiSlider = new GuiSlider(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), this);
 
         parts.add(guiSlider);
         callbacks.put(guiSlider, this);
@@ -128,8 +128,8 @@ public class SettingSlider extends SettingAlignable {
     public void loadStringValue(String save) {
         setValue(Float.valueOf(save));
 
-        if(guiSlider != null) {
+        /*if(guiSlider != null) {
             guiSlider.updateDisplayString();
-        }
+        }*/
     }
 }

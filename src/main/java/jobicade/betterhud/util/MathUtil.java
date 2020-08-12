@@ -18,6 +18,13 @@ public final class MathUtil {
     }
 
     /**
+     * Performs inverse linear interpolation.
+     */
+    public static float inverseLerp(float a, float b, float x) {
+        return (x - a) / (b - a);
+    }
+
+    /**
      * Performs integer division rounding towards positive infinity.
      */
     public static int ceilDiv(int x, int y) {
