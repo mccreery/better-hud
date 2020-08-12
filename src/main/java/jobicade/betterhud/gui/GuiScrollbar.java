@@ -1,15 +1,14 @@
 package jobicade.betterhud.gui;
 
-import org.lwjgl.input.Mouse;
-
-import net.minecraft.client.gui.Gui;
-import net.minecraft.util.math.MathHelper;
+import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
-import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
+import net.java.games.input.Mouse;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.util.math.MathHelper;
 
-public class GuiScrollbar extends Gui {
+public class GuiScrollbar extends AbstractGui {
     private final Rect bounds;
     private Rect grabber;
     private float scaleFactor;
@@ -125,19 +124,22 @@ public class GuiScrollbar extends Gui {
         }
     }
 
-    protected void mouseClicked(int mouseX, int mouseY, int button) {
-        if(canScroll() && !isScrolling() && bounds.contains(mouseX, mouseY)) {
-            if(grabber.contains(mouseX, mouseY)) {
-                clickOffset = mouseY - grabber.getTop();
+    protected boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if(canScroll() && !isScrolling() && bounds.contains((int)mouseX, (int)mouseY)) {
+            if(grabber.contains((int)mouseX, (int)mouseY)) {
+                clickOffset = (int)mouseY - grabber.getTop();
             } else {
                 clickOffset = grabber.getHeight() / 2;
             }
 
             mouseClickMove(mouseX, mouseY, button, 0);
+            return true;
+        } else {
+            return false;
         }
     }
 
-    protected void mouseClickMove(int mouseX, int mouseY, int button, long heldTime) {
+    protected void mouseClickMove(double mouseX, double mouseY, int button, long heldTime) {
         if(isScrolling()) {
             setScroll((int)((mouseY - bounds.getY() - clickOffset) / scaleFactor));
         }

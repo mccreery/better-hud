@@ -9,6 +9,7 @@ import java.util.HashMap;
 import java.util.List;
 
 import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 
 import org.lwjgl.opengl.GL11;
 
@@ -21,13 +22,12 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
 import net.java.games.input.Keyboard;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiLabel;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
 import net.minecraftforge.common.MinecraftForge;
 
@@ -36,41 +36,47 @@ public class GuiElementSettings extends GuiMenuScreen {
     private static final int REPEAT_SPEED_FAST = 10; // Rate of speed-up beyond 20/s
 
     public HudElement<?> element;
-    private ArrayList<GuiTextField> textboxList = new ArrayList<>();
-    public HashMap<Gui, Setting> callbacks = new HashMap<>();
+    private ArrayList<TextFieldWidget> textboxList = new ArrayList<>();
+    public HashMap<AbstractGui, Setting> callbacks = new HashMap<>();
 
     private Rect viewport;
 
-    private final GuiActionButton done = new GuiActionButton(I18n.format("gui.done"));
+    private SuperButton done;
     private GuiScrollbar scrollbar;
 
     private int repeatTimer = 0;
 
-    public GuiElementSettings(HudElement<?> element, GuiScreen prev) {
+    private final Screen previousScreen;
+
+    public GuiElementSettings(HudElement<?> element, Screen previousScreen) {
+        super(new TranslationTextComponent("betterHud.menu.settings", new TranslationTextComponent(element.getUnlocalizedName())));
+
         this.element = element;
-        done.setCallback(b -> MC.displayGuiScreen(prev));
+        this.previousScreen = previousScreen;
     }
 
     @Override
-    public void initGui() {
-        setTitle(I18n.format("betterHud.menu.settings", this.element.getLocalizedName()));
-        buttonList.clear();
+    public void init() {
+        buttons.clear();
         textboxList.clear();
-        labelList.clear();
+        //labels.clear();
+
+        done = new SuperButton(b -> MC.displayGuiScreen(previousScreen));
+        done.setBounds(new Rect(200, 20).align(getOrigin(), Direction.NORTH));
+        done.setMessage(I18n.format("gui.done"));
 
         Keyboard.enableRepeatEvents(true);
-        done.setBounds(new Rect(200, 20).align(getOrigin(), Direction.NORTH));
 
-        List<Gui> parts = new ArrayList<Gui>();
+        List<AbstractGui> parts = new ArrayList<AbstractGui>();
         int contentHeight = element.settings.getGuiParts(parts, callbacks, new Point(width / 2, SPACER)).getY();
 
-        for(Gui gui : parts) {
-            if(gui instanceof GuiButton) {
-                buttonList.add((GuiButton)gui);
+        for(AbstractGui gui : parts) {
+            if(gui instanceof Button) {
+                buttons.add((Button)gui);
             } else if(gui instanceof GuiLabel) {
                 labelList.add((GuiLabel)gui);
-            } else if(gui instanceof GuiTextField) {
-                textboxList.add((GuiTextField)gui);
+            } else if(gui instanceof TextFieldWidget) {
+                textboxList.add((TextFieldWidget)gui);
             }
         }
 
@@ -83,13 +89,13 @@ public class GuiElementSettings extends GuiMenuScreen {
     }
 
     @Override
-    public void onGuiClosed() {
+    public void onClose() {
         Keyboard.enableRepeatEvents(false);
         BetterHud.getProxy().getConfig().saveSettings();
     }
 
     @Override
-    protected void actionPerformed(GuiButton button) {
+    protected void actionPerformed(Button button) {
         if(callbacks.containsKey(button)) {
             callbacks.get(button).actionPerformed(this, button);
 
@@ -104,9 +110,9 @@ public class GuiElementSettings extends GuiMenuScreen {
 
     /** @see GuiScreen#handleMouseInput() */
     @Override
-    public void updateScreen() {
-        for(GuiTextField field : this.textboxList) {
-            field.updateCursorCounter();
+    public void tick() {
+        for(TextFieldWidget field : this.textboxList) {
+            field.tick();
         }
 
         if(selectedButton instanceof GuiActionButton && ((GuiActionButton)selectedButton).getRepeat()) {
@@ -128,7 +134,7 @@ public class GuiElementSettings extends GuiMenuScreen {
     protected void keyTyped(char typedChar, int keyCode) throws IOException {
         super.keyTyped(typedChar, keyCode);
 
-        for(GuiTextField field : this.textboxList) {
+        for(TextFieldWidget field : this.textboxList) {
             field.textboxKeyTyped(typedChar, keyCode);
 
             if(callbacks.containsKey(field)) {
@@ -144,7 +150,7 @@ public class GuiElementSettings extends GuiMenuScreen {
     }
 
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int button) throws IOException {
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if(mouseY >= viewport.getTop() && mouseY < viewport.getBottom()) {
             super.mouseClicked(mouseX, mouseY + getMouseOffset(), button);
 
@@ -154,7 +160,7 @@ public class GuiElementSettings extends GuiMenuScreen {
         }
 
         // Done button isn't in buttonList, have to handle it manually
-        if(done.mousePressed(this.mc, mouseX, mouseY)) {
+        if(done.mousePressed(this, mouseX, mouseY)) {
             ActionPerformedEvent.Pre event = new ActionPerformedEvent.Pre(this, done, buttonList);
             if(MinecraftForge.EVENT_BUS.post(event)) return;
 
@@ -168,6 +174,7 @@ public class GuiElementSettings extends GuiMenuScreen {
             }
         }
         scrollbar.mouseClicked(mouseX, mouseY, button);
+        return true; // TODO
     }
 
     @Override
@@ -183,29 +190,28 @@ public class GuiElementSettings extends GuiMenuScreen {
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        drawDefaultBackground();
+    public void render(int mouseX, int mouseY, float partialTicks) {
+        renderBackground();
         drawTitle();
 
-        ScaledResolution resolution = new ScaledResolution(MC);
-        done.drawButton(MC, mouseX, mouseY, partialTicks);
+        done.render(mouseX, mouseY, partialTicks);
 
-        GlStateManager.pushMatrix();
-        GlUtil.beginScissor(viewport, resolution);
+        RenderSystem.pushMatrix();
+        GlUtil.beginScissor(viewport);
         GL11.glTranslatef(0, -getMouseOffset(), 0);
 
         int viewportMouseY = mouseY + getMouseOffset();
 
-        for(GuiButton button : buttonList) button.drawButton(mc, mouseX, viewportMouseY, partialTicks);
-        for(GuiLabel label : labelList) label.drawLabel(mc, mouseX, viewportMouseY);
+        for(Button button : buttons) button.render(mouseX, viewportMouseY, partialTicks);
+        for(GuiLabel label : labelList) label.drawLabel(mouseX, viewportMouseY);
 
-        for(GuiTextField field : this.textboxList) {
-            field.drawTextBox();
+        for(TextFieldWidget field : this.textboxList) {
+            field.render(mouseX, mouseY, partialTicks);
         }
         element.settings.draw();
 
         GlUtil.endScissor();
-        GlStateManager.popMatrix();
+        RenderSystem.popMatrix();
 
         scrollbar.drawScrollbar(mouseX, mouseY);
         drawResolution(10, 10, 100);
@@ -222,18 +228,18 @@ public class GuiElementSettings extends GuiMenuScreen {
 
         // Precalculate width
         String widthDisplay = String.valueOf(this.width);
-        int stringWidth = fontRenderer.getStringWidth(widthDisplay);
+        int stringWidth = font.getStringWidth(widthDisplay);
 
         // Horizontal
         int textX = x + (width - stringWidth) / 2;
-        drawHorizontalLine(x, textX - SPACER, y, Color.WHITE.getPacked());
-        drawHorizontalLine(x + (width + stringWidth) / 2 + SPACER, x + width, y, Color.WHITE.getPacked());
-        fontRenderer.drawString(widthDisplay, textX, y, Color.WHITE.getPacked());
+        hLine(x, textX - SPACER, y, Color.WHITE.getPacked());
+        hLine(x + (width + stringWidth) / 2 + SPACER, x + width, y, Color.WHITE.getPacked());
+        font.drawString(widthDisplay, textX, y, Color.WHITE.getPacked());
 
         // Vertical
-        int textY = y + (height - fontRenderer.FONT_HEIGHT) / 2;
-        drawVerticalLine(x, y, textY - SPACER, Color.WHITE.getPacked());
-        drawVerticalLine(x, y + (height + fontRenderer.FONT_HEIGHT) / 2 + SPACER, y + height, Color.WHITE.getPacked());
-        fontRenderer.drawString(String.valueOf(this.height), x, textY, Color.WHITE.getPacked());
+        int textY = y + (height - font.FONT_HEIGHT) / 2;
+        vLine(x, y, textY - SPACER, Color.WHITE.getPacked());
+        vLine(x, y + (height + font.FONT_HEIGHT) / 2 + SPACER, y + height, Color.WHITE.getPacked());
+        font.drawString(String.valueOf(this.height), x, textY, Color.WHITE.getPacked());
     }
 }

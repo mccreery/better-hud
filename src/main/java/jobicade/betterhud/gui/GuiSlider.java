@@ -4,23 +4,23 @@ import static jobicade.betterhud.BetterHud.MC;
 
 import jobicade.betterhud.element.settings.SettingSlider;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.widget.button.Button;
 
-public class GuiSlider extends GuiButton {
+public class GuiSlider extends Button {
     private final SettingSlider slider;
     public boolean dragging;
 
-    public GuiSlider(int id, int x, int y, SettingSlider slider) {
-        this(id, x, y, 150, 20, slider);
+    public GuiSlider(int x, int y, SettingSlider slider) {
+        this(x, y, 150, 20, slider);
     }
 
     public void updateDisplayString() {
-        displayString = slider.getDisplayString();
+        setMessage(slider.getDisplayString());
     }
 
-    public GuiSlider(int id, int x, int y, int width, int height, SettingSlider slider) {
-        super(id, x, y, width, height, "");
+    public GuiSlider(int x, int y, int width, int height, SettingSlider slider) {
+        super(x, y, width, height, "", b -> {});
         this.slider = slider;
         updateDisplayString();
     }
@@ -31,7 +31,7 @@ public class GuiSlider extends GuiButton {
     }
 
     @Override
-    protected int getHoverState(boolean mouseOver) {
+    protected int getYImage(boolean mouseOver) {
         return 0;
     }
 
@@ -51,7 +51,7 @@ public class GuiSlider extends GuiButton {
             MC.getTextureManager().bindTexture(BUTTON_TEXTURES);
             this.drawTexturedModalRect(x + sliderOffset,     y,   0, 66, 4, 20);
             this.drawTexturedModalRect(x + sliderOffset + 4, y, 196, 66, 4, 20);
-            MC.getTextureManager().bindTexture(Gui.ICONS);
+            MC.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
         }
     }
 

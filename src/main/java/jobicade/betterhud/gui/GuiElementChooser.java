@@ -8,15 +8,15 @@ import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.SettingElement;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.registry.HudElements;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screen.Screen;
 
 public class GuiElementChooser extends GuiElements {
-    private final GuiScreen parent;
+    private final Screen parent;
     private final HudElement<?> element;
 
     private final SettingElement setting;
 
-    public GuiElementChooser(GuiScreen parent, HudElement<?> element, SettingElement setting) {
+    public GuiElementChooser(Screen parent, HudElement<?> element, SettingElement setting) {
         this.parent = parent;
         this.element = element;
         this.setting = setting;
@@ -31,12 +31,13 @@ public class GuiElementChooser extends GuiElements {
     }
 
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
         MC.displayGuiScreen(parent);
+        return true;
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+    public void render(int mouseX, int mouseY, float partialTicks) {
         HudElement<?> selected = getHoveredElement(mouseX, mouseY, (HudElement<?> element) -> {
             return element == this.element;
         });

@@ -5,24 +5,29 @@ import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.util.text.ITextComponent;
 
-public class GuiMenuScreen extends GuiScreen {
+public class GuiMenuScreen extends Screen {
     private Point origin;
     private String title;
 
+    public GuiMenuScreen(ITextComponent title) {
+        super(title);
+    }
+
     @Override
-    protected void actionPerformed(GuiButton button) {
+    protected void actionPerformed(Button button) {
         if(button instanceof GuiActionButton) {
             ((GuiActionButton)button).actionPerformed();
         }
     }
 
     @Override
-    public void setWorldAndResolution(Minecraft mc, int width, int height) {
+    public void resize(Minecraft mc, int width, int height) {
         this.origin = new Point(width / 2, height / 16 + 20);
-        super.setWorldAndResolution(mc, width, height);
+        super.resize(mc, width, height);
     }
 
     protected Point getOrigin() {
@@ -40,9 +45,9 @@ public class GuiMenuScreen extends GuiScreen {
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        this.drawDefaultBackground();
+    public void render(int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground();
         this.drawTitle();
-        super.drawScreen(mouseX, mouseY, partialTicks);
+        super.render(mouseX, mouseY, partialTicks);
     }
 }

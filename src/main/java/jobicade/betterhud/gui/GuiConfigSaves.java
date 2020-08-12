@@ -22,26 +22,27 @@ import jobicade.betterhud.render.DefaultBoxed;
 import jobicade.betterhud.render.Grid;
 import jobicade.betterhud.render.Label;
 import jobicade.betterhud.util.GlUtil;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.StringTextComponent;
 
-public class GuiConfigSaves extends GuiScreen {
-    private GuiTextField name;
+public class GuiConfigSaves extends Screen {
+    private TextFieldWidget name;
     private GuiScrollbar scrollbar;
     private Rect viewport;
 
-    private final GuiScreen previous;
+    private final Screen previous;
     private final ConfigManager manager;
 
     private Grid<ListItem> list;
     private ConfigSlot selected;
 
-    private GuiActionButton load, save;
+    private SuperButton load, save;
 
-    public GuiConfigSaves(ConfigManager manager, GuiScreen previous) {
+    public GuiConfigSaves(ConfigManager manager, Screen previous) {
+        super(new StringTextComponent(""));
         this.previous = previous;
         this.manager = manager;
     }
@@ -56,8 +57,8 @@ public class GuiConfigSaves extends GuiScreen {
 
     private void updateSelected() {
         selected = getSelectedEntry();
-        load.enabled = selected != null;
-        save.enabled = selected != null && selected.isDest();
+        load.active = selected != null;
+        save.active = selected != null && selected.isDest();
     }
 
     private void save() {
@@ -80,14 +81,15 @@ public class GuiConfigSaves extends GuiScreen {
     }
 
     @Override
-    public void initGui() {
-        super.initGui();
+    public void init() {
+        super.init();
 
         Point origin = new Point(width / 2, height / 16 + 20);
 
-        buttonList.add(new GuiActionButton(I18n.format("gui.done"))
-            .setCallback(b -> MC.displayGuiScreen(previous))
-            .setBounds(new Rect(200, 20).align(origin, Direction.NORTH)));
+        SuperButton done = new SuperButton(b -> MC.displayGuiScreen(previous));
+        done.setBounds(new Rect(200, 20).align(origin, Direction.NORTH));
+        done.setMessage(I18n.format("gui.done"));
+        buttons.add(done);
 
         Rect textField = new Rect(150, 20);
         Rect smallButton = new Rect(50, 20);
@@ -95,15 +97,23 @@ public class GuiConfigSaves extends GuiScreen {
         Rect fieldLine = new Rect(textField.getWidth() + (SPACER + smallButton.getWidth()) * 2, 20).align(origin.add(0, 20 + SPACER), Direction.NORTH);
         textField = textField.anchor(fieldLine, Direction.NORTH_WEST);
 
-        name = new GuiTextField(0, fontRenderer, textField.getX(), textField.getY(), textField.getWidth(), textField.getHeight());
-        name.setFocused(true);
+        name = new TextFieldWidget(font, textField.getX(), textField.getY(), textField.getWidth(), textField.getHeight(), "");
+        name.changeFocus(true);
         name.setCanLoseFocus(false);
 
         smallButton = smallButton.move(textField.getAnchor(Direction.NORTH_EAST).add(SPACER, 0));
-        buttonList.add(load = new GuiActionButton("Load").setCallback(b -> load()).setBounds(smallButton));
+
+        load = new SuperButton(b -> load());
+        load.setBounds(smallButton);
+        load.setMessage("Load");
+        buttons.add(load);
 
         smallButton = smallButton.move(smallButton.getAnchor(Direction.NORTH_EAST).add(SPACER, 0));
-        buttonList.add(save = new GuiActionButton("Save").setCallback(b -> save()).setBounds(smallButton));
+
+        save = new SuperButton(b -> save());
+        save.setBounds(smallButton);
+        save.setMessage("Save");
+        buttons.add(save);
 
         viewport = new Rect(400, 0).align(fieldLine.getAnchor(Direction.SOUTH).add(0, SPACER), Direction.NORTH).withBottom(height - 20);
         scrollbar = new GuiScrollbar(viewport, 0);
@@ -120,35 +130,41 @@ public class GuiConfigSaves extends GuiScreen {
     }
 
     @Override
-    public void updateScreen() {
-        super.updateScreen();
-        name.updateCursorCounter();
+    public void tick() {
+        super.tick();
+        name.tick();
     }
 
     @Override
-    protected void keyTyped(char typedChar, int keyCode) throws IOException {
-        super.keyTyped(typedChar, keyCode);
-        name.textboxKeyTyped(typedChar, keyCode);
+    public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
+        boolean b = name.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_) ||
+            super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
+
         updateSelected();
+        return b;
     }
 
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-        super.mouseClicked(mouseX, mouseY, mouseButton);
+    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+        if (name.mouseClicked(mouseX, mouseY, mouseButton)) {
+            return true;
+        }
+        if (scrollbar.mouseClicked(mouseX, mouseY, mouseButton)) {
+            return true;
+        }
 
-        name.mouseClicked(mouseX, mouseY, mouseButton);
-        scrollbar.mouseClicked(mouseX, mouseY, mouseButton);
-
-        if(viewport.contains(mouseX, mouseY)) {
+        if(viewport.contains((int)mouseX, (int)mouseY)) {
             for(int i = 0; i < list.getSource().size(); i++) {
                 Rect listBounds = getListBounds();
 
-                if(list.getCellBounds(listBounds, new Point(0, i)).contains(mouseX, mouseY)) {
+                if(list.getCellBounds(listBounds, new Point(0, i)).contains((int)mouseX, (int)mouseY)) {
                     name.setText(list.getSource().get(i).entry.getName());
                     updateSelected();
                 }
             }
         }
+
+        return super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
     @Override
@@ -170,7 +186,7 @@ public class GuiConfigSaves extends GuiScreen {
     }
 
     @Override
-    protected void actionPerformed(GuiButton button) throws IOException {
+    protected void actionPerformed(Button button) throws IOException {
         if(button instanceof GuiActionButton) {
             ((GuiActionButton)button).actionPerformed();
         }
@@ -182,13 +198,15 @@ public class GuiConfigSaves extends GuiScreen {
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        drawDefaultBackground();
-        super.drawScreen(mouseX, mouseY, partialTicks);
+    public void render(int mouseX, int mouseY, float partialTicks) {
+        renderBackground();
+        super.render(mouseX, mouseY, partialTicks);
 
-        name.drawTextBox();
+        name.render(mouseX, mouseY, partialTicks);
 
-        Rect scissorRect = viewport.withY(height - viewport.getBottom()).scale(new ScaledResolution(MC).getScaleFactor());
+        float scaleFactor = (float)MC.getMainWindow().getGuiScaleFactor();
+
+        Rect scissorRect = viewport.withY(height - viewport.getBottom()).scale(scaleFactor, scaleFactor);
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
         GL11.glScissor(scissorRect.getX(), scissorRect.getY(), scissorRect.getWidth(), scissorRect.getHeight());
 

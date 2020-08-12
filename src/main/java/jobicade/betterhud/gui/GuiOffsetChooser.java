@@ -5,21 +5,24 @@ import static jobicade.betterhud.BetterHud.SPACER;
 
 import java.io.IOException;
 
+import org.lwjgl.glfw.GLFW;
+
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
-import net.java.games.input.Keyboard;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.StringTextComponent;
 
-public class GuiOffsetChooser extends GuiScreen {
+public class GuiOffsetChooser extends Screen {
     private final GuiElementSettings parent;
     private final SettingPosition setting;
 
     public GuiOffsetChooser(GuiElementSettings parent, SettingPosition setting) {
+        super(new StringTextComponent(""));
         this.parent = parent;
         this.setting = setting;
     }
@@ -33,16 +36,17 @@ public class GuiOffsetChooser extends GuiScreen {
     }
 
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
         MC.displayGuiScreen(parent);
+        return true;
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+    public void render(int mouseX, int mouseY, float partialTicks) {
         Point anchor = setting.getParent().getAnchor(setting.getAnchor());
         Point offset = new Point(mouseX, mouseY).sub(anchor);
 
-        if(!Keyboard.isKeyDown(Keyboard.KEY_LCONTROL)) {
+        if(!Screen.hasControlDown()) {
             int x = (offset.getX() + SPACER * 3 / 2) / SPACER - 1;
             if(x >= -1 && x <= 1) {
                 offset = offset.withX(x * SPACER);
@@ -62,13 +66,13 @@ public class GuiOffsetChooser extends GuiScreen {
             GlUtil.drawBorderRect(parent.element.getLastBounds(), Color.RED);
         } else {
             Point mouse = offset.add(anchor);
-            drawHorizontalLine(mouse.getX() - SPACER, mouse.getX() + SPACER, mouse.getY(), Color.RED.getPacked());
-            drawVerticalLine(mouse.getX(), mouse.getY() - SPACER, mouse.getY() + SPACER, Color.RED.getPacked());
+            hLine(mouse.getX() - SPACER, mouse.getX() + SPACER, mouse.getY(), Color.RED.getPacked());
+            vLine(mouse.getX(), mouse.getY() - SPACER, mouse.getY() + SPACER, Color.RED.getPacked());
         }
 
-        String key = Keyboard.getKeyName(Keyboard.KEY_LCONTROL);
+        String key = GLFW.glfwGetKeyName(GLFW.GLFW_KEY_LEFT_CONTROL, GLFW.glfwGetKeyScancode(GLFW.GLFW_KEY_LEFT_CONTROL));
         GlUtil.drawString(I18n.format("betterHud.menu.unsnap", key), new Point(SPACER, SPACER), Direction.NORTH_WEST, Color.WHITE);
 
-        drawHoveringText(offset.toPrettyString(), mouseX, mouseY);
+        renderTooltip(offset.toPrettyString(), mouseX, mouseY);
     }
 }

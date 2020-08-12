@@ -7,9 +7,14 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.registry.OverlayElements;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.util.text.ITextComponent;
 
-public abstract class GuiElements extends GuiScreen {
+public abstract class GuiElements extends Screen {
+    public GuiElements(ITextComponent title) {
+        super(title);
+    }
+
     protected static HudElement<?> getHoveredElement(int mouseX, int mouseY, Predicate<HudElement<?>> ignore) {
         HudElement<?> result = null;
 
