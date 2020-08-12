@@ -59,6 +59,7 @@ public class SettingElement extends SettingAlignable {
         // TODO pass current gui into setting
         button = new SuperButton(b -> MC.displayGuiScreen(new GuiElementChooser(MC.currentScreen, ((GuiElementSettings)MC.currentScreen).element, this)));
         button.setBounds(bounds);
+        button.setMessage(text);
 
         parts.add(button);
         callbacks.put(button, this);
