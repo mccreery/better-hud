@@ -22,8 +22,9 @@ public class Chat extends OverlayElement {
     public Chat() {
         super("chat");
 
-        position = new SettingPosition("position", DirectionOptions.CORNERS, DirectionOptions.NONE);
-        settings.addChild(position);
+        position = new SettingPosition(this, "position");
+        position.setDirectionOptions(DirectionOptions.CORNERS);
+        position.setContentOptions(DirectionOptions.NONE);
     }
 
     private Rect bounds;

@@ -13,7 +13,7 @@ public class FpsCount extends TextElement {
     public FpsCount() {
         super("fpsCount");
 
-        settings.addChild(numberOnly = new SettingBoolean("numberOnly"));
+        numberOnly = new SettingBoolean(this, "numberOnly");
     }
 
     @Override

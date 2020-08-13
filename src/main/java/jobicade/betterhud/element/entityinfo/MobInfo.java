@@ -26,7 +26,7 @@ public class MobInfo extends BillboardElement {
     public MobInfo() {
         super("mobInfo");
 
-        settings.addChild(compress = new SettingSlider("compress", 0, 200, 20) {
+        compress = new SettingSlider(this, "compress", 0, 200) {
             @Override
             public String getDisplayValue(double value) {
                 if(value == 0) {
@@ -35,7 +35,8 @@ public class MobInfo extends BillboardElement {
                     return super.getDisplayValue(value);
                 }
             }
-        });
+        };
+        compress.setInterval(20);
     }
 
     @Override

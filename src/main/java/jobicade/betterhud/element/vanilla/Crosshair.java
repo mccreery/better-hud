@@ -39,9 +39,11 @@ public class Crosshair extends OverlayElement {
     public Crosshair() {
         super("crosshair");
 
-        position = new SettingPosition(DirectionOptions.I, DirectionOptions.NONE);
+        position = new SettingPosition(this, "position");
+        position.setDirectionOptions(DirectionOptions.I);
+        position.setContentOptions(DirectionOptions.NONE);
 
-        attackIndicator = new SettingBoolean(null) {
+        attackIndicator = new SettingBoolean(this, null) {
             @Override
             public boolean get() {
                 return MC.gameSettings.attackIndicator != AttackIndicatorStatus.OFF;
@@ -61,7 +63,7 @@ public class Crosshair extends OverlayElement {
         attackIndicator.setValuePrefix(SettingBoolean.VISIBLE);
         position.setEnableOn(attackIndicator::get);
 
-        indicatorType = new SettingChoose(null, 2) {
+        indicatorType = new SettingChoose(this, null, 2) {
             @Override
             public int getIndex() {
                 return Math.max(MC.gameSettings.attackIndicator.getId() - 1, 0);
@@ -80,8 +82,6 @@ public class Crosshair extends OverlayElement {
             }
         };
         indicatorType.setEnableOn(attackIndicator::get);
-
-        settings.addChildren(position, attackIndicator, indicatorType);
     }
 
     @Override

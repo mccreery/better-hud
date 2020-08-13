@@ -17,15 +17,15 @@ public abstract class Clock extends TextElement {
     public Clock(String name) {
         super(name);
 
-        twentyFour = new SettingBoolean("24hr");
-        showSeconds = new SettingBoolean("showSeconds");
+        new Legend(this, "misc");
+        twentyFour = new SettingBoolean(this, "24hr");
+        showSeconds = new SettingBoolean(this, "showSeconds");
         showSeconds.setValuePrefix(SettingBoolean.VISIBLE);
 
-        dateType = new SettingChoose("dateType", "dmy", "mdy", "ymd");
-        fullYear = new SettingBoolean("fullYear");
+        dateType = new SettingChoose(this, "dateType", "dmy", "mdy", "ymd");
+        fullYear = new SettingBoolean(this, "fullYear");
         fullYear.setValuePrefix(SettingBoolean.VISIBLE);
 
-        settings.addChildren(new Legend("misc"), twentyFour, showSeconds, dateType, fullYear);
         border = true;
     }
 

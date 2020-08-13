@@ -27,11 +27,10 @@ public class ArrowCount extends OverlayElement {
     public ArrowCount() {
         super("arrowCount");
 
-        settings.addChildren(
-            position = new SettingPosition(DirectionOptions.CORNERS, DirectionOptions.NONE),
-            overlay = new SettingBoolean("overlay")
-        );
-
+        position = new SettingPosition(this, "position");
+        position.setDirectionOptions(DirectionOptions.CORNERS);
+        position.setContentOptions(DirectionOptions.NONE);
+        overlay = new SettingBoolean(this, "overlay");
         position.setEnableOn(() -> !overlay.get());
     }
 

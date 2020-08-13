@@ -23,12 +23,11 @@ public class ExperienceInfo extends TextElement {
     public ExperienceInfo() {
         super("experienceInfo");
 
-        total = new SettingBoolean("showTotalExp");
+        new Legend(this, "misc");
+        total = new SettingBoolean(this, "showTotalExp");
         total.setValuePrefix(SettingBoolean.VISIBLE);
-        lifetime = new SettingBoolean("showLifetimeExp");
+        lifetime = new SettingBoolean(this, "showLifetimeExp");
         lifetime.setValuePrefix(SettingBoolean.VISIBLE);
-
-        settings.addChildren(new Legend("misc"), total, lifetime);
     }
 
     @Override

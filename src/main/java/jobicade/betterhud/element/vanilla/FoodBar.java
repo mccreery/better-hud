@@ -16,7 +16,7 @@ public class FoodBar extends Bar {
     public FoodBar() {
         super("food", new StatBarFood());
 
-        settings.addChild(hideMount = new SettingBoolean("hideMount"));
+        hideMount = new SettingBoolean(this, "hideMount");
     }
 
     public boolean shouldRenderPrecheck() {

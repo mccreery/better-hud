@@ -22,8 +22,9 @@ public class Experience extends OverlayElement {
     public Experience() {
         super("experience");
 
-        position = new SettingPosition(DirectionOptions.BAR, DirectionOptions.NORTH_SOUTH);
-        settings.addChild(position);
+        position = new SettingPosition(this, "position");
+        position.setDirectionOptions(DirectionOptions.BAR);
+        position.setContentOptions(DirectionOptions.NORTH_SOUTH);
     }
 
     @Override

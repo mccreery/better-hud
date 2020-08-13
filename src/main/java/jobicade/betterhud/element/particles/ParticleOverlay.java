@@ -19,7 +19,7 @@ public abstract class ParticleOverlay extends OverlayElement implements Tickable
 
     public ParticleOverlay(String name) {
         super(name);
-        settings.addChild(density = new SettingChoose("density", "sparse", "normal", "dense", "denser"));
+        density = new SettingChoose(this, "density", "sparse", "normal", "dense", "denser");
     }
 
     /** Called each tick while enabled to spawn new particles.

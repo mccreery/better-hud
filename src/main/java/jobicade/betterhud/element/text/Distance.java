@@ -21,10 +21,8 @@ public class Distance extends TextElement {
     public Distance() {
         super("distance");
 
-        settings.addChildren(
-            new Legend("misc"),
-            mode = new SettingChoose(3)
-        );
+        new Legend(this, "misc");
+        mode = new SettingChoose(this, "mode", 3);
     }
 
     @Override

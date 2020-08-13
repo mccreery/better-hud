@@ -21,7 +21,9 @@ public class JumpBar extends OverlayElement {
     public JumpBar() {
         super("jumpBar");
 
-        settings.addChild(position = new SettingPosition("position", DirectionOptions.BAR, DirectionOptions.NORTH_SOUTH));
+        position = new SettingPosition(this, "position");
+        position.setDirectionOptions(DirectionOptions.BAR);
+        position.setContentOptions(DirectionOptions.NORTH_SOUTH);
     }
 
     @Override

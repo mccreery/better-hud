@@ -35,7 +35,7 @@ public class PlayerInfo extends BillboardElement {
     public PlayerInfo() {
         super("playerInfo");
 
-        settings.addChild(tooltipLines = new SettingSlider("tooltipLines", -1, 10, 1) {
+        tooltipLines = new SettingSlider(this, "tooltipLines", -1, 10) {
             @Override
             public String getDisplayValue(double scaledValue) {
                 if(scaledValue == -1) {
@@ -44,7 +44,8 @@ public class PlayerInfo extends BillboardElement {
                     return super.getDisplayValue(scaledValue);
                 }
             }
-        });
+        };
+        tooltipLines.setInterval(1);
     }
 
     @Override
