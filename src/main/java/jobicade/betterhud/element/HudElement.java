@@ -1,8 +1,5 @@
 package jobicade.betterhud.element;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
-
 import org.apache.maven.artifact.versioning.InvalidVersionSpecificationException;
 import org.apache.maven.artifact.versioning.VersionRange;
 
@@ -49,25 +46,8 @@ public abstract class HudElement<T> {
         return I18n.format(getUnlocalizedName());
     }
 
-    // Maintains insert order
-    private final Set<Setting> settingsList = new LinkedHashSet<>();
-
-    /**
-     * Only called by {@link Setting#Setting(HudElement, String)} to complete
-     * the double link between the element and the setting.
-     *
-     * <p><strong>Do not call this method.</strong>
-     * @throws IllegalStateException if the setting has already been added.
-     */
-    public final void addSetting(Setting setting) {
-        if (!settingsList.add(setting)) {
-            throw new IllegalStateException("setting added multiple times.");
-        }
-    }
-
     /** The settings saved to the config file for this element */
-    @Deprecated
-    public final Setting rootSetting;
+    private final Setting rootSetting;
 
     /**
      * @return The root setting which has the same name as the element and

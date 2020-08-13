@@ -32,8 +32,7 @@ public class Setting {
      * Creates a setting as one of the root settings in an element.
      */
     public Setting(HudElement<?> element, String name) {
-        this(element, null, name);
-        element.addSetting(this);
+        this(element, element.getRootSetting(), name);
     }
 
     /**
@@ -41,13 +40,14 @@ public class Setting {
      */
     public Setting(Setting parent, String name) {
         this(parent.element, parent, name);
-        parent.children.add(this);
     }
 
     private Setting(HudElement<?> element, Setting parent, String name) {
         this.element = element;
         this.parent = parent;
         this.name = name;
+
+        parent.children.add(this);
     }
 
     public HudElement<?> getElement() {
@@ -92,27 +92,6 @@ public class Setting {
 
     public void setHidden() {
         this.hidden = true;
-    }
-
-    @Deprecated
-    public final void addChild(Setting setting) {
-        children.add(setting);
-        //setting.parent = this;
-    }
-
-    @Deprecated
-    public final void addChildren(Iterable<Setting> settings) {
-        for (Setting setting : settings) {
-            addChild(setting);
-        }
-    }
-
-    @Deprecated
-    @SafeVarargs
-    public final void addChildren(Setting... settings) {
-        for (Setting setting : settings) {
-            addChild(setting);
-        }
     }
 
     public boolean isEmpty() {
