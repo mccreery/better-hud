@@ -29,11 +29,11 @@ public class Setting {
     private BooleanSupplier enableOn = () -> true;
 
     /**
-     * Creates a root setting for an element. Subclasses need not call this
-     * constructor as it is only used for the root setting.
+     * Creates a setting as one of the root settings in an element.
      */
     public Setting(HudElement<?> element, String name) {
         this(element, null, name);
+        element.addSetting(this);
     }
 
     /**
