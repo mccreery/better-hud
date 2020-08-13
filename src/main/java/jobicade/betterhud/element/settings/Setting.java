@@ -19,8 +19,6 @@ public abstract class Setting {
     protected final List<Setting> children = new ArrayList<>();
     public final String name;
 
-    private String unlocalizedName;
-
     /** Set to {@code true} to hide the setting from the GUI
      * @see #getGuiParts(List, Map, Point) */
     private boolean hidden = false;
@@ -29,7 +27,6 @@ public abstract class Setting {
 
     public Setting(String name) {
         this.name = name;
-        if(name != null) this.unlocalizedName = "betterHud.setting." + name;
     }
 
     public String getName() {
@@ -81,12 +78,8 @@ public abstract class Setting {
         return children.isEmpty();
     }
 
-    public void setUnlocalizedName(String unlocalizedName) {
-        this.unlocalizedName = unlocalizedName;
-    }
-
     public String getUnlocalizedName() {
-        return unlocalizedName;
+        return "betterHud.setting." + name;
     }
 
     public String getLocalizedName() {

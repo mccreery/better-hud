@@ -52,9 +52,13 @@ public class Crosshair extends OverlayElement {
                 MC.gameSettings.attackIndicator = AttackIndicatorStatus.byId(value ? indicatorType.getIndex() + 1 : 0);
                 MC.gameSettings.saveOptions();
             }
+
+            @Override
+            public String getUnlocalizedName() {
+                return "options.attackIndicator";
+            }
         };
         attackIndicator.setValuePrefix(SettingBoolean.VISIBLE);
-        attackIndicator.setUnlocalizedName("options.attackIndicator");
         position.setEnableOn(attackIndicator::get);
 
         indicatorType = new SettingChoose(null, 2) {
