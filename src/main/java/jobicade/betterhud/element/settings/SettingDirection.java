@@ -22,24 +22,18 @@ public class SettingDirection extends SettingAlignable {
 
     private boolean horizontal = false;
 
-    private final DirectionOptions options;
+    private DirectionOptions options = DirectionOptions.ALL;
     private Direction value;
 
-    public SettingDirection(HudElement<?> element, String name, Direction alignment) {
-        this(element, name, alignment, DirectionOptions.ALL);
+    public SettingDirection(HudElement<?> element, String name) {
+        super(element, name);
     }
 
-    public SettingDirection(HudElement<?> element, String name, Direction alignment, DirectionOptions options) {
-        super(element, name, alignment);
-        this.options = options;
+    public SettingDirection(Setting parent, String name) {
+        super(parent, name);
     }
 
-    public SettingDirection(Setting parent, String name, Direction alignment) {
-        this(parent, name, alignment, DirectionOptions.ALL);
-    }
-
-    public SettingDirection(Setting parent, String name, Direction alignment, DirectionOptions options) {
-        super(parent, name, alignment);
+    public void setOptions(DirectionOptions options) {
         this.options = options;
     }
 

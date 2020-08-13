@@ -12,16 +12,14 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.GuiElementSettings;
 
 public abstract class SettingAlignable extends Setting {
-    protected Direction alignment;
+    protected Direction alignment = Direction.CENTER;
 
-    public SettingAlignable(HudElement<?> element, String name, Direction alignment) {
+    public SettingAlignable(HudElement<?> element, String name) {
         super(element, name);
-        this.alignment = alignment;
     }
 
-    public SettingAlignable(Setting parent, String name, Direction alignment) {
+    public SettingAlignable(Setting parent, String name) {
         super(parent, name);
-        this.alignment = alignment;
     }
 
     public void setAlignment(Direction alignment) {

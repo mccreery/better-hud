@@ -22,28 +22,16 @@ public class SettingChoose extends SettingAlignable {
     private int index = 0;
     private int length;
 
-    public SettingChoose(HudElement<?> element, int length) {
-        this(element, "mode", length);
-    }
-
     public SettingChoose(HudElement<?> element, String name, int length) {
         this(element, name);
         this.length = length;
     }
 
     public SettingChoose(HudElement<?> element, String name, String... modes) {
-        this(element, name, Direction.CENTER, modes);
-    }
-
-    public SettingChoose(HudElement<?> element, String name, Direction alignment, String... modes) {
-        super(element, name, alignment);
+        super(element, name);
 
         this.modes = modes;
         this.length = modes.length;
-    }
-
-    public SettingChoose(Setting parent, int length) {
-        this(parent, "mode", length);
     }
 
     public SettingChoose(Setting parent, String name, int length) {
@@ -52,11 +40,7 @@ public class SettingChoose extends SettingAlignable {
     }
 
     public SettingChoose(Setting parent, String name, String... modes) {
-        this(parent, name, Direction.CENTER, modes);
-    }
-
-    public SettingChoose(Setting parent, String name, Direction alignment, String... modes) {
-        super(parent, name, alignment);
+        super(parent, name);
 
         this.modes = modes;
         this.length = modes.length;

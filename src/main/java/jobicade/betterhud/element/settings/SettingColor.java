@@ -4,9 +4,15 @@ import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.render.Color;
 
 public class SettingColor extends Setting {
-    private final SettingSlider red = new SettingSlider(this, "red", 0, 255, 1);
-    private final SettingSlider green = new SettingSlider(this, "green", 0, 255, 1);
-    private final SettingSlider blue = new SettingSlider(this, "blue", 0, 255, 1);
+    private final SettingSlider red = new SettingSlider(this, "red", 0, 255);
+    private final SettingSlider green = new SettingSlider(this, "green", 0, 255);
+    private final SettingSlider blue = new SettingSlider(this, "blue", 0, 255);
+
+    {
+        red.setInterval(1);
+        green.setInterval(1);
+        blue.setInterval(1);
+    }
 
     public SettingColor(HudElement<?> element, String name) {
         super(element, name);

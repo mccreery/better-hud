@@ -3,7 +3,6 @@ package jobicade.betterhud.element.settings;
 import java.util.Collection;
 
 import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.gui.SuperButton;
@@ -18,19 +17,11 @@ public class SettingBoolean extends SettingAlignable {
     private boolean value = false;
 
     public SettingBoolean(HudElement<?> element, String name) {
-        this(element, name, Direction.CENTER);
-    }
-
-    public SettingBoolean(HudElement<?> element, String name, Direction alignment) {
-        super(element, name, alignment);
+        super(element, name);
     }
 
     public SettingBoolean(Setting parent, String name) {
-        this(parent, name, Direction.CENTER);
-    }
-
-    public SettingBoolean(Setting parent, String name, Direction alignment) {
-        super(parent, name, alignment);
+        super(parent, name);
     }
 
     public boolean get() {

@@ -5,7 +5,6 @@ import static jobicade.betterhud.BetterHud.MC;
 import java.util.Collection;
 
 import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.GuiElementChooser;
 import jobicade.betterhud.gui.GuiElementSettings;
@@ -18,12 +17,12 @@ public class SettingElement extends SettingAlignable {
     private HudElement<?> value;
     private SuperButton button;
 
-    public SettingElement(HudElement<?> element, String name, Direction alignment) {
-        super(element, name, alignment);
+    public SettingElement(HudElement<?> element, String name) {
+        super(element, name);
     }
 
-    public SettingElement(Setting parent, String name, Direction alignment) {
-        super(parent, name, alignment);
+    public SettingElement(Setting parent, String name) {
+        super(parent, name);
     }
 
     public HudElement<?> get() {

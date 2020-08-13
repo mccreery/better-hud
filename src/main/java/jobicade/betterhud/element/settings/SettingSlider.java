@@ -1,6 +1,6 @@
 package jobicade.betterhud.element.settings;
 
-import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.gui.GuiSlider;
@@ -17,15 +17,19 @@ public class SettingSlider extends SettingAlignable {
 
     private double displayScale = 1;
 
-    public SettingSlider(Setting parent, String name, float min, float max) {
-        this(parent, name, min, max, -1);
-    }
-
-    public SettingSlider(Setting parent, String name, float minimum, float maximum, float interval) {
-        super(parent, name, Direction.CENTER);
+    public SettingSlider(HudElement<?> element, String name, float minimum, float maximum) {
+        super(element, name);
         this.minimum = minimum;
         this.maximum = maximum;
-        this.interval = interval;
+
+        updateDisplayPlaces();
+        setValue(getMinimum());
+    }
+
+    public SettingSlider(Setting parent, String name, float minimum, float maximum) {
+        super(parent, name);
+        this.minimum = minimum;
+        this.maximum = maximum;
 
         updateDisplayPlaces();
         setValue(getMinimum());
@@ -57,9 +61,13 @@ public class SettingSlider extends SettingAlignable {
         return maximum;
     }
 
-    protected final float interval;
+    protected float interval;
     public float getInterval() {
         return interval;
+    }
+
+    public void setInterval(float interval) {
+        this.interval = interval;
     }
 
     public void setDisplayPercent() {

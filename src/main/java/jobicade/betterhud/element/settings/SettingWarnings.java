@@ -2,18 +2,30 @@ package jobicade.betterhud.element.settings;
 
 import java.util.Collection;
 
+import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Direction;
 import net.minecraft.client.resources.I18n;
 
 public class SettingWarnings extends Setting {
     private final SettingSlider[] sliders;
 
+    public SettingWarnings(HudElement<?> parent, String name, int warnings) {
+        super(parent, name);
+
+        new Legend(this, "damageWarning");
+        sliders = new SettingSlider[warnings];
+        populateSliders();
+    }
+
     public SettingWarnings(Setting parent, String name, int warnings) {
         super(parent, name);
 
         new Legend(this, "damageWarning");
-
         sliders = new SettingSlider[warnings];
+        populateSliders();
+    }
+
+    private void populateSliders() {
         for(int i = 0; i < sliders.length; i++) {
             SettingSlider slider = new WarningSlider(i);
 
