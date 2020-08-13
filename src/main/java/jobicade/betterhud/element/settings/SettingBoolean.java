@@ -16,12 +16,12 @@ public class SettingBoolean extends SettingAlignable {
 
     private boolean value = false;
 
-    public SettingBoolean(String name) {
-        this(name, Direction.CENTER);
+    public SettingBoolean(Setting parent, String name) {
+        this(parent, name, Direction.CENTER);
     }
 
-    public SettingBoolean(String name, Direction alignment) {
-        super(name, alignment);
+    public SettingBoolean(Setting parent, String name, Direction alignment) {
+        super(parent, name, alignment);
     }
 
     public boolean get() {

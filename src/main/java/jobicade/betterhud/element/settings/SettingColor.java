@@ -8,11 +8,9 @@ public class SettingColor extends Setting {
     public SettingColor(Setting parent, String name) {
         super(parent, name);
 
-        addChildren(
-            red = new SettingSlider("red", 0, 255, 1),
-            green = new SettingSlider("green", 0, 255, 1),
-            blue = new SettingSlider("blue", 0, 255, 1)
-        );
+        red = new SettingSlider(this, "red", 0, 255, 1);
+        green = new SettingSlider(this, "green", 0, 255, 1);
+        blue = new SettingSlider(this, "blue", 0, 255, 1);
     }
 
     public void set(Color color) {

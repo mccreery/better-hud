@@ -11,7 +11,7 @@ public class SettingWarnings extends Setting {
     public SettingWarnings(Setting parent, String name, int warnings) {
         super(parent, name);
 
-        addChild(new Legend("damageWarning"));
+        new Legend(this, "damageWarning");
 
         sliders = new SettingSlider[warnings];
         for(int i = 0; i < sliders.length; i++) {
@@ -26,7 +26,6 @@ public class SettingWarnings extends Setting {
             }
             sliders[i] = slider;
         }
-        addChildren(sliders);
     }
 
     public float[] get() {
@@ -57,7 +56,7 @@ public class SettingWarnings extends Setting {
         private final int index;
 
         private WarningSlider(int index) {
-            super("warning." + (index + 1), 0, 1);
+            super(SettingWarnings.this, "warning." + (index + 1), 0, 1);
             this.index = index;
 
             setDisplayPercent();

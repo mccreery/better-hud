@@ -8,8 +8,8 @@ public class SettingLock extends SettingBoolean {
     // Custom bounds overrides aligned bounds
     private Rect bounds;
 
-    public SettingLock(String name) {
-        super(name);
+    public SettingLock(Setting parent, String name) {
+        super(parent, name);
     }
 
     public void setRect(Rect bounds) {

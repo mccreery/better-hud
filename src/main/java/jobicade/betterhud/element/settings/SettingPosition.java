@@ -42,21 +42,22 @@ public class SettingPosition extends Setting {
 
     public SettingPosition(Setting parent, String name, DirectionOptions directionOptions, DirectionOptions contentOptions) {
         super(parent, name);
+        new Legend(this, "position");
 
-        mode = new SettingChoose("position", "preset", "custom");
+        mode = new SettingChoose(this, "position", "preset", "custom");
         BooleanSupplier isPreset = () -> mode.getIndex() == 0;
         BooleanSupplier isCustom = () -> mode.getIndex() == 1;
 
-        direction = new SettingDirection("direction", Direction.WEST, directionOptions);
+        direction = new SettingDirection(this, "direction", Direction.WEST, directionOptions);
         direction.setEnableOn(isPreset);
         direction.setHorizontal();
 
-        parent = new SettingElement("parent", Direction.CENTER);
-        parent.setEnableOn(isCustom);
-        anchor = new SettingDirection("anchor", Direction.WEST);
+        this.parent = new SettingElement(this, "parent", Direction.CENTER);
+        this.parent.setEnableOn(isCustom);
+        anchor = new SettingDirection(this, "anchor", Direction.WEST);
         anchor.setEnableOn(isCustom);
 
-        alignment = new SettingDirection("alignment", Direction.CENTER) {
+        alignment = new SettingDirection(this, "alignment", Direction.CENTER) {
             @Override
             public void updateGuiParts(Collection<Setting> settings) {
                 if(lockAlignment.get()) set(anchor.get());
@@ -64,7 +65,7 @@ public class SettingPosition extends Setting {
             }
         };
 
-        contentAlignment = new SettingDirection("contentAlignment", Direction.EAST, contentOptions) {
+        contentAlignment = new SettingDirection(this, "contentAlignment", Direction.EAST, contentOptions) {
             @Override
             public void updateGuiParts(Collection<Setting> settings) {
                 if(lockContent.get()) set(SettingPosition.this.alignment.get());
@@ -72,21 +73,15 @@ public class SettingPosition extends Setting {
             }
         };
 
-        lockAlignment = new SettingLock("lockAlignment");
+        lockAlignment = new SettingLock(this, "lockAlignment");
         lockAlignment.setEnableOn(isCustom);
-        lockContent = new SettingLock("lockContent");
+        lockContent = new SettingLock(this, "lockContent");
         lockContent.setEnableOn(isCustom);
-        offset = new SettingAbsolutePosition("origin", this);
+        offset = new SettingAbsolutePosition(this, "origin");
         offset.setEnableOn(isCustom);
 
         alignment.setEnableOn(() -> isCustom.getAsBoolean() && !lockAlignment.get());
         contentAlignment.setEnableOn(() -> isCustom.getAsBoolean() && !lockContent.get());
-
-        addChildren(
-            new Legend("position"),
-            mode, direction, parent, anchor, alignment, contentAlignment,
-            lockAlignment, lockContent, offset
-        );
     }
 
     public boolean isDirection(Direction direction) {

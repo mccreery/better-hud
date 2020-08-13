@@ -21,21 +21,21 @@ public class SettingChoose extends SettingAlignable {
     private int index = 0;
     private int length;
 
-    public SettingChoose(int length) {
-        this("mode", length);
+    public SettingChoose(Setting parent, int length) {
+        this(parent, "mode", length);
     }
 
-    public SettingChoose(String name, int length) {
-        this(name);
+    public SettingChoose(Setting parent, String name, int length) {
+        this(parent, name);
         this.length = length;
     }
 
-    public SettingChoose(String name, String... modes) {
-        this(name, Direction.CENTER, modes);
+    public SettingChoose(Setting parent, String name, String... modes) {
+        this(parent, name, Direction.CENTER, modes);
     }
 
-    public SettingChoose(String name, Direction alignment, String... modes) {
-        super(name, alignment);
+    public SettingChoose(Setting parent, String name, Direction alignment, String... modes) {
+        super(parent, name, alignment);
 
         this.modes = modes;
         this.length = modes.length;
