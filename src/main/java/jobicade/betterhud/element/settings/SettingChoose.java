@@ -5,6 +5,7 @@ import java.util.Collection;
 
 import org.apache.commons.lang3.ArrayUtils;
 
+import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -20,6 +21,26 @@ public class SettingChoose extends SettingAlignable {
 
     private int index = 0;
     private int length;
+
+    public SettingChoose(HudElement<?> element, int length) {
+        this(element, "mode", length);
+    }
+
+    public SettingChoose(HudElement<?> element, String name, int length) {
+        this(element, name);
+        this.length = length;
+    }
+
+    public SettingChoose(HudElement<?> element, String name, String... modes) {
+        this(element, name, Direction.CENTER, modes);
+    }
+
+    public SettingChoose(HudElement<?> element, String name, Direction alignment, String... modes) {
+        super(element, name, alignment);
+
+        this.modes = modes;
+        this.length = modes.length;
+    }
 
     public SettingChoose(Setting parent, int length) {
         this(parent, "mode", length);

@@ -1,11 +1,16 @@
 package jobicade.betterhud.element.settings;
 
 import jobicade.betterhud.BetterHud;
+import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.gui.GuiElementSettings;
 import net.minecraft.client.gui.widget.button.Button;
 
 public class SettingInteger extends Setting {
     private int value;
+
+    public SettingInteger(HudElement<?> element, String name) {
+        super(element, name);
+    }
 
     public SettingInteger(Setting parent, String name) {
         super(parent, name);

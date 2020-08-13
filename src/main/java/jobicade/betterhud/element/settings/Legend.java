@@ -4,6 +4,7 @@ import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 
 import jobicade.betterhud.BetterHud;
+import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.render.Color;
@@ -11,6 +12,10 @@ import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.resources.I18n;
 
 public class Legend extends Setting {
+    public Legend(HudElement<?> element, String name) {
+        super(element, name);
+    }
+
     public Legend(Setting parent, String name) {
         super(parent, name);
     }

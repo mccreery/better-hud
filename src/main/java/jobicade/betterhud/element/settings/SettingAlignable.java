@@ -5,6 +5,7 @@ import static jobicade.betterhud.BetterHud.SPACER;
 import java.util.List;
 import java.util.Map;
 
+import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -12,6 +13,11 @@ import jobicade.betterhud.gui.GuiElementSettings;
 
 public abstract class SettingAlignable extends Setting {
     protected Direction alignment;
+
+    public SettingAlignable(HudElement<?> element, String name, Direction alignment) {
+        super(element, name);
+        this.alignment = alignment;
+    }
 
     public SettingAlignable(Setting parent, String name, Direction alignment) {
         super(parent, name);

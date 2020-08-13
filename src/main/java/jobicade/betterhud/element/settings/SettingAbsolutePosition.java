@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
+import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.GuiElementSettings;
@@ -28,6 +29,11 @@ public class SettingAbsolutePosition extends Setting {
 
     public boolean isPicking() {
         return isPicking;
+    }
+
+    public SettingAbsolutePosition(HudElement<?> element, String name) {
+        super(element, name);
+        this.position = null;
     }
 
     public SettingAbsolutePosition(Setting parent, String name) {
