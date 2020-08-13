@@ -17,12 +17,12 @@ public class SettingSlider extends SettingAlignable {
 
     private double displayScale = 1;
 
-    public SettingSlider(String name, float min, float max) {
-        this(name, min, max, -1);
+    public SettingSlider(Setting parent, String name, float min, float max) {
+        this(parent, name, min, max, -1);
     }
 
-    public SettingSlider(String name, float minimum, float maximum, float interval) {
-        super(name, Direction.CENTER);
+    public SettingSlider(Setting parent, String name, float minimum, float maximum, float interval) {
+        super(parent, name, Direction.CENTER);
         this.minimum = minimum;
         this.maximum = maximum;
         this.interval = interval;

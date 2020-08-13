@@ -32,16 +32,16 @@ public class SettingPosition extends Setting {
         return contentAlignment.getOptions();
     }
 
-    public SettingPosition(DirectionOptions directionOptions, DirectionOptions contentOptions) {
-        this("position", directionOptions, contentOptions);
+    public SettingPosition(Setting parent, DirectionOptions directionOptions, DirectionOptions contentOptions) {
+        this(parent, "position", directionOptions, contentOptions);
     }
 
-    public SettingPosition(String name) {
-        this(name, DirectionOptions.ALL, DirectionOptions.ALL);
+    public SettingPosition(Setting parent, String name) {
+        this(parent, name, DirectionOptions.ALL, DirectionOptions.ALL);
     }
 
-    public SettingPosition(String name, DirectionOptions directionOptions, DirectionOptions contentOptions) {
-        super(name);
+    public SettingPosition(Setting parent, String name, DirectionOptions directionOptions, DirectionOptions contentOptions) {
+        super(parent, name);
 
         mode = new SettingChoose("position", "preset", "custom");
         BooleanSupplier isPreset = () -> mode.getIndex() == 0;

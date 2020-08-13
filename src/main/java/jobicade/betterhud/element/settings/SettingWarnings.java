@@ -8,12 +8,8 @@ import net.minecraft.client.resources.I18n;
 public class SettingWarnings extends Setting {
     private final SettingSlider[] sliders;
 
-    public SettingWarnings(String name) {
-        this(name, 3);
-    }
-
-    public SettingWarnings(String name, int warnings) {
-        super(name);
+    public SettingWarnings(Setting parent, String name, int warnings) {
+        super(parent, name);
 
         addChild(new Legend("damageWarning"));
 

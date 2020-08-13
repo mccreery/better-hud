@@ -15,8 +15,11 @@ import net.minecraft.client.resources.I18n;
 /** A setting for a {@link HudElement}. Child elements will be saved under
  * the namespace of the parent's name */
 public class Setting {
-    private Setting parent = null;
-    protected final List<Setting> children = new ArrayList<>();
+    private final HudElement<?> element;
+
+    private final Setting parent;
+    private final List<Setting> children = new ArrayList<>();
+
     public final String name;
 
     /** Set to {@code true} to hide the setting from the GUI
@@ -25,8 +28,30 @@ public class Setting {
 
     private BooleanSupplier enableOn = () -> true;
 
-    public Setting(String name) {
+    /**
+     * Creates a root setting for an element. Subclasses need not call this
+     * constructor as it is only used for the root setting.
+     */
+    public Setting(HudElement<?> element, String name) {
+        this(element, null, name);
+    }
+
+    /**
+     * Creates a child setting of any other setting including the root setting.
+     */
+    public Setting(Setting parent, String name) {
+        this(parent.element, parent, name);
+        parent.children.add(this);
+    }
+
+    private Setting(HudElement<?> element, Setting parent, String name) {
+        this.element = element;
+        this.parent = parent;
         this.name = name;
+    }
+
+    public HudElement<?> getElement() {
+        return element;
     }
 
     public String getName() {
@@ -69,17 +94,20 @@ public class Setting {
         this.hidden = true;
     }
 
+    @Deprecated
     public final void addChild(Setting setting) {
         children.add(setting);
-        setting.parent = this;
+        //setting.parent = this;
     }
 
+    @Deprecated
     public final void addChildren(Iterable<Setting> settings) {
         for (Setting setting : settings) {
             addChild(setting);
         }
     }
 
+    @Deprecated
     @SafeVarargs
     public final void addChildren(Setting... settings) {
         for (Setting setting : settings) {

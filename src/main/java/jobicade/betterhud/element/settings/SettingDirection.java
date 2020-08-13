@@ -24,12 +24,12 @@ public class SettingDirection extends SettingAlignable {
     private final DirectionOptions options;
     private Direction value;
 
-    public SettingDirection(String name, Direction alignment) {
-        this(name, alignment, DirectionOptions.ALL);
+    public SettingDirection(Setting parent, String name, Direction alignment) {
+        this(parent, name, alignment, DirectionOptions.ALL);
     }
 
-    public SettingDirection(String name, Direction alignment, DirectionOptions options) {
-        super(name, alignment);
+    public SettingDirection(Setting parent, String name, Direction alignment, DirectionOptions options) {
+        super(parent, name, alignment);
         this.options = options;
     }
 

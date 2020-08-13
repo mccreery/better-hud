@@ -30,13 +30,14 @@ public class SettingAbsolutePosition extends Setting {
         return isPicking;
     }
 
-    public SettingAbsolutePosition(String name) {
-        this(name, null);
+    public SettingAbsolutePosition(Setting parent, String name) {
+        super(parent, name);
+        this.position = null;
     }
 
-    public SettingAbsolutePosition(String name, SettingPosition position) {
-        super(name);
-        this.position = position;
+    public SettingAbsolutePosition(SettingPosition parent, String name) {
+        super(parent, name);
+        this.position = parent;
     }
 
     @Override

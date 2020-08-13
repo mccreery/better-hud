@@ -5,8 +5,8 @@ import jobicade.betterhud.render.Color;
 public class SettingColor extends Setting {
     protected final SettingSlider red, green, blue;
 
-    public SettingColor(String name) {
-        super(name);
+    public SettingColor(Setting parent, String name) {
+        super(parent, name);
 
         addChildren(
             red = new SettingSlider("red", 0, 255, 1),

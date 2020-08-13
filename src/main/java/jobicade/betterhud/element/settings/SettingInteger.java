@@ -7,8 +7,8 @@ import net.minecraft.client.gui.widget.button.Button;
 public class SettingInteger extends Setting {
     private int value;
 
-    public SettingInteger(String name) {
-        super(name);
+    public SettingInteger(Setting parent, String name) {
+        super(parent, name);
     }
 
     public Integer get() {

@@ -11,8 +11,8 @@ import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.resources.I18n;
 
 public class Legend extends Setting {
-    public Legend(String name) {
-        super(name);
+    public Legend(Setting parent, String name) {
+        super(parent, name);
     }
 
     @Override

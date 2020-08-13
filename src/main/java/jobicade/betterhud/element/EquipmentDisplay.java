@@ -30,7 +30,7 @@ public abstract class EquipmentDisplay extends OverlayElement {
         showUndamaged.setEnableOn(showDurability::get);
         showUndamaged.setValuePrefix("betterHud.value.visible");
 
-        warnings = new SettingWarnings("damageWarning");
+        warnings = new SettingWarnings("damageWarning", 3);
 
         settings.addChildren(showName, showDurability, durabilityMode, showUndamaged, warnings);
     }

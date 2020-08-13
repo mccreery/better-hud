@@ -18,8 +18,8 @@ public class SettingElement extends SettingAlignable {
     private HudElement<?> value;
     private SuperButton button;
 
-    public SettingElement(String name, Direction alignment) {
-        super(name, alignment);
+    public SettingElement(Setting parent, String name, Direction alignment) {
+        super(parent, name, alignment);
     }
 
     public HudElement<?> get() {

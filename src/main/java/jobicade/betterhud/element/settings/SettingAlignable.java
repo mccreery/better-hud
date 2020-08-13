@@ -13,8 +13,8 @@ import jobicade.betterhud.gui.GuiElementSettings;
 public abstract class SettingAlignable extends Setting {
     protected Direction alignment;
 
-    public SettingAlignable(String name, Direction alignment) {
-        super(name);
+    public SettingAlignable(Setting parent, String name, Direction alignment) {
+        super(parent, name);
         this.alignment = alignment;
     }
 
