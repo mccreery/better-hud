@@ -6,6 +6,7 @@ import static jobicade.betterhud.BetterHud.SPACER;
 import java.util.Collection;
 import java.util.function.BooleanSupplier;
 
+import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -24,40 +25,26 @@ public class SettingPosition extends Setting {
     private final SettingDirection anchor, alignment, contentAlignment;
     private final SettingLock lockAlignment, lockContent;
 
-    public DirectionOptions getDirectionOptions() {
-        return direction.getOptions();
-    }
-
-    public DirectionOptions getContentOptions() {
-        return contentAlignment.getOptions();
-    }
-
-    public SettingPosition(Setting parent, DirectionOptions directionOptions, DirectionOptions contentOptions) {
-        this(parent, "position", directionOptions, contentOptions);
-    }
-
-    public SettingPosition(Setting parent, String name) {
-        this(parent, name, DirectionOptions.ALL, DirectionOptions.ALL);
-    }
-
-    public SettingPosition(Setting parent, String name, DirectionOptions directionOptions, DirectionOptions contentOptions) {
-        super(parent, name);
+    {
         new Legend(this, "position");
 
         mode = new SettingChoose(this, "position", "preset", "custom");
         BooleanSupplier isPreset = () -> mode.getIndex() == 0;
         BooleanSupplier isCustom = () -> mode.getIndex() == 1;
 
-        direction = new SettingDirection(this, "direction", Direction.WEST, directionOptions);
+        direction = new SettingDirection(this, "direction");
+        direction.setAlignment(Direction.WEST);
         direction.setEnableOn(isPreset);
         direction.setHorizontal();
 
-        this.parent = new SettingElement(this, "parent", Direction.CENTER);
-        this.parent.setEnableOn(isCustom);
-        anchor = new SettingDirection(this, "anchor", Direction.WEST);
+        parent = new SettingElement(this, "parent");
+        parent.setEnableOn(isCustom);
+
+        anchor = new SettingDirection(this, "anchor");
+        anchor.setAlignment(Direction.WEST);
         anchor.setEnableOn(isCustom);
 
-        alignment = new SettingDirection(this, "alignment", Direction.CENTER) {
+        alignment = new SettingDirection(this, "alignment") {
             @Override
             public void updateGuiParts(Collection<Setting> settings) {
                 if(lockAlignment.get()) set(anchor.get());
@@ -65,13 +52,14 @@ public class SettingPosition extends Setting {
             }
         };
 
-        contentAlignment = new SettingDirection(this, "contentAlignment", Direction.EAST, contentOptions) {
+        contentAlignment = new SettingDirection(this, "contentAlignment") {
             @Override
             public void updateGuiParts(Collection<Setting> settings) {
                 if(lockContent.get()) set(SettingPosition.this.alignment.get());
                 super.updateGuiParts(settings);
             }
         };
+        contentAlignment.setAlignment(Direction.EAST);
 
         lockAlignment = new SettingLock(this, "lockAlignment");
         lockAlignment.setEnableOn(isCustom);
@@ -82,6 +70,30 @@ public class SettingPosition extends Setting {
 
         alignment.setEnableOn(() -> isCustom.getAsBoolean() && !lockAlignment.get());
         contentAlignment.setEnableOn(() -> isCustom.getAsBoolean() && !lockContent.get());
+    }
+
+    public SettingPosition(HudElement<?> element, String name) {
+        super(element, name);
+    }
+
+    public SettingPosition(Setting parent, String name) {
+        super(parent, name);
+    }
+
+    public DirectionOptions getDirectionOptions() {
+        return direction.getOptions();
+    }
+
+    public void setDirectionOptions(DirectionOptions options) {
+        direction.setOptions(options);
+    }
+
+    public DirectionOptions getContentOptions() {
+        return contentAlignment.getOptions();
+    }
+
+    public void setContentOptions(DirectionOptions options) {
+        contentAlignment.setOptions(options);
     }
 
     public boolean isDirection(Direction direction) {
