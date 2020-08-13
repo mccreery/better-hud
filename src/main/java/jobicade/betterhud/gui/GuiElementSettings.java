@@ -23,8 +23,10 @@ import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
 import net.java.games.input.Keyboard;
 import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TranslationTextComponent;
@@ -36,13 +38,13 @@ public class GuiElementSettings extends GuiMenuScreen {
     private static final int REPEAT_SPEED_FAST = 10; // Rate of speed-up beyond 20/s
 
     public HudElement<?> element;
-    private ArrayList<TextFieldWidget> textboxList = new ArrayList<>();
-    public HashMap<AbstractGui, Setting> callbacks = new HashMap<>();
+    //private ArrayList<TextFieldWidget> textboxList = new ArrayList<>();
+    //public HashMap<AbstractGui, Setting> callbacks = new HashMap<>();
 
     private Rect viewport;
 
     private SuperButton done;
-    private GuiScrollbar scrollbar;
+    private Scrollbar scrollbar;
 
     private int repeatTimer = 0;
 
@@ -57,31 +59,17 @@ public class GuiElementSettings extends GuiMenuScreen {
 
     @Override
     public void init() {
-        buttons.clear();
-        textboxList.clear();
-        //labels.clear();
-
-        done = new SuperButton(b -> MC.displayGuiScreen(previousScreen));
+        done = addButton(new SuperButton(b -> MC.displayGuiScreen(previousScreen)));
         done.setBounds(new Rect(200, 20).align(getOrigin(), Direction.NORTH));
         done.setMessage(I18n.format("gui.done"));
 
-        Keyboard.enableRepeatEvents(true);
+        // old LWJGL 2 code
+        //Keyboard.enableRepeatEvents(true);
 
-        List<AbstractGui> parts = new ArrayList<AbstractGui>();
-        int contentHeight = element.settings.getGuiParts(parts, callbacks, new Point(width / 2, SPACER)).getY();
-
-        for(AbstractGui gui : parts) {
-            if(gui instanceof Button) {
-                buttons.add((Button)gui);
-            } else if(gui instanceof GuiLabel) {
-                labelList.add((GuiLabel)gui);
-            } else if(gui instanceof TextFieldWidget) {
-                textboxList.add((TextFieldWidget)gui);
-            }
-        }
+        int contentHeight = element.settings.getGuiParts(new Populator(), new Point(width / 2, SPACER)).getY();
 
         viewport = new Rect(width / 2 - 200, height / 16 + 40 + SPACER, 400, 0).withBottom(height - 20);
-        scrollbar = new GuiScrollbar(viewport, contentHeight);
+        scrollbar = addButton(new Scrollbar(viewport.getX(), viewport.getY(), viewport.getWidth(), viewport.getHeight(), contentHeight / (float)viewport.getHeight()));
 
         for(Setting setting : callbacks.values()) {
             setting.updateGuiParts(callbacks.values());
@@ -90,8 +78,7 @@ public class GuiElementSettings extends GuiMenuScreen {
 
     @Override
     public void onClose() {
-        Keyboard.enableRepeatEvents(false);
-        BetterHud.getProxy().getConfig().saveSettings();
+        BetterHud.getConfigManager().getConfig().saveSettings();
     }
 
     @Override
@@ -144,12 +131,6 @@ public class GuiElementSettings extends GuiMenuScreen {
     }
 
     @Override
-    public void handleMouseInput() throws IOException {
-        super.handleMouseInput();
-        scrollbar.handleMouseInput();
-    }
-
-    @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if(mouseY >= viewport.getTop() && mouseY < viewport.getBottom()) {
             super.mouseClicked(mouseX, mouseY + getMouseOffset(), button);
@@ -175,18 +156,6 @@ public class GuiElementSettings extends GuiMenuScreen {
         }
         scrollbar.mouseClicked(mouseX, mouseY, button);
         return true; // TODO
-    }
-
-    @Override
-    protected void mouseClickMove(int mouseX, int mouseY, int button, long heldTime) {
-        super.mouseClickMove(mouseX, mouseY + getMouseOffset(), button, heldTime);
-        scrollbar.mouseClickMove(mouseX, mouseY, button, heldTime);
-    }
-
-    @Override
-    public void mouseReleased(int mouseX, int mouseY, int button) {
-        super.mouseReleased(mouseX, mouseY + getMouseOffset(), button);
-        scrollbar.mouseReleased(mouseX, mouseY, button);
     }
 
     @Override
@@ -241,5 +210,20 @@ public class GuiElementSettings extends GuiMenuScreen {
         vLine(x, y, textY - SPACER, Color.WHITE.getPacked());
         vLine(x, y + (height + font.FONT_HEIGHT) / 2 + SPACER, y + height, Color.WHITE.getPacked());
         font.drawString(String.valueOf(this.height), x, textY, Color.WHITE.getPacked());
+    }
+
+    /**
+     * Semantic interface for adding buttons, subject to change at Mojang's whim.
+     */
+    public class Populator {
+        private Populator() {
+        }
+
+        /**
+         * Adds a widget to the scrolling viewport.
+         */
+        public <T extends Widget> T add(T widget) {
+            return GuiElementSettings.this.addButton(widget);
+        }
     }
 }

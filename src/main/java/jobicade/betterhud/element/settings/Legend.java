@@ -3,13 +3,10 @@ package jobicade.betterhud.element.settings;
 import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 
-import java.util.List;
-import java.util.Map;
-
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.render.Color;
-import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.resources.I18n;
 
@@ -24,9 +21,9 @@ public class Legend extends SettingStub {
     }
 
     @Override
-    public Point getGuiParts(List<AbstractGui> parts, Map<AbstractGui, Setting> callbacks, Point origin) {
+    public Point getGuiParts(GuiElementSettings.Populator populator, Point origin) {
         String message = I18n.format("betterHud.group." + name);
-        parts.add(new LegendLabel(0, origin.getX() - 150, origin.getY(), 300, message, Color.WHITE));
+        populator.add(new LegendLabel(0, origin.getX() - 150, origin.getY(), 300, message, Color.WHITE));
 
         return origin.add(0, MC.fontRenderer.FONT_HEIGHT + SPACER);
     }

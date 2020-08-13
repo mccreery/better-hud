@@ -3,8 +3,6 @@ package jobicade.betterhud.element.settings;
 import static jobicade.betterhud.BetterHud.MC;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Direction;
@@ -13,7 +11,6 @@ import jobicade.betterhud.gui.GuiElementChooser;
 import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.gui.SuperButton;
 import jobicade.betterhud.registry.HudElements;
-import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 
@@ -54,15 +51,12 @@ public class SettingElement extends SettingAlignable {
     }
 
     @Override
-    public void getGuiParts(List<AbstractGui> parts, Map<AbstractGui, Setting> callbacks, Rect bounds) {
+    public void getGuiParts(GuiElementSettings.Populator populator, Rect bounds) {
         String text = getLocalizedName() + ": " + (value != null ? value.getLocalizedName() : I18n.format("betterHud.value.none"));
         // TODO pass current gui into setting
-        button = new SuperButton(b -> MC.displayGuiScreen(new GuiElementChooser(MC.currentScreen, ((GuiElementSettings)MC.currentScreen).element, this)));
+        button = populator.add(new SuperButton(b -> MC.displayGuiScreen(new GuiElementChooser(MC.currentScreen, ((GuiElementSettings)MC.currentScreen).element, this))));
         button.setBounds(bounds);
         button.setMessage(text);
-
-        parts.add(button);
-        callbacks.put(button, this);
     }
 
     @Override

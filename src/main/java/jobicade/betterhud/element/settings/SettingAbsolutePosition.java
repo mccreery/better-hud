@@ -11,7 +11,6 @@ import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.gui.GuiOffsetChooser;
-import jobicade.betterhud.gui.GuiUpDownButton;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
@@ -41,28 +40,20 @@ public class SettingAbsolutePosition extends Setting {
     }
 
     @Override
-    public Point getGuiParts(List<AbstractGui> parts, Map<AbstractGui, Setting> callbacks, Point origin) {
-        parts.add(xBox = new TextFieldWidget(MC.fontRenderer, origin.getX() - 106, origin.getY() + 1, 80, 18, ""));
+    public Point getGuiParts(GuiElementSettings.Populator populator, Point origin) {
+        populator.add(xBox = new TextFieldWidget(MC.fontRenderer, origin.getX() - 106, origin.getY() + 1, 80, 18, ""));
         xBox.setText(String.valueOf(x));
-        parts.add(yBox = new TextFieldWidget(MC.fontRenderer, origin.getX() + 2, origin.getY() + 1, 80, 18, ""));
+        populator.add(yBox = new TextFieldWidget(MC.fontRenderer, origin.getX() + 2, origin.getY() + 1, 80, 18, ""));
         yBox.setText(String.valueOf(y));
 
-        parts.add(xUp   = new GuiUpDownButton(true ).setBounds(new Rect(origin.getX() - 22, origin.getY(),      0, 0)).setId(0).setRepeat());
-        parts.add(xDown = new GuiUpDownButton(false).setBounds(new Rect(origin.getX() - 22, origin.getY() + 10, 0, 0)).setId(1).setRepeat());
-        parts.add(yUp   = new GuiUpDownButton(true ).setBounds(new Rect(origin.getX() + 86, origin.getY(),      0, 0)).setId(2).setRepeat());
-        parts.add(yDown = new GuiUpDownButton(false).setBounds(new Rect(origin.getX() + 86, origin.getY() + 10, 0, 0)).setId(3).setRepeat());
+        populator.add(xUp   = new GuiUpDownButton(true ).setBounds(new Rect(origin.getX() - 22, origin.getY(),      0, 0)).setId(0).setRepeat());
+        populator.add(xDown = new GuiUpDownButton(false).setBounds(new Rect(origin.getX() - 22, origin.getY() + 10, 0, 0)).setId(1).setRepeat());
+        populator.add(yUp   = new GuiUpDownButton(true ).setBounds(new Rect(origin.getX() + 86, origin.getY(),      0, 0)).setId(2).setRepeat());
+        populator.add(yDown = new GuiUpDownButton(false).setBounds(new Rect(origin.getX() + 86, origin.getY() + 10, 0, 0)).setId(3).setRepeat());
 
         if(position != null) {
-            parts.add(pick = new Button(origin.getX() - 100, origin.getY() + 22, 200, 20, I18n.format("betterHud.menu.pick")));
-            callbacks.put(pick, this);
+            populator.add(pick = new Button(origin.getX() - 100, origin.getY() + 22, 200, 20, I18n.format("betterHud.menu.pick")));
         }
-
-        callbacks.put(xBox, this);
-        callbacks.put(yBox, this);
-        callbacks.put(xUp, this);
-        callbacks.put(xDown, this);
-        callbacks.put(yUp, this);
-        callbacks.put(yDown, this);
 
         return origin.add(0, 42 + SPACER);
     }

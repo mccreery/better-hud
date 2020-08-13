@@ -8,7 +8,7 @@ import java.util.Map;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
-import net.minecraft.client.gui.AbstractGui;
+import jobicade.betterhud.gui.GuiElementSettings;
 
 public abstract class SettingAlignable extends Setting {
     protected Direction alignment;
@@ -23,13 +23,13 @@ public abstract class SettingAlignable extends Setting {
     }
 
     @Override
-    public Point getGuiParts(List<AbstractGui> parts, Map<AbstractGui, Setting> callbacks, Point origin) {
-        origin = super.getGuiParts(parts, callbacks, origin);
+    public Point getGuiParts(GuiElementSettings.Populator populator, Point origin) {
+        origin = super.getGuiParts(populator, origin);
 
         Rect bounds = new Rect(getSize());
         bounds = bounds.anchor(new Rect(getAlignmentWidth(), bounds.getHeight()).align(origin, Direction.NORTH), alignment);
 
-        getGuiParts(parts, callbacks, bounds);
+        getGuiParts(populator, bounds);
         return shouldBreak() ? origin.withY(bounds.getBottom() + SPACER) : origin;
     }
 
@@ -46,5 +46,5 @@ public abstract class SettingAlignable extends Setting {
     }
 
     /** @see Setting#getGuiParts(List, Map, Point) */
-    public abstract void getGuiParts(List<AbstractGui> parts, Map<AbstractGui, Setting> callbacks, Rect bounds);
+    public abstract void getGuiParts(GuiElementSettings.Populator populator, Rect bounds);
 }

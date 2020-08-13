@@ -1,11 +1,8 @@
 package jobicade.betterhud.element.settings;
 
-import java.util.List;
-import java.util.Map;
-
 import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.util.Textures;
-import net.minecraft.client.gui.AbstractGui;
 
 public class SettingLock extends SettingBoolean {
     // Custom bounds overrides aligned bounds
@@ -20,8 +17,8 @@ public class SettingLock extends SettingBoolean {
     }
 
     @Override
-    public void getGuiParts(List<AbstractGui> parts, Map<AbstractGui, Setting> callbacks, Rect bounds) {
-        super.getGuiParts(parts, callbacks, this.bounds);
+    public void getGuiParts(GuiElementSettings.Populator populator, Rect bounds) {
+        super.getGuiParts(populator, this.bounds);
         toggler.setTexture(Textures.SETTINGS, 0, 60, 20);
     }
 

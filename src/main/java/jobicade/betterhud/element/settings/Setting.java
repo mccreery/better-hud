@@ -9,7 +9,6 @@ import java.util.function.BooleanSupplier;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.gui.GuiElementSettings;
-import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 
@@ -109,10 +108,10 @@ public abstract class Setting {
      * @param topAnchor The top center anchor for GUI parts being added
      * @return The bottom center anchor directly below this setting's parts
      */
-    public Point getGuiParts(List<AbstractGui> parts, Map<AbstractGui, Setting> callbacks, Point topAnchor) {
+    public Point getGuiParts(GuiElementSettings.Populator populator, Point topAnchor) {
         for (Setting setting : children) {
             if (!setting.hidden) {
-                topAnchor = setting.getGuiParts(parts, callbacks, topAnchor);
+                topAnchor = setting.getGuiParts(populator, topAnchor);
             }
         }
         return topAnchor;

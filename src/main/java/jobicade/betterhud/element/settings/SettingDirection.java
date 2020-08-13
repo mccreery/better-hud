@@ -4,7 +4,6 @@ import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 
 import java.util.Collection;
-import java.util.Map;
 
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
@@ -13,7 +12,6 @@ import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.gui.SuperButton;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
-import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 
@@ -53,18 +51,16 @@ public class SettingDirection extends SettingAlignable {
     }
 
     @Override
-    public void getGuiParts(java.util.List<AbstractGui> parts, Map<AbstractGui,Setting> callbacks, Rect bounds) {
+    public void getGuiParts(GuiElementSettings.Populator populator, Rect bounds) {
         this.bounds = bounds;
 
         Rect radios = new Rect(60, 60).anchor(bounds, horizontal ? Direction.WEST : Direction.SOUTH);
         Rect radio = new Rect(20, 20);
 
         for(Direction direction : Direction.values()) {
-            SuperButton button = new SuperButton(b -> value = direction);
+            SuperButton button = populator.add(new SuperButton(b -> value = direction));
             button.setBounds(radio.anchor(radios, direction));
 
-            parts.add(button);
-            callbacks.put(button, this);
             toggles[direction.ordinal()] = button;
         }
     }

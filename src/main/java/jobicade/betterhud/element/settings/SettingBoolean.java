@@ -1,14 +1,11 @@
 package jobicade.betterhud.element.settings;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.gui.SuperButton;
-import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.widget.button.Button;
 
 public class SettingBoolean extends SettingAlignable {
@@ -40,11 +37,10 @@ public class SettingBoolean extends SettingAlignable {
     }
 
     @Override
-    public void getGuiParts(List<AbstractGui> parts, Map<AbstractGui, Setting> callbacks, Rect bounds) {
+    public void getGuiParts(GuiElementSettings.Populator populator, Rect bounds) {
         toggler = new SuperButton(b -> value = !value);
         toggler.setBounds(bounds);
-        parts.add(toggler);
-        callbacks.put(toggler, this);
+        populator.add(toggler);
     }
 
     @Override

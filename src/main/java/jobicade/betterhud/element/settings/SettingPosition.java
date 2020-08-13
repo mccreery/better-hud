@@ -4,14 +4,12 @@ import static jobicade.betterhud.BetterHud.MANAGER;
 import static jobicade.betterhud.BetterHud.SPACER;
 
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 import java.util.function.BooleanSupplier;
 
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
-import net.minecraft.client.gui.AbstractGui;
+import jobicade.betterhud.gui.GuiElementSettings;
 
 public class SettingPosition extends SettingStub {
     private boolean edge = false;
@@ -183,12 +181,12 @@ public class SettingPosition extends SettingStub {
     }
 
     @Override
-    public Point getGuiParts(List<AbstractGui> parts, Map<AbstractGui, Setting> callbacks, Point origin) {
+    public Point getGuiParts(GuiElementSettings.Populator populator, Point origin) {
         Point lockOffset = new Point(30 + SPACER, 173);
 
         lockAlignment.setRect(new Rect(20, 10).align(origin.add(lockOffset.withX(-lockOffset.getX())), Direction.EAST));
         lockContent.setRect(new Rect(20, 10).align(origin.add(lockOffset), Direction.WEST));
 
-        return super.getGuiParts(parts, callbacks, origin);
+        return super.getGuiParts(populator, origin);
     }
 }

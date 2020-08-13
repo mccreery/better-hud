@@ -1,14 +1,10 @@
 package jobicade.betterhud.element.settings;
 
-import java.util.List;
-import java.util.Map;
-
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.gui.GuiSlider;
 import jobicade.betterhud.util.MathUtil;
-import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.MathHelper;
@@ -105,11 +101,8 @@ public class SettingSlider extends SettingAlignable {
     }
 
     @Override
-    public void getGuiParts(List<AbstractGui> parts, Map<AbstractGui, Setting> callbacks, Rect bounds) {
-        GuiSlider guiSlider = new GuiSlider(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), this);
-
-        parts.add(guiSlider);
-        callbacks.put(guiSlider, this);
+    public void getGuiParts(GuiElementSettings.Populator populator, Rect bounds) {
+        populator.add(new GuiSlider(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), this));
     }
 
     @Override public void actionPerformed(GuiElementSettings gui, Button button) {}

@@ -2,8 +2,6 @@ package jobicade.betterhud.element.settings;
 
 import java.util.Arrays;
 import java.util.Collection;
-import java.util.List;
-import java.util.Map;
 
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -13,7 +11,6 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
-import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 
@@ -118,14 +115,12 @@ public class SettingChoose extends SettingAlignable {
     }
 
     @Override
-    public void getGuiParts(List<AbstractGui> parts, Map<AbstractGui, Setting> callbacks, Rect bounds) {
-        parts.add(backing = new Button(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), "", b -> {}));
-        parts.add(last = new Button(bounds.getLeft(), bounds.getY(), 20, bounds.getHeight(), "<", b -> last()));
-        parts.add(next = new Button(bounds.getRight() - 20, bounds.getY(), 20, bounds.getHeight(), ">", b -> next()));
+    public void getGuiParts(GuiElementSettings.Populator populator, Rect bounds) {
+        backing = populator.add(new Button(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), "", b -> {}));
         backing.active = false;
 
-        callbacks.put(last, this);
-        callbacks.put(next, this);
+        last = populator.add(new Button(bounds.getLeft(), bounds.getY(), 20, bounds.getHeight(), "<", b -> last()));
+        next = populator.add(new Button(bounds.getRight() - 20, bounds.getY(), 20, bounds.getHeight(), ">", b -> next()));
     }
 
     protected String getUnlocalizedValue() {
