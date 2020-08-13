@@ -31,6 +31,7 @@ public abstract class HudElement<T> {
         }
 
         this.name = name;
+        rootSetting = new Setting(this, name);
     }
 
     /**
@@ -66,7 +67,15 @@ public abstract class HudElement<T> {
 
     /** The settings saved to the config file for this element */
     @Deprecated
-    public final Setting settings = new Setting(null);
+    public final Setting rootSetting;
+
+    /**
+     * @return The root setting which has the same name as the element and
+     * contains all its settings.
+     */
+    public Setting getRootSetting() {
+        return rootSetting;
+    }
 
     private static final VersionRange DEFAULT_SERVER_DEPENDENCY = VersionRange.createFromVersion("1.0");
 

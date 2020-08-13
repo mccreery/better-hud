@@ -66,7 +66,7 @@ public class GuiElementSettings extends GuiMenuScreen {
         // old LWJGL 2 code
         //Keyboard.enableRepeatEvents(true);
 
-        int contentHeight = element.settings.getGuiParts(new Populator(), new Point(width / 2, SPACER)).getY();
+        int contentHeight = element.getRootSetting().getGuiParts(new Populator(), new Point(width / 2, SPACER)).getY();
 
         viewport = new Rect(width / 2 - 200, height / 16 + 40 + SPACER, 400, 0).withBottom(height - 20);
         scrollbar = addButton(new Scrollbar(viewport.getX(), viewport.getY(), viewport.getWidth(), viewport.getHeight(), contentHeight / (float)viewport.getHeight()));
@@ -177,7 +177,7 @@ public class GuiElementSettings extends GuiMenuScreen {
         for(TextFieldWidget field : this.textboxList) {
             field.render(mouseX, mouseY, partialTicks);
         }
-        element.settings.draw();
+        element.getRootSetting().draw();
 
         GlUtil.endScissor();
         RenderSystem.popMatrix();

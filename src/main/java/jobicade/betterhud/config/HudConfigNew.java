@@ -37,9 +37,7 @@ public class HudConfigNew {
         builder.pop();
 
         for (HudElement<?> element : HudElements.get().getRegistered()) {
-            builder.push(element.getName());
-            mapValues(builder, element.settings);
-            builder.pop();
+            mapValues(builder, element.getRootSetting());
         }
     }
 
