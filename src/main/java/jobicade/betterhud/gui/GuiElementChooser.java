@@ -2,13 +2,12 @@ package jobicade.betterhud.gui;
 
 import static jobicade.betterhud.BetterHud.MC;
 
-import java.io.IOException;
-
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.SettingElement;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.registry.HudElements;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.util.text.StringTextComponent;
 
 public class GuiElementChooser extends GuiElements {
     private final Screen parent;
@@ -17,17 +16,16 @@ public class GuiElementChooser extends GuiElements {
     private final SettingElement setting;
 
     public GuiElementChooser(Screen parent, HudElement<?> element, SettingElement setting) {
+        super(new StringTextComponent(""));
         this.parent = parent;
         this.element = element;
         this.setting = setting;
     }
 
     @Override
-    protected void keyTyped(char typedChar, int keyCode) throws IOException {
-        if(keyCode == 1) {
-            setting.set(null);
-            MC.displayGuiScreen(parent);
-        }
+    public void onClose() {
+        setting.set(null);
+        MC.displayGuiScreen(parent);
     }
 
     @Override

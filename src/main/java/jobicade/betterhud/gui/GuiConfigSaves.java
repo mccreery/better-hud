@@ -24,13 +24,12 @@ import jobicade.betterhud.render.Label;
 import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.StringTextComponent;
 
 public class GuiConfigSaves extends Screen {
     private TextFieldWidget name;
-    private GuiScrollbar scrollbar;
+    private Scrollbar scrollbar;
     private Rect viewport;
 
     private final Screen previous;
@@ -116,7 +115,8 @@ public class GuiConfigSaves extends Screen {
         buttons.add(save);
 
         viewport = new Rect(400, 0).align(fieldLine.getAnchor(Direction.SOUTH).add(0, SPACER), Direction.NORTH).withBottom(height - 20);
-        scrollbar = new GuiScrollbar(viewport, 0);
+        scrollbar = new Scrollbar(viewport.getRight() - 8, viewport.getY(), 8, viewport.getHeight(), 0.5f);
+        addButton(scrollbar);
         updateList();
     }
 
@@ -125,7 +125,7 @@ public class GuiConfigSaves extends Screen {
         list = new Grid<>(new Point(1, listItems.size()), listItems);
         list.setStretch(true);
 
-        scrollbar.setContentHeight(list.getPreferredSize().getHeight());
+        scrollbar.setThumbSize((float)viewport.getHeight() / list.getPreferredSize().getHeight());
         updateSelected();
     }
 
@@ -167,33 +167,11 @@ public class GuiConfigSaves extends Screen {
         return super.mouseClicked(mouseX, mouseY, mouseButton);
     }
 
-    @Override
-    protected void mouseClickMove(int mouseX, int mouseY, int button, long heldTime) {
-        super.mouseClickMove(mouseX, mouseY, button, heldTime);
-        scrollbar.mouseClickMove(mouseX, mouseY, button, heldTime);
-    }
-
-    @Override
-    public void mouseReleased(int mouseX, int mouseY, int button) {
-        super.mouseReleased(mouseX, mouseY, button);
-        scrollbar.mouseReleased(mouseX, mouseY, button);
-    }
-
-    @Override
-    public void handleMouseInput() throws IOException {
-        super.handleMouseInput();
-        scrollbar.handleMouseInput();
-    }
-
-    @Override
-    protected void actionPerformed(Button button) throws IOException {
-        if(button instanceof GuiActionButton) {
-            ((GuiActionButton)button).actionPerformed();
-        }
-    }
-
     private Rect getListBounds() {
-        Point origin = viewport.getAnchor(Direction.NORTH).sub(0, scrollbar.getScroll() - SPACER);
+        int maxScroll = list.getPreferredSize().getHeight() - viewport.getHeight();
+        int scroll = Math.round(scrollbar.getValue() * maxScroll);
+
+        Point origin = viewport.getAnchor(Direction.NORTH).sub(0, scroll - SPACER);
         return new Rect(list.getPreferredSize().withWidth(300)).align(origin, Direction.NORTH);
     }
 
@@ -213,8 +191,6 @@ public class GuiConfigSaves extends Screen {
         list.setBounds(getListBounds()).render();
 
         GL11.glDisable(GL11.GL_SCISSOR_TEST);
-
-        scrollbar.drawScrollbar(mouseX, mouseY);
     }
 
     private class ListItem extends DefaultBoxed {
