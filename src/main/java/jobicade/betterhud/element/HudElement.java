@@ -4,7 +4,6 @@ import org.apache.maven.artifact.versioning.InvalidVersionSpecificationException
 import org.apache.maven.artifact.versioning.VersionRange;
 
 import jobicade.betterhud.element.settings.Setting;
-import jobicade.betterhud.element.settings.SettingStub;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.ElementCategory;
 import net.minecraft.client.resources.I18n;
@@ -47,7 +46,7 @@ public abstract class HudElement<T> {
     }
 
     /** The settings saved to the config file for this element */
-    public final Setting settings = new SettingStub();
+    public final Setting settings = new Setting(null);
 
     private static final VersionRange DEFAULT_SERVER_DEPENDENCY = VersionRange.createFromVersion("1.0");
 

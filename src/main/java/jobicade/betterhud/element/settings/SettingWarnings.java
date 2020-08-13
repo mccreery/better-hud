@@ -5,7 +5,7 @@ import java.util.Collection;
 import jobicade.betterhud.geom.Direction;
 import net.minecraft.client.resources.I18n;
 
-public class SettingWarnings extends SettingStub {
+public class SettingWarnings extends Setting {
     private final SettingSlider[] sliders;
 
     public SettingWarnings(String name) {
