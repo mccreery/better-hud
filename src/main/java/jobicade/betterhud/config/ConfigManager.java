@@ -49,25 +49,15 @@ public class ConfigManager implements IFutureReloadListener {
     private PathMatcher pathMatcher;
     private IResourceManager resourceManager;
     private List<ConfigSlot> internalConfigs;
-    private Path rootDirectory;
 
-    private final Path configPath;
+    private Path rootDirectory;
+    private Path configPath;
+
     private HudConfig config;
 
-    /**
-     * Constructor for the config manager.
-     * @param configPath The path of the config file.
-     * @param rootDirectory The directory path where config saves are stored.
-     */
-    public ConfigManager(Path configPath, Path rootDirectory) {
-        this.setRootDirectory(rootDirectory);
-        try {
-            Files.createDirectories(rootDirectory);
-        } catch(IOException e) {
-            throw new RuntimeException(e);
-        }
-
+    public void setConfigPath(Path configPath) {
         this.configPath = configPath;
+        rootDirectory = configPath.resolveSibling(BetterHud.MODID);
 
         if (Files.exists(configPath)) {
             reloadConfig();

@@ -174,6 +174,7 @@ public class HudConfig {
     public static void onConfig(ModConfigEvent event) {
         if (event.getConfig().getSpec() == CLIENT_SPEC) {
             HudConfig.CLIENT.load();
+            BetterHud.getConfigManager().setConfigPath(event.getConfig().getFullPath());
         }
     }
 }
