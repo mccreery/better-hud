@@ -1,12 +1,14 @@
 package jobicade.betterhud.config;
 
-import java.io.File;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import org.apache.commons.lang3.tuple.Pair;
 
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
@@ -14,16 +16,33 @@ import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingValueException;
 import jobicade.betterhud.registry.HudElements;
 import jobicade.betterhud.util.SortedSetList;
-import net.minecraftforge.common.config.Configuration;
-import net.minecraftforge.common.config.Property;
+import net.minecraftforge.common.ForgeConfigSpec;
+import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
 
 /**
  * Handles saving and loading config files through Forge's system. Note that
  * actual settings are stored in each element's settings object.
  */
-public class HudConfig extends Configuration {
-    public HudConfig(File file) {
-        super(file);
+public class HudConfig {
+    public static final HudConfig CLIENT;
+    public static final ForgeConfigSpec CLIENT_SPEC;
+
+    static {
+        Pair<HudConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(HudConfig::new);
+        CLIENT = specPair.getLeft();
+        CLIENT_SPEC = specPair.getRight();
+    }
+
+    private final ConfigValue<List<? extends HudElement<?>>> enabledProperty;
+
+    public HudConfig(ForgeConfigSpec.Builder builder) {
+        builder.push("betterhud");
+        enabledProperty = builder.defineList("enabled", Collections.<HudElement<?>>emptyList(), HudElements.get()::isRegistered);
+        builder.pop();
+
+        for (HudElement<?> element : HudElements.get().getRegistered()) {
+            mapValues(builder, element.getRootSetting());
+        }
     }
 
     private SortedSetList<HudElement<?>> available;
@@ -149,6 +168,40 @@ public class HudConfig extends Configuration {
 
         for (Setting childSetting : setting.getChildren()) {
             mapProperties(map, childSetting, category, pathPrefix);
+        }
+    }
+
+    private final Map<Setting, ConfigValue<String>> valueMap = new HashMap<>();
+
+    public void loadValues() {
+        for (Map.Entry<Setting, ConfigValue<String>> entry : valueMap.entrySet()) {
+            try {
+                entry.getKey().loadStringValue(entry.getValue().get());
+            } catch (SettingValueException e) {
+                String path = String.join(".", entry.getValue().getPath());
+                BetterHud.getLogger().error("Parsing " + path + "=" + entry.getValue().get(), e);
+            }
+        }
+    }
+
+    private void mapValues(ForgeConfigSpec.Builder builder, Setting setting) {
+        String name = setting.getName();
+        boolean hasName = name != null && !name.isEmpty();
+
+        if (hasName) {
+            builder.push(name);
+
+            if (setting.hasValue()) {
+                valueMap.put(setting, builder.define(Collections.emptyList(), ""));
+            }
+        }
+
+        for (Setting childSetting : setting.getChildren()) {
+            mapValues(builder, childSetting);
+        }
+
+        if (hasName) {
+            builder.pop();
         }
     }
 }

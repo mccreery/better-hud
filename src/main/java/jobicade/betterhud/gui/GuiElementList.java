@@ -3,7 +3,6 @@ package jobicade.betterhud.gui;
 import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -28,7 +27,6 @@ import jobicade.betterhud.util.Textures;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.client.util.InputMappings;
 import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.client.settings.KeyModifier;
 
@@ -123,7 +121,7 @@ public class GuiElementList extends GuiMenuScreen {
 
     @Override
     public void onClose() {
-        BetterHud.getProxy().getConfig().saveSettings();
+        BetterHud.getModConfig().save();
     }
 
     /**

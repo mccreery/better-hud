@@ -7,7 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 import jobicade.betterhud.BetterHud;
-import jobicade.betterhud.config.HudConfigNew;
+import jobicade.betterhud.config.HudConfig;
 import jobicade.betterhud.element.HudElement;
 
 public abstract class HudRegistry<T extends HudElement<?>> {
@@ -58,7 +58,7 @@ public abstract class HudRegistry<T extends HudElement<?>> {
      * @return The enabled elements filtered by this registry.
      */
     public List<T> getEnabled() {
-        List<? extends HudElement<?>> selected = HudConfigNew.CLIENT.getSelected();
+        List<? extends HudElement<?>> selected = HudConfig.CLIENT.getSelected();
 
         List<T> subclassSelected = new ArrayList<>();
         for (HudElement<?> element : selected) {

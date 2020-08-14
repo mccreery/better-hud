@@ -8,7 +8,7 @@ import org.apache.maven.artifact.versioning.ArtifactVersion;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 
 import jobicade.betterhud.config.ConfigManager;
-import jobicade.betterhud.config.HudConfigNew;
+import jobicade.betterhud.config.HudConfig;
 import jobicade.betterhud.events.ClientEvents;
 import jobicade.betterhud.geom.LayoutManager;
 import jobicade.betterhud.network.InventoryNameQuery;
@@ -49,6 +49,10 @@ public class BetterHud {
     private static ArtifactVersion serverVersion;
 
     private static ModConfig config;
+    public static ModConfig getModConfig() {
+        return config;
+    }
+
     private static ConfigManager configManager;
 
     public static ConfigManager getConfigManager() {
@@ -68,7 +72,7 @@ public class BetterHud {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientEvents::setupClient);
 
         ModContainer container = ModLoadingContext.get().getActiveContainer();
-        config = new ModConfig(Type.CLIENT, HudConfigNew.CLIENT_SPEC, container);
+        config = new ModConfig(Type.CLIENT, HudConfig.CLIENT_SPEC, container);
         container.addConfig(config);
 
         configManager = new ConfigManager(config.getFullPath(), config.getFullPath().resolveSibling(BetterHud.MODID));
@@ -77,7 +81,7 @@ public class BetterHud {
     @SubscribeEvent
     public static void onConfig(ModConfigEvent event) {
         if (event.getConfig() == config) {
-            HudConfigNew.CLIENT.loadValues();
+            HudConfig.CLIENT.loadValues();
         }
     }
 
