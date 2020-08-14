@@ -30,7 +30,7 @@ public class Setting {
      * Creates a setting as one of the root settings in an element.
      */
     public Setting(HudElement<?> element, String name) {
-        this(element, element.getRootSetting(), name);
+        this(element, null, name);
     }
 
     /**
@@ -38,14 +38,13 @@ public class Setting {
      */
     public Setting(Setting parent, String name) {
         this(parent.element, parent, name);
+        parent.children.add(this);
     }
 
     private Setting(HudElement<?> element, Setting parent, String name) {
         this.element = element;
         this.parent = parent;
         this.name = name;
-
-        parent.children.add(this);
     }
 
     public HudElement<?> getElement() {
