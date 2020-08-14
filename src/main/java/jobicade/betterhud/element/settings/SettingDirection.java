@@ -11,7 +11,6 @@ import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.gui.SuperButton;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 
 public class SettingDirection extends SettingAlignable {
@@ -74,11 +73,6 @@ public class SettingDirection extends SettingAlignable {
 
     private String getText() {
         return horizontal ? getLocalizedName() + ": " + localizeDirection(value) : getLocalizedName();
-    }
-
-    @Override
-    public void actionPerformed(GuiElementSettings gui, Button button) {
-        button.onPress();
     }
 
     @Override

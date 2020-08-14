@@ -4,7 +4,6 @@ import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.gui.SuperButton;
-import net.minecraft.client.gui.widget.button.Button;
 
 public class SettingBoolean extends SettingAlignable {
     public static final String VISIBLE = "betterHud.value.visible";
@@ -39,11 +38,6 @@ public class SettingBoolean extends SettingAlignable {
         toggler = new SuperButton(b -> value = !value);
         toggler.setBounds(bounds);
         populator.add(toggler);
-    }
-
-    @Override
-    public void actionPerformed(GuiElementSettings gui, Button button) {
-        toggler.onPress();
     }
 
     @Override

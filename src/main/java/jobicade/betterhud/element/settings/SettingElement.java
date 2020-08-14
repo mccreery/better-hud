@@ -8,7 +8,6 @@ import jobicade.betterhud.gui.GuiElementChooser;
 import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.gui.SuperButton;
 import jobicade.betterhud.registry.HudElements;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 
 public class SettingElement extends SettingAlignable {
@@ -44,11 +43,6 @@ public class SettingElement extends SettingAlignable {
     @Override
     public void loadStringValue(String save) {
         value = HudElements.get().getRegistered(save);
-    }
-
-    @Override
-    public void actionPerformed(GuiElementSettings gui, Button button) {
-        button.onPress();
     }
 
     @Override

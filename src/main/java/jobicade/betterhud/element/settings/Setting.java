@@ -8,7 +8,6 @@ import java.util.function.BooleanSupplier;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.gui.GuiElementSettings;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 
 /** A setting for a {@link HudElement}. Child elements will be saved under
@@ -134,13 +133,6 @@ public class Setting {
         for(Setting setting : children) {
             setting.draw();
         }
-    }
-
-    /** Passed on from the element's setting screen when a GuiButton for this setting is pressed.
-     * @param button The GuiButton that was pressed.
-     * @deprecated Buttons have their own onPress method now. */
-    @Deprecated
-    public void actionPerformed(GuiElementSettings gui, Button button) {
     }
 
     /** Updates the GUI elements based on the state of other settings.

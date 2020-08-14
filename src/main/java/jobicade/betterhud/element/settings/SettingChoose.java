@@ -148,11 +148,6 @@ public class SettingChoose extends SettingAlignable {
     }
 
     @Override
-    public void actionPerformed(GuiElementSettings gui, Button button) {
-        button.onPress();
-    }
-
-    @Override
     public void updateGuiParts() {
         last.active = next.active = enabled();
     }

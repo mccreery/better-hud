@@ -39,7 +39,6 @@ public class GuiElementSettings extends GuiMenuScreen {
 
     public HudElement<?> element;
     //private ArrayList<TextFieldWidget> textboxList = new ArrayList<>();
-    //public HashMap<AbstractGui, Setting> callbacks = new HashMap<>();
 
     private Rect viewport;
 
@@ -79,18 +78,6 @@ public class GuiElementSettings extends GuiMenuScreen {
         BetterHud.getConfigManager().getConfig().saveSettings();
     }
 
-    @Override
-    protected void actionPerformed(Button button) {
-        if(callbacks.containsKey(button)) {
-            callbacks.get(button).actionPerformed(this, button);
-
-            // Notify the rest of the elements that a button has been pressed
-            element.getRootSetting().updateGuiParts();
-        } else {
-            super.actionPerformed(button);
-        }
-    }
-
     /** @see GuiScreen#handleMouseInput() */
     @Override
     public void tick() {
@@ -126,7 +113,10 @@ public class GuiElementSettings extends GuiMenuScreen {
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if(mouseY >= viewport.getTop() && mouseY < viewport.getBottom()) {
-            super.mouseClicked(mouseX, mouseY + getMouseOffset(), button);
+            // TODO
+            if (super.mouseClicked(mouseX, mouseY + getMouseOffset(), button)) {
+                element.getRootSetting().updateGuiParts();
+            }
 
             for(GuiTextField field : this.textboxList) {
                 field.mouseClicked(mouseX, mouseY + getMouseOffset(), button);
@@ -140,7 +130,7 @@ public class GuiElementSettings extends GuiMenuScreen {
 
             GuiButton eventResult = event.getButton();
             selectedButton = eventResult;
-            eventResult.playPressSound(this.mc.getSoundHandler());
+            eventResult.playPressSound(minecraft.getSoundHandler());
             actionPerformed(eventResult);
 
             if(this.equals(MC.currentScreen)) {
@@ -175,8 +165,8 @@ public class GuiElementSettings extends GuiMenuScreen {
         GlUtil.endScissor();
         RenderSystem.popMatrix();
 
-        scrollbar.drawScrollbar(mouseX, mouseY);
         drawResolution(10, 10, 100);
+        super.render(mouseX, mouseY, partialTicks);
     }
 
     /** Add to {@code mouseY} to get the effective {@code mouseY} taking into account scroll */

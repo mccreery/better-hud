@@ -5,7 +5,6 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.gui.GuiSlider;
 import jobicade.betterhud.util.MathUtil;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.MathHelper;
 
@@ -112,8 +111,6 @@ public class SettingSlider extends SettingAlignable {
     public void getGuiParts(GuiElementSettings.Populator populator, Rect bounds) {
         populator.add(new GuiSlider(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), this));
     }
-
-    @Override public void actionPerformed(GuiElementSettings gui, Button button) {}
 
     @Override
     public boolean hasValue() {

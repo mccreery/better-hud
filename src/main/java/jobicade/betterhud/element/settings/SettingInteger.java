@@ -2,8 +2,6 @@ package jobicade.betterhud.element.settings;
 
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.gui.GuiElementSettings;
-import net.minecraft.client.gui.widget.button.Button;
 
 public class SettingInteger extends Setting {
     private int value;
@@ -42,9 +40,5 @@ public class SettingInteger extends Setting {
             BetterHud.getLogger().error(e);
             value = 0;
         }
-    }
-
-    @Override
-    public void actionPerformed(GuiElementSettings gui, Button button) {
     }
 }
