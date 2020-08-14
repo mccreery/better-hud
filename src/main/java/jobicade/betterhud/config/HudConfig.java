@@ -16,13 +16,18 @@ import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingValueException;
 import jobicade.betterhud.registry.HudElements;
 import jobicade.betterhud.util.SortedSetList;
+import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
+import net.minecraftforge.fml.config.ModConfig.ModConfigEvent;
 
 /**
  * Handles saving and loading config files through Forge's system. Note that
  * actual settings are stored in each element's settings object.
  */
+@EventBusSubscriber(modid = BetterHud.MODID, value = Dist.CLIENT)
 public class HudConfig {
     public static final HudConfig CLIENT;
     public static final ForgeConfigSpec CLIENT_SPEC;
@@ -33,11 +38,11 @@ public class HudConfig {
         CLIENT_SPEC = specPair.getRight();
     }
 
-    private final ConfigValue<List<? extends HudElement<?>>> enabledProperty;
+    private final ConfigValue<List<? extends String>> enabledProperty;
 
     public HudConfig(ForgeConfigSpec.Builder builder) {
         builder.push("betterhud");
-        enabledProperty = builder.defineList("enabled", Collections.<HudElement<?>>emptyList(), HudElements.get()::isRegistered);
+        enabledProperty = builder.defineList("enabled", Collections.<String>emptyList(), HudElements.get()::isRegistered);
         builder.pop();
 
         for (HudElement<?> element : HudElements.get().getRegistered()) {
@@ -84,32 +89,18 @@ public class HudConfig {
         from.clear();
     }
 
-    @Override
     public void load() {
-        super.load();
-        loadSelected();
-
-        for (Map.Entry<Setting, Property> entry : getPropertyMap().entrySet()) {
-            try {
-                entry.getKey().loadStringValue(entry.getValue().getString());
-            } catch (SettingValueException e) {
-                BetterHud.getLogger().error("Parsing " + entry.getValue().getName() + "=" + entry.getValue().getString(), e);
-            }
-        }
-
-        if (hasChanged()) {
-            save();
-        }
+        loadEnabledList();
+        loadElementSettings();
     }
 
-    private void loadSelected() {
+    private void loadEnabledList() {
         available = new SortedSetList<>(new ArrayList<>(), Comparator.comparing(HudElement::getLocalizedName));
         selected = new ArrayList<>();
 
         available.addAll(HudElements.get().getRegistered());
 
-        String[] enabledNames = getEnabledProperty().getStringList();
-        for (String name : enabledNames) {
+        for (String name : enabledProperty.get()) {
             HudElement<?> element = HudElements.get().getRegistered(name);
 
             if (element != null) {
@@ -118,62 +109,7 @@ public class HudConfig {
         }
     }
 
-    public void saveSettings() {
-        // Convert current selected elements to string list for loading
-        String[] enabledNames = new String[selected.size()];
-
-        for (int i = 0; i < selected.size(); i++) {
-            enabledNames[i] = selected.get(i).getName();
-        }
-        getEnabledProperty().set(enabledNames);
-
-        for (Map.Entry<Setting, Property> entry : getPropertyMap().entrySet()) {
-            entry.getValue().set(entry.getKey().getStringValue());
-        }
-
-        if (hasChanged()) {
-            save();
-        }
-    }
-
-    private Property getEnabledProperty() {
-        return get(BetterHud.MODID, "enabledElements", new String[0]);
-    }
-
-    private Map<Setting, Property> getPropertyMap() {
-        Map<Setting, Property> propertyMap = new HashMap<>();
-        mapProperties(propertyMap, HudElements.GLOBAL.settings, HudElements.GLOBAL.getName(), "");
-
-        for (HudElement<?> element : HudElements.get().getRegistered()) {
-            mapProperties(propertyMap, element.settings, element.getName(), "");
-        }
-        return propertyMap;
-    }
-
-    private void mapProperties(Map<Setting, Property> map, Setting setting, String category, String pathPrefix) {
-        String name = setting.getName();
-
-        if (name != null && !name.isEmpty()) {
-            if (pathPrefix.isEmpty()) {
-                pathPrefix = name;
-            } else {
-                pathPrefix = pathPrefix + "." + name;
-            }
-
-            if (setting.hasValue()) {
-                Property property = get(category, pathPrefix, setting.getStringValue());
-                map.put(setting, property);
-            }
-        }
-
-        for (Setting childSetting : setting.getChildren()) {
-            mapProperties(map, childSetting, category, pathPrefix);
-        }
-    }
-
-    private final Map<Setting, ConfigValue<String>> valueMap = new HashMap<>();
-
-    public void loadValues() {
+    private void loadElementSettings() {
         for (Map.Entry<Setting, ConfigValue<String>> entry : valueMap.entrySet()) {
             try {
                 entry.getKey().loadStringValue(entry.getValue().get());
@@ -183,6 +119,27 @@ public class HudConfig {
             }
         }
     }
+
+    public void save() {
+        saveEnabledList();
+        saveElementSettings();
+    }
+
+    private void saveEnabledList() {
+        List<String> enabledNames = new ArrayList<>();
+        for (HudElement<?> element : selected) {
+            enabledNames.add(element.getName());
+        }
+        enabledProperty.set(enabledNames);
+    }
+
+    private void saveElementSettings() {
+        for (Map.Entry<Setting, ConfigValue<String>> entry : valueMap.entrySet()) {
+            entry.getValue().set(entry.getKey().getStringValue());
+        }
+    }
+
+    private final Map<Setting, ConfigValue<String>> valueMap = new HashMap<>();
 
     private void mapValues(ForgeConfigSpec.Builder builder, Setting setting) {
         String name = setting.getName();
@@ -202,6 +159,13 @@ public class HudConfig {
 
         if (hasName) {
             builder.pop();
+        }
+    }
+
+    @SubscribeEvent
+    public static void onConfig(ModConfigEvent event) {
+        if (event.getConfig().getSpec() == CLIENT_SPEC) {
+            HudConfig.CLIENT.load();
         }
     }
 }

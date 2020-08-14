@@ -69,7 +69,7 @@ public class GuiElementSettings extends GuiMenuScreen {
 
     @Override
     public void onClose() {
-        BetterHud.getConfigManager().getConfig().saveSettings();
+        BetterHud.getConfigManager().getConfig().save();
     }
 
     /** @see GuiScreen#handleMouseInput() */

@@ -24,14 +24,12 @@ import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModContainer;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.config.ModConfig.ModConfigEvent;
 import net.minecraftforge.fml.config.ModConfig.Type;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
@@ -76,13 +74,6 @@ public class BetterHud {
         container.addConfig(config);
 
         configManager = new ConfigManager(config.getFullPath(), config.getFullPath().resolveSibling(BetterHud.MODID));
-    }
-
-    @SubscribeEvent
-    public static void onConfig(ModConfigEvent event) {
-        if (event.getConfig() == config) {
-            HudConfig.CLIENT.loadValues();
-        }
     }
 
     private static final Logger logger = LogManager.getLogger();
