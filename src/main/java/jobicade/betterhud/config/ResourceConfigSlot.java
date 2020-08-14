@@ -3,12 +3,10 @@ package jobicade.betterhud.config;
 import static jobicade.betterhud.BetterHud.MC;
 
 import java.io.IOException;
+import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
-import java.nio.file.Files;
-
-import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
 
 /**
@@ -41,6 +39,6 @@ public class ResourceConfigSlot implements ConfigSlot {
 
     @Override
     public String getName() {
-        return com.google.common.io.Files.getNameWithoutExtension(path.getResourcePath());
+        return com.google.common.io.Files.getNameWithoutExtension(path.getPath());
     }
 }
