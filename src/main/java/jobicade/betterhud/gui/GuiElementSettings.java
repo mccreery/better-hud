@@ -40,6 +40,8 @@ public class GuiElementSettings extends GuiMenuScreen {
     public HudElement<?> element;
     //private ArrayList<TextFieldWidget> textboxList = new ArrayList<>();
 
+    private List<TextFieldWidget> textboxes = new ArrayList<>();
+
     private Rect viewport;
 
     private SuperButton done;
@@ -81,7 +83,7 @@ public class GuiElementSettings extends GuiMenuScreen {
     /** @see GuiScreen#handleMouseInput() */
     @Override
     public void tick() {
-        for(TextFieldWidget field : this.textboxList) {
+        for(TextFieldWidget field : textboxes) {
             field.tick();
         }
 
@@ -101,12 +103,12 @@ public class GuiElementSettings extends GuiMenuScreen {
     }
 
     @Override
-    protected void keyTyped(char typedChar, int keyCode) throws IOException {
-        super.keyTyped(typedChar, keyCode);
-
-        for(TextFieldWidget field : this.textboxList) {
-            field.textboxKeyTyped(typedChar, keyCode);
+    public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
+        if (super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_)) {
             element.getRootSetting().updateGuiParts();
+            return true;
+        } else {
+            return false;
         }
     }
 
@@ -116,10 +118,6 @@ public class GuiElementSettings extends GuiMenuScreen {
             // TODO
             if (super.mouseClicked(mouseX, mouseY + getMouseOffset(), button)) {
                 element.getRootSetting().updateGuiParts();
-            }
-
-            for(GuiTextField field : this.textboxList) {
-                field.mouseClicked(mouseX, mouseY + getMouseOffset(), button);
             }
         }
 
@@ -146,6 +144,7 @@ public class GuiElementSettings extends GuiMenuScreen {
         renderBackground();
         drawTitle();
 
+        // done button doesn't get translated
         done.render(mouseX, mouseY, partialTicks);
 
         RenderSystem.pushMatrix();
@@ -154,19 +153,15 @@ public class GuiElementSettings extends GuiMenuScreen {
 
         int viewportMouseY = mouseY + getMouseOffset();
 
-        for(Button button : buttons) button.render(mouseX, viewportMouseY, partialTicks);
+        super.render(mouseX, mouseY, partialTicks);
         for(GuiLabel label : labelList) label.drawLabel(mouseX, viewportMouseY);
 
-        for(TextFieldWidget field : this.textboxList) {
-            field.render(mouseX, mouseY, partialTicks);
-        }
         element.getRootSetting().draw();
 
         GlUtil.endScissor();
         RenderSystem.popMatrix();
 
         drawResolution(10, 10, 100);
-        super.render(mouseX, mouseY, partialTicks);
     }
 
     /** Add to {@code mouseY} to get the effective {@code mouseY} taking into account scroll */
@@ -206,7 +201,12 @@ public class GuiElementSettings extends GuiMenuScreen {
          * Adds a widget to the scrolling viewport.
          */
         public <T extends Widget> T add(T widget) {
-            return GuiElementSettings.this.addButton(widget);
+            return addButton(widget);
+        }
+
+        public <T extends TextFieldWidget> T add(T textbox) {
+            textboxes.add(textbox);
+            return addButton(textbox);
         }
     }
 }
