@@ -3,39 +3,29 @@ package jobicade.betterhud.gui;
 import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import org.lwjgl.opengl.GL11;
 
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
-import net.java.games.input.Keyboard;
-import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.IGuiEventListener;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.Widget;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.text.TranslationTextComponent;
-import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
-import net.minecraftforge.common.MinecraftForge;
 
 public class GuiElementSettings extends GuiMenuScreen {
-    private static final int REPEAT_SPEED       = 20; // Rate of speed-up to 20/s
-    private static final int REPEAT_SPEED_FAST = 10; // Rate of speed-up beyond 20/s
+    //private static final int REPEAT_SPEED       = 20; // Rate of speed-up to 20/s
+    //private static final int REPEAT_SPEED_FAST = 10; // Rate of speed-up beyond 20/s
 
     public HudElement<?> element;
     //private ArrayList<TextFieldWidget> textboxList = new ArrayList<>();
@@ -47,7 +37,7 @@ public class GuiElementSettings extends GuiMenuScreen {
     private SuperButton done;
     private Scrollbar scrollbar;
 
-    private int repeatTimer = 0;
+    //private int repeatTimer = 0;
 
     private final Screen previousScreen;
 
@@ -58,6 +48,8 @@ public class GuiElementSettings extends GuiMenuScreen {
         this.previousScreen = previousScreen;
     }
 
+    private int contentHeight;
+
     @Override
     public void init() {
         done = addButton(new SuperButton(b -> MC.displayGuiScreen(previousScreen)));
@@ -67,7 +59,7 @@ public class GuiElementSettings extends GuiMenuScreen {
         // old LWJGL 2 code
         //Keyboard.enableRepeatEvents(true);
 
-        int contentHeight = element.getRootSetting().getGuiParts(new Populator(), new Point(width / 2, SPACER)).getY();
+        contentHeight = element.getRootSetting().getGuiParts(new Populator(), new Point(width / 2, SPACER)).getY();
 
         viewport = new Rect(width / 2 - 200, height / 16 + 40 + SPACER, 400, 0).withBottom(height - 20);
         scrollbar = addButton(new Scrollbar(viewport.getX(), viewport.getY(), viewport.getWidth(), viewport.getHeight(), contentHeight / (float)viewport.getHeight()));
@@ -87,7 +79,8 @@ public class GuiElementSettings extends GuiMenuScreen {
             field.tick();
         }
 
-        if(selectedButton instanceof GuiActionButton && ((GuiActionButton)selectedButton).getRepeat()) {
+        // TODO repeat
+        /*if(getFocused() instanceof SuperButton && ((GuiActionButton)selectedButton).getRepeat()) {
             // Slowly build up speed until 1/tick after REPEAT_SPEED ticks
             if(++repeatTimer % Math.max(1, Math.round(REPEAT_SPEED / repeatTimer)) == 0) {
                 // When above REPEAT_SPEED, repeat multiple times per tick
@@ -99,7 +92,7 @@ public class GuiElementSettings extends GuiMenuScreen {
             }
         } else {
             repeatTimer = 0;
-        }
+        }*/
     }
 
     @Override
@@ -114,29 +107,18 @@ public class GuiElementSettings extends GuiMenuScreen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        // divide clicks into viewport and non viewport
         if(mouseY >= viewport.getTop() && mouseY < viewport.getBottom()) {
-            // TODO
             if (super.mouseClicked(mouseX, mouseY + getMouseOffset(), button)) {
                 element.getRootSetting().updateGuiParts();
+                return true;
+            } else {
+                return false;
             }
+        } else {
+            return done.mouseClicked(mouseX, mouseY, button)
+                || scrollbar.mouseClicked(mouseX, mouseY, button);
         }
-
-        // Done button isn't in buttonList, have to handle it manually
-        if(done.mousePressed(this, mouseX, mouseY)) {
-            ActionPerformedEvent.Pre event = new ActionPerformedEvent.Pre(this, done, buttonList);
-            if(MinecraftForge.EVENT_BUS.post(event)) return;
-
-            GuiButton eventResult = event.getButton();
-            selectedButton = eventResult;
-            eventResult.playPressSound(minecraft.getSoundHandler());
-            actionPerformed(eventResult);
-
-            if(this.equals(MC.currentScreen)) {
-                MinecraftForge.EVENT_BUS.post(new ActionPerformedEvent.Post(this, done, buttonList));
-            }
-        }
-        scrollbar.mouseClicked(mouseX, mouseY, button);
-        return true; // TODO
     }
 
     @Override
@@ -152,9 +134,7 @@ public class GuiElementSettings extends GuiMenuScreen {
         GL11.glTranslatef(0, -getMouseOffset(), 0);
 
         int viewportMouseY = mouseY + getMouseOffset();
-
-        super.render(mouseX, mouseY, partialTicks);
-        for(GuiLabel label : labelList) label.drawLabel(mouseX, viewportMouseY);
+        super.render(mouseX, viewportMouseY, partialTicks);
 
         element.getRootSetting().draw();
 
@@ -164,9 +144,13 @@ public class GuiElementSettings extends GuiMenuScreen {
         drawResolution(10, 10, 100);
     }
 
+    private int getScroll() {
+        return Math.round(scrollbar.getValue() * (contentHeight - viewport.getHeight()));
+    }
+
     /** Add to {@code mouseY} to get the effective {@code mouseY} taking into account scroll */
     @Deprecated private int getMouseOffset() {
-        return scrollbar.getScroll() - viewport.getTop();
+        return getScroll() - viewport.getTop();
     }
 
     /** Draws a diagram of the size of the HUD */
