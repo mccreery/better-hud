@@ -18,7 +18,7 @@ version="${file.jarVersion}" #mandatory
  # A display name for the mod
 displayName="Better HUD" #mandatory
 # A URL to query for updates for this mod. See the JSON update specification <here>
-updateJSONURL="https://github.com/mccreery/better-hud/blob/master/update.json" #optional
+updateJSONURL="https://raw.githubusercontent.com/mccreery/better-hud/master/update.json" #optional
 # A URL for the "homepage" for this mod, displayed in the mod UI
 displayURL="https://www.curseforge.com/minecraft/mc-mods/better-hud" #optional
 # A file name (in the root of the mod JAR) containing a logo for display
