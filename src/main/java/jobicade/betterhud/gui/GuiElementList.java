@@ -25,96 +25,88 @@ import jobicade.betterhud.render.Grid;
 import jobicade.betterhud.render.Label;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.Textures;
-import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.InputMappings;
+import net.minecraft.util.text.TranslationTextComponent;
 import net.minecraftforge.client.settings.KeyModifier;
 
 public class GuiElementList extends GuiMenuScreen {
     private final ConfigManager configManager;
 
-    private GuiScrollbar disabledScroll;
+    private Scrollbar disabledScroll;
     private Rect disabledViewport;
     private Grid<ListItem> disabledList;
 
-    private GuiScrollbar enabledScroll;
+    private Scrollbar enabledScroll;
     private Rect enabledViewport;
     private Grid<ListItem> enabledList;
 
     private List<HudElement<?>> selection = new ArrayList<>();
 
-    private GuiActionButton upButton;
-    private GuiActionButton downButton;
-    private GuiActionButton configButton;
+    private SuperButton upButton;
+    private SuperButton downButton;
+    private SuperButton configButton;
 
-    private GuiTexturedButton moveButton;
-    private GuiActionButton enableAllButton;
-    private GuiActionButton disableAllButton;
+    private SuperButton moveButton;
+    private SuperButton enableAllButton;
+    private SuperButton disableAllButton;
 
     public GuiElementList(ConfigManager configManager) {
+        super(new TranslationTextComponent("betterHud.menu.hudSettings"));
         this.configManager = configManager;
-        setTitle(I18n.format("betterHud.menu.hudSettings"));
     }
 
     @Override
-    public void initGui() {
-        super.initGui();
+    public void init() {
+        SuperButton backButton = addButton(new SuperButton(b -> minecraft.displayGuiScreen(null)));
+        backButton.setMessage(I18n.format("menu.returnToGame"));
+        backButton.setBounds(new Rect(200, 20).align(getOrigin(), Direction.NORTH));
 
-        GuiActionButton backButton = new GuiActionButton(I18n.format("menu.returnToGame"))
-            .setBounds(new Rect(200, 20).align(getOrigin(), Direction.NORTH))
-            .setCallback(b -> mc.displayGuiScreen(null));
+        SuperButton saveLoadButton = addButton(new SuperButton(b -> minecraft.displayGuiScreen(new GuiConfigSaves(configManager, this))));
+        saveLoadButton.setMessage(I18n.format("betterHud.menu.saveLoad"));
+        saveLoadButton.setBounds(new Rect(150, 20).align(getOrigin().add(-1, 22), Direction.NORTH_EAST));
 
-        GuiActionButton saveLoadButton = new GuiActionButton(I18n.format("betterHud.menu.saveLoad"))
-            .setBounds(new Rect(150, 20).align(getOrigin().add(-1, 22), Direction.NORTH_EAST))
-            .setCallback(b -> mc.displayGuiScreen(new GuiConfigSaves(configManager, this)));
-
-        GuiActionButton modSettingsButton = new GuiActionButton(I18n.format("betterHud.menu.modSettings"))
-            .setBounds(new Rect(150, 20).align(getOrigin().add(1, 22), Direction.NORTH_WEST))
-            .setCallback(b -> mc.displayGuiScreen(new GuiElementSettings(HudElements.GLOBAL, this)));
-
-        buttonList.add(backButton);
-        buttonList.add(saveLoadButton);
-        buttonList.add(modSettingsButton);
+        SuperButton modSettingsButton = addButton(new SuperButton(b -> minecraft.displayGuiScreen(new GuiElementSettings(HudElements.GLOBAL, this))));
+        modSettingsButton.setMessage(I18n.format("betterHud.menu.modSettings"));
+        modSettingsButton.setBounds(new Rect(150, 20).align(getOrigin().add(1, 22), Direction.NORTH_WEST));
 
         disabledViewport = new Rect(200, 0).align(getOrigin().add(-14, 67), Direction.SOUTH_EAST).withBottom(height - 30);
-        disabledScroll = new GuiScrollbar(disabledViewport, 0);
+        disabledScroll = new Scrollbar(disabledViewport.getRight() - 8, disabledViewport.getY(), 8, disabledViewport.getHeight(), 0.5f);
+        addButton(disabledScroll);
 
         enabledViewport = new Rect(200, 0).align(getOrigin().add(14, 67), Direction.SOUTH_WEST).withBottom(height - 30);
-        enabledScroll = new GuiScrollbar(enabledViewport, 0);
+        disabledScroll = new Scrollbar(enabledViewport.getRight() - 8, enabledViewport.getY(), 8, enabledViewport.getHeight(), 0.5f);
+        addButton(enabledScroll);
 
         Point centerButtons = disabledViewport.getAnchor(Direction.EAST).add(SPACER, 0);
 
-        moveButton = new GuiTexturedButton(new Rect(120, 0, 20, 20));
+        moveButton = addButton(new SuperButton(b -> swapSelected()));
         moveButton.setBounds(new Rect(20, 20).align(centerButtons.add(0, -22), Direction.WEST));
-        moveButton.setCallback(b -> swapSelected());
-        buttonList.add(moveButton);
+        moveButton.setTexture(Textures.SETTINGS, 120, 0, 20);
 
-        enableAllButton = new GuiTexturedButton(new Rect(160, 0, 20, 20));
+        enableAllButton = addButton(new SuperButton(b -> enableAll()));
         enableAllButton.setBounds(new Rect(20, 20).align(centerButtons, Direction.WEST));
-        enableAllButton.setCallback(b -> enableAll());
-        buttonList.add(enableAllButton);
+        enableAllButton.setTexture(Textures.SETTINGS, 160, 0, 20);
 
-        disableAllButton = new GuiTexturedButton(new Rect(140, 0, 20, 20));
+        disableAllButton = new SuperButton(b -> disableAll());
         disableAllButton.setBounds(new Rect(20, 20).align(centerButtons.add(0, 22), Direction.WEST));
-        disableAllButton.setCallback(b -> disableAll());
-        buttonList.add(disableAllButton);
+        disableAllButton.setTexture(Textures.SETTINGS, 140, 0, 20);
 
         Point rightButtons = enabledViewport.getAnchor(Direction.EAST).add(SPACER, 0);
 
-        upButton = new GuiTexturedButton(new Rect(60, 0, 20, 20));
+        upButton = addButton(new SuperButton(b -> moveSelectionUp()));
         upButton.setBounds(new Rect(20, 20).align(rightButtons.add(0, -22), Direction.WEST));
-        upButton.setCallback(b -> moveSelectionUp());
-        buttonList.add(upButton);
+        upButton.setTexture(Textures.SETTINGS, 60, 0, 20);
 
-        downButton = new GuiTexturedButton(new Rect(80, 0, 20, 20));
+        downButton = addButton(new SuperButton(b -> moveSelectionDown()));
         downButton.setBounds(new Rect(20, 20).align(rightButtons, Direction.WEST));
-        downButton.setCallback(b -> moveSelectionDown());
-        buttonList.add(downButton);
+        downButton.setTexture(Textures.SETTINGS, 80, 0, 20);
 
-        configButton = new GuiTexturedButton(new Rect(40, 0, 20, 20));
+        configButton = addButton(new SuperButton(b -> openSettings()));
         configButton.setBounds(new Rect(20, 20).align(rightButtons.add(0, 22), Direction.WEST));
-        configButton.setCallback(b -> openSettings());
-        buttonList.add(configButton);
+        configButton.setTexture(Textures.SETTINGS, 40, 0, 20);
 
         updateLists();
     }
@@ -130,7 +122,7 @@ public class GuiElementList extends GuiMenuScreen {
     }
 
     @Override
-    public void onGuiClosed() {
+    public void onClose() {
         BetterHud.getProxy().getConfig().saveSettings();
     }
 
@@ -138,26 +130,26 @@ public class GuiElementList extends GuiMenuScreen {
      * Checks if each button is enabled.
      */
     private void checkButtons() {
-        enableAllButton.enabled = !getDisabled().isEmpty();
-        disableAllButton.enabled = !getEnabled().isEmpty();
+        enableAllButton.active = !getDisabled().isEmpty();
+        disableAllButton.active = !getEnabled().isEmpty();
 
-        upButton.enabled = false;
-        downButton.enabled = false;
-        configButton.enabled = false;
+        upButton.active = false;
+        downButton.active = false;
+        configButton.active = false;
 
-        moveButton.enabled = !selection.isEmpty();
-        if (moveButton.enabled) {
+        moveButton.active = !selection.isEmpty();
+        if (moveButton.active) {
             HudElement<?> element = selection.get(0);
 
             if (getEnabled().contains(element)) {
-                moveButton.setTexture(new Rect(100, 0, 20, 20));
-                configButton.enabled = true;
+                moveButton.setTexture(Textures.SETTINGS, 100, 0, 20);
+                configButton.active = true;
 
                 List<Integer> indices = getIndices(getEnabled(), selection);
-                upButton.enabled = Collections.min(indices) != 0;
-                downButton.enabled = Collections.max(indices) != getEnabled().size() - 1;
+                upButton.active = Collections.min(indices) != 0;
+                downButton.active = Collections.max(indices) != getEnabled().size() - 1;
             } else {
-                moveButton.setTexture(new Rect(120, 0, 20, 20));
+                moveButton.setTexture(Textures.SETTINGS, 120, 0, 20);
             }
         }
     }
@@ -182,7 +174,7 @@ public class GuiElementList extends GuiMenuScreen {
     private void openSettings() {
         if (!selection.isEmpty()) {
             HudElement<?> element = selection.get(selection.size() - 1);
-            mc.displayGuiScreen(new GuiElementSettings(element, this));
+            minecraft.displayGuiScreen(new GuiElementSettings(element, this));
         }
     }
 
@@ -226,10 +218,12 @@ public class GuiElementList extends GuiMenuScreen {
 
     private void updateLists() {
         disabledList = getList(getDisabled());
-        disabledScroll.setContentHeight(disabledList.getPreferredSize().getHeight() + SPACER * 2);
+        int disabledHeight = disabledList.getPreferredSize().getHeight() + SPACER * 2;
+        disabledScroll.setThumbSize((float)disabledHeight / disabledViewport.getHeight());
 
         enabledList = getList(getEnabled());
-        enabledScroll.setContentHeight(enabledList.getPreferredSize().getHeight() + SPACER * 2);
+        int enabledHeight = enabledList.getPreferredSize().getHeight() + SPACER * 2;
+        enabledScroll.setThumbSize((float)enabledHeight / enabledViewport.getHeight());
 
         checkButtons();
     }
@@ -248,17 +242,21 @@ public class GuiElementList extends GuiMenuScreen {
     }
 
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-        super.mouseClicked(mouseX, mouseY, mouseButton);
-
-        disabledScroll.mouseClicked(mouseX, mouseY, mouseButton);
-        enabledScroll.mouseClicked(mouseX, mouseY, mouseButton);
-        mouseClicked(mouseX, mouseY, disabledViewport, disabledScroll, disabledList);
-        mouseClicked(mouseX, mouseY, enabledViewport, enabledScroll, enabledList);
+    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+        if (mouseClicked((int)mouseX, (int)mouseY, disabledViewport, disabledScroll, disabledList)
+                || mouseClicked((int)mouseX, (int)mouseY, enabledViewport, enabledScroll, enabledList)) {
+            return true;
+        } else {
+            return super.mouseClicked(mouseX, mouseY, mouseButton);
+        }
     }
 
-    private void mouseClicked(int mouseX, int mouseY, Rect viewport, GuiScrollbar scrollbar, Grid<ListItem> list) {
-        if(viewport.contains(mouseX, mouseY) && !scrollbar.getBounds().contains(mouseX, mouseY)) {
+    private Rect getBounds(Widget widget) {
+        return new Rect(widget.x, widget.y, widget.getWidth(), widget.getHeight());
+    }
+
+    private boolean mouseClicked(int mouseX, int mouseY, Rect viewport, Scrollbar scrollbar, Grid<ListItem> list) {
+        if(viewport.contains(mouseX, mouseY) && !getBounds(scrollbar).contains(mouseX, mouseY)) {
             boolean selectedAny = false;
 
             for(int i = 0; i < list.getSource().size(); i++) {
@@ -274,11 +272,14 @@ public class GuiElementList extends GuiMenuScreen {
                 selection.clear();
             }
             checkButtons();
+            return selectedAny;
+        } else {
+            return false;
         }
     }
 
     private void addToSelection(HudElement<?> element) {
-        if (!selection.isEmpty() && isShiftKeyDown()) {
+        if (!selection.isEmpty() && hasShiftDown()) {
             List<HudElement<?>> selectionSide = getSelectionSide();
 
             int index = selectionSide.indexOf(element);
@@ -297,7 +298,7 @@ public class GuiElementList extends GuiMenuScreen {
                 }
             }
         } else {
-            if (!isCtrlKeyDown()) {
+            if (!hasControlDown()) {
                 selection.clear();
             } else {
                 List<HudElement<?>> selectionSide = getSelectionSide();
@@ -368,29 +369,10 @@ public class GuiElementList extends GuiMenuScreen {
         }
     }
 
-    @Override
-    protected void mouseClickMove(int mouseX, int mouseY, int button, long heldTime) {
-        super.mouseClickMove(mouseX, mouseY, button, heldTime);
-        disabledScroll.mouseClickMove(mouseX, mouseY, button, heldTime);
-        enabledScroll.mouseClickMove(mouseX, mouseY, button, heldTime);
-    }
+    private Rect getListBounds(Rect viewport, Scrollbar scrollbar, Grid<ListItem> list) {
+        int scroll = Math.round(scrollbar.getValue() * (list.getPreferredSize().getHeight() - viewport.getHeight()));
 
-    @Override
-    public void mouseReleased(int mouseX, int mouseY, int button) {
-        super.mouseReleased(mouseX, mouseY, button);
-        disabledScroll.mouseReleased(mouseX, mouseY, button);
-        enabledScroll.mouseReleased(mouseX, mouseY, button);
-    }
-
-    @Override
-    public void handleMouseInput() throws IOException {
-        super.handleMouseInput();
-        disabledScroll.handleMouseInput();
-        enabledScroll.handleMouseInput();
-    }
-
-    private Rect getListBounds(Rect viewport, GuiScrollbar scrollbar, Grid<ListItem> list) {
-        Point origin = viewport.getAnchor(Direction.NORTH).sub(0, scrollbar.getScroll() - SPACER);
+        Point origin = viewport.getAnchor(Direction.NORTH).sub(0, scroll - SPACER);
         return new Rect(list.getPreferredSize().withWidth(150)).align(origin, Direction.NORTH);
     }
 
@@ -401,42 +383,39 @@ public class GuiElementList extends GuiMenuScreen {
     private boolean showWarning;
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        super.drawScreen(mouseX, mouseY, partialTicks);
+    public void render(int mouseX, int mouseY, float partialTicks) {
+        drawViewport(disabledViewport, disabledScroll, disabledList);
+        drawViewport(enabledViewport, enabledScroll, enabledList);
+
+        super.render(mouseX, mouseY, partialTicks);
 
         this.mouseX = mouseX;
         this.mouseY = mouseY;
         showWarning = false;
 
-        drawViewport(disabledViewport, disabledScroll, disabledList);
-        disabledScroll.drawScrollbar(mouseX, mouseY);
-
-        drawViewport(enabledViewport, enabledScroll, enabledList);
-        enabledScroll.drawScrollbar(mouseX, mouseY);
-
         String hint = I18n.format("betterHud.menu.modifiers",
-            KeyModifier.CONTROL.getLocalizedComboName(-100),
-            KeyModifier.SHIFT.getLocalizedComboName(-100));
+            KeyModifier.CONTROL.getLocalizedComboName(null, () -> I18n.format("key.mouse.left")),
+            KeyModifier.SHIFT.getLocalizedComboName(null, () -> I18n.format("key.mouse.left")));
 
-        drawCenteredString(fontRenderer, hint, width / 2, height - fontRenderer.FONT_HEIGHT - SPACER, 0xffffff);
+        drawCenteredString(font, hint, width / 2, height - font.FONT_HEIGHT - SPACER, 0xffffff);
 
-        Point p = disabledViewport.getAnchor(Direction.NORTH).sub(0, fontRenderer.FONT_HEIGHT + SPACER);
-        drawCenteredString(fontRenderer, I18n.format("betterHud.menu.disabledElements"), p.getX(), p.getY(), 0xffffff);
+        Point p = disabledViewport.getAnchor(Direction.NORTH).sub(0, font.FONT_HEIGHT + SPACER);
+        drawCenteredString(font, I18n.format("betterHud.menu.disabledElements"), p.getX(), p.getY(), 0xffffff);
 
-        p = enabledViewport.getAnchor(Direction.NORTH).sub(0, fontRenderer.FONT_HEIGHT + SPACER);
-        drawCenteredString(fontRenderer, I18n.format("betterHud.menu.enabledElements"), p.getX(), p.getY(), 0xffffff);
+        p = enabledViewport.getAnchor(Direction.NORTH).sub(0, font.FONT_HEIGHT + SPACER);
+        drawCenteredString(font, I18n.format("betterHud.menu.enabledElements"), p.getX(), p.getY(), 0xffffff);
 
         if (showWarning) {
-            drawHoveringText(I18n.format("betterHud.menu.unsupported"), mouseX, mouseY);
+            renderTooltip(I18n.format("betterHud.menu.unsupported"), mouseX, mouseY);
             // Side-effect is enabling item lighting
             RenderHelper.disableStandardItemLighting();
         }
     }
 
-    private void drawViewport(Rect viewport, GuiScrollbar scrollbar, Grid<ListItem> list) {
+    private void drawViewport(Rect viewport, Scrollbar scrollbar, Grid<ListItem> list) {
         GlUtil.drawRect(viewport, new Color(32, 0, 0, 0));
 
-        GlUtil.beginScissor(viewport, new ScaledResolution(MC));
+        GlUtil.beginScissor(viewport);
         list.setBounds(getListBounds(viewport, scrollbar, list)).render();
         GlUtil.endScissor();
     }
