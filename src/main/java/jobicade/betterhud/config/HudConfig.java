@@ -51,7 +51,7 @@ public class HudConfig {
     }
 
     private SortedSetList<HudElement<?>> available;
-    private List<HudElement<?>> selected;
+    private List<HudElement<?>> selected = new ArrayList<>();
 
     public List<HudElement<?>> getAvailable() {
         return available;
