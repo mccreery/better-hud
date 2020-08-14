@@ -8,6 +8,7 @@ import org.apache.maven.artifact.versioning.ArtifactVersion;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 
 import jobicade.betterhud.config.ConfigManager;
+import jobicade.betterhud.config.HudConfig;
 import jobicade.betterhud.events.ClientEvents;
 import jobicade.betterhud.geom.LayoutManager;
 import jobicade.betterhud.network.InventoryNameQuery;
@@ -24,6 +25,7 @@ import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.DistExecutor;
+import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.config.ModConfig;
@@ -65,6 +67,7 @@ public class BetterHud {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientEvents::setupClient);
 
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, HudConfig.CLIENT_SPEC);
         configManager = new ConfigManager();
     }
 
