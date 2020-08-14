@@ -46,15 +46,19 @@ public abstract class HudRegistry<T extends HudElement<?>> {
         return elements.values();
     }
 
-    public final T getRegistered(String name) {
+    public final T getRegistered(Object name) {
         return elements.get(name);
+    }
+
+    public final boolean isRegistered(Object name) {
+        return elements.containsKey(name);
     }
 
     /**
      * @return The enabled elements filtered by this registry.
      */
     public List<T> getEnabled() {
-        List<HudElement<?>> selected = HudConfigNew.CLIENT.getSelected();
+        List<? extends HudElement<?>> selected = HudConfigNew.CLIENT.getSelected();
 
         List<T> subclassSelected = new ArrayList<>();
         for (HudElement<?> element : selected) {

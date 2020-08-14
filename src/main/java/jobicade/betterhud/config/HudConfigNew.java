@@ -31,9 +31,7 @@ public class HudConfigNew {
 
     public HudConfigNew(ForgeConfigSpec.Builder builder) {
         builder.push("betterhud");
-        enabled = builder.defineList("enabled", Collections.<HudElement<?>>emptyList(),
-            name -> name instanceof String
-            && HudElements.get().getRegistered((String)name) != null);
+        enabled = builder.defineList("enabled", Collections.<HudElement<?>>emptyList(), HudElements.get()::isRegistered);
         builder.pop();
 
         for (HudElement<?> element : HudElements.get().getRegistered()) {
@@ -41,8 +39,8 @@ public class HudConfigNew {
         }
     }
 
-    public List<HudElement<?>> getSelected() {
-        throw new UnsupportedOperationException(); // TODO
+    public List<? extends HudElement<?>> getSelected() {
+        return enabled.get();
     }
 
     public void loadValues() {
