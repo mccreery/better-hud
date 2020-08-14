@@ -59,10 +59,15 @@ public class SettingAbsolutePosition extends Setting {
         populator.add(yDown = new GuiUpDownButton(false).setBounds(new Rect(origin.getX() + 86, origin.getY() + 10, 0, 0)).setId(3).setRepeat());
 
         if(position != null) {
-            populator.add(pick = new Button(origin.getX() - 100, origin.getY() + 22, 200, 20, I18n.format("betterHud.menu.pick")));
+            pick = populator.add(new Button(origin.getX() - 100, origin.getY() + 22, 200, 20, I18n.format("betterHud.menu.pick"), b -> pick()));
         }
 
         return origin.add(0, 42 + SPACER);
+    }
+
+    private void pick() {
+        GuiElementSettings gui = (GuiElementSettings)MC.currentScreen;
+        MC.displayGuiScreen(new GuiOffsetChooser(gui, position));
     }
 
     public void updateText() {
