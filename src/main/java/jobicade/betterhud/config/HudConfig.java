@@ -89,7 +89,11 @@ public class HudConfig {
         from.clear();
     }
 
+    /**
+     * Bakes values without reloading from file
+     */
     public void load() {
+        // TODO allow outside callers to reload from file e.g. after replacing
         loadEnabledList();
         loadElementSettings();
     }
@@ -120,7 +124,11 @@ public class HudConfig {
         }
     }
 
+    /**
+     * Saves values to config value without writing the file.
+     */
     public void save() {
+        // TODO write file
         saveEnabledList();
         saveElementSettings();
     }

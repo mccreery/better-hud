@@ -78,7 +78,7 @@ public class ConfigManager implements IFutureReloadListener {
      * Reloads the current config, for example after overwriting it.
      */
     public void reloadConfig() {
-        this.config = new HudConfig(configPath.toFile());
+        HudConfig.CLIENT.load();
     }
 
     /**
