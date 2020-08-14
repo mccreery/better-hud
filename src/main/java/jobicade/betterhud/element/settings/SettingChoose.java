@@ -1,7 +1,6 @@
 package jobicade.betterhud.element.settings;
 
 import java.util.Arrays;
-import java.util.Collection;
 
 import org.apache.commons.lang3.ArrayUtils;
 
@@ -154,7 +153,7 @@ public class SettingChoose extends SettingAlignable {
     }
 
     @Override
-    public void updateGuiParts(Collection<Setting> settings) {
+    public void updateGuiParts() {
         last.active = next.active = enabled();
     }
 }

@@ -3,8 +3,6 @@ package jobicade.betterhud.element.settings;
 import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 
-import java.util.Collection;
-
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
@@ -84,8 +82,8 @@ public class SettingDirection extends SettingAlignable {
     }
 
     @Override
-    public void updateGuiParts(Collection<Setting> settings) {
-        super.updateGuiParts(settings);
+    public void updateGuiParts() {
+        super.updateGuiParts();
         boolean enabled = enabled();
 
         for (int i = 0; i < toggles.length; i++) {

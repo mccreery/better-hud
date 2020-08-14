@@ -3,7 +3,6 @@ package jobicade.betterhud.element.settings;
 import static jobicade.betterhud.BetterHud.MANAGER;
 import static jobicade.betterhud.BetterHud.SPACER;
 
-import java.util.Collection;
 import java.util.function.BooleanSupplier;
 
 import jobicade.betterhud.element.HudElement;
@@ -46,17 +45,17 @@ public class SettingPosition extends Setting {
 
         alignment = new SettingDirection(this, "alignment") {
             @Override
-            public void updateGuiParts(Collection<Setting> settings) {
+            public void updateGuiParts() {
                 if(lockAlignment.get()) set(anchor.get());
-                super.updateGuiParts(settings);
+                super.updateGuiParts();
             }
         };
 
         contentAlignment = new SettingDirection(this, "contentAlignment") {
             @Override
-            public void updateGuiParts(Collection<Setting> settings) {
+            public void updateGuiParts() {
                 if(lockContent.get()) set(SettingPosition.this.alignment.get());
-                super.updateGuiParts(settings);
+                super.updateGuiParts();
             }
         };
         contentAlignment.setAlignment(Direction.EAST);

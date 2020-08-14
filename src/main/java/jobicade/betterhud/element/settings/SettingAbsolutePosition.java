@@ -3,8 +3,6 @@ package jobicade.betterhud.element.settings;
 import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 
-import java.util.Collection;
-
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.gui.GuiElementSettings;
@@ -120,8 +118,8 @@ public class SettingAbsolutePosition extends Setting {
     }
 
     @Override
-    public void updateGuiParts(Collection<Setting> settings) {
-        super.updateGuiParts(settings);
+    public void updateGuiParts() {
+        super.updateGuiParts();
 
         boolean enabled = enabled();
         xBox.setEnabled(enabled);

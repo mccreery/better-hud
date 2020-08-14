@@ -1,7 +1,5 @@
 package jobicade.betterhud.element.settings;
 
-import java.util.Collection;
-
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Direction;
 import net.minecraft.client.resources.I18n;
@@ -101,7 +99,7 @@ public class SettingWarnings extends Setting {
         }
 
         @Override
-        public void updateGuiParts(Collection<Setting> settings) {
+        public void updateGuiParts() {
             //guiSlider.updateDisplayString(); // TODO
         }
     }

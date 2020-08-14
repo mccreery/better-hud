@@ -2,8 +2,6 @@ package jobicade.betterhud.element.settings;
 
 import static jobicade.betterhud.BetterHud.MC;
 
-import java.util.Collection;
-
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.GuiElementChooser;
@@ -63,7 +61,7 @@ public class SettingElement extends SettingAlignable {
     }
 
     @Override
-    public void updateGuiParts(Collection<Setting> settings) {
+    public void updateGuiParts() {
         button.active = enabled();
     }
 }

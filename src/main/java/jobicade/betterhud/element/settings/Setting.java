@@ -1,7 +1,6 @@
 package jobicade.betterhud.element.settings;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BooleanSupplier;
@@ -146,9 +145,9 @@ public class Setting {
 
     /** Updates the GUI elements based on the state of other settings.
      * This is called when any button tied to a setting callback is pressed */
-    public void updateGuiParts(Collection<Setting> settings) {
+    public void updateGuiParts() {
         for(Setting setting : children) {
-            setting.updateGuiParts(settings);
+            setting.updateGuiParts();
         }
     }
 }

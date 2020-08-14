@@ -1,7 +1,5 @@
 package jobicade.betterhud.element.settings;
 
-import java.util.Collection;
-
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.GuiElementSettings;
@@ -74,8 +72,8 @@ public class SettingBoolean extends SettingAlignable {
     }
 
     @Override
-    public void updateGuiParts(Collection<Setting> settings) {
-        super.updateGuiParts(settings);
+    public void updateGuiParts() {
+        super.updateGuiParts();
         toggler.active = enabled();
         toggler.setMessage(getUnlocalizedName(), unlocalizedValue, value);
     }

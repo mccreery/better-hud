@@ -71,9 +71,7 @@ public class GuiElementSettings extends GuiMenuScreen {
         viewport = new Rect(width / 2 - 200, height / 16 + 40 + SPACER, 400, 0).withBottom(height - 20);
         scrollbar = addButton(new Scrollbar(viewport.getX(), viewport.getY(), viewport.getWidth(), viewport.getHeight(), contentHeight / (float)viewport.getHeight()));
 
-        for(Setting setting : callbacks.values()) {
-            setting.updateGuiParts(callbacks.values());
-        }
+        element.getRootSetting().updateGuiParts();
     }
 
     @Override
@@ -87,9 +85,7 @@ public class GuiElementSettings extends GuiMenuScreen {
             callbacks.get(button).actionPerformed(this, button);
 
             // Notify the rest of the elements that a button has been pressed
-            for(Setting setting : callbacks.values()) {
-                setting.updateGuiParts(callbacks.values());
-            }
+            element.getRootSetting().updateGuiParts();
         } else {
             super.actionPerformed(button);
         }
@@ -123,10 +119,7 @@ public class GuiElementSettings extends GuiMenuScreen {
 
         for(TextFieldWidget field : this.textboxList) {
             field.textboxKeyTyped(typedChar, keyCode);
-
-            if(callbacks.containsKey(field)) {
-                callbacks.get(field).updateGuiParts(callbacks.values());
-            }
+            element.getRootSetting().updateGuiParts();
         }
     }
 
