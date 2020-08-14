@@ -111,7 +111,8 @@ public class ConfigManager implements IFutureReloadListener {
         this.resourceManager = resourceManager;
         this.internalConfigs = null;
 
-        if (!Files.exists(configPath)) {
+        // TODO config path should not be null
+        if (configPath != null && !Files.exists(configPath)) {
             for (IResource config : getAllConfigs()) {
                 try (InputStreamReader reader = new InputStreamReader(config.getInputStream())) {
                     Configs configs = GSON.fromJson(reader, Configs.class);
