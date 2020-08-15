@@ -26,7 +26,7 @@ public class GuiOverlayDebug2 extends DebugOverlayGui {
     // made public
     @Override
     public List<String> getDebugInfoLeft() {
-        List<String> list = getDebugInfoLeft();
+        List<String> list = super.getDebugInfoLeft();
 
         list.add("");
         list.add("Debug: Pie [shift]: "
