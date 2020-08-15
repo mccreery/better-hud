@@ -1,5 +1,7 @@
 package jobicade.betterhud.events;
 
+import static jobicade.betterhud.BetterHud.MC;
+
 import java.util.List;
 
 import net.minecraft.client.Minecraft;
@@ -26,6 +28,7 @@ public class GuiOverlayDebug2 extends DebugOverlayGui {
     // made public
     @Override
     public List<String> getDebugInfoLeft() {
+        updateRayTrace();
         List<String> list = super.getDebugInfoLeft();
 
         list.add("");
@@ -41,6 +44,12 @@ public class GuiOverlayDebug2 extends DebugOverlayGui {
     // made public
     @Override
     public List<String> getDebugInfoRight() {
+        updateRayTrace();
         return super.getDebugInfoRight();
+    }
+
+    private void updateRayTrace() {
+        this.rayTraceBlock = MC.renderViewEntity.pick(20.0D, 0.0F, false);
+        this.rayTraceFluid = MC.renderViewEntity.pick(20.0D, 0.0F, true);
     }
 }
