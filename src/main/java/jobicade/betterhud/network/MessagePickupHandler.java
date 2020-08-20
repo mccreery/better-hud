@@ -11,5 +11,6 @@ public class MessagePickupHandler implements BiConsumer<MessagePickup, Supplier<
     @Override
     public void accept(MessagePickup message, Supplier<Context> contextSupplier) {
         OverlayElements.PICKUP.refreshStack(message.getStack());
+        contextSupplier.get().setPacketHandled(true);
     }
 }

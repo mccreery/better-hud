@@ -38,6 +38,7 @@ public class InventoryNameQuery {
                 ITextComponent inventoryName = ((INameable)tileEntity).getDisplayName();
                 BetterHud.NET_WRAPPER.send(PacketDistributor.PLAYER.with(context::getSender), new Response(blockPos, inventoryName));
             }
+            context.setPacketHandled(true);
         }
     }
 
@@ -63,6 +64,7 @@ public class InventoryNameQuery {
             //System.out.println("Received block response " + message.getBlockPos() + " for name " + message.getInventoryName());
 
             OverlayElements.BLOCK_VIEWER.onNameReceived(blockPos, inventoryName);
+            contextSupplier.get().setPacketHandled(true);
         }
     }
 }
