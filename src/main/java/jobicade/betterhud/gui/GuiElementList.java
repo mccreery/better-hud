@@ -121,7 +121,7 @@ public class GuiElementList extends GuiMenuScreen {
 
     @Override
     public void onClose() {
-        BetterHud.getModConfig().save();
+        BetterHud.getConfig().save();
     }
 
     /**

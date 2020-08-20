@@ -2,6 +2,7 @@ package jobicade.betterhud;
 
 import java.util.function.Supplier;
 
+import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.maven.artifact.versioning.ArtifactVersion;
@@ -23,12 +24,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.config.ModConfig;
+import net.minecraftforge.fml.config.ModConfig.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -44,17 +47,6 @@ public class BetterHud {
 
     private static ArtifactVersion serverVersion;
 
-    private static ModConfig config;
-    public static ModConfig getModConfig() {
-        return config;
-    }
-
-    private static ConfigManager configManager;
-
-    public static ConfigManager getConfigManager() {
-        return configManager;
-    }
-
     /**
      * Calling Minecraft.getInstance() in expressions causes a resource leak
      * warning in some IDEs since Minecraft is {@link AutoCloseable}. This is
@@ -66,9 +58,6 @@ public class BetterHud {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setup);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(this::setupClient);
         FMLJavaModLoadingContext.get().getModEventBus().addListener(ClientEvents::setupClient);
-
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, HudConfig.CLIENT_SPEC);
-        configManager = new ConfigManager();
     }
 
     private static final Logger logger = LogManager.getLogger();
@@ -117,11 +106,40 @@ public class BetterHud {
             BetterHud.getLogger().warn("Unable to register alphabetical sort update on language change");
         }
 
-        MinecraftForge.EVENT_BUS.post(new HudRegistryEvent());
+        if (!MinecraftForge.EVENT_BUS.post(new HudRegistryEvent())) {
+            logger.warn("Better HUD registry event canceled unexpectedly");
+        }
 
         Ticker.FASTER.register(OverlayElements.BLOOD_SPLATTERS);
         Ticker.FASTER.register(OverlayElements.WATER_DROPS);
         Ticker.FAST.register(OverlayElements.CPS);
+
+        setupConfig();
+    }
+
+    private static HudConfig config;
+    public static HudConfig getConfig() {
+        return config;
+    }
+
+    private static ConfigManager configManager;
+    public static ConfigManager getConfigManager() {
+        return configManager;
+    }
+
+    private void setupConfig() {
+        Pair<HudConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(HudConfig::new);
+        config = specPair.getLeft();
+        ForgeConfigSpec spec = specPair.getRight();
+
+        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, spec);
+        configManager = new ConfigManager(config);
+
+        FMLJavaModLoadingContext.get().getModEventBus().addListener((ModConfigEvent event) -> {
+            if (event.getConfig().getSpec() == spec) {
+                config.load();
+            }
+        });
     }
 
     public static boolean isModEnabled() {

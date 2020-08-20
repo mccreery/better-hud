@@ -8,8 +8,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import org.apache.commons.lang3.tuple.Pair;
-
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.Setting;
@@ -18,25 +16,12 @@ import jobicade.betterhud.registry.HudElements;
 import jobicade.betterhud.util.SortedSetList;
 import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.ForgeConfigSpec.ConfigValue;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.config.ModConfig.ModConfigEvent;
 
 /**
  * Handles saving and loading config files through Forge's system. Note that
  * actual settings are stored in each element's settings object.
  */
-@EventBusSubscriber(modid = BetterHud.MODID, bus = EventBusSubscriber.Bus.MOD)
 public class HudConfig {
-    public static final HudConfig CLIENT;
-    public static final ForgeConfigSpec CLIENT_SPEC;
-
-    static {
-        Pair<HudConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(HudConfig::new);
-        CLIENT = specPair.getLeft();
-        CLIENT_SPEC = specPair.getRight();
-    }
-
     private final ConfigValue<List<? extends String>> enabledProperty;
 
     public HudConfig(ForgeConfigSpec.Builder builder) {
@@ -166,14 +151,6 @@ public class HudConfig {
 
         if (hasName) {
             builder.pop();
-        }
-    }
-
-    @SubscribeEvent
-    public static void onConfig(ModConfigEvent event) {
-        if (event.getConfig().getSpec() == CLIENT_SPEC) {
-            HudConfig.CLIENT.load();
-            BetterHud.getConfigManager().setConfigPath(event.getConfig().getFullPath());
         }
     }
 }

@@ -53,7 +53,11 @@ public class ConfigManager implements IFutureReloadListener {
     private Path rootDirectory;
     private Path configPath;
 
-    private HudConfig config;
+    private final HudConfig config;
+
+    public ConfigManager(HudConfig config) {
+        this.config = config;
+    }
 
     public void setConfigPath(Path configPath) {
         this.configPath = configPath;
@@ -68,7 +72,7 @@ public class ConfigManager implements IFutureReloadListener {
      * Reloads the current config, for example after overwriting it.
      */
     public void reloadConfig() {
-        HudConfig.CLIENT.load();
+        config.load(); // TODO
     }
 
     /**
