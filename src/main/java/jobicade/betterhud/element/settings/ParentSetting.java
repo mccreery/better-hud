@@ -7,6 +7,9 @@ import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
 
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.gui.GuiElementSettings.Populator;
+
 /**
  * A setting which can have children.
  */
@@ -90,5 +93,29 @@ public final class ParentSetting extends Setting {
             element.add(childSetting.getName(), childSetting.saveJson(gson));
         }
         return element;
+    }
+
+    @Override
+    public Point getGuiParts(Populator populator, Point topAnchor) {
+        for (Setting setting : children) {
+            if (!setting.getHidden()) {
+                topAnchor = setting.getGuiParts(populator, topAnchor);
+            }
+        }
+        return topAnchor;
+    }
+
+    @Override
+    public void draw() {
+        for (Setting child : children) {
+            child.draw();
+        }
+    }
+
+    @Override
+    public void updateGuiParts() {
+        for (Setting child : children) {
+            child.draw();
+        }
     }
 }

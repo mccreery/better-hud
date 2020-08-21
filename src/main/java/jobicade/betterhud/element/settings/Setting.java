@@ -70,8 +70,12 @@ public abstract class Setting {
         this.enableOn = enableOn;
     }
 
-    public void setHidden() {
-        this.hidden = true;
+    public void setHidden(boolean hidden) {
+        this.hidden = hidden;
+    }
+
+    public boolean getHidden() {
+        return hidden;
     }
 
     public String getUnlocalizedName() {
@@ -97,27 +101,12 @@ public abstract class Setting {
      * @param topAnchor The top center anchor for GUI parts being added
      * @return The bottom center anchor directly below this setting's parts
      */
-    public Point getGuiParts(GuiElementSettings.Populator populator, Point topAnchor) {
-        for (Setting setting : children) {
-            if (!setting.hidden) {
-                topAnchor = setting.getGuiParts(populator, topAnchor);
-            }
-        }
-        return topAnchor;
-    }
+    public abstract Point getGuiParts(GuiElementSettings.Populator populator, Point topAnchor);
 
     /** Renders extra parts of this GUI */
-    public void draw() {
-        for(Setting setting : children) {
-            setting.draw();
-        }
-    }
+    public abstract void draw();
 
     /** Updates the GUI elements based on the state of other settings.
      * This is called when any button tied to a setting callback is pressed */
-    public void updateGuiParts() {
-        for(Setting setting : children) {
-            setting.updateGuiParts();
-        }
-    }
+    public abstract void updateGuiParts();
 }
