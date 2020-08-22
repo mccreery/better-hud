@@ -1,6 +1,5 @@
 package jobicade.betterhud.element.settings;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BooleanSupplier;
@@ -16,9 +15,9 @@ import net.minecraft.client.resources.I18n;
 /** A setting for a {@link HudElement}. Child elements will be saved under
  * the namespace of the parent's name */
 public abstract class Setting {
-    private final ParentSetting parent;
+    protected ParentSetting parent;
 
-    public final String name;
+    private final String name;
 
     /** Set to {@code true} to hide the setting from the GUI
      * @see #getGuiParts(List, Map, Point) */
@@ -26,20 +25,8 @@ public abstract class Setting {
 
     private BooleanSupplier enableOn = () -> true;
 
-    /**
-     * Creates a setting as one of the root settings in an element.
-     */
     public Setting(String name) {
-        this(null, name);
-    }
-
-    /**
-     * Creates a child setting of any other setting including the root setting.
-     */
-    public Setting(ParentSetting parent, String name) {
-        this.parent = parent;
         this.name = name;
-        parent.children.add(this);
     }
 
     public String getName() {

@@ -22,6 +22,7 @@ public final class ParentSetting extends Setting {
 
     public void addChild(Setting setting) {
         children.add(setting);
+        setting.parent = this;
     }
 
     public boolean isEmpty() {
