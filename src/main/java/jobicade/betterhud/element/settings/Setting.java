@@ -34,6 +34,14 @@ public abstract class Setting {
     }
 
     /**
+     * Saves the current setting value to a JSON element.
+     *
+     * @param gson The GSON instance for serializing JSON.
+     * @return A JSON subtree representing the current value.
+     */
+    public abstract JsonElement saveJson(Gson gson);
+
+    /**
      * Loads a new setting value from a JSON element. If the JSON is invalid
      * (e.g. the wrong type entirely), the value will not be updated. If the
      * JSON is incomplete, the value may be partially updated or not updated at
@@ -44,14 +52,6 @@ public abstract class Setting {
      * @return {@code true} if the value was fully or partially updated.
      */
     public abstract boolean loadJson(Gson gson, JsonElement element);
-
-    /**
-     * Saves the current setting value to a JSON element.
-     *
-     * @param gson The GSON instance for serializing JSON.
-     * @return A JSON subtree representing the current value.
-     */
-    public abstract JsonElement saveJson(Gson gson);
 
     public void setEnableOn(BooleanSupplier enableOn) {
         this.enableOn = enableOn;
@@ -91,9 +91,11 @@ public abstract class Setting {
     public abstract Point getGuiParts(GuiElementSettings.Populator populator, Point topAnchor);
 
     /** Renders extra parts of this GUI */
-    public abstract void draw();
+    public void draw() {
+    }
 
     /** Updates the GUI elements based on the state of other settings.
      * This is called when any button tied to a setting callback is pressed */
-    public abstract void updateGuiParts();
+    public void updateGuiParts() {
+    }
 }

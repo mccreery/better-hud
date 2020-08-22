@@ -1,6 +1,9 @@
 package jobicade.betterhud.element.settings;
 
-import jobicade.betterhud.element.HudElement;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
+
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.gui.SuperButton;
@@ -13,12 +16,8 @@ public class SettingBoolean extends SettingAlignable {
 
     private boolean value = false;
 
-    public SettingBoolean(HudElement<?> element, String name) {
-        super(element, name);
-    }
-
-    public SettingBoolean(Setting parent, String name) {
-        super(parent, name);
+    public SettingBoolean(String name) {
+        super(name);
     }
 
     public boolean get() {
@@ -41,33 +40,22 @@ public class SettingBoolean extends SettingAlignable {
     }
 
     @Override
-    public boolean hasValue() {
-        return true;
+    public JsonElement saveJson(Gson gson) {
+        return new JsonPrimitive(value);
     }
 
     @Override
-    public String getStringValue() {
-        return String.valueOf(value);
-    }
-
-    @Override
-    public void loadStringValue(String stringValue) {
-        stringValue = stringValue.trim();
-
-        if ("true".equalsIgnoreCase(stringValue)) {
-            value = true;
-            //return true;
-        } else if ("false".equalsIgnoreCase(stringValue)) {
-            value = false;
-            //return true;
+    public boolean loadJson(Gson gson, JsonElement element) {
+        if (element.isJsonPrimitive()) {
+            value = element.getAsJsonPrimitive().getAsBoolean();
+            return true;
         } else {
-            //return false;
+            return false;
         }
     }
 
     @Override
     public void updateGuiParts() {
-        super.updateGuiParts();
         toggler.active = enabled();
         toggler.setMessage(getUnlocalizedName(), unlocalizedValue, value);
     }

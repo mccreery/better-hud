@@ -39,6 +39,16 @@ public final class ParentSetting extends Setting {
         this.requireAll = requireAll;
     }
 
+    @Override
+    public JsonElement saveJson(Gson gson) {
+        JsonObject element = new JsonObject();
+
+        for (Setting childSetting : children) {
+            element.add(childSetting.getName(), childSetting.saveJson(gson));
+        }
+        return element;
+    }
+
     /**
      * {@inheritDoc}
      * <p>This implementation accepts incomplete objects (with properties
@@ -84,16 +94,6 @@ public final class ParentSetting extends Setting {
             }
         }
         return updated;
-    }
-
-    @Override
-    public JsonElement saveJson(Gson gson) {
-        JsonObject element = new JsonObject();
-
-        for (Setting childSetting : children) {
-            element.add(childSetting.getName(), childSetting.saveJson(gson));
-        }
-        return element;
     }
 
     @Override
