@@ -2,15 +2,22 @@ package jobicade.betterhud.config;
 
 import static jobicade.betterhud.BetterHud.MODID;
 
+import java.awt.Color;
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.Reader;
+import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.PathMatcher;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map.Entry;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
@@ -21,8 +28,17 @@ import java.util.stream.Stream;
 import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 
 import jobicade.betterhud.BetterHud;
+import jobicade.betterhud.element.HudElement;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.registry.HudRegistry;
+import jobicade.betterhud.util.json.ColorTypeAdapter;
+import jobicade.betterhud.util.json.ElementTypeAdapter;
+import jobicade.betterhud.util.json.PointTypeAdapter;
 import net.minecraft.profiler.IProfiler;
 import net.minecraft.resources.IFutureReloadListener;
 import net.minecraft.resources.IResource;
@@ -42,10 +58,6 @@ public class ConfigManager implements IFutureReloadListener {
      */
     public static final ResourceLocation CONFIGS_LOCATION = new ResourceLocation(MODID, "configs/configs.json");
 
-    private static final Gson GSON = new GsonBuilder()
-        .registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer())
-        .create();
-
     private PathMatcher pathMatcher;
     private IResourceManager resourceManager;
     private List<ConfigSlot> internalConfigs;
@@ -53,34 +65,53 @@ public class ConfigManager implements IFutureReloadListener {
     private Path rootDirectory;
     private Path configPath;
 
-    private final HudConfig config;
+    private final HudRegistry<?> elementRegistry;
+    private final Gson gson;
 
-    public ConfigManager(HudConfig config) {
-        this.config = config;
+    public ConfigManager(HudRegistry<?> elementRegistry) {
+        this.elementRegistry = elementRegistry;
+        gson = new GsonBuilder()
+            .registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer())
+            .registerTypeAdapter(Color.class, new ColorTypeAdapter())
+            .registerTypeAdapter(HudElement.class, new ElementTypeAdapter(elementRegistry))
+            .registerTypeAdapter(Point.class, new PointTypeAdapter())
+            .create();
+    }
+
+    public void loadFile() throws IOException {
+        JsonObject rootObject;
+
+        try (Reader reader = new BufferedReader(new FileReader(configPath.toFile()))) {
+            JsonParser parser = new JsonParser();
+            rootObject = parser.parse(reader).getAsJsonObject();
+        }
+
+        for (Entry<String, JsonElement> entry : rootObject.entrySet()) {
+            HudElement<?> element = elementRegistry.getRegistered(entry.getKey());
+
+            if (element != null) {
+                element.getRootSetting().loadJson(gson, entry.getValue());
+            } else {
+                BetterHud.getLogger().warn("Unknown element in config file: \"%s\"", entry.getKey());
+            }
+        }
+    }
+
+    public void saveFile() throws IOException {
+        JsonObject rootObject = new JsonObject();
+
+        for (HudElement<?> element : elementRegistry.getRegistered()) {
+            rootObject.add(element.getName(), element.getRootSetting().saveJson(gson));
+        }
+
+        try (Writer writer = new BufferedWriter(new FileWriter(configPath.toFile()))) {
+            gson.toJson(rootObject, writer);
+        }
     }
 
     public void setConfigPath(Path configPath) {
         this.configPath = configPath;
         rootDirectory = configPath.resolveSibling(BetterHud.MODID);
-
-        if (Files.exists(configPath)) {
-            reloadConfig();
-        }
-    }
-
-    /**
-     * Reloads the current config, for example after overwriting it.
-     */
-    public void reloadConfig() {
-        config.load(); // TODO
-    }
-
-    /**
-     * Getter for the current config.
-     * @return The current config.
-     */
-    public HudConfig getConfig() {
-        return config;
     }
 
     /**
@@ -119,17 +150,18 @@ public class ConfigManager implements IFutureReloadListener {
         if (configPath != null && !Files.exists(configPath)) {
             for (IResource config : getAllConfigs()) {
                 try (InputStreamReader reader = new InputStreamReader(config.getInputStream())) {
-                    Configs configs = GSON.fromJson(reader, Configs.class);
+                    Configs configs = gson.fromJson(reader, Configs.class);
                     ConfigSlot slot = new ResourceConfigSlot(configs.defaultConfig);
 
                     slot.copyTo(configPath);
-                    reloadConfig();
+                    loadFile();
                 } catch (IOException e) {
                     BetterHud.getLogger().warn("Unable to load default config file", e);
                 }
             }
         }
-        config.sortAvailable();
+        // TODO
+        //config.sortAvailable();
 
         return CompletableFuture.completedFuture(null);
     }
@@ -182,7 +214,7 @@ public class ConfigManager implements IFutureReloadListener {
 
     private Stream<ConfigSlot> streamJsonSlots(IResource resource) {
         try(Reader reader = new InputStreamReader(resource.getInputStream())) {
-            Configs configs = GSON.fromJson(reader, Configs.class);
+            Configs configs = gson.fromJson(reader, Configs.class);
             return Arrays.stream(configs.configs).map(ResourceConfigSlot::new);
         } catch(IOException e) {
             return Stream.empty();
