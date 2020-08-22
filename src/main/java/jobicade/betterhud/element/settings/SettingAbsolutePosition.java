@@ -3,7 +3,10 @@ package jobicade.betterhud.element.settings;
 import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 
-import jobicade.betterhud.element.HudElement;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonSyntaxException;
+
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.gui.GuiOffsetChooser;
@@ -25,18 +28,13 @@ public class SettingAbsolutePosition extends Setting {
         return isPicking;
     }
 
-    public SettingAbsolutePosition(HudElement<?> element, String name) {
-        super(element, name);
-        this.position = null;
-    }
-
-    public SettingAbsolutePosition(Setting parent, String name) {
-        super(parent, name);
+    public SettingAbsolutePosition(String name) {
+        super(name);
         this.position = null;
     }
 
     public SettingAbsolutePosition(SettingPosition parent, String name) {
-        super(parent, name);
+        super(name);
         this.position = parent;
     }
 
@@ -88,33 +86,13 @@ public class SettingAbsolutePosition extends Setting {
     }
 
     @Override
-    public boolean hasValue() {
-        return true;
+    public JsonElement saveJson(Gson gson) {
+        return gson.toJsonTree(get());
     }
 
     @Override
-    public String getStringValue() {
-        return x + ", " + y;
-    }
-
-    @Override
-    public void loadStringValue(String val) {
-        int comma = val.indexOf(',');
-
-        if (comma == -1) {
-            //return false;
-        }
-
-        int x, y;
-        try {
-            x = Integer.parseInt(val.substring(0, comma).trim());
-            y = Integer.parseInt(val.substring(comma + 1).trim());
-        } catch (NumberFormatException e) {
-            //return false;
-            return;
-        }
-
-        set(new Point(x, y));
+    public void loadJson(Gson gson, JsonElement element) throws JsonSyntaxException {
+        set(gson.fromJson(element, Point.class));
     }
 
     @Override

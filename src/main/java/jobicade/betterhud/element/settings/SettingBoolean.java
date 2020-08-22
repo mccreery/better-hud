@@ -3,6 +3,7 @@ package jobicade.betterhud.element.settings;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+import com.google.gson.JsonSyntaxException;
 
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.GuiElementSettings;
@@ -45,12 +46,11 @@ public class SettingBoolean extends SettingAlignable {
     }
 
     @Override
-    public boolean loadJson(Gson gson, JsonElement element) {
+    public void loadJson(Gson gson, JsonElement element) throws JsonSyntaxException {
         if (element.isJsonPrimitive()) {
             value = element.getAsJsonPrimitive().getAsBoolean();
-            return true;
         } else {
-            return false;
+            throw new JsonSyntaxException("not a boolean");
         }
     }
 

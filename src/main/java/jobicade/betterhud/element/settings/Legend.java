@@ -3,8 +3,11 @@ package jobicade.betterhud.element.settings;
 import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonSyntaxException;
+
 import jobicade.betterhud.BetterHud;
-import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.render.Color;
@@ -12,22 +15,23 @@ import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.resources.I18n;
 
 public class Legend extends Setting {
-    public Legend(HudElement<?> element, String name) {
-        super(element, name);
-    }
-
-    public Legend(Setting parent, String name) {
-        super(parent, name);
+    public Legend(String name) {
+        super(name);
     }
 
     @Override
-    public boolean hasValue() {
-        return false;
+    public JsonElement saveJson(Gson gson) {
+        throw new UnsupportedOperationException();
+    }
+
+    @Override
+    public void loadJson(Gson gson, JsonElement element) throws JsonSyntaxException {
+        throw new UnsupportedOperationException();
     }
 
     @Override
     public Point getGuiParts(GuiElementSettings.Populator populator, Point origin) {
-        String message = I18n.format("betterHud.group." + name);
+        String message = I18n.format("betterHud.group." + getName());
         populator.add(new LegendLabel(0, origin.getX() - 150, origin.getY(), 300, message, Color.WHITE));
 
         return origin.add(0, MC.fontRenderer.FONT_HEIGHT + SPACER);

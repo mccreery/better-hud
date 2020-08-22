@@ -1,24 +1,15 @@
 package jobicade.betterhud.element.settings;
 
-import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Direction;
 import net.minecraft.client.resources.I18n;
 
-public class SettingWarnings extends Setting {
+public class SettingWarnings extends ParentSetting {
     private final SettingSlider[] sliders;
 
-    public SettingWarnings(HudElement<?> parent, String name, int warnings) {
-        super(parent, name);
+    public SettingWarnings(String name, int warnings) {
+        super(name);
 
-        new Legend(this, "damageWarning");
-        sliders = new SettingSlider[warnings];
-        populateSliders();
-    }
-
-    public SettingWarnings(Setting parent, String name, int warnings) {
-        super(parent, name);
-
-        new Legend(this, "damageWarning");
+        addChild(new Legend("damageWarning"));
         sliders = new SettingSlider[warnings];
         populateSliders();
     }
@@ -35,6 +26,7 @@ public class SettingWarnings extends Setting {
                 slider.setAlignment(Direction.WEST);
             }
             sliders[i] = slider;
+            addChild(slider);
         }
     }
 
@@ -66,7 +58,7 @@ public class SettingWarnings extends Setting {
         private final int index;
 
         private WarningSlider(int index) {
-            super(SettingWarnings.this, "warning." + (index + 1), 0, 1);
+            super("warning." + (index + 1), 0, 1);
             this.index = index;
 
             setDisplayPercent();

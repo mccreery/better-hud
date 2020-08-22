@@ -2,24 +2,23 @@ package jobicade.betterhud.element.settings;
 
 import static jobicade.betterhud.BetterHud.MC;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonSyntaxException;
+
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.GuiElementChooser;
 import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.gui.SuperButton;
-import jobicade.betterhud.registry.HudElements;
 import net.minecraft.client.resources.I18n;
 
 public class SettingElement extends SettingAlignable {
     private HudElement<?> value;
     private SuperButton button;
 
-    public SettingElement(HudElement<?> element, String name) {
-        super(element, name);
-    }
-
-    public SettingElement(Setting parent, String name) {
-        super(parent, name);
+    public SettingElement(String name) {
+        super(name);
     }
 
     public HudElement<?> get() {
@@ -31,18 +30,13 @@ public class SettingElement extends SettingAlignable {
     }
 
     @Override
-    public boolean hasValue() {
-        return true;
+    public JsonElement saveJson(Gson gson) {
+        return gson.toJsonTree(value);
     }
 
     @Override
-    public String getStringValue() {
-        return value != null ? value.getName() : "null";
-    }
-
-    @Override
-    public void loadStringValue(String save) {
-        value = HudElements.get().getRegistered(save);
+    public void loadJson(Gson gson, JsonElement element) throws JsonSyntaxException {
+        value = gson.fromJson(element, HudElement.class);
     }
 
     @Override

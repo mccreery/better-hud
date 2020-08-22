@@ -5,13 +5,12 @@ import static jobicade.betterhud.BetterHud.SPACER;
 
 import java.util.function.BooleanSupplier;
 
-import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.GuiElementSettings;
 
-public class SettingPosition extends Setting {
+public class SettingPosition extends ParentSetting {
     private boolean edge = false;
     private int postSpacer = SPACER;
 
@@ -25,33 +24,38 @@ public class SettingPosition extends Setting {
     private final SettingLock lockAlignment, lockContent;
 
     {
-        new Legend(this, "position");
+        addChild(new Legend("position"));
 
-        mode = new SettingChoose(this, "position", "preset", "custom");
+        mode = new SettingChoose("position", "preset", "custom");
         BooleanSupplier isPreset = () -> mode.getIndex() == 0;
         BooleanSupplier isCustom = () -> mode.getIndex() == 1;
+        addChild(mode);
 
-        direction = new SettingDirection(this, "direction");
+        direction = new SettingDirection("direction");
         direction.setAlignment(Direction.WEST);
         direction.setEnableOn(isPreset);
         direction.setHorizontal();
+        addChild(direction);
 
-        parent = new SettingElement(this, "parent");
+        parent = new SettingElement("parent");
         parent.setEnableOn(isCustom);
+        addChild(parent);
 
-        anchor = new SettingDirection(this, "anchor");
+        anchor = new SettingDirection("anchor");
         anchor.setAlignment(Direction.WEST);
         anchor.setEnableOn(isCustom);
+        addChild(anchor);
 
-        alignment = new SettingDirection(this, "alignment") {
+        alignment = new SettingDirection("alignment") {
             @Override
             public void updateGuiParts() {
                 if(lockAlignment.get()) set(anchor.get());
                 super.updateGuiParts();
             }
         };
+        addChild(alignment);
 
-        contentAlignment = new SettingDirection(this, "contentAlignment") {
+        contentAlignment = new SettingDirection("contentAlignment") {
             @Override
             public void updateGuiParts() {
                 if(lockContent.get()) set(SettingPosition.this.alignment.get());
@@ -59,24 +63,26 @@ public class SettingPosition extends Setting {
             }
         };
         contentAlignment.setAlignment(Direction.EAST);
+        addChild(contentAlignment);
 
-        lockAlignment = new SettingLock(this, "lockAlignment");
+        lockAlignment = new SettingLock("lockAlignment");
         lockAlignment.setEnableOn(isCustom);
-        lockContent = new SettingLock(this, "lockContent");
+        addChild(lockAlignment);
+
+        lockContent = new SettingLock("lockContent");
         lockContent.setEnableOn(isCustom);
+        addChild(lockContent);
+
         offset = new SettingAbsolutePosition(this, "origin");
         offset.setEnableOn(isCustom);
+        addChild(offset);
 
         alignment.setEnableOn(() -> isCustom.getAsBoolean() && !lockAlignment.get());
         contentAlignment.setEnableOn(() -> isCustom.getAsBoolean() && !lockContent.get());
     }
 
-    public SettingPosition(HudElement<?> element, String name) {
-        super(element, name);
-    }
-
-    public SettingPosition(Setting parent, String name) {
-        super(parent, name);
+    public SettingPosition(String name) {
+        super(name);
     }
 
     public DirectionOptions getDirectionOptions() {

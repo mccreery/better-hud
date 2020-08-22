@@ -3,7 +3,10 @@ package jobicade.betterhud.element.settings;
 import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 
-import jobicade.betterhud.element.HudElement;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonSyntaxException;
+
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -20,18 +23,15 @@ public class SettingDirection extends SettingAlignable {
     private boolean horizontal = false;
 
     private DirectionOptions options = DirectionOptions.ALL;
-    private Direction value;
+    private Direction value = Direction.NORTH_WEST;
 
-    public SettingDirection(HudElement<?> element, String name) {
-        super(element, name);
-    }
-
-    public SettingDirection(Setting parent, String name) {
-        super(parent, name);
+    public SettingDirection(String name) {
+        super(name);
     }
 
     public void setOptions(DirectionOptions options) {
         this.options = options;
+        set(value);
     }
 
     public void setHorizontal() {
@@ -101,22 +101,13 @@ public class SettingDirection extends SettingAlignable {
     }
 
     @Override
-    public boolean hasValue() {
-        return true;
+    public JsonElement saveJson(Gson gson) {
+        return gson.toJsonTree(value);
     }
 
     @Override
-    public String getStringValue() {
-        return value != null ? value.name() : "null";
-    }
-
-    @Override
-    public void loadStringValue(String save) {
-        try {
-            set(Direction.valueOf(save));
-        } catch(IllegalArgumentException e) {
-            set(null);
-        }
+    public void loadJson(Gson gson, JsonElement element) throws JsonSyntaxException {
+        set(gson.fromJson(element, Direction.class));
     }
 
     public Direction get() {

@@ -2,9 +2,12 @@ package jobicade.betterhud.element.settings;
 
 import java.util.Arrays;
 
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonSyntaxException;
+
 import org.apache.commons.lang3.ArrayUtils;
 
-import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -21,25 +24,13 @@ public class SettingChoose extends SettingAlignable {
     private int index = 0;
     private int length;
 
-    public SettingChoose(HudElement<?> element, String name, int length) {
-        this(element, name);
+    public SettingChoose(String name, int length) {
+        this(name);
         this.length = length;
     }
 
-    public SettingChoose(HudElement<?> element, String name, String... modes) {
-        super(element, name);
-
-        this.modes = modes;
-        this.length = modes.length;
-    }
-
-    public SettingChoose(Setting parent, String name, int length) {
-        this(parent, name);
-        this.length = length;
-    }
-
-    public SettingChoose(Setting parent, String name, String... modes) {
-        super(parent, name);
+    public SettingChoose(String name, String... modes) {
+        super(name);
 
         this.modes = modes;
         this.length = modes.length;
@@ -100,22 +91,13 @@ public class SettingChoose extends SettingAlignable {
     }
 
     @Override
-    public boolean hasValue() {
-        return true;
+    public JsonElement saveJson(Gson gson) {
+        return gson.toJsonTree(get());
     }
 
     @Override
-    public String getStringValue() {
-        return get();
-    }
-
-    @Override
-    public void loadStringValue(String save) throws SettingValueException {
-        try {
-            set(save);
-        } catch (IllegalArgumentException e) {
-            throw new SettingValueException(e);
-        }
+    public void loadJson(Gson gson, JsonElement element) throws JsonSyntaxException {
+        set(gson.fromJson(element, String.class));
     }
 
     @Override

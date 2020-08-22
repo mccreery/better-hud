@@ -14,7 +14,7 @@ import jobicade.betterhud.gui.GuiElementSettings.Populator;
 /**
  * A setting which can have children.
  */
-public final class ParentSetting extends Setting {
+public class ParentSetting extends Setting {
     private final List<Setting> children = new ArrayList<>();
 
     public ParentSetting(String name) {

@@ -1,6 +1,9 @@
 package jobicade.betterhud.element.settings;
 
-import jobicade.betterhud.element.HudElement;
+import com.google.gson.Gson;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonSyntaxException;
+
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.gui.GuiSlider;
@@ -16,17 +19,8 @@ public class SettingSlider extends SettingAlignable {
 
     private double displayScale = 1;
 
-    public SettingSlider(HudElement<?> element, String name, float minimum, float maximum) {
-        super(element, name);
-        this.minimum = minimum;
-        this.maximum = maximum;
-
-        updateDisplayPlaces();
-        setValue(getMinimum());
-    }
-
-    public SettingSlider(Setting parent, String name, float minimum, float maximum) {
-        super(parent, name);
+    public SettingSlider(String name, float minimum, float maximum) {
+        super(name);
         this.minimum = minimum;
         this.maximum = maximum;
 
@@ -95,7 +89,7 @@ public class SettingSlider extends SettingAlignable {
     }
 
     public String getDisplayString() {
-        return I18n.format("betterHud.setting." + name) + ": " + getDisplayValue(getValue() * displayScale);
+        return I18n.format("betterHud.setting." + getName()) + ": " + getDisplayValue(getValue() * displayScale);
     }
 
     public String getDisplayValue(double scaledValue) {
@@ -113,21 +107,12 @@ public class SettingSlider extends SettingAlignable {
     }
 
     @Override
-    public boolean hasValue() {
-        return true;
+    public JsonElement saveJson(Gson gson) {
+        return gson.toJsonTree(getValue());
     }
 
     @Override
-    public String getStringValue() {
-        return String.valueOf(getValue());
-    }
-
-    @Override
-    public void loadStringValue(String save) {
-        setValue(Float.valueOf(save));
-
-        /*if(guiSlider != null) {
-            guiSlider.updateDisplayString();
-        }*/
+    public void loadJson(Gson gson, JsonElement element) throws JsonSyntaxException {
+        setValue(gson.fromJson(element, Float.class));
     }
 }

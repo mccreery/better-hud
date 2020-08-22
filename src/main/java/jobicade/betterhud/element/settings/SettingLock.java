@@ -1,6 +1,5 @@
 package jobicade.betterhud.element.settings;
 
-import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.util.Textures;
@@ -9,12 +8,8 @@ public class SettingLock extends SettingBoolean {
     // Custom bounds overrides aligned bounds
     private Rect bounds;
 
-    public SettingLock(HudElement<?> element, String name) {
-        super(element, name);
-    }
-
-    public SettingLock(Setting parent, String name) {
-        super(parent, name);
+    public SettingLock(String name) {
+        super(name);
     }
 
     public void setRect(Rect bounds) {
