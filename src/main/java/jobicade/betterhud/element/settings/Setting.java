@@ -6,6 +6,7 @@ import java.util.function.BooleanSupplier;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonSyntaxException;
 
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Point;
@@ -42,16 +43,14 @@ public abstract class Setting {
     public abstract JsonElement saveJson(Gson gson);
 
     /**
-     * Loads a new setting value from a JSON element. If the JSON is invalid
-     * (e.g. the wrong type entirely), the value will not be updated. If the
-     * JSON is incomplete, the value may be partially updated or not updated at
-     * all, depending on the implementation.
+     * Loads a new setting value from a JSON element. If the JSON is invalid or
+     * incomplete, the value may partially change.
      *
      * @param gson The GSON instance for deserializing JSON.
-     * @param element The JSON subtree representing the new value.
-     * @return {@code true} if the value was fully or partially updated.
+     * @param element The JSON representing the new value.
+     * @throws JsonSyntaxException if the JSON is invalid.
      */
-    public abstract boolean loadJson(Gson gson, JsonElement element);
+    public abstract void loadJson(Gson gson, JsonElement element) throws JsonSyntaxException;
 
     public void setEnableOn(BooleanSupplier enableOn) {
         this.enableOn = enableOn;

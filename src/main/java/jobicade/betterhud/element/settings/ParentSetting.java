@@ -6,6 +6,7 @@ import java.util.List;
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonObject;
+import com.google.gson.JsonSyntaxException;
 
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.gui.GuiElementSettings.Populator;
@@ -29,16 +30,6 @@ public final class ParentSetting extends Setting {
         return children.isEmpty();
     }
 
-    private boolean requireAll;
-    /**
-     * @param requireAll {@code true} to only treat JSON as valid if it contains
-     * properties for all children.
-     * @see #loadJson(Gson, JsonElement)
-     */
-    public void setRequireAll(boolean requireAll) {
-        this.requireAll = requireAll;
-    }
-
     @Override
     public JsonElement saveJson(Gson gson) {
         JsonObject element = new JsonObject();
@@ -51,49 +42,27 @@ public final class ParentSetting extends Setting {
 
     /**
      * {@inheritDoc}
-     * <p>This implementation accepts incomplete objects (with properties
-     * matching only some of the setting's children) and updates only those
-     * children which are present. To disable this, use
-     * {@link #setRequireAll(boolean)}.
+     * <p>This implementation accepts incomplete objects and updates only those
+     * children which are present. Children after the first invalid one are not
+     * updated.
+     *
+     * @throws JsonSyntaxException if the JSON is not an object or any of the
+     * children are invalid.
      */
     @Override
-    public boolean loadJson(Gson gson, JsonElement element) {
-        if (element.isJsonObject()) {
-            JsonObject object = element.getAsJsonObject();
-
-            if (requireAll) {
-                JsonElement original = saveJson(gson);
-
-                if (loadChildren(gson, object) < children.size()) {
-                    // Rollback
-                    loadJson(gson, original);
-                    return false;
-                } else {
-                    return true;
-                }
-            } else {
-                return loadChildren(gson, object) > 0;
-            }
-        } else {
-            return false;
+    public void loadJson(Gson gson, JsonElement element) throws JsonSyntaxException {
+        if (!element.isJsonObject()) {
+            throw new JsonSyntaxException("not an object");
         }
-    }
+        JsonObject object = element.getAsJsonObject();
 
-    /**
-     * Loads child values from a JSON object by their key.
-     * @return The number of children found and updated.
-     */
-    private int loadChildren(Gson gson, JsonObject object) {
-        int updated = 0;
+        for (Setting child : children) {
+            JsonElement childElement = object.get(child.getName());
 
-        for (Setting childSetting : children) {
-            JsonElement childElement = object.get(childSetting.getName());
-
-            if (childElement != null && childSetting.loadJson(gson, childElement)) {
-                ++updated;
+            if (childElement != null) {
+                child.loadJson(gson, childElement);
             }
         }
-        return updated;
     }
 
     @Override
