@@ -28,9 +28,10 @@ public class SignReader extends OverlayElement {
     public SignReader() {
         super("signReader");
 
-        position = new SettingPosition(this, "position");
+        position = new SettingPosition("position");
         position.setDirectionOptions(DirectionOptions.CORNERS);
         position.setContentOptions(DirectionOptions.NONE);
+        addSetting(position);
     }
 
     @Override

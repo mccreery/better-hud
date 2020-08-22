@@ -22,8 +22,10 @@ public class HorseInfo extends BillboardElement {
     public HorseInfo() {
         super("horseInfo");
 
-        jump = new SettingBoolean(this, "jump");
-        speed = new SettingBoolean(this, "speed");
+        jump = new SettingBoolean("jump");
+        addSetting(jump);
+        speed = new SettingBoolean("speed");
+        addSetting(speed);
     }
 
     @Override

@@ -30,12 +30,15 @@ public class ArmorBars extends EquipmentDisplay {
     public ArmorBars() {
         super("armorBars");
 
-        position = new SettingPosition(this, "position");
+        position = new SettingPosition("position");
         position.setDirectionOptions(DirectionOptions.CORNERS);
         position.setContentOptions(DirectionOptions.WEST_EAST);
+        addSetting(position);
 
-        barType = new SettingChoose(this, "bars", "visible.off", "smallBars", "largeBars");
-        alwaysVisible = new SettingBoolean(this, "alwaysVisible");
+        barType = new SettingChoose("bars", "visible.off", "smallBars", "largeBars");
+        addSetting(barType);
+        alwaysVisible = new SettingBoolean("alwaysVisible");
+        addSetting(alwaysVisible);
     }
 
     @Override

@@ -50,15 +50,17 @@ public class BlockViewer extends TextElement {
 
     public BlockViewer() {
         super("blockViewer");
-        new Legend(this, "misc");
+        addSetting(new Legend("misc"));
 
-        showBlock = new SettingBoolean(this, "showItem");
+        showBlock = new SettingBoolean("showItem");
         showBlock.setValuePrefix(SettingBoolean.VISIBLE);
+        addSetting(showBlock);
 
-        showIds = new SettingBoolean(this, "showIds");
+        showIds = new SettingBoolean("showIds");
         showIds.setValuePrefix(SettingBoolean.VISIBLE);
+        addSetting(showIds);
 
-        invNames = new SettingBoolean(this, "invNames");
+        invNames = new SettingBoolean("invNames");
         invNames.setEnableOn(() -> {
             VersionRange versionRange;
             try {
@@ -69,6 +71,7 @@ public class BlockViewer extends TextElement {
 
             return versionRange.containsVersion(BetterHud.getServerVersion());
         });
+        addSetting(invNames);
     }
 
     @Override

@@ -27,11 +27,13 @@ public class Coordinates extends TextElement {
     public Coordinates() {
         super("coordinates");
 
-        new Legend(this, "misc");
-        spaced = new SettingBoolean(this, "spaced");
-        decimalPlaces = new SettingSlider(this, "precision", 0, 5);
+        addSetting(new Legend("misc"));
+        spaced = new SettingBoolean("spaced");
+        addSetting(spaced);
+        decimalPlaces = new SettingSlider("precision", 0, 5);
         decimalPlaces.setInterval(1);
         decimalPlaces.setUnlocalizedValue("betterHud.value.places");
+        addSetting(decimalPlaces);
     }
 
     @Override

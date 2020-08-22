@@ -30,8 +30,9 @@ public class Vignette extends OverlayElement {
     public Vignette() {
         super("vignette");
 
-        warnings = new SettingBoolean(this, "warnings");
+        warnings = new SettingBoolean("warnings");
         warnings.setValuePrefix(SettingBoolean.VISIBLE);
+        addSetting(warnings);
     }
 
     @Override

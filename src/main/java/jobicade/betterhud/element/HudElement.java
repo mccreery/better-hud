@@ -3,6 +3,7 @@ package jobicade.betterhud.element;
 import org.apache.maven.artifact.versioning.InvalidVersionSpecificationException;
 import org.apache.maven.artifact.versioning.VersionRange;
 
+import jobicade.betterhud.element.settings.ParentSetting;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.ElementCategory;
@@ -28,7 +29,7 @@ public abstract class HudElement<T> {
         }
 
         this.name = name;
-        rootSetting = new Setting(this, name);
+        rootSetting = new ParentSetting(name);
     }
 
     /**
@@ -47,14 +48,18 @@ public abstract class HudElement<T> {
     }
 
     /** The settings saved to the config file for this element */
-    private final Setting rootSetting;
+    private final ParentSetting rootSetting;
 
     /**
      * @return The root setting which has the same name as the element and
      * contains all its settings.
      */
-    public Setting getRootSetting() {
+    public ParentSetting getRootSetting() {
         return rootSetting;
+    }
+
+    public void addSetting(Setting setting) {
+        rootSetting.addChild(setting);
     }
 
     private static final VersionRange DEFAULT_SERVER_DEPENDENCY = VersionRange.createFromVersion("1.0");

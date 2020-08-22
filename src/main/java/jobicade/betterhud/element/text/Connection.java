@@ -19,12 +19,16 @@ public class Connection extends TextElement {
     public Connection() {
         super("connection");
 
-        new Legend(this, "misc");
-        playerCount = new SettingBoolean(this, "playerCount");
-        playerCount.setValuePrefix(SettingBoolean.VISIBLE);
+        addSetting(new Legend("misc"));
 
-        showIp = new SettingBoolean(this, "showIp");
-        latency = new SettingBoolean(this, "latency");
+        playerCount = new SettingBoolean("playerCount");
+        playerCount.setValuePrefix(SettingBoolean.VISIBLE);
+        addSetting(playerCount);
+
+        showIp = new SettingBoolean("showIp");
+        addSetting(showIp);
+        latency = new SettingBoolean("latency");
+        addSetting(latency);
     }
 
     public void setLocal() {

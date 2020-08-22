@@ -16,8 +16,9 @@ public class FullInvIndicator extends TextElement {
     public FullInvIndicator() {
         super("fullInvIndicator");
 
-        new Legend(this, "misc");
-        offHand = new SettingBoolean(this, "offhand");
+        addSetting(new Legend("misc"));
+        offHand = new SettingBoolean("offhand");
+        addSetting(offHand);
     }
 
     @Override

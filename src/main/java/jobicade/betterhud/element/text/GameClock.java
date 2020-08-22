@@ -31,13 +31,16 @@ public class GameClock extends Clock {
     public GameClock() {
         super("gameClock");
 
-        showDays = new SettingBoolean(this, "showDays");
+        showDays = new SettingBoolean("showDays");
         showDays.setValuePrefix(SettingBoolean.VISIBLE);
+        addSetting(showDays);
 
-        showSleepIndicator = new SettingBoolean(this, "showSleepIndicator");
+        showSleepIndicator = new SettingBoolean("showSleepIndicator");
         showSleepIndicator.setValuePrefix(SettingBoolean.VISIBLE);
+        addSetting(showSleepIndicator);
 
-        requireItem = new SettingChoose(this, "requireItem", "disabled", "inventory", "hand");
+        requireItem = new SettingChoose("requireItem", "disabled", "inventory", "hand");
+        addSetting(requireItem);
     }
 
     @Override

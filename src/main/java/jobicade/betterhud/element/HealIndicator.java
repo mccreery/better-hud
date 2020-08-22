@@ -24,12 +24,14 @@ public class HealIndicator extends OverlayElement {
     public HealIndicator() {
         super("healIndicator");
 
-        position = new SettingPosition(this, "position");
+        position = new SettingPosition("position");
         position.setDirectionOptions(DirectionOptions.NONE);
         position.setContentOptions(DirectionOptions.NONE);
+        addSetting(position);
 
-        new Legend(this, "misc");
-        mode = new SettingChoose(this, "mode", 2);
+        addSetting(new Legend("misc"));
+        mode = new SettingChoose("mode", 2);
+        addSetting(mode);
     }
 
     @Override

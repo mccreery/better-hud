@@ -21,18 +21,25 @@ public class HandBar extends EquipmentDisplay {
     public HandBar() {
         super("handBar");
 
-        position = new SettingPosition(this, "position");
+        position = new SettingPosition("position");
         position.setDirectionOptions(DirectionOptions.BAR);
         position.setContentOptions(DirectionOptions.NORTH_SOUTH);
+        addSetting(position);
 
-        new Legend(this, "misc");
-        showItem = new SettingBoolean(this, "showItem");
+        addSetting(new Legend("misc"));
+
+        showItem = new SettingBoolean("showItem");
         showItem.setValuePrefix(SettingBoolean.VISIBLE);
+        addSetting(showItem);
 
-        showBars = new SettingBoolean(this, "bars");
-        offHand = new SettingBoolean(this, "offhand");
-        showNonTools = new SettingBoolean(this, "showNonTools");
+        showBars = new SettingBoolean("bars");
+        addSetting(showBars);
+        offHand = new SettingBoolean("offhand");
+        addSetting(offHand);
+
+        showNonTools = new SettingBoolean("showNonTools");
         showNonTools.setValuePrefix("betterHud.value.nonTools");
+        addSetting(showNonTools);
     }
 
     public void renderBar(ItemStack stack, int x, int y) {

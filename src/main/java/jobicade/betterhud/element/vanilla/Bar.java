@@ -24,12 +24,14 @@ public abstract class Bar extends OverlayElement {
         super(name);
         this.bar = bar;
 
-        position = new SettingPosition(this, "position");
+        position = new SettingPosition("position");
         position.setDirectionOptions(DirectionOptions.BAR);
         position.setContentOptions(DirectionOptions.CORNERS);
+        addSetting(position);
 
-        side = new SettingChoose(this, "side", "west", "east");
+        side = new SettingChoose("side", "west", "east");
         side.setEnableOn(() -> position.isDirection(Direction.SOUTH));
+        addSetting(side);
     }
 
     @Override

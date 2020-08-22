@@ -20,19 +20,25 @@ public abstract class EquipmentDisplay extends OverlayElement {
     public EquipmentDisplay(String name) {
         super(name);
 
-        showName = new SettingBoolean(this, "showName");
-        showDurability = new SettingBoolean(this, "showDurability");
-        showDurability.setAlignment(Direction.WEST);
+        showName = new SettingBoolean("showName");
+        addSetting(showName);
 
-        durabilityMode = new SettingChoose(this, "durabilityFormat", "points", "percentage");
+        showDurability = new SettingBoolean("showDurability");
+        showDurability.setAlignment(Direction.WEST);
+        addSetting(showDurability);
+
+        durabilityMode = new SettingChoose("durabilityFormat", "points", "percentage");
         durabilityMode.setAlignment(Direction.EAST);
         durabilityMode.setEnableOn(showDurability::get);
+        addSetting(durabilityMode);
 
-        showUndamaged = new SettingBoolean(this, "showUndamaged");
+        showUndamaged = new SettingBoolean("showUndamaged");
         showUndamaged.setEnableOn(showDurability::get);
         showUndamaged.setValuePrefix("betterHud.value.visible");
+        addSetting(showUndamaged);
 
-        warnings = new SettingWarnings(this, "damageWarning", 3);
+        warnings = new SettingWarnings("damageWarning", 3);
+        addSetting(warnings);
     }
 
     protected boolean hasText() {

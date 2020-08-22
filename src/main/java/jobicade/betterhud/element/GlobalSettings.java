@@ -13,13 +13,19 @@ public class GlobalSettings extends HudElement<Object> {
     public GlobalSettings() {
         super("global");
 
-        billboardScale = new SettingSlider(this, "billboardScale", 0, 1);
+        billboardScale = new SettingSlider("billboardScale", 0, 1);
         billboardScale.setDisplayPercent();
-        billboardDistance = new SettingSlider(this, "rayDistance", 5, 200);
-        billboardDistance.setUnlocalizedValue("betterHud.hud.meters");
+        addSetting(billboardDistance);
 
-        hideOnDebug = new SettingBoolean(this, "hideOnDebug");
-        debugMode = new SettingBoolean(this, "debugMode");
+        billboardDistance = new SettingSlider("rayDistance", 5, 200);
+        billboardDistance.setUnlocalizedValue("betterHud.hud.meters");
+        addSetting(billboardDistance);
+
+        hideOnDebug = new SettingBoolean("hideOnDebug");
+        addSetting(hideOnDebug);
+
+        debugMode = new SettingBoolean("debugMode");
+        addSetting(debugMode);
     }
 
     public float getBillboardScale() {

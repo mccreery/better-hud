@@ -32,22 +32,25 @@ public class PickupCount extends OverlayElement {
         super("itemPickup");
         setServerDependency("[1.4-beta,1.4.1),(1.4.1,]");
 
-        position = new SettingPosition(this, "position");
+        position = new SettingPosition("position");
         position.setDirectionOptions(DirectionOptions.X);
         position.setContentOptions(DirectionOptions.CORNERS);
+        addSetting(position);
 
-        fadeAfter = new SettingSlider(this, "fadeAfter", 20, 600);
+        fadeAfter = new SettingSlider("fadeAfter", 20, 600);
         fadeAfter.setInterval(20);
         fadeAfter.setDisplayScale(0.05);
         fadeAfter.setUnlocalizedValue("betterHud.hud.seconds");
+        addSetting(fadeAfter);
 
-        maxStacks = new SettingSlider(this, "maxStacks", 1, 11) {
+        maxStacks = new SettingSlider("maxStacks", 1, 11) {
             @Override
             public String getDisplayValue(double scaledValue) {
                 return scaledValue == getMaximum() ? I18n.format("betterHud.value.unlimited") : super.getDisplayValue(scaledValue);
             }
         };
         maxStacks.setInterval(1);
+        addSetting(maxStacks);
     }
 
     /**

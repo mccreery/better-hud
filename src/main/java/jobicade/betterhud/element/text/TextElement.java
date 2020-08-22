@@ -25,11 +25,13 @@ public abstract class TextElement extends OverlayElement {
     public TextElement(String name) {
         super(name);
 
-        position = new SettingPosition(this, "position");
+        position = new SettingPosition("position");
         position.setDirectionOptions(DirectionOptions.TOP_BOTTOM);
         position.setContentOptions(DirectionOptions.CORNERS);
+        addSetting(position);
 
-        color = new SettingColor(this, "color");
+        color = new SettingColor("color");
+        addSetting(color);
     }
 
     public Color getColor() {
