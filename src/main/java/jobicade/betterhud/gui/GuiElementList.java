@@ -12,7 +12,6 @@ import com.google.common.collect.Ordering;
 
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.config.ConfigManager;
-import jobicade.betterhud.config.HudConfig;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
@@ -111,19 +110,19 @@ public class GuiElementList extends GuiMenuScreen {
     }
 
     private void enableAll() {
-        HudConfig.moveAll(getDisabled(), getEnabled());
+        configManager.getModSettings().enableAll();
         updateLists();
     }
 
     private void disableAll() {
-        HudConfig.moveAll(getEnabled(), getDisabled());
+        configManager.getModSettings().disableAll();
         updateLists();
     }
 
     @Override
     public void onClose() {
         try {
-            BetterHud.getConfigManager().saveFile();
+            configManager.saveFile();
         } catch (IOException e) {
             BetterHud.getLogger().error(e);
         }
@@ -183,19 +182,14 @@ public class GuiElementList extends GuiMenuScreen {
 
     private void swapSelected() {
         if (!selection.isEmpty()) {
-            List<HudElement<?>> source, dest;
-
-            // All selection items are from the same list
             if (getEnabled().contains(selection.get(0))) {
-                source = getEnabled();
-                dest = getDisabled();
+                for (HudElement<?> element : selection) {
+                    configManager.getModSettings().disable(element);
+                }
             } else {
-                source = getDisabled();
-                dest = getEnabled();
-            }
-
-            for (HudElement<?> element : selection) {
-                HudConfig.move(element, source, dest);
+                for (HudElement<?> element : selection) {
+                    configManager.getModSettings().enable(element);
+                }
             }
         }
         updateLists();

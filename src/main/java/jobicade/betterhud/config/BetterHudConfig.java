@@ -1,12 +1,12 @@
 package jobicade.betterhud.config;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.registry.HudRegistry;
-import jobicade.betterhud.util.SortedSetList;
 
 /**
  * Mod settings which exist outside of an individual element. Forge's config
@@ -14,24 +14,50 @@ import jobicade.betterhud.util.SortedSetList;
  * generated specs (like the list of registered elements).
  */
 public class BetterHudConfig {
+    private static final Comparator<HudElement<?>> COMPARATOR = Comparator.comparing(HudElement::getLocalizedName);
+
     private List<HudElement<?>> disabled;
     private List<HudElement<?>> enabled;
 
     public BetterHudConfig(HudRegistry<?> elementRegistry, Data data) {
-        Comparator<HudElement<?>> comparator = Comparator.comparing(HudElement::getLocalizedName);
-
-        disabled = new SortedSetList<>(new ArrayList<>(), comparator);
+        disabled = new ArrayList<>();
         enabled = new ArrayList<>(data.enabled);
 
         disabled.addAll(elementRegistry.getRegistered());
+        disabled.removeAll(enabled);
+        disabled.sort(COMPARATOR);
+    }
+
+    public List<HudElement<?>> getEnabled() {
+        return enabled;
+    }
+
+    public void enable(HudElement<?> element) {
+        if (disabled.remove(element)) {
+            enabled.add(element);
+        }
+    }
+
+    public void enableAll() {
+        enabled.addAll(disabled);
+        disabled.clear();
     }
 
     public List<HudElement<?>> getDisabled() {
         return disabled;
     }
 
-    public List<HudElement<?>> getEnabled() {
-        return enabled;
+    public void disable(HudElement<?> element) {
+        if (enabled.remove(element)) {
+            int insertIndex = Collections.binarySearch(disabled, element, COMPARATOR);
+            disabled.add(insertIndex, element);
+        }
+    }
+
+    public void disableAll() {
+        disabled.addAll(disabled);
+        disabled.sort(COMPARATOR);
+        enabled.clear();
     }
 
     public static class Data {
