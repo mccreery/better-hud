@@ -75,7 +75,7 @@ public class GuiElementList extends GuiMenuScreen {
         addButton(disabledScroll);
 
         enabledViewport = new Rect(200, 0).align(getOrigin().add(14, 67), Direction.SOUTH_WEST).withBottom(height - 30);
-        disabledScroll = new Scrollbar(enabledViewport.getRight() - 8, enabledViewport.getY(), 8, enabledViewport.getHeight(), 0.5f);
+        enabledScroll = new Scrollbar(enabledViewport.getRight() - 8, enabledViewport.getY(), 8, enabledViewport.getHeight(), 0.5f);
         addButton(enabledScroll);
 
         Point centerButtons = disabledViewport.getAnchor(Direction.EAST).add(SPACER, 0);
