@@ -83,18 +83,23 @@ public class ConfigManager implements IFutureReloadListener {
             .create();
     }
 
+    private BetterHudConfig modSettings;
+
     /**
      * Loads new settings from the config file.
      */
     public void loadFile() throws IOException {
-        JsonObject rootObject;
+        JsonObject elementSettings;
 
         try (Reader reader = new BufferedReader(new FileReader(configFile.toFile()))) {
             JsonParser parser = new JsonParser();
-            rootObject = parser.parse(reader).getAsJsonObject();
+            JsonObject rootObject = parser.parse(reader).getAsJsonObject();
+
+            modSettings = new BetterHudConfig(elementRegistry, gson.fromJson(rootObject.get("modSettings"), BetterHudConfig.Data.class));
+            elementSettings = rootObject.getAsJsonObject("elementSettings");
         }
 
-        for (Entry<String, JsonElement> entry : rootObject.entrySet()) {
+        for (Entry<String, JsonElement> entry : elementSettings.entrySet()) {
             HudElement<?> element = elementRegistry.getRegistered(entry.getKey());
 
             if (element != null) {
@@ -110,13 +115,16 @@ public class ConfigManager implements IFutureReloadListener {
      */
     public void saveFile() throws IOException {
         JsonObject rootObject = new JsonObject();
+        JsonObject elementSettings = new JsonObject();
 
         for (HudElement<?> element : elementRegistry.getRegistered()) {
-            rootObject.add(element.getName(), element.getRootSetting().saveJson(gson));
+            elementSettings.add(element.getName(), element.getRootSetting().saveJson(gson));
         }
+        rootObject.add("elementSettings", elementSettings);
+        rootObject.add("modSettings", gson.toJsonTree(new BetterHudConfig.Data(modSettings)));
 
         try (Writer writer = new BufferedWriter(new FileWriter(configFile.toFile()))) {
-            gson.toJson(rootObject, writer);
+            gson.toJson(elementSettings, writer);
         }
     }
 
