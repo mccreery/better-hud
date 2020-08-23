@@ -59,7 +59,7 @@ public class Scrollbar extends Widget {
 
     @Override
     public void renderButton(int mouseX, int mouseY, float partialTicks) {
-        fill(x, y, width, height, background.getPacked());
+        fill(x, y, x + width, y + height, background.getPacked());
 
         Rect thumb = getThumb();
         GlUtil.drawRect(thumb, isHovered() ? highlight : foreground);
@@ -68,6 +68,10 @@ public class Scrollbar extends Widget {
     // The offset of the initial mousedown on the thumb
     private double grabOffset;
     private boolean grabbed;
+
+    public boolean isGrabbed() {
+        return grabbed;
+    }
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
@@ -79,9 +83,9 @@ public class Scrollbar extends Widget {
                 grabOffset = mouseY - thumb.getY();
             } else {
                 grabOffset = thumb.getHeight() / 2;
+                mouseDragged(mouseX, mouseY, button, 0, 0);
             }
             grabbed = true;
-            // mouseDragged(mouseX, mouseY, button, 0, 0); // TODO required?
             return true;
         } else {
             return false;
@@ -94,7 +98,7 @@ public class Scrollbar extends Widget {
         int thumbY = (int)Math.round(mouseY - grabOffset);
         int track = height - getThumbHeight();
 
-        setValue((thumbY - y) / track);
+        setValue((float)(thumbY - y) / track);
         return true;
     }
 
@@ -102,16 +106,5 @@ public class Scrollbar extends Widget {
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
         grabbed = false;
         return true;
-    }
-
-    @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double scrollDelta) {
-        // Dragging and scrolling are mutually exclusive
-        if (!grabbed) {
-            setValue(getValue() + (float)scrollDelta);
-            return true;
-        } else {
-            return false;
-        }
     }
 }
