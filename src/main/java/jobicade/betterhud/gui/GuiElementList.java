@@ -460,7 +460,7 @@ public class GuiElementList extends GuiMenuScreen {
                 Rect warningBounds = new Rect(16, 16).anchor(bounds.grow(-2), Direction.WEST);
 
                 MC.getTextureManager().bindTexture(Textures.SETTINGS);
-                GlUtil.drawRect(warningBounds, new Rect(100, 60, 16, 16));
+                blit(warningBounds.getX(), warningBounds.getY(), 100, 60, 16, 16);
 
                 label.setColor(Color.GRAY);
             } else {
