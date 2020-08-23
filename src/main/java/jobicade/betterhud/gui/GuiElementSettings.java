@@ -63,7 +63,7 @@ public class GuiElementSettings extends GuiMenuScreen {
         contentHeight = element.getRootSetting().getGuiParts(new Populator(), new Point(width / 2, SPACER)).getY();
 
         viewport = new Rect(width / 2 - 200, height / 16 + 40 + SPACER, 400, 0).withBottom(height - 20);
-        scrollbar = addButton(new Scrollbar(viewport.getX(), viewport.getY(), viewport.getWidth(), viewport.getHeight(), contentHeight / (float)viewport.getHeight()));
+        scrollbar = new Scrollbar(viewport.getRight() - 8, viewport.getY(), 8, viewport.getHeight(), (float)viewport.getHeight() / contentHeight);
 
         element.getRootSetting().updateGuiParts();
     }
@@ -133,6 +133,7 @@ public class GuiElementSettings extends GuiMenuScreen {
 
         // done button doesn't get translated
         done.render(mouseX, mouseY, partialTicks);
+        scrollbar.render(mouseX, mouseY, partialTicks);
 
         RenderSystem.pushMatrix();
         GlUtil.beginScissor(viewport);

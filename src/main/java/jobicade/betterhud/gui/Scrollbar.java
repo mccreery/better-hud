@@ -9,7 +9,7 @@ import net.minecraft.util.math.MathHelper;
 public class Scrollbar extends Widget {
     public Scrollbar(int x, int y, int width, int height, float thumbSize) {
         super(x, y, width, height, "");
-        this.thumbSize = thumbSize;
+        setThumbSize(thumbSize);
     }
 
     private float value = 0;
