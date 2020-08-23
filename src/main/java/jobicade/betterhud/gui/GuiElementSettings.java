@@ -112,18 +112,24 @@ public class GuiElementSettings extends GuiMenuScreen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        // divide clicks into viewport and non viewport
-        if(mouseY >= viewport.getTop() && mouseY < viewport.getBottom()) {
-            if (super.mouseClicked(mouseX, mouseY + getMouseOffset(), button)) {
-                element.getRootSetting().updateGuiParts();
-                return true;
-            } else {
-                return false;
-            }
+        if (mouseY >= viewport.getTop() && mouseY < viewport.getBottom() && super.mouseClicked(mouseX, mouseY + getMouseOffset(), button)) {
+            element.getRootSetting().updateGuiParts();
+            return true;
+        } else if (done.mouseClicked(mouseX, mouseY, button)) {
+            return true;
+        } else if (scrollbar.mouseClicked(mouseX, mouseY, button)) {
+            setDragging(true);
+            setFocused(scrollbar);
+            return true;
         } else {
-            return done.mouseClicked(mouseX, mouseY, button)
-                || scrollbar.mouseClicked(mouseX, mouseY, button);
+            return false;
         }
+    }
+
+    @Override
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        scrollbar.mouseReleased(mouseX, mouseY, button);
+        return super.mouseReleased(mouseX, mouseY, button);
     }
 
     @Override
