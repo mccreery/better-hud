@@ -88,7 +88,7 @@ public class GuiConfigSaves extends Screen {
         SuperButton done = new SuperButton(b -> MC.displayGuiScreen(previous));
         done.setBounds(new Rect(200, 20).align(origin, Direction.NORTH));
         done.setMessage(I18n.format("gui.done"));
-        buttons.add(done);
+        addButton(done);
 
         Rect textField = new Rect(150, 20);
         Rect smallButton = new Rect(50, 20);
@@ -99,20 +99,21 @@ public class GuiConfigSaves extends Screen {
         name = new TextFieldWidget(font, textField.getX(), textField.getY(), textField.getWidth(), textField.getHeight(), "");
         name.changeFocus(true);
         name.setCanLoseFocus(false);
+        addButton(name);
 
         smallButton = smallButton.move(textField.getAnchor(Direction.NORTH_EAST).add(SPACER, 0));
 
         load = new SuperButton(b -> load());
         load.setBounds(smallButton);
         load.setMessage("Load");
-        buttons.add(load);
+        addButton(load);
 
         smallButton = smallButton.move(smallButton.getAnchor(Direction.NORTH_EAST).add(SPACER, 0));
 
         save = new SuperButton(b -> save());
         save.setBounds(smallButton);
         save.setMessage("Save");
-        buttons.add(save);
+        addButton(save);
 
         viewport = new Rect(400, 0).align(fieldLine.getAnchor(Direction.SOUTH).add(0, SPACER), Direction.NORTH).withBottom(height - 20);
         scrollbar = new Scrollbar(viewport.getRight() - 8, viewport.getY(), 8, viewport.getHeight(), 0.5f);
@@ -131,17 +132,7 @@ public class GuiConfigSaves extends Screen {
 
     @Override
     public void tick() {
-        super.tick();
         name.tick();
-    }
-
-    @Override
-    public boolean keyPressed(int p_keyPressed_1_, int p_keyPressed_2_, int p_keyPressed_3_) {
-        boolean b = name.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_) ||
-            super.keyPressed(p_keyPressed_1_, p_keyPressed_2_, p_keyPressed_3_);
-
-        updateSelected();
-        return b;
     }
 
     @Override
