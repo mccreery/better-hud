@@ -32,6 +32,22 @@ public class BetterHudConfig {
         return enabled;
     }
 
+    /**
+     * Filters the list of enabled elements by those registered in one registry.
+     */
+    public <T extends HudElement<?>> List<T> getEnabled(HudRegistry<? extends T> registry) {
+        List<T> enabled = new ArrayList<>();
+
+        for (HudElement<?> element : getEnabled()) {
+            T subclass = registry.getRegistered(element.getName());
+
+            if (subclass != null) {
+                enabled.add(subclass);
+            }
+        }
+        return enabled;
+    }
+
     public void enable(HudElement<?> element) {
         if (disabled.remove(element)) {
             enabled.add(element);

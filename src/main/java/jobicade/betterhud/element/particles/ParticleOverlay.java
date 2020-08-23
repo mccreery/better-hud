@@ -6,11 +6,11 @@ import static jobicade.betterhud.BetterHud.MC;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 
+import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.events.OverlayContext;
 import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.registry.OverlayElements;
 import jobicade.betterhud.util.Tickable;
 
 public abstract class ParticleOverlay extends OverlayElement implements Tickable {
@@ -31,7 +31,7 @@ public abstract class ParticleOverlay extends OverlayElement implements Tickable
 
     @Override
     public void tick() {
-        if (OverlayElements.get().getEnabled().contains(this)
+        if (BetterHud.getConfigManager().getModSettings().getEnabled().contains(this)
                 && !MC.isGamePaused()) {
             particles.forEach(Particle::tick);
             updateParticles();

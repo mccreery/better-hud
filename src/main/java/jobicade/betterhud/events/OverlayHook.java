@@ -103,7 +103,9 @@ public final class OverlayHook {
         BetterHud.MANAGER.reset(event.getWindow());
         OverlayContext context = new OverlayContext(event, BetterHud.MANAGER);
 
-        for (OverlayElement element : OverlayElements.get().getEnabled()) {
+        List<OverlayElement> elements = BetterHud.getConfigManager().getModSettings().getEnabled(OverlayElements.get());
+
+        for (OverlayElement element : elements) {
             loadGlState();
 
             if (canRender(element, context)) {
@@ -148,7 +150,7 @@ public final class OverlayHook {
      */
     public static boolean shouldRender(OverlayElement hudElement, OverlayContext context) {
         return canRender(hudElement, context)
-            && OverlayElements.get().getEnabled().contains(hudElement);
+            && BetterHud.getConfigManager().getModSettings().getEnabled().contains(hudElement);
     }
 
     /**

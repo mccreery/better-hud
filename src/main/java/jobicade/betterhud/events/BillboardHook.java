@@ -2,6 +2,8 @@ package jobicade.betterhud.events;
 
 import static jobicade.betterhud.BetterHud.MC;
 
+import java.util.List;
+
 import com.mojang.blaze3d.systems.RenderSystem;
 
 import jobicade.betterhud.BetterHud;
@@ -62,7 +64,9 @@ public class BillboardHook {
             pre = new GlSnapshot();
         }
 
-        for (BillboardElement element : BillboardElements.get().getEnabled()) {
+        List<BillboardElement> elements = BetterHud.getConfigManager().getModSettings().getEnabled(BillboardElements.get());
+
+        for (BillboardElement element : elements) {
             if (element.getServerDependency().containsVersion(BetterHud.getServerVersion())
                     && element.shouldRender(event)) {
                 MC.getProfiler().startSection(element.getName());
