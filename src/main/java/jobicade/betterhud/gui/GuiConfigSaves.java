@@ -97,7 +97,8 @@ public class GuiConfigSaves extends Screen {
         textField = textField.anchor(fieldLine, Direction.NORTH_WEST);
 
         name = new TextFieldWidget(font, textField.getX(), textField.getY(), textField.getWidth(), textField.getHeight(), "");
-        name.changeFocus(true);
+        setFocused(name);
+        name.setFocused2(true);
         name.setCanLoseFocus(false);
         addButton(name);
 
@@ -137,10 +138,7 @@ public class GuiConfigSaves extends Screen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
-        if (name.mouseClicked(mouseX, mouseY, mouseButton)) {
-            return true;
-        }
-        if (scrollbar.mouseClicked(mouseX, mouseY, mouseButton)) {
+        if (super.mouseClicked(mouseX, mouseY, mouseButton)) {
             return true;
         }
 
@@ -151,11 +149,11 @@ public class GuiConfigSaves extends Screen {
                 if(list.getCellBounds(listBounds, new Point(0, i)).contains((int)mouseX, (int)mouseY)) {
                     name.setText(list.getSource().get(i).entry.getName());
                     updateSelected();
+                    return true;
                 }
             }
         }
-
-        return super.mouseClicked(mouseX, mouseY, mouseButton);
+        return false;
     }
 
     private Rect getListBounds() {
