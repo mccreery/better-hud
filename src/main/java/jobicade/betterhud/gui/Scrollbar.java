@@ -29,7 +29,7 @@ public class Scrollbar extends Widget {
      * @param thumbSize The size of the thumb as a fraction of the track.
      */
     public void setThumbSize(float thumbSize) {
-        this.thumbSize = thumbSize;
+        this.thumbSize = Math.min(1, thumbSize);
     }
 
     /**

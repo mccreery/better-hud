@@ -216,11 +216,11 @@ public class GuiElementList extends GuiMenuScreen {
     private void updateLists() {
         disabledList = getList(getDisabled());
         int disabledHeight = disabledList.getPreferredSize().getHeight() + SPACER * 2;
-        disabledScroll.setThumbSize((float)disabledHeight / disabledViewport.getHeight());
+        disabledScroll.setThumbSize((float)disabledViewport.getHeight() / disabledHeight);
 
         enabledList = getList(getEnabled());
         int enabledHeight = enabledList.getPreferredSize().getHeight() + SPACER * 2;
-        enabledScroll.setThumbSize((float)enabledHeight / enabledViewport.getHeight());
+        enabledScroll.setThumbSize((float)enabledViewport.getHeight() / enabledHeight);
 
         checkButtons();
     }
