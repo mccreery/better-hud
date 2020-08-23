@@ -1,32 +1,30 @@
 package jobicade.betterhud.config;
 
-import static jobicade.betterhud.BetterHud.MC;
-
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.resources.IResource;
 
 /**
  * A config slot representing a resource in the resource pack system.
  * This slot is not a destination.
  */
 public class ResourceConfigSlot implements ConfigSlot {
-    private final ResourceLocation path;
+    private final IResource resource;
 
     /**
      * Constructor for resource config slots.
      * @param path The resource location containing the config.
      */
-    public ResourceConfigSlot(ResourceLocation path) {
-        this.path = path;
+    public ResourceConfigSlot(IResource resource) {
+        this.resource = resource;
     }
 
     @Override
     public void copyTo(Path dest) throws IOException {
-        Files.copy(MC.getResourceManager().getResource(path).getInputStream(), dest, StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(resource.getInputStream(), dest, StandardCopyOption.REPLACE_EXISTING);
     }
 
     @Override
@@ -39,6 +37,6 @@ public class ResourceConfigSlot implements ConfigSlot {
 
     @Override
     public String getName() {
-        return com.google.common.io.Files.getNameWithoutExtension(path.getPath());
+        return com.google.common.io.Files.getNameWithoutExtension(resource.getLocation().getPath());
     }
 }

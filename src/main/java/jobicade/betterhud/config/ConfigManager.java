@@ -13,19 +13,14 @@ import java.io.Reader;
 import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
-import java.nio.file.PathMatcher;
-import java.util.Arrays;
-import java.util.HashSet;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map.Entry;
-import java.util.Set;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.CompletionException;
 import java.util.concurrent.Executor;
-import java.util.function.Function;
-import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import com.google.common.collect.ImmutableList;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.google.gson.JsonElement;
@@ -52,23 +47,33 @@ import net.minecraft.util.ResourceLocation;
  * config folder.
  */
 public class ConfigManager implements IFutureReloadListener {
-    /**
-     * The resource location for lists of configs, where each entry is a resource
-     * string. Configs from resource packs will stack, if used.
-     */
     public static final ResourceLocation CONFIGS_LOCATION = new ResourceLocation(MODID, "configs/configs.json");
 
-    private PathMatcher pathMatcher;
-    private IResourceManager resourceManager;
-    private List<ConfigSlot> internalConfigs;
-
-    private Path rootDirectory;
-    private Path configPath;
+    private final Path configFile;
+    private final Path configDirectory;
 
     private final HudRegistry<?> elementRegistry;
     private final Gson gson;
 
-    public ConfigManager(HudRegistry<?> elementRegistry) {
+    /**
+     * {@code configDirectory} defaults to {@code betterhud} in the same
+     * directory as {@code configFile}.
+     *
+     * @see #ConfigManager(Path, Path, HudRegistry)
+     */
+    public ConfigManager(Path configFile, HudRegistry<?> elementRegistry) {
+        this(configFile, configFile.resolveSibling(BetterHud.MODID), elementRegistry);
+    }
+
+    /**
+     * @param configFile The config file to load from.
+     * @param configDirectory The directory containing alternate configs to swap.
+     * @param elementRegistry Registry for looking up elements to load.
+     */
+    public ConfigManager(Path configFile, Path configDirectory, HudRegistry<?> elementRegistry) {
+        this.configFile = configFile;
+        this.configDirectory = configDirectory;
+
         this.elementRegistry = elementRegistry;
         gson = new GsonBuilder()
             .registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer())
@@ -78,10 +83,13 @@ public class ConfigManager implements IFutureReloadListener {
             .create();
     }
 
+    /**
+     * Loads new settings from the config file.
+     */
     public void loadFile() throws IOException {
         JsonObject rootObject;
 
-        try (Reader reader = new BufferedReader(new FileReader(configPath.toFile()))) {
+        try (Reader reader = new BufferedReader(new FileReader(configFile.toFile()))) {
             JsonParser parser = new JsonParser();
             rootObject = parser.parse(reader).getAsJsonObject();
         }
@@ -97,6 +105,9 @@ public class ConfigManager implements IFutureReloadListener {
         }
     }
 
+    /**
+     * Saves the current settings to the config file.
+     */
     public void saveFile() throws IOException {
         JsonObject rootObject = new JsonObject();
 
@@ -104,158 +115,72 @@ public class ConfigManager implements IFutureReloadListener {
             rootObject.add(element.getName(), element.getRootSetting().saveJson(gson));
         }
 
-        try (Writer writer = new BufferedWriter(new FileWriter(configPath.toFile()))) {
+        try (Writer writer = new BufferedWriter(new FileWriter(configFile.toFile()))) {
             gson.toJson(rootObject, writer);
         }
     }
 
-    public void setConfigPath(Path configPath) {
-        this.configPath = configPath;
-        rootDirectory = configPath.resolveSibling(BetterHud.MODID);
-    }
-
+    private List<ConfigSlot> configSlots;
     /**
-     * Getter for the path of the current config.
-     * @return The path of the current config.
+     * @return A list of config slots supplied by resources and the file system.
      */
-    public Path getConfigPath() {
-        return configPath;
-    }
-
-    /**
-     * Getter for the directory path where saved configs are stored.
-     * @return The root directory.
-     */
-    public Path getRootDirectory() {
-        return rootDirectory;
-    }
-
-    /**
-     * Setter for the directory where saved configs are stored.
-     * @param rootDirectory The new root directory.
-     */
-    public void setRootDirectory(Path rootDirectory) {
-        this.rootDirectory = rootDirectory;
-        this.pathMatcher = rootDirectory.getFileSystem().getPathMatcher("glob:**/*.cfg");
+    public List<ConfigSlot> getConfigSlots() {
+        return configSlots;
     }
 
     @Override
     public CompletableFuture<Void> reload(IStage stage, IResourceManager resourceManager,
             IProfiler preparationsProfiler, IProfiler reloadProfiler, Executor backgroundExecutor,
             Executor gameExecutor) {
-        this.resourceManager = resourceManager;
-        this.internalConfigs = null;
+        return CompletableFuture.runAsync(() -> {
+            try {
+                ConfigResourceList configResourceList = loadConfigResourceList(resourceManager);
+                configSlots = loadConfigSlots(resourceManager, configResourceList);
 
-        // TODO config path should not be null
-        if (configPath != null && !Files.exists(configPath)) {
-            for (IResource config : getAllConfigs()) {
-                try (InputStreamReader reader = new InputStreamReader(config.getInputStream())) {
-                    Configs configs = gson.fromJson(reader, Configs.class);
-                    ConfigSlot slot = new ResourceConfigSlot(configs.defaultConfig);
+                if (!Files.exists(configFile)) {
+                    IResource defaultResource = resourceManager.getResource(configResourceList.getDefaultConfig());
+                    ConfigSlot defaultSlot = new ResourceConfigSlot(defaultResource);
 
-                    slot.copyTo(configPath);
+                    defaultSlot.copyTo(configFile);
                     loadFile();
-                } catch (IOException e) {
-                    BetterHud.getLogger().warn("Unable to load default config file", e);
                 }
+            } catch (IOException e) {
+                throw new CompletionException(e);
+            }
+        }, gameExecutor);
+    }
+
+    /**
+     * Loads the config resource list from configs.json.
+     */
+    private ConfigResourceList loadConfigResourceList(IResourceManager resourceManager) throws IOException {
+        ConfigResourceList list = new ConfigResourceList();
+
+        for (IResource resource : resourceManager.getAllResources(CONFIGS_LOCATION)) {
+            try (Reader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
+                list.combine(gson.fromJson(reader, ConfigResourceList.class));
             }
         }
-        // TODO
-        //config.sortAvailable();
-
-        return CompletableFuture.completedFuture(null);
-    }
-
-    private List<IResource> getAllConfigs() {
-        try {
-            return resourceManager.getAllResources(CONFIGS_LOCATION);
-        } catch (IOException e) {
-            throw new RuntimeException("Finding internal configs JSON", e);
-        }
+        return list;
     }
 
     /**
-     * Generates or returns a list of all internal and external save slots.
-     * Internal save slots are stored in resources, and external save slots
-     * are stored in the root directory.
-     *
-     * @return A list of all internal and external save slots.
-     * @see #getInternalSlots()
-     * @see #getExternalSlots()
+     * Loads config slots from resources and the file system.
      */
-    public List<ConfigSlot> getSlots() {
-        return Stream.concat(getInternalSlots().stream(), streamExternalSlots())
-            .filter(distinctBy(ConfigSlot::getName))
-            .collect(ImmutableList.toImmutableList());
-    }
+    private List<ConfigSlot> loadConfigSlots(IResourceManager resourceManager, ConfigResourceList configResourceList) throws IOException {
+        List<ConfigSlot> slots = new ArrayList<>();
 
-    /**
-     * Generates or returns a list of internal save slots.
-     * Internal save slots are stored in resources, and can be stacked using
-     * resource packs. The resource locations of the config files are stored in
-     * a JSON list inside the resource {@link #CONFIGS_LOCATION}.
-     *
-     * @return A list of all internal save slots.
-     */
-    public List<ConfigSlot> getInternalSlots() {
-        if(internalConfigs == null) {
-            internalConfigs = streamInternalSlots().collect(ImmutableList.toImmutableList());
+        for (ResourceLocation resourceLocation : configResourceList.getConfigs()) {
+            IResource resource = resourceManager.getResource(resourceLocation);
+            slots.add(new ResourceConfigSlot(resource));
         }
-        return internalConfigs;
-    }
 
-    private Stream<ConfigSlot> streamInternalSlots() {
-        try {
-            return resourceManager.getAllResources(CONFIGS_LOCATION).stream().flatMap(this::streamJsonSlots);
-        } catch(IOException e) {
-            return Stream.empty();
+        try (Stream<Path> paths = Files.walk(configDirectory)) {
+            paths
+                .filter(p -> Files.isRegularFile(p) && p.getFileName().endsWith(".json"))
+                .map(FileConfigSlot::new)
+                .forEachOrdered(slots::add);
         }
-    }
-
-    private Stream<ConfigSlot> streamJsonSlots(IResource resource) {
-        try(Reader reader = new InputStreamReader(resource.getInputStream())) {
-            Configs configs = gson.fromJson(reader, Configs.class);
-            return Arrays.stream(configs.configs).map(ResourceConfigSlot::new);
-        } catch(IOException e) {
-            return Stream.empty();
-        }
-    }
-
-    /**
-     * Generates or returns a list of external save slots.
-     * External save slots are stored in the root directory, as files.
-     *
-     * @return A list of all external save slots.
-     * @see #getRootDirectory()
-     */
-    public List<ConfigSlot> getExternalSlots() {
-        return streamExternalSlots().collect(ImmutableList.toImmutableList());
-    }
-
-    private Stream<ConfigSlot> streamExternalSlots() {
-        try {
-            return Files.walk(rootDirectory).filter(pathMatcher::matches).map(FileConfigSlot::new);
-        } catch(IOException e) {
-            return Stream.empty();
-        }
-    }
-
-    /**
-     * Creates a stateful filter which adds the result of the key function
-     * on each object it filters to a set, returning true the first time it
-     * sees a key and false for all subsequent times.
-     *
-     * <p>The filter is intended to be used for {@link Stream#filter(Predicate)}
-     * and mimics {@link Stream#distinct()} for comparing different keys.
-     */
-    private static <T, U> Predicate<T> distinctBy(Function<? super T, U> key) {
-        Set<U> seen = new HashSet<>();
-        return t -> seen.add(key.apply(t));
-    }
-
-    // null members populated using reflection in GSON
-    private static final class Configs {
-        private final ResourceLocation[] configs = null;
-        private final ResourceLocation defaultConfig = null;
+        return slots;
     }
 }
