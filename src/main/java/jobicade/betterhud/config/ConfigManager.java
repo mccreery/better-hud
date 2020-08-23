@@ -14,6 +14,7 @@ import java.io.Writer;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.Map.Entry;
 import java.util.concurrent.CompletableFuture;
@@ -144,7 +145,7 @@ public class ConfigManager implements IFutureReloadListener {
         }
     }
 
-    private List<ConfigSlot> configSlots;
+    private List<ConfigSlot> configSlots = Collections.emptyList();
     /**
      * @return A list of config slots supplied by resources and the file system.
      */
