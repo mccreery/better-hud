@@ -62,7 +62,14 @@ public abstract class HudElement<T> {
         rootSetting.addChild(setting);
     }
 
-    private static final VersionRange DEFAULT_SERVER_DEPENDENCY = VersionRange.createFromVersion("1.0");
+    private static final VersionRange DEFAULT_SERVER_DEPENDENCY;
+    static {
+        try {
+            DEFAULT_SERVER_DEPENDENCY = VersionRange.createFromVersionSpec("1.0");
+        } catch (InvalidVersionSpecificationException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
     private VersionRange serverDependency = DEFAULT_SERVER_DEPENDENCY;
 
