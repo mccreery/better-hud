@@ -381,14 +381,14 @@ public class GuiElementList extends GuiMenuScreen {
 
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
-        drawViewport(disabledViewport, disabledScroll, disabledList);
-        drawViewport(enabledViewport, enabledScroll, enabledList);
-
         super.render(mouseX, mouseY, partialTicks);
 
         this.mouseX = mouseX;
         this.mouseY = mouseY;
         showWarning = false;
+
+        drawViewport(disabledViewport, disabledScroll, disabledList);
+        drawViewport(enabledViewport, enabledScroll, enabledList);
 
         String hint = I18n.format("betterHud.menu.modifiers",
             KeyModifier.CONTROL.getLocalizedComboName(null, () -> I18n.format("key.mouse.left")),
