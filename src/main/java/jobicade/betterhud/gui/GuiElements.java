@@ -22,7 +22,7 @@ public abstract class GuiElements extends Screen {
             if(!ignore.test(element)) {
                 Rect bounds = element.getLastBounds();
 
-                if(bounds.contains(mouseX, mouseY) && (result == null ||
+                if(bounds != null && bounds.contains(mouseX, mouseY) && (result == null ||
                         bounds.getWidth() < result.getLastBounds().getWidth() &&
                         bounds.getHeight() < result.getLastBounds().getHeight())) {
                     result = element;
