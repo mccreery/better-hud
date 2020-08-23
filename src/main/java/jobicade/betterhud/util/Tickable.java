@@ -1,5 +1,7 @@
 package jobicade.betterhud.util;
 
+import static jobicade.betterhud.BetterHud.MC;
+
 import java.util.ArrayList;
 
 import jobicade.betterhud.BetterHud;
@@ -82,7 +84,7 @@ public interface Tickable {
         @SubscribeEvent
         public void clientTick(ClientTickEvent event) {
             // Event called twice per tick, for start and end
-            if (event.phase == Phase.END && BetterHud.isModEnabled()) {
+            if (event.phase == Phase.END && BetterHud.isModEnabled() && MC.world != null) {
                 startTick();
             }
         }
