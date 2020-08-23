@@ -14,15 +14,14 @@ import jobicade.betterhud.network.InventoryNameQuery;
 import jobicade.betterhud.network.MessagePickup;
 import jobicade.betterhud.network.MessagePickupHandler;
 import jobicade.betterhud.network.MessageVersion;
+import jobicade.betterhud.registry.BillboardElements;
 import jobicade.betterhud.registry.HudElements;
-import jobicade.betterhud.registry.HudRegistryEvent;
 import jobicade.betterhud.registry.OverlayElements;
 import jobicade.betterhud.util.Tickable.Ticker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.DistExecutor;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
@@ -93,9 +92,8 @@ public class BetterHud {
     }
 
     private void setupClient(FMLClientSetupEvent event) {
-        if (!MinecraftForge.EVENT_BUS.post(new HudRegistryEvent())) {
-            logger.warn("Better HUD registry event canceled unexpectedly");
-        }
+        OverlayElements.registerAll();
+        BillboardElements.registerAll();
 
         configManager = new ConfigManager(FMLPaths.CONFIGDIR.get().resolve(MODID), HudElements.get());
 

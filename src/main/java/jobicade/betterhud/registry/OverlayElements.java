@@ -42,7 +42,6 @@ import jobicade.betterhud.element.vanilla.RidingHealth;
 import jobicade.betterhud.element.vanilla.Sidebar;
 import jobicade.betterhud.element.vanilla.Vignette;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber(modid = BetterHud.MODID, value = Dist.CLIENT)
@@ -97,8 +96,7 @@ public class OverlayElements extends HudRegistry<OverlayElement> {
     public static final Vignette VIGNETTE = new Vignette();
     public static final WaterDrops WATER_DROPS = new WaterDrops();
 
-    @SubscribeEvent
-    public static void onHudRegistry(HudRegistryEvent event) {
+    public static void registerAll() {
         get().register(
             AIR_BAR,
             ARMOR_BAR,

@@ -6,7 +6,6 @@ import jobicade.betterhud.element.entityinfo.HorseInfo;
 import jobicade.betterhud.element.entityinfo.MobInfo;
 import jobicade.betterhud.element.entityinfo.PlayerInfo;
 import net.minecraftforge.api.distmarker.Dist;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 
 @EventBusSubscriber(modid = BetterHud.MODID, value = Dist.CLIENT)
@@ -25,8 +24,7 @@ public class BillboardElements extends HudRegistry<BillboardElement> {
     public static final MobInfo MOB_INFO = new MobInfo();
     public static final PlayerInfo PLAYER_INFO = new PlayerInfo();
 
-    @SubscribeEvent
-    public static void onHudRegistry(HudRegistryEvent event) {
+    public static void registerAll() {
         get().register(
             HORSE_INFO,
             MOB_INFO,
