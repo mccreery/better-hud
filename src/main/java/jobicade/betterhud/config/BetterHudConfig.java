@@ -74,7 +74,7 @@ public class BetterHudConfig {
     }
 
     public void disableAll() {
-        disabled.addAll(disabled);
+        disabled.addAll(enabled);
         disabled.sort(COMPARATOR);
         enabled.clear();
     }

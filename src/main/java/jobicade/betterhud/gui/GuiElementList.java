@@ -88,7 +88,7 @@ public class GuiElementList extends GuiMenuScreen {
         enableAllButton.setBounds(new Rect(20, 20).align(centerButtons, Direction.WEST));
         enableAllButton.setTexture(Textures.SETTINGS, 160, 0, 20);
 
-        disableAllButton = new SuperButton(b -> disableAll());
+        disableAllButton = addButton(new SuperButton(b -> disableAll()));
         disableAllButton.setBounds(new Rect(20, 20).align(centerButtons.add(0, 22), Direction.WEST));
         disableAllButton.setTexture(Textures.SETTINGS, 140, 0, 20);
 
