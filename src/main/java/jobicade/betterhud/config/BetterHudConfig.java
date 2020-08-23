@@ -14,23 +14,31 @@ import jobicade.betterhud.util.SortedSetList;
  * generated specs (like the list of registered elements).
  */
 public class BetterHudConfig {
-    private List<HudElement<?>> available;
-    private List<HudElement<?>> selected;
+    private List<HudElement<?>> disabled;
+    private List<HudElement<?>> enabled;
 
     public BetterHudConfig(HudRegistry<?> elementRegistry, Data data) {
         Comparator<HudElement<?>> comparator = Comparator.comparing(HudElement::getLocalizedName);
 
-        available = new SortedSetList<>(new ArrayList<>(), comparator);
-        selected = new ArrayList<>(data.selected);
+        disabled = new SortedSetList<>(new ArrayList<>(), comparator);
+        enabled = new ArrayList<>(data.enabled);
 
-        available.addAll(elementRegistry.getRegistered());
+        disabled.addAll(elementRegistry.getRegistered());
+    }
+
+    public List<HudElement<?>> getDisabled() {
+        return disabled;
+    }
+
+    public List<HudElement<?>> getEnabled() {
+        return enabled;
     }
 
     public static class Data {
-        private List<HudElement<?>> selected;
+        private List<HudElement<?>> enabled;
 
         public Data(BetterHudConfig config) {
-            selected = config.selected;
+            enabled = config.enabled;
         }
     }
 }

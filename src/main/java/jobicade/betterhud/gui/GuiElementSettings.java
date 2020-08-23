@@ -3,6 +3,7 @@ package jobicade.betterhud.gui;
 import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -69,7 +70,11 @@ public class GuiElementSettings extends GuiMenuScreen {
 
     @Override
     public void onClose() {
-        BetterHud.getConfigManager().getConfig().save();
+        try {
+            BetterHud.getConfigManager().saveFile();
+        } catch (IOException e) {
+            BetterHud.getLogger().error(e);
+        }
     }
 
     /** @see GuiScreen#handleMouseInput() */

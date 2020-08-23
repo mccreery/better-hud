@@ -8,7 +8,6 @@ import org.apache.maven.artifact.versioning.ArtifactVersion;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 
 import jobicade.betterhud.config.ConfigManager;
-import jobicade.betterhud.config.HudConfig;
 import jobicade.betterhud.events.ClientEvents;
 import jobicade.betterhud.geom.LayoutManager;
 import jobicade.betterhud.network.InventoryNameQuery;
@@ -110,11 +109,6 @@ public class BetterHud {
         Ticker.FASTER.register(OverlayElements.BLOOD_SPLATTERS);
         Ticker.FASTER.register(OverlayElements.WATER_DROPS);
         Ticker.FAST.register(OverlayElements.CPS);
-    }
-
-    private static HudConfig config;
-    public static HudConfig getConfig() {
-        return config;
     }
 
     private static ConfigManager configManager;

@@ -3,6 +3,7 @@ package jobicade.betterhud.gui;
 import static jobicade.betterhud.BetterHud.MC;
 import static jobicade.betterhud.BetterHud.SPACER;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -121,7 +122,11 @@ public class GuiElementList extends GuiMenuScreen {
 
     @Override
     public void onClose() {
-        BetterHud.getConfig().save();
+        try {
+            BetterHud.getConfigManager().saveFile();
+        } catch (IOException e) {
+            BetterHud.getLogger().error(e);
+        }
     }
 
     /**
@@ -153,11 +158,11 @@ public class GuiElementList extends GuiMenuScreen {
     }
 
     private List<HudElement<?>> getEnabled() {
-        return configManager.getConfig().getSelected();
+        return configManager.getModSettings().getEnabled();
     }
 
     private List<HudElement<?>> getDisabled() {
-        return configManager.getConfig().getAvailable();
+        return configManager.getModSettings().getDisabled();
     }
 
     private List<Integer> getIndices(List<?> list, List<?> subList) {

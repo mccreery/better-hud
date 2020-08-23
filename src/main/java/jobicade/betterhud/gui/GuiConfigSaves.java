@@ -51,7 +51,7 @@ public class GuiConfigSaves extends Screen {
 
         return list.getSource().stream().map(li -> li.entry)
             .filter(e -> e.matches(name.getText())).findFirst()
-            .orElseGet(() -> new FileConfigSlot(manager.getRootDirectory().resolve(name.getText() + ".cfg")));
+            .orElseGet(() -> new FileConfigSlot(manager.getConfigDirectory().resolve(name.getText() + ".cfg")));
     }
 
     private void updateSelected() {
@@ -62,8 +62,8 @@ public class GuiConfigSaves extends Screen {
 
     private void save() {
         try {
-            manager.getConfig().save();
-            selected.copyFrom(manager.getConfigPath());
+            manager.saveFile();
+            selected.copyFrom(manager.getConfigFile());
             updateList();
         } catch(IOException e) {
             throw new RuntimeException(e);
@@ -72,8 +72,8 @@ public class GuiConfigSaves extends Screen {
 
     private void load() {
         try {
-            selected.copyTo(manager.getConfigPath());
-            manager.reloadConfig();
+            selected.copyTo(manager.getConfigFile());
+            manager.loadFile();
         } catch(IOException e) {
             throw new RuntimeException(e);
         }
@@ -121,7 +121,7 @@ public class GuiConfigSaves extends Screen {
     }
 
     private void updateList() {
-        List<ListItem> listItems = manager.getSlots().stream().map(ListItem::new).collect(Collectors.toList());
+        List<ListItem> listItems = manager.getConfigSlots().stream().map(ListItem::new).collect(Collectors.toList());
         list = new Grid<>(new Point(1, listItems.size()), listItems);
         list.setStretch(true);
 

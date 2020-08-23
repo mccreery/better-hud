@@ -83,7 +83,19 @@ public class ConfigManager implements IFutureReloadListener {
             .create();
     }
 
+    public Path getConfigFile() {
+        return configFile;
+    }
+
+    public Path getConfigDirectory() {
+        return configDirectory;
+    }
+
     private BetterHudConfig modSettings;
+
+    public BetterHudConfig getModSettings() {
+        return modSettings;
+    }
 
     /**
      * Loads new settings from the config file.

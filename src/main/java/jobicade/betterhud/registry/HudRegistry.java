@@ -57,7 +57,7 @@ public abstract class HudRegistry<T extends HudElement<?>> {
      * @return The enabled elements filtered by this registry.
      */
     public List<T> getEnabled() {
-        List<? extends HudElement<?>> selected = BetterHud.getConfig().getSelected();
+        List<? extends HudElement<?>> selected = BetterHud.getConfigManager().getModSettings().getEnabled();
 
         List<T> subclassSelected = new ArrayList<>();
         for (HudElement<?> element : selected) {
