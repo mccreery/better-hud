@@ -62,7 +62,7 @@ public class SuperButton extends Button {
         int hw = width / 2;
 
         blit(x, y, leftU, v, hw, height);
-        blit(x + hw, y, textureWidth - hw, v, hw, height);
+        blit(x + hw, y, leftU + textureWidth - hw, v, hw, height);
 
         renderBg(minecraft, mouseX, mouseY);
         int color = getFGColor() | MathHelper.ceil(alpha * 255) << 24;
