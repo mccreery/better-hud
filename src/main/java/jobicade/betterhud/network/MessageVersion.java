@@ -18,6 +18,6 @@ public class MessageVersion {
     }
 
     public void encode(PacketBuffer packetBuffer) {
-        packetBuffer.writeString(version.getQualifier());
+        packetBuffer.writeString(version.toString());
     }
 }

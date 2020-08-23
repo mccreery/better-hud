@@ -86,7 +86,7 @@ public class BetterHud {
     }
 
     public static void onServerVersion(MessageVersion message, Supplier<NetworkEvent.Context> context) {
-        getLogger().info("Server reported version " + message.version.getQualifier());
+        getLogger().info("Server reported version " + message.version);
         setServerVersion(message.version);
         context.get().setPacketHandled(true);
     }
