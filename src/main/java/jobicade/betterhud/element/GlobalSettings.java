@@ -15,7 +15,7 @@ public class GlobalSettings extends HudElement<Object> {
 
         billboardScale = new SettingSlider("billboardScale", 0, 1);
         billboardScale.setDisplayPercent();
-        addSetting(billboardDistance);
+        addSetting(billboardScale);
 
         billboardDistance = new SettingSlider("rayDistance", 5, 200);
         billboardDistance.setUnlocalizedValue("betterHud.hud.meters");
