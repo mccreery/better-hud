@@ -410,11 +410,15 @@ public class GuiElementList extends GuiMenuScreen {
     }
 
     private void drawViewport(Rect viewport, Scrollbar scrollbar, Grid<ListItem> list) {
-        GlUtil.drawRect(viewport, new Color(32, 0, 0, 0));
+        fill(viewport, new Color(32, 0, 0, 0));
 
         GlUtil.beginScissor(viewport);
         list.setBounds(getListBounds(viewport, scrollbar, list)).render();
         GlUtil.endScissor();
+    }
+
+    private void fill(Rect rect, Color color) {
+        fill(rect.getLeft(), rect.getTop(), rect.getRight(), rect.getBottom(), color.getPacked());
     }
 
     private class ListItem extends DefaultBoxed {
