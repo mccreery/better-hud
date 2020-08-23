@@ -81,6 +81,10 @@ public class ConfigManager implements IFutureReloadListener {
             .registerTypeAdapter(HudElement.class, new ElementTypeAdapter(elementRegistry))
             .registerTypeAdapter(Point.class, new PointTypeAdapter())
             .create();
+
+        BetterHudConfig.Data data = new BetterHudConfig.Data();
+        data.enabled = new ArrayList<>();
+        modSettings = new BetterHudConfig(elementRegistry, data);
     }
 
     public Path getConfigFile() {

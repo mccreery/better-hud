@@ -77,7 +77,10 @@ public class BetterHudConfig {
     }
 
     public static class Data {
-        private List<HudElement<?>> enabled;
+        public List<HudElement<?>> enabled;
+
+        public Data() {
+        }
 
         public Data(BetterHudConfig config) {
             enabled = config.enabled;
