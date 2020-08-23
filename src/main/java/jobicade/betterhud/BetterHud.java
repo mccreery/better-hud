@@ -2,7 +2,6 @@ package jobicade.betterhud;
 
 import java.util.function.Supplier;
 
-import org.apache.commons.lang3.tuple.Pair;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.maven.artifact.versioning.ArtifactVersion;
@@ -24,17 +23,14 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResourceManager;
 import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.common.ForgeConfigSpec;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.DistExecutor;
-import net.minecraftforge.fml.ModLoadingContext;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
-import net.minecraftforge.fml.config.ModConfig;
-import net.minecraftforge.fml.config.ModConfig.ModConfigEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.fml.network.NetworkEvent;
 import net.minecraftforge.fml.network.NetworkRegistry;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
@@ -98,23 +94,22 @@ public class BetterHud {
     }
 
     private void setupClient(FMLClientSetupEvent event) {
-        IResourceManager resourceManager = event.getMinecraftSupplier().get().getResourceManager();
+        if (!MinecraftForge.EVENT_BUS.post(new HudRegistryEvent())) {
+            logger.warn("Better HUD registry event canceled unexpectedly");
+        }
 
+        configManager = new ConfigManager(FMLPaths.CONFIGDIR.get().resolve(MODID), HudElements.get());
+
+        IResourceManager resourceManager = event.getMinecraftSupplier().get().getResourceManager();
         if(resourceManager instanceof IReloadableResourceManager) {
             ((IReloadableResourceManager)resourceManager).addReloadListener(configManager);
         } else {
             BetterHud.getLogger().warn("Unable to register alphabetical sort update on language change");
         }
 
-        if (!MinecraftForge.EVENT_BUS.post(new HudRegistryEvent())) {
-            logger.warn("Better HUD registry event canceled unexpectedly");
-        }
-
         Ticker.FASTER.register(OverlayElements.BLOOD_SPLATTERS);
         Ticker.FASTER.register(OverlayElements.WATER_DROPS);
         Ticker.FAST.register(OverlayElements.CPS);
-
-        setupConfig();
     }
 
     private static HudConfig config;
@@ -125,21 +120,6 @@ public class BetterHud {
     private static ConfigManager configManager;
     public static ConfigManager getConfigManager() {
         return configManager;
-    }
-
-    private void setupConfig() {
-        Pair<HudConfig, ForgeConfigSpec> specPair = new ForgeConfigSpec.Builder().configure(HudConfig::new);
-        config = specPair.getLeft();
-        ForgeConfigSpec spec = specPair.getRight();
-
-        ModLoadingContext.get().registerConfig(ModConfig.Type.CLIENT, spec);
-        configManager = new ConfigManager(config);
-
-        FMLJavaModLoadingContext.get().getModEventBus().addListener((ModConfigEvent event) -> {
-            if (event.getConfig().getSpec() == spec) {
-                config.load();
-            }
-        });
     }
 
     public static boolean isModEnabled() {
