@@ -66,7 +66,10 @@ public class BetterHudConfig {
     public void disable(HudElement<?> element) {
         if (enabled.remove(element)) {
             int insertIndex = Collections.binarySearch(disabled, element, COMPARATOR);
-            disabled.add(insertIndex, element);
+
+            if (insertIndex < 0) {
+                disabled.add(-insertIndex - 1, element);
+            }
         }
     }
 
