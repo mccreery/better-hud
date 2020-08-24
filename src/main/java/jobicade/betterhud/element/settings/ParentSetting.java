@@ -85,7 +85,7 @@ public class ParentSetting extends Setting {
     @Override
     public void updateGuiParts() {
         for (Setting child : children) {
-            child.draw();
+            child.updateGuiParts();
         }
     }
 }
