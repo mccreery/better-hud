@@ -2,7 +2,6 @@ package jobicade.betterhud.config;
 
 import static jobicade.betterhud.BetterHud.MODID;
 
-import java.awt.Color;
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
 import java.io.FileReader;
@@ -32,6 +31,7 @@ import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.registry.HudRegistry;
+import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.json.ColorTypeAdapter;
 import jobicade.betterhud.util.json.ElementTypeAdapter;
 import jobicade.betterhud.util.json.PointTypeAdapter;
