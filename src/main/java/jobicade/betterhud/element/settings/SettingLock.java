@@ -30,5 +30,6 @@ public class SettingLock extends SettingBoolean {
     @Override
     public void updateGuiParts() {
         toggler.active = enabled();
+        toggler.setForceHovered(get());
     }
 }
