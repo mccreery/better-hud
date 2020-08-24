@@ -142,7 +142,7 @@ public class ConfigManager implements IFutureReloadListener {
         rootObject.add("modSettings", gson.toJsonTree(new BetterHudConfig.Data(modSettings)));
 
         try (Writer writer = new BufferedWriter(new FileWriter(configFile.toFile()))) {
-            gson.toJson(elementSettings, writer);
+            gson.toJson(rootObject, writer);
         }
     }
 
