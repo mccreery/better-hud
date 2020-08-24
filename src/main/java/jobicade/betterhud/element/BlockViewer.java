@@ -78,7 +78,7 @@ public class BlockViewer extends TextElement {
     public boolean shouldRender(OverlayContext context) {
         RayTraceResult traceResult = MC.getRenderViewEntity().pick(HudElements.GLOBAL.getBillboardDistance(), 1f, false);
 
-        if(trace != null && trace.getType() == RayTraceResult.Type.BLOCK) {
+        if(traceResult != null && traceResult.getType() == RayTraceResult.Type.BLOCK) {
             trace = (BlockRayTraceResult)traceResult;
             state = MC.world.getBlockState(trace.getPos());
             stack = getDisplayStack(trace, state);
