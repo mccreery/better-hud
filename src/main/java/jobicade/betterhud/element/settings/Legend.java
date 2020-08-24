@@ -32,7 +32,7 @@ public class Legend extends Setting {
     @Override
     public Point getGuiParts(GuiElementSettings.Populator populator, Point origin) {
         String message = I18n.format("betterHud.group." + getName());
-        populator.add(new LegendLabel(0, origin.getX() - 150, origin.getY(), 300, message, Color.WHITE));
+        populator.add(new LegendLabel(origin.getX() - 150, origin.getY(), 300, MC.fontRenderer.FONT_HEIGHT, message, Color.WHITE));
 
         return origin.add(0, MC.fontRenderer.FONT_HEIGHT + SPACER);
     }
@@ -43,6 +43,7 @@ public class Legend extends Setting {
         public LegendLabel(int x, int y, int width, int height, String message, Color color) {
             super(x, y, width, height, message);
             this.color = color;
+            active = false;
         }
 
         @Override
@@ -53,9 +54,9 @@ public class Legend extends Setting {
                 int cx = x + width / 2;
                 int cy = y + height / 2;
 
-                this.drawCenteredString(MC.fontRenderer, getMessage(), cx, cy, color.getPacked());
+                this.drawCenteredString(MC.fontRenderer, getMessage(), cx, y, color.getPacked());
                 fill(x, cy, cx - blank, cy + 1, color.getPacked());
-                fill(x, cy, cx - blank, cy + 1, color.getPacked());
+                fill(cx + blank, cy, x + width, cy + 1, color.getPacked());
             }
         }
     }
