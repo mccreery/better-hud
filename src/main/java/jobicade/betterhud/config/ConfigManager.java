@@ -87,6 +87,14 @@ public class ConfigManager implements IFutureReloadListener {
         BetterHudConfig.Data data = new BetterHudConfig.Data();
         data.enabled = new ArrayList<>();
         modSettings = new BetterHudConfig(elementRegistry, data);
+
+        if (Files.exists(configFile)) {
+            try {
+                loadFile();
+            } catch (IOException e) {
+                BetterHud.getLogger().error("Loading config file", e);
+            }
+        }
     }
 
     public Path getConfigFile() {
