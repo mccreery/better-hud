@@ -81,6 +81,7 @@ public class ConfigManager implements IFutureReloadListener {
             .registerTypeAdapter(Color.class, new ColorTypeAdapter())
             .registerTypeAdapter(HudElement.class, new ElementTypeAdapter(elementRegistry))
             .registerTypeAdapter(Point.class, new PointTypeAdapter())
+            .setPrettyPrinting()
             .create();
 
         BetterHudConfig.Data data = new BetterHudConfig.Data();

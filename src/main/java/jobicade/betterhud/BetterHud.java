@@ -95,7 +95,7 @@ public class BetterHud {
         OverlayElements.registerAll();
         BillboardElements.registerAll();
 
-        configManager = new ConfigManager(FMLPaths.CONFIGDIR.get().resolve(MODID), HudElements.get());
+        configManager = new ConfigManager(FMLPaths.CONFIGDIR.get().resolve(MODID + ".json"), HudElements.get());
 
         IResourceManager resourceManager = event.getMinecraftSupplier().get().getResourceManager();
         if(resourceManager instanceof IReloadableResourceManager) {
