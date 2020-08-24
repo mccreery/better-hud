@@ -1,0 +1,614 @@
+{
+  "elementSettings": {
+    "vignette": {
+      "warnings": true
+    },
+    "blockViewer": {
+      "position": {
+        "position": "preset",
+        "direction": "NORTH_WEST",
+        "anchor": "NORTH_WEST",
+        "alignment": "NORTH_WEST",
+        "contentAlignment": "NORTH_WEST",
+        "lockAlignment": false,
+        "lockContent": false,
+        "origin": [
+          0,
+          0
+        ]
+      },
+      "color": "#000000",
+      "showItem": false,
+      "showIds": false,
+      "invNames": false
+    },
+    "distance": {
+      "position": {
+        "position": "preset",
+        "direction": "NORTH_WEST",
+        "anchor": "NORTH_WEST",
+        "alignment": "NORTH_WEST",
+        "contentAlignment": "NORTH_WEST",
+        "lockAlignment": false,
+        "lockContent": false,
+        "origin": [
+          0,
+          0
+        ]
+      },
+      "color": "#000000",
+      "mode": "0"
+    },
+    "playerInfo": {
+      "tooltipLines": -1.0
+    },
+    "fullInvIndicator": {
+      "position": {
+        "position": "preset",
+        "direction": "NORTH_WEST",
+        "anchor": "NORTH_WEST",
+        "alignment": "NORTH_WEST",
+        "contentAlignment": "NORTH_WEST",
+        "lockAlignment": false,
+        "lockContent": false,
+        "origin": [
+          0,
+          0
+        ]
+      },
+      "color": "#000000",
+      "offhand": false
+    },
+    "experience": {
+      "position": {
+        "position": "preset",
+        "direction": "SOUTH",
+        "anchor": "NORTH_WEST",
+        "alignment": "NORTH_WEST",
+        "contentAlignment": "NORTH",
+        "lockAlignment": false,
+        "lockContent": false,
+        "origin": [
+          0,
+          0
+        ]
+      }
+    },
+    "horseInfo": {
+      "jump": false,
+      "speed": false
+    },
+    "saturation": {
+      "position": {
+        "position": "preset",
+        "direction": "NORTH_WEST",
+        "anchor": "NORTH_WEST",
+        "alignment": "NORTH_WEST",
+        "contentAlignment": "NORTH_WEST",
+        "lockAlignment": false,
+        "lockContent": false,
+        "origin": [
+          0,
+          0
+        ]
+      },
+      "color": "#000000"
+    },
+    "armorBars": {
+      "showName": false,
+      "showDurability": false,
+      "durabilityFormat": "points",
+      "showUndamaged": false,
+      "damageWarning": {
+        "warning.1": 0.0,
+        "warning.2": 0.0,
+        "warning.3": 0.0
+      },
+      "position": {
+        "position": "preset",
+        "direction": "NORTH_WEST",
+        "anchor": "NORTH_WEST",
+        "alignment": "NORTH_WEST",
+        "contentAlignment": "WEST",
+        "lockAlignment": false,
+        "lockContent": false,
+        "origin": [
+          0,
+          0
+        ]
+      },
+      "bars": "visible.off",
+      "alwaysVisible": false
+    },
+    "itemPickup": {
+      "position": {
+        "position": "preset",
+        "direction": "NORTH_WEST",
+        "anchor": "NORTH_WEST",
+        "alignment": "NORTH_WEST",
+        "contentAlignment": "NORTH_WEST",
+        "lockAlignment": false,
+        "lockContent": false,
+        "origin": [
+          0,
+          0
+        ]
+      },
+      "fadeAfter": 20.0,
+      "maxStacks": 1.0
+    },
+    "arrowCount": {
+      "position": {
+        "position": "preset",
+        "direction": "NORTH_WEST",
+        "anchor": "NORTH_WEST",
+        "alignment": "NORTH_WEST",
+        "lockAlignment": false,
+        "lockContent": false,
+        "origin": [
+          0,
+          0
+        ]
+      },
+      "overlay": false
+    },
+    "connection": {
+      "position": {
+        "position": "preset",
+        "direction": "NORTH_WEST",
+        "anchor": "NORTH_WEST",
+        "alignment": "NORTH_WEST",
+        "contentAlignment": "NORTH_WEST",
+        "lockAlignment": false,
+        "lockContent": false,
+        "origin": [
+          0,
+          0
+        ]
+      },
+      "color": "#000000",
+      "playerCount": false,
+      "showIp": false,
+      "latency": false
+    },
+    "scoreboard": {
+      "position": {
+        "position": "preset",
+        "direction": "EAST",
+        "anchor": "NORTH_WEST",
+        "alignment": "NORTH_WEST",
+        "contentAlignment": "WEST",
+        "lockAlignment": false,
+        "lockContent": false,
+        "origin": [
+          0,
+          0
+        ]
+      }
+    },
+    "portal": {},
+    "bossHealth": {},
+    "signReader": {
+      "position": {
+        "position": "preset",
+        "direction": "NORTH_WEST",
+        "anchor": "NORTH_WEST",
+        "alignment": "NORTH_WEST",
+        "lockAlignment": false,
+        "lockContent": false,
+        "origin": [
+          0,
+          0
+        ]
+      }
+    },
+    "potionBar": {
+      "position": {
+        "position": "preset",
+        "direction": "NORTH_EAST",
+        "anchor": "NORTH_WEST",
+        "alignment": "NORTH_WEST",
+        "contentAlignment": "NORTH_WEST",
+        "lockAlignment": false,
+        "lockContent": false,
+        "origin": [
+          0,
+          0
+        ]
+      },
+      "duration": false
+    },
+    "gameClock": {
+      "position": {
+        "position": "preset",
+        "direction": "NORTH_WEST",
+        "anchor": "NORTH_WEST",
+        "alignment": "NORTH_WEST",
+        "contentAlignment": "NORTH_WEST",
+        "lockAlignment": false,
+        "lockContent": false,
+        "origin": [
+          0,
+          0
+        ]
+      },
+      "color": "#000000",
+      "24hr": false,
+      "showSeconds": false,
+      "dateType": "dmy",
+      "fullYear": false,
+      "showDays": false,
+      "showSleepIndicator": false,
+      "requireItem": "disabled"
+    },
+    "helmetOverlay": {},
+    "waterDrops": {
+      "density": "normal"
+    },
+    "cps": {
+      "position": {
+        "position": "preset",
+        "direction": "NORTH_WEST",
+        "anchor": "NORTH_WEST",
+        "alignment": "NORTH_WEST",
+        "contentAlignment": "NORTH_WEST",
+        "lockAlignment": false,
+        "lockContent": false,
+        "origin": [
+          0,
+          0
+        ]
+      },
+      "color": "#000000",
+      "timeout": 1.0,
+      "showBurst": false,
+      "remember": false
+    },
+    "coordinates": {
+      "position": {
+        "position": "preset",
+        "direction": "NORTH_WEST",
+        "anchor": "NORTH_WEST",
+        "alignment": "NORTH_WEST",
+        "contentAlignment": "NORTH_WEST",
+        "lockAlignment": false,
+        "lockContent": false,
+        "origin": [
+          0,
+          0
+        ]
+      },
+      "color": "#000000",
+      "spaced": false,
+      "precision": 0.0
+    },
+    "health": {
+      "position": {
+        "position": "preset",
+        "direction": "SOUTH",
+        "anchor": "NORTH_WEST",
+        "alignment": "NORTH_WEST",
+        "contentAlignment": "NORTH_WEST",
+        "lockAlignment": false,
+        "lockContent": false,
+        "origin": [
+          0,
+          0
+        ]
+      },
+      "side": "west"
+    },
+    "jumpBar": {
+      "position": {
+        "position": "preset",
+        "direction": "NORTH_WEST",
+        "anchor": "NORTH_WEST",
+        "alignment": "NORTH_WEST",
+        "contentAlignment": "NORTH",
+        "lockAlignment": false,
+        "lockContent": false,
+        "origin": [
+          0,
+          0
+        ]
+      }
+    },
+    "airBar": {
+      "position": {
+        "position": "preset",
+        "direction": "SOUTH",
+        "anchor": "NORTH_WEST",
+        "alignment": "NORTH_WEST",
+        "contentAlignment": "NORTH_WEST",
+        "lockAlignment": false,
+        "lockContent": false,
+        "origin": [
+          0,
+          0
+        ]
+      },
+      "side": "east"
+    },
+    "hotbar": {
+      "position": {
+        "position": "preset",
+        "direction": "SOUTH",
+        "anchor": "NORTH_WEST",
+        "alignment": "NORTH_WEST",
+        "lockAlignment": false,
+        "lockContent": false,
+        "origin": [
+          0,
+          0
+        ]
+      }
+    },
+    "food": {
+      "position": {
+        "position": "preset",
+        "direction": "SOUTH",
+        "anchor": "NORTH_WEST",
+        "alignment": "NORTH_WEST",
+        "contentAlignment": "NORTH_WEST",
+        "lockAlignment": false,
+        "lockContent": false,
+        "origin": [
+          0,
+          0
+        ]
+      },
+      "side": "east",
+      "hideMount": true
+    },
+    "handBar": {
+      "showName": true,
+      "showDurability": false,
+      "durabilityFormat": "points",
+      "showUndamaged": false,
+      "damageWarning": {
+        "warning.1": 0.0,
+        "warning.2": 0.0,
+        "warning.3": 0.0
+      },
+      "position": {
+        "position": "preset",
+        "direction": "SOUTH",
+        "anchor": "NORTH_WEST",
+        "alignment": "NORTH_WEST",
+        "contentAlignment": "NORTH",
+        "lockAlignment": false,
+        "lockContent": false,
+        "origin": [
+          0,
+          0
+        ]
+      },
+      "showItem": false,
+      "bars": false,
+      "offhand": false,
+      "showNonTools": false
+    },
+    "offhand": {
+      "position": {
+        "position": "preset",
+        "direction": "SOUTH",
+        "anchor": "NORTH_WEST",
+        "alignment": "NORTH_WEST",
+        "lockAlignment": false,
+        "lockContent": false,
+        "origin": [
+          0,
+          0
+        ]
+      }
+    },
+    "systemClock": {
+      "position": {
+        "position": "preset",
+        "direction": "NORTH_WEST",
+        "anchor": "NORTH_WEST",
+        "alignment": "NORTH_WEST",
+        "contentAlignment": "NORTH_WEST",
+        "lockAlignment": false,
+        "lockContent": false,
+        "origin": [
+          0,
+          0
+        ]
+      },
+      "color": "#000000",
+      "24hr": false,
+      "showSeconds": false,
+      "dateType": "dmy",
+      "fullYear": false
+    },
+    "crosshair": {
+      "position": {
+        "position": "preset",
+        "direction": "CENTER",
+        "anchor": "NORTH_WEST",
+        "alignment": "NORTH_WEST",
+        "lockAlignment": false,
+        "lockContent": false,
+        "origin": [
+          0,
+          0
+        ]
+      },
+      "attackIndicator": true,
+      "indicatorType": "0"
+    },
+    "healIndicator": {
+      "position": {
+        "position": "preset",
+        "anchor": "NORTH_WEST",
+        "alignment": "NORTH_WEST",
+        "lockAlignment": false,
+        "lockContent": false,
+        "origin": [
+          0,
+          0
+        ]
+      },
+      "mode": "0"
+    },
+    "lightLevel": {
+      "position": {
+        "position": "preset",
+        "direction": "NORTH_WEST",
+        "anchor": "NORTH_WEST",
+        "alignment": "NORTH_WEST",
+        "contentAlignment": "NORTH_WEST",
+        "lockAlignment": false,
+        "lockContent": false,
+        "origin": [
+          0,
+          0
+        ]
+      },
+      "color": "#000000"
+    },
+    "experienceInfo": {
+      "position": {
+        "position": "preset",
+        "direction": "NORTH_WEST",
+        "anchor": "NORTH_WEST",
+        "alignment": "NORTH_WEST",
+        "contentAlignment": "NORTH_WEST",
+        "lockAlignment": false,
+        "lockContent": false,
+        "origin": [
+          0,
+          0
+        ]
+      },
+      "color": "#000000",
+      "showTotalExp": false,
+      "showLifetimeExp": false
+    },
+    "armor": {
+      "position": {
+        "position": "preset",
+        "direction": "SOUTH",
+        "anchor": "NORTH_WEST",
+        "alignment": "NORTH_WEST",
+        "contentAlignment": "NORTH_WEST",
+        "lockAlignment": false,
+        "lockContent": false,
+        "origin": [
+          0,
+          0
+        ]
+      },
+      "side": "west"
+    },
+    "compass": {
+      "position": {
+        "position": "preset",
+        "direction": "NORTH_WEST",
+        "anchor": "NORTH_WEST",
+        "alignment": "NORTH_WEST",
+        "contentAlignment": "NORTH",
+        "lockAlignment": false,
+        "lockContent": false,
+        "origin": [
+          0,
+          0
+        ]
+      },
+      "mode": "visual",
+      "letterScale": 0.0,
+      "showNotches": false,
+      "requireItem": "disabled"
+    },
+    "fpsCount": {
+      "position": {
+        "position": "preset",
+        "direction": "NORTH_WEST",
+        "anchor": "NORTH_WEST",
+        "alignment": "NORTH_WEST",
+        "contentAlignment": "NORTH_WEST",
+        "lockAlignment": false,
+        "lockContent": false,
+        "origin": [
+          0,
+          0
+        ]
+      },
+      "color": "#000000",
+      "numberOnly": false
+    },
+    "biome": {
+      "position": {
+        "position": "preset",
+        "direction": "NORTH",
+        "anchor": "NORTH_WEST",
+        "alignment": "NORTH_WEST",
+        "contentAlignment": "NORTH_WEST",
+        "lockAlignment": false,
+        "lockContent": false,
+        "origin": [
+          0,
+          0
+        ]
+      },
+      "color": "#ffffff"
+    },
+    "chat": {
+      "position": {
+        "position": "preset",
+        "direction": "SOUTH_WEST",
+        "anchor": "SOUTH_WEST",
+        "alignment": "SOUTH_WEST",
+        "lockAlignment": true,
+        "lockContent": true,
+        "origin": [
+          0,
+          0
+        ]
+      }
+    },
+    "mobInfo": {
+      "compress": 0.0
+    },
+    "mountHealth": {
+      "position": {
+        "position": "preset",
+        "direction": "NORTH_WEST",
+        "anchor": "NORTH_WEST",
+        "alignment": "NORTH_WEST",
+        "contentAlignment": "NORTH_WEST",
+        "lockAlignment": false,
+        "lockContent": false,
+        "origin": [
+          0,
+          0
+        ]
+      },
+      "side": "west"
+    },
+    "bloodSplatters": {
+      "density": "normal"
+    }
+  },
+  "modSettings": {
+    "enabled": [
+      "vignette",
+      "helmetOverlay",
+      "hotbar",
+      "experience",
+      "health",
+      "armor",
+      "jumpBar",
+      "food",
+      "airBar",
+      "handBar",
+      "chat",
+      "crosshair",
+      "offhand",
+      "scoreboard",
+      "potionBar",
+      "bossHealth"
+    ]
+  }
+}

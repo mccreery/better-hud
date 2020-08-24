@@ -1,7 +1,6 @@
 {
   "configs": [
-    "betterhud:configs/default.cfg",
-    "betterhud:configs/vanilla.cfg"
+    "betterhud:configs/vanilla.json"
   ],
-  "defaultConfig": "betterhud:configs/default.cfg"
+  "defaultConfig": "betterhud:configs/vanilla.json"
 }
