@@ -381,6 +381,8 @@ public class GuiElementList extends GuiMenuScreen {
 
     @Override
     public void render(int mouseX, int mouseY, float partialTicks) {
+        renderBackground();
+        drawTitle();
         super.render(mouseX, mouseY, partialTicks);
 
         this.mouseX = mouseX;

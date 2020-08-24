@@ -21,11 +21,4 @@ public class GuiMenuScreen extends Screen {
             GlUtil.drawString(title.getFormattedText(), getOrigin().sub(0, 15), Direction.NORTH, Color.WHITE);
         }
     }
-
-    @Override
-    public void render(int mouseX, int mouseY, float partialTicks) {
-        this.renderBackground();
-        this.drawTitle();
-        super.render(mouseX, mouseY, partialTicks);
-    }
 }

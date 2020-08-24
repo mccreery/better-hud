@@ -53,7 +53,8 @@ public class GuiElementSettings extends GuiMenuScreen {
 
     @Override
     public void init() {
-        done = addButton(new SuperButton(b -> MC.displayGuiScreen(previousScreen)));
+        // done button is not added but rendered manually
+        done = new SuperButton(b -> MC.displayGuiScreen(previousScreen));
         done.setBounds(new Rect(200, 20).align(getOrigin(), Direction.NORTH));
         done.setMessage(I18n.format("gui.done"));
 
@@ -63,6 +64,7 @@ public class GuiElementSettings extends GuiMenuScreen {
         contentHeight = element.getRootSetting().getGuiParts(new Populator(), new Point(width / 2, SPACER)).getY();
 
         viewport = new Rect(width / 2 - 200, height / 16 + 40 + SPACER, 400, 0).withBottom(height - 20);
+        // scrollbar is not added but rendered manually
         scrollbar = new Scrollbar(viewport.getRight() - 8, viewport.getY(), 8, viewport.getHeight(), (float)viewport.getHeight() / contentHeight);
 
         element.getRootSetting().updateGuiParts();
@@ -112,7 +114,7 @@ public class GuiElementSettings extends GuiMenuScreen {
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (mouseY >= viewport.getTop() && mouseY < viewport.getBottom() && super.mouseClicked(mouseX, mouseY + getMouseOffset(), button)) {
+        if (mouseY >= viewport.getTop() && mouseY < viewport.getBottom() && super.mouseClicked(mouseX, mouseY - getContentTop(), button)) {
             element.getRootSetting().updateGuiParts();
             return true;
         } else if (done.mouseClicked(mouseX, mouseY, button)) {
@@ -128,8 +130,12 @@ public class GuiElementSettings extends GuiMenuScreen {
 
     @Override
     public boolean mouseReleased(double mouseX, double mouseY, int button) {
-        scrollbar.mouseReleased(mouseX, mouseY, button);
-        return super.mouseReleased(mouseX, mouseY, button);
+        if (scrollbar.mouseReleased(mouseX, mouseY, button)
+                || done.mouseReleased(mouseX, mouseY, button)) {
+            return true;
+        } else {
+            return super.mouseReleased(mouseX, mouseY - getContentTop(), button);
+        }
     }
 
     @Override
@@ -139,13 +145,15 @@ public class GuiElementSettings extends GuiMenuScreen {
 
         // done button doesn't get translated
         done.render(mouseX, mouseY, partialTicks);
+
+        fill(viewport, new Color(32, 0, 0, 0));
         scrollbar.render(mouseX, mouseY, partialTicks);
 
         RenderSystem.pushMatrix();
         GlUtil.beginScissor(viewport);
-        GL11.glTranslatef(0, -getMouseOffset(), 0);
+        GL11.glTranslatef(0, getContentTop(), 0);
 
-        int viewportMouseY = mouseY + getMouseOffset();
+        int viewportMouseY = mouseY - getContentTop();
         super.render(mouseX, viewportMouseY, partialTicks);
 
         element.getRootSetting().draw();
@@ -156,13 +164,16 @@ public class GuiElementSettings extends GuiMenuScreen {
         drawResolution(10, 10, 100);
     }
 
-    private int getScroll() {
-        return Math.round(scrollbar.getValue() * (contentHeight - viewport.getHeight()));
+    private void fill(Rect rect, Color color) {
+        fill(rect.getLeft(), rect.getTop(), rect.getRight(), rect.getBottom(), color.getPacked());
     }
 
-    /** Add to {@code mouseY} to get the effective {@code mouseY} taking into account scroll */
-    @Deprecated private int getMouseOffset() {
-        return getScroll() - viewport.getTop();
+    private int getScroll() {
+        return Math.round(scrollbar.getValue() * Math.max(0, contentHeight - viewport.getHeight()));
+    }
+
+    private int getContentTop() {
+        return viewport.getY() - getScroll();
     }
 
     /** Draws a diagram of the size of the HUD */
