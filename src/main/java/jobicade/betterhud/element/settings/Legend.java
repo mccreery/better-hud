@@ -5,6 +5,7 @@ import static jobicade.betterhud.BetterHud.SPACER;
 
 import com.google.gson.Gson;
 import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
 import com.google.gson.JsonSyntaxException;
 
 import jobicade.betterhud.BetterHud;
@@ -21,12 +22,13 @@ public class Legend extends Setting {
 
     @Override
     public JsonElement saveJson(Gson gson) {
-        throw new UnsupportedOperationException();
+        return JsonNull.INSTANCE;
+        //throw new UnsupportedOperationException(); TODO
     }
 
     @Override
     public void loadJson(Gson gson, JsonElement element) throws JsonSyntaxException {
-        throw new UnsupportedOperationException();
+        //throw new UnsupportedOperationException();
     }
 
     @Override
