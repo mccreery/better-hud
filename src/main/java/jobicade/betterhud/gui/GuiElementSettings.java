@@ -77,6 +77,7 @@ public class GuiElementSettings extends GuiMenuScreen {
         } catch (IOException e) {
             BetterHud.getLogger().error(e);
         }
+        minecraft.displayGuiScreen(null);
     }
 
     /** @see GuiScreen#handleMouseInput() */

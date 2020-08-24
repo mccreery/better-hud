@@ -58,7 +58,7 @@ public class GuiElementList extends GuiMenuScreen {
 
     @Override
     public void init() {
-        SuperButton backButton = addButton(new SuperButton(b -> minecraft.displayGuiScreen(null)));
+        SuperButton backButton = addButton(new SuperButton(b -> onClose()));
         backButton.setMessage(I18n.format("menu.returnToGame"));
         backButton.setBounds(new Rect(200, 20).align(getOrigin(), Direction.NORTH));
 
@@ -126,6 +126,7 @@ public class GuiElementList extends GuiMenuScreen {
         } catch (IOException e) {
             BetterHud.getLogger().error(e);
         }
+        minecraft.displayGuiScreen(null);
     }
 
     /**
