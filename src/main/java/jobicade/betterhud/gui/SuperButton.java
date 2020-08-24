@@ -58,7 +58,7 @@ public class SuperButton extends Button {
         RenderSystem.enableBlend();
         RenderSystem.defaultBlendFunc();
 
-        int v = topV + getYImage(isHovered()) * 20;
+        int v = topV + getYImage(isHovered()) * height;
         int hw = width / 2;
 
         blit(x, y, leftU, v, hw, height);
