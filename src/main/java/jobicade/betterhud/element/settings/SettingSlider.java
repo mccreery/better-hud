@@ -12,7 +12,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.MathHelper;
 
 public class SettingSlider extends SettingAlignable {
-    //protected GuiSlider guiSlider; // TODO
+    private GuiSlider guiSlider;
 
     private int displayPlaces;
     private String unlocalizedValue;
@@ -103,7 +103,12 @@ public class SettingSlider extends SettingAlignable {
 
     @Override
     public void getGuiParts(GuiElementSettings.Populator populator, Rect bounds) {
-        populator.add(new GuiSlider(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), this));
+        populator.add(guiSlider = new GuiSlider(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), this));
+    }
+
+    @Override
+    public void updateGuiParts() {
+        guiSlider.updateMessage();
     }
 
     @Override

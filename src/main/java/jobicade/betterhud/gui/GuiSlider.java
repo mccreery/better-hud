@@ -14,7 +14,7 @@ public class GuiSlider extends AbstractSlider {
     }
 
     @Override
-    protected void updateMessage() {
+    public void updateMessage() {
         setMessage(slider.getDisplayString());
     }
 
