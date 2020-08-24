@@ -26,4 +26,9 @@ public class SettingLock extends SettingBoolean {
     protected boolean shouldBreak() {
         return false;
     }
+
+    @Override
+    public void updateGuiParts() {
+        toggler.active = enabled();
+    }
 }
