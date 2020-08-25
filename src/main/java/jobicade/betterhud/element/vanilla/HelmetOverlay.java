@@ -11,7 +11,6 @@ import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
@@ -35,14 +34,15 @@ public class HelmetOverlay extends OverlayElement {
     @Override
     public Rect render(OverlayContext context) {
         ItemStack stack = MC.player.inventory.armorItemInSlot(3);
-        Item item = stack.getItem();
 
-        if(item == Blocks.PUMPKIN.asItem()) {
-            MC.getTextureManager().bindTexture(PUMPKIN_BLUR_TEX_PATH);
-            GlUtil.drawRect(MANAGER.getScreen(), new Rect(256, 256), Color.RED);
-            MC.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
-        } else {
-            item.renderHelmetOverlay(stack, MC.player, MC.getMainWindow().getScaledWidth(), MC.getMainWindow().getScaledHeight(), context.getPartialTicks());
+        if (MC.gameSettings.thirdPersonView == 0 && !stack.isEmpty()) {
+            if (stack.getItem() == Blocks.CARVED_PUMPKIN.asItem()) {
+                MC.getTextureManager().bindTexture(PUMPKIN_BLUR_TEX_PATH);
+                GlUtil.drawRect(MANAGER.getScreen(), new Rect(256, 256), Color.RED);
+                MC.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
+            } else {
+                stack.getItem().renderHelmetOverlay(stack, MC.player, MC.getMainWindow().getScaledWidth(), MC.getMainWindow().getScaledHeight(), context.getPartialTicks());
+            }
         }
 
         OverlayHook.post(context.getEvent(), ElementType.HELMET);
