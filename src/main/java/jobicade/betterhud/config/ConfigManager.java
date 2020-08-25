@@ -75,6 +75,12 @@ public class ConfigManager implements IFutureReloadListener {
         this.configFile = configFile;
         this.configDirectory = configDirectory;
 
+        try {
+            Files.createDirectories(configDirectory);
+        } catch (IOException e) {
+            BetterHud.getLogger().error("Creating configs directory", e);
+        }
+
         this.elementRegistry = elementRegistry;
         gson = new GsonBuilder()
             .registerTypeAdapter(ResourceLocation.class, new ResourceLocation.Serializer())
