@@ -2,6 +2,8 @@ package jobicade.betterhud.element.vanilla;
 
 import static jobicade.betterhud.BetterHud.MC;
 
+import com.mojang.blaze3d.systems.RenderSystem;
+
 import jobicade.betterhud.element.OverlayElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
@@ -76,6 +78,7 @@ public class Hotbar extends OverlayElement {
             }
 
             GlUtil.renderHotbarItem(slot, MC.player.inventory.mainInventory.get(i), partialTicks);
+            RenderSystem.enableBlend();
         }
 
         MC.getTextureManager().bindTexture(AbstractGui.GUI_ICONS_LOCATION);
