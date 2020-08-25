@@ -13,33 +13,20 @@ import net.minecraft.client.gui.screen.OptionsScreen;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.client.settings.KeyBinding;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent;
 import net.minecraftforge.client.event.GuiScreenEvent.InitGuiEvent;
 import net.minecraftforge.client.event.InputEvent.MouseInputEvent;
-import net.minecraftforge.event.TickEvent.ClientTickEvent;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerChangedDimensionEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 @EventBusSubscriber(modid = BetterHud.MODID, value = Dist.CLIENT)
 public class ClientEvents {
-    private static final KeyBinding menuKey = new KeyBinding("key.betterHud.open", GLFW.GLFW_KEY_U, "key.categories.misc");
-
     public static void setupClient(FMLClientSetupEvent event) {
-        ClientRegistry.registerKeyBinding(menuKey);
-    }
-
-    @SubscribeEvent
-    public static void onClientTick(ClientTickEvent event) {
-        if (menuKey.isPressed()) {
-            //MC.displayGuiScreen(new GuiElementList(BetterHud.getConfigManager()));
-        }
     }
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
