@@ -24,6 +24,7 @@ import jobicade.betterhud.render.Grid;
 import jobicade.betterhud.render.Label;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.Textures;
+import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.Widget;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.client.resources.I18n;
@@ -51,15 +52,18 @@ public class GuiElementList extends GuiMenuScreen {
     private SuperButton enableAllButton;
     private SuperButton disableAllButton;
 
-    public GuiElementList(ConfigManager configManager) {
+    private Screen prevScreen;
+
+    public GuiElementList(Screen prevScreen, ConfigManager configManager) {
         super(new TranslationTextComponent("betterHud.menu.hudSettings"));
+        this.prevScreen = prevScreen;
         this.configManager = configManager;
     }
 
     @Override
     public void init() {
         SuperButton backButton = addButton(new SuperButton(b -> onClose()));
-        backButton.setMessage(I18n.format("menu.returnToGame"));
+        backButton.setMessage(I18n.format("gui.done"));
         backButton.setBounds(new Rect(200, 20).align(getOrigin(), Direction.NORTH));
 
         SuperButton saveLoadButton = addButton(new SuperButton(b -> minecraft.displayGuiScreen(new GuiConfigSaves(configManager, this))));
@@ -120,13 +124,21 @@ public class GuiElementList extends GuiMenuScreen {
     }
 
     @Override
+    public boolean keyPressed(int keyCode, int p_keyPressed_2_, int p_keyPressed_3_) {
+        if (keyCode == 256 && this.shouldCloseOnEsc()) {
+            prevScreen = null;
+        }
+        return super.keyPressed(keyCode, p_keyPressed_2_, p_keyPressed_3_);
+    }
+
+    @Override
     public void onClose() {
         try {
             configManager.saveFile();
         } catch (IOException e) {
             BetterHud.getLogger().error(e);
         }
-        minecraft.displayGuiScreen(null);
+        minecraft.displayGuiScreen(prevScreen);
     }
 
     /**
