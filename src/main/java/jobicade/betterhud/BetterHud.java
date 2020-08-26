@@ -1,5 +1,6 @@
 package jobicade.betterhud;
 
+import java.io.IOException;
 import java.util.function.Supplier;
 
 import org.apache.logging.log4j.LogManager;
@@ -96,8 +97,14 @@ public class BetterHud {
         BillboardElements.registerAll();
 
         configManager = new ConfigManager(FMLPaths.CONFIGDIR.get().resolve(MODID + ".json"), HudElements.get());
-
         IResourceManager resourceManager = event.getMinecraftSupplier().get().getResourceManager();
+
+        try {
+            configManager.loadResources(resourceManager);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
         if(resourceManager instanceof IReloadableResourceManager) {
             ((IReloadableResourceManager)resourceManager).addReloadListener(configManager);
         } else {

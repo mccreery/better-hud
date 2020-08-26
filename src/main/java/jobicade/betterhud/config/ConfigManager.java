@@ -180,17 +180,21 @@ public class ConfigManager implements IFutureReloadListener {
             Executor gameExecutor) {
         return CompletableFuture.runAsync(() -> {
             try {
-                loadData(resourceManager);
-
-                if (!Files.exists(configFile)) {
-                    ConfigSlot defaultSlot = new ResourceConfigSlot(defaultResource);
-                    defaultSlot.copyTo(configFile);
-                    loadFile();
-                }
+                loadResources(resourceManager);
             } catch (IOException e) {
                 throw new CompletionException(e);
             }
-        }, gameExecutor);
+        }, backgroundExecutor);
+    }
+
+    public void loadResources(IResourceManager resourceManager) throws IOException {
+        loadData(resourceManager);
+
+        if (!Files.exists(configFile)) {
+            ConfigSlot defaultSlot = new ResourceConfigSlot(defaultResource);
+            defaultSlot.copyTo(configFile);
+            loadFile();
+        }
     }
 
     private List<ConfigSlot> loadFileSlots() throws IOException {
