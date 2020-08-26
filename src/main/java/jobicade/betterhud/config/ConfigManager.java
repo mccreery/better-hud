@@ -192,7 +192,6 @@ public class ConfigManager implements IFutureReloadListener {
         loadData(resourceManager);
 
         if (!Files.exists(configFile)) {
-            ConfigSlot defaultSlot = new ResourceConfigSlot(defaultResource);
             defaultSlot.copyTo(configFile);
             loadFile();
         }
@@ -208,7 +207,7 @@ public class ConfigManager implements IFutureReloadListener {
     }
 
     private List<ConfigSlot> resourceSlots = Collections.emptyList();
-    private IResource defaultResource;
+    private ConfigSlot defaultSlot;
 
     private void loadData(IResourceManager resourceManager) throws IOException {
         resourceSlots = new ArrayList<>();
@@ -219,12 +218,11 @@ public class ConfigManager implements IFutureReloadListener {
                 Data data = gson.fromJson(reader, Data.class);
 
                 for (ResourceLocation configLocation : data.configs) {
-                    IResource configResource = resourceManager.getResource(configLocation);
-                    resourceSlots.add(new ResourceConfigSlot(configResource));
+                    resourceSlots.add(new ResourceConfigSlot(resourceManager, configLocation));
                 }
 
                 if (data.defaultConfig != null) {
-                    defaultResource = resourceManager.getResource(data.defaultConfig);
+                    defaultSlot = new ResourceConfigSlot(resourceManager, data.defaultConfig);
                 }
             }
         }

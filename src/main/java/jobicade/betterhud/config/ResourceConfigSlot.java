@@ -6,25 +6,31 @@ import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
 
 import net.minecraft.resources.IResource;
+import net.minecraft.resources.IResourceManager;
+import net.minecraft.util.ResourceLocation;
 
 /**
  * A config slot representing a resource in the resource pack system.
  * This slot is not a destination.
  */
 public class ResourceConfigSlot implements ConfigSlot {
-    private final IResource resource;
+    private final IResourceManager resourceManager;
+    private final ResourceLocation resourceLocation;
 
     /**
      * Constructor for resource config slots.
      * @param path The resource location containing the config.
      */
-    public ResourceConfigSlot(IResource resource) {
-        this.resource = resource;
+    public ResourceConfigSlot(IResourceManager resourceManager, ResourceLocation resourceLocation) {
+        this.resourceManager = resourceManager;
+        this.resourceLocation = resourceLocation;
     }
 
     @Override
     public void copyTo(Path dest) throws IOException {
-        Files.copy(resource.getInputStream(), dest, StandardCopyOption.REPLACE_EXISTING);
+        try (IResource resource = resourceManager.getResource(resourceLocation)) {
+            Files.copy(resource.getInputStream(), dest, StandardCopyOption.REPLACE_EXISTING);
+        }
     }
 
     @Override
@@ -37,6 +43,6 @@ public class ResourceConfigSlot implements ConfigSlot {
 
     @Override
     public String getName() {
-        return com.google.common.io.Files.getNameWithoutExtension(resource.getLocation().getPath());
+        return com.google.common.io.Files.getNameWithoutExtension(resourceLocation.getPath());
     }
 }
