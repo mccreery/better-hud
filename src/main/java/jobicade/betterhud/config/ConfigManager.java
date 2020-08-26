@@ -19,6 +19,7 @@ import java.util.Map.Entry;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.Executor;
+import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
 import com.google.gson.Gson;
@@ -48,13 +49,13 @@ import net.minecraft.util.ResourceLocation;
  * config folder.
  */
 public class ConfigManager implements IFutureReloadListener {
-    public static final ResourceLocation CONFIGS_LOCATION = new ResourceLocation(MODID, "configs/configs.json");
-
     private final Path configFile;
     private final Path configDirectory;
 
     private final HudRegistry<?> elementRegistry;
     private final Gson gson;
+
+    private BetterHudConfig modSettings;
 
     /**
      * {@code configDirectory} defaults to {@code betterhud} in the same
@@ -78,7 +79,7 @@ public class ConfigManager implements IFutureReloadListener {
         try {
             Files.createDirectories(configDirectory);
         } catch (IOException e) {
-            BetterHud.getLogger().error("Creating configs directory", e);
+            throw new RuntimeException(e);
         }
 
         this.elementRegistry = elementRegistry;
@@ -90,15 +91,13 @@ public class ConfigManager implements IFutureReloadListener {
             .setPrettyPrinting()
             .create();
 
-        BetterHudConfig.Data data = new BetterHudConfig.Data();
-        data.enabled = new ArrayList<>();
-        modSettings = new BetterHudConfig(elementRegistry, data);
+        modSettings = new BetterHudConfig(elementRegistry);
 
         if (Files.exists(configFile)) {
             try {
                 loadFile();
             } catch (IOException e) {
-                BetterHud.getLogger().error("Loading config file", e);
+                throw new RuntimeException(e);
             }
         }
     }
@@ -110,8 +109,6 @@ public class ConfigManager implements IFutureReloadListener {
     public Path getConfigDirectory() {
         return configDirectory;
     }
-
-    private BetterHudConfig modSettings;
 
     public BetterHudConfig getModSettings() {
         return modSettings;
@@ -160,12 +157,21 @@ public class ConfigManager implements IFutureReloadListener {
         }
     }
 
-    private List<ConfigSlot> configSlots = Collections.emptyList();
     /**
      * @return A list of config slots supplied by resources and the file system.
      */
     public List<ConfigSlot> getConfigSlots() {
-        return configSlots;
+        List<ConfigSlot> fileSlots;
+        try {
+            fileSlots = loadFileSlots();
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
+
+        List<ConfigSlot> allSlots = new ArrayList<>(resourceSlots.size() + fileSlots.size());
+        allSlots.addAll(resourceSlots);
+        allSlots.addAll(fileSlots);
+        return allSlots;
     }
 
     @Override
@@ -174,13 +180,10 @@ public class ConfigManager implements IFutureReloadListener {
             Executor gameExecutor) {
         return CompletableFuture.runAsync(() -> {
             try {
-                ConfigResourceList configResourceList = loadConfigResourceList(resourceManager);
-                configSlots = loadConfigSlots(resourceManager, configResourceList);
+                loadData(resourceManager);
 
                 if (!Files.exists(configFile)) {
-                    IResource defaultResource = resourceManager.getResource(configResourceList.getDefaultConfig());
                     ConfigSlot defaultSlot = new ResourceConfigSlot(defaultResource);
-
                     defaultSlot.copyTo(configFile);
                     loadFile();
                 }
@@ -190,37 +193,40 @@ public class ConfigManager implements IFutureReloadListener {
         }, gameExecutor);
     }
 
-    /**
-     * Loads the config resource list from configs.json.
-     */
-    private ConfigResourceList loadConfigResourceList(IResourceManager resourceManager) throws IOException {
-        ConfigResourceList list = new ConfigResourceList();
-
-        for (IResource resource : resourceManager.getAllResources(CONFIGS_LOCATION)) {
-            try (Reader reader = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
-                list.combine(gson.fromJson(reader, ConfigResourceList.class));
-            }
-        }
-        return list;
-    }
-
-    /**
-     * Loads config slots from resources and the file system.
-     */
-    private List<ConfigSlot> loadConfigSlots(IResourceManager resourceManager, ConfigResourceList configResourceList) throws IOException {
-        List<ConfigSlot> slots = new ArrayList<>();
-
-        for (ResourceLocation resourceLocation : configResourceList.getConfigs()) {
-            IResource resource = resourceManager.getResource(resourceLocation);
-            slots.add(new ResourceConfigSlot(resource));
-        }
-
+    private List<ConfigSlot> loadFileSlots() throws IOException {
         try (Stream<Path> paths = Files.walk(configDirectory)) {
-            paths
+            return paths
                 .filter(p -> Files.isRegularFile(p) && p.getFileName().endsWith(".json"))
                 .map(FileConfigSlot::new)
-                .forEachOrdered(slots::add);
+                .collect(Collectors.toList());
         }
-        return slots;
+    }
+
+    private List<ConfigSlot> resourceSlots = Collections.emptyList();
+    private IResource defaultResource;
+
+    private void loadData(IResourceManager resourceManager) throws IOException {
+        resourceSlots = new ArrayList<>();
+        final ResourceLocation dataLocation = new ResourceLocation(MODID, "configs/configs.json");
+
+        for (IResource dataResource : resourceManager.getAllResources(dataLocation)) {
+            try (Reader reader = new BufferedReader(new InputStreamReader(dataResource.getInputStream()))) {
+                Data data = gson.fromJson(reader, Data.class);
+
+                for (ResourceLocation configLocation : data.configs) {
+                    IResource configResource = resourceManager.getResource(configLocation);
+                    resourceSlots.add(new ResourceConfigSlot(configResource));
+                }
+
+                if (data.defaultConfig != null) {
+                    defaultResource = resourceManager.getResource(data.defaultConfig);
+                }
+            }
+        }
+    }
+
+    private static class Data {
+        List<ResourceLocation> configs;
+        ResourceLocation defaultConfig;
     }
 }

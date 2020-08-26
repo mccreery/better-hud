@@ -19,13 +19,15 @@ public class BetterHudConfig {
     private List<HudElement<?>> disabled;
     private List<HudElement<?>> enabled;
 
-    public BetterHudConfig(HudRegistry<?> elementRegistry, Data data) {
-        disabled = new ArrayList<>();
-        enabled = new ArrayList<>(data.enabled);
-
-        disabled.addAll(elementRegistry.getRegistered());
-        disabled.removeAll(enabled);
+    public BetterHudConfig(HudRegistry<?> elementRegistry) {
+        disabled = new ArrayList<>(elementRegistry.getRegistered());
+        enabled = new ArrayList<>();
         disabled.sort(COMPARATOR);
+    }
+
+    public BetterHudConfig(HudRegistry<?> elementRegistry, Data data) {
+        this(elementRegistry);
+        data.enabled.forEach(this::enable);
     }
 
     public List<HudElement<?>> getEnabled() {
