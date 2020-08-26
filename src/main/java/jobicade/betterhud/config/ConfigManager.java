@@ -184,6 +184,7 @@ public class ConfigManager implements IFutureReloadListener {
             } catch (IOException e) {
                 throw new CompletionException(e);
             }
+            stage.markCompleteAwaitingOthers(null);
         }, backgroundExecutor);
     }
 
