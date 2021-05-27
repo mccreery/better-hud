@@ -6,9 +6,9 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import jobicade.betterhud.element.HudElement;
 
 public class MessagePickupHandler implements IMessageHandler<MessagePickup, IMessage> {
-	@Override
-	public IMessage onMessage(MessagePickup message, MessageContext ctx) {
-		HudElement.PICKUP.refreshStack(message.getStack());
-		return null;
-	}
+    @Override
+    public IMessage onMessage(MessagePickup message, MessageContext ctx) {
+        HudElement.PICKUP.refreshStack(message.getStack());
+        return null;
+    }
 }

@@ -9,33 +9,33 @@ import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.bars.StatBarHealth;
 
 public class HealthBar extends Bar {
-	public HealthBar() {
-		super("health", new StatBarHealth());
-	}
+    public HealthBar() {
+        super("health", new StatBarHealth());
+    }
 
-	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-		settings.priority.set(3);
-		side.setIndex(0);
-	}
+    @Override
+    public void loadDefaults() {
+        super.loadDefaults();
+        settings.priority.set(3);
+        side.setIndex(0);
+    }
 
-	@Override
-	protected ElementType getType() {
-		return ElementType.HEALTH;
-	}
+    @Override
+    protected ElementType getType() {
+        return ElementType.HEALTH;
+    }
 
-	/** Used by {@link HealIndicator} */
-	public Direction getIndicatorSide() {
-		if(!position.isCustom() && DirectionOptions.CORNERS.isValid(position.getDirection())) {
-			return getContentAlignment().mirrorCol();
-		} else {
-			return getContentAlignment();
-		}
-	}
+    /** Used by {@link HealIndicator} */
+    public Direction getIndicatorSide() {
+        if(!position.isCustom() && DirectionOptions.CORNERS.isValid(position.getDirection())) {
+            return getContentAlignment().mirrorCol();
+        } else {
+            return getContentAlignment();
+        }
+    }
 
-	@Override
-	public boolean shouldRender(Event event) {
-		return Minecraft.getMinecraft().playerController.shouldDrawHUD() && super.shouldRender(event);
-	}
+    @Override
+    public boolean shouldRender(Event event) {
+        return Minecraft.getMinecraft().playerController.shouldDrawHUD() && super.shouldRender(event);
+    }
 }

@@ -11,33 +11,33 @@ import jobicade.betterhud.element.HudElement.SortType;
  * actual settings are stored in each element's settings object.
  */
 public class HudConfig extends Configuration {
-	public HudConfig(File file) {
-		super(file);
-	}
+    public HudConfig(File file) {
+        super(file);
+    }
 
-	@Override
-	public void load() {
-		super.load();
+    @Override
+    public void load() {
+        super.load();
 
-		HudElement.GLOBAL.settings.bindConfig(this);
-		HudElement.GLOBAL.settings.loadConfig();
+        HudElement.GLOBAL.settings.bindConfig(this);
+        HudElement.GLOBAL.settings.loadConfig();
 
-		for(HudElement element : HudElement.ELEMENTS) {
-			element.settings.bindConfig(this);
-			element.settings.loadConfig();
-		}
-		HudElement.SORTER.markDirty(SortType.ENABLED);
-		HudElement.normalizePriority();
+        for(HudElement element : HudElement.ELEMENTS) {
+            element.settings.bindConfig(this);
+            element.settings.loadConfig();
+        }
+        HudElement.SORTER.markDirty(SortType.ENABLED);
+        HudElement.normalizePriority();
 
-		if(hasChanged()) save();
-	}
+        if(hasChanged()) save();
+    }
 
-	public void saveSettings() {
-		HudElement.GLOBAL.settings.saveConfig();
+    public void saveSettings() {
+        HudElement.GLOBAL.settings.saveConfig();
 
-		for(HudElement element : HudElement.ELEMENTS) {
-			element.settings.saveConfig();
-		}
-		if(hasChanged()) save();
-	}
+        for(HudElement element : HudElement.ELEMENTS) {
+            element.settings.saveConfig();
+        }
+        if(hasChanged()) save();
+    }
 }

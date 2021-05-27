@@ -32,91 +32,91 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 
 public class PotionBar extends HudElement {
-	public static final ResourceLocation INVENTORY = new ResourceLocation("textures/gui/container/inventory.png");
+    public static final ResourceLocation INVENTORY = new ResourceLocation("textures/gui/container/inventory.png");
 
-	private SettingBoolean showDuration;
+    private SettingBoolean showDuration;
 
-	public PotionBar() {
-		super("potionBar", new SettingPosition(DirectionOptions.X, DirectionOptions.CORNERS));
-	}
+    public PotionBar() {
+        super("potionBar", new SettingPosition(DirectionOptions.X, DirectionOptions.CORNERS));
+    }
 
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(showDuration = new SettingBoolean("duration").setValuePrefix(SettingBoolean.VISIBLE));
-	}
+    @Override
+    protected void addSettings(List<Setting<?>> settings) {
+        super.addSettings(settings);
+        settings.add(showDuration = new SettingBoolean("duration").setValuePrefix(SettingBoolean.VISIBLE));
+    }
 
-	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-		position.setPreset(Direction.NORTH_WEST);
-	}
+    @Override
+    public void loadDefaults() {
+        super.loadDefaults();
+        position.setPreset(Direction.NORTH_WEST);
+    }
 
-	@Override
-	public void init(FMLInitializationEvent event) {
-		MinecraftForge.EVENT_BUS.register(this);
-	}
+    @Override
+    public void init(FMLInitializationEvent event) {
+        MinecraftForge.EVENT_BUS.register(this);
+    }
 
-	@SubscribeEvent
-	public void onRenderTick(RenderGameOverlayEvent.Pre event) {
-		if (BetterHud.getProxy().isModEnabled() && event.getType() == ElementType.POTION_ICONS) {
-			event.setCanceled(true);
-		}
-	}
+    @SubscribeEvent
+    public void onRenderTick(RenderGameOverlayEvent.Pre event) {
+        if (BetterHud.getProxy().isModEnabled() && event.getType() == ElementType.POTION_ICONS) {
+            event.setCanceled(true);
+        }
+    }
 
-	@Override
-	public boolean shouldRender(Event event) {
-		return super.shouldRender(event) && !Minecraft.getMinecraft().player.getActivePotionEffects().isEmpty();
-	}
+    @Override
+    public boolean shouldRender(Event event) {
+        return super.shouldRender(event) && !Minecraft.getMinecraft().player.getActivePotionEffects().isEmpty();
+    }
 
-	@Override
-	public Rect render(Event event) {
-		Boxed grid = getGrid();
+    @Override
+    public Rect render(Event event) {
+        Boxed grid = getGrid();
 
-		Rect bounds = new Rect(grid.getPreferredSize());
-		if(position.isDirection(Direction.CENTER)) {
-			bounds = bounds.align(MANAGER.getScreen().getAnchor(Direction.CENTER).add(SPACER, SPACER), Direction.NORTH_WEST);
-		} else {
-			bounds = position.applyTo(bounds);
-		}
-		grid.setBounds(bounds).render();
-		Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+        Rect bounds = new Rect(grid.getPreferredSize());
+        if(position.isDirection(Direction.CENTER)) {
+            bounds = bounds.align(MANAGER.getScreen().getAnchor(Direction.CENTER).add(SPACER, SPACER), Direction.NORTH_WEST);
+        } else {
+            bounds = position.applyTo(bounds);
+        }
+        grid.setBounds(bounds).render();
+        Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
 
-		return bounds;
-	}
+        return bounds;
+    }
 
-	private void populateEffects(List<PotionEffect> helpful, List<PotionEffect> harmful) {
-		Stream<PotionEffect> source = Minecraft.getMinecraft().player
-			.getActivePotionEffects().parallelStream()
-			.filter(e -> e.doesShowParticles() && e.getPotion().shouldRenderHUD(e));
+    private void populateEffects(List<PotionEffect> helpful, List<PotionEffect> harmful) {
+        Stream<PotionEffect> source = Minecraft.getMinecraft().player
+            .getActivePotionEffects().parallelStream()
+            .filter(e -> e.doesShowParticles() && e.getPotion().shouldRenderHUD(e));
 
-		MathUtil.splitList(source::iterator, e -> e.getPotion().isBeneficial(), helpful, harmful);
-		helpful.sort(Collections.reverseOrder());
-		harmful.sort(Collections.reverseOrder());
-	}
+        MathUtil.splitList(source::iterator, e -> e.getPotion().isBeneficial(), helpful, harmful);
+        helpful.sort(Collections.reverseOrder());
+        harmful.sort(Collections.reverseOrder());
+    }
 
-	private void fillRow(Grid<? super PotionIcon> grid, int row, List<PotionEffect> effects) {
-		for(int i = 0; i < effects.size(); i++) {
-			grid.setCell(new Point(i, row), new PotionIcon(effects.get(i), showDuration.get()));
-		}
-	}
+    private void fillRow(Grid<? super PotionIcon> grid, int row, List<PotionEffect> effects) {
+        for(int i = 0; i < effects.size(); i++) {
+            grid.setCell(new Point(i, row), new PotionIcon(effects.get(i), showDuration.get()));
+        }
+    }
 
-	private Boxed getGrid() {
-		List<PotionEffect> helpful = new ArrayList<>(), harmful = new ArrayList<>();
-		populateEffects(helpful, harmful);
+    private Boxed getGrid() {
+        List<PotionEffect> helpful = new ArrayList<>(), harmful = new ArrayList<>();
+        populateEffects(helpful, harmful);
 
-		int rows = 0;
-		if(!helpful.isEmpty()) ++rows;
-		if(!harmful.isEmpty()) ++rows;
+        int rows = 0;
+        if(!helpful.isEmpty()) ++rows;
+        if(!harmful.isEmpty()) ++rows;
 
-		Grid<PotionIcon> grid = new Grid<>(new Point(Math.max(helpful.size(), harmful.size()), rows));
-		grid.setAlignment(position.getContentAlignment());
-		grid.setGutter(new Point(1, 2));
+        Grid<PotionIcon> grid = new Grid<>(new Point(Math.max(helpful.size(), harmful.size()), rows));
+        grid.setAlignment(position.getContentAlignment());
+        grid.setGutter(new Point(1, 2));
 
-		int row = 0;
-		if(!helpful.isEmpty()) fillRow(grid, row++, helpful);
-		if(!harmful.isEmpty()) fillRow(grid, row++, harmful);
+        int row = 0;
+        if(!helpful.isEmpty()) fillRow(grid, row++, helpful);
+        if(!harmful.isEmpty()) fillRow(grid, row++, harmful);
 
-		return grid;
-	}
+        return grid;
+    }
 }

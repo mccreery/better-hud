@@ -9,44 +9,44 @@ import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.events.RenderEvents;
 
 public abstract class OverrideElement extends HudElement {
-	protected OverrideElement(String name) {
-		super(name);
-	}
+    protected OverrideElement(String name) {
+        super(name);
+    }
 
-	protected OverrideElement(String name, SettingPosition position) {
-		super(name, position);
-	}
+    protected OverrideElement(String name, SettingPosition position) {
+        super(name, position);
+    }
 
-	protected abstract ElementType getType();
+    protected abstract ElementType getType();
 
-	private static boolean safePost(Event event) {
-		//RenderEvents.endOverlayState(); // Never disable blend
-		boolean cancel = MinecraftForge.EVENT_BUS.post(event);
-		RenderEvents.beginOverlayState();
+    private static boolean safePost(Event event) {
+        //RenderEvents.endOverlayState(); // Never disable blend
+        boolean cancel = MinecraftForge.EVENT_BUS.post(event);
+        RenderEvents.beginOverlayState();
 
-		return cancel;
-	}
+        return cancel;
+    }
 
-	@Override
-	public boolean shouldRender(Event event) {
-		if(!(event instanceof RenderGameOverlayEvent)) {
-			return false;
-		}
-		RenderGameOverlayEvent parent = (RenderGameOverlayEvent)event;
-		Event child = new RenderGameOverlayEvent.Pre(parent, getType());
+    @Override
+    public boolean shouldRender(Event event) {
+        if(!(event instanceof RenderGameOverlayEvent)) {
+            return false;
+        }
+        RenderGameOverlayEvent parent = (RenderGameOverlayEvent)event;
+        Event child = new RenderGameOverlayEvent.Pre(parent, getType());
 
-		return !safePost(child);
-	}
+        return !safePost(child);
+    }
 
-	@Override
-	protected void postRender(Event event) {
-		if(event instanceof RenderGameOverlayEvent) {
-			ElementType type = getType();
+    @Override
+    protected void postRender(Event event) {
+        if(event instanceof RenderGameOverlayEvent) {
+            ElementType type = getType();
 
-			if(type != null) {
-				RenderGameOverlayEvent e = (RenderGameOverlayEvent)event;
-				safePost(new RenderGameOverlayEvent.Post(e, type));
-			}
-		}
-	}
+            if(type != null) {
+                RenderGameOverlayEvent e = (RenderGameOverlayEvent)event;
+                safePost(new RenderGameOverlayEvent.Post(e, type));
+            }
+        }
+    }
 }

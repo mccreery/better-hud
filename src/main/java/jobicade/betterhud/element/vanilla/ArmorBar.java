@@ -6,24 +6,24 @@ import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.util.bars.StatBarArmor;
 
 public class ArmorBar extends Bar {
-	public ArmorBar() {
-		super("armor", new StatBarArmor());
-	}
+    public ArmorBar() {
+        super("armor", new StatBarArmor());
+    }
 
-	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-		settings.priority.set(4);
-		side.setIndex(0);
-	}
+    @Override
+    public void loadDefaults() {
+        super.loadDefaults();
+        settings.priority.set(4);
+        side.setIndex(0);
+    }
 
-	@Override
-	protected ElementType getType() {
-		return ElementType.ARMOR;
-	}
+    @Override
+    protected ElementType getType() {
+        return ElementType.ARMOR;
+    }
 
-	@Override
-	public boolean shouldRender(Event event) {
-		return Minecraft.getMinecraft().playerController.shouldDrawHUD() && super.shouldRender(event);
-	}
+    @Override
+    public boolean shouldRender(Event event) {
+        return Minecraft.getMinecraft().playerController.shouldDrawHUD() && super.shouldRender(event);
+    }
 }

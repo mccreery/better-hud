@@ -13,45 +13,45 @@ import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
 
 public class JumpBar extends OverrideElement {
-	public JumpBar() {
-		super("jumpBar", new SettingPosition("position", DirectionOptions.BAR, DirectionOptions.NORTH_SOUTH));
-	}
+    public JumpBar() {
+        super("jumpBar", new SettingPosition("position", DirectionOptions.BAR, DirectionOptions.NORTH_SOUTH));
+    }
 
-	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
-		settings.priority.set(2);
-	}
+    @Override
+    public void loadDefaults() {
+        super.loadDefaults();
+        settings.priority.set(2);
+    }
 
-	@Override
-	public boolean shouldRender(Event event) {
-		return Minecraft.getMinecraft().player.isRidingHorse() && super.shouldRender(event);
-	}
+    @Override
+    public boolean shouldRender(Event event) {
+        return Minecraft.getMinecraft().player.isRidingHorse() && super.shouldRender(event);
+    }
 
-	@Override
-	protected Rect render(Event event) {
-		Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+    @Override
+    protected Rect render(Event event) {
+        Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
 
-		Rect bounds = new Rect(182, 5);
-		if(!position.isCustom() && position.getDirection() == Direction.SOUTH) {
-			bounds = MANAGER.position(Direction.SOUTH, bounds, false, 1);
-		} else {
-			bounds = position.applyTo(bounds);
-		}
+        Rect bounds = new Rect(182, 5);
+        if(!position.isCustom() && position.getDirection() == Direction.SOUTH) {
+            bounds = MANAGER.position(Direction.SOUTH, bounds, false, 1);
+        } else {
+            bounds = position.applyTo(bounds);
+        }
 
-		float charge = Minecraft.getMinecraft().player.getHorseJumpPower();
-		int filled = (int)(charge * bounds.getWidth());
+        float charge = Minecraft.getMinecraft().player.getHorseJumpPower();
+        int filled = (int)(charge * bounds.getWidth());
 
-		GlUtil.drawRect(bounds, bounds.move(0, 84));
+        GlUtil.drawRect(bounds, bounds.move(0, 84));
 
-		if(filled > 0) {
-			GlUtil.drawRect(bounds.withWidth(filled), new Rect(0, 89, filled, bounds.getHeight()));
-		}
-		return bounds;
-	}
+        if(filled > 0) {
+            GlUtil.drawRect(bounds.withWidth(filled), new Rect(0, 89, filled, bounds.getHeight()));
+        }
+        return bounds;
+    }
 
-	@Override
-	protected ElementType getType() {
-		return ElementType.JUMPBAR;
-	}
+    @Override
+    protected ElementType getType() {
+        return ElementType.JUMPBAR;
+    }
 }

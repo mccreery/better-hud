@@ -24,64 +24,64 @@ import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 
 public class Coordinates extends TextElement {
-	private SettingBoolean spaced;
-	private SettingSlider decimalPlaces;
+    private SettingBoolean spaced;
+    private SettingSlider decimalPlaces;
 
-	@Override
-	public void loadDefaults() {
-		super.loadDefaults();
+    @Override
+    public void loadDefaults() {
+        super.loadDefaults();
 
-		position.setPreset(Direction.NORTH);
-		spaced.set(true);
-		decimalPlaces.set(0);
-		settings.priority.set(-2);
-	}
+        position.setPreset(Direction.NORTH);
+        spaced.set(true);
+        decimalPlaces.set(0);
+        settings.priority.set(-2);
+    }
 
-	public Coordinates() {
-		super("coordinates", new SettingPosition(DirectionOptions.TOP_BOTTOM, DirectionOptions.NONE));
-	}
+    public Coordinates() {
+        super("coordinates", new SettingPosition(DirectionOptions.TOP_BOTTOM, DirectionOptions.NONE));
+    }
 
-	@Override
-	protected void addSettings(List<Setting<?>> settings) {
-		super.addSettings(settings);
-		settings.add(new Legend("misc"));
-		settings.add(spaced = new SettingBoolean("spaced"));
-		settings.add(decimalPlaces = new SettingSlider("precision", 0, 5, 1).setUnlocalizedValue("betterHud.value.places"));
-	}
+    @Override
+    protected void addSettings(List<Setting<?>> settings) {
+        super.addSettings(settings);
+        settings.add(new Legend("misc"));
+        settings.add(spaced = new SettingBoolean("spaced"));
+        settings.add(decimalPlaces = new SettingSlider("precision", 0, 5, 1).setUnlocalizedValue("betterHud.value.places"));
+    }
 
-	@Override
-	public Rect render(Event event, List<String> text) {
-		if(!spaced.get() || !position.isDirection(Direction.NORTH) && !position.isDirection(Direction.SOUTH)) {
-			return super.render(event, text);
-		}
+    @Override
+    public Rect render(Event event, List<String> text) {
+        if(!spaced.get() || !position.isDirection(Direction.NORTH) && !position.isDirection(Direction.SOUTH)) {
+            return super.render(event, text);
+        }
 
-		Grid<Label> grid = new Grid<>(new Point(3, 1), text.stream().map(Label::new).collect(Collectors.toList()))
-			.setCellAlignment(position.getDirection()).setGutter(new Point(5, 5));
+        Grid<Label> grid = new Grid<>(new Point(3, 1), text.stream().map(Label::new).collect(Collectors.toList()))
+            .setCellAlignment(position.getDirection()).setGutter(new Point(5, 5));
 
-		Size size = grid.getPreferredSize();
-		if(size.getX() < 150) size = size.withX(150);
-		Rect bounds = MANAGER.position(position.getDirection(), new Rect(size));
+        Size size = grid.getPreferredSize();
+        if(size.getX() < 150) size = size.withX(150);
+        Rect bounds = MANAGER.position(position.getDirection(), new Rect(size));
 
-		grid.setBounds(bounds).render();
-		return bounds;
-	}
+        grid.setBounds(bounds).render();
+        return bounds;
+    }
 
-	@Override
-	protected List<String> getText() {
-		DecimalFormat format = new DecimalFormat();
-		format.setMaximumFractionDigits(decimalPlaces.get().intValue());
+    @Override
+    protected List<String> getText() {
+        DecimalFormat format = new DecimalFormat();
+        format.setMaximumFractionDigits(decimalPlaces.get().intValue());
 
-		String x = format.format(Minecraft.getMinecraft().player.posX);
-		String y = format.format(Minecraft.getMinecraft().player.posY);
-		String z = format.format(Minecraft.getMinecraft().player.posZ);
+        String x = format.format(Minecraft.getMinecraft().player.posX);
+        String y = format.format(Minecraft.getMinecraft().player.posY);
+        String z = format.format(Minecraft.getMinecraft().player.posZ);
 
-		if(spaced.get()) {
-			x = I18n.format("betterHud.hud.x", x);
-			y = I18n.format("betterHud.hud.y", y);
-			z = I18n.format("betterHud.hud.z", z);
-			return Arrays.asList(x, y, z);
-		} else {
-			return Arrays.asList(I18n.format("betterHud.hud.xyz", x, y, z));
-		}
-	}
+        if(spaced.get()) {
+            x = I18n.format("betterHud.hud.x", x);
+            y = I18n.format("betterHud.hud.y", y);
+            z = I18n.format("betterHud.hud.z", z);
+            return Arrays.asList(x, y, z);
+        } else {
+            return Arrays.asList(I18n.format("betterHud.hud.xyz", x, y, z));
+        }
+    }
 }

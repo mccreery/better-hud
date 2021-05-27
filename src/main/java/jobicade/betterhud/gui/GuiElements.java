@@ -9,27 +9,27 @@ import jobicade.betterhud.render.Color;
 import net.minecraft.client.gui.GuiScreen;
 
 public abstract class GuiElements extends GuiScreen {
-	protected static HudElement getHoveredElement(int mouseX, int mouseY, Predicate<HudElement> ignore) {
-		HudElement result = null;
+    protected static HudElement getHoveredElement(int mouseX, int mouseY, Predicate<HudElement> ignore) {
+        HudElement result = null;
 
-		for(HudElement element : HudElement.ELEMENTS) {
-			if(!ignore.test(element)) {
-				Rect bounds = element.getLastBounds();
+        for(HudElement element : HudElement.ELEMENTS) {
+            if(!ignore.test(element)) {
+                Rect bounds = element.getLastBounds();
 
-				if(bounds.contains(mouseX, mouseY) && (result == null ||
-						bounds.getWidth() < result.getLastBounds().getWidth() &&
-						bounds.getHeight() < result.getLastBounds().getHeight())) {
-					result = element;
-				}
-			}
-		}
-		return result;
-	}
+                if(bounds.contains(mouseX, mouseY) && (result == null ||
+                        bounds.getWidth() < result.getLastBounds().getWidth() &&
+                        bounds.getHeight() < result.getLastBounds().getHeight())) {
+                    result = element;
+                }
+            }
+        }
+        return result;
+    }
 
-	private static final Color FADED = Color.RED.withAlpha(63);
-	private static final Color HIGHLIGHT = Color.RED;
+    private static final Color FADED = Color.RED.withAlpha(63);
+    private static final Color HIGHLIGHT = Color.RED;
 
-	protected static void drawRect(Rect bounds, boolean highlight) {
-		GlUtil.drawBorderRect(bounds, highlight ? HIGHLIGHT : FADED);
-	}
+    protected static void drawRect(Rect bounds, boolean highlight) {
+        GlUtil.drawBorderRect(bounds, highlight ? HIGHLIGHT : FADED);
+    }
 }

@@ -14,95 +14,95 @@ import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import jobicade.betterhud.element.HudElement;
 
 public abstract class InventoryNameQuery implements IMessage {
-	private BlockPos pos = null;
+    private BlockPos pos = null;
 
-	public InventoryNameQuery() {}
+    public InventoryNameQuery() {}
 
-	public InventoryNameQuery(BlockPos pos) {
-		this.pos = pos;
-	}
+    public InventoryNameQuery(BlockPos pos) {
+        this.pos = pos;
+    }
 
-	public BlockPos getBlockPos() {
-		return pos;
-	}
+    public BlockPos getBlockPos() {
+        return pos;
+    }
 
-	@Override
-	public void fromBytes(ByteBuf buf) {
-		PacketBuffer buffer = new PacketBuffer(buf);
-		pos = buffer.readBlockPos();
+    @Override
+    public void fromBytes(ByteBuf buf) {
+        PacketBuffer buffer = new PacketBuffer(buf);
+        pos = buffer.readBlockPos();
 
-		fromBytes(buffer);
-	}
+        fromBytes(buffer);
+    }
 
-	@Override
-	public void toBytes(ByteBuf buf) {
-		PacketBuffer buffer = new PacketBuffer(buf);
-		buffer.writeBlockPos(pos);
+    @Override
+    public void toBytes(ByteBuf buf) {
+        PacketBuffer buffer = new PacketBuffer(buf);
+        buffer.writeBlockPos(pos);
 
-		toBytes(buffer);
-	}
+        toBytes(buffer);
+    }
 
-	protected void fromBytes(PacketBuffer buf) {}
-	protected void toBytes(PacketBuffer buf) {}
+    protected void fromBytes(PacketBuffer buf) {}
+    protected void toBytes(PacketBuffer buf) {}
 
-	public static class Request extends InventoryNameQuery {
-		public Request() {super();}
+    public static class Request extends InventoryNameQuery {
+        public Request() {super();}
 
-		public Request(BlockPos pos) {
-			super(pos);
-		}
-	}
+        public Request(BlockPos pos) {
+            super(pos);
+        }
+    }
 
-	public static class Response extends InventoryNameQuery {
-		private ITextComponent name = null;
+    public static class Response extends InventoryNameQuery {
+        private ITextComponent name = null;
 
-		public Response() {super();}
+        public Response() {super();}
 
-		public Response(BlockPos pos, ITextComponent name) {
-			super(pos);
-			this.name = name;
-		}
+        public Response(BlockPos pos, ITextComponent name) {
+            super(pos);
+            this.name = name;
+        }
 
-		public ITextComponent getInventoryName() {
-			return name;
-		}
+        public ITextComponent getInventoryName() {
+            return name;
+        }
 
-		@Override
-		public void fromBytes(PacketBuffer buf) {
-			try {
-				name = buf.readTextComponent();
-			} catch(IOException e) {
-				e.printStackTrace();
-			}
-		}
+        @Override
+        public void fromBytes(PacketBuffer buf) {
+            try {
+                name = buf.readTextComponent();
+            } catch(IOException e) {
+                e.printStackTrace();
+            }
+        }
 
-		@Override
-		public void toBytes(PacketBuffer buf) {
-			buf.writeTextComponent(name);
-		}
-	}
+        @Override
+        public void toBytes(PacketBuffer buf) {
+            buf.writeTextComponent(name);
+        }
+    }
 
-	public static class ServerHandler implements IMessageHandler<Request, Response> {
-		@Override
-		public Response onMessage(Request message, MessageContext ctx) {
-			//System.out.println("Received block request " + message.getBlockPos());
-			TileEntity tileEntity = ctx.getServerHandler().player.world.getTileEntity(message.getBlockPos());
+    public static class ServerHandler implements IMessageHandler<Request, Response> {
+        @Override
+        public Response onMessage(Request message, MessageContext ctx) {
+            //System.out.println("Received block request " + message.getBlockPos());
+            TileEntity tileEntity = ctx.getServerHandler().player.world.getTileEntity(message.getBlockPos());
 
-			if (tileEntity instanceof IWorldNameable) {
-				return new Response(message.getBlockPos(), tileEntity.getDisplayName());
-			} else {
-				return null;
-			}
-		}
-	}
+            if (tileEntity instanceof IWorldNameable) {
+                return new Response(message.getBlockPos(), tileEntity.getDisplayName());
+            } else {
+                return null;
+            }
+        }
+    }
 
-	public static class ClientHandler implements IMessageHandler<Response, IMessage> {
-		@Override
-		public IMessage onMessage(Response message, MessageContext ctx) {
-			//System.out.println("Received block response " + message.getBlockPos() + " for name " + message.getInventoryName());
+    public static class ClientHandler implements IMessageHandler<Response, IMessage> {
+        @Override
+        public IMessage onMessage(Response message, MessageContext ctx) {
+            //System.out.println("Received block response " + message.getBlockPos() + " for name " + message.getInventoryName());
 
-			HudElement.BLOCK_VIEWER.onNameReceived(message.getBlockPos(), message.getInventoryName());
-			return null;
-		}
-	}
+            HudElement.BLOCK_VIEWER.onNameReceived(message.getBlockPos(), message.getInventoryName());
+            return null;
+        }
+    }
 }

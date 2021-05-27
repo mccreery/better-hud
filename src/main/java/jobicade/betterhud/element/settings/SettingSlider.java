@@ -15,116 +15,116 @@ import jobicade.betterhud.util.ISlider;
 import jobicade.betterhud.util.MathUtil;
 
 public class SettingSlider extends SettingAlignable<Double> implements ISlider {
-	protected GuiSlider slider;
-	private final double min, max, interval;
+    protected GuiSlider slider;
+    private final double min, max, interval;
 
-	private int displayPlaces;
-	private String unlocalizedValue;
+    private int displayPlaces;
+    private String unlocalizedValue;
 
-	private double value;
-	private double displayScale = 1;
+    private double value;
+    private double displayScale = 1;
 
-	public SettingSlider(String name, double min, double max) {
-		this(name, min, max, -1);
-	}
+    public SettingSlider(String name, double min, double max) {
+        this(name, min, max, -1);
+    }
 
-	public SettingSlider(String name, double min, double max, double interval) {
-		super(name, Direction.CENTER);
-		this.min = min;
-		this.max = max;
-		this.interval = interval;
+    public SettingSlider(String name, double min, double max, double interval) {
+        super(name, Direction.CENTER);
+        this.min = min;
+        this.max = max;
+        this.interval = interval;
 
-		updateDisplayPlaces();
-		set(getMinimum());
-	}
+        updateDisplayPlaces();
+        set(getMinimum());
+    }
 
-	private void updateDisplayPlaces() {
-		int places = interval != -1
-			&& interval * displayScale == (int)(interval * displayScale) ? 0 : 1;
-		setDisplayPlaces(places);
-	}
+    private void updateDisplayPlaces() {
+        int places = interval != -1
+            && interval * displayScale == (int)(interval * displayScale) ? 0 : 1;
+        setDisplayPlaces(places);
+    }
 
-	public SettingSlider setAlignment(Direction alignment) {
-		this.alignment = alignment;
-		return this;
-	}
+    public SettingSlider setAlignment(Direction alignment) {
+        this.alignment = alignment;
+        return this;
+    }
 
-	public SettingSlider setDisplayScale(double displayScale) {
-		this.displayScale = displayScale;
-		updateDisplayPlaces();
+    public SettingSlider setDisplayScale(double displayScale) {
+        this.displayScale = displayScale;
+        updateDisplayPlaces();
 
-		return this;
-	}
+        return this;
+    }
 
-	public SettingSlider setDisplayPlaces(int displayPlaces) {
-		this.displayPlaces = displayPlaces;
-		return this;
-	}
+    public SettingSlider setDisplayPlaces(int displayPlaces) {
+        this.displayPlaces = displayPlaces;
+        return this;
+    }
 
-	public SettingSlider setUnlocalizedValue(String unlocalizedValue) {
-		this.unlocalizedValue = unlocalizedValue;
-		return this;
-	}
+    public SettingSlider setUnlocalizedValue(String unlocalizedValue) {
+        this.unlocalizedValue = unlocalizedValue;
+        return this;
+    }
 
-	@Override
-	public String getDisplayString() {
-		return I18n.format("betterHud.setting." + name) + ": " + getDisplayValue(get() * displayScale);
-	}
+    @Override
+    public String getDisplayString() {
+        return I18n.format("betterHud.setting." + name) + ": " + getDisplayValue(get() * displayScale);
+    }
 
-	public String getDisplayValue(double scaledValue) {
-		String displayValue = MathUtil.formatToPlaces(scaledValue, displayPlaces);
+    public String getDisplayValue(double scaledValue) {
+        String displayValue = MathUtil.formatToPlaces(scaledValue, displayPlaces);
 
-		if(unlocalizedValue != null) {
-			displayValue = I18n.format(unlocalizedValue, displayValue);
-		}
-		return displayValue;
-	}
+        if(unlocalizedValue != null) {
+            displayValue = I18n.format(unlocalizedValue, displayValue);
+        }
+        return displayValue;
+    }
 
-	@Override
-	public void getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Rect bounds) {
-		slider = new GuiSlider(0, bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), this);
+    @Override
+    public void getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Rect bounds) {
+        slider = new GuiSlider(0, bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), this);
 
-		parts.add(slider);
-		callbacks.put(slider, this);
-	}
+        parts.add(slider);
+        callbacks.put(slider, this);
+    }
 
-	@Override public void actionPerformed(GuiElementSettings gui, GuiButton button) {}
-	@Override public Double get() {return value;}
+    @Override public void actionPerformed(GuiElementSettings gui, GuiButton button) {}
+    @Override public Double get() {return value;}
 
-	public int getInt() {
-		return get().intValue();
-	}
+    public int getInt() {
+        return get().intValue();
+    }
 
-	@Override
-	public void set(Double value) {
-		this.value = normalize(value);
-		if(slider != null) slider.updateDisplayString();
-	}
+    @Override
+    public void set(Double value) {
+        this.value = normalize(value);
+        if(slider != null) slider.updateDisplayString();
+    }
 
-	public void set(int value) {
-		set((double)value);
-	}
+    public void set(int value) {
+        set((double)value);
+    }
 
-	@Override
-	public String save() {
-		return get().toString();
-	}
+    @Override
+    public String save() {
+        return get().toString();
+    }
 
-	@Override
-	public void load(String save) {
-		set(Double.valueOf(save));
+    @Override
+    public void load(String save) {
+        set(Double.valueOf(save));
 
-		if(slider != null) {
-			slider.updateDisplayString();
-		}
-	}
+        if(slider != null) {
+            slider.updateDisplayString();
+        }
+    }
 
-	@Override
-	protected Type getPropertyType() {
-		return Type.DOUBLE;
-	}
+    @Override
+    protected Type getPropertyType() {
+        return Type.DOUBLE;
+    }
 
-	@Override public Double getMinimum() {return min;}
-	@Override public Double getMaximum() {return max;}
-	@Override public Double getInterval() {return interval;}
+    @Override public Double getMinimum() {return min;}
+    @Override public Double getMaximum() {return max;}
+    @Override public Double getInterval() {return interval;}
 }
