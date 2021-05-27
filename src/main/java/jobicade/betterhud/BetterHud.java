@@ -36,7 +36,7 @@ import net.minecraftforge.fml.relauncher.Side;
     dependencies = "required-after:forge@[14.23.1.2557,)")
 public class BetterHud {
     public static final String MODID = "betterhud";
-    public static final String VERSION = "1.4.3";
+    public static final String VERSION = "1.4.4";
 
     private static ArtifactVersion serverVersion;
 

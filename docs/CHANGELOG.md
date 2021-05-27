@@ -1,5 +1,12 @@
 # Changelog
 
+## [1.4.4] - 2021-05-28
+### Changed
+- Improvements to Chinese (zh_CN) and Brazilian Portuguese (pt_BR) translations
+- `mcmod.info` crediting all known translators
+### Fixed
+- Enabling or disabling elements not saved unless an element's settings screen is opened and closed
+
 ## [1.4.3] - 2020-06-15
 ### Fixed
 - Game crash on first startup (no config file, #95)
