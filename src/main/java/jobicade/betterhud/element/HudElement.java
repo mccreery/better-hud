@@ -46,7 +46,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.apache.maven.artifact.versioning.Restriction;
 import org.apache.maven.artifact.versioning.VersionRange;
 
@@ -289,7 +289,7 @@ public abstract class HudElement implements IBoolean {
     /** Calls {@link #init(FMLInitializationEvent)} on all elements
      * @see #init(FMLInitializationEvent)
      * @see BetterHud#init(FMLInitializationEvent) */
-    public static void initAll(FMLInitializationEvent event) {
+    public static void initAll(FMLClientSetupEvent event) {
         for(HudElement element : ELEMENTS) {
             element.init(event);
         }
@@ -302,7 +302,7 @@ public abstract class HudElement implements IBoolean {
      *
      * @see ClientProxy#init(FMLInitializationEvent)
      */
-    public void init(FMLInitializationEvent event) {}
+    public void init(FMLClientSetupEvent event) {}
 
     /** Calls {@link #loadDefaults()} on all elements
      * @see #loadDefaults() */

@@ -1,14 +1,16 @@
 package jobicade.betterhud.network;
 
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
-import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
 import jobicade.betterhud.element.HudElement;
+import net.minecraftforge.fml.network.NetworkEvent;
+import net.minecraftforge.fml.network.NetworkEvent.Context;
 
-public class MessagePickupHandler implements IMessageHandler<MessagePickup, IMessage> {
+import java.util.function.BiConsumer;
+import java.util.function.Supplier;
+
+public class MessagePickupHandler implements BiConsumer<MessagePickup, Supplier<NetworkEvent.Context>> {
     @Override
-    public IMessage onMessage(MessagePickup message, MessageContext ctx) {
+    public void accept(MessagePickup message, Supplier<Context> contextSupplier) {
         HudElement.PICKUP.refreshStack(message.getStack());
-        return null;
+        contextSupplier.get().setPacketHandled(true);
     }
 }

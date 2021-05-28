@@ -1,11 +1,13 @@
 package jobicade.betterhud.network;
 
-import io.netty.buffer.ByteBuf;
+import jobicade.betterhud.element.HudElement;
 import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.fml.network.NetworkEvent.Context;
 
-public class MessagePickup implements IMessage {
+import java.util.function.Supplier;
+
+public class MessagePickup {
     private ItemStack stack;
 
     public MessagePickup() {}
@@ -13,17 +15,20 @@ public class MessagePickup implements IMessage {
         this.stack = stack;
     }
 
+    public MessagePickup(PacketBuffer packetBuffer) {
+        this(packetBuffer.readItem());
+    }
+
     public ItemStack getStack() {
         return this.stack;
     }
 
-    @Override
-    public void fromBytes(ByteBuf buf) {
-        this.stack = ByteBufUtils.readItemStack(buf);
+    public void encode(PacketBuffer packetBuffer) {
+        packetBuffer.writeItem(stack);
     }
 
-    @Override
-    public void toBytes(ByteBuf buf) {
-        ByteBufUtils.writeItemStack(buf, this.stack);
+    public static void handle(MessagePickup message, Supplier<Context> context) {
+        HudElement.PICKUP.refreshStack(message.getStack());
+        context.get().setPacketHandled(true);
     }
 }

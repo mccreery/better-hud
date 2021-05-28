@@ -10,7 +10,7 @@ import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.text.TextElement;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.network.InventoryNameQuery;
+import jobicade.betterhud.network.InventoryNameRequest;
 import jobicade.betterhud.util.GlUtil;
 import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
@@ -234,7 +234,7 @@ public class BlockViewer extends TextElement {
      * of the inventory, it will return that value */
     private static ITextComponent ensureInvName(BlockPos pos) {
         if(!nameCache.containsKey(pos)) {
-            BetterHud.NET_WRAPPER.sendToServer(new InventoryNameQuery.Request(pos));
+            BetterHud.NET_WRAPPER.sendToServer(new InventoryNameRequest(pos));
             nameCache.put(pos, null);
         }
         ITextComponent name = nameCache.get(pos);

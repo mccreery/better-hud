@@ -35,7 +35,7 @@ public final class RenderEvents {
     public void onRenderTick(RenderGameOverlayEvent.Pre event) {
         Minecraft.getInstance().profiler.push(MODID);
 
-        boolean enabled = BetterHud.getProxy().isModEnabled();
+        boolean enabled = BetterHud.isModEnabled();
         suppressVanilla(enabled);
 
         if(enabled && event.getType() == ElementType.ALL) {
@@ -48,7 +48,7 @@ public final class RenderEvents {
     public void worldRender(RenderWorldLastEvent event) {
         Minecraft.getInstance().profiler.push(MODID);
 
-        if(BetterHud.getProxy().isModEnabled()) {
+        if(BetterHud.isModEnabled()) {
             Entity entity = getMouseOver(HudElement.GLOBAL.getBillboardDistance(), event.getPartialTicks());
 
             if(entity instanceof LivingEntity) {

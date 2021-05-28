@@ -1,12 +1,14 @@
 package jobicade.betterhud.network;
 
-import io.netty.buffer.ByteBuf;
-import net.minecraftforge.fml.common.network.ByteBufUtils;
-import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
+import jobicade.betterhud.BetterHud;
+import net.minecraft.network.PacketBuffer;
+import net.minecraftforge.fml.network.NetworkEvent.Context;
 import org.apache.maven.artifact.versioning.ArtifactVersion;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 
-public class MessageVersion implements IMessage {
+import java.util.function.Supplier;
+
+public class MessageVersion {
     public ArtifactVersion version;
 
     public MessageVersion() {}
@@ -14,13 +16,18 @@ public class MessageVersion implements IMessage {
         this.version = version2;
     }
 
-    @Override
-    public void fromBytes(ByteBuf buf) {
-        this.version = new DefaultArtifactVersion(ByteBufUtils.readUTF8String(buf));
+    public MessageVersion(PacketBuffer packetBuffer) {
+        // the no-arg readUtf() is @OnlyIn(Dist.Client)
+        this(new DefaultArtifactVersion(packetBuffer.readUtf(32767)));
     }
 
-    @Override
-    public void toBytes(ByteBuf buf) {
-        ByteBufUtils.writeUTF8String(buf, version.getVersionString());
+    public void encode(PacketBuffer packetBuffer) {
+        packetBuffer.writeUtf(version.toString());
+    }
+
+    public static void handle(MessageVersion message, Supplier<Context> context) {
+        BetterHud.getLogger().info("Server reported version " + message.version);
+        BetterHud.setServerVersion(message.version);
+        context.get().setPacketHandled(true);
     }
 }
