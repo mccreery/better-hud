@@ -7,6 +7,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
+import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.config.ConfigManager;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.HudElement.SortType;
@@ -45,6 +46,11 @@ public class GuiHudMenu extends GuiMenuScreen {
         resetDefaults.setCallback(button -> {
             Minecraft.getMinecraft().displayGuiScreen(new GuiConfigSaves(configManager, this));
         });
+    }
+
+    @Override
+    public void onGuiClosed() {
+        BetterHud.getProxy().getConfig().saveSettings();
     }
 
     public SortField<HudElement> getSortCriteria() {
