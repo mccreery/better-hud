@@ -1,13 +1,5 @@
 package jobicade.betterhud.element.vanilla;
 
-import static jobicade.betterhud.BetterHud.MANAGER;
-import static jobicade.betterhud.BetterHud.SPACER;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.stream.Stream;
-
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
@@ -21,15 +13,23 @@ import jobicade.betterhud.render.Boxed;
 import jobicade.betterhud.render.Grid;
 import jobicade.betterhud.util.MathUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.potion.PotionEffect;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.Event;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.stream.Stream;
+
+import static jobicade.betterhud.BetterHud.MANAGER;
+import static jobicade.betterhud.BetterHud.SPACER;
 
 public class PotionBar extends HudElement {
     public static final ResourceLocation INVENTORY = new ResourceLocation("textures/gui/container/inventory.png");
@@ -80,13 +80,13 @@ public class PotionBar extends HudElement {
             bounds = position.applyTo(bounds);
         }
         grid.setBounds(bounds).render();
-        Minecraft.getInstance().getTextureManager().bind(Gui.field_110324_m);
+        Minecraft.getInstance().getTextureManager().bind(AbstractGui.field_110324_m);
 
         return bounds;
     }
 
-    private void populateEffects(List<PotionEffect> helpful, List<PotionEffect> harmful) {
-        Stream<PotionEffect> source = Minecraft.getInstance().player
+    private void populateEffects(List<EffectInstance> helpful, List<EffectInstance> harmful) {
+        Stream<EffectInstance> source = Minecraft.getInstance().player
             .getActiveEffects().parallelStream()
             .filter(e -> e.isVisible() && e.getEffect().shouldRenderHUD(e));
 
@@ -95,14 +95,14 @@ public class PotionBar extends HudElement {
         harmful.sort(Collections.reverseOrder());
     }
 
-    private void fillRow(Grid<? super PotionIcon> grid, int row, List<PotionEffect> effects) {
+    private void fillRow(Grid<? super PotionIcon> grid, int row, List<EffectInstance> effects) {
         for(int i = 0; i < effects.size(); i++) {
             grid.setCell(new Point(i, row), new PotionIcon(effects.get(i), showDuration.get()));
         }
     }
 
     private Boxed getGrid() {
-        List<PotionEffect> helpful = new ArrayList<>(), harmful = new ArrayList<>();
+        List<EffectInstance> helpful = new ArrayList<>(), harmful = new ArrayList<>();
         populateEffects(helpful, harmful);
 
         int rows = 0;

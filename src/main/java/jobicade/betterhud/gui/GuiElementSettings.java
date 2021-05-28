@@ -1,15 +1,6 @@
 package jobicade.betterhud.gui;
 
-import static jobicade.betterhud.BetterHud.SPACER;
-
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-
-import org.lwjgl.input.Keyboard;
-import org.lwjgl.opengl.GL11;
-
+import com.mojang.blaze3d.platform.GlStateManager;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.Setting;
@@ -19,24 +10,32 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.GuiLabel;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraftforge.client.event.GuiScreenEvent.ActionPerformedEvent;
 import net.minecraftforge.common.MinecraftForge;
+import org.lwjgl.input.Keyboard;
+import org.lwjgl.opengl.GL11;
+
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+
+import static jobicade.betterhud.BetterHud.SPACER;
 
 public class GuiElementSettings extends GuiMenuScreen {
     private static final int REPEAT_SPEED       = 20; // Rate of speed-up to 20/s
     private static final int REPEAT_SPEED_FAST = 10; // Rate of speed-up beyond 20/s
 
     public HudElement element;
-    private ArrayList<GuiTextField> textboxList = new ArrayList<GuiTextField>();
-    public HashMap<Gui, Setting<?>> callbacks = new HashMap<Gui, Setting<?>>();
+    private ArrayList<TextFieldWidget> textboxList = new ArrayList<TextFieldWidget>();
+    public HashMap<AbstractGui, Setting<?>> callbacks = new HashMap<AbstractGui, Setting<?>>();
 
     private Rect viewport;
 
@@ -45,7 +44,7 @@ public class GuiElementSettings extends GuiMenuScreen {
 
     private int repeatTimer = 0;
 
-    public GuiElementSettings(HudElement element, GuiScreen prev) {
+    public GuiElementSettings(HudElement element, Screen prev) {
         this.element = element;
         done.setCallback(b -> Minecraft.getInstance().setScreen(prev));
     }
@@ -60,16 +59,16 @@ public class GuiElementSettings extends GuiMenuScreen {
         Keyboard.enableRepeatEvents(true);
         done.setBounds(new Rect(200, 20).align(getOrigin(), Direction.NORTH));
 
-        List<Gui> parts = new ArrayList<Gui>();
+        List<AbstractGui> parts = new ArrayList<AbstractGui>();
         int contentHeight = element.settings.getGuiParts(parts, callbacks, new Point(field_146294_l / 2, SPACER)).getY();
 
-        for(Gui gui : parts) {
-            if(gui instanceof GuiButton) {
-                field_146292_n.add((GuiButton)gui);
+        for(AbstractGui gui : parts) {
+            if(gui instanceof Button) {
+                field_146292_n.add((Button)gui);
             } else if(gui instanceof GuiLabel) {
                 field_146293_o.add((GuiLabel)gui);
-            } else if(gui instanceof GuiTextField) {
-                textboxList.add((GuiTextField)gui);
+            } else if(gui instanceof TextFieldWidget) {
+                textboxList.add((TextFieldWidget)gui);
             }
         }
 
@@ -88,7 +87,7 @@ public class GuiElementSettings extends GuiMenuScreen {
     }
 
     @Override
-    protected void func_146284_a(GuiButton button) {
+    protected void func_146284_a(Button button) {
         if(callbacks.containsKey(button)) {
             callbacks.get(button).actionPerformed(this, button);
 
@@ -101,10 +100,10 @@ public class GuiElementSettings extends GuiMenuScreen {
         }
     }
 
-    /** @see GuiScreen#handleMouseInput() */
+    /** @see Screen#handleMouseInput() */
     @Override
     public void func_73876_c() {
-        for(GuiTextField field : this.textboxList) {
+        for(TextFieldWidget field : this.textboxList) {
             field.tick();
         }
 
@@ -127,7 +126,7 @@ public class GuiElementSettings extends GuiMenuScreen {
     protected void func_73869_a(char typedChar, int keyCode) throws IOException {
         super.func_73869_a(typedChar, keyCode);
 
-        for(GuiTextField field : this.textboxList) {
+        for(TextFieldWidget field : this.textboxList) {
             field.func_146201_a(typedChar, keyCode);
 
             if(callbacks.containsKey(field)) {
@@ -147,7 +146,7 @@ public class GuiElementSettings extends GuiMenuScreen {
         if(mouseY >= viewport.getTop() && mouseY < viewport.getBottom()) {
             super.func_73864_a(mouseX, mouseY + getMouseOffset(), button);
 
-            for(GuiTextField field : this.textboxList) {
+            for(TextFieldWidget field : this.textboxList) {
                 field.func_146192_a(mouseX, mouseY + getMouseOffset(), button);
             }
         }
@@ -157,7 +156,7 @@ public class GuiElementSettings extends GuiMenuScreen {
             ActionPerformedEvent.Pre event = new ActionPerformedEvent.Pre(this, done, field_146292_n);
             if(MinecraftForge.EVENT_BUS.post(event)) return;
 
-            GuiButton eventResult = event.getButton();
+            Button eventResult = event.getButton();
             field_146290_a = eventResult;
             eventResult.func_146113_a(this.field_146297_k.getSoundManager());
             func_146284_a(eventResult);
@@ -195,10 +194,10 @@ public class GuiElementSettings extends GuiMenuScreen {
 
         int viewportMouseY = mouseY + getMouseOffset();
 
-        for(GuiButton button : field_146292_n) button.func_191745_a(field_146297_k, mouseX, viewportMouseY, partialTicks);
+        for(Button button : field_146292_n) button.func_191745_a(field_146297_k, mouseX, viewportMouseY, partialTicks);
         for(GuiLabel label : field_146293_o) label.func_146159_a(field_146297_k, mouseX, viewportMouseY);
 
-        for(GuiTextField field : this.textboxList) {
+        for(TextFieldWidget field : this.textboxList) {
             field.func_146194_f();
         }
         element.settings.draw();

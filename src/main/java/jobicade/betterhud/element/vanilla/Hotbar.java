@@ -7,10 +7,10 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.Textures;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraftforge.client.GuiIngameForge;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.client.gui.ForgeIngameGui;
+import net.minecraftforge.eventbus.api.Event;
 
 public class Hotbar extends OverrideElement {
     public Hotbar() {
@@ -31,7 +31,7 @@ public class Hotbar extends OverrideElement {
 
     @Override
     public boolean shouldRender(Event event) {
-        return !GuiIngameForge.renderHotbar && super.shouldRender(event);
+        return !ForgeIngameGui.renderHotbar && super.shouldRender(event);
     }
 
     @Override
@@ -54,7 +54,7 @@ public class Hotbar extends OverrideElement {
             GlUtil.renderHotbarItem(slot, Minecraft.getInstance().player.inventory.items.get(i), partialTicks);
         }
 
-        Minecraft.getInstance().getTextureManager().bind(Gui.field_110324_m);
+        Minecraft.getInstance().getTextureManager().bind(AbstractGui.field_110324_m);
         return bounds;
     }
 }

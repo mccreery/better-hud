@@ -1,10 +1,10 @@
 package jobicade.betterhud.proxy;
 
-import java.nio.file.Path;
-
 import jobicade.betterhud.config.HudConfig;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
+
+import java.nio.file.Path;
 
 public interface HudSidedProxy {
     /**

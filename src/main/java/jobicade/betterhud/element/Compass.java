@@ -1,9 +1,6 @@
 package jobicade.betterhud.element;
 
-import static jobicade.betterhud.BetterHud.SPACER;
-
-import java.util.List;
-
+import com.mojang.blaze3d.platform.GlStateManager;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.Setting;
@@ -13,18 +10,20 @@ import jobicade.betterhud.element.settings.SettingDirection;
 import jobicade.betterhud.element.settings.SettingPercentage;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.settings.SettingSlider;
-import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
+import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.init.Items;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumFacing;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraft.item.Items;
+import net.minecraftforge.eventbus.api.Event;
+
+import java.util.List;
+
+import static jobicade.betterhud.BetterHud.SPACER;
 
 public class Compass extends HudElement {
     private static final String[] DIRECTIONS = { "S", "E", "N", "W" };
@@ -139,7 +138,7 @@ public class Compass extends HudElement {
     }
 
     public String getText() {
-        EnumFacing enumfacing = Minecraft.getInstance().player.getDirection();
+        net.minecraft.util.Direction enumfacing = Minecraft.getInstance().player.getDirection();
 
         String coord;
         Direction direction;

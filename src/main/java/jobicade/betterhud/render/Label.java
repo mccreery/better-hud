@@ -1,12 +1,12 @@
 package jobicade.betterhud.render;
 
+import com.mojang.blaze3d.platform.GlStateManager;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Size;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.GlStateManager;
+import net.minecraft.client.gui.AbstractGui;
 
 public class Label extends DefaultBoxed {
     private String text;
@@ -64,7 +64,7 @@ public class Label extends DefaultBoxed {
 
         // Restore OpenGL state as expected
         Color.WHITE.apply();
-        Minecraft.getInstance().getTextureManager().bind(Gui.field_110324_m);
+        Minecraft.getInstance().getTextureManager().bind(AbstractGui.field_110324_m);
         GlStateManager.func_179118_c();
     }
 }

@@ -1,13 +1,13 @@
 package jobicade.betterhud.element.vanilla;
 
-import java.util.List;
-
-import net.minecraft.client.Minecraft;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.util.bars.StatBarFood;
+import net.minecraft.client.Minecraft;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.eventbus.api.Event;
+
+import java.util.List;
 
 public class FoodBar extends Bar {
     private SettingBoolean hideMount;

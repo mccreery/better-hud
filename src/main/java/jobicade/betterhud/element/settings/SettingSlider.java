@@ -1,18 +1,18 @@
 package jobicade.betterhud.element.settings;
 
-import java.util.List;
-import java.util.Map;
-
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.resources.I18n;
-import net.minecraftforge.common.config.Property.Type;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.gui.GuiSlider;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.ISlider;
 import jobicade.betterhud.util.MathUtil;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.resources.I18n;
+import net.minecraftforge.common.config.Property.Type;
+
+import java.util.List;
+import java.util.Map;
 
 public class SettingSlider extends SettingAlignable<Double> implements ISlider {
     protected GuiSlider slider;
@@ -81,14 +81,14 @@ public class SettingSlider extends SettingAlignable<Double> implements ISlider {
     }
 
     @Override
-    public void getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Rect bounds) {
+    public void getGuiParts(List<AbstractGui> parts, Map<AbstractGui, Setting<?>> callbacks, Rect bounds) {
         slider = new GuiSlider(0, bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), this);
 
         parts.add(slider);
         callbacks.put(slider, this);
     }
 
-    @Override public void actionPerformed(GuiElementSettings gui, GuiButton button) {}
+    @Override public void actionPerformed(GuiElementSettings gui, Button button) {}
     @Override public Double get() {return value;}
 
     public int getInt() {

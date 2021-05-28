@@ -1,14 +1,14 @@
 package jobicade.betterhud.gui;
 
+import jobicade.betterhud.element.HudElement;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.util.GlUtil;
+import jobicade.betterhud.util.SortField;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
-import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.geom.Point;
-import jobicade.betterhud.util.SortField;
 
 class SortButton extends GuiActionButton {
     private static final ResourceLocation ARROW_TEXTURE = new ResourceLocation("textures/gui/resource_packs.png");

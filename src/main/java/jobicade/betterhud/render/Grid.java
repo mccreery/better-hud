@@ -1,14 +1,14 @@
 package jobicade.betterhud.render;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Size;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class Grid<T extends Boxed> extends DefaultBoxed {
     private List<T> source;

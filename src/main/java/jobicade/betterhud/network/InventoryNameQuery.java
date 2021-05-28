@@ -1,17 +1,17 @@
 package jobicade.betterhud.network;
 
-import java.io.IOException;
-
 import io.netty.buffer.ByteBuf;
+import jobicade.betterhud.element.HudElement;
 import net.minecraft.network.PacketBuffer;
 import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.INameable;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.IWorldNameable;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessage;
 import net.minecraftforge.fml.common.network.simpleimpl.IMessageHandler;
 import net.minecraftforge.fml.common.network.simpleimpl.MessageContext;
-import jobicade.betterhud.element.HudElement;
+
+import java.io.IOException;
 
 public abstract class InventoryNameQuery implements IMessage {
     private BlockPos pos = null;
@@ -88,7 +88,7 @@ public abstract class InventoryNameQuery implements IMessage {
             //System.out.println("Received block request " + message.getBlockPos());
             TileEntity tileEntity = ctx.getServerHandler().player.level.getBlockEntity(message.getBlockPos());
 
-            if (tileEntity instanceof IWorldNameable) {
+            if (tileEntity instanceof INameable) {
                 return new Response(message.getBlockPos(), tileEntity.getDisplayName());
             } else {
                 return null;

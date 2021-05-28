@@ -1,14 +1,14 @@
 package jobicade.betterhud.element.settings;
 
-import static jobicade.betterhud.BetterHud.SPACER;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import net.minecraft.client.gui.AbstractGui;
 
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.client.gui.Gui;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.geom.Point;
-import jobicade.betterhud.geom.Rect;
+import static jobicade.betterhud.BetterHud.SPACER;
 
 public abstract class SettingAlignable<T> extends Setting<T> {
     protected Direction alignment;
@@ -24,7 +24,7 @@ public abstract class SettingAlignable<T> extends Setting<T> {
     }
 
     @Override
-    public Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Point origin) {
+    public Point getGuiParts(List<AbstractGui> parts, Map<AbstractGui, Setting<?>> callbacks, Point origin) {
         origin = super.getGuiParts(parts, callbacks, origin);
 
         Rect bounds = new Rect(getSize());
@@ -47,5 +47,5 @@ public abstract class SettingAlignable<T> extends Setting<T> {
     }
 
     /** @see Setting#getGuiParts(List, Map, Point) */
-    public abstract void getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Rect bounds);
+    public abstract void getGuiParts(List<AbstractGui> parts, Map<AbstractGui, Setting<?>> callbacks, Rect bounds);
 }

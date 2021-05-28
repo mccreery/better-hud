@@ -1,17 +1,5 @@
 package jobicade.betterhud.element;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.Event;
-import net.minecraftforge.fml.common.versioning.Restriction;
-import net.minecraftforge.fml.common.versioning.VersionRange;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.entityinfo.HorseInfo;
 import jobicade.betterhud.element.entityinfo.MobInfo;
@@ -53,6 +41,18 @@ import jobicade.betterhud.proxy.ClientProxy;
 import jobicade.betterhud.util.IGetSet.IBoolean;
 import jobicade.betterhud.util.SortField;
 import jobicade.betterhud.util.Sorter;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderWorldLastEvent;
+import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import org.apache.maven.artifact.versioning.Restriction;
+import org.apache.maven.artifact.versioning.VersionRange;
+
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
 
 public abstract class HudElement implements IBoolean {
     /** A list of all the registered elements */

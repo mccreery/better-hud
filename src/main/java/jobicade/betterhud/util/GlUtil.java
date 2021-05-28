@@ -1,9 +1,8 @@
 package jobicade.betterhud.util;
 
-import java.util.EnumSet;
-
-import org.lwjgl.opengl.GL11;
-
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
+import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
@@ -12,15 +11,15 @@ import jobicade.betterhud.render.Color;
 import jobicade.betterhud.render.Label;
 import jobicade.betterhud.render.Quad;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.GlStateManager.DestFactor;
-import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
+import org.lwjgl.opengl.GL11;
+
+import java.util.EnumSet;
 
 public final class GlUtil {
     private GlUtil() {
@@ -35,7 +34,7 @@ public final class GlUtil {
         GlStateManager.func_179152_a(scale, scale, scale);
     }
 
-    /** @see Gui#drawRect(int, int, int, int, int) */
+    /** @see AbstractGui#drawRect(int, int, int, int, int) */
     public static void drawRect(Rect bounds, Color color) {
         new Quad().setColor(color).setBounds(bounds).render();
     }
@@ -83,7 +82,7 @@ public final class GlUtil {
         Minecraft.getInstance().font.func_175065_a(text, x, y, color.getPacked(), false);
         Color.WHITE.apply();
         GlStateManager.func_179118_c();
-        Minecraft.getInstance().getTextureManager().bind(Gui.field_110324_m);
+        Minecraft.getInstance().getTextureManager().bind(AbstractGui.field_110324_m);
     }
 
     /** @see #renderSingleItem(ItemStack, int, int) */
@@ -103,7 +102,7 @@ public final class GlUtil {
         Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(stack, x, y);
         RenderHelper.turnOff();
         GlStateManager.func_179097_i();
-        Minecraft.getInstance().getTextureManager().bind(Gui.field_110324_m);
+        Minecraft.getInstance().getTextureManager().bind(AbstractGui.field_110324_m);
         blendFuncSafe(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
         GlStateManager.func_179103_j(GL11.GL_SMOOTH);
     }
@@ -138,7 +137,7 @@ public final class GlUtil {
         RenderHelper.turnOff();
         GlStateManager.func_179097_i();
         GlStateManager.func_179118_c();
-        Minecraft.getInstance().getTextureManager().bind(Gui.field_110324_m);
+        Minecraft.getInstance().getTextureManager().bind(AbstractGui.field_110324_m);
         GlUtil.blendFuncSafe(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
         GlStateManager.func_179103_j(GL11.GL_SMOOTH);
     }

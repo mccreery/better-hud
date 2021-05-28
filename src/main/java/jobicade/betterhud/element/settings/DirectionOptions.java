@@ -1,12 +1,13 @@
 package jobicade.betterhud.element.settings;
 
 import jobicade.betterhud.geom.Direction;
-import static jobicade.betterhud.geom.Direction.*;
 
 import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Set;
 import java.util.function.Function;
+
+import static jobicade.betterhud.geom.Direction.*;
 
 public enum DirectionOptions implements Function<Direction, Direction> {
     ALL(Direction.values()) {

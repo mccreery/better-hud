@@ -1,11 +1,11 @@
 package jobicade.betterhud.config;
 
+import com.google.common.io.MoreFiles;
+
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardCopyOption;
-
-import com.google.common.io.MoreFiles;
 
 /**
  * A config slot representing an external config file.

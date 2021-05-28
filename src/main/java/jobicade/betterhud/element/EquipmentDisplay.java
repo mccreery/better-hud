@@ -1,10 +1,5 @@
 package jobicade.betterhud.element;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import net.minecraft.client.resources.I18n;
-import net.minecraft.item.ItemStack;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingChoose;
@@ -12,6 +7,11 @@ import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.settings.SettingWarnings;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.MathUtil;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.item.ItemStack;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public abstract class EquipmentDisplay extends HudElement {
     private SettingBoolean showName;

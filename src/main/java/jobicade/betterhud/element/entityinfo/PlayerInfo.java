@@ -1,36 +1,34 @@
 package jobicade.betterhud.element.entityinfo;
 
-import static jobicade.betterhud.BetterHud.MANAGER;
+import jobicade.betterhud.element.settings.Setting;
+import jobicade.betterhud.element.settings.SettingSlider;
+import jobicade.betterhud.events.RenderMobInfoEvent;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.render.Color;
+import jobicade.betterhud.render.Grid;
+import jobicade.betterhud.render.Label;
+import jobicade.betterhud.util.GlUtil;
+import jobicade.betterhud.util.bars.StatBar;
+import jobicade.betterhud.util.bars.StatBarArmor;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.enchantment.Enchantment;
+import net.minecraft.enchantment.EnchantmentHelper;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.eventbus.api.Event;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
-
-import net.minecraft.client.resources.I18n;
-import net.minecraft.enchantment.Enchantment;
-import net.minecraft.enchantment.EnchantmentHelper;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.item.ItemStack;
-import net.minecraft.util.text.TextFormatting;
-import net.minecraftforge.fml.common.eventhandler.Event;
-import jobicade.betterhud.element.settings.Setting;
-import jobicade.betterhud.element.settings.SettingSlider;
-import jobicade.betterhud.events.RenderMobInfoEvent;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.render.Color;
-import jobicade.betterhud.render.Grid;
-import jobicade.betterhud.render.Label;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.geom.Point;
-import jobicade.betterhud.util.bars.StatBar;
-import jobicade.betterhud.util.bars.StatBarArmor;
+import static jobicade.betterhud.BetterHud.MANAGER;
 
 public class PlayerInfo extends EntityInfo {
-    private StatBar<? super EntityPlayer> bar = new StatBarArmor();
+    private StatBar<? super PlayerEntity> bar = new StatBarArmor();
 
     private SettingSlider tooltipLines;
 
@@ -55,12 +53,12 @@ public class PlayerInfo extends EntityInfo {
 
     @Override
     public boolean shouldRender(Event event) {
-        return super.shouldRender(event) && ((RenderMobInfoEvent)event).getEntity() instanceof EntityPlayer;
+        return super.shouldRender(event) && ((RenderMobInfoEvent)event).getEntity() instanceof PlayerEntity;
     }
 
     @Override
     public Rect render(Event event) {
-        EntityPlayer player = (EntityPlayer)((RenderMobInfoEvent)event).getEntity();
+        PlayerEntity player = (PlayerEntity)((RenderMobInfoEvent)event).getEntity();
         bar.setHost(player);
         List<String> tooltip = new ArrayList<String>();
 
@@ -92,7 +90,7 @@ public class PlayerInfo extends EntityInfo {
         return null;
     }
 
-    /** @see ItemStack#getTooltip(EntityPlayer, net.minecraft.client.util.ITooltipFlag) */
+    /** @see ItemStack#getTooltip(PlayerEntity, net.minecraft.client.util.ITooltipFlag) */
     private String getStackName(ItemStack stack) {
         StringBuilder builder = new StringBuilder();
 
@@ -114,7 +112,7 @@ public class PlayerInfo extends EntityInfo {
 
         for(Map.Entry<Enchantment, Integer> enchantment : enchantments.entrySet()) {
             if(enchantment.getKey() != null && enchantment.getValue() > 0) {
-                dest.add(ChatFormatting.GRAY + enchantment.getKey().func_77316_c(enchantment.getValue()));
+                dest.add(TextFormatting.GRAY + enchantment.getKey().func_77316_c(enchantment.getValue()));
             }
         }
     }

@@ -1,35 +1,6 @@
 package jobicade.betterhud.element;
 
-import static jobicade.betterhud.BetterHud.SPACER;
-import static jobicade.betterhud.BetterHud.MANAGER;
-
-import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
-import com.mojang.realmsclient.gui.ChatFormatting;
-
-import net.minecraft.block.Block;
-import net.minecraft.block.state.IBlockState;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.init.Blocks;
-import net.minecraft.item.ItemStack;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.util.math.BlockPos;
-import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.text.ITextComponent;
-import net.minecraft.world.IWorldNameable;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.Event;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerChangedDimensionEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
-import net.minecraftforge.fml.common.versioning.InvalidVersionSpecificationException;
-import net.minecraftforge.fml.common.versioning.VersionRange;
+import com.mojang.blaze3d.platform.GlStateManager;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Legend;
@@ -37,10 +8,39 @@ import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.element.text.TextElement;
-import jobicade.betterhud.network.InventoryNameQuery;
-import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.network.InventoryNameQuery;
 import jobicade.betterhud.util.GlUtil;
+import net.minecraft.block.Block;
+import net.minecraft.block.BlockState;
+import net.minecraft.block.Blocks;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.ItemStack;
+import net.minecraft.tileentity.TileEntity;
+import net.minecraft.util.INameable;
+import net.minecraft.util.math.BlockPos;
+import net.minecraft.util.math.RayTraceResult;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.client.event.ClientPlayerNetworkEvent.LoggedOutEvent;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.event.entity.player.PlayerEvent.PlayerChangedDimensionEvent;
+import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import org.apache.maven.artifact.versioning.InvalidVersionSpecificationException;
+import org.apache.maven.artifact.versioning.VersionRange;
+
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static jobicade.betterhud.BetterHud.MANAGER;
+import static jobicade.betterhud.BetterHud.SPACER;
 
 /**
  * @see BetterHud#onBlockBreak(net.minecraftforge.event.world.BlockEvent.BreakEvent)
@@ -48,7 +48,7 @@ import jobicade.betterhud.util.GlUtil;
 public class BlockViewer extends TextElement {
     private SettingBoolean showBlock, showIds, invNames;
     private RayTraceResult trace;
-    private IBlockState state;
+    private BlockState state;
     private ItemStack stack;
 
     public BlockViewer() {
@@ -162,8 +162,8 @@ public class BlockViewer extends TextElement {
     /** Creates the most representative item stack for the given result.<br>
      * If the block has no {@link net.minecraft.item.ItemBlock}, it is impossible to create a stack.
      *
-     * @see net.minecraftforge.common.ForgeHooks#onPickBlock(RayTraceResult, net.minecraft.entity.player.EntityPlayer, net.minecraft.world.World) */
-    private ItemStack getDisplayStack(RayTraceResult trace, IBlockState state) {
+     * @see net.minecraftforge.common.ForgeHooks#onPickBlock(RayTraceResult, PlayerEntity, net.minecraft.world.World) */
+    private ItemStack getDisplayStack(RayTraceResult trace, BlockState state) {
         ItemStack stack = state.getBlock().getPickBlock(state, trace, Minecraft.getInstance().level, trace.func_178782_a(), Minecraft.getInstance().player);
 
         if(isStackEmpty(stack)) {
@@ -178,12 +178,12 @@ public class BlockViewer extends TextElement {
     }
 
     /** Chooses the best name for the given result and its related stack.
-     * @param stack The direct result of {@link #getDisplayStack(RayTraceResult, IBlockState)}. May be {@code null}
+     * @param stack The direct result of {@link #getDisplayStack(RayTraceResult, BlockState)}. May be {@code null}
      *
      * @see ItemStack#getDisplayName()
      * @see TileEntity#getDisplayName()
      * @see net.minecraft.item.ItemBlock#getUnlocalizedName(ItemStack) */
-    private String getBlockName(RayTraceResult trace, IBlockState state, ItemStack stack) {
+    private String getBlockName(RayTraceResult trace, BlockState state, ItemStack stack) {
         if(state.getBlock() == Blocks.END_PORTAL) {
             return I18n.get("tile.endPortal.name");
         }
@@ -191,7 +191,7 @@ public class BlockViewer extends TextElement {
         if(invNames.get() && state.getBlock().hasTileEntity(state)) {
             TileEntity tileEntity = Minecraft.getInstance().level.getBlockEntity(trace.func_178782_a());
 
-            if(tileEntity instanceof IWorldNameable) {
+            if(tileEntity instanceof INameable) {
                 ITextComponent invName = ensureInvName(trace.func_178782_a());
 
                 if(invName != null) {
@@ -204,16 +204,16 @@ public class BlockViewer extends TextElement {
     }
 
     /** @return Information about the block's related IDs */
-    private String getIdString(IBlockState state) {
+    private String getIdString(BlockState state) {
         String name = Block.field_149771_c.getKey(state.getBlock()).toString();
         int id = Block.func_149682_b(state.getBlock());
         int meta = state.getBlock().func_176201_c(state);
 
-        return String.format("%s(%s:%d/#%04d)", ChatFormatting.YELLOW, name, meta, id);
+        return String.format("%s(%s:%d/#%04d)", TextFormatting.YELLOW, name, meta, id);
     }
 
     @SubscribeEvent
-    public void onPlayerDisconnected(ClientDisconnectionFromServerEvent event) {
+    public void onPlayerDisconnected(LoggedOutEvent event) {
         nameCache.clear();
     }
 

@@ -1,25 +1,25 @@
 package jobicade.betterhud.gui;
 
-import static jobicade.betterhud.BetterHud.*;
+import com.google.common.base.Predicates;
+import jobicade.betterhud.element.HudElement;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.util.IGetSet;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.util.math.MathHelper;
 
 import java.io.IOException;
 import java.util.List;
 
-import com.google.common.base.Predicates;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
-import net.minecraft.util.math.MathHelper;
-import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.util.IGetSet;
-import jobicade.betterhud.geom.Point;
+import static jobicade.betterhud.BetterHud.MANAGER;
+import static jobicade.betterhud.BetterHud.SPACER;
 
 public class GuiReorder extends GuiElements {
-    private final GuiScreen parent;
+    private final Screen parent;
 
     private Rect toolbox;
     private GuiActionButton moveUp = new GuiTexturedButton(new Rect(20, 60, 20, 20));
@@ -30,7 +30,7 @@ public class GuiReorder extends GuiElements {
     private HudElement hovered;
     private HudElement selected;
 
-    public GuiReorder(GuiScreen parent) {
+    public GuiReorder(Screen parent) {
         this.parent = parent;
 
         moveTop.setCallback(new ActionMove(false, HudElement.ELEMENTS.size()));
@@ -105,7 +105,7 @@ public class GuiReorder extends GuiElements {
     }
 
     @Override
-    protected void func_146284_a(GuiButton button) throws IOException {
+    protected void func_146284_a(Button button) throws IOException {
         if(button instanceof GuiActionButton)
             ((GuiActionButton)button).actionPerformed();
     }

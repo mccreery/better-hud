@@ -1,23 +1,23 @@
 package jobicade.betterhud.element.vanilla;
 
-import static jobicade.betterhud.BetterHud.MANAGER;
-
-import java.util.List;
-
+import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
+import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
-import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
+import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.GlStateManager.DestFactor;
-import net.minecraft.client.renderer.GlStateManager.SourceFactor;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.world.border.WorldBorder;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.eventbus.api.Event;
+
+import java.util.List;
+
+import static jobicade.betterhud.BetterHud.MANAGER;
 
 public class Vignette extends OverrideElement {
     private static final ResourceLocation VIGNETTE_TEX_PATH = new ResourceLocation("textures/misc/vignette.png");
@@ -82,7 +82,7 @@ public class Vignette extends OverrideElement {
 
         GlUtil.drawRect(MANAGER.getScreen(), new Rect(256, 256), color);
 
-        Minecraft.getInstance().getTextureManager().bind(Gui.field_110324_m);
+        Minecraft.getInstance().getTextureManager().bind(AbstractGui.field_110324_m);
         GlUtil.blendFuncSafe(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
         return null;
     }

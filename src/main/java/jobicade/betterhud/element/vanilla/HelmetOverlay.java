@@ -1,19 +1,19 @@
 package jobicade.betterhud.element.vanilla;
 
-import static jobicade.betterhud.BetterHud.MANAGER;
-
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.init.Blocks;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.eventbus.api.Event;
+
+import static jobicade.betterhud.BetterHud.MANAGER;
 
 public class HelmetOverlay extends OverrideElement {
     private static final ResourceLocation PUMPKIN_BLUR_TEX_PATH = new ResourceLocation("textures/misc/pumpkinblur.png");
@@ -46,7 +46,7 @@ public class HelmetOverlay extends OverrideElement {
         if(item == Item.byBlock(Blocks.PUMPKIN)) {
             Minecraft.getInstance().getTextureManager().bind(PUMPKIN_BLUR_TEX_PATH);
             GlUtil.drawRect(MANAGER.getScreen(), new Rect(256, 256), Color.RED);
-            Minecraft.getInstance().getTextureManager().bind(Gui.field_110324_m);
+            Minecraft.getInstance().getTextureManager().bind(AbstractGui.field_110324_m);
         } else {
             item.renderHelmetOverlay(stack, Minecraft.getInstance().player, new ScaledResolution(Minecraft.getInstance()), getPartialTicks(event));
         }

@@ -1,9 +1,5 @@
 package jobicade.betterhud.proxy;
 
-import java.nio.file.Path;
-
-import org.lwjgl.input.Keyboard;
-
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.config.ConfigManager;
 import jobicade.betterhud.config.HudConfig;
@@ -12,15 +8,18 @@ import jobicade.betterhud.element.HudElement.SortType;
 import jobicade.betterhud.events.RenderEvents;
 import jobicade.betterhud.gui.GuiHudMenu;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.IReloadableResourceManager;
-import net.minecraft.client.resources.IResourceManager;
 import net.minecraft.client.settings.KeyBinding;
+import net.minecraft.resources.IReloadableResourceManager;
+import net.minecraft.resources.IResourceManager;
+import net.minecraftforge.client.event.InputEvent.KeyInputEvent;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.client.registry.ClientRegistry;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.InputEvent.KeyInputEvent;
+import org.lwjgl.input.Keyboard;
+
+import java.nio.file.Path;
 
 public class ClientProxy implements HudSidedProxy {
     private ConfigManager configManager;

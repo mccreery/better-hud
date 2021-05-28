@@ -1,13 +1,13 @@
 package jobicade.betterhud.element.text;
 
-import java.util.Arrays;
-import java.util.List;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.MathUtil;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
+import net.minecraftforge.eventbus.api.Event;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class Saturation extends TextElement {
     public Saturation() {

@@ -1,12 +1,12 @@
 package jobicade.betterhud.element.particles;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
+import jobicade.betterhud.util.MathUtil;
 import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.BlockPos;
-import jobicade.betterhud.util.MathUtil;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class WaterDrops extends ParticleOverlay {
     public WaterDrops() {

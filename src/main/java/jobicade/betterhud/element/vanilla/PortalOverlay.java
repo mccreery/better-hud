@@ -1,15 +1,15 @@
 package jobicade.betterhud.element.vanilla;
 
-import static jobicade.betterhud.BetterHud.MANAGER;
-
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
+import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.init.Blocks;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.eventbus.api.Event;
+
+import static jobicade.betterhud.BetterHud.MANAGER;
 
 public class PortalOverlay extends OverrideElement {
     public PortalOverlay() {

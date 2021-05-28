@@ -5,15 +5,15 @@ import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.button.Button;
 
-public class GuiMenuScreen extends GuiScreen {
+public class GuiMenuScreen extends Screen {
     private Point origin;
     private String title;
 
     @Override
-    protected void func_146284_a(GuiButton button) {
+    protected void func_146284_a(Button button) {
         if(button instanceof GuiActionButton) {
             ((GuiActionButton)button).actionPerformed();
         }

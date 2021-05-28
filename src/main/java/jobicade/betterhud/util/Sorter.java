@@ -1,15 +1,14 @@
 package jobicade.betterhud.util;
 
+import com.google.common.collect.Lists;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-import com.google.common.collect.Lists;
-
-import java.util.Comparator;
 
 public class Sorter<T> {
     private final List<T> sourceData;

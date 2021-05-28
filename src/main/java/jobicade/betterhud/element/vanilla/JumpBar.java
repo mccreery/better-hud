@@ -1,16 +1,16 @@
 package jobicade.betterhud.element.vanilla;
 
-import static jobicade.betterhud.BetterHud.MANAGER;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.GlUtil;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.eventbus.api.Event;
+
+import static jobicade.betterhud.BetterHud.MANAGER;
 
 public class JumpBar extends OverrideElement {
     public JumpBar() {
@@ -30,7 +30,7 @@ public class JumpBar extends OverrideElement {
 
     @Override
     protected Rect render(Event event) {
-        Minecraft.getInstance().getTextureManager().bind(Gui.field_110324_m);
+        Minecraft.getInstance().getTextureManager().bind(AbstractGui.field_110324_m);
 
         Rect bounds = new Rect(182, 5);
         if(!position.isCustom() && position.getDirection() == Direction.SOUTH) {

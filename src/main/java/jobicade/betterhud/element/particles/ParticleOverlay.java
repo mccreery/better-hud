@@ -1,20 +1,18 @@
 package jobicade.betterhud.element.particles;
 
-import static jobicade.betterhud.BetterHud.MANAGER;
-
-import java.util.List;
-import java.util.concurrent.CopyOnWriteArrayList;
-
-import net.minecraft.client.Minecraft;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.Tickable;
+import net.minecraft.client.Minecraft;
+import net.minecraftforge.eventbus.api.Event;
+import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 
-import jobicade.betterhud.util.Tickable.Ticker;
+import java.util.List;
+import java.util.concurrent.CopyOnWriteArrayList;
+
+import static jobicade.betterhud.BetterHud.MANAGER;
 
 public abstract class ParticleOverlay extends HudElement implements Tickable {
     protected SettingChoose density;

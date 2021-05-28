@@ -1,12 +1,13 @@
 package jobicade.betterhud.util;
 
 import jobicade.betterhud.BetterHud;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.util.ResourceLocation;
 
 /**
  * Static definitions for common texture resources.
  *
- * @see net.minecraft.client.gui.Gui#ICONS
+ * @see AbstractGui#ICONS
  */
 public final class Textures {
     public static final ResourceLocation WIDGETS   = new ResourceLocation("textures/gui/widgets.png");

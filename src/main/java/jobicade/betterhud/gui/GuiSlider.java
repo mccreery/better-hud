@@ -2,10 +2,10 @@ package jobicade.betterhud.gui;
 
 import jobicade.betterhud.util.ISlider;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiButton;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.widget.button.Button;
 
-public class GuiSlider extends GuiButton {
+public class GuiSlider extends Button {
     private final ISlider slider;
     public boolean dragging;
 
@@ -49,7 +49,7 @@ public class GuiSlider extends GuiButton {
             Minecraft.getInstance().getTextureManager().bind(field_146122_a);
             this.func_73729_b(field_146128_h + sliderOffset,     field_146129_i,   0, 66, 4, 20);
             this.func_73729_b(field_146128_h + sliderOffset + 4, field_146129_i, 196, 66, 4, 20);
-            Minecraft.getInstance().getTextureManager().bind(Gui.field_110324_m);
+            Minecraft.getInstance().getTextureManager().bind(AbstractGui.field_110324_m);
         }
     }
 

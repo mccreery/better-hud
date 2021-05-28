@@ -1,21 +1,21 @@
 package jobicade.betterhud.element.settings;
 
-import static jobicade.betterhud.BetterHud.SPACER;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.gui.GuiActionButton;
+import jobicade.betterhud.gui.GuiElementSettings;
+import jobicade.betterhud.render.Color;
+import jobicade.betterhud.util.GlUtil;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.resources.I18n;
 
 import java.util.Collection;
 import java.util.Map;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.resources.I18n;
-import jobicade.betterhud.gui.GuiActionButton;
-import jobicade.betterhud.gui.GuiElementSettings;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.geom.Point;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.render.Color;
-import jobicade.betterhud.util.GlUtil;
+import static jobicade.betterhud.BetterHud.SPACER;
 
 public class SettingDirection extends SettingAlignable<Direction> {
     private GuiActionButton[] toggles = new GuiActionButton[9];
@@ -57,7 +57,7 @@ public class SettingDirection extends SettingAlignable<Direction> {
     }
 
     @Override
-    public void getGuiParts(java.util.List<Gui> parts, Map<Gui,Setting<?>> callbacks, Rect bounds) {
+    public void getGuiParts(java.util.List<AbstractGui> parts, Map<AbstractGui,Setting<?>> callbacks, Rect bounds) {
         this.bounds = bounds;
 
         Rect radios = new Rect(60, 60).anchor(bounds, horizontal ? Direction.WEST : Direction.SOUTH);
@@ -84,7 +84,7 @@ public class SettingDirection extends SettingAlignable<Direction> {
     }
 
     @Override
-    public void actionPerformed(GuiElementSettings gui, GuiButton button) {
+    public void actionPerformed(GuiElementSettings gui, Button button) {
         value = Direction.values()[button.field_146127_k];
     }
 

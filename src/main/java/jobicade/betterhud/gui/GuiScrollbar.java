@@ -1,15 +1,14 @@
 package jobicade.betterhud.gui;
 
-import org.lwjgl.input.Mouse;
-
-import net.minecraft.client.gui.Gui;
-import net.minecraft.util.math.MathHelper;
+import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
-import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.util.math.MathHelper;
+import org.lwjgl.input.Mouse;
 
-public class GuiScrollbar extends Gui {
+public class GuiScrollbar extends AbstractGui {
     private final Rect bounds;
     private Rect grabber;
     private float scaleFactor;

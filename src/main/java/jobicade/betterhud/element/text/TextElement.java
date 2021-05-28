@@ -1,21 +1,21 @@
 package jobicade.betterhud.element.text;
 
-import java.util.List;
-
-import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingColor;
 import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.render.Grid;
 import jobicade.betterhud.render.Label;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.util.GlUtil;
+import net.minecraftforge.eventbus.api.Event;
+
+import java.util.List;
 
 public abstract class TextElement extends HudElement {
     private SettingColor color;

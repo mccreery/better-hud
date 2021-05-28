@@ -1,16 +1,16 @@
 package jobicade.betterhud.gui;
 
-import java.util.Arrays;
-import java.util.List;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.HudElement.SortType;
-import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Rect;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.resources.I18n;
+
+import java.util.Arrays;
+import java.util.List;
 
 class ButtonRow {
     private final HudElement element;
@@ -19,7 +19,7 @@ class ButtonRow {
 
     private Rect bounds;
 
-    public ButtonRow(GuiScreen callback, HudElement element) {
+    public ButtonRow(Screen callback, HudElement element) {
         this.element = element;
 
         toggle = new GuiActionButton("").setCallback(b -> {
@@ -45,7 +45,7 @@ class ButtonRow {
         return bounds;
     }
 
-    public List<GuiButton> getButtons() {
+    public List<Button> getButtons() {
         return Arrays.asList(toggle, options);
     }
 

@@ -1,6 +1,11 @@
 package jobicade.betterhud.config;
 
-import static jobicade.betterhud.BetterHud.MODID;
+import com.google.common.collect.ImmutableList;
+import com.google.gson.Gson;
+import net.minecraft.resources.IResource;
+import net.minecraft.resources.IResourceManager;
+import net.minecraft.resources.IResourceManagerReloadListener;
+import net.minecraft.util.ResourceLocation;
 
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -16,13 +21,7 @@ import java.util.function.Function;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
 
-import com.google.common.collect.ImmutableList;
-import com.google.gson.Gson;
-
-import net.minecraft.client.resources.IResource;
-import net.minecraft.client.resources.IResourceManager;
-import net.minecraft.client.resources.IResourceManagerReloadListener;
-import net.minecraft.util.ResourceLocation;
+import static jobicade.betterhud.BetterHud.MODID;
 
 /**
  * Maintains a list of config slots for saving and loading.

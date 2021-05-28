@@ -1,10 +1,5 @@
 package jobicade.betterhud.element;
 
-import static jobicade.betterhud.BetterHud.MANAGER;
-
-import java.util.ArrayList;
-import java.util.List;
-
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingPosition;
@@ -22,11 +17,16 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.Event;
-import net.minecraftforge.fml.common.versioning.InvalidVersionSpecificationException;
-import net.minecraftforge.fml.common.versioning.VersionRange;
 import net.minecraftforge.items.ItemHandlerHelper;
+import org.apache.maven.artifact.versioning.InvalidVersionSpecificationException;
+import org.apache.maven.artifact.versioning.VersionRange;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static jobicade.betterhud.BetterHud.MANAGER;
 
 public class PickupCount extends HudElement {
     private SettingSlider maxStacks, fadeAfter;

@@ -1,7 +1,5 @@
 package jobicade.betterhud.element.vanilla;
 
-import static jobicade.betterhud.BetterHud.SPACER;
-
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
@@ -11,8 +9,10 @@ import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.Textures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
-import net.minecraft.util.EnumHandSide;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraft.util.HandSide;
+import net.minecraftforge.eventbus.api.Event;
+
+import static jobicade.betterhud.BetterHud.SPACER;
 
 public class Offhand extends HudElement {
     public Offhand() {
@@ -33,8 +33,8 @@ public class Offhand extends HudElement {
     @Override
     protected Rect render(Event event) {
         ItemStack offhandStack = Minecraft.getInstance().player.getOffhandItem();
-        EnumHandSide offhandSide = Minecraft.getInstance().player.getMainArm().getOpposite();
-        Direction offhand = offhandSide == EnumHandSide.RIGHT ? Direction.EAST : Direction.WEST;
+        HandSide offhandSide = Minecraft.getInstance().player.getMainArm().getOpposite();
+        Direction offhand = offhandSide == HandSide.RIGHT ? Direction.EAST : Direction.WEST;
 
         Rect bounds = new Rect(22, 22);
         Rect texture = new Rect(24, 23, 22, 22);

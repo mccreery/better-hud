@@ -1,18 +1,18 @@
 package jobicade.betterhud.element.settings;
 
-import static jobicade.betterhud.BetterHud.SPACER;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.render.Color;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.GuiLabel;
+import net.minecraft.client.resources.I18n;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiLabel;
-import net.minecraft.client.resources.I18n;
-import jobicade.betterhud.geom.Point;
-import jobicade.betterhud.render.Color;
+import static jobicade.betterhud.BetterHud.SPACER;
 
 public class Legend extends SettingStub<Object> {
     public Legend(String name) {
@@ -25,7 +25,7 @@ public class Legend extends SettingStub<Object> {
     }
 
     @Override
-    public Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Point origin) {
+    public Point getGuiParts(List<AbstractGui> parts, Map<AbstractGui, Setting<?>> callbacks, Point origin) {
         GuiLegendLabel label = new GuiLegendLabel(0, origin.getX() - 150, origin.getY(), 300, Minecraft.getInstance().font.lineHeight, Color.WHITE);
         label.func_175202_a("betterHud.group." + this.name);
         parts.add(label);

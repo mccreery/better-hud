@@ -1,39 +1,38 @@
 package jobicade.betterhud.gui;
 
-import static jobicade.betterhud.BetterHud.SPACER;
-
-import java.io.IOException;
-import java.util.List;
-import java.util.stream.Collectors;
-
-import org.apache.commons.lang3.StringUtils;
-import org.lwjgl.opengl.GL11;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraft.client.resources.I18n;
+import jobicade.betterhud.config.ConfigManager;
+import jobicade.betterhud.config.ConfigSlot;
+import jobicade.betterhud.config.FileConfigSlot;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Size;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.render.DefaultBoxed;
 import jobicade.betterhud.render.Grid;
 import jobicade.betterhud.render.Label;
-import jobicade.betterhud.config.ConfigManager;
-import jobicade.betterhud.config.ConfigSlot;
-import jobicade.betterhud.config.FileConfigSlot;
-import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.geom.Point;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.resources.I18n;
+import org.apache.commons.lang3.StringUtils;
+import org.lwjgl.opengl.GL11;
 
-public class GuiConfigSaves extends GuiScreen {
-    private GuiTextField name;
+import java.io.IOException;
+import java.util.List;
+import java.util.stream.Collectors;
+
+import static jobicade.betterhud.BetterHud.SPACER;
+
+public class GuiConfigSaves extends Screen {
+    private TextFieldWidget name;
     private GuiScrollbar scrollbar;
     private Rect viewport;
 
-    private final GuiScreen previous;
+    private final Screen previous;
     private final ConfigManager manager;
 
     private Grid<ListItem> list;
@@ -41,7 +40,7 @@ public class GuiConfigSaves extends GuiScreen {
 
     private GuiActionButton load, save;
 
-    public GuiConfigSaves(ConfigManager manager, GuiScreen previous) {
+    public GuiConfigSaves(ConfigManager manager, Screen previous) {
         this.previous = previous;
         this.manager = manager;
     }
@@ -95,7 +94,7 @@ public class GuiConfigSaves extends GuiScreen {
         Rect fieldLine = new Rect(textField.getWidth() + (SPACER + smallButton.getWidth()) * 2, 20).align(origin.add(0, 20 + SPACER), Direction.NORTH);
         textField = textField.anchor(fieldLine, Direction.NORTH_WEST);
 
-        name = new GuiTextField(0, field_146289_q, textField.getX(), textField.getY(), textField.getWidth(), textField.getHeight());
+        name = new TextFieldWidget(0, field_146289_q, textField.getX(), textField.getY(), textField.getWidth(), textField.getHeight());
         name.setFocus(true);
         name.setCanLoseFocus(false);
 
@@ -170,7 +169,7 @@ public class GuiConfigSaves extends GuiScreen {
     }
 
     @Override
-    protected void func_146284_a(GuiButton button) throws IOException {
+    protected void func_146284_a(Button button) throws IOException {
         if(button instanceof GuiActionButton) {
             ((GuiActionButton)button).actionPerformed();
         }

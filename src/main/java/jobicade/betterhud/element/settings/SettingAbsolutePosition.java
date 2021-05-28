@@ -1,26 +1,26 @@
 package jobicade.betterhud.element.settings;
 
-import static jobicade.betterhud.BetterHud.SPACER;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.gui.GuiElementSettings;
+import jobicade.betterhud.gui.GuiOffsetChooser;
+import jobicade.betterhud.gui.GuiUpDownButton;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.widget.TextFieldWidget;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.resources.I18n;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.gui.GuiTextField;
-import net.minecraft.client.resources.I18n;
-import jobicade.betterhud.gui.GuiElementSettings;
-import jobicade.betterhud.gui.GuiOffsetChooser;
-import jobicade.betterhud.gui.GuiUpDownButton;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.geom.Point;
+import static jobicade.betterhud.BetterHud.SPACER;
 
 public class SettingAbsolutePosition extends Setting<Point> {
-    public GuiTextField xBox, yBox;
-    public GuiButton pick;
-    private GuiButton xUp, xDown, yUp, yDown;
+    public TextFieldWidget xBox, yBox;
+    public Button pick;
+    private Button xUp, xDown, yUp, yDown;
 
     private final SettingPosition position;
 
@@ -41,10 +41,10 @@ public class SettingAbsolutePosition extends Setting<Point> {
     }
 
     @Override
-    public Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Point origin) {
-        parts.add(xBox = new GuiTextField(0, Minecraft.getInstance().font, origin.getX() - 106, origin.getY() + 1, 80, 18));
+    public Point getGuiParts(List<AbstractGui> parts, Map<AbstractGui, Setting<?>> callbacks, Point origin) {
+        parts.add(xBox = new TextFieldWidget(0, Minecraft.getInstance().font, origin.getX() - 106, origin.getY() + 1, 80, 18));
         xBox.setValue(String.valueOf(x));
-        parts.add(yBox = new GuiTextField(0, Minecraft.getInstance().font, origin.getX() + 2, origin.getY() + 1, 80, 18));
+        parts.add(yBox = new TextFieldWidget(0, Minecraft.getInstance().font, origin.getX() + 2, origin.getY() + 1, 80, 18));
         yBox.setValue(String.valueOf(y));
 
         parts.add(xUp   = new GuiUpDownButton(true ).setBounds(new Rect(origin.getX() - 22, origin.getY(),      0, 0)).setId(0).setRepeat());
@@ -53,7 +53,7 @@ public class SettingAbsolutePosition extends Setting<Point> {
         parts.add(yDown = new GuiUpDownButton(false).setBounds(new Rect(origin.getX() + 86, origin.getY() + 10, 0, 0)).setId(3).setRepeat());
 
         if(position != null) {
-            parts.add(pick = new GuiButton(4, origin.getX() - 100, origin.getY() + 22, 200, 20, I18n.get("betterHud.menu.pick")));
+            parts.add(pick = new Button(4, origin.getX() - 100, origin.getY() + 22, 200, 20, I18n.get("betterHud.menu.pick")));
             callbacks.put(pick, this);
         }
 
@@ -75,7 +75,7 @@ public class SettingAbsolutePosition extends Setting<Point> {
     }
 
     @Override
-    public void actionPerformed(GuiElementSettings gui, GuiButton button) {
+    public void actionPerformed(GuiElementSettings gui, Button button) {
         switch(button.field_146127_k) {
             case 0: xBox.setValue(String.valueOf(++x)); break;
             case 1: xBox.setValue(String.valueOf(--x)); break;

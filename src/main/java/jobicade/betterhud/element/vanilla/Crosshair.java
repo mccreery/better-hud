@@ -1,9 +1,8 @@
 package jobicade.betterhud.element.vanilla;
 
-import static jobicade.betterhud.BetterHud.MANAGER;
-
-import java.util.List;
-
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
+import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
@@ -14,21 +13,22 @@ import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.GlUtil;
-import net.minecraft.block.state.IBlockState;
+import net.minecraft.block.BlockState;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.GlStateManager.DestFactor;
-import net.minecraft.client.renderer.GlStateManager.SourceFactor;
 import net.minecraft.client.renderer.OpenGlHelper;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.IInventory;
-import net.minecraft.util.EnumHandSide;
+import net.minecraft.util.HandSide;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.eventbus.api.Event;
+
+import java.util.List;
+
+import static jobicade.betterhud.BetterHud.MANAGER;
 
 public class Crosshair extends OverrideElement {
     private SettingBoolean attackIndicator;
@@ -113,7 +113,7 @@ public class Crosshair extends OverrideElement {
             if(trace == null || trace.field_72313_a != Type.BLOCK) return false;
 
             BlockPos pos = trace.func_178782_a();
-            IBlockState state = Minecraft.getInstance().level.getBlockState(pos);
+            BlockState state = Minecraft.getInstance().level.getBlockState(pos);
             return state.getBlock().hasTileEntity(state) && Minecraft.getInstance().level.getBlockEntity(pos) instanceof IInventory;
         }
     }
@@ -147,7 +147,7 @@ public class Crosshair extends OverrideElement {
         Rect bounds = indicatorType.getIndex() == 0 ? new Rect(16, 8) : new Rect(18, 18);
 
         if(position.isDirection(Direction.SOUTH)) {
-            Direction primary = Minecraft.getInstance().player.getMainArm() == EnumHandSide.RIGHT ? Direction.EAST : Direction.WEST;
+            Direction primary = Minecraft.getInstance().player.getMainArm() == HandSide.RIGHT ? Direction.EAST : Direction.WEST;
             // Vanilla indicator is also offset by (1, 0) regardless of main hand
             bounds = bounds.align(HudElement.HOTBAR.getLastBounds().grow(5).getAnchor(primary), primary.mirrorCol()).translate(1, 0);
         } else if(position.isDirection(Direction.CENTER)) {
@@ -161,8 +161,8 @@ public class Crosshair extends OverrideElement {
         if(indicatorType.getIndex() == 0) {
             if(attackStrength >= 1) {
                 if (
-                    Minecraft.getInstance().crosshairPickEntity instanceof EntityLivingBase
-                    && ((EntityLivingBase)Minecraft.getInstance().crosshairPickEntity).isAlive()
+                    Minecraft.getInstance().crosshairPickEntity instanceof LivingEntity
+                    && ((LivingEntity)Minecraft.getInstance().crosshairPickEntity).isAlive()
                     && Minecraft.getInstance().player.getCurrentItemAttackStrengthDelay() > 5
                 ) {
                     GlUtil.drawRect(bounds.resize(16, 16), new Rect(68, 94, 16, 16));

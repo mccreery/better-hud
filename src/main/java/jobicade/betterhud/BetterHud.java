@@ -1,7 +1,5 @@
 package jobicade.betterhud;
 
-import org.apache.logging.log4j.Logger;
-
 import jobicade.betterhud.geom.LayoutManager;
 import jobicade.betterhud.network.InventoryNameQuery;
 import jobicade.betterhud.network.MessageNotifyClientHandler;
@@ -10,25 +8,26 @@ import jobicade.betterhud.network.MessagePickupHandler;
 import jobicade.betterhud.network.MessageVersion;
 import jobicade.betterhud.proxy.HudSidedProxy;
 import jobicade.betterhud.util.Tickable.Ticker;
-import net.minecraft.entity.player.EntityPlayerMP;
-import net.minecraft.world.IWorldNameable;
+import net.minecraft.entity.player.ServerPlayerEntity;
+import net.minecraft.util.INameable;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.client.event.ClientPlayerNetworkEvent.LoggedOutEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent.ItemPickupEvent;
+import net.minecraftforge.event.entity.player.PlayerEvent.PlayerLoggedInEvent;
 import net.minecraftforge.event.world.BlockEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.common.Mod.EventHandler;
 import net.minecraftforge.fml.common.SidedProxy;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
 import net.minecraftforge.fml.common.event.FMLPreInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.ItemPickupEvent;
-import net.minecraftforge.fml.common.gameevent.PlayerEvent.PlayerLoggedInEvent;
-import net.minecraftforge.fml.common.network.FMLNetworkEvent.ClientDisconnectionFromServerEvent;
 import net.minecraftforge.fml.common.network.NetworkRegistry;
 import net.minecraftforge.fml.common.network.simpleimpl.SimpleNetworkWrapper;
-import net.minecraftforge.fml.common.versioning.ArtifactVersion;
-import net.minecraftforge.fml.common.versioning.DefaultArtifactVersion;
-import net.minecraftforge.fml.relauncher.Side;
+import org.apache.logging.log4j.Logger;
+import org.apache.maven.artifact.versioning.ArtifactVersion;
+import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
 
 @EventBusSubscriber
 @Mod(modid = BetterHud.MODID, name = "Better HUD", version = BetterHud.VERSION,
@@ -73,12 +72,12 @@ public class BetterHud {
     @EventHandler
     public void init(FMLInitializationEvent event) {
         // Message ID 0 reserved for ignored server presence message from [,1.4)
-        NET_WRAPPER.registerMessage(MessagePickupHandler.class, MessagePickup.class, 1, Side.CLIENT);
-        NET_WRAPPER.registerMessage(MessageNotifyClientHandler.class, MessageVersion.class, 2, Side.CLIENT);
+        NET_WRAPPER.registerMessage(MessagePickupHandler.class, MessagePickup.class, 1, Dist.CLIENT);
+        NET_WRAPPER.registerMessage(MessageNotifyClientHandler.class, MessageVersion.class, 2, Dist.CLIENT);
 
         // Used to update inventory names
-        NET_WRAPPER.registerMessage(InventoryNameQuery.ServerHandler.class, InventoryNameQuery.Request.class, 3, Side.SERVER);
-        NET_WRAPPER.registerMessage(InventoryNameQuery.ClientHandler.class, InventoryNameQuery.Response.class, 4, Side.CLIENT);
+        NET_WRAPPER.registerMessage(InventoryNameQuery.ServerHandler.class, InventoryNameQuery.Request.class, 3, Dist.SERVER);
+        NET_WRAPPER.registerMessage(InventoryNameQuery.ClientHandler.class, InventoryNameQuery.Response.class, 4, Dist.CLIENT);
 
         Ticker.registerEvents();
         proxy.init(event);
@@ -90,9 +89,9 @@ public class BetterHud {
      */
     @SubscribeEvent
     public static void onPlayerConnected(PlayerLoggedInEvent e) {
-        if(e.player instanceof EntityPlayerMP) {
+        if(e.player instanceof ServerPlayerEntity) {
             ArtifactVersion version = new DefaultArtifactVersion(VERSION);
-            NET_WRAPPER.sendTo(new MessageVersion(version), (EntityPlayerMP)e.player);
+            NET_WRAPPER.sendTo(new MessageVersion(version), (ServerPlayerEntity)e.player);
         }
     }
 
@@ -101,7 +100,7 @@ public class BetterHud {
      * Resets the version tracked by the proxy to none.
      */
     @SubscribeEvent
-    public static void onPlayerDisconnected(ClientDisconnectionFromServerEvent e) {
+    public static void onPlayerDisconnected(LoggedOutEvent e) {
         setServerVersion(null);
     }
 
@@ -111,7 +110,7 @@ public class BetterHud {
      */
     @SubscribeEvent
     public static void onBlockBreak(BlockEvent.BreakEvent event) {
-        if (event.getWorld().getBlockEntity(event.getPos()) instanceof IWorldNameable) {
+        if (event.getWorld().getBlockEntity(event.getPos()) instanceof INameable) {
             NET_WRAPPER.sendToDimension(
                 new InventoryNameQuery.Response(event.getPos(), null),
                 event.getWorld().dimension.getDimension()
@@ -125,10 +124,10 @@ public class BetterHud {
      */
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onItemPickup(ItemPickupEvent e) {
-        if (!e.getStack().isEmpty() && e.player instanceof EntityPlayerMP) {
+        if (!e.getStack().isEmpty() && e.player instanceof ServerPlayerEntity) {
             BetterHud.NET_WRAPPER.sendTo(
                 new MessagePickup(e.getStack()),
-                (EntityPlayerMP)e.player
+                (ServerPlayerEntity)e.player
             );
         }
     }

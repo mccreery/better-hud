@@ -1,16 +1,15 @@
 package jobicade.betterhud.gui;
 
-import com.mojang.realmsclient.gui.ChatFormatting;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.resources.I18n;
+import com.mojang.blaze3d.platform.GlStateManager;
+import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
-import jobicade.betterhud.geom.Point;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.TextFormatting;
 
-public class GuiActionButton extends GuiButton {
+public class GuiActionButton extends Button {
     private ActionCallback callback;
     private boolean repeat;
 
@@ -81,9 +80,9 @@ public class GuiActionButton extends GuiButton {
         String valueDisplay;
 
         if(value) {
-            valueDisplay = ChatFormatting.GREEN + I18n.get(valuePrefix + ".on");
+            valueDisplay = TextFormatting.GREEN + I18n.get(valuePrefix + ".on");
         } else {
-            valueDisplay = ChatFormatting.RED + I18n.get(valuePrefix + ".off");
+            valueDisplay = TextFormatting.RED + I18n.get(valuePrefix + ".off");
         }
         updateText(I18n.get(unlocalizedName), valueDisplay);
         glowing = value;

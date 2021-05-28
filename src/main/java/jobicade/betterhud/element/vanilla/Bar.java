@@ -1,27 +1,27 @@
 package jobicade.betterhud.element.vanilla;
 
-import static jobicade.betterhud.BetterHud.MANAGER;
-
-import java.util.List;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.entity.EntityPlayerSP;
-import net.minecraft.client.gui.Gui;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingPosition;
-import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.bars.StatBar;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.entity.player.ClientPlayerEntity;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraftforge.eventbus.api.Event;
+
+import java.util.List;
+
+import static jobicade.betterhud.BetterHud.MANAGER;
 
 public abstract class Bar extends OverrideElement {
     protected SettingChoose side;
 
-    private StatBar<? super EntityPlayerSP> bar;
+    private StatBar<? super ClientPlayerEntity> bar;
 
-    public Bar(String name, StatBar<? super EntityPlayerSP> bar) {
+    public Bar(String name, StatBar<? super ClientPlayerEntity> bar) {
         super(name, new SettingPosition(DirectionOptions.BAR, DirectionOptions.CORNERS));
         this.bar = bar;
     }
@@ -60,7 +60,7 @@ public abstract class Bar extends OverrideElement {
 
     @Override
     protected Rect render(Event event) {
-        Minecraft.getInstance().getTextureManager().bind(Gui.field_110324_m);
+        Minecraft.getInstance().getTextureManager().bind(AbstractGui.field_110324_m);
         Direction contentAlignment = getContentAlignment();
 
         Rect bounds = new Rect(bar.getPreferredSize());

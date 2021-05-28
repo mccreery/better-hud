@@ -1,23 +1,24 @@
 package jobicade.betterhud.util;
 
-import java.util.ArrayList;
-
 import jobicade.betterhud.BetterHud;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent;
-import net.minecraftforge.fml.common.gameevent.TickEvent.Phase;
+import net.minecraftforge.event.TickEvent;
+import net.minecraftforge.event.TickEvent.ClientTickEvent;
+import net.minecraftforge.event.TickEvent.Phase;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+
+import java.util.ArrayList;
 
 /** A generic interface for something which responds to ticks */
 public interface Tickable {
     public void tick();
 
-    /** Ticked during {@link net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent}.
+    /** Ticked during {@link TickEvent.ClientTickEvent}.
      *
      * <p>Use {@link #register(Tickable)} to register a tickable at this speed.<br>
      * Use {@link #startTick()} to tick the whole chain
      *
-     * @see BetterHud#clientTick(net.minecraftforge.fml.common.gameevent.TickEvent.ClientTickEvent) */
+     * @see BetterHud#clientTick(TickEvent.ClientTickEvent) */
     public enum Ticker implements Tickable {
         /** Called every tick */
         FASTER(1),

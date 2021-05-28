@@ -9,20 +9,20 @@ import jobicade.betterhud.render.DefaultBoxed;
 import jobicade.betterhud.render.Label;
 import jobicade.betterhud.render.Quad;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.inventory.GuiContainer;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.potion.EffectInstance;
 import net.minecraft.potion.Potion;
-import net.minecraft.potion.PotionEffect;
 import net.minecraft.util.math.MathHelper;
 
 public class PotionIcon extends DefaultBoxed {
-    private final PotionEffect effect;
+    private final EffectInstance effect;
     private final Potion potion;
 
     private final boolean showDuration;
 
-    public PotionIcon(PotionEffect effect, boolean showDuration) {
+    public PotionIcon(EffectInstance effect, boolean showDuration) {
         this.effect = effect;
         this.potion = effect.getEffect();
         this.showDuration = showDuration;
@@ -34,7 +34,7 @@ public class PotionIcon extends DefaultBoxed {
         Rect background = getIconBackground();
         Rect iconBounds = background.anchor(bounds, Direction.NORTH);
 
-        Minecraft.getInstance().getTextureManager().bind(GuiContainer.INVENTORY_LOCATION);
+        Minecraft.getInstance().getTextureManager().bind(ContainerScreen.INVENTORY_LOCATION);
         new Quad().setTexture(background).setBounds(iconBounds).render();
 
         iconColor.apply();
@@ -60,7 +60,7 @@ public class PotionIcon extends DefaultBoxed {
             label.setBounds(new Rect(label.getPreferredSize()).anchor(iconBounds.grow(2), Direction.SOUTH, true)).render();
         }
 
-        Minecraft.getInstance().getTextureManager().bind(Gui.field_110324_m);
+        Minecraft.getInstance().getTextureManager().bind(AbstractGui.field_110324_m);
         Color.WHITE.apply();
     }
 

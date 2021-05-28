@@ -5,7 +5,7 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.Textures;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.AbstractGui;
 
 public class GuiTexturedButton extends GuiActionButton {
     private final Rect disabled, inactive, active;
@@ -49,6 +49,6 @@ public class GuiTexturedButton extends GuiActionButton {
     protected void drawButton(Rect bounds, Point mousePosition, float partialTicks) {
         Minecraft.getInstance().getTextureManager().bind(Textures.SETTINGS);
         GlUtil.drawRect(bounds, getTexture());
-        Minecraft.getInstance().getTextureManager().bind(Gui.field_110324_m);
+        Minecraft.getInstance().getTextureManager().bind(AbstractGui.field_110324_m);
     }
 }

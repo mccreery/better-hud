@@ -1,12 +1,12 @@
 package jobicade.betterhud.element.vanilla;
 
-import net.minecraftforge.client.event.RenderGameOverlayEvent;
-import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
-import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.events.RenderEvents;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
+import net.minecraftforge.common.MinecraftForge;
+import net.minecraftforge.eventbus.api.Event;
 
 public abstract class OverrideElement extends HudElement {
     protected OverrideElement(String name) {

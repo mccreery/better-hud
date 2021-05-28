@@ -1,5 +1,10 @@
 package jobicade.betterhud.util;
 
+import com.google.common.graph.Graph;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import net.minecraft.util.math.MathHelper;
+
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -10,12 +15,6 @@ import java.util.Objects;
 import java.util.Random;
 import java.util.Set;
 import java.util.function.Predicate;
-
-import com.google.common.graph.Graph;
-
-import jobicade.betterhud.geom.Point;
-import jobicade.betterhud.geom.Rect;
-import net.minecraft.util.math.MathHelper;
 
 public final class MathUtil {
     private MathUtil() {}

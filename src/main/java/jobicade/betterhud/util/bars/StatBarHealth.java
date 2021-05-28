@@ -1,18 +1,18 @@
 package jobicade.betterhud.util.bars;
 
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.util.MathUtil;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.potion.Effects;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraft.init.MobEffects;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.util.MathUtil;
-
-public class StatBarHealth extends StatBar<EntityLivingBase> {
+public class StatBarHealth extends StatBar<LivingEntity> {
     private final Random random = new Random();
 
     private int currentHealth, displayHealth, maxHealth, absorptionHealth;
@@ -21,7 +21,7 @@ public class StatBarHealth extends StatBar<EntityLivingBase> {
     private int regenCounter;
 
     @Override
-    public void setHost(EntityLivingBase host) {
+    public void setHost(LivingEntity host) {
         if(this.host != host) {
             currentHealth = 0;
         }
@@ -83,9 +83,9 @@ public class StatBarHealth extends StatBar<EntityLivingBase> {
         int fullX;
         if(pointsIndex >= maxHealth) {
             fullX = 160;
-        } else if(host.hasEffect(MobEffects.POISON)) {
+        } else if(host.hasEffect(Effects.POISON)) {
             fullX = 88;
-        } else if(host.hasEffect(MobEffects.WITHER)) {
+        } else if(host.hasEffect(Effects.WITHER)) {
             fullX = 124;
         } else {
             fullX = 52;
@@ -138,7 +138,7 @@ public class StatBarHealth extends StatBar<EntityLivingBase> {
             if(flash <= 0) displayHealth = newHealth;
         }
 
-        if(host.hasEffect(MobEffects.REGENERATION)) {
+        if(host.hasEffect(Effects.REGENERATION)) {
             regenCounter += updateDelta * 2;
 
             if(regenCounter >= maxHealth + 30) {
@@ -151,7 +151,7 @@ public class StatBarHealth extends StatBar<EntityLivingBase> {
         currentHealth = newHealth;
         currentUpdateCounter = newUpdateCounter;
 
-        Minecraft.getInstance().getTextureManager().bind(Gui.field_110324_m);
+        Minecraft.getInstance().getTextureManager().bind(AbstractGui.field_110324_m);
         super.render();
     }
 }

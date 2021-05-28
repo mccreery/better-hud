@@ -1,13 +1,13 @@
 package jobicade.betterhud.element;
 
-import java.util.List;
-
-import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingPercentage;
 import jobicade.betterhud.element.settings.SettingSlider;
 import jobicade.betterhud.geom.Rect;
+import net.minecraftforge.eventbus.api.Event;
+
+import java.util.List;
 
 public class GlobalSettings extends HudElement {
     private SettingPercentage billboardScale;

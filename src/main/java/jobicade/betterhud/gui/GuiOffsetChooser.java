@@ -1,22 +1,21 @@
 package jobicade.betterhud.gui;
 
-import static jobicade.betterhud.BetterHud.SPACER;
-
-import java.io.IOException;
-
-import org.lwjgl.input.Keyboard;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.GuiScreen;
-import net.minecraft.client.resources.I18n;
 import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.geom.Point;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.resources.I18n;
+import org.lwjgl.input.Keyboard;
 
-public class GuiOffsetChooser extends GuiScreen {
+import java.io.IOException;
+
+import static jobicade.betterhud.BetterHud.SPACER;
+
+public class GuiOffsetChooser extends Screen {
     private final GuiElementSettings parent;
     private final SettingPosition setting;
 

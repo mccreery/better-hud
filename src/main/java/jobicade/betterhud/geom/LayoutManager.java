@@ -1,10 +1,10 @@
 package jobicade.betterhud.geom;
 
+import net.minecraft.client.gui.ScaledResolution;
+import net.minecraftforge.client.gui.ForgeIngameGui;
+
 import java.util.HashMap;
 import java.util.Map;
-
-import net.minecraft.client.gui.ScaledResolution;
-import net.minecraftforge.client.GuiIngameForge;
 
 public class LayoutManager {
     public static final int SPACER = 5;
@@ -21,7 +21,7 @@ public class LayoutManager {
         corners.clear();
 
         // Compatibility with bars from other mods
-        GuiIngameForge.left_height = GuiIngameForge.right_height = SPACER + 9;
+        ForgeIngameGui.left_height = ForgeIngameGui.right_height = SPACER + 9;
     }
 
     public Rect getScreen() {
@@ -33,9 +33,9 @@ public class LayoutManager {
         int column = alignment.getCol();
 
         switch(column) {
-            case 0: offset = GuiIngameForge.left_height; break;
-            case 1: offset = Math.max(GuiIngameForge.left_height, GuiIngameForge.right_height); break;
-            case 2: offset = GuiIngameForge.right_height; break;
+            case 0: offset = ForgeIngameGui.left_height; break;
+            case 1: offset = Math.max(ForgeIngameGui.left_height, ForgeIngameGui.right_height); break;
+            case 2: offset = ForgeIngameGui.right_height; break;
         }
         offset -= 9;
 
@@ -44,8 +44,8 @@ public class LayoutManager {
 
         int newHeight = offset + bounds.getHeight() + postSpacer + 9;
 
-        if(column > 0) GuiIngameForge.right_height = newHeight;
-        if(column < 2) GuiIngameForge.left_height = newHeight;
+        if(column > 0) ForgeIngameGui.right_height = newHeight;
+        if(column < 2) ForgeIngameGui.left_height = newHeight;
 
         corners.put(Direction.SOUTH, newHeight - 9);
         return bounds;
@@ -66,7 +66,7 @@ public class LayoutManager {
         corners.put(corner, newOffset);
 
         if(corner == Direction.SOUTH) {
-            GuiIngameForge.left_height = GuiIngameForge.right_height = newOffset + 9;
+            ForgeIngameGui.left_height = ForgeIngameGui.right_height = newOffset + 9;
         }
         return bounds;
     }

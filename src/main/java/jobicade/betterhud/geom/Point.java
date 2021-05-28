@@ -1,9 +1,8 @@
 package jobicade.betterhud.geom;
 
-import java.io.Serializable;
-
-import jobicade.betterhud.geom.Size;
 import net.minecraft.client.gui.ScaledResolution;
+
+import java.io.Serializable;
 
 /**
  * Represents an immutable 2D point in integer precision, typically in screen

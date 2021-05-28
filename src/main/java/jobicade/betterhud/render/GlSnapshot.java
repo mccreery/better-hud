@@ -1,18 +1,17 @@
 package jobicade.betterhud.render;
 
-import java.nio.FloatBuffer;
-import java.util.Collections;
-import java.util.EnumMap;
-import java.util.Map;
-import java.util.Objects;
-
+import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
+import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
 import org.lwjgl.BufferUtils;
 import org.lwjgl.opengl.GL11;
 import org.lwjgl.opengl.GL12;
 import org.lwjgl.opengl.GL14;
 
-import net.minecraft.client.renderer.GlStateManager.DestFactor;
-import net.minecraft.client.renderer.GlStateManager.SourceFactor;
+import java.nio.FloatBuffer;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.Map;
+import java.util.Objects;
 
 /**
  * Data class containing a single immutable snapshot of the OpenGL state.

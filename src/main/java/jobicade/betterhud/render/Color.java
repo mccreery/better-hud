@@ -1,9 +1,9 @@
 package jobicade.betterhud.render;
 
-import java.util.Arrays;
-
-import net.minecraft.client.renderer.GlStateManager;
+import com.mojang.blaze3d.platform.GlStateManager;
 import net.minecraft.util.math.MathHelper;
+
+import java.util.Arrays;
 
 public class Color {
     public static final Color WHITE = new Color(255, 255, 255);

@@ -1,14 +1,14 @@
 package jobicade.betterhud.gui;
 
-import java.util.function.Predicate;
-
 import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
-import net.minecraft.client.gui.GuiScreen;
+import jobicade.betterhud.util.GlUtil;
+import net.minecraft.client.gui.screen.Screen;
 
-public abstract class GuiElements extends GuiScreen {
+import java.util.function.Predicate;
+
+public abstract class GuiElements extends Screen {
     protected static HudElement getHoveredElement(int mouseX, int mouseY, Predicate<HudElement> ignore) {
         HudElement result = null;
 

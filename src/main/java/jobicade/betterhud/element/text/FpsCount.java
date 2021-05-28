@@ -1,12 +1,12 @@
 package jobicade.betterhud.element.text;
 
-import java.util.Arrays;
-import java.util.List;
-
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.geom.Direction;
 import net.minecraft.client.Minecraft;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class FpsCount extends TextElement {
     private SettingBoolean numberOnly;

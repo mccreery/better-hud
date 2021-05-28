@@ -1,15 +1,15 @@
 package jobicade.betterhud.util.bars;
 
-import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
-import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.MathUtil;
+import net.minecraft.entity.Entity;
+import net.minecraft.entity.LivingEntity;
 
 public class StatBarMount extends StatBarBasic<Entity> {
     @Override
     public boolean shouldRender() {
-        return host.getVehicle() instanceof EntityLivingBase;
+        return host.getVehicle() instanceof LivingEntity;
     }
 
     @Override
@@ -24,12 +24,12 @@ public class StatBarMount extends StatBarBasic<Entity> {
 
     @Override
     protected int getCurrent() {
-        return MathUtil.getHealthForDisplay(((EntityLivingBase)host.getVehicle()).getHealth());
+        return MathUtil.getHealthForDisplay(((LivingEntity)host.getVehicle()).getHealth());
     }
 
     @Override
     protected int getMaximum() {
-        return MathUtil.getHealthForDisplay(((EntityLivingBase)host.getVehicle()).getMaxHealth());
+        return MathUtil.getHealthForDisplay(((LivingEntity)host.getVehicle()).getMaxHealth());
     }
 
     @Override

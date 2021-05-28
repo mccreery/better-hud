@@ -1,20 +1,21 @@
 package jobicade.betterhud.element;
 
-import static jobicade.betterhud.BetterHud.SPACER;
-
-import java.util.List;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.resources.I18n;
-import net.minecraftforge.fml.common.eventhandler.Event;
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingChoose;
+import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.Textures;
-import jobicade.betterhud.geom.Direction;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.resources.I18n;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraftforge.eventbus.api.Event;
+
+import java.util.List;
+
+import static jobicade.betterhud.BetterHud.SPACER;
 
 public class HealIndicator extends HudElement {
     private SettingChoose mode;
@@ -59,7 +60,7 @@ public class HealIndicator extends HudElement {
             return bounds;
     }
 
-    /** @see net.minecraft.util.FoodStats#onUpdate(net.minecraft.entity.player.EntityPlayer) */
+    /** @see net.minecraft.util.FoodStats#onUpdate(PlayerEntity) */
     @Override
     public boolean shouldRender(Event event) {
         return super.shouldRender(event)

@@ -1,16 +1,16 @@
 package jobicade.betterhud.element.settings;
 
-import static jobicade.betterhud.BetterHud.MANAGER;
-import static jobicade.betterhud.BetterHud.SPACER;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.geom.Rect;
+import net.minecraft.client.gui.AbstractGui;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 
-import net.minecraft.client.gui.Gui;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.geom.Point;
-import jobicade.betterhud.geom.Rect;
+import static jobicade.betterhud.BetterHud.MANAGER;
+import static jobicade.betterhud.BetterHud.SPACER;
 
 public class SettingPosition extends SettingStub<Object> {
     private boolean edge = false;
@@ -207,7 +207,7 @@ public class SettingPosition extends SettingStub<Object> {
     }
 
     @Override
-    public Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Point origin) {
+    public Point getGuiParts(List<AbstractGui> parts, Map<AbstractGui, Setting<?>> callbacks, Point origin) {
         Point lockOffset = new Point(30 + SPACER, 173);
 
         lockAlignment.setRect(new Rect(20, 10).align(origin.add(lockOffset.withX(-lockOffset.getX())), Direction.EAST));

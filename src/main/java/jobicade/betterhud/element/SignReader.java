@@ -1,10 +1,5 @@
 package jobicade.betterhud.element;
 
-import java.util.List;
-import java.util.Optional;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.geom.Direction;
@@ -15,10 +10,15 @@ import jobicade.betterhud.render.Grid;
 import jobicade.betterhud.render.Label;
 import jobicade.betterhud.render.Quad;
 import net.minecraft.client.Minecraft;
-import net.minecraft.tileentity.TileEntitySign;
+import net.minecraft.tileentity.SignTileEntity;
 import net.minecraft.util.ResourceLocation;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraftforge.eventbus.api.Event;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 public class SignReader extends HudElement {
     private static final ResourceLocation SIGN_TEXTURE = new ResourceLocation("textures/entity/sign.png");
@@ -61,7 +61,7 @@ public class SignReader extends HudElement {
      * @return The sign the player is looking at or {@code null} if the player
      * is not looking at a sign.
      */
-    private TileEntitySign getSign() {
+    private SignTileEntity getSign() {
         // Sanity check, but can continue normally if null
         if (Minecraft.getInstance() == null || Minecraft.getInstance().level == null) {
             return null;
@@ -72,8 +72,8 @@ public class SignReader extends HudElement {
             .map(entity -> entity.func_174822_a(200, 1.0f))
             .map(RayTraceResult::func_178782_a)
             .map(Minecraft.getInstance().level::getBlockEntity)
-            .filter(TileEntitySign.class::isInstance)
-            .map(TileEntitySign.class::cast)
+            .filter(SignTileEntity.class::isInstance)
+            .map(SignTileEntity.class::cast)
             .orElse(null);
     }
 }

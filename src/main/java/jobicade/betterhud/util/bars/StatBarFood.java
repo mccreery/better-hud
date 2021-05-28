@@ -1,15 +1,15 @@
 package jobicade.betterhud.util.bars;
 
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Rect;
+import jobicade.betterhud.util.MathUtil;
+import net.minecraft.client.Minecraft;
+import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.potion.Effects;
+
 import java.util.Random;
 
-import net.minecraft.client.Minecraft;
-import net.minecraft.entity.player.EntityPlayer;
-import net.minecraft.init.MobEffects;
-import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.util.MathUtil;
-
-public class StatBarFood extends StatBarBasic<EntityPlayer> {
+public class StatBarFood extends StatBarBasic<PlayerEntity> {
     private final Random random = new Random();
 
     @Override
@@ -19,7 +19,7 @@ public class StatBarFood extends StatBarBasic<EntityPlayer> {
 
     @Override
     protected Rect getIcon(IconType icon, int pointsIndex) {
-        boolean hasHunger = host.hasEffect(MobEffects.HUNGER);
+        boolean hasHunger = host.hasEffect(Effects.HUNGER);
         int xOffset = hasHunger ? 88 : 52;
 
         switch(icon) {

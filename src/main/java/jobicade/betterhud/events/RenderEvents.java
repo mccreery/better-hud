@@ -1,27 +1,9 @@
 package jobicade.betterhud.events;
 
-import static jobicade.betterhud.BetterHud.MANAGER;
-import static jobicade.betterhud.BetterHud.MODID;
-import static net.minecraftforge.client.GuiIngameForge.renderAir;
-import static net.minecraftforge.client.GuiIngameForge.renderArmor;
-import static net.minecraftforge.client.GuiIngameForge.renderCrosshairs;
-import static net.minecraftforge.client.GuiIngameForge.renderExperiance;
-import static net.minecraftforge.client.GuiIngameForge.renderFood;
-import static net.minecraftforge.client.GuiIngameForge.renderHealth;
-import static net.minecraftforge.client.GuiIngameForge.renderHealthMount;
-import static net.minecraftforge.client.GuiIngameForge.renderHelmet;
-import static net.minecraftforge.client.GuiIngameForge.renderHotbar;
-import static net.minecraftforge.client.GuiIngameForge.renderJumpBar;
-import static net.minecraftforge.client.GuiIngameForge.renderObjective;
-import static net.minecraftforge.client.GuiIngameForge.renderPortal;
-import static net.minecraftforge.client.GuiIngameForge.renderVignette;
-
-import java.util.List;
-
 import com.google.common.base.Predicate;
-
-import org.lwjgl.opengl.GL11;
-
+import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
+import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Point;
@@ -29,20 +11,24 @@ import jobicade.betterhud.render.Color;
 import jobicade.betterhud.render.GlSnapshot;
 import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.GlStateManager;
-import net.minecraft.client.renderer.GlStateManager.DestFactor;
-import net.minecraft.client.renderer.GlStateManager.SourceFactor;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.Entity;
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
-import net.minecraft.util.math.Vec3d;
+import net.minecraft.util.math.vector.Vector3d;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
+import org.lwjgl.opengl.GL11;
+
+import java.util.List;
+
+import static jobicade.betterhud.BetterHud.MANAGER;
+import static jobicade.betterhud.BetterHud.MODID;
+import static net.minecraftforge.client.gui.ForgeIngameGui.*;
 
 public final class RenderEvents {
     @SubscribeEvent
@@ -65,8 +51,8 @@ public final class RenderEvents {
         if(BetterHud.getProxy().isModEnabled()) {
             Entity entity = getMouseOver(HudElement.GLOBAL.getBillboardDistance(), event.getPartialTicks());
 
-            if(entity instanceof EntityLivingBase) {
-                renderMobInfo(new RenderMobInfoEvent(event, (EntityLivingBase)entity));
+            if(entity instanceof LivingEntity) {
+                renderMobInfo(new RenderMobInfoEvent(event, (LivingEntity)entity));
             }
         }
         Minecraft.getInstance().profiler.pop();
@@ -81,7 +67,7 @@ public final class RenderEvents {
         GlStateManager.func_179147_l();
         GlStateManager.func_179118_c();
 
-        Minecraft.getInstance().getTextureManager().bind(Gui.field_110324_m);
+        Minecraft.getInstance().getTextureManager().bind(AbstractGui.field_110324_m);
         GlStateManager.func_179103_j(GL11.GL_SMOOTH);
     }
 
@@ -152,7 +138,7 @@ public final class RenderEvents {
         GlStateManager.func_179147_l();
         GlStateManager.func_179118_c();
         Color.WHITE.apply();
-        Minecraft.getInstance().getTextureManager().bind(Gui.field_110324_m);
+        Minecraft.getInstance().getTextureManager().bind(AbstractGui.field_110324_m);
 
         GlStateManager.func_179094_E();
         GlUtil.setupBillboard(event.getEntity(), event.getPartialTicks(), HudElement.GLOBAL.getBillboardScale());
@@ -185,8 +171,8 @@ public final class RenderEvents {
         Minecraft.getInstance().profiler.push("pick");
 
         RayTraceResult trace = viewEntity.func_174822_a(distance, partialTicks);
-        Vec3d eyePosition = viewEntity.getEyePosition(partialTicks);
-        Vec3d lookDelta = viewEntity.getLookAngle().scale(distance);
+        Vector3d eyePosition = viewEntity.getEyePosition(partialTicks);
+        Vector3d lookDelta = viewEntity.getLookAngle().scale(distance);
 
         if(trace != null) {
             distance = trace.location.distanceTo(eyePosition);

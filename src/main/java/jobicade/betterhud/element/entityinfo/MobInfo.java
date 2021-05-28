@@ -1,27 +1,26 @@
 package jobicade.betterhud.element.entityinfo;
 
-import static jobicade.betterhud.BetterHud.MANAGER;
-import static jobicade.betterhud.BetterHud.SPACER;
-
-import java.util.List;
-
-import com.mojang.realmsclient.gui.ChatFormatting;
-
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingSlider;
 import jobicade.betterhud.events.RenderMobInfoEvent;
-import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.util.MathUtil;
-import jobicade.betterhud.util.bars.StatBarHealth;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
+import jobicade.betterhud.util.GlUtil;
+import jobicade.betterhud.util.MathUtil;
+import jobicade.betterhud.util.bars.StatBarHealth;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.resources.I18n;
-import net.minecraft.entity.EntityLivingBase;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import net.minecraft.entity.LivingEntity;
+import net.minecraft.util.text.TextFormatting;
+import net.minecraftforge.eventbus.api.Event;
+
+import java.util.List;
+
+import static jobicade.betterhud.BetterHud.MANAGER;
+import static jobicade.betterhud.BetterHud.SPACER;
 
 public class MobInfo extends EntityInfo {
     private final StatBarHealth bar = new StatBarHealth();
@@ -55,14 +54,14 @@ public class MobInfo extends EntityInfo {
 
     @Override
     public Rect render(Event event) {
-        EntityLivingBase entity = ((RenderMobInfoEvent)event).getEntity();
+        LivingEntity entity = ((RenderMobInfoEvent)event).getEntity();
         bar.setHost(entity);
         bar.setCompressThreshold(compress.getInt());
 
         int health = MathUtil.getHealthForDisplay(entity.getHealth());
         int maxHealth = MathUtil.getHealthForDisplay(entity.getMaxHealth());
 
-        String text = String.format("%s %s(%d/%d)", entity.func_70005_c_(), ChatFormatting.GRAY, health, maxHealth);
+        String text = String.format("%s %s(%d/%d)", entity.func_70005_c_(), TextFormatting.GRAY, health, maxHealth);
 
         Point size = GlUtil.getStringSize(text);
         Point barSize = bar.getPreferredSize();
@@ -80,7 +79,7 @@ public class MobInfo extends EntityInfo {
         GlUtil.drawString(text, bounds.getPosition(), Direction.NORTH_WEST, Color.WHITE);
         Rect barRect = new Rect(barSize).anchor(bounds, Direction.SOUTH_WEST);
 
-        Minecraft.getInstance().getTextureManager().bind(Gui.field_110324_m);
+        Minecraft.getInstance().getTextureManager().bind(AbstractGui.field_110324_m);
         bar.setBounds(barRect).render();
         return null;
     }

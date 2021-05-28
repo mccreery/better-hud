@@ -1,7 +1,7 @@
 package jobicade.betterhud.element.settings;
 
-import net.minecraft.client.gui.GuiButton;
 import jobicade.betterhud.gui.GuiElementSettings;
+import net.minecraft.client.gui.widget.button.Button;
 
 /** A default implementation of {@link Setting} which stores no value.<br>
  * It is used for settings which are for display only and which only store
@@ -19,6 +19,6 @@ public class SettingStub<T> extends Setting<T> {
     @Override public void set(T value) {}
     @Override public String save() {return null;}
     @Override public void load(String save) {}
-    @Override public void actionPerformed(GuiElementSettings gui, GuiButton button) {}
+    @Override public void actionPerformed(GuiElementSettings gui, Button button) {}
     @Override protected boolean hasValue() {return false;}
 }

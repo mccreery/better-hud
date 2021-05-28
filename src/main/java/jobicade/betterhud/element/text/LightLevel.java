@@ -1,12 +1,12 @@
 package jobicade.betterhud.element.text;
 
-import java.util.Arrays;
-import java.util.List;
-
+import jobicade.betterhud.geom.Direction;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.world.EnumSkyBlock;
-import jobicade.betterhud.geom.Direction;
+
+import java.util.Arrays;
+import java.util.List;
 
 public class LightLevel extends TextElement {
     @Override

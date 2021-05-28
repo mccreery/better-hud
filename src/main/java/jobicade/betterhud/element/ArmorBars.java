@@ -1,28 +1,28 @@
 package jobicade.betterhud.element;
 
-import java.util.List;
-
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.item.ItemArmor;
-import net.minecraft.item.ItemStack;
-import net.minecraftforge.fml.common.eventhandler.Event;
+import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.geom.Direction;
+import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Size;
-import jobicade.betterhud.geom.Direction;
-import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.render.Boxed;
 import jobicade.betterhud.render.DefaultBoxed;
 import jobicade.betterhud.render.Grid;
 import jobicade.betterhud.render.Label;
 import jobicade.betterhud.util.GlUtil;
-import jobicade.betterhud.geom.Point;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.item.ArmorItem;
+import net.minecraft.item.ItemStack;
+import net.minecraftforge.eventbus.api.Event;
+
+import java.util.List;
 
 public class ArmorBars extends EquipmentDisplay {
     private SettingChoose barType;
@@ -67,7 +67,7 @@ public class ArmorBars extends EquipmentDisplay {
 
         for(int i = 0; i < 4; i++) {
             ItemStack stack = Minecraft.getInstance().player.inventory.getArmor(3-i);
-            TextureAtlasSprite empty = Minecraft.getInstance().func_147117_R().getTexture(ItemArmor.field_94603_a[3-i]);
+            TextureAtlasSprite empty = Minecraft.getInstance().func_147117_R().getTexture(ArmorItem.field_94603_a[3-i]);
 
             grid.setCell(new Point(0, i), new SlotDisplay(stack, empty));
         }
@@ -110,7 +110,7 @@ public class ArmorBars extends EquipmentDisplay {
             if(stack.isEmpty()) {
                 Minecraft.getInstance().getTextureManager().bind(TextureMap.LOCATION_BLOCKS);
                 Minecraft.getInstance().gui.func_175175_a(item.getX(), item.getY(), empty, item.getWidth(), item.getHeight());
-                Minecraft.getInstance().getTextureManager().bind(Gui.field_110324_m);
+                Minecraft.getInstance().getTextureManager().bind(AbstractGui.field_110324_m);
             } else {
                 GlUtil.renderSingleItem(stack, item.getPosition());
             }

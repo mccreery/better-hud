@@ -1,12 +1,5 @@
 package jobicade.betterhud.gui;
 
-import static jobicade.betterhud.BetterHud.SPACER;
-
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.config.ConfigManager;
 import jobicade.betterhud.element.HudElement;
@@ -20,6 +13,13 @@ import jobicade.betterhud.util.Paginator;
 import jobicade.betterhud.util.SortField;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
+import static jobicade.betterhud.BetterHud.SPACER;
 
 public class GuiHudMenu extends GuiMenuScreen {
     private final Map<HudElement, ButtonRow> rows = new HashMap<HudElement, ButtonRow>(HudElement.ELEMENTS.size());

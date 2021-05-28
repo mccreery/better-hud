@@ -1,10 +1,10 @@
 package jobicade.betterhud.element.settings;
 
-import java.util.List;
-
-import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.config.HudConfig;
+import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.util.IGetSet.IBoolean;
+
+import java.util.List;
 
 public class RootSetting extends SettingStub<Boolean> implements IBoolean {
     private final HudElement element;

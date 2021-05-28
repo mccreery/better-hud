@@ -1,10 +1,10 @@
 package jobicade.betterhud.config;
 
-import java.io.File;
-
-import net.minecraftforge.common.config.Configuration;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.HudElement.SortType;
+import net.minecraftforge.common.config.Configuration;
+
+import java.io.File;
 
 /**
  * Handles saving and loading config files through Forge's system. Note that

@@ -1,23 +1,23 @@
 package jobicade.betterhud.element.settings;
 
+import jobicade.betterhud.config.HudConfig;
+import jobicade.betterhud.element.HudElement;
+import jobicade.betterhud.geom.Point;
+import jobicade.betterhud.gui.GuiElementSettings;
+import jobicade.betterhud.util.IGetSet;
+import jobicade.betterhud.util.ISaveLoad;
+import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.client.resources.I18n;
+import net.minecraftforge.common.config.ConfigCategory;
+import net.minecraftforge.common.config.Property;
+import net.minecraftforge.common.config.Property.Type;
+
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
 import java.util.function.BooleanSupplier;
-
-import net.minecraft.client.gui.Gui;
-import net.minecraft.client.gui.GuiButton;
-import net.minecraft.client.resources.I18n;
-import net.minecraftforge.common.config.ConfigCategory;
-import net.minecraftforge.common.config.Property;
-import net.minecraftforge.common.config.Property.Type;
-import jobicade.betterhud.element.HudElement;
-import jobicade.betterhud.gui.GuiElementSettings;
-import jobicade.betterhud.config.HudConfig;
-import jobicade.betterhud.util.IGetSet;
-import jobicade.betterhud.util.ISaveLoad;
-import jobicade.betterhud.geom.Point;
 
 /** A setting for a {@link HudElement}. Child elements will be saved under
  * the namespace of the parent's name
@@ -168,15 +168,15 @@ public abstract class Setting<T> implements IGetSet<T>, ISaveLoad {
         return Type.STRING;
     }
 
-    /** Populates {@code parts} with {@link Gui}s which should be added to the settings screen.<br>
-     * Also populates {@code callbacks} with {@link #keyTyped(char, int)} and {@link #actionPerformed(GuiElementSettings, GuiButton)} callbacks.
+    /** Populates {@code parts} with {@link AbstractGui}s which should be added to the settings screen.<br>
+     * Also populates {@code callbacks} with {@link #keyTyped(char, int)} and {@link #actionPerformed(GuiElementSettings, Button)} callbacks.
      *
      * <p>The minimum implementation (in {@link Setting#getGuiParts(List, Map, Point)})
      * populates {@code parts} and {@code callbacks} with those of the element's children
      *
      * @param origin The top center point for GUI parts being added
      * @return The new origin directly below this setting's parts */
-    public Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Point origin) {
+    public Point getGuiParts(List<AbstractGui> parts, Map<AbstractGui, Setting<?>> callbacks, Point origin) {
         return getGuiParts(parts, callbacks, origin, children);
     }
 
@@ -187,7 +187,7 @@ public abstract class Setting<T> implements IGetSet<T>, ISaveLoad {
      * @param origin The top center point for GUI parts being added
      * @return The bottom center point of all {@code settings}
      * @see #getGuiParts(List, Map, Point) */
-    public static Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Point origin, List<Setting<?>> settings) {
+    public static Point getGuiParts(List<AbstractGui> parts, Map<AbstractGui, Setting<?>> callbacks, Point origin, List<Setting<?>> settings) {
         if(!settings.isEmpty()) {
             for(Setting<?> setting : settings) {
                 if(!setting.hidden) {
@@ -211,7 +211,7 @@ public abstract class Setting<T> implements IGetSet<T>, ISaveLoad {
 
     /** Passed on from the element's setting screen when a GuiButton for this setting is pressed.
      * @param button The GuiButton that was pressed. */
-    public abstract void actionPerformed(GuiElementSettings gui, GuiButton button);
+    public abstract void actionPerformed(GuiElementSettings gui, Button button);
 
     /** Updates the GUI elements based on the state of other settings.
      * This is called when any button tied to a setting callback is pressed */

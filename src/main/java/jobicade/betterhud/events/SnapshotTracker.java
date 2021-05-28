@@ -1,9 +1,8 @@
 package jobicade.betterhud.events;
 
+import jobicade.betterhud.render.GlSnapshot;
 import org.apache.logging.log4j.Level;
 import org.apache.logging.log4j.Logger;
-
-import jobicade.betterhud.render.GlSnapshot;
 
 /**
  * Encapsulates behaviour of logging unforseen OpenGL state changes.

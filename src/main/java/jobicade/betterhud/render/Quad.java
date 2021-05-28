@@ -1,20 +1,19 @@
 package jobicade.betterhud.render;
 
-import java.util.EnumMap;
-import java.util.Map;
-
-import org.lwjgl.opengl.GL11;
-
+import com.mojang.blaze3d.platform.GlStateManager;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Size;
 import net.minecraft.client.renderer.BufferBuilder;
-import net.minecraft.client.renderer.GlStateManager;
 import net.minecraft.client.renderer.Tessellator;
 import net.minecraft.client.renderer.vertex.DefaultVertexFormats;
 import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
+import org.lwjgl.opengl.GL11;
+
+import java.util.EnumMap;
+import java.util.Map;
 
 public class Quad extends DefaultBoxed {
     private static final float TEX_SCALE = 1f / 256f;

@@ -1,13 +1,12 @@
 package jobicade.betterhud.config;
 
-import java.io.IOException;
-import java.nio.file.Path;
-import java.nio.file.StandardCopyOption;
-
-import java.nio.file.Files;
-
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.ResourceLocation;
+
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.StandardCopyOption;
 
 /**
  * A config slot representing a resource in the resource pack system.

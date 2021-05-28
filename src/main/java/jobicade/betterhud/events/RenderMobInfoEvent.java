@@ -1,17 +1,17 @@
 package jobicade.betterhud.events;
 
-import net.minecraft.entity.EntityLivingBase;
+import net.minecraft.entity.LivingEntity;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 
 public class RenderMobInfoEvent extends RenderWorldLastEvent {
-    private final EntityLivingBase entity;
+    private final LivingEntity entity;
 
-    RenderMobInfoEvent(RenderWorldLastEvent event, EntityLivingBase entity) {
+    RenderMobInfoEvent(RenderWorldLastEvent event, LivingEntity entity) {
         super(event.getContext(), event.getPartialTicks());
         this.entity = entity;
     }
 
-    public EntityLivingBase getEntity() {
+    public LivingEntity getEntity() {
         return entity;
     }
 }

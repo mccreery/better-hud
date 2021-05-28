@@ -1,14 +1,14 @@
 package jobicade.betterhud.element.particles;
 
-import java.util.ArrayList;
-import java.util.Collection;
-
 import net.minecraft.client.Minecraft;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
+import net.minecraftforge.eventbus.api.EventPriority;
+import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import net.minecraftforge.fml.common.eventhandler.EventPriority;
-import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
+
+import java.util.ArrayList;
+import java.util.Collection;
 
 public class BloodSplatters extends ParticleOverlay {
     public BloodSplatters() {
