@@ -1,5 +1,8 @@
 package jobicade.betterhud.element.settings;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonPrimitive;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
@@ -34,14 +37,14 @@ public class SettingElement extends SettingAlignable<HudElement> {
     }
 
     @Override
-    public String save() {
-        return value != null ? value.getUnlocalizedName() : "null";
+    public JsonElement save() {
+        return value != null ? new JsonPrimitive(value.getUnlocalizedName()) : JsonNull.INSTANCE;
     }
 
     @Override
-    public void load(String save) {
+    public void load(JsonElement save) {
         for(HudElement element : HudElement.ELEMENTS) {
-            if(element.getUnlocalizedName().equals(save)) {
+            if(element.getUnlocalizedName().equals(save.getAsString())) {
                 value = element;
                 return;
             }

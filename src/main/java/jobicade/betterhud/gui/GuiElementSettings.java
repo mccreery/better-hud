@@ -83,7 +83,7 @@ public class GuiElementSettings extends GuiMenuScreen {
     @Override
     public void func_146281_b() {
         Keyboard.enableRepeatEvents(false);
-        BetterHud.getConfig().saveSettings();
+        BetterHud.getConfig().save();
     }
 
     @Override

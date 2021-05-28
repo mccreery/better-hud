@@ -1,5 +1,7 @@
 package jobicade.betterhud.element.settings;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.GuiElementSettings;
@@ -9,7 +11,6 @@ import jobicade.betterhud.util.MathUtil;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
-import net.minecraftforge.common.config.Property.Type;
 
 import java.util.List;
 import java.util.Map;
@@ -106,22 +107,17 @@ public class SettingSlider extends SettingAlignable<Double> implements ISlider {
     }
 
     @Override
-    public String save() {
-        return get().toString();
+    public JsonElement save() {
+        return new JsonPrimitive(get());
     }
 
     @Override
-    public void load(String save) {
-        set(Double.valueOf(save));
+    public void load(JsonElement save) {
+        set(save.getAsDouble());
 
         if(slider != null) {
             slider.updateDisplayString();
         }
-    }
-
-    @Override
-    protected Type getPropertyType() {
-        return Type.DOUBLE;
     }
 
     @Override public Double getMinimum() {return min;}

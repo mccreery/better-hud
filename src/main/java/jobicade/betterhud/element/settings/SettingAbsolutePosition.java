@@ -1,5 +1,8 @@
 package jobicade.betterhud.element.settings;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonPrimitive;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.GuiElementSettings;
@@ -104,17 +107,17 @@ public class SettingAbsolutePosition extends Setting<Point> {
     }
 
     @Override
-    public String save() {
-        return x + ", " + y;
+    public JsonElement save() {
+        JsonObject object = new JsonObject();
+        object.add("x", new JsonPrimitive(x));
+        object.add("y", new JsonPrimitive(y));
+        return object;
     }
 
     @Override
-    public void load(String val) {
-        int comma = val.indexOf(',');
-        int x = Integer.parseInt(val.substring(0, comma).trim());
-        int y = Integer.parseInt(val.substring(comma + 1).trim());
-
-        set(new Point(x, y));
+    public void load(JsonElement val) {
+        JsonObject object = val.getAsJsonObject();
+        set(new Point(object.get("x").getAsInt(), object.get("y").getAsInt()));
     }
 
     @Override

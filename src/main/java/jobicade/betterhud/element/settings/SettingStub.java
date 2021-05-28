@@ -1,5 +1,6 @@
 package jobicade.betterhud.element.settings;
 
+import com.google.gson.JsonElement;
 import jobicade.betterhud.gui.GuiElementSettings;
 import net.minecraft.client.gui.widget.button.Button;
 
@@ -17,8 +18,8 @@ public class SettingStub<T> extends Setting<T> {
 
     @Override public T get() {return null;}
     @Override public void set(T value) {}
-    @Override public String save() {return null;}
-    @Override public void load(String save) {}
+    @Override public JsonElement save() {return null;}
+    @Override public void load(JsonElement save) {}
     @Override public void actionPerformed(GuiElementSettings gui, Button button) {}
     @Override protected boolean hasValue() {return false;}
 }

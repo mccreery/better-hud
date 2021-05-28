@@ -1,6 +1,7 @@
 package jobicade.betterhud.element.settings;
 
-import jobicade.betterhud.config.HudConfig;
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.util.IGetSet.IBoolean;
 
@@ -16,15 +17,11 @@ public class RootSetting extends SettingStub<Boolean> implements IBoolean {
         @Override public void set(Integer value) {priorityRank = value;}
         @Override public Integer get() {return priorityRank;}
 
-        @Override public String save() {return String.valueOf(priorityRank);}
-        @Override public void load(String save) {priorityRank = Integer.parseInt(save);}
+        @Override public JsonElement save() {return new JsonPrimitive(priorityRank);}
+        @Override public void load(JsonElement save) {priorityRank = save.getAsInt();}
 
         @Override protected boolean hasValue() {return true;}
     }.setHidden();
-
-    public final void bindConfig(HudConfig config) {
-        bindConfig(config, element.name, new StringBuilder());
-    }
 
     public RootSetting(HudElement element, List<Setting<?>> settings) {
         super();

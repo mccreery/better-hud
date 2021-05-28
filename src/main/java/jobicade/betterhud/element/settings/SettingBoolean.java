@@ -1,5 +1,7 @@
 package jobicade.betterhud.element.settings;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonPrimitive;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.gui.GuiActionButton;
@@ -7,7 +9,6 @@ import jobicade.betterhud.gui.GuiElementSettings;
 import jobicade.betterhud.util.IGetSet.IBoolean;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraftforge.common.config.Property.Type;
 
 import java.util.Collection;
 import java.util.List;
@@ -34,11 +35,6 @@ public class SettingBoolean extends SettingAlignable<Boolean> implements IBoolea
         return this;
     }
 
-    @Override
-    protected Type getPropertyType() {
-        return Type.BOOLEAN;
-    }
-
     public Boolean get() {return enabled() && value;}
     public void set(Boolean value) {this.value = value;}
 
@@ -55,13 +51,13 @@ public class SettingBoolean extends SettingAlignable<Boolean> implements IBoolea
     }
 
     @Override
-    public String save() {
-        return get().toString();
+    public JsonElement save() {
+        return new JsonPrimitive(get());
     }
 
     @Override
-    public void load(String save) {
-        set(Boolean.valueOf(save));
+    public void load(JsonElement save) {
+        set(save.getAsBoolean());
     }
 
     @Override

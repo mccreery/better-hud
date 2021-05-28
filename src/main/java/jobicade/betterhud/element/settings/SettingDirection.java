@@ -1,5 +1,8 @@
 package jobicade.betterhud.element.settings;
 
+import com.google.gson.JsonElement;
+import com.google.gson.JsonNull;
+import com.google.gson.JsonPrimitive;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -111,14 +114,14 @@ public class SettingDirection extends SettingAlignable<Direction> {
     }
 
     @Override
-    public String save() {
-        return value != null ? value.name() : "null";
+    public JsonElement save() {
+        return value != null ? new JsonPrimitive(value.name()) : JsonNull.INSTANCE;
     }
 
     @Override
-    public void load(String save) {
+    public void load(JsonElement save) {
         try {
-            set(Direction.valueOf(save));
+            set(Direction.valueOf(save.getAsString()));
         } catch(IllegalArgumentException e) {
             set(null);
         }

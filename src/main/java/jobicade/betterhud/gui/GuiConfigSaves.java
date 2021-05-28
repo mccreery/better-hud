@@ -61,7 +61,7 @@ public class GuiConfigSaves extends Screen {
 
     private void save() {
         try {
-            manager.getConfig().saveSettings();
+            manager.getConfig().save();
             selected.copyFrom(manager.getConfigPath());
             updateList();
         } catch(IOException e) {

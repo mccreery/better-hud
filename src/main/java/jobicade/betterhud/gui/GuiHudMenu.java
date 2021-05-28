@@ -50,7 +50,7 @@ public class GuiHudMenu extends GuiMenuScreen {
 
     @Override
     public void func_146281_b() {
-        BetterHud.getConfig().saveSettings();
+        BetterHud.getConfig().save();
     }
 
     public SortField<HudElement> getSortCriteria() {
