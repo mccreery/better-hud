@@ -66,7 +66,7 @@ public class PotionBar extends HudElement {
 
     @Override
     public boolean shouldRender(Event event) {
-        return super.shouldRender(event) && !Minecraft.getMinecraft().player.getActivePotionEffects().isEmpty();
+        return super.shouldRender(event) && !Minecraft.getInstance().player.getActiveEffects().isEmpty();
     }
 
     @Override
@@ -80,17 +80,17 @@ public class PotionBar extends HudElement {
             bounds = position.applyTo(bounds);
         }
         grid.setBounds(bounds).render();
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+        Minecraft.getInstance().getTextureManager().bind(Gui.field_110324_m);
 
         return bounds;
     }
 
     private void populateEffects(List<PotionEffect> helpful, List<PotionEffect> harmful) {
-        Stream<PotionEffect> source = Minecraft.getMinecraft().player
-            .getActivePotionEffects().parallelStream()
-            .filter(e -> e.doesShowParticles() && e.getPotion().shouldRenderHUD(e));
+        Stream<PotionEffect> source = Minecraft.getInstance().player
+            .getActiveEffects().parallelStream()
+            .filter(e -> e.isVisible() && e.getEffect().shouldRenderHUD(e));
 
-        MathUtil.splitList(source::iterator, e -> e.getPotion().isBeneficial(), helpful, harmful);
+        MathUtil.splitList(source::iterator, e -> e.getEffect().isBeneficial(), helpful, harmful);
         helpful.sort(Collections.reverseOrder());
         harmful.sort(Collections.reverseOrder());
     }

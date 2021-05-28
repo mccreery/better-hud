@@ -14,7 +14,7 @@ public class GuiSlider extends GuiButton {
     }
 
     public void updateDisplayString() {
-        displayString = slider.getDisplayString();
+        field_146126_j = slider.getDisplayString();
     }
 
     public GuiSlider(int id, int x, int y, int width, int height, ISlider slider) {
@@ -29,7 +29,7 @@ public class GuiSlider extends GuiButton {
     }
 
     @Override
-    protected int getHoverState(boolean mouseOver) {
+    protected int func_146114_a(boolean mouseOver) {
         return 0;
     }
 
@@ -38,26 +38,26 @@ public class GuiSlider extends GuiButton {
      * <p>{@inheritDoc}
      */
     @Override
-    protected void mouseDragged(Minecraft mc, int mouseX, int mouseY) {
-        if(this.visible) {
+    protected void func_146119_b(Minecraft mc, int mouseX, int mouseY) {
+        if(this.field_146125_m) {
             if(this.dragging) {
-                int mouseOffset = mouseX - (x + 4);
-                setNormalized((double)mouseOffset / (width - 8));
+                int mouseOffset = mouseX - (field_146128_h + 4);
+                setNormalized((double)mouseOffset / (field_146120_f - 8));
             }
-            int sliderOffset = (int)((slider.get() - slider.getMinimum()) / (slider.getMaximum() - slider.getMinimum()) * (width - 8));
+            int sliderOffset = (int)((slider.get() - slider.getMinimum()) / (slider.getMaximum() - slider.getMinimum()) * (field_146120_f - 8));
 
-            Minecraft.getMinecraft().getTextureManager().bindTexture(BUTTON_TEXTURES);
-            this.drawTexturedModalRect(x + sliderOffset,     y,   0, 66, 4, 20);
-            this.drawTexturedModalRect(x + sliderOffset + 4, y, 196, 66, 4, 20);
-            Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+            Minecraft.getInstance().getTextureManager().bind(field_146122_a);
+            this.func_73729_b(field_146128_h + sliderOffset,     field_146129_i,   0, 66, 4, 20);
+            this.func_73729_b(field_146128_h + sliderOffset + 4, field_146129_i, 196, 66, 4, 20);
+            Minecraft.getInstance().getTextureManager().bind(Gui.field_110324_m);
         }
     }
 
     @Override
-    public boolean mousePressed(Minecraft mc, int mouseX, int mouseY) {
-        if(super.mousePressed(mc, mouseX, mouseY)) {
+    public boolean func_146116_c(Minecraft mc, int mouseX, int mouseY) {
+        if(super.func_146116_c(mc, mouseX, mouseY)) {
             dragging = true;
-            mouseDragged(mc, mouseX, mouseY);
+            func_146119_b(mc, mouseX, mouseY);
 
             return true;
         } else {
@@ -66,7 +66,7 @@ public class GuiSlider extends GuiButton {
     }
 
     @Override
-    public void mouseReleased(int mouseX, int mouseY) {
+    public void func_146118_a(int mouseX, int mouseY) {
         dragging = false;
     }
 }

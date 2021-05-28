@@ -35,12 +35,12 @@ public class FullInvIndicator extends TextElement {
 
     @Override
     protected List<String> getText() {
-        return Arrays.asList(I18n.format("betterHud.hud.fullInv"));
+        return Arrays.asList(I18n.get("betterHud.hud.fullInv"));
     }
 
     @Override
     public boolean shouldRender(Event event) {
-        return super.shouldRender(event) && Minecraft.getMinecraft().player.inventory.getFirstEmptyStack() == -1 &&
-            (!offHand.get() || !Minecraft.getMinecraft().player.inventory.offHandInventory.get(0).isEmpty());
+        return super.shouldRender(event) && Minecraft.getInstance().player.inventory.getFreeSlot() == -1 &&
+            (!offHand.get() || !Minecraft.getInstance().player.inventory.offhand.get(0).isEmpty());
     }
 }

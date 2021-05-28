@@ -38,8 +38,8 @@ public class Experience extends OverrideElement {
     @Override
     public boolean shouldRender(Event event) {
         return super.shouldRender(event)
-            && Minecraft.getMinecraft().playerController.shouldDrawHUD()
-            && (!hideMount.get() || !Minecraft.getMinecraft().player.isRidingHorse());
+            && Minecraft.getInstance().gameMode.canHurtPlayer()
+            && (!hideMount.get() || !Minecraft.getInstance().player.isRidingJumpable());
     }
 
     @Override
@@ -61,10 +61,10 @@ public class Experience extends OverrideElement {
         } else {
             barRect = position.applyTo(barRect);
         }
-        GlUtil.drawTexturedProgressBar(barRect.getPosition(), bgTexture, fgTexture, Minecraft.getMinecraft().player.experience, Direction.EAST);
+        GlUtil.drawTexturedProgressBar(barRect.getPosition(), bgTexture, fgTexture, Minecraft.getInstance().player.experienceProgress, Direction.EAST);
 
-        if(Minecraft.getMinecraft().player.experienceLevel > 0) {
-            String numberText = String.valueOf(Minecraft.getMinecraft().player.experienceLevel);
+        if(Minecraft.getInstance().player.experienceLevel > 0) {
+            String numberText = String.valueOf(Minecraft.getInstance().player.experienceLevel);
             Point numberPosition = new Rect(GlUtil.getStringSize(numberText))
                 .anchor(barRect.grow(6), position.getContentAlignment().mirrorRow()).getPosition();
 

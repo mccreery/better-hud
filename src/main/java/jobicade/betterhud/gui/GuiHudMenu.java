@@ -25,31 +25,31 @@ public class GuiHudMenu extends GuiMenuScreen {
     private final Map<HudElement, ButtonRow> rows = new HashMap<HudElement, ButtonRow>(HudElement.ELEMENTS.size());
     final Paginator<HudElement> paginator = new Paginator<HudElement>();
 
-    private final GuiActionButton returnToGame = new GuiActionButton(I18n.format("menu.returnToGame")).setCallback(b -> Minecraft.getMinecraft().displayGuiScreen(null));
+    private final GuiActionButton returnToGame = new GuiActionButton(I18n.get("menu.returnToGame")).setCallback(b -> Minecraft.getInstance().setScreen(null));
     private final GuiActionButton toggleAll = new GuiActionButton("").setCallback(b -> setAll(!allEnabled()));
-    private final GuiActionButton reorder = new GuiActionButton(I18n.format("betterHud.menu.reorder")).setCallback(b -> Minecraft.getMinecraft().displayGuiScreen(new GuiReorder(this)));
+    private final GuiActionButton reorder = new GuiActionButton(I18n.get("betterHud.menu.reorder")).setCallback(b -> Minecraft.getInstance().setScreen(new GuiReorder(this)));
 
-    private final GuiActionButton resetDefaults = new GuiActionButton(I18n.format("betterHud.menu.saveLoad"));
+    private final GuiActionButton resetDefaults = new GuiActionButton(I18n.get("betterHud.menu.saveLoad"));
 
     private final ButtonRow globalRow = new ButtonRow(this, HudElement.GLOBAL);
 
-    private final GuiActionButton lastPage = new GuiActionButton(I18n.format("betterHud.menu.lastPage"))
-        .setCallback(b -> {paginator.previousPage(); initGui();});
+    private final GuiActionButton lastPage = new GuiActionButton(I18n.get("betterHud.menu.lastPage"))
+        .setCallback(b -> {paginator.previousPage(); func_73866_w_();});
 
-    private final GuiActionButton nextPage = new GuiActionButton(I18n.format("betterHud.menu.nextPage"))
-        .setCallback(b -> {paginator.nextPage(); initGui();});
+    private final GuiActionButton nextPage = new GuiActionButton(I18n.get("betterHud.menu.nextPage"))
+        .setCallback(b -> {paginator.nextPage(); func_73866_w_();});
 
     private SortField<HudElement> sortCriteria = SortType.ALPHABETICAL;
     private boolean descending;
 
     public GuiHudMenu(ConfigManager configManager) {
         resetDefaults.setCallback(button -> {
-            Minecraft.getMinecraft().displayGuiScreen(new GuiConfigSaves(configManager, this));
+            Minecraft.getInstance().setScreen(new GuiConfigSaves(configManager, this));
         });
     }
 
     @Override
-    public void onGuiClosed() {
+    public void func_146281_b() {
         BetterHud.getProxy().getConfig().saveSettings();
     }
 
@@ -65,17 +65,17 @@ public class GuiHudMenu extends GuiMenuScreen {
         return HudElement.ELEMENTS.stream().allMatch(e -> e.get());
     }
 
-    public void initGui() {
-        setTitle(I18n.format("betterHud.menu.hudSettings"));
+    public void func_73866_w_() {
+        setTitle(I18n.get("betterHud.menu.hudSettings"));
         paginator.setData(HudElement.SORTER.getSortedData(sortCriteria, descending ^ sortCriteria.isInverted()));
-        paginator.setPageSize(Math.max(1, (int) Math.floor((height / 8 * 7 - 134) / 24)));
+        paginator.setPageSize(Math.max(1, (int) Math.floor((field_146295_m / 8 * 7 - 134) / 24)));
 
         addDefaultButtons();
         Rect buttonRect = new Rect(170, 20).align(getOrigin().add(0, 82), Direction.NORTH);
 
         for(HudElement element : paginator.getPage()) {
             ButtonRow row = getRow(element);
-            buttonList.addAll(row.getButtons());
+            field_146292_n.addAll(row.getButtons());
 
             row.setBounds(buttonRect);
             row.update();
@@ -96,27 +96,27 @@ public class GuiHudMenu extends GuiMenuScreen {
         toggleAll.setBounds(thirdWidth.anchor(buttons, Direction.SOUTH_WEST));
         reorder.setBounds(thirdWidth.anchor(buttons,      Direction.SOUTH));
         resetDefaults.setBounds(thirdWidth.anchor(buttons, Direction.SOUTH_EAST));
-        toggleAll.displayString = I18n.format(allEnabled() ? "betterHud.menu.disableAll" : "betterHud.menu.enableAll");
+        toggleAll.field_146126_j = I18n.get(allEnabled() ? "betterHud.menu.disableAll" : "betterHud.menu.enableAll");
 
-        lastPage.enabled = paginator.hasPrevious();
-        nextPage.enabled = paginator.hasNext();
+        lastPage.field_146124_l = paginator.hasPrevious();
+        nextPage.field_146124_l = paginator.hasNext();
 
-        buttons = buttons.align(new Point(width / 2, height - 20 - height / 16), Direction.NORTH);
+        buttons = buttons.align(new Point(field_146294_l / 2, field_146295_m - 20 - field_146295_m / 16), Direction.NORTH);
         lastPage.setBounds(thirdWidth.anchor(buttons, Direction.NORTH_WEST));
         nextPage.setBounds(thirdWidth.anchor(buttons, Direction.NORTH_EAST));
 
-        buttonList.clear();
+        field_146292_n.clear();
 
-        buttonList.add(returnToGame);
-        buttonList.addAll(globalRow.getButtons());
+        field_146292_n.add(returnToGame);
+        field_146292_n.addAll(globalRow.getButtons());
         globalRow.update();
 
-        buttonList.add(toggleAll);
-        buttonList.add(reorder);
-        buttonList.add(resetDefaults);
+        field_146292_n.add(toggleAll);
+        field_146292_n.add(reorder);
+        field_146292_n.add(resetDefaults);
 
-        buttonList.add(lastPage);
-        buttonList.add(nextPage);
+        field_146292_n.add(lastPage);
+        field_146292_n.add(nextPage);
 
         List<GuiActionButton> indexerControls = getIndexControls(SortType.values());
         Rect sortButton = new Rect(75, 20);
@@ -127,7 +127,7 @@ public class GuiHudMenu extends GuiMenuScreen {
             button.setBounds(sortButton);
             sortButton = sortButton.withX(sortButton.getRight() + SPACER);
         }
-        buttonList.addAll(indexerControls);
+        field_146292_n.addAll(indexerControls);
     }
 
     private void setAll(boolean enabled) {
@@ -136,18 +136,18 @@ public class GuiHudMenu extends GuiMenuScreen {
         }
 
         HudElement.SORTER.markDirty(SortType.ENABLED);
-        initGui();
+        func_73866_w_();
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float p_73863_3_) {
-        super.drawScreen(mouseX, mouseY, p_73863_3_);
+    public void func_73863_a(int mouseX, int mouseY, float p_73863_3_) {
+        super.func_73863_a(mouseX, mouseY, p_73863_3_);
 
         int enabled = (int)HudElement.ELEMENTS.stream().filter(HudElement::get).count();
         GlUtil.drawString(enabled + "/" + HudElement.ELEMENTS.size() + " enabled", new Point(SPACER, SPACER), Direction.NORTH_WEST, Color.WHITE);
 
-        String page = I18n.format("betterHud.menu.page", (paginator.getPageIndex() + 1) + "/" + paginator.getPageCount());
-        drawCenteredString(fontRenderer, page, width / 2, height - height / 16 - 13, Color.WHITE.getPacked());
+        String page = I18n.get("betterHud.menu.page", (paginator.getPageIndex() + 1) + "/" + paginator.getPageCount());
+        func_73732_a(field_146289_q, page, field_146294_l / 2, field_146295_m - field_146295_m / 16 - 13, Color.WHITE.getPacked());
     }
 
     private List<GuiActionButton> getIndexControls(SortField<HudElement>[] sortValues) {
@@ -171,6 +171,6 @@ public class GuiHudMenu extends GuiMenuScreen {
             descending = sortCriteria.isInverted();
         }
 
-        initGui();
+        func_73866_w_();
     }
 }

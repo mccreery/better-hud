@@ -45,7 +45,7 @@ public class PlayerInfo extends EntityInfo {
             @Override
             public String getDisplayValue(double scaledValue) {
                 if(scaledValue == -1) {
-                    return I18n.format("betterHud.value.unlimited");
+                    return I18n.get("betterHud.value.unlimited");
                 } else {
                     return super.getDisplayValue(scaledValue);
                 }
@@ -64,10 +64,10 @@ public class PlayerInfo extends EntityInfo {
         bar.setHost(player);
         List<String> tooltip = new ArrayList<String>();
 
-        ItemStack held = player.getHeldItemMainhand();
+        ItemStack held = player.getMainHandItem();
 
         if(!held.isEmpty()) {
-            tooltip.add(I18n.format("betterHud.hud.holding", getStackName(held)));
+            tooltip.add(I18n.get("betterHud.hud.holding", getStackName(held)));
             getEnchantmentLines(held, tooltip);
 
             int lines = tooltipLines.getInt();
@@ -96,15 +96,15 @@ public class PlayerInfo extends EntityInfo {
     private String getStackName(ItemStack stack) {
         StringBuilder builder = new StringBuilder();
 
-        if(stack.hasDisplayName()) {
+        if(stack.hasCustomHoverName()) {
             builder.append(TextFormatting.ITALIC);
         }
-        if(stack.isItemEnchanted()) {
+        if(stack.isEnchanted()) {
             builder.append(TextFormatting.AQUA);
         } else {
             builder.append(TextFormatting.GRAY);
         }
-        builder.append(stack.getDisplayName());
+        builder.append(stack.func_82833_r());
         return builder.toString();
     }
 
@@ -114,7 +114,7 @@ public class PlayerInfo extends EntityInfo {
 
         for(Map.Entry<Enchantment, Integer> enchantment : enchantments.entrySet()) {
             if(enchantment.getKey() != null && enchantment.getValue() > 0) {
-                dest.add(ChatFormatting.GRAY + enchantment.getKey().getTranslatedName(enchantment.getValue()));
+                dest.add(ChatFormatting.GRAY + enchantment.getKey().func_77316_c(enchantment.getValue()));
             }
         }
     }

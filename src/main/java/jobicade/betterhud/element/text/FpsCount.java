@@ -31,7 +31,7 @@ public class FpsCount extends TextElement {
 
     @Override
     protected List<String> getText() {
-        String fps = Minecraft.getMinecraft().debug.substring(0, Minecraft.getMinecraft().debug.indexOf(' '));
+        String fps = Minecraft.getInstance().fpsString.substring(0, Minecraft.getInstance().fpsString.indexOf(' '));
 
         if(!numberOnly.get()) {
             fps = getLocalizedName() + ": " + fps;

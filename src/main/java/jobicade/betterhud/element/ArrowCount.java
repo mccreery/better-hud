@@ -48,8 +48,8 @@ public class ArrowCount extends HudElement {
     private int arrowCount(EntityPlayer player) {
         int count = 0;
 
-        for(int i = 0; i < player.inventory.getSizeInventory(); i++) {
-            ItemStack stack = player.inventory.getStackInSlot(i);
+        for(int i = 0; i < player.inventory.getContainerSize(); i++) {
+            ItemStack stack = player.inventory.getItem(i);
 
             if(stack != null && stack.getItem() instanceof ItemArrow) {
                 count += stack.getCount();
@@ -62,7 +62,7 @@ public class ArrowCount extends HudElement {
     public boolean shouldRender(Event event) {
         if(!super.shouldRender(event)) return false;
 
-        ItemStack stack = Minecraft.getMinecraft().player.getHeldItemOffhand();
+        ItemStack stack = Minecraft.getInstance().player.getOffhandItem();
         boolean offhandHeld = stack != null && stack.getItem() == Items.BOW;
 
         if(overlay.get()) {
@@ -72,7 +72,7 @@ public class ArrowCount extends HudElement {
 
             if(HudElement.HOTBAR.isEnabledAndSupported()) {
                 for(int i = 0; i < 9; i++) {
-                    stack = Minecraft.getMinecraft().player.inventory.getStackInSlot(i);
+                    stack = Minecraft.getInstance().player.inventory.getItem(i);
 
                     if(stack != null && stack.getItem() == Items.BOW) {
                         return true;
@@ -83,20 +83,20 @@ public class ArrowCount extends HudElement {
         } else if(offhandHeld) {
             return true;
         } else {
-            stack = Minecraft.getMinecraft().player.getHeldItemMainhand();
+            stack = Minecraft.getInstance().player.getMainHandItem();
             return stack != null && stack.getItem() == Items.BOW;
         }
     }
 
     @Override
     public Rect render(Event event) {
-        int totalArrows = arrowCount(Minecraft.getMinecraft().player);
+        int totalArrows = arrowCount(Minecraft.getInstance().player);
 
         if(overlay.get()) {
             Rect stackRect = new Rect(16, 16).anchor(HOTBAR.getLastBounds().grow(-3), Direction.WEST);
 
             for(int i = 0; i < 9; i++) {
-                ItemStack stack = Minecraft.getMinecraft().player.inventory.getStackInSlot(i);
+                ItemStack stack = Minecraft.getInstance().player.inventory.getItem(i);
 
                 if(stack != null && stack.getItem() == Items.BOW) {
                     drawCounter(stackRect, totalArrows);
@@ -104,7 +104,7 @@ public class ArrowCount extends HudElement {
                 stackRect = stackRect.withX(stackRect.getX() + 20);
             }
 
-            ItemStack stack = Minecraft.getMinecraft().player.inventory.getStackInSlot(40);
+            ItemStack stack = Minecraft.getInstance().player.inventory.getItem(40);
 
             if(stack != null && stack.getItem() == Items.BOW) {
                 drawCounter(new Rect(OFFHAND.getLastBounds().getPosition().add(3, 3), new Point(16, 16)), totalArrows);

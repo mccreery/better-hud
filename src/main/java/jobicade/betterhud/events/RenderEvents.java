@@ -47,7 +47,7 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 public final class RenderEvents {
     @SubscribeEvent
     public void onRenderTick(RenderGameOverlayEvent.Pre event) {
-        Minecraft.getMinecraft().mcProfiler.startSection(MODID);
+        Minecraft.getInstance().profiler.push(MODID);
 
         boolean enabled = BetterHud.getProxy().isModEnabled();
         suppressVanilla(enabled);
@@ -55,12 +55,12 @@ public final class RenderEvents {
         if(enabled && event.getType() == ElementType.ALL) {
             renderOverlay(event);
         }
-        Minecraft.getMinecraft().mcProfiler.endSection();
+        Minecraft.getInstance().profiler.pop();
     }
 
     @SubscribeEvent
     public void worldRender(RenderWorldLastEvent event) {
-        Minecraft.getMinecraft().mcProfiler.startSection(MODID);
+        Minecraft.getInstance().profiler.push(MODID);
 
         if(BetterHud.getProxy().isModEnabled()) {
             Entity entity = getMouseOver(HudElement.GLOBAL.getBillboardDistance(), event.getPartialTicks());
@@ -69,7 +69,7 @@ public final class RenderEvents {
                 renderMobInfo(new RenderMobInfoEvent(event, (EntityLivingBase)entity));
             }
         }
-        Minecraft.getMinecraft().mcProfiler.endSection();
+        Minecraft.getInstance().profiler.pop();
     }
 
     /**
@@ -77,12 +77,12 @@ public final class RenderEvents {
      * This is only used for {@link #onRenderTick(net.minecraftforge.client.event.RenderGameOverlayEvent.Pre)}
      */
     public static void beginOverlayState() {
-        GlStateManager.tryBlendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
-        GlStateManager.enableBlend();
-        GlStateManager.disableAlpha();
+        GlStateManager.func_187428_a(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
+        GlStateManager.func_179147_l();
+        GlStateManager.func_179118_c();
 
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
-        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        Minecraft.getInstance().getTextureManager().bind(Gui.field_110324_m);
+        GlStateManager.func_179103_j(GL11.GL_SMOOTH);
     }
 
     /**
@@ -90,12 +90,12 @@ public final class RenderEvents {
      * This is only used for {@link #onRenderTick(net.minecraftforge.client.event.RenderGameOverlayEvent.Pre))}
      */
     public static void endOverlayState() {
-        GlStateManager.tryBlendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
-        GlStateManager.disableBlend();
-        GlStateManager.disableAlpha();
+        GlStateManager.func_187428_a(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
+        GlStateManager.func_179084_k();
+        GlStateManager.func_179118_c();
 
-        GlStateManager.bindTexture(0);
-        GlStateManager.shadeModel(GL11.GL_FLAT);
+        GlStateManager.func_179144_i(0);
+        GlStateManager.func_179103_j(GL11.GL_FLAT);
     }
 
     /**
@@ -105,7 +105,7 @@ public final class RenderEvents {
     private static void suppressVanilla(boolean suppress) {
         boolean allow = !suppress;
 
-        renderHotbar      = allow || Minecraft.getMinecraft().player.isSpectator();
+        renderHotbar      = allow || Minecraft.getInstance().player.isSpectator();
         renderExperiance  = allow;
         renderHealth      = allow;
         renderArmor       = allow;
@@ -148,13 +148,13 @@ public final class RenderEvents {
     private void renderMobInfo(RenderMobInfoEvent event) {
         MANAGER.reset(Point.zero());
 
-        GlStateManager.disableDepth();
-        GlStateManager.enableBlend();
-        GlStateManager.disableAlpha();
+        GlStateManager.func_179097_i();
+        GlStateManager.func_179147_l();
+        GlStateManager.func_179118_c();
         Color.WHITE.apply();
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+        Minecraft.getInstance().getTextureManager().bind(Gui.field_110324_m);
 
-        GlStateManager.pushMatrix();
+        GlStateManager.func_179094_E();
         GlUtil.setupBillboard(event.getEntity(), event.getPartialTicks(), HudElement.GLOBAL.getBillboardScale());
 
         if(HudElement.GLOBAL.isDebugMode()) {
@@ -165,45 +165,45 @@ public final class RenderEvents {
             HudElement.renderAll(event);
         }
 
-        GlStateManager.popMatrix();
+        GlStateManager.func_179121_F();
 
-        Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-        GlStateManager.enableAlpha();
-        GlStateManager.enableDepth();
-        GlStateManager.disableBlend();
+        Minecraft.getInstance().getTextureManager().bind(TextureMap.LOCATION_BLOCKS);
+        GlStateManager.func_179141_d();
+        GlStateManager.func_179126_j();
+        GlStateManager.func_179084_k();
     }
 
     /** Allows a custom distance
      * @see net.minecraft.client.renderer.EntityRenderer#getMouseOver(float) */
     private static Entity getMouseOver(double distance, float partialTicks) {
-        if(Minecraft.getMinecraft().world == null) return null;
-        Entity viewEntity = Minecraft.getMinecraft().getRenderViewEntity();
+        if(Minecraft.getInstance().level == null) return null;
+        Entity viewEntity = Minecraft.getInstance().getCameraEntity();
         if(viewEntity == null) return null;
 
         Entity pointedEntity = null;
 
-        Minecraft.getMinecraft().mcProfiler.startSection("pick");
+        Minecraft.getInstance().profiler.push("pick");
 
-        RayTraceResult trace = viewEntity.rayTrace(distance, partialTicks);
-        Vec3d eyePosition = viewEntity.getPositionEyes(partialTicks);
-        Vec3d lookDelta = viewEntity.getLookVec().scale(distance);
+        RayTraceResult trace = viewEntity.func_174822_a(distance, partialTicks);
+        Vec3d eyePosition = viewEntity.getEyePosition(partialTicks);
+        Vec3d lookDelta = viewEntity.getLookAngle().scale(distance);
 
         if(trace != null) {
-            distance = trace.hitVec.distanceTo(eyePosition);
+            distance = trace.location.distanceTo(eyePosition);
         }
 
-        AxisAlignedBB range = viewEntity.getEntityBoundingBox().expand(lookDelta.x, lookDelta.y, lookDelta.z).grow(1, 1, 1);
+        AxisAlignedBB range = viewEntity.getBoundingBox().expandTowards(lookDelta.x, lookDelta.y, lookDelta.z).inflate(1, 1, 1);
 
-        List<Entity> entitiesInRange = Minecraft.getMinecraft().world.getEntitiesInAABBexcluding(viewEntity, range, new Predicate<Entity>() {
+        List<Entity> entitiesInRange = Minecraft.getInstance().level.getEntities(viewEntity, range, new Predicate<Entity>() {
             @Override
             public boolean apply(Entity entity) {
-                return entity != null && entity.canBeCollidedWith();
+                return entity != null && entity.isPickable();
             }
         });
 
         for(Entity entity : entitiesInRange) {
-            AxisAlignedBB entityBox = entity.getEntityBoundingBox().grow(entity.getCollisionBorderSize());
-            RayTraceResult entityTrace = entityBox.calculateIntercept(eyePosition, eyePosition.add(lookDelta));
+            AxisAlignedBB entityBox = entity.getBoundingBox().inflate(entity.getPickRadius());
+            RayTraceResult entityTrace = entityBox.func_72327_a(eyePosition, eyePosition.add(lookDelta));
 
             if(entityBox.contains(eyePosition)) {
                 if(distance >= 0) {
@@ -211,10 +211,10 @@ public final class RenderEvents {
                     distance = 0;
                 }
             } else if(entityTrace != null) {
-                double entityDistance = eyePosition.distanceTo(entityTrace.hitVec);
+                double entityDistance = eyePosition.distanceTo(entityTrace.location);
 
                 if(entityDistance < distance || distance == 0) {
-                    if(entity.getLowestRidingEntity() == viewEntity.getLowestRidingEntity() && !entity.canRiderInteract()) {
+                    if(entity.getRootVehicle() == viewEntity.getRootVehicle() && !entity.canRiderInteract()) {
                         if(distance == 0) {
                             pointedEntity = entity;
                         }
@@ -225,7 +225,7 @@ public final class RenderEvents {
                 }
             }
         }
-        Minecraft.getMinecraft().mcProfiler.endSection();
+        Minecraft.getInstance().profiler.pop();
         return pointedEntity;
     }
 }

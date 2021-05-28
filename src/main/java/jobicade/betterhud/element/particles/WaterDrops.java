@@ -17,7 +17,7 @@ public class WaterDrops extends ParticleOverlay {
 
     @Override
     protected void updateParticles() {
-        boolean isUnderwater = Minecraft.getMinecraft().player.isInsideOfMaterial(Material.WATER);
+        boolean isUnderwater = Minecraft.getInstance().player.func_70055_a(Material.WATER);
 
         if(isUnderwater) {
             particles.clear();
@@ -33,8 +33,8 @@ public class WaterDrops extends ParticleOverlay {
                 }
             }
 
-            BlockPos camera = new BlockPos(Minecraft.getMinecraft().player.getPositionEyes(1));
-            if(Minecraft.getMinecraft().world.isRainingAt(camera) && MathUtil.randomChance(getParticleChance())) {
+            BlockPos camera = new BlockPos(Minecraft.getInstance().player.getEyePosition(1));
+            if(Minecraft.getInstance().level.isRainingAt(camera) && MathUtil.randomChance(getParticleChance())) {
                 toSpawn.add(ParticleWater.createRandom());
             }
 

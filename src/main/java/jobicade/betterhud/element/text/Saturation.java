@@ -22,11 +22,11 @@ public class Saturation extends TextElement {
 
     @Override
     public boolean shouldRender(Event event) {
-        return super.shouldRender(event) && Minecraft.getMinecraft().playerController.gameIsSurvivalOrAdventure();
+        return super.shouldRender(event) && Minecraft.getInstance().gameMode.hasExperience();
     }
 
     @Override
     protected List<String> getText() {
-        return Arrays.asList(I18n.format("betterHud.hud.saturation", MathUtil.formatToPlaces(Minecraft.getMinecraft().player.getFoodStats().getSaturationLevel(), 1)));
+        return Arrays.asList(I18n.get("betterHud.hud.saturation", MathUtil.formatToPlaces(Minecraft.getInstance().player.getFoodData().getSaturationLevel(), 1)));
     }
 }

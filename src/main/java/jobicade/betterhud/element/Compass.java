@@ -94,7 +94,7 @@ public class Compass extends HudElement {
     }
 
     private void drawDirections(Rect bounds) {
-        float angle = (float)Math.toRadians(Minecraft.getMinecraft().player.rotationYaw);
+        float angle = (float)Math.toRadians(Minecraft.getInstance().player.yRot);
 
         float radius = bounds.getWidth() / 2 + SPACER;
         boolean bottom = position.getContentAlignment() == Direction.SOUTH;
@@ -107,9 +107,9 @@ public class Compass extends HudElement {
             Point letter = origin.add(-(int)(Math.sin(angle) * radius), 0);
             double scale = 1 + directionScaling.get() * cos * 2;
 
-            GlStateManager.pushMatrix();
+            GlStateManager.func_179094_E();
 
-            GlStateManager.translate(letter.getX(), letter.getY(), 0);
+            GlStateManager.func_179109_b(letter.getX(), letter.getY(), 0);
             GlUtil.scale((float)scale);
 
             Color color = i == 0 ? Color.BLUE : i == 2 ? Color.RED : Color.WHITE;
@@ -120,7 +120,7 @@ public class Compass extends HudElement {
                 GlUtil.drawString(DIRECTIONS[i], Point.zero(), bottom ? Direction.SOUTH : Direction.NORTH, color);
             }
 
-            GlStateManager.popMatrix();
+            GlStateManager.func_179121_F();
         }
     }
 
@@ -130,16 +130,16 @@ public class Compass extends HudElement {
 
         switch(requireItem.getIndex()) {
             case 1:
-                return Minecraft.getMinecraft().player.inventory.hasItemStack(new ItemStack(Items.COMPASS));
+                return Minecraft.getInstance().player.inventory.contains(new ItemStack(Items.COMPASS));
             case 2:
-                return Minecraft.getMinecraft().player.getHeldItemMainhand().getItem() == Items.COMPASS
-                    || Minecraft.getMinecraft().player.getHeldItemOffhand().getItem() == Items.COMPASS;
+                return Minecraft.getInstance().player.getMainHandItem().getItem() == Items.COMPASS
+                    || Minecraft.getInstance().player.getOffhandItem().getItem() == Items.COMPASS;
         }
         return true;
     }
 
     public String getText() {
-        EnumFacing enumfacing = Minecraft.getMinecraft().player.getHorizontalFacing();
+        EnumFacing enumfacing = Minecraft.getInstance().player.getDirection();
 
         String coord;
         Direction direction;
@@ -151,7 +151,7 @@ public class Compass extends HudElement {
             case EAST: coord = "+X"; direction = Direction.EAST; break;
             default: return "?";
         }
-        return I18n.format("betterHud.hud.facing", SettingDirection.localizeDirection(direction), coord);
+        return I18n.get("betterHud.hud.facing", SettingDirection.localizeDirection(direction), coord);
     }
 
     @Override
@@ -161,18 +161,18 @@ public class Compass extends HudElement {
         if(mode.getIndex() == 0) {
             bounds = position.applyTo(new Rect(180, 12));
 
-            Minecraft.getMinecraft().mcProfiler.startSection("background");
+            Minecraft.getInstance().profiler.push("background");
             drawBackground(bounds);
-            Minecraft.getMinecraft().mcProfiler.endStartSection("text");
+            Minecraft.getInstance().profiler.func_76318_c("text");
             drawDirections(bounds);
-            Minecraft.getMinecraft().mcProfiler.endSection();
+            Minecraft.getInstance().profiler.pop();
         } else {
             String text = getText();
             bounds = position.applyTo(new Rect(GlUtil.getStringSize(text)));
 
-            Minecraft.getMinecraft().mcProfiler.startSection("text");
+            Minecraft.getInstance().profiler.push("text");
             GlUtil.drawString(text, bounds.getPosition(), Direction.NORTH_WEST, Color.WHITE);
-            Minecraft.getMinecraft().mcProfiler.endSection();
+            Minecraft.getInstance().profiler.pop();
         }
 
         return bounds;

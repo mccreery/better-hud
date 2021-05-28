@@ -51,12 +51,12 @@ public class SettingElement extends SettingAlignable<HudElement> {
 
     @Override
     public void actionPerformed(GuiElementSettings gui, GuiButton button) {
-        Minecraft.getMinecraft().displayGuiScreen(new GuiElementChooser(gui, gui.element, this));
+        Minecraft.getInstance().setScreen(new GuiElementChooser(gui, gui.element, this));
     }
 
     @Override
     public void getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Rect bounds) {
-        String text = getLocalizedName() + ": " + (value != null ? value.getLocalizedName() : I18n.format("betterHud.value.none"));
+        String text = getLocalizedName() + ": " + (value != null ? value.getLocalizedName() : I18n.get("betterHud.value.none"));
         button = new GuiActionButton(text);
         button.setBounds(bounds);
 
@@ -66,6 +66,6 @@ public class SettingElement extends SettingAlignable<HudElement> {
 
     @Override
     public void updateGuiParts(Collection<Setting<?>> settings) {
-        button.enabled = enabled();
+        button.field_146124_l = enabled();
     }
 }

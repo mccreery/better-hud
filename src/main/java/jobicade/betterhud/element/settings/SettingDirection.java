@@ -76,7 +76,7 @@ public class SettingDirection extends SettingAlignable<Direction> {
 
     @Override
     protected Point getSize() {
-        return horizontal ? new Point(150, 60) : new Point(60, 60 + SPACER + Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT);
+        return horizontal ? new Point(150, 60) : new Point(60, 60 + SPACER + Minecraft.getInstance().font.lineHeight);
     }
 
     private String getText() {
@@ -85,7 +85,7 @@ public class SettingDirection extends SettingAlignable<Direction> {
 
     @Override
     public void actionPerformed(GuiElementSettings gui, GuiButton button) {
-        value = Direction.values()[button.id];
+        value = Direction.values()[button.field_146127_k];
     }
 
     @Override
@@ -94,8 +94,8 @@ public class SettingDirection extends SettingAlignable<Direction> {
         boolean enabled = enabled();
 
         for(GuiActionButton button : toggles) {
-            button.glowing = value != null && button.id == value.ordinal();
-            button.enabled = button.glowing || enabled && options.isValid(Direction.values()[button.id]);
+            button.glowing = value != null && button.field_146127_k == value.ordinal();
+            button.field_146124_l = button.glowing || enabled && options.isValid(Direction.values()[button.field_146127_k]);
         }
     }
 
@@ -163,6 +163,6 @@ public class SettingDirection extends SettingAlignable<Direction> {
                 case SOUTH_EAST: name = "southEast"; break;
             }
         }
-        return I18n.format("betterHud.value." + name);
+        return I18n.get("betterHud.value." + name);
     }
 }

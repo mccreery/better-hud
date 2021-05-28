@@ -23,8 +23,8 @@ public class GuiActionButton extends GuiButton {
     }
 
     @Override
-    protected int getHoverState(boolean mouseOver) {
-        int state = super.getHoverState(mouseOver);
+    protected int func_146114_a(boolean mouseOver) {
+        int state = super.func_146114_a(mouseOver);
         return glowing && state == 1 ? 2 : state;
     }
 
@@ -48,21 +48,21 @@ public class GuiActionButton extends GuiButton {
     }
 
     public GuiActionButton setId(int id) {
-        this.id = id;
+        this.field_146127_k = id;
         return this;
     }
 
     public GuiActionButton setBounds(Rect bounds) {
-        this.x = bounds.getX();
-        this.y = bounds.getY();
-        this.width = bounds.getWidth();
-        this.height = bounds.getHeight();
+        this.field_146128_h = bounds.getX();
+        this.field_146129_i = bounds.getY();
+        this.field_146120_f = bounds.getWidth();
+        this.field_146121_g = bounds.getHeight();
 
         return this;
     }
 
     public Rect getBounds() {
-        return new Rect(x, y, width, height);
+        return new Rect(field_146128_h, field_146129_i, field_146120_f, field_146121_g);
     }
 
     public final void actionPerformed() {
@@ -70,22 +70,22 @@ public class GuiActionButton extends GuiButton {
     }
 
     protected void drawButton(Rect bounds, Point mousePosition, float partialTicks) {
-        super.drawButton(Minecraft.getMinecraft(), mousePosition.getX(), mousePosition.getY(), partialTicks);
+        super.func_191745_a(Minecraft.getInstance(), mousePosition.getX(), mousePosition.getY(), partialTicks);
     }
 
     public void updateText(String name, String value) {
-        this.displayString = name + ": " + value;
+        this.field_146126_j = name + ": " + value;
     }
 
     public void updateText(String unlocalizedName, String valuePrefix, boolean value) {
         String valueDisplay;
 
         if(value) {
-            valueDisplay = ChatFormatting.GREEN + I18n.format(valuePrefix + ".on");
+            valueDisplay = ChatFormatting.GREEN + I18n.get(valuePrefix + ".on");
         } else {
-            valueDisplay = ChatFormatting.RED + I18n.format(valuePrefix + ".off");
+            valueDisplay = ChatFormatting.RED + I18n.get(valuePrefix + ".off");
         }
-        updateText(I18n.format(unlocalizedName), valueDisplay);
+        updateText(I18n.get(unlocalizedName), valueDisplay);
         glowing = value;
     }
 
@@ -93,23 +93,23 @@ public class GuiActionButton extends GuiButton {
      * OpenGL side-effects: depth disabled, color set to white
      */
     @Override
-    public final void drawButton(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
-        if(!visible) return;
+    public final void func_191745_a(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
+        if(!field_146125_m) return;
 
         Rect bounds = getBounds();
-        hovered = bounds.contains(mouseX, mouseY);
+        field_146123_n = bounds.contains(mouseX, mouseY);
 
         drawButton(bounds, new Point(mouseX, mouseY), partialTicks);
 
-        if(tooltip != null && hovered) {
-            GlStateManager.enableDepth();
-            GlStateManager.pushMatrix();
+        if(tooltip != null && field_146123_n) {
+            GlStateManager.func_179126_j();
+            GlStateManager.func_179094_E();
 
-            GlStateManager.translate(0, 0, 1);
-            Minecraft.getMinecraft().currentScreen.drawHoveringText(tooltip, mouseX, mouseY);
+            GlStateManager.func_179109_b(0, 0, 1);
+            Minecraft.getInstance().screen.func_146279_a(tooltip, mouseX, mouseY);
 
-            GlStateManager.popMatrix();
-            GlStateManager.disableDepth();
+            GlStateManager.func_179121_F();
+            GlStateManager.func_179097_i();
         }
         Color.WHITE.apply();
     }

@@ -26,7 +26,7 @@ public class ResourceConfigSlot implements ConfigSlot {
 
     @Override
     public void copyTo(Path dest) throws IOException {
-        Files.copy(Minecraft.getMinecraft().getResourceManager().getResource(path).getInputStream(), dest, StandardCopyOption.REPLACE_EXISTING);
+        Files.copy(Minecraft.getInstance().func_110442_L().func_110536_a(path).func_110527_b(), dest, StandardCopyOption.REPLACE_EXISTING);
     }
 
     @Override
@@ -39,6 +39,6 @@ public class ResourceConfigSlot implements ConfigSlot {
 
     @Override
     public String getName() {
-        return com.google.common.io.Files.getNameWithoutExtension(path.getResourcePath());
+        return com.google.common.io.Files.getNameWithoutExtension(path.getPath());
     }
 }

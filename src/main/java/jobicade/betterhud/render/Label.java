@@ -24,7 +24,7 @@ public class Label extends DefaultBoxed {
 
     public Label setText(String text) {
         this.text = text;
-        this.size = new Size(Minecraft.getMinecraft().fontRenderer.getStringWidth(text), Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT);
+        this.size = new Size(Minecraft.getInstance().font.width(text), Minecraft.getInstance().font.lineHeight);
         return this;
     }
 
@@ -60,11 +60,11 @@ public class Label extends DefaultBoxed {
         if(color.getAlpha() < 4) return;
 
         Point position = new Rect(size).anchor(bounds, Direction.CENTER).getPosition();
-        Minecraft.getMinecraft().fontRenderer.drawString(text, position.getX(), position.getY(), color.getPacked(), shadow);
+        Minecraft.getInstance().font.func_175065_a(text, position.getX(), position.getY(), color.getPacked(), shadow);
 
         // Restore OpenGL state as expected
         Color.WHITE.apply();
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
-        GlStateManager.disableAlpha();
+        Minecraft.getInstance().getTextureManager().bind(Gui.field_110324_m);
+        GlStateManager.func_179118_c();
     }
 }

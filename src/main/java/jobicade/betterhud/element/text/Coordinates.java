@@ -71,17 +71,17 @@ public class Coordinates extends TextElement {
         DecimalFormat format = new DecimalFormat();
         format.setMaximumFractionDigits(decimalPlaces.get().intValue());
 
-        String x = format.format(Minecraft.getMinecraft().player.posX);
-        String y = format.format(Minecraft.getMinecraft().player.posY);
-        String z = format.format(Minecraft.getMinecraft().player.posZ);
+        String x = format.format(Minecraft.getInstance().player.field_70165_t);
+        String y = format.format(Minecraft.getInstance().player.field_70163_u);
+        String z = format.format(Minecraft.getInstance().player.field_70161_v);
 
         if(spaced.get()) {
-            x = I18n.format("betterHud.hud.x", x);
-            y = I18n.format("betterHud.hud.y", y);
-            z = I18n.format("betterHud.hud.z", z);
+            x = I18n.get("betterHud.hud.x", x);
+            y = I18n.get("betterHud.hud.y", y);
+            z = I18n.get("betterHud.hud.z", z);
             return Arrays.asList(x, y, z);
         } else {
-            return Arrays.asList(I18n.format("betterHud.hud.xyz", x, y, z));
+            return Arrays.asList(I18n.get("betterHud.hud.xyz", x, y, z));
         }
     }
 }

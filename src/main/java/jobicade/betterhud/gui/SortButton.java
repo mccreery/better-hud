@@ -19,7 +19,7 @@ class SortButton extends GuiActionButton {
     SortField<HudElement> sortValue;
 
     SortButton(GuiHudMenu callback, SortField<HudElement> sortValue) {
-        super(I18n.format(sortValue.getUnlocalizedName()));
+        super(I18n.get(sortValue.getUnlocalizedName()));
 
         this.callback = callback;
         this.sortValue = sortValue;
@@ -32,8 +32,8 @@ class SortButton extends GuiActionButton {
     }
 
     @Override
-    protected int getHoverState(boolean mouseOver) {
-        return isTargeted() ? 2 : super.getHoverState(mouseOver);
+    protected int func_146114_a(boolean mouseOver) {
+        return isTargeted() ? 2 : super.func_146114_a(mouseOver);
     }
 
     @Override
@@ -44,9 +44,9 @@ class SortButton extends GuiActionButton {
             Rect texture = callback.isDescending() ? DOWN_TEXTURE : UP_TEXTURE;
             Rect arrow = new Rect(texture).anchor(bounds, Direction.EAST).translate(-2, 0);
 
-            Minecraft.getMinecraft().getTextureManager().bindTexture(ARROW_TEXTURE);
+            Minecraft.getInstance().getTextureManager().bind(ARROW_TEXTURE);
             GlUtil.drawRect(arrow, texture);
-            Minecraft.getMinecraft().getTextureManager().bindTexture(ICONS);
+            Minecraft.getInstance().getTextureManager().bind(field_110324_m);
         }
     }
 }

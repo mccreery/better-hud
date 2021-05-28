@@ -27,13 +27,13 @@ public class Offhand extends HudElement {
 
     @Override
     public boolean shouldRender(Event event) {
-        return !Minecraft.getMinecraft().player.getHeldItemOffhand().isEmpty() && super.shouldRender(event);
+        return !Minecraft.getInstance().player.getOffhandItem().isEmpty() && super.shouldRender(event);
     }
 
     @Override
     protected Rect render(Event event) {
-        ItemStack offhandStack = Minecraft.getMinecraft().player.getHeldItemOffhand();
-        EnumHandSide offhandSide = Minecraft.getMinecraft().player.getPrimaryHand().opposite();
+        ItemStack offhandStack = Minecraft.getInstance().player.getOffhandItem();
+        EnumHandSide offhandSide = Minecraft.getInstance().player.getMainArm().getOpposite();
         Direction offhand = offhandSide == EnumHandSide.RIGHT ? Direction.EAST : Direction.WEST;
 
         Rect bounds = new Rect(22, 22);
@@ -45,7 +45,7 @@ public class Offhand extends HudElement {
             bounds = position.applyTo(bounds);
         }
 
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Textures.WIDGETS);
+        Minecraft.getInstance().getTextureManager().bind(Textures.WIDGETS);
         GlUtil.drawRect(bounds, texture);
 
         GlUtil.renderHotbarItem(bounds.translate(3, 3), offhandStack, getPartialTicks(event));

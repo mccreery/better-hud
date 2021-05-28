@@ -37,13 +37,13 @@ public class ClientProxy implements HudSidedProxy {
 
     @Override
     public void init(FMLInitializationEvent event) {
-        IResourceManager manager = Minecraft.getMinecraft().getResourceManager();
+        IResourceManager manager = Minecraft.getInstance().func_110442_L();
 
         if(manager instanceof IReloadableResourceManager) {
             IReloadableResourceManager reloadableManager = (IReloadableResourceManager)manager;
 
-            reloadableManager.registerReloadListener(m -> HudElement.SORTER.markDirty(SortType.ALPHABETICAL));
-            reloadableManager.registerReloadListener(configManager);
+            reloadableManager.func_110542_a(m -> HudElement.SORTER.markDirty(SortType.ALPHABETICAL));
+            reloadableManager.func_110542_a(configManager);
         } else {
             BetterHud.getLogger().warn("Unable to register alphabetical sort update on language change");
         }
@@ -58,7 +58,7 @@ public class ClientProxy implements HudSidedProxy {
     public boolean isModEnabled() {
         return HudElement.GLOBAL.isEnabledAndSupported() && !(
             HudElement.GLOBAL.hideOnDebug()
-            && Minecraft.getMinecraft().gameSettings.showDebugInfo
+            && Minecraft.getInstance().options.renderDebug
         );
     }
 
@@ -69,8 +69,8 @@ public class ClientProxy implements HudSidedProxy {
 
     @SubscribeEvent
     public void onKey(KeyInputEvent event) {
-        if (Minecraft.getMinecraft().inGameHasFocus && menuKey.isPressed()) {
-            Minecraft.getMinecraft().displayGuiScreen(new GuiHudMenu(configManager));
+        if (Minecraft.getInstance().field_71415_G && menuKey.consumeClick()) {
+            Minecraft.getInstance().setScreen(new GuiHudMenu(configManager));
         }
     }
 }

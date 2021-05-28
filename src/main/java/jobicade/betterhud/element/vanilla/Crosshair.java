@@ -47,13 +47,13 @@ public class Crosshair extends OverrideElement {
         settings.add(attackIndicator = new SettingBoolean(null) {
             @Override
             public Boolean get() {
-                return Minecraft.getMinecraft().gameSettings.attackIndicator != 0;
+                return Minecraft.getInstance().options.attackIndicator != 0;
             }
 
             @Override
             public void set(Boolean value) {
-                Minecraft.getMinecraft().gameSettings.attackIndicator = value ? indicatorType.getIndex() + 1 : 0;
-                Minecraft.getMinecraft().gameSettings.saveOptions();
+                Minecraft.getInstance().options.attackIndicator = value ? indicatorType.getIndex() + 1 : 0;
+                Minecraft.getInstance().options.save();
             }
         });
         attackIndicator.setValuePrefix(SettingBoolean.VISIBLE).setUnlocalizedName("options.attackIndicator");
@@ -66,13 +66,13 @@ public class Crosshair extends OverrideElement {
 
             @Override
             public int getIndex() {
-                return Math.max(Minecraft.getMinecraft().gameSettings.attackIndicator - 1, 0);
+                return Math.max(Minecraft.getInstance().options.attackIndicator - 1, 0);
             }
 
             @Override
             public void setIndex(int index) {
                 if(index >= 0 && index < 2) {
-                    Minecraft.getMinecraft().gameSettings.attackIndicator = attackIndicator.get() ? index + 1 : 0;
+                    Minecraft.getInstance().options.attackIndicator = attackIndicator.get() ? index + 1 : 0;
                 }
             }
 
@@ -100,21 +100,21 @@ public class Crosshair extends OverrideElement {
     @Override
     public boolean shouldRender(Event event) {
         return super.shouldRender(event)
-            && Minecraft.getMinecraft().gameSettings.thirdPersonView == 0
-            && (!Minecraft.getMinecraft().playerController.isSpectator() || canInteract());
+            && Minecraft.getInstance().options.field_74320_O == 0
+            && (!Minecraft.getInstance().gameMode.func_78747_a() || canInteract());
     }
 
     /** @return {@code true} if the player is looking at something that can be interacted with in spectator mode */
     private boolean canInteract() {
-        if(Minecraft.getMinecraft().pointedEntity != null) {
+        if(Minecraft.getInstance().crosshairPickEntity != null) {
             return true;
         } else {
-            RayTraceResult trace = Minecraft.getMinecraft().objectMouseOver;
-            if(trace == null || trace.typeOfHit != Type.BLOCK) return false;
+            RayTraceResult trace = Minecraft.getInstance().hitResult;
+            if(trace == null || trace.field_72313_a != Type.BLOCK) return false;
 
-            BlockPos pos = trace.getBlockPos();
-            IBlockState state = Minecraft.getMinecraft().world.getBlockState(pos);
-            return state.getBlock().hasTileEntity(state) && Minecraft.getMinecraft().world.getTileEntity(pos) instanceof IInventory;
+            BlockPos pos = trace.func_178782_a();
+            IBlockState state = Minecraft.getInstance().level.getBlockState(pos);
+            return state.getBlock().hasTileEntity(state) && Minecraft.getInstance().level.getBlockEntity(pos) instanceof IInventory;
         }
     }
 
@@ -122,7 +122,7 @@ public class Crosshair extends OverrideElement {
     protected Rect render(Event event) {
         Rect bounds = null;
 
-        if(Minecraft.getMinecraft().gameSettings.showDebugInfo && !Minecraft.getMinecraft().gameSettings.reducedDebugInfo && !Minecraft.getMinecraft().player.hasReducedDebug()) {
+        if(Minecraft.getInstance().options.renderDebug && !Minecraft.getInstance().options.reducedDebugInfo && !Minecraft.getInstance().player.isReducedDebugInfo()) {
             renderAxes(MANAGER.getScreen().getAnchor(Direction.CENTER), getPartialTicks(event));
         } else {
             Rect texture = new Rect(16, 16);
@@ -130,15 +130,15 @@ public class Crosshair extends OverrideElement {
             // Vanilla crosshair is offset by (1, 1) for some reason
             Rect crosshair = new Rect(texture).anchor(MANAGER.getScreen(), Direction.CENTER).translate(1, 1);
 
-            GlStateManager.blendFunc(SourceFactor.ONE_MINUS_DST_COLOR, DestFactor.ONE_MINUS_SRC_COLOR);
-            GlStateManager.enableAlpha();
+            GlStateManager.func_187401_a(SourceFactor.ONE_MINUS_DST_COLOR, DestFactor.ONE_MINUS_SRC_COLOR);
+            GlStateManager.func_179141_d();
             GlUtil.drawRect(crosshair, texture);
 
             if(attackIndicator.get()) {
                 bounds = renderAttackIndicator();
             }
             GlUtil.blendFuncSafe(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
-            GlStateManager.disableAlpha();
+            GlStateManager.func_179118_c();
         }
         return bounds;
     }
@@ -147,7 +147,7 @@ public class Crosshair extends OverrideElement {
         Rect bounds = indicatorType.getIndex() == 0 ? new Rect(16, 8) : new Rect(18, 18);
 
         if(position.isDirection(Direction.SOUTH)) {
-            Direction primary = Minecraft.getMinecraft().player.getPrimaryHand() == EnumHandSide.RIGHT ? Direction.EAST : Direction.WEST;
+            Direction primary = Minecraft.getInstance().player.getMainArm() == EnumHandSide.RIGHT ? Direction.EAST : Direction.WEST;
             // Vanilla indicator is also offset by (1, 0) regardless of main hand
             bounds = bounds.align(HudElement.HOTBAR.getLastBounds().grow(5).getAnchor(primary), primary.mirrorCol()).translate(1, 0);
         } else if(position.isDirection(Direction.CENTER)) {
@@ -156,14 +156,14 @@ public class Crosshair extends OverrideElement {
             bounds = position.applyTo(bounds);
         }
 
-        float attackStrength = Minecraft.getMinecraft().player.getCooledAttackStrength(0);
+        float attackStrength = Minecraft.getInstance().player.getAttackStrengthScale(0);
 
         if(indicatorType.getIndex() == 0) {
             if(attackStrength >= 1) {
                 if (
-                    Minecraft.getMinecraft().pointedEntity instanceof EntityLivingBase
-                    && ((EntityLivingBase)Minecraft.getMinecraft().pointedEntity).isEntityAlive()
-                    && Minecraft.getMinecraft().player.getCooldownPeriod() > 5
+                    Minecraft.getInstance().crosshairPickEntity instanceof EntityLivingBase
+                    && ((EntityLivingBase)Minecraft.getInstance().crosshairPickEntity).isAlive()
+                    && Minecraft.getInstance().player.getCurrentItemAttackStrengthDelay() > 5
                 ) {
                     GlUtil.drawRect(bounds.resize(16, 16), new Rect(68, 94, 16, 16));
                 }
@@ -178,15 +178,15 @@ public class Crosshair extends OverrideElement {
     }
 
     private void renderAxes(Point center, float partialTicks) {
-        GlStateManager.pushMatrix();
-        GlStateManager.translate(center.getX(), center.getY(), 0);
+        GlStateManager.func_179094_E();
+        GlStateManager.func_179109_b(center.getX(), center.getY(), 0);
 
-        Entity entity = Minecraft.getMinecraft().getRenderViewEntity();
-        GlStateManager.rotate(entity.prevRotationPitch + (entity.rotationPitch - entity.prevRotationPitch) * partialTicks, -1.0F, 0.0F, 0.0F);
-        GlStateManager.rotate(entity.prevRotationYaw + (entity.rotationYaw - entity.prevRotationYaw) * partialTicks, 0.0F, 1.0F, 0.0F);
-        GlStateManager.scale(-1.0F, -1.0F, -1.0F);
-        OpenGlHelper.renderDirections(10);
+        Entity entity = Minecraft.getInstance().getCameraEntity();
+        GlStateManager.func_179114_b(entity.xRotO + (entity.xRot - entity.xRotO) * partialTicks, -1.0F, 0.0F, 0.0F);
+        GlStateManager.func_179114_b(entity.yRotO + (entity.yRot - entity.yRotO) * partialTicks, 0.0F, 1.0F, 0.0F);
+        GlStateManager.func_179152_a(-1.0F, -1.0F, -1.0F);
+        OpenGlHelper.func_188785_m(10);
 
-        GlStateManager.popMatrix();
+        GlStateManager.func_179121_F();
     }
 }

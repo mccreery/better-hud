@@ -48,14 +48,14 @@ public class Vignette extends OverrideElement {
 
     @Override
     public boolean shouldRender(Event event) {
-        return Minecraft.isFancyGraphicsEnabled() && super.shouldRender(event);
+        return Minecraft.useFancyGraphics() && super.shouldRender(event);
     }
 
     @Override
     protected Rect render(Event event) {
-        WorldBorder border = Minecraft.getMinecraft().world.getWorldBorder();
+        WorldBorder border = Minecraft.getInstance().level.getWorldBorder();
 
-        float distance = (float)border.getClosestDistance(Minecraft.getMinecraft().player);
+        float distance = (float)border.getDistanceToBorder(Minecraft.getInstance().player);
         float warningDistance = (float)getWarningDistance(border);
 
         float f;
@@ -66,7 +66,7 @@ public class Vignette extends OverrideElement {
         }
 
         // Animate brightness
-        brightness = brightness + (MathHelper.clamp(1 - Minecraft.getMinecraft().player.getBrightness(), 0, 1) - brightness) / 100;
+        brightness = brightness + (MathHelper.clamp(1 - Minecraft.getInstance().player.getBrightness(), 0, 1) - brightness) / 100;
 
         Color color;
         if(f > 0) {
@@ -78,11 +78,11 @@ public class Vignette extends OverrideElement {
         }
 
         GlUtil.blendFuncSafe(SourceFactor.ZERO, DestFactor.ONE_MINUS_SRC_COLOR, SourceFactor.ONE, DestFactor.ZERO);
-        Minecraft.getMinecraft().getTextureManager().bindTexture(VIGNETTE_TEX_PATH);
+        Minecraft.getInstance().getTextureManager().bind(VIGNETTE_TEX_PATH);
 
         GlUtil.drawRect(MANAGER.getScreen(), new Rect(256, 256), color);
 
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+        Minecraft.getInstance().getTextureManager().bind(Gui.field_110324_m);
         GlUtil.blendFuncSafe(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
         return null;
     }
@@ -93,17 +93,17 @@ public class Vignette extends OverrideElement {
      */
     private double getWarningDistance(WorldBorder worldBorder) {
         // The distance the border will move within the warning time
-        double warningTimeDistance = worldBorder.getResizeSpeed() // meters/millis
+        double warningTimeDistance = worldBorder.getLerpSpeed() // meters/millis
             * worldBorder.getWarningTime() * 1000; // millis
 
         // Border cannot move further than the target size
-        double remainingResize = Math.abs(worldBorder.getTargetSize() - worldBorder.getDiameter());
+        double remainingResize = Math.abs(worldBorder.getLerpTarget() - worldBorder.getSize());
         warningTimeDistance = Math.min(warningTimeDistance, remainingResize);
 
         // Warn by distance and time
         // The larger distance triggers a warning first
         return Math.max(
-            worldBorder.getWarningDistance(),
+            worldBorder.getWarningBlocks(),
             warningTimeDistance
         );
     }

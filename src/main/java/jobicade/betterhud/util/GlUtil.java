@@ -32,7 +32,7 @@ public final class GlUtil {
      * @see GlStateManager#scale(float, float, float)
      */
     public static void scale(float scale) {
-        GlStateManager.scale(scale, scale, scale);
+        GlStateManager.func_179152_a(scale, scale, scale);
     }
 
     /** @see Gui#drawRect(int, int, int, int, int) */
@@ -75,15 +75,15 @@ public final class GlUtil {
     /** Draws text with black borders on all sides */
     public static void drawBorderedString(String text, int x, int y, Color color) {
         // Borders
-        Minecraft.getMinecraft().fontRenderer.drawString(text, x + 1, y, Color.BLACK.getPacked(), false);
-        Minecraft.getMinecraft().fontRenderer.drawString(text, x - 1, y, Color.BLACK.getPacked(), false);
-        Minecraft.getMinecraft().fontRenderer.drawString(text, x, y + 1, Color.BLACK.getPacked(), false);
-        Minecraft.getMinecraft().fontRenderer.drawString(text, x, y - 1, Color.BLACK.getPacked(), false);
+        Minecraft.getInstance().font.func_175065_a(text, x + 1, y, Color.BLACK.getPacked(), false);
+        Minecraft.getInstance().font.func_175065_a(text, x - 1, y, Color.BLACK.getPacked(), false);
+        Minecraft.getInstance().font.func_175065_a(text, x, y + 1, Color.BLACK.getPacked(), false);
+        Minecraft.getInstance().font.func_175065_a(text, x, y - 1, Color.BLACK.getPacked(), false);
 
-        Minecraft.getMinecraft().fontRenderer.drawString(text, x, y, color.getPacked(), false);
+        Minecraft.getInstance().font.func_175065_a(text, x, y, color.getPacked(), false);
         Color.WHITE.apply();
-        GlStateManager.disableAlpha();
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+        GlStateManager.func_179118_c();
+        Minecraft.getInstance().getTextureManager().bind(Gui.field_110324_m);
     }
 
     /** @see #renderSingleItem(ItemStack, int, int) */
@@ -98,14 +98,14 @@ public final class GlUtil {
      * @see net.minecraft.client.renderer.RenderItem#renderItemAndEffectIntoGUI(ItemStack, int, int)
      * @see RenderHelper#disableStandardItemLighting() */
     public static void renderSingleItem(ItemStack stack, int x, int y) {
-        GlStateManager.enableDepth();
-        RenderHelper.enableGUIStandardItemLighting();
-        Minecraft.getMinecraft().getRenderItem().renderItemAndEffectIntoGUI(stack, x, y);
-        RenderHelper.disableStandardItemLighting();
-        GlStateManager.disableDepth();
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+        GlStateManager.func_179126_j();
+        RenderHelper.func_74520_c();
+        Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(stack, x, y);
+        RenderHelper.turnOff();
+        GlStateManager.func_179097_i();
+        Minecraft.getInstance().getTextureManager().bind(Gui.field_110324_m);
         blendFuncSafe(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
-        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        GlStateManager.func_179103_j(GL11.GL_SMOOTH);
     }
 
     /** Renders the item with hotbar animations.
@@ -113,34 +113,34 @@ public final class GlUtil {
      */
     public static void renderHotbarItem(Rect bounds, ItemStack stack, float partialTicks) {
         if(stack.isEmpty()) return;
-        float animationTicks = stack.getAnimationsToGo() - partialTicks;
+        float animationTicks = stack.getPopTime() - partialTicks;
 
-        GlStateManager.enableDepth();
-        RenderHelper.enableGUIStandardItemLighting();
+        GlStateManager.func_179126_j();
+        RenderHelper.func_74520_c();
         if(animationTicks > 0) {
             float factor = 1 + animationTicks / 5;
 
-            GlStateManager.pushMatrix();
-            GlStateManager.translate(bounds.getX() + 8, bounds.getY() + 12, 0);
-            GlStateManager.scale(1 / factor, (factor + 1) / 2, 1);
-            GlStateManager.translate(-(bounds.getX() + 8), -(bounds.getY() + 12), 0.0F);
+            GlStateManager.func_179094_E();
+            GlStateManager.func_179109_b(bounds.getX() + 8, bounds.getY() + 12, 0);
+            GlStateManager.func_179152_a(1 / factor, (factor + 1) / 2, 1);
+            GlStateManager.func_179109_b(-(bounds.getX() + 8), -(bounds.getY() + 12), 0.0F);
 
-            Minecraft.getMinecraft().getRenderItem().renderItemAndEffectIntoGUI(Minecraft.getMinecraft().player, stack, bounds.getX(), bounds.getY());
+            Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(Minecraft.getInstance().player, stack, bounds.getX(), bounds.getY());
 
-            GlStateManager.popMatrix();
+            GlStateManager.func_179121_F();
         } else {
-            Minecraft.getMinecraft().getRenderItem().renderItemAndEffectIntoGUI(Minecraft.getMinecraft().player, stack, bounds.getX(), bounds.getY());
+            Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(Minecraft.getInstance().player, stack, bounds.getX(), bounds.getY());
         }
 
-        Minecraft.getMinecraft().getRenderItem().renderItemOverlays(Minecraft.getMinecraft().fontRenderer, stack, bounds.getX(), bounds.getY());
+        Minecraft.getInstance().getItemRenderer().renderGuiItemDecorations(Minecraft.getInstance().font, stack, bounds.getX(), bounds.getY());
 
         // Possible side-effects
-        RenderHelper.disableStandardItemLighting();
-        GlStateManager.disableDepth();
-        GlStateManager.disableAlpha();
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+        RenderHelper.turnOff();
+        GlStateManager.func_179097_i();
+        GlStateManager.func_179118_c();
+        Minecraft.getInstance().getTextureManager().bind(Gui.field_110324_m);
         GlUtil.blendFuncSafe(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
-        GlStateManager.shadeModel(GL11.GL_SMOOTH);
+        GlStateManager.func_179103_j(GL11.GL_SMOOTH);
     }
 
     /**
@@ -179,26 +179,26 @@ public final class GlUtil {
      * @param scaleFactor Linearly affects the size of things drawn to the billboard
      * @see net.minecraft.client.renderer.EntityRenderer#drawNameplate(net.minecraft.client.gui.FontRenderer, String, float, float, float, int, float, float, boolean, boolean) */
     public static void setupBillboard(Entity entity, float partialTicks, float scaleFactor) {
-        double dx = (entity.prevPosX + (entity.posX - entity.prevPosX) * partialTicks) - (Minecraft.getMinecraft().player.prevPosX + (Minecraft.getMinecraft().player.posX - Minecraft.getMinecraft().player.prevPosX) * partialTicks);
-        double dy = (entity.prevPosY + (entity.posY - entity.prevPosY) * partialTicks) - (Minecraft.getMinecraft().player.prevPosY + (Minecraft.getMinecraft().player.posY - Minecraft.getMinecraft().player.prevPosY) * partialTicks);
-        double dz = (entity.prevPosZ + (entity.posZ - entity.prevPosZ) * partialTicks) - (Minecraft.getMinecraft().player.prevPosZ + (Minecraft.getMinecraft().player.posZ - Minecraft.getMinecraft().player.prevPosZ) * partialTicks);
+        double dx = (entity.xo + (entity.field_70165_t - entity.xo) * partialTicks) - (Minecraft.getInstance().player.xo + (Minecraft.getInstance().player.field_70165_t - Minecraft.getInstance().player.xo) * partialTicks);
+        double dy = (entity.yo + (entity.field_70163_u - entity.yo) * partialTicks) - (Minecraft.getInstance().player.yo + (Minecraft.getInstance().player.field_70163_u - Minecraft.getInstance().player.yo) * partialTicks);
+        double dz = (entity.zo + (entity.field_70161_v - entity.zo) * partialTicks) - (Minecraft.getInstance().player.zo + (Minecraft.getInstance().player.field_70161_v - Minecraft.getInstance().player.zo) * partialTicks);
 
-        dy += entity.height + 0.5;
-        GlStateManager.translate(dx, dy, dz);
+        dy += entity.field_70131_O + 0.5;
+        GlStateManager.func_179137_b(dx, dy, dz);
 
-        dy -= Minecraft.getMinecraft().player.getEyeHeight();
+        dy -= Minecraft.getInstance().player.getEyeHeight();
         float distance = (float)Math.sqrt(dx*dx + dy*dy + dz*dz);
         scale(distance * (scaleFactor + 0.5f) / 300f);
 
-        GlStateManager.rotate(-Minecraft.getMinecraft().player.rotationYaw,  0, 1, 0);
-        GlStateManager.rotate(Minecraft.getMinecraft().player.rotationPitch, 1, 0, 0);
-        GlStateManager.rotate(180, 0, 0, 1);
+        GlStateManager.func_179114_b(-Minecraft.getInstance().player.yRot,  0, 1, 0);
+        GlStateManager.func_179114_b(Minecraft.getInstance().player.xRot, 1, 0, 0);
+        GlStateManager.func_179114_b(180, 0, 0, 1);
     }
 
     /** {@code progress} defaults to the durability of {@code stack}
      * @see #drawProgressBar(Rect, float, boolean) */
     public static void drawDamageBar(Rect bounds, ItemStack stack, boolean vertical) {
-        float progress = (float)(stack.getMaxDamage() - stack.getItemDamage()) / stack.getMaxDamage();
+        float progress = (float)(stack.getMaxDamage() - stack.getDamageValue()) / stack.getMaxDamage();
         drawProgressBar(bounds, progress, vertical);
     }
 
@@ -253,7 +253,7 @@ public final class GlUtil {
 
     /** @return The size of {@code string} as rendered by Minecraft's font renderer */
     public static Point getStringSize(String string) {
-        return new Point(Minecraft.getMinecraft().fontRenderer.getStringWidth(string), Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT);
+        return new Point(Minecraft.getInstance().font.width(string), Minecraft.getInstance().font.lineHeight);
     }
 
     /**
@@ -291,20 +291,20 @@ public final class GlUtil {
         // We need to trick the state manager into updating the cache
         EnumSet<SourceFactor> factors = EnumSet.allOf(SourceFactor.class);
         factors.remove(srcFactor);
-        factors.removeIf(f -> f.factor == GL11.glGetInteger(GL11.GL_BLEND_SRC));
+        factors.removeIf(f -> f.field_187395_p == GL11.glGetInteger(GL11.GL_BLEND_SRC));
 
         // Get a factor which is distinct from both current and new factor
         SourceFactor dummyFactor = factors.iterator().next();
         // Ensure cache differs from our desired values
-        GlStateManager.tryBlendFuncSeparate(dummyFactor, dstFactor, srcFactorAlpha, dstFactorAlpha);
+        GlStateManager.func_187428_a(dummyFactor, dstFactor, srcFactorAlpha, dstFactorAlpha);
         // Guarantee cache updates correctly
-        GlStateManager.tryBlendFuncSeparate(srcFactor, dstFactor, srcFactorAlpha, dstFactorAlpha);
+        GlStateManager.func_187428_a(srcFactor, dstFactor, srcFactorAlpha, dstFactorAlpha);
     }
 
     public static void beginScissor(Rect scissorRect, ScaledResolution resolution) {
         final Rect scaledRect = scissorRect
-            .withY(resolution.getScaledHeight() - scissorRect.getBottom())
-            .scale(resolution.getScaleFactor());
+            .withY(resolution.func_78328_b() - scissorRect.getBottom())
+            .scale(resolution.func_78325_e());
 
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
         GL11.glScissor(scaledRect.getX(), scaledRect.getY(), scaledRect.getWidth(), scaledRect.getHeight());

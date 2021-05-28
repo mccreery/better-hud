@@ -226,7 +226,7 @@ public abstract class HudElement implements IBoolean {
     /** @return The localized name of the element
      * @see #getUnlocalizedName() */
     public final String getLocalizedName() {
-        return I18n.format(getUnlocalizedName());
+        return I18n.get(getUnlocalizedName());
     }
 
     /** @return The unlocalized name of the element */
@@ -258,13 +258,13 @@ public abstract class HudElement implements IBoolean {
      * should be rendered and caches the bounds so they are available from {@link #getLastRect()} */
     public final void tryRender(Event event) {
         if(shouldRender(event) && isEnabledAndSupported()) {
-            Minecraft.getMinecraft().mcProfiler.startSection(name);
+            Minecraft.getInstance().profiler.push(name);
 
             lastBounds = render(event);
             if(lastBounds == null) lastBounds = Rect.empty();
             postRender(event);
 
-            Minecraft.getMinecraft().mcProfiler.endSection();
+            Minecraft.getInstance().profiler.pop();
         }
     }
 

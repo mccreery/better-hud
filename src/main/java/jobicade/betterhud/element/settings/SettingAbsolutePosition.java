@@ -42,10 +42,10 @@ public class SettingAbsolutePosition extends Setting<Point> {
 
     @Override
     public Point getGuiParts(List<Gui> parts, Map<Gui, Setting<?>> callbacks, Point origin) {
-        parts.add(xBox = new GuiTextField(0, Minecraft.getMinecraft().fontRenderer, origin.getX() - 106, origin.getY() + 1, 80, 18));
-        xBox.setText(String.valueOf(x));
-        parts.add(yBox = new GuiTextField(0, Minecraft.getMinecraft().fontRenderer, origin.getX() + 2, origin.getY() + 1, 80, 18));
-        yBox.setText(String.valueOf(y));
+        parts.add(xBox = new GuiTextField(0, Minecraft.getInstance().font, origin.getX() - 106, origin.getY() + 1, 80, 18));
+        xBox.setValue(String.valueOf(x));
+        parts.add(yBox = new GuiTextField(0, Minecraft.getInstance().font, origin.getX() + 2, origin.getY() + 1, 80, 18));
+        yBox.setValue(String.valueOf(y));
 
         parts.add(xUp   = new GuiUpDownButton(true ).setBounds(new Rect(origin.getX() - 22, origin.getY(),      0, 0)).setId(0).setRepeat());
         parts.add(xDown = new GuiUpDownButton(false).setBounds(new Rect(origin.getX() - 22, origin.getY() + 10, 0, 0)).setId(1).setRepeat());
@@ -53,7 +53,7 @@ public class SettingAbsolutePosition extends Setting<Point> {
         parts.add(yDown = new GuiUpDownButton(false).setBounds(new Rect(origin.getX() + 86, origin.getY() + 10, 0, 0)).setId(3).setRepeat());
 
         if(position != null) {
-            parts.add(pick = new GuiButton(4, origin.getX() - 100, origin.getY() + 22, 200, 20, I18n.format("betterHud.menu.pick")));
+            parts.add(pick = new GuiButton(4, origin.getX() - 100, origin.getY() + 22, 200, 20, I18n.get("betterHud.menu.pick")));
             callbacks.put(pick, this);
         }
 
@@ -69,19 +69,19 @@ public class SettingAbsolutePosition extends Setting<Point> {
 
     public void updateText() {
         if(xBox != null && yBox != null) {
-            xBox.setText(String.valueOf(x));
-            yBox.setText(String.valueOf(y));
+            xBox.setValue(String.valueOf(x));
+            yBox.setValue(String.valueOf(y));
         }
     }
 
     @Override
     public void actionPerformed(GuiElementSettings gui, GuiButton button) {
-        switch(button.id) {
-            case 0: xBox.setText(String.valueOf(++x)); break;
-            case 1: xBox.setText(String.valueOf(--x)); break;
-            case 2: yBox.setText(String.valueOf(++y)); break;
-            case 3: yBox.setText(String.valueOf(--y)); break;
-            case 4: Minecraft.getMinecraft().displayGuiScreen(new GuiOffsetChooser(gui, position)); break;
+        switch(button.field_146127_k) {
+            case 0: xBox.setValue(String.valueOf(++x)); break;
+            case 1: xBox.setValue(String.valueOf(--x)); break;
+            case 2: yBox.setValue(String.valueOf(++y)); break;
+            case 3: yBox.setValue(String.valueOf(--y)); break;
+            case 4: Minecraft.getInstance().setScreen(new GuiOffsetChooser(gui, position)); break;
         }
     }
 
@@ -122,29 +122,29 @@ public class SettingAbsolutePosition extends Setting<Point> {
         super.updateGuiParts(settings);
 
         boolean enabled = enabled();
-        xBox.setEnabled(enabled);
-        yBox.setEnabled(enabled);
+        xBox.setEditable(enabled);
+        yBox.setEditable(enabled);
 
-        if(pick != null) pick.enabled = enabled;
+        if(pick != null) pick.field_146124_l = enabled;
 
         if(enabled) {
             try {
-                x = Integer.parseInt(xBox.getText());
-                xUp.enabled = xDown.enabled = true;
+                x = Integer.parseInt(xBox.getValue());
+                xUp.field_146124_l = xDown.field_146124_l = true;
             } catch(NumberFormatException e) {
                 x = 0;
-                xUp.enabled = xDown.enabled = false;
+                xUp.field_146124_l = xDown.field_146124_l = false;
             }
 
             try {
-                y = Integer.parseInt(yBox.getText());
-                yUp.enabled = yDown.enabled = true;
+                y = Integer.parseInt(yBox.getValue());
+                yUp.field_146124_l = yDown.field_146124_l = true;
             } catch(NumberFormatException e) {
                 y = 0;
-                yUp.enabled = yDown.enabled = false;
+                yUp.field_146124_l = yDown.field_146124_l = false;
             }
         } else {
-            xUp.enabled = xDown.enabled = yUp.enabled = yDown.enabled = false;
+            xUp.field_146124_l = xDown.field_146124_l = yUp.field_146124_l = yDown.field_146124_l = false;
         }
     }
 }

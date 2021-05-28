@@ -42,11 +42,11 @@ public class SignReader extends HudElement {
     public Rect render(Event event) {
         Rect bounds = position.applyTo(new Rect(96, 48));
 
-        Minecraft.getMinecraft().getTextureManager().bindTexture(SIGN_TEXTURE);
+        Minecraft.getInstance().getTextureManager().bind(SIGN_TEXTURE);
         new Quad().setTexture(new Rect(2, 2, 24, 12).scale(4, 8)).setBounds(bounds).render();
 
-        List<Label> labels = Stream.of(getSign().signText)
-            .map(line -> new Label(line.getFormattedText()).setColor(Color.BLACK).setShadow(false))
+        List<Label> labels = Stream.of(getSign().messages)
+            .map(line -> new Label(line.func_150254_d()).setColor(Color.BLACK).setShadow(false))
             .collect(Collectors.toList());
 
         Grid<Label> grid = new Grid<>(new Point(1, labels.size()), labels);
@@ -63,15 +63,15 @@ public class SignReader extends HudElement {
      */
     private TileEntitySign getSign() {
         // Sanity check, but can continue normally if null
-        if (Minecraft.getMinecraft() == null || Minecraft.getMinecraft().world == null) {
+        if (Minecraft.getInstance() == null || Minecraft.getInstance().level == null) {
             return null;
         }
 
         // Functional approach avoids long null check chain
-        return Optional.ofNullable(Minecraft.getMinecraft().getRenderViewEntity())
-            .map(entity -> entity.rayTrace(200, 1.0f))
-            .map(RayTraceResult::getBlockPos)
-            .map(Minecraft.getMinecraft().world::getTileEntity)
+        return Optional.ofNullable(Minecraft.getInstance().getCameraEntity())
+            .map(entity -> entity.func_174822_a(200, 1.0f))
+            .map(RayTraceResult::func_178782_a)
+            .map(Minecraft.getInstance().level::getBlockEntity)
             .filter(TileEntitySign.class::isInstance)
             .map(TileEntitySign.class::cast)
             .orElse(null);

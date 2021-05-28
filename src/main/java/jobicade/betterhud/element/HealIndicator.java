@@ -40,8 +40,8 @@ public class HealIndicator extends HudElement {
 
     @Override
     public Rect render(Event event) {
-            String healIndicator = I18n.format("betterHud.hud.healIndicator");
-            Rect bounds = mode.getIndex() == 0 ? new Rect(Minecraft.getMinecraft().fontRenderer.getStringWidth(healIndicator), Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT) : new Rect(9, 9);
+            String healIndicator = I18n.get("betterHud.hud.healIndicator");
+            Rect bounds = mode.getIndex() == 0 ? new Rect(Minecraft.getInstance().font.width(healIndicator), Minecraft.getInstance().font.lineHeight) : new Rect(9, 9);
 
             if(position.isCustom()) {
                 bounds = position.applyTo(bounds);
@@ -53,8 +53,8 @@ public class HealIndicator extends HudElement {
             if(mode.getIndex() == 0) {
                 GlUtil.drawString(healIndicator, bounds.getPosition(), Direction.NORTH_WEST, Color.GREEN);
             } else {
-                Minecraft.getMinecraft().getTextureManager().bindTexture(Textures.HUD_ICONS);
-                Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(bounds.getX(), bounds.getY(), 0, 80, 9, 9);
+                Minecraft.getInstance().getTextureManager().bind(Textures.HUD_ICONS);
+                Minecraft.getInstance().gui.func_73729_b(bounds.getX(), bounds.getY(), 0, 80, 9, 9);
             }
             return bounds;
     }
@@ -63,9 +63,9 @@ public class HealIndicator extends HudElement {
     @Override
     public boolean shouldRender(Event event) {
         return super.shouldRender(event)
-            && Minecraft.getMinecraft().playerController.gameIsSurvivalOrAdventure()
-            && Minecraft.getMinecraft().world.getGameRules().getBoolean("naturalRegeneration")
-            && Minecraft.getMinecraft().player.getFoodStats().getFoodLevel() >= 18
-            && Minecraft.getMinecraft().player.shouldHeal();
+            && Minecraft.getInstance().gameMode.hasExperience()
+            && Minecraft.getInstance().level.getGameRules().func_82766_b("naturalRegeneration")
+            && Minecraft.getInstance().player.getFoodData().getFoodLevel() >= 18
+            && Minecraft.getInstance().player.isHurt();
     }
 }

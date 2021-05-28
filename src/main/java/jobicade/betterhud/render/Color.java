@@ -56,7 +56,7 @@ public class Color {
     public Color withBlue(int blue) {return new Color(alpha, red, green, blue);}
 
     public void apply() {
-        GlStateManager.color(red / 255.0f, green / 255.0f, blue / 255.0f, alpha / 255.0f);
+        GlStateManager.func_179131_c(red / 255.0f, green / 255.0f, blue / 255.0f, alpha / 255.0f);
     }
 
     @Override
@@ -85,7 +85,7 @@ public class Color {
         saturation = MathHelper.clamp(saturation, 0, 1);
         value = MathHelper.clamp(value, 0, 1);
 
-        return new Color(MathHelper.hsvToRGB(hue, saturation, value)).withAlpha(255);
+        return new Color(MathHelper.hsvToRgb(hue, saturation, value)).withAlpha(255);
     }
 
     public static Color getProgressColor(float progress) {

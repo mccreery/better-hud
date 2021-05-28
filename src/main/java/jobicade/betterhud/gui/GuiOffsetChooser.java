@@ -26,20 +26,20 @@ public class GuiOffsetChooser extends GuiScreen {
     }
 
     @Override
-    protected void keyTyped(char typedChar, int keyCode) throws IOException {
+    protected void func_73869_a(char typedChar, int keyCode) throws IOException {
         if(keyCode == 1) {
             setting.set(null);
-            Minecraft.getMinecraft().displayGuiScreen(parent);
+            Minecraft.getInstance().setScreen(parent);
         }
     }
 
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-        Minecraft.getMinecraft().displayGuiScreen(parent);
+    protected void func_73864_a(int mouseX, int mouseY, int mouseButton) throws IOException {
+        Minecraft.getInstance().setScreen(parent);
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+    public void func_73863_a(int mouseX, int mouseY, float partialTicks) {
         Point anchor = setting.getParent().getAnchor(setting.getAnchor());
         Point offset = new Point(mouseX, mouseY).sub(anchor);
 
@@ -63,13 +63,13 @@ public class GuiOffsetChooser extends GuiScreen {
             GlUtil.drawBorderRect(parent.element.getLastBounds(), Color.RED);
         } else {
             Point mouse = offset.add(anchor);
-            drawHorizontalLine(mouse.getX() - SPACER, mouse.getX() + SPACER, mouse.getY(), Color.RED.getPacked());
-            drawVerticalLine(mouse.getX(), mouse.getY() - SPACER, mouse.getY() + SPACER, Color.RED.getPacked());
+            func_73730_a(mouse.getX() - SPACER, mouse.getX() + SPACER, mouse.getY(), Color.RED.getPacked());
+            func_73728_b(mouse.getX(), mouse.getY() - SPACER, mouse.getY() + SPACER, Color.RED.getPacked());
         }
 
         String key = Keyboard.getKeyName(Keyboard.KEY_LCONTROL);
-        GlUtil.drawString(I18n.format("betterHud.menu.unsnap", key), new Point(SPACER, SPACER), Direction.NORTH_WEST, Color.WHITE);
+        GlUtil.drawString(I18n.get("betterHud.menu.unsnap", key), new Point(SPACER, SPACER), Direction.NORTH_WEST, Color.WHITE);
 
-        drawHoveringText(offset.toPrettyString(), mouseX, mouseY);
+        func_146279_a(offset.toPrettyString(), mouseX, mouseY);
     }
 }

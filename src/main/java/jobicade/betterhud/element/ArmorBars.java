@@ -54,7 +54,7 @@ public class ArmorBars extends EquipmentDisplay {
         if(alwaysVisible.get()) return true;
 
         for(int i = 0; i < 4; i++) {
-            if(!Minecraft.getMinecraft().player.inventory.armorItemInSlot(i).isEmpty()) {
+            if(!Minecraft.getInstance().player.inventory.getArmor(i).isEmpty()) {
                 return true;
             }
         }
@@ -66,8 +66,8 @@ public class ArmorBars extends EquipmentDisplay {
         Grid<Boxed> grid = new Grid<>(new Point(1, 4)).setStretch(true);
 
         for(int i = 0; i < 4; i++) {
-            ItemStack stack = Minecraft.getMinecraft().player.inventory.armorItemInSlot(3-i);
-            TextureAtlasSprite empty = Minecraft.getMinecraft().getTextureMapBlocks().getAtlasSprite(ItemArmor.EMPTY_SLOT_NAMES[3-i]);
+            ItemStack stack = Minecraft.getInstance().player.inventory.getArmor(3-i);
+            TextureAtlasSprite empty = Minecraft.getInstance().func_147117_R().getTexture(ItemArmor.field_94603_a[3-i]);
 
             grid.setCell(new Point(0, i), new SlotDisplay(stack, empty));
         }
@@ -108,9 +108,9 @@ public class ArmorBars extends EquipmentDisplay {
 
             Rect item = new Rect(16, 16).anchor(bounds, contentAlignment);
             if(stack.isEmpty()) {
-                Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
-                Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(item.getX(), item.getY(), empty, item.getWidth(), item.getHeight());
-                Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+                Minecraft.getInstance().getTextureManager().bind(TextureMap.LOCATION_BLOCKS);
+                Minecraft.getInstance().gui.func_175175_a(item.getX(), item.getY(), empty, item.getWidth(), item.getHeight());
+                Minecraft.getInstance().getTextureManager().bind(Gui.field_110324_m);
             } else {
                 GlUtil.renderSingleItem(stack, item.getPosition());
             }

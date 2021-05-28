@@ -96,10 +96,10 @@ public class BlockViewer extends TextElement {
     public boolean shouldRender(Event event) {
         if(!super.shouldRender(event)) return false;
 
-        trace = Minecraft.getMinecraft().getRenderViewEntity().rayTrace(HudElement.GLOBAL.getBillboardDistance(), 1f);
+        trace = Minecraft.getInstance().getCameraEntity().func_174822_a(HudElement.GLOBAL.getBillboardDistance(), 1f);
 
-        if(trace != null && trace.typeOfHit == RayTraceResult.Type.BLOCK) {
-            state = Minecraft.getMinecraft().world.getBlockState(trace.getBlockPos());
+        if(trace != null && trace.field_72313_a == RayTraceResult.Type.BLOCK) {
+            state = Minecraft.getInstance().level.getBlockState(trace.func_178782_a());
             stack = getDisplayStack(trace, state);
             return true;
         } else {
@@ -117,7 +117,7 @@ public class BlockViewer extends TextElement {
 
     @Override
     protected Rect getPadding() {
-        int vPad = 20 - Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT;
+        int vPad = 20 - Minecraft.getInstance().font.lineHeight;
         int bottom = vPad / 2;
         Rect bounds = Rect.createPadding(5, vPad - bottom, 5, bottom);
 
@@ -138,7 +138,7 @@ public class BlockViewer extends TextElement {
 
     @Override
     public Rect render(Event event) {
-        GlStateManager.disableDepth();
+        GlStateManager.func_179097_i();
         return super.render(event);
     }
 
@@ -164,11 +164,11 @@ public class BlockViewer extends TextElement {
      *
      * @see net.minecraftforge.common.ForgeHooks#onPickBlock(RayTraceResult, net.minecraft.entity.player.EntityPlayer, net.minecraft.world.World) */
     private ItemStack getDisplayStack(RayTraceResult trace, IBlockState state) {
-        ItemStack stack = state.getBlock().getPickBlock(state, trace, Minecraft.getMinecraft().world, trace.getBlockPos(), Minecraft.getMinecraft().player);
+        ItemStack stack = state.getBlock().getPickBlock(state, trace, Minecraft.getInstance().level, trace.func_178782_a(), Minecraft.getInstance().player);
 
         if(isStackEmpty(stack)) {
             // Pick block is disabled, however we can grab the information directly
-            stack = new ItemStack(state.getBlock(), state.getBlock().getMetaFromState(state));
+            stack = new ItemStack(state.getBlock(), state.getBlock().func_176201_c(state));
 
             if(isStackEmpty(stack)) { // There's no registered ItemBlock, no stack exists
                 return null;
@@ -185,29 +185,29 @@ public class BlockViewer extends TextElement {
      * @see net.minecraft.item.ItemBlock#getUnlocalizedName(ItemStack) */
     private String getBlockName(RayTraceResult trace, IBlockState state, ItemStack stack) {
         if(state.getBlock() == Blocks.END_PORTAL) {
-            return I18n.format("tile.endPortal.name");
+            return I18n.get("tile.endPortal.name");
         }
 
         if(invNames.get() && state.getBlock().hasTileEntity(state)) {
-            TileEntity tileEntity = Minecraft.getMinecraft().world.getTileEntity(trace.getBlockPos());
+            TileEntity tileEntity = Minecraft.getInstance().level.getBlockEntity(trace.func_178782_a());
 
             if(tileEntity instanceof IWorldNameable) {
-                ITextComponent invName = ensureInvName(trace.getBlockPos());
+                ITextComponent invName = ensureInvName(trace.func_178782_a());
 
                 if(invName != null) {
-                    return invName.getFormattedText();
+                    return invName.func_150254_d();
                 }
             }
         }
 
-        return isStackEmpty(stack) ? state.getBlock().getLocalizedName() : stack.getDisplayName();
+        return isStackEmpty(stack) ? state.getBlock().func_149732_F() : stack.func_82833_r();
     }
 
     /** @return Information about the block's related IDs */
     private String getIdString(IBlockState state) {
-        String name = Block.REGISTRY.getNameForObject(state.getBlock()).toString();
-        int id = Block.getIdFromBlock(state.getBlock());
-        int meta = state.getBlock().getMetaFromState(state);
+        String name = Block.field_149771_c.getKey(state.getBlock()).toString();
+        int id = Block.func_149682_b(state.getBlock());
+        int meta = state.getBlock().func_176201_c(state);
 
         return String.format("%s(%s:%d/#%04d)", ChatFormatting.YELLOW, name, meta, id);
     }
@@ -242,7 +242,7 @@ public class BlockViewer extends TextElement {
         if(name != null) {
             return name;
         } else {
-            return Minecraft.getMinecraft().world.getTileEntity(pos).getDisplayName();
+            return Minecraft.getInstance().level.getBlockEntity(pos).getDisplayName();
         }
     }
 

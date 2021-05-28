@@ -23,7 +23,7 @@ public class BloodSplatters extends ParticleOverlay {
 
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public void onEntityDamage(LivingDamageEvent event) {
-        if(event.isCanceled() || !event.getEntity().equals(Minecraft.getMinecraft().player)) {
+        if(event.isCanceled() || !event.getEntity().equals(Minecraft.getInstance().player)) {
             return;
         }
 

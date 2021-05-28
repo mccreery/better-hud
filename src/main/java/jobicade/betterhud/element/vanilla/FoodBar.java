@@ -38,8 +38,8 @@ public class FoodBar extends Bar {
 
     @Override
     public boolean shouldRender(Event event) {
-        return Minecraft.getMinecraft().playerController.shouldDrawHUD()
-            && (!hideMount.get() || !Minecraft.getMinecraft().player.isRidingHorse())
+        return Minecraft.getInstance().gameMode.canHurtPlayer()
+            && (!hideMount.get() || !Minecraft.getInstance().player.isRidingJumpable())
             && super.shouldRender(event);
     }
 }

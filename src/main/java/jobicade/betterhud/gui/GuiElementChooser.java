@@ -21,20 +21,20 @@ public class GuiElementChooser extends GuiElements {
     }
 
     @Override
-    protected void keyTyped(char typedChar, int keyCode) throws IOException {
+    protected void func_73869_a(char typedChar, int keyCode) throws IOException {
         if(keyCode == 1) {
             setting.set(null);
-            Minecraft.getMinecraft().displayGuiScreen(parent);
+            Minecraft.getInstance().setScreen(parent);
         }
     }
 
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
-        Minecraft.getMinecraft().displayGuiScreen(parent);
+    protected void func_73864_a(int mouseX, int mouseY, int mouseButton) throws IOException {
+        Minecraft.getInstance().setScreen(parent);
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+    public void func_73863_a(int mouseX, int mouseY, float partialTicks) {
         HudElement selected = getHoveredElement(mouseX, mouseY, (HudElement element) -> {
             return element == this.element;
         });

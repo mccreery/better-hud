@@ -13,16 +13,16 @@ public class GuiMenuScreen extends GuiScreen {
     private String title;
 
     @Override
-    protected void actionPerformed(GuiButton button) {
+    protected void func_146284_a(GuiButton button) {
         if(button instanceof GuiActionButton) {
             ((GuiActionButton)button).actionPerformed();
         }
     }
 
     @Override
-    public void setWorldAndResolution(Minecraft mc, int width, int height) {
+    public void func_146280_a(Minecraft mc, int width, int height) {
         this.origin = new Point(width / 2, height / 16 + 20);
-        super.setWorldAndResolution(mc, width, height);
+        super.func_146280_a(mc, width, height);
     }
 
     protected Point getOrigin() {
@@ -40,9 +40,9 @@ public class GuiMenuScreen extends GuiScreen {
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
-        this.drawDefaultBackground();
+    public void func_73863_a(int mouseX, int mouseY, float partialTicks) {
+        this.func_146276_q_();
         this.drawTitle();
-        super.drawScreen(mouseX, mouseY, partialTicks);
+        super.func_73863_a(mouseX, mouseY, partialTicks);
     }
 }

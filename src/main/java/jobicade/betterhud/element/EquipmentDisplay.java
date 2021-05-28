@@ -61,7 +61,7 @@ public abstract class EquipmentDisplay extends HudElement {
     }
 
     protected boolean showDurability(ItemStack stack) {
-        return showDurability.get() && (showUndamaged.get() ? stack.isItemStackDamageable() : stack.isItemDamaged());
+        return showDurability.get() && (showUndamaged.get() ? stack.isDamageableItem() : stack.isDamaged());
     }
 
     protected String getText(ItemStack stack) {
@@ -69,11 +69,11 @@ public abstract class EquipmentDisplay extends HudElement {
         ArrayList<String> parts = new ArrayList<String>();
 
         if(this.showName.get()) {
-            parts.add(stack.getDisplayName());
+            parts.add(stack.func_82833_r());
         }
 
         int maxDurability = stack.getMaxDamage();
-        int durability = maxDurability - stack.getItemDamage();
+        int durability = maxDurability - stack.getDamageValue();
 
         float value = (float)durability / (float)maxDurability;
 
@@ -87,9 +87,9 @@ public abstract class EquipmentDisplay extends HudElement {
 
         String text = String.join(" - ", parts);
 
-        if(stack.isItemStackDamageable()) {
+        if(stack.isDamageableItem()) {
             int count = warnings.getWarning(value);
-            if(count > 0) text += ' ' + I18n.format("betterHud.setting.warning." + count);
+            if(count > 0) text += ' ' + I18n.get("betterHud.setting.warning." + count);
         }
         return text;
     }

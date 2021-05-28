@@ -38,10 +38,10 @@ public class GuiReorder extends GuiElements {
         moveDown.setCallback(new ActionMove(true, -1));
         moveBottom.setCallback(new ActionMove(false, -1));
 
-        moveTop.setTooltip(I18n.format("betterHud.menu.moveTop"));
-        moveUp.setTooltip(I18n.format("betterHud.menu.moveUp"));
-        moveDown.setTooltip(I18n.format("betterHud.menu.moveDown"));
-        moveBottom.setTooltip(I18n.format("betterHud.menu.moveBottom"));
+        moveTop.setTooltip(I18n.get("betterHud.menu.moveTop"));
+        moveUp.setTooltip(I18n.get("betterHud.menu.moveUp"));
+        moveDown.setTooltip(I18n.get("betterHud.menu.moveDown"));
+        moveBottom.setTooltip(I18n.get("betterHud.menu.moveBottom"));
     }
 
     private class ActionMove implements ActionCallback {
@@ -94,40 +94,40 @@ public class GuiReorder extends GuiElements {
     }
 
     @Override
-    public void initGui() {
-        buttonList.clear();
+    public void func_73866_w_() {
+        field_146292_n.clear();
 
-        buttonList.add(moveTop);
-        buttonList.add(moveUp);
-        buttonList.add(moveDown);
-        buttonList.add(moveBottom);
+        field_146292_n.add(moveTop);
+        field_146292_n.add(moveUp);
+        field_146292_n.add(moveDown);
+        field_146292_n.add(moveBottom);
         select(null);
     }
 
     @Override
-    protected void actionPerformed(GuiButton button) throws IOException {
+    protected void func_146284_a(GuiButton button) throws IOException {
         if(button instanceof GuiActionButton)
             ((GuiActionButton)button).actionPerformed();
     }
 
     @Override
-    protected void keyTyped(char typedChar, int keyCode) throws IOException {
+    protected void func_73869_a(char typedChar, int keyCode) throws IOException {
         if(keyCode == 1) {
-            Minecraft.getMinecraft().displayGuiScreen(parent);
+            Minecraft.getInstance().setScreen(parent);
         }
     }
 
     @Override
-    protected void mouseClicked(int mouseX, int mouseY, int mouseButton) throws IOException {
+    protected void func_73864_a(int mouseX, int mouseY, int mouseButton) throws IOException {
         if(toolbox.contains(mouseX, mouseY)) {
-            super.mouseClicked(mouseX, mouseY, mouseButton);
+            super.func_73864_a(mouseX, mouseY, mouseButton);
         } else {
             select(hovered);
         }
     }
 
     @Override
-    public void drawScreen(int mouseX, int mouseY, float partialTicks) {
+    public void func_73863_a(int mouseX, int mouseY, float partialTicks) {
         hovered = getHoveredElement(mouseX, mouseY, Predicates.alwaysFalse());
 
         for(HudElement element : HudElement.ELEMENTS) {
@@ -137,6 +137,6 @@ public class GuiReorder extends GuiElements {
                 drawRect(bounds, element == hovered || element == selected);
             }
         }
-        super.drawScreen(mouseX, mouseY, partialTicks);
+        super.func_73863_a(mouseX, mouseY, partialTicks);
     }
 }

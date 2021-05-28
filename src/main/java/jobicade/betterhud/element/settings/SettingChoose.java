@@ -92,7 +92,7 @@ public class SettingChoose extends SettingAlignable<String> {
         parts.add(backing = new GuiButton(2, bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), ""));
         parts.add(last = new GuiButton(0, bounds.getLeft(), bounds.getY(), 20, bounds.getHeight(), "<"));
         parts.add(next = new GuiButton(1, bounds.getRight() - 20, bounds.getY(), 20, bounds.getHeight(), ">"));
-        backing.enabled = false;
+        backing.field_146124_l = false;
 
         callbacks.put(last, this);
         callbacks.put(next, this);
@@ -106,26 +106,26 @@ public class SettingChoose extends SettingAlignable<String> {
         int index = getIndex();
 
         if(index >= 0 && index < modes.length) {
-            return I18n.format(getUnlocalizedValue());
+            return I18n.get(getUnlocalizedValue());
         } else {
-            return I18n.format("betterHud.value.mode", index);
+            return I18n.get("betterHud.value.mode", index);
         }
     }
 
     @Override
     public void draw() {
-        Point center = new Point(backing.x + backing.width / 2, backing.y + backing.height / 2);
+        Point center = new Point(backing.field_146128_h + backing.field_146120_f / 2, backing.field_146129_i + backing.field_146121_g / 2);
         GlUtil.drawString(getLocalizedValue(), center, Direction.CENTER, Color.WHITE);
     }
 
     @Override
     public void actionPerformed(GuiElementSettings gui, GuiButton button) {
-        if(button.id == 0) last();
+        if(button.field_146127_k == 0) last();
         else next();
     }
 
     @Override
     public void updateGuiParts(Collection<Setting<?>> settings) {
-        last.enabled = next.enabled = enabled();
+        last.field_146124_l = next.field_146124_l = enabled();
     }
 }

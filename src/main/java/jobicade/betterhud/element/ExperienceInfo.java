@@ -42,14 +42,14 @@ public class ExperienceInfo extends TextElement {
 
     @Override
     public boolean shouldRender(Event event) {
-        return super.shouldRender(event) && Minecraft.getMinecraft().playerController.gameIsSurvivalOrAdventure();
+        return super.shouldRender(event) && Minecraft.getInstance().gameMode.hasExperience();
     }
 
     @Override
     public Rect render(Event event) {
-        int fullBar = getExperienceWithinLevel(Minecraft.getMinecraft().player.experienceLevel);
+        int fullBar = getExperienceWithinLevel(Minecraft.getInstance().player.experienceLevel);
 
-        int has = (int)(Minecraft.getMinecraft().player.experience * fullBar);
+        int has = (int)(Minecraft.getInstance().player.experienceProgress * fullBar);
         int needed = fullBar - has;
 
         String hasDisplay = String.valueOf(has);
@@ -99,13 +99,13 @@ public class ExperienceInfo extends TextElement {
         List<String> parts = new ArrayList<String>(2);
 
         if(total.get()) {
-            int totalDisplay = getExperienceToLevel(Minecraft.getMinecraft().player.experienceLevel);
-            totalDisplay += Minecraft.getMinecraft().player.experience * getExperienceWithinLevel(Minecraft.getMinecraft().player.experienceLevel);
+            int totalDisplay = getExperienceToLevel(Minecraft.getInstance().player.experienceLevel);
+            totalDisplay += Minecraft.getInstance().player.experienceProgress * getExperienceWithinLevel(Minecraft.getInstance().player.experienceLevel);
 
             parts.add(total.getLocalizedName() + ": "+ totalDisplay);
         }
         if(lifetime.get()) {
-            parts.add(lifetime.getLocalizedName() + ": " + Minecraft.getMinecraft().player.experienceTotal);
+            parts.add(lifetime.getLocalizedName() + ": " + Minecraft.getInstance().player.totalExperience);
         }
         return parts;
     }

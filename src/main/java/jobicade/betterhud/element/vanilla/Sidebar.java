@@ -39,12 +39,12 @@ public class Sidebar extends HudElement {
 
     @Override
     public boolean shouldRender(Event event) {
-        return getObjective(Minecraft.getMinecraft().player) != null && super.shouldRender(event);
+        return getObjective(Minecraft.getInstance().player) != null && super.shouldRender(event);
     }
 
     @Override
     protected Rect render(Event event) {
-        ScoreObjective objective = getObjective(Minecraft.getMinecraft().player);
+        ScoreObjective objective = getObjective(Minecraft.getInstance().player);
         List<Score> scores = getScores(objective);
 
         Label title = new Label(objective.getDisplayName()).setShadow(false);
@@ -54,9 +54,9 @@ public class Sidebar extends HudElement {
         Color valueColor = new Color(255, 255, 55, 55);
 
         for(Score score : scores) {
-            String name = score.getPlayerName();
-            String formattedName = ScorePlayerTeam.formatPlayerName(objective.getScoreboard().getPlayersTeam(name), name);
-            String points = String.valueOf(score.getScorePoints());
+            String name = score.getOwner();
+            String formattedName = ScorePlayerTeam.func_96667_a(objective.getScoreboard().getPlayersTeam(name), name);
+            String points = String.valueOf(score.getScore());
 
             names.add(new Label(formattedName).setShadow(false));
             values.add(new Label(points).setColor(valueColor).setShadow(false));
@@ -65,13 +65,13 @@ public class Sidebar extends HudElement {
         Grid<Label> namesGroup = new Grid<>(new Point(1, names.size()), names).setStretch(true).setCellAlignment(position.getContentAlignment().mirrorCol());
         Grid<Label> valuesGroup = new Grid<>(new Point(1, values.size()), values).setStretch(true).setCellAlignment(position.getContentAlignment());
 
-        int spaceWidth = Minecraft.getMinecraft().fontRenderer.getCharWidth(' ');
+        int spaceWidth = Minecraft.getInstance().font.func_78263_a(' ');
         Size size = namesGroup.getPreferredSize().add(valuesGroup.getPreferredSize().getX() + spaceWidth * 2, 0);
 
         int tWidth = title.getPreferredSize().getWidth();
         if(tWidth > size.getWidth()) size = size.withWidth(tWidth);
 
-        Rect padding = Rect.createPadding(1, Minecraft.getMinecraft().fontRenderer.FONT_HEIGHT + 1, 1, 1);
+        Rect padding = Rect.createPadding(1, Minecraft.getInstance().font.lineHeight + 1, 1, 1);
         Rect bounds = new Rect(size).grow(padding);
 
         if(!position.isCustom() && position.getDirection().getRow() == 1) {
@@ -93,7 +93,7 @@ public class Sidebar extends HudElement {
     }
 
     private boolean showScore(Score score) {
-        return !score.getPlayerName().startsWith("#");
+        return !score.getOwner().startsWith("#");
     }
 
     /**
@@ -102,7 +102,7 @@ public class Sidebar extends HudElement {
      * @return A list of scores for the given objective.
      */
     private List<Score> getScores(ScoreObjective objective) {
-        List<Score> scores = objective.getScoreboard().getSortedScores(objective).stream()
+        List<Score> scores = objective.getScoreboard().getPlayerScores(objective).stream()
             .filter(this::showScore).collect(Collectors.toCollection(ArrayList::new));
 
         Collections.reverse(scores);
@@ -118,20 +118,20 @@ public class Sidebar extends HudElement {
      * @see net.minecraft.client.gui.GuiIngame#renderGameOverlay(float)
      */
     private ScoreObjective getObjective(EntityPlayer player) {
-        Scoreboard scoreboard = player.getWorldScoreboard();
+        Scoreboard scoreboard = player.getScoreboard();
         ScoreObjective objective = null;
-        ScorePlayerTeam team = scoreboard.getPlayersTeam(Minecraft.getMinecraft().player.getName());
+        ScorePlayerTeam team = scoreboard.getPlayersTeam(Minecraft.getInstance().player.func_70005_c_());
 
         if(team != null) {
-            int slot = team.getColor().getColorIndex();
+            int slot = team.getColor().getId();
 
             if(slot >= 0) {
-                objective = scoreboard.getObjectiveInDisplaySlot(3 + slot);
+                objective = scoreboard.getDisplayObjective(3 + slot);
             }
         }
 
         if(objective == null) {
-            objective = scoreboard.getObjectiveInDisplaySlot(1);
+            objective = scoreboard.getDisplayObjective(1);
         }
         return objective;
     }

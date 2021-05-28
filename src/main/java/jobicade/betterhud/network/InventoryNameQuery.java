@@ -70,7 +70,7 @@ public abstract class InventoryNameQuery implements IMessage {
         @Override
         public void fromBytes(PacketBuffer buf) {
             try {
-                name = buf.readTextComponent();
+                name = buf.readComponent();
             } catch(IOException e) {
                 e.printStackTrace();
             }
@@ -78,7 +78,7 @@ public abstract class InventoryNameQuery implements IMessage {
 
         @Override
         public void toBytes(PacketBuffer buf) {
-            buf.writeTextComponent(name);
+            buf.writeComponent(name);
         }
     }
 
@@ -86,7 +86,7 @@ public abstract class InventoryNameQuery implements IMessage {
         @Override
         public Response onMessage(Request message, MessageContext ctx) {
             //System.out.println("Received block request " + message.getBlockPos());
-            TileEntity tileEntity = ctx.getServerHandler().player.world.getTileEntity(message.getBlockPos());
+            TileEntity tileEntity = ctx.getServerHandler().player.level.getBlockEntity(message.getBlockPos());
 
             if (tileEntity instanceof IWorldNameable) {
                 return new Response(message.getBlockPos(), tileEntity.getDisplayName());

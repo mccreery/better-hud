@@ -24,7 +24,7 @@ public class PotionIcon extends DefaultBoxed {
 
     public PotionIcon(PotionEffect effect, boolean showDuration) {
         this.effect = effect;
-        this.potion = effect.getPotion();
+        this.potion = effect.getEffect();
         this.showDuration = showDuration;
     }
 
@@ -34,19 +34,19 @@ public class PotionIcon extends DefaultBoxed {
         Rect background = getIconBackground();
         Rect iconBounds = background.anchor(bounds, Direction.NORTH);
 
-        Minecraft.getMinecraft().getTextureManager().bindTexture(GuiContainer.INVENTORY_BACKGROUND);
+        Minecraft.getInstance().getTextureManager().bind(GuiContainer.INVENTORY_LOCATION);
         new Quad().setTexture(background).setBounds(iconBounds).render();
 
         iconColor.apply();
         Rect iconInnerBounds = new Rect(18, 18).anchor(iconBounds, Direction.CENTER);
 
-        if(potion.hasStatusIcon()) {
-            int index = potion.getStatusIconIndex();
+        if(potion.func_76400_d()) {
+            int index = potion.func_76392_e();
             Rect icon = new Rect((index % 8) * 18, 198 + (index / 8) * 18, 18, 18);
 
             new Quad().setTexture(icon).setBounds(iconInnerBounds).render();
         }
-        potion.renderHUDEffect(iconBounds.getX(), iconBounds.getY(), effect, Minecraft.getMinecraft(), iconColor.getAlpha() / 255.0f);
+        potion.renderHUDEffect(iconBounds.getX(), iconBounds.getY(), effect, Minecraft.getInstance(), iconColor.getAlpha() / 255.0f);
 
         String levelLabel = getLevelLabel();
         if(levelLabel != null) {
@@ -60,7 +60,7 @@ public class PotionIcon extends DefaultBoxed {
             label.setBounds(new Rect(label.getPreferredSize()).anchor(iconBounds.grow(2), Direction.SOUTH, true)).render();
         }
 
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+        Minecraft.getInstance().getTextureManager().bind(Gui.field_110324_m);
         Color.WHITE.apply();
     }
 
@@ -76,7 +76,7 @@ public class PotionIcon extends DefaultBoxed {
 
     private String getDurationLabel() {
         if(potion.shouldRenderInvText(effect) && showDuration) {
-            return Potion.getPotionDurationString(effect, 1.0f);
+            return Potion.formatDuration(effect, 1.0f);
         } else {
             return null;
         }
@@ -89,8 +89,8 @@ public class PotionIcon extends DefaultBoxed {
             if(amplifier > 0) {
                 String unlocalized = "enchantment.level." + (amplifier + 1);
 
-                if(I18n.hasKey(unlocalized)) {
-                    return I18n.format(unlocalized);
+                if(I18n.exists(unlocalized)) {
+                    return I18n.get(unlocalized);
                 }
             }
         }
@@ -98,7 +98,7 @@ public class PotionIcon extends DefaultBoxed {
     }
 
     private Color getIconColor() {
-        if(effect.getIsAmbient() || effect.getDuration() > 200) {
+        if(effect.isAmbient() || effect.getDuration() > 200) {
             return Color.WHITE;
         } else {
             int duration = effect.getDuration();
@@ -110,6 +110,6 @@ public class PotionIcon extends DefaultBoxed {
     }
 
     private Rect getIconBackground() {
-        return new Rect(effect.getIsAmbient() ? 165 : 141, 166, 24, 24);
+        return new Rect(effect.isAmbient() ? 165 : 141, 166, 24, 24);
     }
 }

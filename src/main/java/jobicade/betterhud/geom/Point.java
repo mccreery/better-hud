@@ -47,8 +47,8 @@ public class Point implements Serializable {
      * @param resolution The resolution to get width and height from.
      */
     public Point(ScaledResolution resolution) {
-        this.x = resolution.getScaledWidth();
-        this.y = resolution.getScaledHeight();
+        this.x = resolution.func_78326_a();
+        this.y = resolution.func_78328_b();
     }
 
     /**

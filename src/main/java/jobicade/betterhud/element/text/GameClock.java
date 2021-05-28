@@ -24,7 +24,7 @@ import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.geom.Point;
 
 public class GameClock extends Clock {
-    private static final ItemStack BED = new ItemStack(Items.BED, 1, 14);
+    private static final ItemStack BED = new ItemStack(Items.field_151104_aV, 1, 14);
 
     private SettingBoolean showDays;
     private SettingBoolean showSleepIndicator;
@@ -63,10 +63,10 @@ public class GameClock extends Clock {
 
         switch(requireItem.getIndex()) {
             case 1:
-                return Minecraft.getMinecraft().player.inventory.hasItemStack(new ItemStack(Items.CLOCK));
+                return Minecraft.getInstance().player.inventory.contains(new ItemStack(Items.CLOCK));
             case 2:
-                return Minecraft.getMinecraft().player.getHeldItemMainhand().getItem() == Items.CLOCK
-                    || Minecraft.getMinecraft().player.getHeldItemOffhand().getItem() == Items.CLOCK;
+                return Minecraft.getInstance().player.getMainHandItem().getItem() == Items.CLOCK
+                    || Minecraft.getInstance().player.getOffhandItem().getItem() == Items.CLOCK;
         }
         return true;
     }
@@ -87,19 +87,19 @@ public class GameClock extends Clock {
 
     private boolean showSleepIndicator(float partialTicks) {
         return showSleepIndicator.get()
-                && Minecraft.getMinecraft().world.provider.canSleepAt(Minecraft.getMinecraft().player, Minecraft.getMinecraft().player.getPosition()) == WorldSleepResult.ALLOW
+                && Minecraft.getInstance().level.dimension.canSleepAt(Minecraft.getInstance().player, Minecraft.getInstance().player.func_180425_c()) == WorldSleepResult.ALLOW
                 // Taken from EntityPlayer#trySleep, ignores enemies and bed position
-                && !Minecraft.getMinecraft().player.isPlayerSleeping()
-                && Minecraft.getMinecraft().player.isEntityAlive()
-                && Minecraft.getMinecraft().world.provider.isSurfaceWorld()
+                && !Minecraft.getInstance().player.isSleeping()
+                && Minecraft.getInstance().player.isAlive()
+                && Minecraft.getInstance().level.dimension.func_76569_d()
                 // World#isDayTime is server only
                 //&& !Minecraft.getMinecraft().world.isDaytime();
-                && Minecraft.getMinecraft().world.calculateSkylightSubtracted(partialTicks) >= 4;
+                && Minecraft.getInstance().level.func_72967_a(partialTicks) >= 4;
     }
 
     @Override
     protected Date getDate() {
-        long worldTime = Minecraft.getMinecraft().world.getWorldTime() + 6000;
+        long worldTime = Minecraft.getInstance().level.getDayTime() + 6000;
 
         // Convert to milliseconds
         worldTime = Math.round(worldTime / 1000. * 3600.) * 1000;
@@ -128,7 +128,7 @@ public class GameClock extends Clock {
                 public StringBuffer format(Date date, StringBuffer buffer, FieldPosition fieldPosition) {
                     long day = date.getTime() / 84600000 + 1;
 
-                    buffer.append(I18n.format("betterHud.hud.day", day));
+                    buffer.append(I18n.get("betterHud.hud.day", day));
                     return buffer;
                 }
 

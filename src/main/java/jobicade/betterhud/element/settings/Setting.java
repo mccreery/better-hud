@@ -90,7 +90,7 @@ public abstract class Setting<T> implements IGetSet<T>, ISaveLoad {
     }
 
     public String getLocalizedName() {
-        return I18n.format(getUnlocalizedName());
+        return I18n.get(getUnlocalizedName());
     }
 
     /** @return {@code true} if this setting has a value to save */

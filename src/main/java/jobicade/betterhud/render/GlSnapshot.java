@@ -115,14 +115,14 @@ public class GlSnapshot {
 
         private static SourceFactor getSrcFactor(int factor) {
             for(SourceFactor srcFactor : SourceFactor.values()) {
-                if(srcFactor.factor == factor) return srcFactor;
+                if(srcFactor.field_187395_p == factor) return srcFactor;
             }
             return null;
         }
 
         private static DestFactor getDstFactor(int factor) {
             for(DestFactor dstFactor : DestFactor.values()) {
-                if(dstFactor.factor == factor) return dstFactor;
+                if(dstFactor.field_187345_o == factor) return dstFactor;
             }
             return null;
         }

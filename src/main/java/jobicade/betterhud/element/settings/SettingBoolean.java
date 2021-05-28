@@ -67,7 +67,7 @@ public class SettingBoolean extends SettingAlignable<Boolean> implements IBoolea
     @Override
     public void updateGuiParts(Collection<Setting<?>> settings) {
         super.updateGuiParts(settings);
-        toggler.enabled = enabled();
+        toggler.field_146124_l = enabled();
         toggler.updateText(getUnlocalizedName(), unlocalizedValue, get());
     }
 }

@@ -14,6 +14,8 @@ import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.Tickable;
 
+import jobicade.betterhud.util.Tickable.Ticker;
+
 public abstract class ParticleOverlay extends HudElement implements Tickable {
     protected SettingChoose density;
     protected final List<Particle> particles = new CopyOnWriteArrayList<Particle>();
@@ -41,7 +43,7 @@ public abstract class ParticleOverlay extends HudElement implements Tickable {
 
     @Override
     public void tick() {
-        if(!isEnabledAndSupported() || Minecraft.getMinecraft().player == null || Minecraft.getMinecraft().world == null) return;
+        if(!isEnabledAndSupported() || Minecraft.getInstance().player == null || Minecraft.getInstance().level == null) return;
 
         particles.forEach(Particle::tick);
         updateParticles();

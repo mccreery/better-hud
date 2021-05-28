@@ -39,22 +39,22 @@ public class Hotbar extends OverrideElement {
         Rect barTexture = new Rect(182, 22);
         Rect bounds = position.applyTo(new Rect(barTexture));
 
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Textures.WIDGETS);
+        Minecraft.getInstance().getTextureManager().bind(Textures.WIDGETS);
         GlUtil.drawRect(bounds, barTexture);
 
         Rect slot = bounds.grow(-3).withWidth(16);
 
         float partialTicks = getPartialTicks(event);
         for(int i = 0; i < 9; i++, slot = slot.translate(Direction.EAST.scale(20))) {
-            if(i == Minecraft.getMinecraft().player.inventory.currentItem) {
-                Minecraft.getMinecraft().getTextureManager().bindTexture(Textures.WIDGETS);
+            if(i == Minecraft.getInstance().player.inventory.selected) {
+                Minecraft.getInstance().getTextureManager().bind(Textures.WIDGETS);
                 GlUtil.drawRect(slot.grow(4), new Rect(0, 22, 24, 24));
             }
 
-            GlUtil.renderHotbarItem(slot, Minecraft.getMinecraft().player.inventory.mainInventory.get(i), partialTicks);
+            GlUtil.renderHotbarItem(slot, Minecraft.getInstance().player.inventory.items.get(i), partialTicks);
         }
 
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+        Minecraft.getInstance().getTextureManager().bind(Gui.field_110324_m);
         return bounds;
     }
 }

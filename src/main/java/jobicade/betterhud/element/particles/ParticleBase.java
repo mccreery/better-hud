@@ -48,19 +48,19 @@ public class ParticleBase implements Particle {
 
     @Override
     public void render(float partialTicks) {
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Textures.HUD_ICONS);
-        GlStateManager.pushMatrix();
+        Minecraft.getInstance().getTextureManager().bind(Textures.HUD_ICONS);
+        GlStateManager.func_179094_E();
 
-        GlStateManager.translate(position.getX(), position.getY(), 0.0F);
-        GlStateManager.rotate(rotation, 0, 0, 1);
-        GlStateManager.scale(this.size, this.size, 1.0F);
+        GlStateManager.func_179109_b(position.getX(), position.getY(), 0.0F);
+        GlStateManager.func_179114_b(rotation, 0, 0, 1);
+        GlStateManager.func_179152_a(this.size, this.size, 1.0F);
 
         Color color = Color.WHITE.withAlpha(Math.round(opacity * 255));
         Rect bounds = texture.align(Point.zero(), Direction.CENTER);
         GlUtil.drawRect(bounds, texture, color);
 
-        GlStateManager.popMatrix();
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+        GlStateManager.func_179121_F();
+        Minecraft.getInstance().getTextureManager().bind(Gui.field_110324_m);
     }
 
     @Override

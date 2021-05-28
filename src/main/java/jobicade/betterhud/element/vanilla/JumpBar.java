@@ -25,12 +25,12 @@ public class JumpBar extends OverrideElement {
 
     @Override
     public boolean shouldRender(Event event) {
-        return Minecraft.getMinecraft().player.isRidingHorse() && super.shouldRender(event);
+        return Minecraft.getInstance().player.isRidingJumpable() && super.shouldRender(event);
     }
 
     @Override
     protected Rect render(Event event) {
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+        Minecraft.getInstance().getTextureManager().bind(Gui.field_110324_m);
 
         Rect bounds = new Rect(182, 5);
         if(!position.isCustom() && position.getDirection() == Direction.SOUTH) {
@@ -39,7 +39,7 @@ public class JumpBar extends OverrideElement {
             bounds = position.applyTo(bounds);
         }
 
-        float charge = Minecraft.getMinecraft().player.getHorseJumpPower();
+        float charge = Minecraft.getInstance().player.getJumpRidingScale();
         int filled = (int)(charge * bounds.getWidth());
 
         GlUtil.drawRect(bounds, bounds.move(0, 84));

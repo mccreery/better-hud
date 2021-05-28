@@ -71,13 +71,13 @@ public class HorseInfo extends EntityInfo {
     /** Calculates horse jump height using a derived polynomial
      * @see <a href=https://minecraft.gamepedia.com/Horse#Jump_strength>Minecraft Wiki</a> */
     public double getJumpHeight(EntityHorse horse) {
-        double jumpStrength = horse.getHorseJumpStrength();
+        double jumpStrength = horse.getCustomJump();
         return jumpStrength * (jumpStrength * (jumpStrength * -0.1817584952 + 3.689713992) + 2.128599134) - 0.343930367;
     }
 
     /** Calculates horse speed using an approximate coefficient
      * @see <a href=https://minecraft.gamepedia.com/Horse#Movement_speed>Minecraft Wiki</a> */
     public double getSpeed(EntityHorse horse) {
-        return horse.getEntityAttribute(SharedMonsterAttributes.MOVEMENT_SPEED).getBaseValue() * 43.17037;
+        return horse.getAttribute(SharedMonsterAttributes.field_111263_d).getBaseValue() * 43.17037;
     }
 }

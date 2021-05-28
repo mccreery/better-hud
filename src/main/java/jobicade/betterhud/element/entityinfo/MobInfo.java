@@ -38,7 +38,7 @@ public class MobInfo extends EntityInfo {
             @Override
             public String getDisplayValue(double value) {
                 if(value == 0) {
-                    return I18n.format("betterHud.value.never");
+                    return I18n.get("betterHud.value.never");
                 } else {
                     return super.getDisplayValue(value);
                 }
@@ -62,7 +62,7 @@ public class MobInfo extends EntityInfo {
         int health = MathUtil.getHealthForDisplay(entity.getHealth());
         int maxHealth = MathUtil.getHealthForDisplay(entity.getMaxHealth());
 
-        String text = String.format("%s %s(%d/%d)", entity.getName(), ChatFormatting.GRAY, health, maxHealth);
+        String text = String.format("%s %s(%d/%d)", entity.func_70005_c_(), ChatFormatting.GRAY, health, maxHealth);
 
         Point size = GlUtil.getStringSize(text);
         Point barSize = bar.getPreferredSize();
@@ -80,7 +80,7 @@ public class MobInfo extends EntityInfo {
         GlUtil.drawString(text, bounds.getPosition(), Direction.NORTH_WEST, Color.WHITE);
         Rect barRect = new Rect(barSize).anchor(bounds, Direction.SOUTH_WEST);
 
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+        Minecraft.getInstance().getTextureManager().bind(Gui.field_110324_m);
         bar.setBounds(barRect).render();
         return null;
     }

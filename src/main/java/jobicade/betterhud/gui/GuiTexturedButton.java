@@ -34,7 +34,7 @@ public class GuiTexturedButton extends GuiActionButton {
     }
 
     protected Rect getTexture() {
-        switch(getHoverState(this.hovered)) {
+        switch(func_146114_a(this.field_146123_n)) {
             case 0:  return disabled;
             case 2:  return active;
             case 1:
@@ -47,8 +47,8 @@ public class GuiTexturedButton extends GuiActionButton {
      */
     @Override
     protected void drawButton(Rect bounds, Point mousePosition, float partialTicks) {
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Textures.SETTINGS);
+        Minecraft.getInstance().getTextureManager().bind(Textures.SETTINGS);
         GlUtil.drawRect(bounds, getTexture());
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+        Minecraft.getInstance().getTextureManager().bind(Gui.field_110324_m);
     }
 }

@@ -33,17 +33,17 @@ public class ParticleWater extends ParticleBase {
 
     @Override
     public void render(float partialTicks) {
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Textures.PARTICLES);
-        GlStateManager.pushMatrix();
+        Minecraft.getInstance().getTextureManager().bind(Textures.PARTICLES);
+        GlStateManager.func_179094_E();
 
-        GlStateManager.translate(position.getX(), position.getY() - opacity * speed, 0);
-        GlStateManager.scale(size, size, 1);
+        GlStateManager.func_179109_b(position.getX(), position.getY() - opacity * speed, 0);
+        GlStateManager.func_179152_a(size, size, 1);
 
         Color color = Color.WHITE.withAlpha(Math.round(opacity * 255));
         Rect bounds = texture.align(Point.zero(), Direction.CENTER);
         GlUtil.drawRect(bounds, texture, color);
 
-        GlStateManager.popMatrix();
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+        GlStateManager.func_179121_F();
+        Minecraft.getInstance().getTextureManager().bind(Gui.field_110324_m);
     }
 }

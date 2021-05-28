@@ -61,21 +61,21 @@ public class Connection extends TextElement {
         List<String> toRender = new ArrayList<String>(3);
 
         if(playerCount.get()) {
-            int players = Minecraft.getMinecraft().getConnection().getPlayerInfoMap().size();
-            String conn = I18n.format(players != 1 ? "betterHud.hud.players" : "betterHud.hud.player", players);
+            int players = Minecraft.getInstance().getConnection().getOnlinePlayers().size();
+            String conn = I18n.get(players != 1 ? "betterHud.hud.players" : "betterHud.hud.player", players);
             toRender.add(conn);
         }
 
         if(showIp.get()) {
-            toRender.add(I18n.format(ip.equals("localServer") ? "betterHud.hud.localServer" : "betterHud.hud.ip", ip));
+            toRender.add(I18n.get(ip.equals("localServer") ? "betterHud.hud.localServer" : "betterHud.hud.ip", ip));
         }
 
-        if(latency.get() && Minecraft.getMinecraft().getCurrentServerData() != null) {
-            NetworkPlayerInfo info = Minecraft.getMinecraft().getConnection().getPlayerInfo(Minecraft.getMinecraft().player.getUniqueID());
+        if(latency.get() && Minecraft.getInstance().getCurrentServer() != null) {
+            NetworkPlayerInfo info = Minecraft.getInstance().getConnection().getPlayerInfo(Minecraft.getInstance().player.getUUID());
 
             if(info != null) {
-                int ping = info.getResponseTime();
-                toRender.add(I18n.format("betterHud.hud.ping", ping));
+                int ping = info.getLatency();
+                toRender.add(I18n.get("betterHud.hud.ping", ping));
             }
         }
         return toRender;

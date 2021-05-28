@@ -45,7 +45,7 @@ public abstract class Bar extends OverrideElement {
 
     @Override
     public boolean shouldRender(Event event) {
-        bar.setHost(Minecraft.getMinecraft().player);
+        bar.setHost(Minecraft.getInstance().player);
         return super.shouldRender(event) && bar.shouldRender();
     }
 
@@ -60,7 +60,7 @@ public abstract class Bar extends OverrideElement {
 
     @Override
     protected Rect render(Event event) {
-        Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+        Minecraft.getInstance().getTextureManager().bind(Gui.field_110324_m);
         Direction contentAlignment = getContentAlignment();
 
         Rect bounds = new Rect(bar.getPreferredSize());

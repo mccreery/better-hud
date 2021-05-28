@@ -104,7 +104,7 @@ public class ConfigManager implements IResourceManagerReloadListener {
     }
 
     @Override
-    public void onResourceManagerReload(IResourceManager resourceManager) {
+    public void func_110549_a(IResourceManager resourceManager) {
         this.resourceManager = resourceManager;
         this.internalConfigs = null;
     }
@@ -141,14 +141,14 @@ public class ConfigManager implements IResourceManagerReloadListener {
 
     private Stream<ConfigSlot> streamInternalSlots() {
         try {
-            return resourceManager.getAllResources(CONFIGS_LOCATION).stream().flatMap(this::streamJsonSlots);
+            return resourceManager.func_135056_b(CONFIGS_LOCATION).stream().flatMap(this::streamJsonSlots);
         } catch(IOException e) {
             return Stream.empty();
         }
     }
 
     private Stream<ConfigSlot> streamJsonSlots(IResource resource) {
-        try(Reader reader = new InputStreamReader(resource.getInputStream())) {
+        try(Reader reader = new InputStreamReader(resource.func_110527_b())) {
             String[] paths = gson.fromJson(reader, String[].class);
             return Arrays.stream(paths).map(path -> new ResourceConfigSlot(new ResourceLocation(path)));
         } catch(IOException e) {

@@ -18,6 +18,8 @@ import jobicade.betterhud.util.Tickable;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.util.MathUtil;
 
+import jobicade.betterhud.util.Tickable.Ticker;
+
 public class CpsCount extends TextElement implements Tickable {
     private SettingSlider timeoutMax;
     private SettingBoolean showBurst, remember;
@@ -119,7 +121,7 @@ public class CpsCount extends TextElement implements Tickable {
         if(showBurst.get() && cps > 0) {
             return Arrays.asList(
                 cpsDisplay,
-                I18n.format("betterHud.hud.burst", burstTotal, burstLength)
+                I18n.get("betterHud.hud.burst", burstTotal, burstLength)
             );
         } else {
             return Arrays.asList(cpsDisplay);

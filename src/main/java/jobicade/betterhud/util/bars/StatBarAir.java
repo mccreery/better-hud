@@ -7,7 +7,7 @@ import jobicade.betterhud.geom.Rect;
 public class StatBarAir extends StatBarBasic<Entity> {
     @Override
     protected int getCurrent() {
-        int air = host.getAir();
+        int air = host.getAirSupply();
 
         int full = ((air - 2) * 10 + 299) / 300;
         int partial = (air * 10 + 299) / 300 - full;
@@ -25,6 +25,6 @@ public class StatBarAir extends StatBarBasic<Entity> {
 
     @Override
     public boolean shouldRender() {
-        return host.isInsideOfMaterial(Material.WATER);
+        return host.func_70055_a(Material.WATER);
     }
 }

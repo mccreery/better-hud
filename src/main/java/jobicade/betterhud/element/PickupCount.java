@@ -57,7 +57,7 @@ public class PickupCount extends HudElement {
         settings.add(maxStacks = new SettingSlider("maxStacks", 1, 11, 1) {
             @Override
             public String getDisplayValue(double scaledValue) {
-                return scaledValue == getMaximum() ? I18n.format("betterHud.value.unlimited") : super.getDisplayValue(scaledValue);
+                return scaledValue == getMaximum() ? I18n.get("betterHud.value.unlimited") : super.getDisplayValue(scaledValue);
             }
         });
     }
@@ -148,21 +148,21 @@ public class PickupCount extends HudElement {
 
         public StackNode(ItemStack stack) {
             this.stack = stack;
-            this.updateCounter = Minecraft.getMinecraft().ingameGUI.getUpdateCounter();
+            this.updateCounter = Minecraft.getInstance().gui.getGuiTicks();
         }
 
         public void increaseStackSize(int size) {
             stack.setCount(stack.getCount() + size);
-            this.updateCounter = Minecraft.getMinecraft().ingameGUI.getUpdateCounter();
+            this.updateCounter = Minecraft.getInstance().gui.getGuiTicks();
         }
 
         private Label getLabel() {
-            return new Label(stack.getCount() + " " + stack.getDisplayName())
+            return new Label(stack.getCount() + " " + stack.func_82833_r())
                 .setColor(Color.WHITE.withAlpha(Math.round(getOpacity() * 255)));
         }
 
         private float getOpacity() {
-            return 1.0f - (Minecraft.getMinecraft().ingameGUI.getUpdateCounter() - updateCounter) / fadeAfter.get().floatValue();
+            return 1.0f - (Minecraft.getInstance().gui.getGuiTicks() - updateCounter) / fadeAfter.get().floatValue();
         }
 
         private boolean isDead() {

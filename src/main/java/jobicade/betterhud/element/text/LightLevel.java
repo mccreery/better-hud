@@ -21,12 +21,12 @@ public class LightLevel extends TextElement {
 
     @Override
     protected List<String> getText() {
-        BlockPos position = new BlockPos(Minecraft.getMinecraft().player.posX, Minecraft.getMinecraft().player.posY, Minecraft.getMinecraft().player.posZ);
+        BlockPos position = new BlockPos(Minecraft.getInstance().player.field_70165_t, Minecraft.getInstance().player.field_70163_u, Minecraft.getInstance().player.field_70161_v);
 
         int light = 0;
-        if(Minecraft.getMinecraft().world != null && Minecraft.getMinecraft().world.isBlockLoaded(position)) {
-            light = Minecraft.getMinecraft().world.getLightFor(EnumSkyBlock.SKY, position) - Minecraft.getMinecraft().world.calculateSkylightSubtracted(1.0F);
-            light = Math.max(light, Minecraft.getMinecraft().world.getLightFor(EnumSkyBlock.BLOCK, position));
+        if(Minecraft.getInstance().level != null && Minecraft.getInstance().level.hasChunkAt(position)) {
+            light = Minecraft.getInstance().level.func_175642_b(EnumSkyBlock.SKY, position) - Minecraft.getInstance().level.func_72967_a(1.0F);
+            light = Math.max(light, Minecraft.getInstance().level.func_175642_b(EnumSkyBlock.BLOCK, position));
         }
         return Arrays.asList(getLocalizedName() + ": " + light);
     }

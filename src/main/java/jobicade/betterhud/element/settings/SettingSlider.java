@@ -68,14 +68,14 @@ public class SettingSlider extends SettingAlignable<Double> implements ISlider {
 
     @Override
     public String getDisplayString() {
-        return I18n.format("betterHud.setting." + name) + ": " + getDisplayValue(get() * displayScale);
+        return I18n.get("betterHud.setting." + name) + ": " + getDisplayValue(get() * displayScale);
     }
 
     public String getDisplayValue(double scaledValue) {
         String displayValue = MathUtil.formatToPlaces(scaledValue, displayPlaces);
 
         if(unlocalizedValue != null) {
-            displayValue = I18n.format(unlocalizedValue, displayValue);
+            displayValue = I18n.get(unlocalizedValue, displayValue);
         }
         return displayValue;
     }

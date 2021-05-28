@@ -35,20 +35,20 @@ public class HelmetOverlay extends OverrideElement {
 
     @Override
     public boolean shouldRender(Event event) {
-        return super.shouldRender(event) && Minecraft.getMinecraft().gameSettings.thirdPersonView == 0 && !Minecraft.getMinecraft().player.inventory.armorItemInSlot(3).isEmpty();
+        return super.shouldRender(event) && Minecraft.getInstance().options.field_74320_O == 0 && !Minecraft.getInstance().player.inventory.getArmor(3).isEmpty();
     }
 
     @Override
     protected Rect render(Event event) {
-        ItemStack stack = Minecraft.getMinecraft().player.inventory.armorItemInSlot(3);
+        ItemStack stack = Minecraft.getInstance().player.inventory.getArmor(3);
         Item item = stack.getItem();
 
-        if(item == Item.getItemFromBlock(Blocks.PUMPKIN)) {
-            Minecraft.getMinecraft().getTextureManager().bindTexture(PUMPKIN_BLUR_TEX_PATH);
+        if(item == Item.byBlock(Blocks.PUMPKIN)) {
+            Minecraft.getInstance().getTextureManager().bind(PUMPKIN_BLUR_TEX_PATH);
             GlUtil.drawRect(MANAGER.getScreen(), new Rect(256, 256), Color.RED);
-            Minecraft.getMinecraft().getTextureManager().bindTexture(Gui.ICONS);
+            Minecraft.getInstance().getTextureManager().bind(Gui.field_110324_m);
         } else {
-            item.renderHelmetOverlay(stack, Minecraft.getMinecraft().player, new ScaledResolution(Minecraft.getMinecraft()), getPartialTicks(event));
+            item.renderHelmetOverlay(stack, Minecraft.getInstance().player, new ScaledResolution(Minecraft.getInstance()), getPartialTicks(event));
         }
         return MANAGER.getScreen();
     }

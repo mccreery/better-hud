@@ -9,7 +9,7 @@ import jobicade.betterhud.util.MathUtil;
 public class StatBarMount extends StatBarBasic<Entity> {
     @Override
     public boolean shouldRender() {
-        return host.getRidingEntity() instanceof EntityLivingBase;
+        return host.getVehicle() instanceof EntityLivingBase;
     }
 
     @Override
@@ -24,12 +24,12 @@ public class StatBarMount extends StatBarBasic<Entity> {
 
     @Override
     protected int getCurrent() {
-        return MathUtil.getHealthForDisplay(((EntityLivingBase)host.getRidingEntity()).getHealth());
+        return MathUtil.getHealthForDisplay(((EntityLivingBase)host.getVehicle()).getHealth());
     }
 
     @Override
     protected int getMaximum() {
-        return MathUtil.getHealthForDisplay(((EntityLivingBase)host.getRidingEntity()).getMaxHealth());
+        return MathUtil.getHealthForDisplay(((EntityLivingBase)host.getVehicle()).getMaxHealth());
     }
 
     @Override

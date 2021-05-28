@@ -111,10 +111,10 @@ public class BetterHud {
      */
     @SubscribeEvent
     public static void onBlockBreak(BlockEvent.BreakEvent event) {
-        if (event.getWorld().getTileEntity(event.getPos()) instanceof IWorldNameable) {
+        if (event.getWorld().getBlockEntity(event.getPos()) instanceof IWorldNameable) {
             NET_WRAPPER.sendToDimension(
                 new InventoryNameQuery.Response(event.getPos(), null),
-                event.getWorld().provider.getDimension()
+                event.getWorld().dimension.getDimension()
             );
         }
     }

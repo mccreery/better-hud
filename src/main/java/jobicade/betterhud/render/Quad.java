@@ -77,13 +77,13 @@ public class Quad extends DefaultBoxed {
     @Override
     public void render() {
         Tessellator tessellator = Tessellator.getInstance();
-        BufferBuilder builder = tessellator.getBuffer();
+        BufferBuilder builder = tessellator.getBuilder();
 
         VertexFormat format = new VertexFormat();
 
-        format.addElement(DefaultVertexFormats.POSITION_3F);
-        if(texture != null) format.addElement(DefaultVertexFormats.TEX_2F);
-        if(hasColor) format.addElement(DefaultVertexFormats.COLOR_4UB);
+        format.func_181721_a(DefaultVertexFormats.ELEMENT_POSITION);
+        if(texture != null) format.func_181721_a(DefaultVertexFormats.ELEMENT_UV0);
+        if(hasColor) format.func_181721_a(DefaultVertexFormats.ELEMENT_COLOR);
 
         builder.begin(GL11.GL_QUADS, format);
         addVertex(bounds, builder, Direction.SOUTH_WEST);
@@ -92,30 +92,30 @@ public class Quad extends DefaultBoxed {
         addVertex(bounds, builder, Direction.NORTH_WEST);
 
         if(texture == null) {
-            GlStateManager.disableTexture2D();
-            tessellator.draw();
-            GlStateManager.enableTexture2D();
+            GlStateManager.func_179090_x();
+            tessellator.end();
+            GlStateManager.func_179098_w();
         } else {
-            tessellator.draw();
+            tessellator.end();
         }
     }
 
     private void addVertex(Rect bounds, BufferBuilder builder, Direction anchor) {
-        for(VertexFormatElement element : builder.getVertexFormat().getElements()) {
+        for(VertexFormatElement element : builder.func_178973_g().func_177343_g()) {
             switch(element.getUsage()) {
                 case POSITION: {
                     Point xy = bounds.getAnchor(anchor);
-                    builder.pos(xy.getX(), xy.getY(), zLevel);
+                    builder.func_181662_b(xy.getX(), xy.getY(), zLevel);
                     break;
                 }
                 case UV: {
                     Point uv = texture.getAnchor(anchor);
-                    builder.tex(uv.getX() * TEX_SCALE, uv.getY() * TEX_SCALE);
+                    builder.func_187315_a(uv.getX() * TEX_SCALE, uv.getY() * TEX_SCALE);
                     break;
                 }
                 case COLOR: {
                     Color color = colors.get(anchor);
-                    builder.color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+                    builder.func_181669_b(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
                     break;
                 }
                 default: throw new IllegalStateException("Unsupported builder element");

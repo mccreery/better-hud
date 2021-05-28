@@ -27,7 +27,7 @@ public class PortalOverlay extends OverrideElement {
     }
 
     private float getTimeInPortal(Event event) {
-        return Minecraft.getMinecraft().player.prevTimeInPortal + (Minecraft.getMinecraft().player.timeInPortal - Minecraft.getMinecraft().player.prevTimeInPortal) * getPartialTicks(event);
+        return Minecraft.getInstance().player.oPortalTime + (Minecraft.getInstance().player.portalTime - Minecraft.getInstance().player.oPortalTime) * getPartialTicks(event);
     }
 
     @Override
@@ -42,11 +42,11 @@ public class PortalOverlay extends OverrideElement {
         }
 
         Color.WHITE.withAlpha(Math.round(timeInPortal * 255)).apply();
-        Minecraft.getMinecraft().getTextureManager().bindTexture(TextureMap.LOCATION_BLOCKS_TEXTURE);
+        Minecraft.getInstance().getTextureManager().bind(TextureMap.LOCATION_BLOCKS);
 
-        TextureAtlasSprite texture = Minecraft.getMinecraft().getBlockRendererDispatcher().getBlockModelShapes().getTexture(Blocks.PORTAL.getDefaultState());
+        TextureAtlasSprite texture = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper().getParticleIcon(Blocks.NETHER_PORTAL.defaultBlockState());
         Rect screen = MANAGER.getScreen();
-        Minecraft.getMinecraft().ingameGUI.drawTexturedModalRect(0, 0, texture, screen.getWidth(), screen.getHeight());
+        Minecraft.getInstance().gui.func_175175_a(0, 0, texture, screen.getWidth(), screen.getHeight());
 
         return null;
     }

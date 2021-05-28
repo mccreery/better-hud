@@ -45,7 +45,7 @@ public class HandBar extends EquipmentDisplay {
     }
 
     public void renderBar(ItemStack stack, int x, int y) {
-        boolean isTool = stack.isItemStackDamageable();
+        boolean isTool = stack.isDamageableItem();
         if(stack == null || !showNonTools.get() && !isTool) return;
 
         String text = getText(stack);
@@ -54,35 +54,35 @@ public class HandBar extends EquipmentDisplay {
         if(showItem.get()) width += 21;
 
         if(text != null) {
-            width += Minecraft.getMinecraft().fontRenderer.getStringWidth(text);
+            width += Minecraft.getInstance().font.width(text);
         }
 
         if(showItem.get()) {
-            Minecraft.getMinecraft().mcProfiler.startSection("items");
+            Minecraft.getInstance().profiler.push("items");
             GlUtil.renderSingleItem(stack, x + 90 - width / 2, y);
-            Minecraft.getMinecraft().mcProfiler.endSection();
+            Minecraft.getInstance().profiler.pop();
         }
 
         if(text != null) {
-            Minecraft.getMinecraft().mcProfiler.startSection("text");
+            Minecraft.getInstance().profiler.push("text");
             GlUtil.drawString(text, new Point(x + 90 - width / 2 + (showItem.get() ? 21 : 0), y + 4), Direction.NORTH_WEST, Color.WHITE);
-            Minecraft.getMinecraft().mcProfiler.endSection();
+            Minecraft.getInstance().profiler.pop();
         }
 
         if(isTool && showBars.get()) {
-            Minecraft.getMinecraft().mcProfiler.startSection("bars");
+            Minecraft.getInstance().profiler.push("bars");
             GlUtil.drawDamageBar(new Rect(x, y + 16, 180, 2), stack, false);
-            Minecraft.getMinecraft().mcProfiler.endSection();
+            Minecraft.getInstance().profiler.pop();
         }
     }
 
     @Override
     public Rect render(Event event) {
         Rect bounds = position.applyTo(new Rect(180, offHand.get() ? 41 : 18));
-        renderBar(Minecraft.getMinecraft().player.getHeldItemMainhand(), bounds.getX(), bounds.getBottom() - 18);
+        renderBar(Minecraft.getInstance().player.getMainHandItem(), bounds.getX(), bounds.getBottom() - 18);
 
         if(offHand.get()) {
-            renderBar(Minecraft.getMinecraft().player.getHeldItemOffhand(), bounds.getX(), bounds.getY());
+            renderBar(Minecraft.getInstance().player.getOffhandItem(), bounds.getX(), bounds.getY());
         }
         return bounds;
     }

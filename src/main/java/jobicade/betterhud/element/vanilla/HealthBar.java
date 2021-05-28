@@ -36,6 +36,6 @@ public class HealthBar extends Bar {
 
     @Override
     public boolean shouldRender(Event event) {
-        return Minecraft.getMinecraft().playerController.shouldDrawHUD() && super.shouldRender(event);
+        return Minecraft.getInstance().gameMode.canHurtPlayer() && super.shouldRender(event);
     }
 }
