@@ -1,6 +1,7 @@
 package jobicade.betterhud.render;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.google.common.collect.ImmutableList;
+import com.mojang.blaze3d.systems.RenderSystem;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -12,7 +13,9 @@ import net.minecraft.client.renderer.vertex.VertexFormat;
 import net.minecraft.client.renderer.vertex.VertexFormatElement;
 import org.lwjgl.opengl.GL11;
 
+import java.util.ArrayList;
 import java.util.EnumMap;
+import java.util.List;
 import java.util.Map;
 
 public class Quad extends DefaultBoxed {
@@ -78,12 +81,12 @@ public class Quad extends DefaultBoxed {
         Tessellator tessellator = Tessellator.getInstance();
         BufferBuilder builder = tessellator.getBuilder();
 
-        VertexFormat format = new VertexFormat();
+        List<VertexFormatElement> elements  = new ArrayList<>();
+        elements.add(DefaultVertexFormats.ELEMENT_POSITION);
+        if(texture != null) elements.add(DefaultVertexFormats.ELEMENT_UV0);
+        if(hasColor) elements.add(DefaultVertexFormats.ELEMENT_COLOR);
 
-        format.func_181721_a(DefaultVertexFormats.ELEMENT_POSITION);
-        if(texture != null) format.func_181721_a(DefaultVertexFormats.ELEMENT_UV0);
-        if(hasColor) format.func_181721_a(DefaultVertexFormats.ELEMENT_COLOR);
-
+        VertexFormat format = new VertexFormat(ImmutableList.copyOf(elements));
         builder.begin(GL11.GL_QUADS, format);
         addVertex(bounds, builder, Direction.SOUTH_WEST);
         addVertex(bounds, builder, Direction.SOUTH_EAST);
@@ -91,30 +94,30 @@ public class Quad extends DefaultBoxed {
         addVertex(bounds, builder, Direction.NORTH_WEST);
 
         if(texture == null) {
-            GlStateManager.func_179090_x();
+            RenderSystem.disableTexture();
             tessellator.end();
-            GlStateManager.func_179098_w();
+            RenderSystem.enableTexture();
         } else {
             tessellator.end();
         }
     }
 
     private void addVertex(Rect bounds, BufferBuilder builder, Direction anchor) {
-        for(VertexFormatElement element : builder.func_178973_g().func_177343_g()) {
+        for(VertexFormatElement element : builder.getVertexFormat().getElements()) {
             switch(element.getUsage()) {
                 case POSITION: {
                     Point xy = bounds.getAnchor(anchor);
-                    builder.func_181662_b(xy.getX(), xy.getY(), zLevel);
+                    builder.vertex(xy.getX(), xy.getY(), zLevel);
                     break;
                 }
                 case UV: {
                     Point uv = texture.getAnchor(anchor);
-                    builder.func_187315_a(uv.getX() * TEX_SCALE, uv.getY() * TEX_SCALE);
+                    builder.uv(uv.getX() * TEX_SCALE, uv.getY() * TEX_SCALE);
                     break;
                 }
                 case COLOR: {
                     Color color = colors.get(anchor);
-                    builder.func_181669_b(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
+                    builder.color(color.getRed(), color.getGreen(), color.getBlue(), color.getAlpha());
                     break;
                 }
                 default: throw new IllegalStateException("Unsupported builder element");

@@ -49,6 +49,6 @@ public class GuiTexturedButton extends GuiActionButton {
     protected void drawButton(Rect bounds, Point mousePosition, float partialTicks) {
         Minecraft.getInstance().getTextureManager().bind(Textures.SETTINGS);
         GlUtil.drawRect(bounds, getTexture());
-        Minecraft.getInstance().getTextureManager().bind(AbstractGui.field_110324_m);
+        Minecraft.getInstance().getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
     }
 }

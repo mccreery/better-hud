@@ -1,6 +1,6 @@
 package jobicade.betterhud.element;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Legend;
@@ -138,7 +138,7 @@ public class BlockViewer extends TextElement {
 
     @Override
     public Rect render(Event event) {
-        GlStateManager.func_179097_i();
+        RenderSystem.disableDepthTest();
         return super.render(event);
     }
 

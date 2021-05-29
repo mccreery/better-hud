@@ -23,7 +23,7 @@ public class BiomeName extends TextElement {
 
     @Override
     protected List<String> getText() {
-        BlockPos pos = new BlockPos((int)Minecraft.getInstance().player.field_70165_t, 0, (int)Minecraft.getInstance().player.field_70161_v);
+        BlockPos pos = new BlockPos((int)Minecraft.getInstance().player.getX(), 0, (int)Minecraft.getInstance().player.getZ());
 
         return Arrays.asList(getLocalizedName() + ": " + Minecraft.getInstance().level.getBiomeForCoordsBody(pos).func_185359_l());
     }

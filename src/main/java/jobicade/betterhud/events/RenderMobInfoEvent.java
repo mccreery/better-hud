@@ -7,7 +7,7 @@ public class RenderMobInfoEvent extends RenderWorldLastEvent {
     private final LivingEntity entity;
 
     RenderMobInfoEvent(RenderWorldLastEvent event, LivingEntity entity) {
-        super(event.getContext(), event.getPartialTicks());
+        super(event.getContext(), event.getMatrixStack(), event.getPartialTicks(), event.getProjectionMatrix(), event.getFinishTimeNano());
         this.entity = entity;
     }
 

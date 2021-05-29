@@ -34,7 +34,7 @@ public class GlSnapshot {
 
     private Color getCurrentColor() {
         FloatBuffer buf = BufferUtils.createFloatBuffer(16);
-        GL11.glGetFloat(GL11.GL_CURRENT_COLOR, buf);
+        GL11.glGetFloatv(GL11.GL_CURRENT_COLOR, buf);
 
         int red   = Math.round(buf.get(0) * 255.0f);
         int green = Math.round(buf.get(1) * 255.0f);
@@ -114,14 +114,14 @@ public class GlSnapshot {
 
         private static SourceFactor getSrcFactor(int factor) {
             for(SourceFactor srcFactor : SourceFactor.values()) {
-                if(srcFactor.field_187395_p == factor) return srcFactor;
+                if(srcFactor.value == factor) return srcFactor;
             }
             return null;
         }
 
         private static DestFactor getDstFactor(int factor) {
             for(DestFactor dstFactor : DestFactor.values()) {
-                if(dstFactor.field_187345_o == factor) return dstFactor;
+                if(dstFactor.value == factor) return dstFactor;
             }
             return null;
         }

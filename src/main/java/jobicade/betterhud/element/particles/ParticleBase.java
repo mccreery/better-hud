@@ -1,6 +1,6 @@
 package jobicade.betterhud.element.particles;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -10,6 +10,8 @@ import jobicade.betterhud.util.MathUtil;
 import jobicade.betterhud.util.Textures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.util.math.vector.Quaternion;
+import net.minecraft.util.math.vector.Vector3f;
 
 public class ParticleBase implements Particle {
     protected Point position;
@@ -47,20 +49,20 @@ public class ParticleBase implements Particle {
     }
 
     @Override
-    public void render(float partialTicks) {
+    public void render(MatrixStack matrixStack, float partialTicks) {
         Minecraft.getInstance().getTextureManager().bind(Textures.HUD_ICONS);
-        GlStateManager.func_179094_E();
+        matrixStack.pushPose();
 
-        GlStateManager.func_179109_b(position.getX(), position.getY(), 0.0F);
-        GlStateManager.func_179114_b(rotation, 0, 0, 1);
-        GlStateManager.func_179152_a(this.size, this.size, 1.0F);
+        matrixStack.translate(position.getX(), position.getY(), 0.0F);
+        matrixStack.mulPose(new Quaternion(new Vector3f(0, 0, 1), rotation, true));
+        matrixStack.scale(this.size, this.size, 1.0F);
 
         Color color = Color.WHITE.withAlpha(Math.round(opacity * 255));
         Rect bounds = texture.align(Point.zero(), Direction.CENTER);
         GlUtil.drawRect(bounds, texture, color);
 
-        GlStateManager.func_179121_F();
-        Minecraft.getInstance().getTextureManager().bind(AbstractGui.field_110324_m);
+        matrixStack.popPose();
+        Minecraft.getInstance().getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
     }
 
     @Override

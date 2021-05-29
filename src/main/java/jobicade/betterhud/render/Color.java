@@ -1,6 +1,6 @@
 package jobicade.betterhud.render;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.util.math.MathHelper;
 
 import java.util.Arrays;
@@ -56,7 +56,7 @@ public class Color {
     public Color withBlue(int blue) {return new Color(alpha, red, green, blue);}
 
     public void apply() {
-        GlStateManager.func_179131_c(red / 255.0f, green / 255.0f, blue / 255.0f, alpha / 255.0f);
+        RenderSystem.color4f(red / 255.0f, green / 255.0f, blue / 255.0f, alpha / 255.0f);
     }
 
     @Override

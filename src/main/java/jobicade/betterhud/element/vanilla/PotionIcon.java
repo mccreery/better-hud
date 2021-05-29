@@ -60,7 +60,7 @@ public class PotionIcon extends DefaultBoxed {
             label.setBounds(new Rect(label.getPreferredSize()).anchor(iconBounds.grow(2), Direction.SOUTH, true)).render();
         }
 
-        Minecraft.getInstance().getTextureManager().bind(AbstractGui.field_110324_m);
+        Minecraft.getInstance().getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
         Color.WHITE.apply();
     }
 

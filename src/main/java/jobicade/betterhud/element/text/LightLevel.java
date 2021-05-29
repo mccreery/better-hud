@@ -21,7 +21,7 @@ public class LightLevel extends TextElement {
 
     @Override
     protected List<String> getText() {
-        BlockPos position = new BlockPos(Minecraft.getInstance().player.field_70165_t, Minecraft.getInstance().player.field_70163_u, Minecraft.getInstance().player.field_70161_v);
+        BlockPos position = new BlockPos(Minecraft.getInstance().player.getX(), Minecraft.getInstance().player.getY(), Minecraft.getInstance().player.getZ());
 
         int light = 0;
         if(Minecraft.getInstance().level != null && Minecraft.getInstance().level.hasChunkAt(position)) {

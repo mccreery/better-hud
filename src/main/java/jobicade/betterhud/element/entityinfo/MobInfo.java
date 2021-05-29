@@ -79,7 +79,7 @@ public class MobInfo extends EntityInfo {
         GlUtil.drawString(text, bounds.getPosition(), Direction.NORTH_WEST, Color.WHITE);
         Rect barRect = new Rect(barSize).anchor(bounds, Direction.SOUTH_WEST);
 
-        Minecraft.getInstance().getTextureManager().bind(AbstractGui.field_110324_m);
+        Minecraft.getInstance().getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
         bar.setBounds(barRect).render();
         return null;
     }

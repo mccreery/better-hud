@@ -46,7 +46,7 @@ public class HelmetOverlay extends OverrideElement {
         if(item == Item.byBlock(Blocks.PUMPKIN)) {
             Minecraft.getInstance().getTextureManager().bind(PUMPKIN_BLUR_TEX_PATH);
             GlUtil.drawRect(MANAGER.getScreen(), new Rect(256, 256), Color.RED);
-            Minecraft.getInstance().getTextureManager().bind(AbstractGui.field_110324_m);
+            Minecraft.getInstance().getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
         } else {
             item.renderHelmetOverlay(stack, Minecraft.getInstance().player, new ScaledResolution(Minecraft.getInstance()), getPartialTicks(event));
         }

@@ -1,6 +1,6 @@
 package jobicade.betterhud.element;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.Setting;
@@ -19,6 +19,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.Event;
 
 import java.util.List;
@@ -92,7 +93,7 @@ public class Compass extends HudElement {
         GlUtil.drawRect(largeNotch.anchor(largeRect, alignment.withCol(2)), Color.RED);
     }
 
-    private void drawDirections(Rect bounds) {
+    private void drawDirections(MatrixStack matrixStack, Rect bounds) {
         float angle = (float)Math.toRadians(Minecraft.getInstance().player.yRot);
 
         float radius = bounds.getWidth() / 2 + SPACER;
@@ -106,10 +107,10 @@ public class Compass extends HudElement {
             Point letter = origin.add(-(int)(Math.sin(angle) * radius), 0);
             double scale = 1 + directionScaling.get() * cos * 2;
 
-            GlStateManager.func_179094_E();
+            matrixStack.pushPose();
 
-            GlStateManager.func_179109_b(letter.getX(), letter.getY(), 0);
-            GlUtil.scale((float)scale);
+            matrixStack.translate(letter.getX(), letter.getY(), 0);
+            GlUtil.scale(matrixStack, (float)scale);
 
             Color color = i == 0 ? Color.BLUE : i == 2 ? Color.RED : Color.WHITE;
             color = color.withAlpha((int)(((cos + 1) / 2) * 255));
@@ -119,7 +120,7 @@ public class Compass extends HudElement {
                 GlUtil.drawString(DIRECTIONS[i], Point.zero(), bottom ? Direction.SOUTH : Direction.NORTH, color);
             }
 
-            GlStateManager.func_179121_F();
+            matrixStack.popPose();
         }
     }
 
@@ -158,12 +159,13 @@ public class Compass extends HudElement {
         Rect bounds;
 
         if(mode.getIndex() == 0) {
+            MatrixStack matrixStack = ((RenderGameOverlayEvent)event).getMatrixStack();
             bounds = position.applyTo(new Rect(180, 12));
 
             Minecraft.getInstance().profiler.push("background");
             drawBackground(bounds);
             Minecraft.getInstance().profiler.func_76318_c("text");
-            drawDirections(bounds);
+            drawDirections(matrixStack, bounds);
             Minecraft.getInstance().profiler.pop();
         } else {
             String text = getText();

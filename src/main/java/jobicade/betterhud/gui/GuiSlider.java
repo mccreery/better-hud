@@ -49,7 +49,7 @@ public class GuiSlider extends Button {
             Minecraft.getInstance().getTextureManager().bind(field_146122_a);
             this.func_73729_b(field_146128_h + sliderOffset,     field_146129_i,   0, 66, 4, 20);
             this.func_73729_b(field_146128_h + sliderOffset + 4, field_146129_i, 196, 66, 4, 20);
-            Minecraft.getInstance().getTextureManager().bind(AbstractGui.field_110324_m);
+            Minecraft.getInstance().getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
         }
     }
 

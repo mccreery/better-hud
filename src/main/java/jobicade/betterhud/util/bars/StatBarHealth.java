@@ -151,7 +151,7 @@ public class StatBarHealth extends StatBar<LivingEntity> {
         currentHealth = newHealth;
         currentUpdateCounter = newUpdateCounter;
 
-        Minecraft.getInstance().getTextureManager().bind(AbstractGui.field_110324_m);
+        Minecraft.getInstance().getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
         super.render();
     }
 }

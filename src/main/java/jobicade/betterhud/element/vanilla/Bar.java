@@ -60,7 +60,7 @@ public abstract class Bar extends OverrideElement {
 
     @Override
     protected Rect render(Event event) {
-        Minecraft.getInstance().getTextureManager().bind(AbstractGui.field_110324_m);
+        Minecraft.getInstance().getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
         Direction contentAlignment = getContentAlignment();
 
         Rect bounds = new Rect(bar.getPreferredSize());

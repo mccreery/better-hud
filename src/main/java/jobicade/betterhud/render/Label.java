@@ -1,6 +1,6 @@
 package jobicade.betterhud.render;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -60,11 +60,15 @@ public class Label extends DefaultBoxed {
         if(color.getAlpha() < 4) return;
 
         Point position = new Rect(size).anchor(bounds, Direction.CENTER).getPosition();
-        Minecraft.getInstance().font.func_175065_a(text, position.getX(), position.getY(), color.getPacked(), shadow);
+        if (shadow) {
+            Minecraft.getInstance().font.drawShadow(matrixStack, text, position.getX(), position.getY(), color.getPacked());
+        } else {
+            Minecraft.getInstance().font.draw(matrixStack, text, position.getX(), position.getY(), color.getPacked());
+        }
 
         // Restore OpenGL state as expected
         Color.WHITE.apply();
-        Minecraft.getInstance().getTextureManager().bind(AbstractGui.field_110324_m);
-        GlStateManager.func_179118_c();
+        Minecraft.getInstance().getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
+        RenderSystem.disableAlphaTest();
     }
 }

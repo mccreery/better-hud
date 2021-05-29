@@ -1,8 +1,10 @@
 package jobicade.betterhud.util;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
 import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
+import com.mojang.blaze3d.systems.RenderSystem;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
@@ -10,13 +12,15 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.render.Label;
 import jobicade.betterhud.render.Quad;
+import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
+import net.minecraft.util.math.vector.Quaternion;
+import net.minecraft.util.math.vector.Vector3f;
 import org.lwjgl.opengl.GL11;
 
 import java.util.EnumSet;
@@ -30,8 +34,8 @@ public final class GlUtil {
      *
      * @see GlStateManager#scale(float, float, float)
      */
-    public static void scale(float scale) {
-        GlStateManager.func_179152_a(scale, scale, scale);
+    public static void scale(MatrixStack matrixStack, float scale) {
+        matrixStack.scale(scale, scale, scale);
     }
 
     /** @see AbstractGui#drawRect(int, int, int, int, int) */
@@ -72,17 +76,17 @@ public final class GlUtil {
     }
 
     /** Draws text with black borders on all sides */
-    public static void drawBorderedString(String text, int x, int y, Color color) {
+    public static void drawBorderedString(MatrixStack matrixStack, String text, int x, int y, Color color) {
         // Borders
-        Minecraft.getInstance().font.func_175065_a(text, x + 1, y, Color.BLACK.getPacked(), false);
-        Minecraft.getInstance().font.func_175065_a(text, x - 1, y, Color.BLACK.getPacked(), false);
-        Minecraft.getInstance().font.func_175065_a(text, x, y + 1, Color.BLACK.getPacked(), false);
-        Minecraft.getInstance().font.func_175065_a(text, x, y - 1, Color.BLACK.getPacked(), false);
+        Minecraft.getInstance().font.draw(matrixStack, text, x + 1, y, Color.BLACK.getPacked());
+        Minecraft.getInstance().font.draw(matrixStack, text, x - 1, y, Color.BLACK.getPacked());
+        Minecraft.getInstance().font.draw(matrixStack, text, x, y + 1, Color.BLACK.getPacked());
+        Minecraft.getInstance().font.draw(matrixStack, text, x, y - 1, Color.BLACK.getPacked());
 
-        Minecraft.getInstance().font.func_175065_a(text, x, y, color.getPacked(), false);
+        Minecraft.getInstance().font.draw(matrixStack, text, x, y, color.getPacked());
         Color.WHITE.apply();
-        GlStateManager.func_179118_c();
-        Minecraft.getInstance().getTextureManager().bind(AbstractGui.field_110324_m);
+        RenderSystem.disableAlphaTest();
+        Minecraft.getInstance().getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
     }
 
     /** @see #renderSingleItem(ItemStack, int, int) */
@@ -97,36 +101,36 @@ public final class GlUtil {
      * @see net.minecraft.client.renderer.RenderItem#renderItemAndEffectIntoGUI(ItemStack, int, int)
      * @see RenderHelper#disableStandardItemLighting() */
     public static void renderSingleItem(ItemStack stack, int x, int y) {
-        GlStateManager.func_179126_j();
-        RenderHelper.func_74520_c();
+        RenderSystem.enableDepthTest();
+        RenderHelper.turnBackOn();
         Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(stack, x, y);
         RenderHelper.turnOff();
-        GlStateManager.func_179097_i();
-        Minecraft.getInstance().getTextureManager().bind(AbstractGui.field_110324_m);
+        RenderSystem.disableDepthTest();
+        Minecraft.getInstance().getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
         blendFuncSafe(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
-        GlStateManager.func_179103_j(GL11.GL_SMOOTH);
+        RenderSystem.shadeModel(GL11.GL_SMOOTH);
     }
 
     /** Renders the item with hotbar animations.
      * OpenGL side-effects: disables depth and item ligthing.
      */
-    public static void renderHotbarItem(Rect bounds, ItemStack stack, float partialTicks) {
+    public static void renderHotbarItem(MatrixStack matrixStack, Rect bounds, ItemStack stack, float partialTicks) {
         if(stack.isEmpty()) return;
         float animationTicks = stack.getPopTime() - partialTicks;
 
-        GlStateManager.func_179126_j();
-        RenderHelper.func_74520_c();
+        RenderSystem.enableDepthTest();
+        RenderHelper.turnBackOn();
         if(animationTicks > 0) {
             float factor = 1 + animationTicks / 5;
 
-            GlStateManager.func_179094_E();
-            GlStateManager.func_179109_b(bounds.getX() + 8, bounds.getY() + 12, 0);
-            GlStateManager.func_179152_a(1 / factor, (factor + 1) / 2, 1);
-            GlStateManager.func_179109_b(-(bounds.getX() + 8), -(bounds.getY() + 12), 0.0F);
+            matrixStack.pushPose();
+            matrixStack.translate(bounds.getX() + 8, bounds.getY() + 12, 0);
+            matrixStack.scale(1 / factor, (factor + 1) / 2, 1);
+            matrixStack.translate(-(bounds.getX() + 8), -(bounds.getY() + 12), 0.0F);
 
             Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(Minecraft.getInstance().player, stack, bounds.getX(), bounds.getY());
 
-            GlStateManager.func_179121_F();
+            matrixStack.popPose();
         } else {
             Minecraft.getInstance().getItemRenderer().renderAndDecorateItem(Minecraft.getInstance().player, stack, bounds.getX(), bounds.getY());
         }
@@ -135,11 +139,11 @@ public final class GlUtil {
 
         // Possible side-effects
         RenderHelper.turnOff();
-        GlStateManager.func_179097_i();
-        GlStateManager.func_179118_c();
-        Minecraft.getInstance().getTextureManager().bind(AbstractGui.field_110324_m);
+        RenderSystem.disableDepthTest();
+        RenderSystem.disableAlphaTest();
+        Minecraft.getInstance().getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
         GlUtil.blendFuncSafe(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
-        GlStateManager.func_179103_j(GL11.GL_SMOOTH);
+        RenderSystem.shadeModel(GL11.GL_SMOOTH);
     }
 
     /**
@@ -177,21 +181,21 @@ public final class GlUtil {
      *
      * @param scaleFactor Linearly affects the size of things drawn to the billboard
      * @see net.minecraft.client.renderer.EntityRenderer#drawNameplate(net.minecraft.client.gui.FontRenderer, String, float, float, float, int, float, float, boolean, boolean) */
-    public static void setupBillboard(Entity entity, float partialTicks, float scaleFactor) {
-        double dx = (entity.xo + (entity.field_70165_t - entity.xo) * partialTicks) - (Minecraft.getInstance().player.xo + (Minecraft.getInstance().player.field_70165_t - Minecraft.getInstance().player.xo) * partialTicks);
-        double dy = (entity.yo + (entity.field_70163_u - entity.yo) * partialTicks) - (Minecraft.getInstance().player.yo + (Minecraft.getInstance().player.field_70163_u - Minecraft.getInstance().player.yo) * partialTicks);
-        double dz = (entity.zo + (entity.field_70161_v - entity.zo) * partialTicks) - (Minecraft.getInstance().player.zo + (Minecraft.getInstance().player.field_70161_v - Minecraft.getInstance().player.zo) * partialTicks);
+    public static void setupBillboard(MatrixStack matrixStack, Entity entity, float partialTicks, float scaleFactor) {
+        double dx = (entity.xo + (entity.getX() - entity.xo) * partialTicks) - (Minecraft.getInstance().player.xo + (Minecraft.getInstance().player.getX() - Minecraft.getInstance().player.xo) * partialTicks);
+        double dy = (entity.yo + (entity.getY() - entity.yo) * partialTicks) - (Minecraft.getInstance().player.yo + (Minecraft.getInstance().player.getY() - Minecraft.getInstance().player.yo) * partialTicks);
+        double dz = (entity.zo + (entity.getZ() - entity.zo) * partialTicks) - (Minecraft.getInstance().player.zo + (Minecraft.getInstance().player.getZ() - Minecraft.getInstance().player.zo) * partialTicks);
 
-        dy += entity.field_70131_O + 0.5;
-        GlStateManager.func_179137_b(dx, dy, dz);
+        dy += entity.getBbHeight() + 0.5;
+        matrixStack.translate(dx, dy, dz);
 
         dy -= Minecraft.getInstance().player.getEyeHeight();
         float distance = (float)Math.sqrt(dx*dx + dy*dy + dz*dz);
-        scale(distance * (scaleFactor + 0.5f) / 300f);
+        scale(matrixStack, distance * (scaleFactor + 0.5f) / 300f);
 
-        GlStateManager.func_179114_b(-Minecraft.getInstance().player.yRot,  0, 1, 0);
-        GlStateManager.func_179114_b(Minecraft.getInstance().player.xRot, 1, 0, 0);
-        GlStateManager.func_179114_b(180, 0, 0, 1);
+        matrixStack.mulPose(new Quaternion(new Vector3f(0, 1, 0), -Minecraft.getInstance().player.yRot, true));
+        matrixStack.mulPose(new Quaternion(new Vector3f(1, 0, 0), Minecraft.getInstance().player.xRot, true));
+        matrixStack.mulPose(new Quaternion(new Vector3f(0, 0, 1), 180, true));
     }
 
     /** {@code progress} defaults to the durability of {@code stack}
@@ -290,20 +294,20 @@ public final class GlUtil {
         // We need to trick the state manager into updating the cache
         EnumSet<SourceFactor> factors = EnumSet.allOf(SourceFactor.class);
         factors.remove(srcFactor);
-        factors.removeIf(f -> f.field_187395_p == GL11.glGetInteger(GL11.GL_BLEND_SRC));
+        factors.removeIf(f -> f.value == GL11.glGetInteger(GL11.GL_BLEND_SRC));
 
         // Get a factor which is distinct from both current and new factor
         SourceFactor dummyFactor = factors.iterator().next();
         // Ensure cache differs from our desired values
-        GlStateManager.func_187428_a(dummyFactor, dstFactor, srcFactorAlpha, dstFactorAlpha);
+        RenderSystem.blendFuncSeparate(dummyFactor, dstFactor, srcFactorAlpha, dstFactorAlpha);
         // Guarantee cache updates correctly
-        GlStateManager.func_187428_a(srcFactor, dstFactor, srcFactorAlpha, dstFactorAlpha);
+        RenderSystem.blendFuncSeparate(srcFactor, dstFactor, srcFactorAlpha, dstFactorAlpha);
     }
 
-    public static void beginScissor(Rect scissorRect, ScaledResolution resolution) {
+    public static void beginScissor(Rect scissorRect, MainWindow mainWindow) {
         final Rect scaledRect = scissorRect
-            .withY(resolution.func_78328_b() - scissorRect.getBottom())
-            .scale(resolution.func_78325_e());
+            .withY(mainWindow.getGuiScaledHeight() - scissorRect.getBottom())
+            .scale((int)mainWindow.getGuiScale());
 
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
         GL11.glScissor(scaledRect.getX(), scaledRect.getY(), scaledRect.getWidth(), scaledRect.getHeight());

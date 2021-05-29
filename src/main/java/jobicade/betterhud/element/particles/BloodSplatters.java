@@ -5,7 +5,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.living.LivingDamageEvent;
 import net.minecraftforge.eventbus.api.EventPriority;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -16,7 +16,7 @@ public class BloodSplatters extends ParticleOverlay {
     }
 
     @Override
-    public void init(FMLInitializationEvent event) {
+    public void init(FMLClientSetupEvent event) {
         super.init(event);
         MinecraftForge.EVENT_BUS.register(this);
     }

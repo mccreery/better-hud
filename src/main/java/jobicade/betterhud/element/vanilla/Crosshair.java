@@ -1,8 +1,9 @@
 package jobicade.betterhud.element.vanilla;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
 import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
+import com.mojang.blaze3d.systems.RenderSystem;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
@@ -23,6 +24,9 @@ import net.minecraft.util.HandSide;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
+import net.minecraft.util.math.vector.Quaternion;
+import net.minecraft.util.math.vector.Vector3f;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.eventbus.api.Event;
 
@@ -123,22 +127,22 @@ public class Crosshair extends OverrideElement {
         Rect bounds = null;
 
         if(Minecraft.getInstance().options.renderDebug && !Minecraft.getInstance().options.reducedDebugInfo && !Minecraft.getInstance().player.isReducedDebugInfo()) {
-            renderAxes(MANAGER.getScreen().getAnchor(Direction.CENTER), getPartialTicks(event));
+            renderAxes(((RenderGameOverlayEvent)event).getMatrixStack(), MANAGER.getScreen().getAnchor(Direction.CENTER), getPartialTicks(event));
         } else {
             Rect texture = new Rect(16, 16);
 
             // Vanilla crosshair is offset by (1, 1) for some reason
             Rect crosshair = new Rect(texture).anchor(MANAGER.getScreen(), Direction.CENTER).translate(1, 1);
 
-            GlStateManager.func_187401_a(SourceFactor.ONE_MINUS_DST_COLOR, DestFactor.ONE_MINUS_SRC_COLOR);
-            GlStateManager.func_179141_d();
+            RenderSystem.blendFunc(SourceFactor.ONE_MINUS_DST_COLOR, DestFactor.ONE_MINUS_SRC_COLOR);
+            RenderSystem.enableAlphaTest();
             GlUtil.drawRect(crosshair, texture);
 
             if(attackIndicator.get()) {
                 bounds = renderAttackIndicator();
             }
             GlUtil.blendFuncSafe(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
-            GlStateManager.func_179118_c();
+            RenderSystem.disableAlphaTest();
         }
         return bounds;
     }
@@ -177,16 +181,16 @@ public class Crosshair extends OverrideElement {
         return bounds;
     }
 
-    private void renderAxes(Point center, float partialTicks) {
-        GlStateManager.func_179094_E();
-        GlStateManager.func_179109_b(center.getX(), center.getY(), 0);
+    private void renderAxes(MatrixStack matrixStack, Point center, float partialTicks) {
+        matrixStack.pushPose();
+        matrixStack.translate(center.getX(), center.getY(), 0);
 
         Entity entity = Minecraft.getInstance().getCameraEntity();
-        GlStateManager.func_179114_b(entity.xRotO + (entity.xRot - entity.xRotO) * partialTicks, -1.0F, 0.0F, 0.0F);
-        GlStateManager.func_179114_b(entity.yRotO + (entity.yRot - entity.yRotO) * partialTicks, 0.0F, 1.0F, 0.0F);
-        GlStateManager.func_179152_a(-1.0F, -1.0F, -1.0F);
+        matrixStack.mulPose(new Quaternion(new Vector3f(-1.0F, 0.0F, 0.0F), entity.xRotO + (entity.xRot - entity.xRotO) * partialTicks, true));
+        matrixStack.mulPose(new Quaternion(new Vector3f(0.0F, 1.0F, 0.0F), entity.yRotO + (entity.yRot - entity.yRotO) * partialTicks, true));
+        matrixStack.scale(-1.0F, -1.0F, -1.0F);
         OpenGlHelper.func_188785_m(10);
 
-        GlStateManager.func_179121_F();
+        matrixStack.popPose();
     }
 }

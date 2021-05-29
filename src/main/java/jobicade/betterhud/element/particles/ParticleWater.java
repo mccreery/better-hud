@@ -1,6 +1,6 @@
 package jobicade.betterhud.element.particles;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -32,18 +32,18 @@ public class ParticleWater extends ParticleBase {
     }
 
     @Override
-    public void render(float partialTicks) {
+    public void render(MatrixStack matrixStack, float partialTicks) {
         Minecraft.getInstance().getTextureManager().bind(Textures.PARTICLES);
-        GlStateManager.func_179094_E();
+        matrixStack.pushPose();
 
-        GlStateManager.func_179109_b(position.getX(), position.getY() - opacity * speed, 0);
-        GlStateManager.func_179152_a(size, size, 1);
+        matrixStack.translate(position.getX(), position.getY() - opacity * speed, 0);
+        matrixStack.scale(size, size, 1);
 
         Color color = Color.WHITE.withAlpha(Math.round(opacity * 255));
         Rect bounds = texture.align(Point.zero(), Direction.CENTER);
         GlUtil.drawRect(bounds, texture, color);
 
-        GlStateManager.func_179121_F();
-        Minecraft.getInstance().getTextureManager().bind(AbstractGui.field_110324_m);
+        matrixStack.popPose();
+        Minecraft.getInstance().getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
     }
 }

@@ -30,7 +30,7 @@ public class JumpBar extends OverrideElement {
 
     @Override
     protected Rect render(Event event) {
-        Minecraft.getInstance().getTextureManager().bind(AbstractGui.field_110324_m);
+        Minecraft.getInstance().getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
 
         Rect bounds = new Rect(182, 5);
         if(!position.isCustom() && position.getDirection() == Direction.SOUTH) {

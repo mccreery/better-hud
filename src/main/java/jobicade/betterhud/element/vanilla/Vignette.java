@@ -82,7 +82,7 @@ public class Vignette extends OverrideElement {
 
         GlUtil.drawRect(MANAGER.getScreen(), new Rect(256, 256), color);
 
-        Minecraft.getInstance().getTextureManager().bind(AbstractGui.field_110324_m);
+        Minecraft.getInstance().getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
         GlUtil.blendFuncSafe(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
         return null;
     }

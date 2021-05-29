@@ -1,6 +1,6 @@
 package jobicade.betterhud.gui;
 
-import com.mojang.blaze3d.platform.GlStateManager;
+import com.mojang.blaze3d.systems.RenderSystem;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
@@ -101,14 +101,14 @@ public class GuiActionButton extends Button {
         drawButton(bounds, new Point(mouseX, mouseY), partialTicks);
 
         if(tooltip != null && field_146123_n) {
-            GlStateManager.func_179126_j();
-            GlStateManager.func_179094_E();
+            RenderSystem.enableDepthTest();
+            matrixStack.pushPose();
 
-            GlStateManager.func_179109_b(0, 0, 1);
+            matrixStack.translate(0, 0, 1);
             Minecraft.getInstance().screen.func_146279_a(tooltip, mouseX, mouseY);
 
-            GlStateManager.func_179121_F();
-            GlStateManager.func_179097_i();
+            matrixStack.popPose();
+            RenderSystem.disableDepthTest();
         }
         Color.WHITE.apply();
     }

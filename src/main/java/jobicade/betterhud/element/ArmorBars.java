@@ -110,7 +110,7 @@ public class ArmorBars extends EquipmentDisplay {
             if(stack.isEmpty()) {
                 Minecraft.getInstance().getTextureManager().bind(TextureMap.LOCATION_BLOCKS);
                 Minecraft.getInstance().gui.func_175175_a(item.getX(), item.getY(), empty, item.getWidth(), item.getHeight());
-                Minecraft.getInstance().getTextureManager().bind(AbstractGui.field_110324_m);
+                Minecraft.getInstance().getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
             } else {
                 GlUtil.renderSingleItem(stack, item.getPosition());
             }

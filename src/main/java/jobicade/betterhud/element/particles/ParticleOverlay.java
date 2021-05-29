@@ -6,8 +6,9 @@ import jobicade.betterhud.element.settings.SettingChoose;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.Tickable;
 import net.minecraft.client.Minecraft;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -35,7 +36,7 @@ public abstract class ParticleOverlay extends HudElement implements Tickable {
     }
 
     @Override
-    public void init(FMLInitializationEvent event) {
+    public void init(FMLClientSetupEvent event) {
         Ticker.FASTER.register(this);
     }
 
@@ -56,13 +57,13 @@ public abstract class ParticleOverlay extends HudElement implements Tickable {
     @Override
     public Rect render(Event event) {
         for(Particle particle : particles) {
-            particle.render(getPartialTicks(event));
+            particle.render(((RenderGameOverlayEvent)event).getMatrixStack(), getPartialTicks(event));
         }
         return MANAGER.getScreen();
     }
 
     @Override
     public boolean shouldRender(Event event) {
-        return !particles.isEmpty();
+        return super.shouldRender(event) && !particles.isEmpty();
     }
 }

@@ -1,5 +1,6 @@
 package jobicade.betterhud.element;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
@@ -10,6 +11,7 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.Event;
 
 import java.util.ArrayList;
@@ -56,12 +58,13 @@ public class ExperienceInfo extends TextElement {
         String neededDisplay = String.valueOf(needed);
 
         Rect bar = EXPERIENCE.getLastBounds();
+        MatrixStack matrixStack = ((RenderGameOverlayEvent)event).getMatrixStack();
 
         Point text = new Rect(GlUtil.getStringSize(hasDisplay).sub(0, 2)).anchor(bar, Direction.WEST).getPosition();
-        GlUtil.drawBorderedString(hasDisplay, text.getX(), text.getY(), Color.WHITE);
+        GlUtil.drawBorderedString(matrixStack, hasDisplay, text.getX(), text.getY(), Color.WHITE);
 
         text = new Rect(GlUtil.getStringSize(neededDisplay).sub(0, 2)).anchor(bar, Direction.EAST).getPosition();
-        GlUtil.drawBorderedString(neededDisplay, text.getX(), text.getY(), Color.WHITE);
+        GlUtil.drawBorderedString(matrixStack, neededDisplay, text.getX(), text.getY(), Color.WHITE);
 
         return super.render(event);
     }

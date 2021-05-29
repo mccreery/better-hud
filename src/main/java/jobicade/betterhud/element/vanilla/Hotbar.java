@@ -1,5 +1,6 @@
 package jobicade.betterhud.element.vanilla;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.geom.Direction;
@@ -8,6 +9,7 @@ import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.Textures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 import net.minecraftforge.eventbus.api.Event;
@@ -51,10 +53,11 @@ public class Hotbar extends OverrideElement {
                 GlUtil.drawRect(slot.grow(4), new Rect(0, 22, 24, 24));
             }
 
-            GlUtil.renderHotbarItem(slot, Minecraft.getInstance().player.inventory.items.get(i), partialTicks);
+            MatrixStack matrixStack = ((RenderGameOverlayEvent)event).getMatrixStack();
+            GlUtil.renderHotbarItem(matrixStack, slot, Minecraft.getInstance().player.inventory.items.get(i), partialTicks);
         }
 
-        Minecraft.getInstance().getTextureManager().bind(AbstractGui.field_110324_m);
+        Minecraft.getInstance().getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
         return bounds;
     }
 }

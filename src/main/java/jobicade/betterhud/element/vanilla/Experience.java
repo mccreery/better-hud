@@ -1,5 +1,6 @@
 package jobicade.betterhud.element.vanilla;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
@@ -10,6 +11,7 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.eventbus.api.Event;
 
@@ -68,7 +70,8 @@ public class Experience extends OverrideElement {
             Point numberPosition = new Rect(GlUtil.getStringSize(numberText))
                 .anchor(barRect.grow(6), position.getContentAlignment().mirrorRow()).getPosition();
 
-            GlUtil.drawBorderedString(numberText, numberPosition.getX(), numberPosition.getY(), new Color(128, 255, 32));
+            MatrixStack matrixStack = ((RenderGameOverlayEvent)event).getMatrixStack();
+            GlUtil.drawBorderedString(matrixStack, numberText, numberPosition.getX(), numberPosition.getY(), new Color(128, 255, 32));
         }
         return barRect;
     }

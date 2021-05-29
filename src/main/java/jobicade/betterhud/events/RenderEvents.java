@@ -1,9 +1,9 @@
 package jobicade.betterhud.events;
 
 import com.google.common.base.Predicate;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
 import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
+import com.mojang.blaze3d.systems.RenderSystem;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Point;
@@ -63,12 +63,12 @@ public final class RenderEvents {
      * This is only used for {@link #onRenderTick(net.minecraftforge.client.event.RenderGameOverlayEvent.Pre)}
      */
     public static void beginOverlayState() {
-        GlStateManager.func_187428_a(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
-        GlStateManager.func_179147_l();
-        GlStateManager.func_179118_c();
+        RenderSystem.blendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
+        RenderSystem.enableBlend();
+        RenderSystem.disableAlphaTest();
 
-        Minecraft.getInstance().getTextureManager().bind(AbstractGui.field_110324_m);
-        GlStateManager.func_179103_j(GL11.GL_SMOOTH);
+        Minecraft.getInstance().getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
+        RenderSystem.shadeModel(GL11.GL_SMOOTH);
     }
 
     /**
@@ -76,12 +76,12 @@ public final class RenderEvents {
      * This is only used for {@link #onRenderTick(net.minecraftforge.client.event.RenderGameOverlayEvent.Pre))}
      */
     public static void endOverlayState() {
-        GlStateManager.func_187428_a(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
-        GlStateManager.func_179084_k();
-        GlStateManager.func_179118_c();
+        RenderSystem.blendFuncSeparate(SourceFactor.SRC_ALPHA, DestFactor.ONE_MINUS_SRC_ALPHA, SourceFactor.ZERO, DestFactor.ONE);
+        RenderSystem.disableBlend();
+        RenderSystem.disableAlphaTest();
 
-        GlStateManager.func_179144_i(0);
-        GlStateManager.func_179103_j(GL11.GL_FLAT);
+        RenderSystem.bindTexture(0);
+        RenderSystem.shadeModel(GL11.GL_FLAT);
     }
 
     /**
@@ -134,14 +134,14 @@ public final class RenderEvents {
     private void renderMobInfo(RenderMobInfoEvent event) {
         MANAGER.reset(Point.zero());
 
-        GlStateManager.func_179097_i();
-        GlStateManager.func_179147_l();
-        GlStateManager.func_179118_c();
+        RenderSystem.disableDepthTest();
+        RenderSystem.enableBlend();
+        RenderSystem.disableAlphaTest();
         Color.WHITE.apply();
-        Minecraft.getInstance().getTextureManager().bind(AbstractGui.field_110324_m);
+        Minecraft.getInstance().getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
 
-        GlStateManager.func_179094_E();
-        GlUtil.setupBillboard(event.getEntity(), event.getPartialTicks(), HudElement.GLOBAL.getBillboardScale());
+        event.getMatrixStack().pushPose();
+        GlUtil.setupBillboard(event.getMatrixStack(), event.getEntity(), event.getPartialTicks(), HudElement.GLOBAL.getBillboardScale());
 
         if(HudElement.GLOBAL.isDebugMode()) {
             GlSnapshot pre = new GlSnapshot();
@@ -151,12 +151,12 @@ public final class RenderEvents {
             HudElement.renderAll(event);
         }
 
-        GlStateManager.func_179121_F();
+        event.getMatrixStack().popPose();
 
         Minecraft.getInstance().getTextureManager().bind(TextureMap.LOCATION_BLOCKS);
-        GlStateManager.func_179141_d();
-        GlStateManager.func_179126_j();
-        GlStateManager.func_179084_k();
+        RenderSystem.enableAlphaTest();
+        RenderSystem.enableDepthTest();
+        RenderSystem.disableBlend();
     }
 
     /** Allows a custom distance

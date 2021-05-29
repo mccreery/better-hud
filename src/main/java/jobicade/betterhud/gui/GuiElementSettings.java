@@ -1,6 +1,5 @@
 package jobicade.betterhud.gui;
 
-import com.mojang.blaze3d.platform.GlStateManager;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.Setting;
@@ -188,7 +187,7 @@ public class GuiElementSettings extends GuiMenuScreen {
         ScaledResolution resolution = new ScaledResolution(Minecraft.getInstance());
         done.func_191745_a(Minecraft.getInstance(), mouseX, mouseY, partialTicks);
 
-        GlStateManager.func_179094_E();
+        matrixStack.pushPose();
         GlUtil.beginScissor(viewport, resolution);
         GL11.glTranslatef(0, -getMouseOffset(), 0);
 
@@ -203,7 +202,7 @@ public class GuiElementSettings extends GuiMenuScreen {
         element.settings.draw();
 
         GlUtil.endScissor();
-        GlStateManager.func_179121_F();
+        matrixStack.popPose();
 
         scrollbar.drawScrollbar(mouseX, mouseY);
         drawResolution(10, 10, 100);

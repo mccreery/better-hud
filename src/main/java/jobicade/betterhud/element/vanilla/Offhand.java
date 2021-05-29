@@ -1,5 +1,6 @@
 package jobicade.betterhud.element.vanilla;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
@@ -10,6 +11,7 @@ import jobicade.betterhud.util.Textures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.HandSide;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.Event;
 
 import static jobicade.betterhud.BetterHud.SPACER;
@@ -48,7 +50,8 @@ public class Offhand extends HudElement {
         Minecraft.getInstance().getTextureManager().bind(Textures.WIDGETS);
         GlUtil.drawRect(bounds, texture);
 
-        GlUtil.renderHotbarItem(bounds.translate(3, 3), offhandStack, getPartialTicks(event));
+        MatrixStack matrixStack = ((RenderGameOverlayEvent)event).getMatrixStack();
+        GlUtil.renderHotbarItem(matrixStack, bounds.translate(3, 3), offhandStack, getPartialTicks(event));
         return bounds;
     }
 }

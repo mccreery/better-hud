@@ -80,7 +80,7 @@ public class PotionBar extends HudElement {
             bounds = position.applyTo(bounds);
         }
         grid.setBounds(bounds).render();
-        Minecraft.getInstance().getTextureManager().bind(AbstractGui.field_110324_m);
+        Minecraft.getInstance().getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
 
         return bounds;
     }

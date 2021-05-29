@@ -71,9 +71,9 @@ public class Coordinates extends TextElement {
         DecimalFormat format = new DecimalFormat();
         format.setMaximumFractionDigits(decimalPlaces.get().intValue());
 
-        String x = format.format(Minecraft.getInstance().player.field_70165_t);
-        String y = format.format(Minecraft.getInstance().player.field_70163_u);
-        String z = format.format(Minecraft.getInstance().player.field_70161_v);
+        String x = format.format(Minecraft.getInstance().player.getX());
+        String y = format.format(Minecraft.getInstance().player.getY());
+        String z = format.format(Minecraft.getInstance().player.getZ());
 
         if(spaced.get()) {
             x = I18n.get("betterHud.hud.x", x);
