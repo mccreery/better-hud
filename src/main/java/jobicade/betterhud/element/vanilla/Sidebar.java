@@ -1,5 +1,6 @@
 package jobicade.betterhud.element.vanilla;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
@@ -18,6 +19,9 @@ import net.minecraft.scoreboard.Score;
 import net.minecraft.scoreboard.ScoreObjective;
 import net.minecraft.scoreboard.ScorePlayerTeam;
 import net.minecraft.scoreboard.Scoreboard;
+import net.minecraft.util.text.ITextComponent;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.Event;
 
 import java.util.ArrayList;
@@ -47,7 +51,8 @@ public class Sidebar extends HudElement {
         ScoreObjective objective = getObjective(Minecraft.getInstance().player);
         List<Score> scores = getScores(objective);
 
-        Label title = new Label(objective.getDisplayName()).setShadow(false);
+        MatrixStack matrixStack = ((RenderGameOverlayEvent)event).getMatrixStack();
+        Label title = new Label(matrixStack, objective.getDisplayName()).setShadow(false);
         List<Label> names  = new ArrayList<>(scores.size());
         List<Label> values = new ArrayList<>(scores.size());
 
@@ -55,17 +60,17 @@ public class Sidebar extends HudElement {
 
         for(Score score : scores) {
             String name = score.getOwner();
-            String formattedName = ScorePlayerTeam.func_96667_a(objective.getScoreboard().getPlayersTeam(name), name);
+            ITextComponent formattedName = ScorePlayerTeam.formatNameForTeam(objective.getScoreboard().getPlayersTeam(name), new StringTextComponent(name));
             String points = String.valueOf(score.getScore());
 
-            names.add(new Label(formattedName).setShadow(false));
-            values.add(new Label(points).setColor(valueColor).setShadow(false));
+            names.add(new Label(matrixStack, formattedName).setShadow(false));
+            values.add(new Label(matrixStack, points).setColor(valueColor).setShadow(false));
         }
 
         Grid<Label> namesGroup = new Grid<>(new Point(1, names.size()), names).setStretch(true).setCellAlignment(position.getContentAlignment().mirrorCol());
         Grid<Label> valuesGroup = new Grid<>(new Point(1, values.size()), values).setStretch(true).setCellAlignment(position.getContentAlignment());
 
-        int spaceWidth = Minecraft.getInstance().font.func_78263_a(' ');
+        int spaceWidth = Minecraft.getInstance().font.width(" ");
         Size size = namesGroup.getPreferredSize().add(valuesGroup.getPreferredSize().getX() + spaceWidth * 2, 0);
 
         int tWidth = title.getPreferredSize().getWidth();
@@ -115,12 +120,12 @@ public class Sidebar extends HudElement {
      * Gets the objective in the player's sidebar slot.
      * @param player The player.
      * @return The objective in the player's sidebar slot.
-     * @see net.minecraft.client.gui.GuiIngame#renderGameOverlay(float)
+     * @see net.minecraft.client.gui.IngameGui#render(MatrixStack, float)
      */
     private ScoreObjective getObjective(PlayerEntity player) {
         Scoreboard scoreboard = player.getScoreboard();
         ScoreObjective objective = null;
-        ScorePlayerTeam team = scoreboard.getPlayersTeam(Minecraft.getInstance().player.func_70005_c_());
+        ScorePlayerTeam team = scoreboard.getPlayersTeam(Minecraft.getInstance().player.getScoreboardName());
 
         if(team != null) {
             int slot = team.getColor().getId();

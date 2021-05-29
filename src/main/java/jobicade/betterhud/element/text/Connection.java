@@ -9,7 +9,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent.LoggedInEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,7 +29,7 @@ public class Connection extends TextElement {
     }
 
     @Override
-    public void init(FMLInitializationEvent event) {
+    public void init(FMLClientSetupEvent event) {
         super.init(event);
         MinecraftForge.EVENT_BUS.register(this);
     }
@@ -49,8 +49,8 @@ public class Connection extends TextElement {
 
     @SubscribeEvent
     public void onConnect(LoggedInEvent event) {
-        if(!event.isLocal()) {
-            ip = event.getManager().getRemoteAddress().toString();
+        if(!event.getNetworkManager().isMemoryConnection()) {
+            ip = event.getNetworkManager().getRemoteAddress().toString();
         } else {
             ip = "localServer";
         }

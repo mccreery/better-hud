@@ -33,7 +33,7 @@ public abstract class OverrideElement extends HudElement {
             return false;
         }
         RenderGameOverlayEvent parent = (RenderGameOverlayEvent)event;
-        Event child = new RenderGameOverlayEvent.Pre(parent, getType());
+        Event child = new RenderGameOverlayEvent.Pre(parent.getMatrixStack(), parent, getType());
 
         return !safePost(child);
     }
@@ -45,7 +45,7 @@ public abstract class OverrideElement extends HudElement {
 
             if(type != null) {
                 RenderGameOverlayEvent e = (RenderGameOverlayEvent)event;
-                safePost(new RenderGameOverlayEvent.Post(e, type));
+                safePost(new RenderGameOverlayEvent.Post(e.getMatrixStack(), e, type));
             }
         }
     }

@@ -4,12 +4,14 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
 import net.minecraft.block.Blocks;
+import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.settings.PointOfView;
 import net.minecraft.item.Item;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.eventbus.api.Event;
 
@@ -35,7 +37,7 @@ public class HelmetOverlay extends OverrideElement {
 
     @Override
     public boolean shouldRender(Event event) {
-        return super.shouldRender(event) && Minecraft.getInstance().options.field_74320_O == 0 && !Minecraft.getInstance().player.inventory.getArmor(3).isEmpty();
+        return super.shouldRender(event) && Minecraft.getInstance().options.getCameraType() == PointOfView.FIRST_PERSON && !Minecraft.getInstance().player.inventory.getArmor(3).isEmpty();
     }
 
     @Override
@@ -48,7 +50,8 @@ public class HelmetOverlay extends OverrideElement {
             GlUtil.drawRect(MANAGER.getScreen(), new Rect(256, 256), Color.RED);
             Minecraft.getInstance().getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
         } else {
-            item.renderHelmetOverlay(stack, Minecraft.getInstance().player, new ScaledResolution(Minecraft.getInstance()), getPartialTicks(event));
+            MainWindow window = ((RenderGameOverlayEvent)event).getWindow();
+            item.renderHelmetOverlay(stack, Minecraft.getInstance().player, window.getGuiScaledWidth(), window.getGuiScaledHeight(), getPartialTicks(event));
         }
         return MANAGER.getScreen();
     }

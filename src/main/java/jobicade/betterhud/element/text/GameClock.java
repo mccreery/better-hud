@@ -12,7 +12,6 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
-import net.minecraft.world.WorldProvider.WorldSleepResult;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.Event;
 
@@ -24,7 +23,7 @@ import java.util.List;
 import java.util.TimeZone;
 
 public class GameClock extends Clock {
-    private static final ItemStack BED = new ItemStack(Items.field_151104_aV, 1, 14);
+    private static final ItemStack BED = new ItemStack(Items.RED_BED, 1);
 
     private SettingBoolean showDays;
     private SettingBoolean showSleepIndicator;
@@ -87,14 +86,11 @@ public class GameClock extends Clock {
 
     private boolean showSleepIndicator(float partialTicks) {
         return showSleepIndicator.get()
-                && Minecraft.getInstance().level.dimension.canSleepAt(Minecraft.getInstance().player, Minecraft.getInstance().player.func_180425_c()) == WorldSleepResult.ALLOW
+                && !Minecraft.getInstance().level.isDay()
                 // Taken from EntityPlayer#trySleep, ignores enemies and bed position
                 && !Minecraft.getInstance().player.isSleeping()
                 && Minecraft.getInstance().player.isAlive()
-                && Minecraft.getInstance().level.dimension.func_76569_d()
-                // World#isDayTime is server only
-                //&& !Minecraft.getMinecraft().world.isDaytime();
-                && Minecraft.getInstance().level.func_72967_a(partialTicks) >= 4;
+                && Minecraft.getInstance().level.dimensionType().bedWorks();
     }
 
     @Override

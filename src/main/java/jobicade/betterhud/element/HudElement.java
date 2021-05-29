@@ -37,7 +37,6 @@ import jobicade.betterhud.element.vanilla.RidingHealth;
 import jobicade.betterhud.element.vanilla.Sidebar;
 import jobicade.betterhud.element.vanilla.Vignette;
 import jobicade.betterhud.geom.Rect;
-import jobicade.betterhud.proxy.ClientProxy;
 import jobicade.betterhud.util.IGetSet.IBoolean;
 import jobicade.betterhud.util.SortField;
 import jobicade.betterhud.util.Sorter;
@@ -47,11 +46,10 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderWorldLastEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
-import org.apache.maven.artifact.versioning.Restriction;
+import org.apache.maven.artifact.versioning.InvalidVersionSpecificationException;
 import org.apache.maven.artifact.versioning.VersionRange;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public abstract class HudElement implements IBoolean {
@@ -213,7 +211,11 @@ public abstract class HudElement implements IBoolean {
     /** @return The minimum server version that supports this element
      * @see #isSupportedByServer() */
     public VersionRange getServerDependency() {
-        return VersionRange.newRange(null, Arrays.asList(Restriction.EVERYTHING));
+        try {
+            return VersionRange.createFromVersionSpec("[,]");
+        } catch (InvalidVersionSpecificationException exception) {
+            throw new RuntimeException(exception);
+        }
     }
 
     /** @return {@code true} if the current connected server supports the element.
@@ -258,13 +260,13 @@ public abstract class HudElement implements IBoolean {
      * should be rendered and caches the bounds so they are available from {@link #getLastRect()} */
     public final void tryRender(Event event) {
         if(shouldRender(event) && isEnabledAndSupported()) {
-            Minecraft.getInstance().profiler.push(name);
+            Minecraft.getInstance().getProfiler().push(name);
 
             lastBounds = render(event);
             if(lastBounds == null) lastBounds = Rect.empty();
             postRender(event);
 
-            Minecraft.getInstance().profiler.pop();
+            Minecraft.getInstance().getProfiler().pop();
         }
     }
 
@@ -299,8 +301,6 @@ public abstract class HudElement implements IBoolean {
      * Called for all elements during {@link FMLInitializationEvent} on the
      * physical client only. Elements registering themselves as event
      * subscribers can only use client-side events.
-     *
-     * @see ClientProxy#init(FMLInitializationEvent)
      */
     public void init(FMLClientSetupEvent event) {}
 

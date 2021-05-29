@@ -1,5 +1,6 @@
 package jobicade.betterhud.element;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
@@ -17,12 +18,16 @@ import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
-import net.minecraft.item.ArmorItem;
+import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.item.ItemStack;
+import net.minecraft.util.ResourceLocation;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.Event;
 
 import java.util.List;
+import java.util.function.Function;
+
+import static net.minecraft.inventory.container.PlayerContainer.*;
 
 public class ArmorBars extends EquipmentDisplay {
     private SettingChoose barType;
@@ -61,15 +66,28 @@ public class ArmorBars extends EquipmentDisplay {
         return false;
     }
 
+    /**
+     * @see net.minecraft.inventory.container.PlayerContainer#TEXTURE_EMPTY_SLOTS
+     */
+    private static final ResourceLocation[] TEXTURE_EMPTY_SLOTS = new ResourceLocation[] {
+        EMPTY_ARMOR_SLOT_BOOTS,
+        EMPTY_ARMOR_SLOT_LEGGINGS,
+        EMPTY_ARMOR_SLOT_CHESTPLATE,
+        EMPTY_ARMOR_SLOT_HELMET
+    };
+
     @Override
     public Rect render(Event event) {
         Grid<Boxed> grid = new Grid<>(new Point(1, 4)).setStretch(true);
 
+        Function<ResourceLocation, TextureAtlasSprite> atlas = Minecraft.getInstance().getTextureAtlas(PlayerContainer.BLOCK_ATLAS);
+        MatrixStack matrixStack = ((RenderGameOverlayEvent)event).getMatrixStack();
+
         for(int i = 0; i < 4; i++) {
             ItemStack stack = Minecraft.getInstance().player.inventory.getArmor(3-i);
-            TextureAtlasSprite empty = Minecraft.getInstance().func_147117_R().getTexture(ArmorItem.field_94603_a[3-i]);
+            TextureAtlasSprite empty = atlas.apply(TEXTURE_EMPTY_SLOTS[3-i]);
 
-            grid.setCell(new Point(0, i), new SlotDisplay(stack, empty));
+            grid.setCell(new Point(0, i), new SlotDisplay(matrixStack, stack, empty));
         }
 
         Rect bounds = position.applyTo(new Rect(grid.getPreferredSize()));
@@ -78,16 +96,18 @@ public class ArmorBars extends EquipmentDisplay {
     }
 
     private class SlotDisplay extends DefaultBoxed {
+        private final MatrixStack matrixStack;
         private final ItemStack stack;
         private final TextureAtlasSprite empty;
 
-        public SlotDisplay(ItemStack stack, TextureAtlasSprite empty) {
+        public SlotDisplay(MatrixStack matrixStack, ItemStack stack, TextureAtlasSprite empty) {
+            this.matrixStack = matrixStack;
             this.stack = stack;
             this.empty = empty;
         }
 
         private Label getLabel() {
-            return new Label(getText(stack));
+            return new Label(matrixStack, getText(stack));
         }
 
         @Override
@@ -108,8 +128,8 @@ public class ArmorBars extends EquipmentDisplay {
 
             Rect item = new Rect(16, 16).anchor(bounds, contentAlignment);
             if(stack.isEmpty()) {
-                Minecraft.getInstance().getTextureManager().bind(TextureMap.LOCATION_BLOCKS);
-                Minecraft.getInstance().gui.func_175175_a(item.getX(), item.getY(), empty, item.getWidth(), item.getHeight());
+                Minecraft.getInstance().getTextureManager().bind(PlayerContainer.BLOCK_ATLAS);
+                Minecraft.getInstance().gui.blit(matrixStack, item.getX(), item.getY(), 0, item.getWidth(), item.getHeight(), empty);
                 Minecraft.getInstance().getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
             } else {
                 GlUtil.renderSingleItem(stack, item.getPosition());

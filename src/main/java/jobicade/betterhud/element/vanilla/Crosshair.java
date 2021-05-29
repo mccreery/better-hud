@@ -15,17 +15,18 @@ import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.GlUtil;
 import net.minecraft.block.BlockState;
+import net.minecraft.client.GameSettings;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.OpenGlHelper;
-import net.minecraft.entity.Entity;
+import net.minecraft.client.renderer.ActiveRenderInfo;
+import net.minecraft.client.settings.AttackIndicatorStatus;
+import net.minecraft.client.settings.PointOfView;
 import net.minecraft.entity.LivingEntity;
 import net.minecraft.inventory.IInventory;
 import net.minecraft.util.HandSide;
 import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.RayTraceResult.Type;
-import net.minecraft.util.math.vector.Quaternion;
-import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.world.GameType;
 import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.eventbus.api.Event;
@@ -51,13 +52,18 @@ public class Crosshair extends OverrideElement {
         settings.add(attackIndicator = new SettingBoolean(null) {
             @Override
             public Boolean get() {
-                return Minecraft.getInstance().options.attackIndicator != 0;
+                return Minecraft.getInstance().options.attackIndicator != AttackIndicatorStatus.OFF;
             }
 
             @Override
             public void set(Boolean value) {
-                Minecraft.getInstance().options.attackIndicator = value ? indicatorType.getIndex() + 1 : 0;
-                Minecraft.getInstance().options.save();
+                GameSettings options = Minecraft.getInstance().options;
+                if (value) {
+                    options.attackIndicator = AttackIndicatorStatus.byId(indicatorType.getIndex() + 1);
+                } else {
+                    options.attackIndicator = AttackIndicatorStatus.OFF;
+                }
+                options.save();
             }
         });
         attackIndicator.setValuePrefix(SettingBoolean.VISIBLE).setUnlocalizedName("options.attackIndicator");
@@ -70,13 +76,13 @@ public class Crosshair extends OverrideElement {
 
             @Override
             public int getIndex() {
-                return Math.max(Minecraft.getInstance().options.attackIndicator - 1, 0);
+                return Math.max(Minecraft.getInstance().options.attackIndicator.getId() - 1, 0);
             }
 
             @Override
             public void setIndex(int index) {
                 if(index >= 0 && index < 2) {
-                    Minecraft.getInstance().options.attackIndicator = attackIndicator.get() ? index + 1 : 0;
+                    Minecraft.getInstance().options.attackIndicator = AttackIndicatorStatus.byId(attackIndicator.get() ? index + 1 : 0);
                 }
             }
 
@@ -104,8 +110,8 @@ public class Crosshair extends OverrideElement {
     @Override
     public boolean shouldRender(Event event) {
         return super.shouldRender(event)
-            && Minecraft.getInstance().options.field_74320_O == 0
-            && (!Minecraft.getInstance().gameMode.func_78747_a() || canInteract());
+            && Minecraft.getInstance().options.getCameraType() == PointOfView.FIRST_PERSON
+            && (Minecraft.getInstance().gameMode.getPlayerMode() != GameType.SPECTATOR || canInteract());
     }
 
     /** @return {@code true} if the player is looking at something that can be interacted with in spectator mode */
@@ -114,9 +120,9 @@ public class Crosshair extends OverrideElement {
             return true;
         } else {
             RayTraceResult trace = Minecraft.getInstance().hitResult;
-            if(trace == null || trace.field_72313_a != Type.BLOCK) return false;
+            if(trace == null || trace.getType() != Type.BLOCK) return false;
 
-            BlockPos pos = trace.func_178782_a();
+            BlockPos pos = new BlockPos(trace.getLocation());
             BlockState state = Minecraft.getInstance().level.getBlockState(pos);
             return state.getBlock().hasTileEntity(state) && Minecraft.getInstance().level.getBlockEntity(pos) instanceof IInventory;
         }
@@ -181,16 +187,17 @@ public class Crosshair extends OverrideElement {
         return bounds;
     }
 
+    /**
+     * @see net.minecraft.client.gui.IngameGui#renderCrosshair(MatrixStack)
+     */
     private void renderAxes(MatrixStack matrixStack, Point center, float partialTicks) {
-        matrixStack.pushPose();
-        matrixStack.translate(center.getX(), center.getY(), 0);
-
-        Entity entity = Minecraft.getInstance().getCameraEntity();
-        matrixStack.mulPose(new Quaternion(new Vector3f(-1.0F, 0.0F, 0.0F), entity.xRotO + (entity.xRot - entity.xRotO) * partialTicks, true));
-        matrixStack.mulPose(new Quaternion(new Vector3f(0.0F, 1.0F, 0.0F), entity.yRotO + (entity.yRot - entity.yRotO) * partialTicks, true));
-        matrixStack.scale(-1.0F, -1.0F, -1.0F);
-        OpenGlHelper.func_188785_m(10);
-
-        matrixStack.popPose();
+        RenderSystem.pushMatrix();
+        RenderSystem.translatef(center.getX(), center.getY(), 0);
+        ActiveRenderInfo activerenderinfo = Minecraft.getInstance().gameRenderer.getMainCamera();
+        RenderSystem.rotatef(activerenderinfo.getXRot(), -1.0F, 0.0F, 0.0F);
+        RenderSystem.rotatef(activerenderinfo.getYRot(), 0.0F, 1.0F, 0.0F);
+        RenderSystem.scalef(-1.0F, -1.0F, -1.0F);
+        RenderSystem.renderCrosshair(10);
+        RenderSystem.popMatrix();
     }
 }

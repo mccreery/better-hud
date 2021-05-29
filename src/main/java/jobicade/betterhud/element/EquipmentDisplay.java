@@ -69,7 +69,7 @@ public abstract class EquipmentDisplay extends HudElement {
         ArrayList<String> parts = new ArrayList<String>();
 
         if(this.showName.get()) {
-            parts.add(stack.func_82833_r());
+            parts.add(stack.getDisplayName().getString());
         }
 
         int maxDurability = stack.getMaxDamage();

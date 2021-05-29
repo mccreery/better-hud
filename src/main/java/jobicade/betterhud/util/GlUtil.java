@@ -1,7 +1,6 @@
 package jobicade.betterhud.util;
 
 import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.platform.GlStateManager.DestFactor;
 import com.mojang.blaze3d.platform.GlStateManager.SourceFactor;
 import com.mojang.blaze3d.systems.RenderSystem;
@@ -15,12 +14,14 @@ import jobicade.betterhud.render.Quad;
 import net.minecraft.client.MainWindow;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.client.renderer.IRenderTypeBuffer;
 import net.minecraft.client.renderer.RenderHelper;
 import net.minecraft.entity.Entity;
 import net.minecraft.item.ItemStack;
 import net.minecraft.util.math.MathHelper;
 import net.minecraft.util.math.vector.Quaternion;
 import net.minecraft.util.math.vector.Vector3f;
+import net.minecraft.util.text.ITextComponent;
 import org.lwjgl.opengl.GL11;
 
 import java.util.EnumSet;
@@ -32,13 +33,13 @@ public final class GlUtil {
     /**
      * All axes default to {@code scale}
      *
-     * @see GlStateManager#scale(float, float, float)
+     * @see MatrixStack#scale(float, float, float) 
      */
     public static void scale(MatrixStack matrixStack, float scale) {
         matrixStack.scale(scale, scale, scale);
     }
 
-    /** @see AbstractGui#drawRect(int, int, int, int, int) */
+    /** @see AbstractGui#fill(MatrixStack, int, int, int, int, int)  */
     public static void drawRect(Rect bounds, Color color) {
         new Quad().setColor(color).setBounds(bounds).render();
     }
@@ -97,9 +98,9 @@ public final class GlUtil {
     /** Renders {@code stack} to the GUI, and reverts lighting side effects
      * OpenGL side-effect: disables depth and item lighting
      *
-     * @see RenderHelper#enableGUIStandardItemLighting()
-     * @see net.minecraft.client.renderer.RenderItem#renderItemAndEffectIntoGUI(ItemStack, int, int)
-     * @see RenderHelper#disableStandardItemLighting() */
+     * @see RenderHelper#turnBackOn()
+     * @see net.minecraft.client.renderer.ItemRenderer#renderAndDecorateItem(ItemStack, int, int)
+     * @see RenderHelper#turnOff()  */
     public static void renderSingleItem(ItemStack stack, int x, int y) {
         RenderSystem.enableDepthTest();
         RenderHelper.turnBackOn();
@@ -180,7 +181,7 @@ public final class GlUtil {
      * <p>This is similar to the method used to render player names, but any functionality can be implemented
      *
      * @param scaleFactor Linearly affects the size of things drawn to the billboard
-     * @see net.minecraft.client.renderer.EntityRenderer#drawNameplate(net.minecraft.client.gui.FontRenderer, String, float, float, float, int, float, float, boolean, boolean) */
+     * @see net.minecraft.client.renderer.entity.EntityRenderer#renderNameTag(Entity, ITextComponent, MatrixStack, IRenderTypeBuffer, int) */
     public static void setupBillboard(MatrixStack matrixStack, Entity entity, float partialTicks, float scaleFactor) {
         double dx = (entity.xo + (entity.getX() - entity.xo) * partialTicks) - (Minecraft.getInstance().player.xo + (Minecraft.getInstance().player.getX() - Minecraft.getInstance().player.xo) * partialTicks);
         double dy = (entity.yo + (entity.getY() - entity.yo) * partialTicks) - (Minecraft.getInstance().player.yo + (Minecraft.getInstance().player.getY() - Minecraft.getInstance().player.yo) * partialTicks);
@@ -261,18 +262,17 @@ public final class GlUtil {
 
     /**
      * OpenGL side-effect: color set to white, texture set to Gui.ICONS
-     * @see #drawString(String, Point, Direction, int)
      */
-    public static Rect drawString(String string, Point origin, Direction alignment, Color color) {
-        Label label = new Label(string).setColor(color);
+    public static Rect drawString(MatrixStack matrixStack, String string, Point origin, Direction alignment, Color color) {
+        Label label = new Label(matrixStack, string).setColor(color);
         Rect bounds = new Rect(label.getPreferredSize()).align(origin, alignment);
         label.setBounds(bounds).render();
         return bounds;
     }
 
     /**
-     * Fixes a GlStateManager bug where calling {@link GlStateManager#blendFunc(SourceFactor, DestFactor)}
-     * causes a desync, and can ignore calls to {@link GlStateManager#tryBlendFuncSeparate(SourceFactor, DestFactor, SourceFactor, DestFactor)}
+     * Fixes a GlStateManager bug where calling {@link RenderSystem#blendFunc(SourceFactor, DestFactor)}
+     * causes a desync, and can ignore calls to {@link RenderSystem#blendFuncSeparate(SourceFactor, DestFactor, SourceFactor, DestFactor)}
      * when the cache thinks srcFactorAlpha and dstFactorAlpha haven't been changed by blendFunc (they have).
      *
      * <p>Fix in vanilla: add these lines:

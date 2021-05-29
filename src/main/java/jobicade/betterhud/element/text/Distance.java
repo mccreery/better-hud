@@ -62,10 +62,10 @@ public class Distance extends TextElement {
 
     @Override
     protected List<String> getText() {
-        RayTraceResult trace = Minecraft.getInstance().getCameraEntity().func_174822_a(200, 1.0F);
+        RayTraceResult trace = Minecraft.getInstance().getCameraEntity().pick(200, 1.0F, false);
 
         if(trace != null) {
-            long distance = Math.round(Math.sqrt(trace.func_178782_a().func_177957_d(Minecraft.getInstance().player.getX(), Minecraft.getInstance().player.getY(), Minecraft.getInstance().player.getZ())));
+            long distance = Math.round(Math.sqrt(trace.getLocation().distanceToSqr(Minecraft.getInstance().player.getX(), Minecraft.getInstance().player.getY(), Minecraft.getInstance().player.getZ())));
 
             if(mode.getIndex() == 2) {
                 return Arrays.asList(String.valueOf(distance));

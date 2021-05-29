@@ -1,5 +1,6 @@
 package jobicade.betterhud.element.vanilla;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -12,17 +13,20 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.screen.inventory.ContainerScreen;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.potion.Effect;
 import net.minecraft.potion.EffectInstance;
-import net.minecraft.potion.Potion;
+import net.minecraft.potion.EffectUtils;
 import net.minecraft.util.math.MathHelper;
 
 public class PotionIcon extends DefaultBoxed {
+    private final MatrixStack matrixStack;
     private final EffectInstance effect;
-    private final Potion potion;
+    private final Effect potion;
 
     private final boolean showDuration;
 
-    public PotionIcon(EffectInstance effect, boolean showDuration) {
+    public PotionIcon(MatrixStack matrixStack, EffectInstance effect, boolean showDuration) {
+        this.matrixStack = matrixStack;
         this.effect = effect;
         this.potion = effect.getEffect();
         this.showDuration = showDuration;
@@ -40,23 +44,24 @@ public class PotionIcon extends DefaultBoxed {
         iconColor.apply();
         Rect iconInnerBounds = new Rect(18, 18).anchor(iconBounds, Direction.CENTER);
 
-        if(potion.func_76400_d()) {
-            int index = potion.func_76392_e();
-            Rect icon = new Rect((index % 8) * 18, 198 + (index / 8) * 18, 18, 18);
-
-            new Quad().setTexture(icon).setBounds(iconInnerBounds).render();
-        }
-        potion.renderHUDEffect(iconBounds.getX(), iconBounds.getY(), effect, Minecraft.getInstance(), iconColor.getAlpha() / 255.0f);
+        // TODO potion icon?
+//        if(potion.func_76400_d()) {
+//            int index = potion.func_76392_e();
+//            Rect icon = new Rect((index % 8) * 18, 198 + (index / 8) * 18, 18, 18);
+//
+//            new Quad().setTexture(icon).setBounds(iconInnerBounds).render();
+//        }
+        potion.renderHUDEffect(effect, Minecraft.getInstance().gui, matrixStack, iconBounds.getX(), iconBounds.getY(), 0, iconColor.getAlpha() / 255.0f);
 
         String levelLabel = getLevelLabel();
         if(levelLabel != null) {
-            Label label = new Label(levelLabel);
+            Label label = new Label(matrixStack, levelLabel);
             label.setBounds(new Rect(label.getPreferredSize()).anchor(iconInnerBounds, Direction.SOUTH_EAST)).render();
         }
 
         String durationLabel = getDurationLabel();
         if(durationLabel != null) {
-            Label label = new Label(durationLabel);
+            Label label = new Label(matrixStack, durationLabel);
             label.setBounds(new Rect(label.getPreferredSize()).anchor(iconBounds.grow(2), Direction.SOUTH, true)).render();
         }
 
@@ -68,7 +73,7 @@ public class PotionIcon extends DefaultBoxed {
     public Size negotiateSize(Point size) {
         String label = getDurationLabel();
         if(label == null) return new Size(24, 24);
-        Size labelSize = new Label(label).getPreferredSize();
+        Size labelSize = new Label(null, label).getPreferredSize();
 
         int width = Math.max(24, labelSize.getWidth());
         return new Size(width, 26 + labelSize.getHeight());
@@ -76,7 +81,7 @@ public class PotionIcon extends DefaultBoxed {
 
     private String getDurationLabel() {
         if(potion.shouldRenderInvText(effect) && showDuration) {
-            return Potion.formatDuration(effect, 1.0f);
+            return EffectUtils.formatDuration(effect, 1.0f);
         } else {
             return null;
         }

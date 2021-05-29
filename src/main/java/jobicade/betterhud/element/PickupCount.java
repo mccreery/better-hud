@@ -1,5 +1,6 @@
 package jobicade.betterhud.element;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingPosition;
@@ -18,7 +19,7 @@ import net.minecraft.client.resources.I18n;
 import net.minecraft.item.ItemStack;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.Event;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.items.ItemHandlerHelper;
 import org.apache.maven.artifact.versioning.InvalidVersionSpecificationException;
 import org.apache.maven.artifact.versioning.VersionRange;
@@ -46,7 +47,7 @@ public class PickupCount extends HudElement {
     }
 
     @Override
-    public void init(FMLInitializationEvent event) {
+    public void init(FMLClientSetupEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -145,10 +146,15 @@ public class PickupCount extends HudElement {
     private class StackNode extends DefaultBoxed {
         private final ItemStack stack;
         private long updateCounter;
+        private MatrixStack matrixStack;
 
         public StackNode(ItemStack stack) {
             this.stack = stack;
             this.updateCounter = Minecraft.getInstance().gui.getGuiTicks();
+        }
+
+        public void setMatrixStack(MatrixStack matrixStack) {
+            this.matrixStack = matrixStack;
         }
 
         public void increaseStackSize(int size) {
@@ -157,7 +163,7 @@ public class PickupCount extends HudElement {
         }
 
         private Label getLabel() {
-            return new Label(stack.getCount() + " " + stack.func_82833_r())
+            return new Label(matrixStack, stack.getCount() + " " + stack.getDisplayName())
                 .setColor(Color.WHITE.withAlpha(Math.round(getOpacity() * 255)));
         }
 

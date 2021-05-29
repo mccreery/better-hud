@@ -11,8 +11,8 @@ import net.minecraft.client.resources.I18n;
 import net.minecraftforge.client.event.InputEvent.MouseInputEvent;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
-import org.lwjgl.input.Mouse;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
+import org.lwjgl.glfw.GLFW;
 
 import java.util.Arrays;
 import java.util.List;
@@ -56,14 +56,14 @@ public class CpsCount extends TextElement implements Tickable {
     }
 
     @Override
-    public void init(FMLInitializationEvent event) {
+    public void init(FMLClientSetupEvent event) {
         Ticker.FAST.register(this);
         MinecraftForge.EVENT_BUS.register(this);
     }
 
     @SubscribeEvent
     public void onClick(MouseInputEvent event) {
-        if(Mouse.getEventButton() != -1 && Mouse.getEventButtonState()) {
+        if (event.getAction() == GLFW.GLFW_PRESS) {
             ++clickHistory[i];
         }
     }

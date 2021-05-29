@@ -1,5 +1,6 @@
 package jobicade.betterhud.gui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
@@ -7,6 +8,7 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.SortField;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.ResourceLocation;
 
@@ -32,13 +34,13 @@ class SortButton extends GuiActionButton {
     }
 
     @Override
-    protected int func_146114_a(boolean mouseOver) {
-        return isTargeted() ? 2 : super.func_146114_a(mouseOver);
+    protected int getYImage(boolean mouseOver) {
+        return isTargeted() ? 2 : super.getYImage(mouseOver);
     }
 
     @Override
-    protected void drawButton(Rect bounds, Point mousePosition, float partialTicks) {
-        super.drawButton(bounds, mousePosition, partialTicks);
+    protected void drawButton(MatrixStack matrixStack, Rect bounds, Point mousePosition, float partialTicks) {
+        super.drawButton(matrixStack, bounds, mousePosition, partialTicks);
 
         if(isTargeted()) {
             Rect texture = callback.isDescending() ? DOWN_TEXTURE : UP_TEXTURE;
@@ -46,7 +48,7 @@ class SortButton extends GuiActionButton {
 
             Minecraft.getInstance().getTextureManager().bind(ARROW_TEXTURE);
             GlUtil.drawRect(arrow, texture);
-            Minecraft.getInstance().getTextureManager().bind(field_110324_m);
+            Minecraft.getInstance().getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
         }
     }
 }

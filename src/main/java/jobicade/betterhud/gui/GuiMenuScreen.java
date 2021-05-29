@@ -1,28 +1,26 @@
 package jobicade.betterhud.gui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.util.text.StringTextComponent;
 
 public class GuiMenuScreen extends Screen {
     private Point origin;
     private String title;
 
-    @Override
-    protected void func_146284_a(Button button) {
-        if(button instanceof GuiActionButton) {
-            ((GuiActionButton)button).actionPerformed();
-        }
+    public GuiMenuScreen() {
+        super(StringTextComponent.EMPTY);
     }
 
     @Override
-    public void func_146280_a(Minecraft mc, int width, int height) {
+    public void init(Minecraft minecraft, int width, int height) {
+        super.init(minecraft, width, height);
         this.origin = new Point(width / 2, height / 16 + 20);
-        super.func_146280_a(mc, width, height);
     }
 
     protected Point getOrigin() {
@@ -33,16 +31,16 @@ public class GuiMenuScreen extends Screen {
         this.title = title;
     }
 
-    protected void drawTitle() {
+    protected void drawTitle(MatrixStack matrixStack) {
         if(title != null) {
-            GlUtil.drawString(title, origin.sub(0, 15), Direction.NORTH, Color.WHITE);
+            GlUtil.drawString(matrixStack, title, origin.sub(0, 15), Direction.NORTH, Color.WHITE);
         }
     }
 
     @Override
-    public void func_73863_a(int mouseX, int mouseY, float partialTicks) {
-        this.func_146276_q_();
-        this.drawTitle();
-        super.func_73863_a(mouseX, mouseY, partialTicks);
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        this.renderBackground(matrixStack);
+        this.drawTitle(matrixStack);
+        super.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 }

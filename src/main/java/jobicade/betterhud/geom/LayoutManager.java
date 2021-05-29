@@ -1,6 +1,6 @@
 package jobicade.betterhud.geom;
 
-import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.MainWindow;
 import net.minecraftforge.client.gui.ForgeIngameGui;
 
 import java.util.HashMap;
@@ -12,8 +12,8 @@ public class LayoutManager {
     private final Map<Direction, Integer> corners = new HashMap<Direction, Integer>();
     private Rect screen;
 
-    public void reset(ScaledResolution scaledResolution) {
-        reset(new Point(scaledResolution));
+    public void reset(MainWindow mainWindow) {
+        reset(new Point(mainWindow));
     }
 
     public void reset(Point resolution) {

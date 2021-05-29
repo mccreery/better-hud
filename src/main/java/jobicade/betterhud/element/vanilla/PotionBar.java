@@ -1,5 +1,6 @@
 package jobicade.betterhud.element.vanilla;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
@@ -21,7 +22,7 @@ import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -53,7 +54,7 @@ public class PotionBar extends HudElement {
     }
 
     @Override
-    public void init(FMLInitializationEvent event) {
+    public void init(FMLClientSetupEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -71,7 +72,7 @@ public class PotionBar extends HudElement {
 
     @Override
     public Rect render(Event event) {
-        Boxed grid = getGrid();
+        Boxed grid = getGrid(((RenderGameOverlayEvent)event).getMatrixStack());
 
         Rect bounds = new Rect(grid.getPreferredSize());
         if(position.isDirection(Direction.CENTER)) {
@@ -95,13 +96,13 @@ public class PotionBar extends HudElement {
         harmful.sort(Collections.reverseOrder());
     }
 
-    private void fillRow(Grid<? super PotionIcon> grid, int row, List<EffectInstance> effects) {
+    private void fillRow(MatrixStack matrixStack, Grid<? super PotionIcon> grid, int row, List<EffectInstance> effects) {
         for(int i = 0; i < effects.size(); i++) {
-            grid.setCell(new Point(i, row), new PotionIcon(effects.get(i), showDuration.get()));
+            grid.setCell(new Point(i, row), new PotionIcon(matrixStack, effects.get(i), showDuration.get()));
         }
     }
 
-    private Boxed getGrid() {
+    private Boxed getGrid(MatrixStack matrixStack) {
         List<EffectInstance> helpful = new ArrayList<>(), harmful = new ArrayList<>();
         populateEffects(helpful, harmful);
 
@@ -114,8 +115,8 @@ public class PotionBar extends HudElement {
         grid.setGutter(new Point(1, 2));
 
         int row = 0;
-        if(!helpful.isEmpty()) fillRow(grid, row++, helpful);
-        if(!harmful.isEmpty()) fillRow(grid, row++, harmful);
+        if(!helpful.isEmpty()) fillRow(matrixStack, grid, row++, helpful);
+        if(!harmful.isEmpty()) fillRow(matrixStack, grid, row++, harmful);
 
         return grid;
     }

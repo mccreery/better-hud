@@ -3,6 +3,7 @@ package jobicade.betterhud.element.settings;
 import com.google.gson.JsonElement;
 import com.google.gson.JsonNull;
 import com.google.gson.JsonPrimitive;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -15,6 +16,7 @@ import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Map;
 
@@ -88,7 +90,7 @@ public class SettingDirection extends SettingAlignable<Direction> {
 
     @Override
     public void actionPerformed(GuiElementSettings gui, Button button) {
-        value = Direction.values()[button.field_146127_k];
+        value = Direction.values()[Arrays.binarySearch(toggles, button)];
     }
 
     @Override
@@ -97,8 +99,8 @@ public class SettingDirection extends SettingAlignable<Direction> {
         boolean enabled = enabled();
 
         for(GuiActionButton button : toggles) {
-            button.glowing = value != null && button.field_146127_k == value.ordinal();
-            button.field_146124_l = button.glowing || enabled && options.isValid(Direction.values()[button.field_146127_k]);
+            button.glowing = value != null && toggles[value.ordinal()] == button;
+            button.active = button.glowing || enabled && options.isValid(Direction.values()[Arrays.binarySearch(toggles, button)]);
         }
     }
 
@@ -107,9 +109,9 @@ public class SettingDirection extends SettingAlignable<Direction> {
         String text = getText();
 
         if(horizontal) {
-            GlUtil.drawString(text, bounds.withWidth(60 + SPACER).getAnchor(Direction.EAST), Direction.WEST, Color.WHITE);
+            GlUtil.drawString(new MatrixStack(), text, bounds.withWidth(60 + SPACER).getAnchor(Direction.EAST), Direction.WEST, Color.WHITE);
         } else {
-            GlUtil.drawString(text, bounds.getAnchor(Direction.NORTH), Direction.NORTH, Color.WHITE);
+            GlUtil.drawString(new MatrixStack(), text, bounds.getAnchor(Direction.NORTH), Direction.NORTH, Color.WHITE);
         }
     }
 

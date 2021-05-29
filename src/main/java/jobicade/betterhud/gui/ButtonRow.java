@@ -26,8 +26,9 @@ class ButtonRow {
             element.toggle();
             HudElement.SORTER.markDirty(SortType.ENABLED);
 
-            if(Minecraft.getInstance().screen != null) {
-                Minecraft.getInstance().screen.func_73866_w_();
+            Screen screen = Minecraft.getInstance().screen;
+            if(screen != null) {
+                screen.init(Minecraft.getInstance(), screen.width, screen.height);
             }
         });
         options = new GuiTexturedButton(new Rect(40, 0, 20, 20)).setCallback(b ->
@@ -52,12 +53,12 @@ class ButtonRow {
     public ButtonRow update() {
         boolean supported = element.isSupportedByServer();
 
-        toggle.field_146124_l = supported;
+        toggle.active = supported;
         toggle.glowing = element.get();
         toggle.updateText(element.getUnlocalizedName(), "options", element.get());
-        toggle.setTooltip(toggle.field_146124_l ? null : I18n.get("betterHud.menu.unsupported"));
+        toggle.setTooltip(toggle.active ? null : I18n.get("betterHud.menu.unsupported"));
 
-        options.field_146124_l = supported && element.get() && !element.settings.isEmpty();
+        options.active = supported && element.get() && !element.settings.isEmpty();
 
         return this;
     }

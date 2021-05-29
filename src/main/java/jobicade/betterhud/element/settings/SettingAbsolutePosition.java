@@ -12,7 +12,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.widget.TextFieldWidget;
 import net.minecraft.client.gui.widget.button.Button;
-import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.StringTextComponent;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.Collection;
 import java.util.List;
@@ -45,9 +46,9 @@ public class SettingAbsolutePosition extends Setting<Point> {
 
     @Override
     public Point getGuiParts(List<AbstractGui> parts, Map<AbstractGui, Setting<?>> callbacks, Point origin) {
-        parts.add(xBox = new TextFieldWidget(0, Minecraft.getInstance().font, origin.getX() - 106, origin.getY() + 1, 80, 18));
+        parts.add(xBox = new TextFieldWidget(Minecraft.getInstance().font, origin.getX() - 106, origin.getY() + 1, 80, 18, StringTextComponent.EMPTY.copy()));
         xBox.setValue(String.valueOf(x));
-        parts.add(yBox = new TextFieldWidget(0, Minecraft.getInstance().font, origin.getX() + 2, origin.getY() + 1, 80, 18));
+        parts.add(yBox = new TextFieldWidget(Minecraft.getInstance().font, origin.getX() + 2, origin.getY() + 1, 80, 18, StringTextComponent.EMPTY.copy()));
         yBox.setValue(String.valueOf(y));
 
         parts.add(xUp   = new GuiUpDownButton(true ).setBounds(new Rect(origin.getX() - 22, origin.getY(),      0, 0)).setId(0).setRepeat());
@@ -56,7 +57,7 @@ public class SettingAbsolutePosition extends Setting<Point> {
         parts.add(yDown = new GuiUpDownButton(false).setBounds(new Rect(origin.getX() + 86, origin.getY() + 10, 0, 0)).setId(3).setRepeat());
 
         if(position != null) {
-            parts.add(pick = new Button(4, origin.getX() - 100, origin.getY() + 22, 200, 20, I18n.get("betterHud.menu.pick")));
+            parts.add(pick = new Button(origin.getX() - 100, origin.getY() + 22, 200, 20, new TranslationTextComponent("betterHud.menu.pick"), null));
             callbacks.put(pick, this);
         }
 
@@ -79,7 +80,7 @@ public class SettingAbsolutePosition extends Setting<Point> {
 
     @Override
     public void actionPerformed(GuiElementSettings gui, Button button) {
-        switch(button.field_146127_k) {
+        switch(0) {
             case 0: xBox.setValue(String.valueOf(++x)); break;
             case 1: xBox.setValue(String.valueOf(--x)); break;
             case 2: yBox.setValue(String.valueOf(++y)); break;
@@ -128,26 +129,26 @@ public class SettingAbsolutePosition extends Setting<Point> {
         xBox.setEditable(enabled);
         yBox.setEditable(enabled);
 
-        if(pick != null) pick.field_146124_l = enabled;
+        if(pick != null) pick.active = enabled;
 
         if(enabled) {
             try {
                 x = Integer.parseInt(xBox.getValue());
-                xUp.field_146124_l = xDown.field_146124_l = true;
+                xUp.active = xDown.active = true;
             } catch(NumberFormatException e) {
                 x = 0;
-                xUp.field_146124_l = xDown.field_146124_l = false;
+                xUp.active = xDown.active = false;
             }
 
             try {
                 y = Integer.parseInt(yBox.getValue());
-                yUp.field_146124_l = yDown.field_146124_l = true;
+                yUp.active = yDown.active = true;
             } catch(NumberFormatException e) {
                 y = 0;
-                yUp.field_146124_l = yDown.field_146124_l = false;
+                yUp.active = yDown.active = false;
             }
         } else {
-            xUp.field_146124_l = xDown.field_146124_l = yUp.field_146124_l = yDown.field_146124_l = false;
+            xUp.active = xDown.active = yUp.active = yDown.active = false;
         }
     }
 }

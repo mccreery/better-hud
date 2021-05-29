@@ -2,6 +2,7 @@ package jobicade.betterhud.element.settings;
 
 import com.google.gson.JsonElement;
 import com.google.gson.JsonPrimitive;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -11,6 +12,7 @@ import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.StringTextComponent;
 import org.apache.commons.lang3.ArrayUtils;
 
 import java.util.Collection;
@@ -90,10 +92,10 @@ public class SettingChoose extends SettingAlignable<String> {
 
     @Override
     public void getGuiParts(List<AbstractGui> parts, Map<AbstractGui, Setting<?>> callbacks, Rect bounds) {
-        parts.add(backing = new Button(2, bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), ""));
-        parts.add(last = new Button(0, bounds.getLeft(), bounds.getY(), 20, bounds.getHeight(), "<"));
-        parts.add(next = new Button(1, bounds.getRight() - 20, bounds.getY(), 20, bounds.getHeight(), ">"));
-        backing.field_146124_l = false;
+        parts.add(backing = new Button(bounds.getX(), bounds.getY(), bounds.getWidth(), bounds.getHeight(), StringTextComponent.EMPTY, null));
+        parts.add(last = new Button(bounds.getLeft(), bounds.getY(), 20, bounds.getHeight(), new StringTextComponent("<"), b -> last()));
+        parts.add(next = new Button( bounds.getRight() - 20, bounds.getY(), 20, bounds.getHeight(), new StringTextComponent(">"), b -> next()));
+        backing.active = false;
 
         callbacks.put(last, this);
         callbacks.put(next, this);
@@ -114,19 +116,17 @@ public class SettingChoose extends SettingAlignable<String> {
     }
 
     @Override
-    public void draw() {
-        Point center = new Point(backing.field_146128_h + backing.field_146120_f / 2, backing.field_146129_i + backing.field_146121_g / 2);
-        GlUtil.drawString(getLocalizedValue(), center, Direction.CENTER, Color.WHITE);
+    public void actionPerformed(GuiElementSettings gui, Button button) {
     }
 
     @Override
-    public void actionPerformed(GuiElementSettings gui, Button button) {
-        if(button.field_146127_k == 0) last();
-        else next();
+    public void draw() {
+        Point center = new Point(backing.x + backing.getWidth() / 2, backing.y + backing.getHeight() / 2);
+        GlUtil.drawString(new MatrixStack(), getLocalizedValue(), center, Direction.CENTER, Color.WHITE);
     }
 
     @Override
     public void updateGuiParts(Collection<Setting<?>> settings) {
-        last.field_146124_l = next.field_146124_l = enabled();
+        last.active = next.active = enabled();
     }
 }

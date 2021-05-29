@@ -1,5 +1,6 @@
 package jobicade.betterhud.element.text;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.Setting;
@@ -14,6 +15,7 @@ import jobicade.betterhud.render.Grid;
 import jobicade.betterhud.render.Label;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.Event;
 
 import java.text.DecimalFormat;
@@ -55,7 +57,8 @@ public class Coordinates extends TextElement {
             return super.render(event, text);
         }
 
-        Grid<Label> grid = new Grid<>(new Point(3, 1), text.stream().map(Label::new).collect(Collectors.toList()))
+        MatrixStack matrixStack = ((RenderGameOverlayEvent)event).getMatrixStack();
+        Grid<Label> grid = new Grid<>(new Point(3, 1), text.stream().map(s -> new Label(matrixStack, s)).collect(Collectors.toList()))
             .setCellAlignment(position.getDirection()).setGutter(new Point(5, 5));
 
         Size size = grid.getPreferredSize();

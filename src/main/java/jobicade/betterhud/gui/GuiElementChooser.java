@@ -6,8 +6,6 @@ import jobicade.betterhud.geom.Rect;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
 
-import java.io.IOException;
-
 public class GuiElementChooser extends GuiElements {
     private final Screen parent;
     private final HudElement element;
@@ -21,21 +19,24 @@ public class GuiElementChooser extends GuiElements {
     }
 
     @Override
-    protected void func_73869_a(char typedChar, int keyCode) throws IOException {
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if(keyCode == 1) {
             setting.set(null);
             Minecraft.getInstance().setScreen(parent);
+            return true;
         }
+        return false;
     }
 
     @Override
-    protected void func_73864_a(int mouseX, int mouseY, int mouseButton) throws IOException {
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
         Minecraft.getInstance().setScreen(parent);
+        return true;
     }
 
     @Override
-    public void func_73863_a(int mouseX, int mouseY, float partialTicks) {
-        HudElement selected = getHoveredElement(mouseX, mouseY, (HudElement element) -> {
+    public void mouseMoved(double mouseX, double mouseY) {
+        HudElement selected = getHoveredElement((int)mouseX, (int)mouseY, (HudElement element) -> {
             return element == this.element;
         });
         setting.set(selected);

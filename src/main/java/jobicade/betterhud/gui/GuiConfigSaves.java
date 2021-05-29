@@ -1,5 +1,6 @@
 package jobicade.betterhud.gui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import jobicade.betterhud.config.ConfigManager;
 import jobicade.betterhud.config.ConfigSlot;
 import jobicade.betterhud.config.FileConfigSlot;
@@ -13,11 +14,10 @@ import jobicade.betterhud.render.Grid;
 import jobicade.betterhud.render.Label;
 import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.gui.ScaledResolution;
 import net.minecraft.client.gui.screen.Screen;
 import net.minecraft.client.gui.widget.TextFieldWidget;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.StringTextComponent;
 import org.apache.commons.lang3.StringUtils;
 import org.lwjgl.opengl.GL11;
 
@@ -41,6 +41,7 @@ public class GuiConfigSaves extends Screen {
     private GuiActionButton load, save;
 
     public GuiConfigSaves(ConfigManager manager, Screen previous) {
+        super(new StringTextComponent(""));
         this.previous = previous;
         this.manager = manager;
     }
@@ -55,8 +56,8 @@ public class GuiConfigSaves extends Screen {
 
     private void updateSelected() {
         selected = getSelectedEntry();
-        load.field_146124_l = selected != null;
-        save.field_146124_l = selected != null && selected.isDest();
+        load.active = selected != null;
+        save.active = selected != null && selected.isDest();
     }
 
     private void save() {
@@ -79,12 +80,12 @@ public class GuiConfigSaves extends Screen {
     }
 
     @Override
-    public void func_73866_w_() {
-        super.func_73866_w_();
+    public void init() {
+        super.init();
 
-        Point origin = new Point(field_146294_l / 2, field_146295_m / 16 + 20);
+        Point origin = new Point(width / 2, height / 16 + 20);
 
-        field_146292_n.add(new GuiActionButton(I18n.get("gui.done"))
+        buttons.add(new GuiActionButton(I18n.get("gui.done"))
             .setCallback(b -> Minecraft.getInstance().setScreen(previous))
             .setBounds(new Rect(200, 20).align(origin, Direction.NORTH)));
 
@@ -94,17 +95,17 @@ public class GuiConfigSaves extends Screen {
         Rect fieldLine = new Rect(textField.getWidth() + (SPACER + smallButton.getWidth()) * 2, 20).align(origin.add(0, 20 + SPACER), Direction.NORTH);
         textField = textField.anchor(fieldLine, Direction.NORTH_WEST);
 
-        name = new TextFieldWidget(0, field_146289_q, textField.getX(), textField.getY(), textField.getWidth(), textField.getHeight());
+        name = new TextFieldWidget(font, textField.getX(), textField.getY(), textField.getWidth(), textField.getHeight(), StringTextComponent.EMPTY);
         name.setFocus(true);
         name.setCanLoseFocus(false);
 
         smallButton = smallButton.move(textField.getAnchor(Direction.NORTH_EAST).add(SPACER, 0));
-        field_146292_n.add(load = new GuiActionButton("Load").setCallback(b -> load()).setBounds(smallButton));
+        buttons.add(load = new GuiActionButton("Load").setCallback(b -> load()).setBounds(smallButton));
 
         smallButton = smallButton.move(smallButton.getAnchor(Direction.NORTH_EAST).add(SPACER, 0));
-        field_146292_n.add(save = new GuiActionButton("Save").setCallback(b -> save()).setBounds(smallButton));
+        buttons.add(save = new GuiActionButton("Save").setCallback(b -> save()).setBounds(smallButton));
 
-        viewport = new Rect(400, 0).align(fieldLine.getAnchor(Direction.SOUTH).add(0, SPACER), Direction.NORTH).withBottom(field_146295_m - 20);
+        viewport = new Rect(400, 0).align(fieldLine.getAnchor(Direction.SOUTH).add(0, SPACER), Direction.NORTH).withBottom(height - 20);
         scrollbar = new GuiScrollbar(viewport, 0);
         updateList();
     }
@@ -119,60 +120,58 @@ public class GuiConfigSaves extends Screen {
     }
 
     @Override
-    public void func_73876_c() {
-        super.func_73876_c();
+    public void tick() {
+        super.tick();
         name.tick();
     }
 
     @Override
-    protected void func_73869_a(char typedChar, int keyCode) throws IOException {
-        super.func_73869_a(typedChar, keyCode);
-        name.func_146201_a(typedChar, keyCode);
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
+        super.keyPressed(keyCode, scanCode, modifiers);
+        name.keyPressed(keyCode, scanCode, modifiers);
         updateSelected();
+        return false;
     }
 
     @Override
-    protected void func_73864_a(int mouseX, int mouseY, int mouseButton) throws IOException {
-        super.func_73864_a(mouseX, mouseY, mouseButton);
+    public boolean mouseClicked(double mouseX, double mouseY, int mouseButton) {
+        super.mouseClicked(mouseX, mouseY, mouseButton);
 
-        name.func_146192_a(mouseX, mouseY, mouseButton);
+        name.mouseClicked(mouseX, mouseY, mouseButton);
         scrollbar.mouseClicked(mouseX, mouseY, mouseButton);
 
-        if(viewport.contains(mouseX, mouseY)) {
+        if(viewport.contains((int)mouseX, (int)mouseY)) {
             for(int i = 0; i < list.getSource().size(); i++) {
                 Rect listBounds = getListBounds();
 
-                if(list.getCellBounds(listBounds, new Point(0, i)).contains(mouseX, mouseY)) {
+                if(list.getCellBounds(listBounds, new Point(0, i)).contains((int)mouseX, (int)mouseY)) {
                     name.setValue(list.getSource().get(i).entry.getName());
                     updateSelected();
                 }
             }
         }
+        return false;
     }
 
     @Override
-    protected void func_146273_a(int mouseX, int mouseY, int button, long heldTime) {
-        super.func_146273_a(mouseX, mouseY, button, heldTime);
-        scrollbar.mouseClickMove(mouseX, mouseY, button, heldTime);
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double p_231045_6_, double p_231045_8_) {
+        super.mouseDragged(mouseX, mouseY, button, p_231045_6_, p_231045_8_);
+        scrollbar.mouseClickMove((int)mouseX, (int)mouseY, button, 0);
+        return false;
     }
 
     @Override
-    public void func_146286_b(int mouseX, int mouseY, int button) {
-        super.func_146286_b(mouseX, mouseY, button);
-        scrollbar.mouseReleased(mouseX, mouseY, button);
+    public boolean mouseReleased(double mouseX, double mouseY, int button) {
+        super.mouseReleased(mouseX, mouseY, button);
+        scrollbar.mouseReleased((int)mouseX, (int)mouseY, button);
+        return false;
     }
 
     @Override
-    public void func_146274_d() throws IOException {
-        super.func_146274_d();
-        scrollbar.handleMouseInput();
-    }
-
-    @Override
-    protected void func_146284_a(Button button) throws IOException {
-        if(button instanceof GuiActionButton) {
-            ((GuiActionButton)button).actionPerformed();
-        }
+    public boolean mouseScrolled(double p_231043_1_, double p_231043_3_, double p_231043_5_) {
+        super.mouseScrolled(p_231043_1_, p_231043_3_, p_231043_5_);
+        scrollbar.mouseScrolled((int)p_231043_5_);
+        return false;
     }
 
     private Rect getListBounds() {
@@ -180,14 +179,17 @@ public class GuiConfigSaves extends Screen {
         return new Rect(list.getPreferredSize().withWidth(300)).align(origin, Direction.NORTH);
     }
 
+    private MatrixStack matrixStack;
+
     @Override
-    public void func_73863_a(int mouseX, int mouseY, float partialTicks) {
-        func_146276_q_();
-        super.func_73863_a(mouseX, mouseY, partialTicks);
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        this.matrixStack = matrixStack;
+        renderBackground(matrixStack);
+        super.render(matrixStack, mouseX, mouseY, partialTicks);
 
-        name.func_146194_f();
+        name.render(matrixStack, mouseX, mouseY, partialTicks);
 
-        Rect scissorRect = viewport.withY(field_146295_m - viewport.getBottom()).scale(new ScaledResolution(Minecraft.getInstance()).func_78325_e());
+        Rect scissorRect = viewport.withY(height - viewport.getBottom()).scale((int)Minecraft.getInstance().getWindow().getGuiScale());
         GL11.glEnable(GL11.GL_SCISSOR_TEST);
         GL11.glScissor(scissorRect.getX(), scissorRect.getY(), scissorRect.getWidth(), scissorRect.getHeight());
 
@@ -205,7 +207,7 @@ public class GuiConfigSaves extends Screen {
         private ListItem(ConfigSlot entry) {
             this.entry = entry;
 
-            this.label = new Label(entry.getName());
+            this.label = new Label(matrixStack, entry.getName());
             if(!entry.isDest()) label.setColor(Color.GRAY);
         }
 

@@ -1,9 +1,11 @@
 package jobicade.betterhud.element;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
 import jobicade.betterhud.element.settings.SettingPosition;
+import jobicade.betterhud.events.RenderMobInfoEvent;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -12,7 +14,6 @@ import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.entity.player.PlayerEntity;
 import net.minecraft.item.ArrowItem;
-import net.minecraft.item.BowItem;
 import net.minecraft.item.ItemStack;
 import net.minecraft.item.Items;
 import net.minecraftforge.eventbus.api.Event;
@@ -44,8 +45,7 @@ public class ArrowCount extends HudElement {
     }
 
     /** Note this method only cares about arrows which can be shot by a vanilla bow
-     * @return The number of arrows in the player's inventory
-     * @see BowItem#isArrow(ItemStack) */
+     * @return The number of arrows in the player's inventory */
     private int arrowCount(PlayerEntity player) {
         int count = 0;
 
@@ -91,6 +91,7 @@ public class ArrowCount extends HudElement {
 
     @Override
     public Rect render(Event event) {
+        MatrixStack matrixStack = ((RenderMobInfoEvent)event).getMatrixStack();
         int totalArrows = arrowCount(Minecraft.getInstance().player);
 
         if(overlay.get()) {
@@ -100,7 +101,7 @@ public class ArrowCount extends HudElement {
                 ItemStack stack = Minecraft.getInstance().player.inventory.getItem(i);
 
                 if(stack != null && stack.getItem() == Items.BOW) {
-                    drawCounter(stackRect, totalArrows);
+                    drawCounter(matrixStack, stackRect, totalArrows);
                 }
                 stackRect = stackRect.withX(stackRect.getX() + 20);
             }
@@ -108,24 +109,24 @@ public class ArrowCount extends HudElement {
             ItemStack stack = Minecraft.getInstance().player.inventory.getItem(40);
 
             if(stack != null && stack.getItem() == Items.BOW) {
-                drawCounter(new Rect(OFFHAND.getLastBounds().getPosition().add(3, 3), new Point(16, 16)), totalArrows);
+                drawCounter(matrixStack, new Rect(OFFHAND.getLastBounds().getPosition().add(3, 3), new Point(16, 16)), totalArrows);
             }
             return Rect.empty();
         } else {
             Rect bounds = position.applyTo(new Rect(16, 16));
 
             GlUtil.renderSingleItem(ARROW, bounds.getPosition());
-            drawCounter(bounds, totalArrows);
+            drawCounter(matrixStack, bounds, totalArrows);
 
             return bounds;
         }
     }
 
-    private static void drawCounter(Rect stackRect, int count) {
+    private static void drawCounter(MatrixStack matrixStack, Rect stackRect, int count) {
         String countDisplay = String.valueOf(count);
 
         Rect text = new Rect(GlUtil.getStringSize(countDisplay)).align(stackRect.grow(1, 1, 1, 2).getAnchor(Direction.NORTH_EAST), Direction.NORTH_EAST);
 
-        GlUtil.drawString(countDisplay, text.getPosition(), Direction.NORTH_WEST, Color.WHITE);
+        GlUtil.drawString(matrixStack, countDisplay, text.getPosition(), Direction.NORTH_WEST, Color.WHITE);
     }
 }

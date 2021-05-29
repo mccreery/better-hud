@@ -5,7 +5,8 @@ import jobicade.betterhud.render.Color;
 import net.minecraft.block.Blocks;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.renderer.texture.TextureMap;
+import net.minecraft.inventory.container.PlayerContainer;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.client.event.RenderGameOverlayEvent.ElementType;
 import net.minecraftforge.eventbus.api.Event;
 
@@ -42,11 +43,11 @@ public class PortalOverlay extends OverrideElement {
         }
 
         Color.WHITE.withAlpha(Math.round(timeInPortal * 255)).apply();
-        Minecraft.getInstance().getTextureManager().bind(TextureMap.LOCATION_BLOCKS);
+        Minecraft.getInstance().getTextureManager().bind(PlayerContainer.BLOCK_ATLAS);
 
         TextureAtlasSprite texture = Minecraft.getInstance().getBlockRenderer().getBlockModelShaper().getParticleIcon(Blocks.NETHER_PORTAL.defaultBlockState());
         Rect screen = MANAGER.getScreen();
-        Minecraft.getInstance().gui.func_175175_a(0, 0, texture, screen.getWidth(), screen.getHeight());
+        Minecraft.getInstance().gui.blit(((RenderGameOverlayEvent)event).getMatrixStack(), 0, 0, 0, screen.getWidth(), screen.getHeight(), texture);
 
         return null;
     }

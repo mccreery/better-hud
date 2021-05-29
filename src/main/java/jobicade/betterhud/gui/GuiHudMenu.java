@@ -1,5 +1,6 @@
 package jobicade.betterhud.gui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.config.ConfigManager;
 import jobicade.betterhud.element.HudElement;
@@ -13,6 +14,7 @@ import jobicade.betterhud.util.Paginator;
 import jobicade.betterhud.util.SortField;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.TranslationTextComponent;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -34,10 +36,10 @@ public class GuiHudMenu extends GuiMenuScreen {
     private final ButtonRow globalRow = new ButtonRow(this, HudElement.GLOBAL);
 
     private final GuiActionButton lastPage = new GuiActionButton(I18n.get("betterHud.menu.lastPage"))
-        .setCallback(b -> {paginator.previousPage(); func_73866_w_();});
+        .setCallback(b -> {paginator.previousPage(); init();});
 
     private final GuiActionButton nextPage = new GuiActionButton(I18n.get("betterHud.menu.nextPage"))
-        .setCallback(b -> {paginator.nextPage(); func_73866_w_();});
+        .setCallback(b -> {paginator.nextPage(); init();});
 
     private SortField<HudElement> sortCriteria = SortType.ALPHABETICAL;
     private boolean descending;
@@ -49,8 +51,9 @@ public class GuiHudMenu extends GuiMenuScreen {
     }
 
     @Override
-    public void func_146281_b() {
+    public void onClose() {
         BetterHud.getConfig().save();
+        super.onClose();
     }
 
     public SortField<HudElement> getSortCriteria() {
@@ -65,17 +68,17 @@ public class GuiHudMenu extends GuiMenuScreen {
         return HudElement.ELEMENTS.stream().allMatch(e -> e.get());
     }
 
-    public void func_73866_w_() {
+    public void init() {
         setTitle(I18n.get("betterHud.menu.hudSettings"));
         paginator.setData(HudElement.SORTER.getSortedData(sortCriteria, descending ^ sortCriteria.isInverted()));
-        paginator.setPageSize(Math.max(1, (int) Math.floor((field_146295_m / 8 * 7 - 134) / 24)));
+        paginator.setPageSize(Math.max(1, (int) Math.floor((height / 8 * 7 - 134) / 24)));
 
         addDefaultButtons();
         Rect buttonRect = new Rect(170, 20).align(getOrigin().add(0, 82), Direction.NORTH);
 
         for(HudElement element : paginator.getPage()) {
             ButtonRow row = getRow(element);
-            field_146292_n.addAll(row.getButtons());
+            buttons.addAll(row.getButtons());
 
             row.setBounds(buttonRect);
             row.update();
@@ -96,27 +99,27 @@ public class GuiHudMenu extends GuiMenuScreen {
         toggleAll.setBounds(thirdWidth.anchor(buttons, Direction.SOUTH_WEST));
         reorder.setBounds(thirdWidth.anchor(buttons,      Direction.SOUTH));
         resetDefaults.setBounds(thirdWidth.anchor(buttons, Direction.SOUTH_EAST));
-        toggleAll.field_146126_j = I18n.get(allEnabled() ? "betterHud.menu.disableAll" : "betterHud.menu.enableAll");
+        toggleAll.setMessage(new TranslationTextComponent(allEnabled() ? "betterHud.menu.disableAll" : "betterHud.menu.enableAll"));
 
-        lastPage.field_146124_l = paginator.hasPrevious();
-        nextPage.field_146124_l = paginator.hasNext();
+        lastPage.active = paginator.hasPrevious();
+        nextPage.active = paginator.hasNext();
 
-        buttons = buttons.align(new Point(field_146294_l / 2, field_146295_m - 20 - field_146295_m / 16), Direction.NORTH);
+        buttons = buttons.align(new Point(width / 2, height - 20 - height / 16), Direction.NORTH);
         lastPage.setBounds(thirdWidth.anchor(buttons, Direction.NORTH_WEST));
         nextPage.setBounds(thirdWidth.anchor(buttons, Direction.NORTH_EAST));
 
-        field_146292_n.clear();
+        this.buttons.clear();
 
-        field_146292_n.add(returnToGame);
-        field_146292_n.addAll(globalRow.getButtons());
+        this.buttons.add(returnToGame);
+        this.buttons.addAll(globalRow.getButtons());
         globalRow.update();
 
-        field_146292_n.add(toggleAll);
-        field_146292_n.add(reorder);
-        field_146292_n.add(resetDefaults);
+        this.buttons.add(toggleAll);
+        this.buttons.add(reorder);
+        this.buttons.add(resetDefaults);
 
-        field_146292_n.add(lastPage);
-        field_146292_n.add(nextPage);
+        this.buttons.add(lastPage);
+        this.buttons.add(nextPage);
 
         List<GuiActionButton> indexerControls = getIndexControls(SortType.values());
         Rect sortButton = new Rect(75, 20);
@@ -127,7 +130,7 @@ public class GuiHudMenu extends GuiMenuScreen {
             button.setBounds(sortButton);
             sortButton = sortButton.withX(sortButton.getRight() + SPACER);
         }
-        field_146292_n.addAll(indexerControls);
+        this.buttons.addAll(indexerControls);
     }
 
     private void setAll(boolean enabled) {
@@ -136,18 +139,18 @@ public class GuiHudMenu extends GuiMenuScreen {
         }
 
         HudElement.SORTER.markDirty(SortType.ENABLED);
-        func_73866_w_();
+        init();
     }
 
     @Override
-    public void func_73863_a(int mouseX, int mouseY, float p_73863_3_) {
-        super.func_73863_a(mouseX, mouseY, p_73863_3_);
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        super.render(matrixStack, mouseX, mouseY, partialTicks);
 
         int enabled = (int)HudElement.ELEMENTS.stream().filter(HudElement::get).count();
-        GlUtil.drawString(enabled + "/" + HudElement.ELEMENTS.size() + " enabled", new Point(SPACER, SPACER), Direction.NORTH_WEST, Color.WHITE);
+        GlUtil.drawString(matrixStack, enabled + "/" + HudElement.ELEMENTS.size() + " enabled", new Point(SPACER, SPACER), Direction.NORTH_WEST, Color.WHITE);
 
         String page = I18n.get("betterHud.menu.page", (paginator.getPageIndex() + 1) + "/" + paginator.getPageCount());
-        func_73732_a(field_146289_q, page, field_146294_l / 2, field_146295_m - field_146295_m / 16 - 13, Color.WHITE.getPacked());
+        drawCenteredString(matrixStack, font, page, width / 2, height - height / 16 - 13, Color.WHITE.getPacked());
     }
 
     private List<GuiActionButton> getIndexControls(SortField<HudElement>[] sortValues) {
@@ -171,6 +174,6 @@ public class GuiHudMenu extends GuiMenuScreen {
             descending = sortCriteria.isInverted();
         }
 
-        func_73866_w_();
+        init();
     }
 }

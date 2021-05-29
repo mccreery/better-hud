@@ -1,5 +1,6 @@
 package jobicade.betterhud.gui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
@@ -7,6 +8,7 @@ import jobicade.betterhud.render.Color;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.util.text.StringTextComponent;
 import net.minecraft.util.text.TextFormatting;
 
 public class GuiActionButton extends Button {
@@ -18,12 +20,12 @@ public class GuiActionButton extends Button {
     private String tooltip;
 
     public GuiActionButton(String buttonText) {
-        super(0, 0, 0, buttonText);
+        super(0, 0, 0, 0, new StringTextComponent(buttonText), null);
     }
 
     @Override
-    protected int func_146114_a(boolean mouseOver) {
-        int state = super.func_146114_a(mouseOver);
+    protected int getYImage(boolean mouseOver) {
+        int state = super.getYImage(mouseOver);
         return glowing && state == 1 ? 2 : state;
     }
 
@@ -46,34 +48,34 @@ public class GuiActionButton extends Button {
         return repeat;
     }
 
+    @Deprecated
     public GuiActionButton setId(int id) {
-        this.field_146127_k = id;
         return this;
     }
 
     public GuiActionButton setBounds(Rect bounds) {
-        this.field_146128_h = bounds.getX();
-        this.field_146129_i = bounds.getY();
-        this.field_146120_f = bounds.getWidth();
-        this.field_146121_g = bounds.getHeight();
+        this.x = bounds.getX();
+        this.y = bounds.getY();
+        this.width = bounds.getWidth();
+        this.height = bounds.getHeight();
 
         return this;
     }
 
     public Rect getBounds() {
-        return new Rect(field_146128_h, field_146129_i, field_146120_f, field_146121_g);
+        return new Rect(x, y, width, height);
     }
 
     public final void actionPerformed() {
         if(callback != null) callback.actionPerformed(this);
     }
 
-    protected void drawButton(Rect bounds, Point mousePosition, float partialTicks) {
-        super.func_191745_a(Minecraft.getInstance(), mousePosition.getX(), mousePosition.getY(), partialTicks);
+    protected void drawButton(MatrixStack matrixStack, Rect bounds, Point mousePosition, float partialTicks) {
+        super.render(matrixStack, mousePosition.getX(), mousePosition.getY(), partialTicks);
     }
 
     public void updateText(String name, String value) {
-        this.field_146126_j = name + ": " + value;
+        this.setMessage(new StringTextComponent(name + ": " + value));
     }
 
     public void updateText(String unlocalizedName, String valuePrefix, boolean value) {
@@ -92,20 +94,20 @@ public class GuiActionButton extends Button {
      * OpenGL side-effects: depth disabled, color set to white
      */
     @Override
-    public final void func_191745_a(Minecraft mc, int mouseX, int mouseY, float partialTicks) {
-        if(!field_146125_m) return;
+    public final void renderButton(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
+        if(!visible) return;
 
         Rect bounds = getBounds();
-        field_146123_n = bounds.contains(mouseX, mouseY);
+        isHovered = bounds.contains(mouseX, mouseY);
 
-        drawButton(bounds, new Point(mouseX, mouseY), partialTicks);
+        drawButton(matrixStack, bounds, new Point(mouseX, mouseY), partialTicks);
 
-        if(tooltip != null && field_146123_n) {
+        if(tooltip != null && isHovered) {
             RenderSystem.enableDepthTest();
             matrixStack.pushPose();
 
             matrixStack.translate(0, 0, 1);
-            Minecraft.getInstance().screen.func_146279_a(tooltip, mouseX, mouseY);
+            Minecraft.getInstance().screen.renderTooltip(matrixStack, new StringTextComponent(tooltip), mouseX, mouseY);
 
             matrixStack.popPose();
             RenderSystem.disableDepthTest();

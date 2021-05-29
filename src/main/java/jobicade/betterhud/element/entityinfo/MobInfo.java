@@ -1,5 +1,6 @@
 package jobicade.betterhud.element.entityinfo;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingSlider;
 import jobicade.betterhud.events.RenderMobInfoEvent;
@@ -54,6 +55,7 @@ public class MobInfo extends EntityInfo {
 
     @Override
     public Rect render(Event event) {
+        MatrixStack matrixStack = ((RenderMobInfoEvent)event).getMatrixStack();
         LivingEntity entity = ((RenderMobInfoEvent)event).getEntity();
         bar.setHost(entity);
         bar.setCompressThreshold(compress.getInt());
@@ -61,7 +63,7 @@ public class MobInfo extends EntityInfo {
         int health = MathUtil.getHealthForDisplay(entity.getHealth());
         int maxHealth = MathUtil.getHealthForDisplay(entity.getMaxHealth());
 
-        String text = String.format("%s %s(%d/%d)", entity.func_70005_c_(), TextFormatting.GRAY, health, maxHealth);
+        String text = String.format("%s %s(%d/%d)", entity.getName(), TextFormatting.GRAY, health, maxHealth);
 
         Point size = GlUtil.getStringSize(text);
         Point barSize = bar.getPreferredSize();
@@ -76,10 +78,11 @@ public class MobInfo extends EntityInfo {
         GlUtil.drawRect(bounds, Color.TRANSLUCENT);
         bounds = bounds.grow(-SPACER);
 
-        GlUtil.drawString(text, bounds.getPosition(), Direction.NORTH_WEST, Color.WHITE);
+        GlUtil.drawString(matrixStack, text, bounds.getPosition(), Direction.NORTH_WEST, Color.WHITE);
         Rect barRect = new Rect(barSize).anchor(bounds, Direction.SOUTH_WEST);
 
         Minecraft.getInstance().getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
+        bar.setMatrixStack(matrixStack);
         bar.setBounds(barRect).render();
         return null;
     }

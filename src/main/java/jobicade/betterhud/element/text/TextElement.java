@@ -1,5 +1,6 @@
 package jobicade.betterhud.element.text;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.settings.DirectionOptions;
@@ -13,6 +14,7 @@ import jobicade.betterhud.render.Color;
 import jobicade.betterhud.render.Grid;
 import jobicade.betterhud.render.Label;
 import jobicade.betterhud.util.GlUtil;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.Event;
 
 import java.util.List;
@@ -73,8 +75,9 @@ public abstract class TextElement extends HudElement {
         Direction contentAlignment = position.getContentAlignment();
         if(contentAlignment != null) grid.setCellAlignment(contentAlignment);
 
+        MatrixStack matrixStack = ((RenderGameOverlayEvent)event).getMatrixStack();
         for(int i = 0; i < text.size(); i++) {
-            grid.setCell(new Point(0, i), new Label(text.get(i)).setColor(color.get()));
+            grid.setCell(new Point(0, i), new Label(matrixStack, text.get(i)).setColor(color.get()));
         }
 
         Rect padding = getPadding();

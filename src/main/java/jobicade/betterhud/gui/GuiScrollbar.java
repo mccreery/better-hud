@@ -6,7 +6,6 @@ import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.util.math.MathHelper;
-import org.lwjgl.input.Mouse;
 
 public class GuiScrollbar extends AbstractGui {
     private final Rect bounds;
@@ -112,23 +111,21 @@ public class GuiScrollbar extends AbstractGui {
         }
     }
 
-    public void handleMouseInput() {
-        int scrollDelta = Mouse.getEventDWheel();
-
+    public void mouseScrolled(int scrollDelta) {
         if(canScroll() && !isScrolling() && scrollDelta != 0) {
             setScroll(scroll - (scrollDelta > 0 ? 20 : -20));
         }
     }
 
-    protected void mouseClicked(int mouseX, int mouseY, int button) {
-        if(canScroll() && !isScrolling() && bounds.contains(mouseX, mouseY)) {
-            if(grabber.contains(mouseX, mouseY)) {
-                clickOffset = mouseY - grabber.getTop();
+    protected void mouseClicked(double mouseX, double mouseY, int button) {
+        if(canScroll() && !isScrolling() && bounds.contains((int)mouseX, (int)mouseY)) {
+            if(grabber.contains((int)mouseX, (int)mouseY)) {
+                clickOffset = (int)mouseY - grabber.getTop();
             } else {
                 clickOffset = grabber.getHeight() / 2;
             }
 
-            mouseClickMove(mouseX, mouseY, button, 0);
+            mouseClickMove((int)mouseX, (int)mouseY, button, 0);
         }
     }
 

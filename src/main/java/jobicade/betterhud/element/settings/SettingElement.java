@@ -69,6 +69,6 @@ public class SettingElement extends SettingAlignable<HudElement> {
 
     @Override
     public void updateGuiParts(Collection<Setting<?>> settings) {
-        button.field_146124_l = enabled();
+        button.active = enabled();
     }
 }

@@ -1,5 +1,6 @@
 package jobicade.betterhud.util.bars;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
@@ -13,6 +14,12 @@ import jobicade.betterhud.util.MathUtil;
 import java.util.List;
 
 public abstract class StatBar<T> extends DefaultBoxed {
+    protected MatrixStack matrixStack;
+
+    public void setMatrixStack(MatrixStack matrixStack) {
+        this.matrixStack = matrixStack;
+    }
+
     protected int getMaximum() {
         return 20;
     }
@@ -104,7 +111,7 @@ public abstract class StatBar<T> extends DefaultBoxed {
         }
 
         if(text != null) {
-            GlUtil.drawString(text, textPosition, columnWise.mirrorCol(), Color.WHITE);
+            GlUtil.drawString(matrixStack, text, textPosition, columnWise.mirrorCol(), Color.WHITE);
         }
     }
 

@@ -1,5 +1,6 @@
 package jobicade.betterhud.element;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.SettingPosition;
 import jobicade.betterhud.geom.Direction;
@@ -12,13 +13,15 @@ import jobicade.betterhud.render.Quad;
 import net.minecraft.client.Minecraft;
 import net.minecraft.tileentity.SignTileEntity;
 import net.minecraft.util.ResourceLocation;
+import net.minecraft.util.math.BlockPos;
 import net.minecraft.util.math.RayTraceResult;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.Event;
 
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
-import java.util.stream.Stream;
+import java.util.stream.IntStream;
 
 public class SignReader extends HudElement {
     private static final ResourceLocation SIGN_TEXTURE = new ResourceLocation("textures/entity/sign.png");
@@ -40,13 +43,15 @@ public class SignReader extends HudElement {
 
     @Override
     public Rect render(Event event) {
+        MatrixStack matrixStack = ((RenderGameOverlayEvent)event).getMatrixStack();
         Rect bounds = position.applyTo(new Rect(96, 48));
 
         Minecraft.getInstance().getTextureManager().bind(SIGN_TEXTURE);
         new Quad().setTexture(new Rect(2, 2, 24, 12).scale(4, 8)).setBounds(bounds).render();
 
-        List<Label> labels = Stream.of(getSign().messages)
-            .map(line -> new Label(line.func_150254_d()).setColor(Color.BLACK).setShadow(false))
+        SignTileEntity sign = getSign();
+        List<Label> labels = IntStream.range(0, 4).mapToObj(sign::getMessage)
+            .map(line -> new Label(matrixStack, line.getString()).setColor(Color.BLACK).setShadow(false))
             .collect(Collectors.toList());
 
         Grid<Label> grid = new Grid<>(new Point(1, labels.size()), labels);
@@ -69,8 +74,9 @@ public class SignReader extends HudElement {
 
         // Functional approach avoids long null check chain
         return Optional.ofNullable(Minecraft.getInstance().getCameraEntity())
-            .map(entity -> entity.func_174822_a(200, 1.0f))
-            .map(RayTraceResult::func_178782_a)
+            .map(entity -> entity.pick(200, 1.0f, false))
+            .map(RayTraceResult::getLocation)
+            .map(BlockPos::new)
             .map(Minecraft.getInstance().level::getBlockEntity)
             .filter(SignTileEntity.class::isInstance)
             .map(SignTileEntity.class::cast)

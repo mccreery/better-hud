@@ -12,9 +12,9 @@ import jobicade.betterhud.render.GlSnapshot;
 import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
-import net.minecraft.client.renderer.texture.TextureMap;
 import net.minecraft.entity.Entity;
 import net.minecraft.entity.LivingEntity;
+import net.minecraft.inventory.container.PlayerContainer;
 import net.minecraft.util.math.AxisAlignedBB;
 import net.minecraft.util.math.RayTraceResult;
 import net.minecraft.util.math.vector.Vector3d;
@@ -33,7 +33,7 @@ import static net.minecraftforge.client.gui.ForgeIngameGui.*;
 public final class RenderEvents {
     @SubscribeEvent
     public void onRenderTick(RenderGameOverlayEvent.Pre event) {
-        Minecraft.getInstance().profiler.push(MODID);
+        Minecraft.getInstance().getProfiler().push(MODID);
 
         boolean enabled = BetterHud.isModEnabled();
         suppressVanilla(enabled);
@@ -41,12 +41,12 @@ public final class RenderEvents {
         if(enabled && event.getType() == ElementType.ALL) {
             renderOverlay(event);
         }
-        Minecraft.getInstance().profiler.pop();
+        Minecraft.getInstance().getProfiler().pop();
     }
 
     @SubscribeEvent
     public void worldRender(RenderWorldLastEvent event) {
-        Minecraft.getInstance().profiler.push(MODID);
+        Minecraft.getInstance().getProfiler().push(MODID);
 
         if(BetterHud.isModEnabled()) {
             Entity entity = getMouseOver(HudElement.GLOBAL.getBillboardDistance(), event.getPartialTicks());
@@ -55,7 +55,7 @@ public final class RenderEvents {
                 renderMobInfo(new RenderMobInfoEvent(event, (LivingEntity)entity));
             }
         }
-        Minecraft.getInstance().profiler.pop();
+        Minecraft.getInstance().getProfiler().pop();
     }
 
     /**
@@ -115,7 +115,7 @@ public final class RenderEvents {
      * Renders overlay (normal HUD) elements to the screen.
      */
     private void renderOverlay(RenderGameOverlayEvent.Pre event) {
-        MANAGER.reset(event.getResolution());
+        MANAGER.reset(event.getWindow());
         beginOverlayState();
 
         if(HudElement.GLOBAL.isDebugMode()) {
@@ -153,14 +153,12 @@ public final class RenderEvents {
 
         event.getMatrixStack().popPose();
 
-        Minecraft.getInstance().getTextureManager().bind(TextureMap.LOCATION_BLOCKS);
+        Minecraft.getInstance().getTextureManager().bind(PlayerContainer.BLOCK_ATLAS);
         RenderSystem.enableAlphaTest();
         RenderSystem.enableDepthTest();
         RenderSystem.disableBlend();
     }
 
-    /** Allows a custom distance
-     * @see net.minecraft.client.renderer.EntityRenderer#getMouseOver(float) */
     private static Entity getMouseOver(double distance, float partialTicks) {
         if(Minecraft.getInstance().level == null) return null;
         Entity viewEntity = Minecraft.getInstance().getCameraEntity();
@@ -168,14 +166,14 @@ public final class RenderEvents {
 
         Entity pointedEntity = null;
 
-        Minecraft.getInstance().profiler.push("pick");
+        Minecraft.getInstance().getProfiler().push("pick");
 
-        RayTraceResult trace = viewEntity.func_174822_a(distance, partialTicks);
+        RayTraceResult trace = viewEntity.pick(distance, partialTicks, false);
         Vector3d eyePosition = viewEntity.getEyePosition(partialTicks);
         Vector3d lookDelta = viewEntity.getLookAngle().scale(distance);
 
         if(trace != null) {
-            distance = trace.location.distanceTo(eyePosition);
+            distance = trace.getLocation().distanceTo(eyePosition);
         }
 
         AxisAlignedBB range = viewEntity.getBoundingBox().expandTowards(lookDelta.x, lookDelta.y, lookDelta.z).inflate(1, 1, 1);
@@ -189,15 +187,15 @@ public final class RenderEvents {
 
         for(Entity entity : entitiesInRange) {
             AxisAlignedBB entityBox = entity.getBoundingBox().inflate(entity.getPickRadius());
-            RayTraceResult entityTrace = entityBox.func_72327_a(eyePosition, eyePosition.add(lookDelta));
+            boolean entityTrace = entityBox.intersects(eyePosition, eyePosition.add(lookDelta));
 
             if(entityBox.contains(eyePosition)) {
                 if(distance >= 0) {
                     pointedEntity = entity;
                     distance = 0;
                 }
-            } else if(entityTrace != null) {
-                double entityDistance = eyePosition.distanceTo(entityTrace.location);
+            } else if(entityTrace) {
+                double entityDistance = eyePosition.distanceTo(lookDelta);
 
                 if(entityDistance < distance || distance == 0) {
                     if(entity.getRootVehicle() == viewEntity.getRootVehicle() && !entity.canRiderInteract()) {
@@ -211,7 +209,7 @@ public final class RenderEvents {
                 }
             }
         }
-        Minecraft.getInstance().profiler.pop();
+        Minecraft.getInstance().getProfiler().pop();
         return pointedEntity;
     }
 }

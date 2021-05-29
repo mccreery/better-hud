@@ -1,7 +1,6 @@
 package jobicade.betterhud.element.particles;
 
 import jobicade.betterhud.util.MathUtil;
-import net.minecraft.block.material.Material;
 import net.minecraft.client.Minecraft;
 import net.minecraft.util.math.BlockPos;
 
@@ -17,7 +16,7 @@ public class WaterDrops extends ParticleOverlay {
 
     @Override
     protected void updateParticles() {
-        boolean isUnderwater = Minecraft.getInstance().player.func_70055_a(Material.WATER);
+        boolean isUnderwater = Minecraft.getInstance().player.isUnderWater();
 
         if(isUnderwater) {
             particles.clear();

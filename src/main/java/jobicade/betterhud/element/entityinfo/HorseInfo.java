@@ -1,5 +1,6 @@
 package jobicade.betterhud.element.entityinfo;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingBoolean;
@@ -49,14 +50,15 @@ public class HorseInfo extends EntityInfo {
 
     @Override
     public Rect render(Event event) {
+        MatrixStack matrixStack = ((RenderMobInfoEvent)event).getMatrixStack();
         ArrayList<Label> infoParts = new ArrayList<Label>();
         HorseEntity entity = (HorseEntity)((RenderMobInfoEvent)event).getEntity();
 
         if(jump.get()) {
-            infoParts.add(new Label(jump.getLocalizedName() + ": " + MathUtil.formatToPlaces(getJumpHeight(entity), 3) + "m"));
+            infoParts.add(new Label(matrixStack, jump.getLocalizedName() + ": " + MathUtil.formatToPlaces(getJumpHeight(entity), 3) + "m"));
         }
         if(speed.get()) {
-            infoParts.add(new Label(speed.getLocalizedName() + ": " + MathUtil.formatToPlaces(getSpeed(entity), 3) + "m/s"));
+            infoParts.add(new Label(matrixStack, speed.getLocalizedName() + ": " + MathUtil.formatToPlaces(getSpeed(entity), 3) + "m/s"));
         }
 
         Grid<Label> grid = new Grid<Label>(new Point(1, infoParts.size()), infoParts).setGutter(new Point(2, 2));
@@ -78,6 +80,6 @@ public class HorseInfo extends EntityInfo {
     /** Calculates horse speed using an approximate coefficient
      * @see <a href=https://minecraft.gamepedia.com/Horse#Movement_speed>Minecraft Wiki</a> */
     public double getSpeed(HorseEntity horse) {
-        return horse.getAttribute(Attributes.field_111263_d).getBaseValue() * 43.17037;
+        return horse.getAttribute(Attributes.MOVEMENT_SPEED).getBaseValue() * 43.17037;
     }
 }

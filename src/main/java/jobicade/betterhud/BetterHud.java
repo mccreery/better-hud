@@ -12,12 +12,12 @@ import jobicade.betterhud.network.InventoryNameResponse;
 import jobicade.betterhud.network.MessagePickup;
 import jobicade.betterhud.network.MessageVersion;
 import jobicade.betterhud.util.Tickable.Ticker;
-import net.java.games.input.Keyboard;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.settings.KeyBinding;
 import net.minecraft.entity.player.ServerPlayerEntity;
 import net.minecraft.resources.IReloadableResourceManager;
 import net.minecraft.resources.IResourceManager;
+import net.minecraft.resources.IResourceManagerReloadListener;
 import net.minecraft.util.INameable;
 import net.minecraft.util.ResourceLocation;
 import net.minecraftforge.client.event.ClientPlayerNetworkEvent.LoggedOutEvent;
@@ -34,12 +34,15 @@ import net.minecraftforge.fml.common.Mod.EventBusSubscriber;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
+import net.minecraftforge.fml.loading.FMLPaths;
 import net.minecraftforge.fml.network.NetworkRegistry;
+import net.minecraftforge.fml.network.PacketDistributor;
 import net.minecraftforge.fml.network.simple.SimpleChannel;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.apache.maven.artifact.versioning.ArtifactVersion;
 import org.apache.maven.artifact.versioning.DefaultArtifactVersion;
+import org.lwjgl.glfw.GLFW;
 
 import java.nio.file.Path;
 
@@ -88,22 +91,27 @@ public class BetterHud {
     }
 
     private static ConfigManager configManager;
-    private static KeyBinding menuKey = new KeyBinding("key.betterHud.open", Keyboard.KEY_U, "key.categories.misc");
+    private static KeyBinding menuKey = new KeyBinding("key.betterHud.open", GLFW.GLFW_KEY_U, "key.categories.misc");
 
     private void clientSetup(FMLClientSetupEvent event) {
-        Path configPath = event.getSuggestedConfigurationFile().toPath();
+        Path configPath = FMLPaths.CONFIGDIR.get().resolve(MODID + ".json");
 
         // Order is important: initialising config manager loads settings
         HudElement.loadAllDefaults();
         configManager = new ConfigManager(configPath, configPath.resolveSibling(BetterHud.MODID));
 
-        IResourceManager manager = Minecraft.getInstance().func_110442_L();
+        IResourceManager manager = Minecraft.getInstance().getResourceManager();
 
         if(manager instanceof IReloadableResourceManager) {
             IReloadableResourceManager reloadableManager = (IReloadableResourceManager)manager;
 
-            reloadableManager.func_110542_a(m -> HudElement.SORTER.markDirty(SortType.ALPHABETICAL));
-            reloadableManager.func_110542_a(configManager);
+            reloadableManager.registerReloadListener(new IResourceManagerReloadListener() {
+                @Override
+                public void onResourceManagerReload(IResourceManager p_195410_1_) {
+                    HudElement.SORTER.markDirty(SortType.ALPHABETICAL);
+                }
+            });
+            reloadableManager.registerReloadListener(configManager);
         } else {
             BetterHud.getLogger().warn("Unable to register alphabetical sort update on language change");
         }
@@ -126,7 +134,7 @@ public class BetterHud {
 
     @SubscribeEvent
     public void onKey(KeyInputEvent event) {
-        if (Minecraft.getInstance().field_71415_G && menuKey.consumeClick()) {
+        if (Minecraft.getInstance().overlay == null && (Minecraft.getInstance().screen == null || Minecraft.getInstance().screen.passEvents) && menuKey.consumeClick()) {
             Minecraft.getInstance().setScreen(new GuiHudMenu(configManager));
         }
     }
@@ -137,9 +145,9 @@ public class BetterHud {
      */
     @SubscribeEvent
     public static void onPlayerConnected(PlayerLoggedInEvent e) {
-        if(e.player instanceof ServerPlayerEntity) {
+        if(e.getPlayer() instanceof ServerPlayerEntity) {
             ArtifactVersion version = new DefaultArtifactVersion(VERSION);
-            NET_WRAPPER.sendTo(new MessageVersion(version), (ServerPlayerEntity)e.player);
+            NET_WRAPPER.send(PacketDistributor.PLAYER.with(() -> (ServerPlayerEntity)e.getPlayer()), new MessageVersion(version));
         }
     }
 
@@ -159,10 +167,8 @@ public class BetterHud {
     @SubscribeEvent
     public static void onBlockBreak(BlockEvent.BreakEvent event) {
         if (event.getWorld().getBlockEntity(event.getPos()) instanceof INameable) {
-            NET_WRAPPER.sendToDimension(
-                new InventoryNameResponse(event.getPos(), null),
-                event.getWorld().dimension.getDimension()
-            );
+            NET_WRAPPER.send(PacketDistributor.DIMENSION.with(event.getPlayer().getCommandSenderWorld()::dimension),
+                    new InventoryNameResponse(event.getPos(), null));
         }
     }
 
@@ -172,11 +178,9 @@ public class BetterHud {
      */
     @SubscribeEvent(priority = EventPriority.LOWEST)
     public static void onItemPickup(ItemPickupEvent e) {
-        if (!e.getStack().isEmpty() && e.player instanceof ServerPlayerEntity) {
-            BetterHud.NET_WRAPPER.sendTo(
-                new MessagePickup(e.getStack()),
-                (ServerPlayerEntity)e.player
-            );
+        if (!e.getStack().isEmpty() && e.getPlayer() instanceof ServerPlayerEntity) {
+            NET_WRAPPER.send(PacketDistributor.PLAYER.with(() -> ((ServerPlayerEntity)e.getPlayer())),
+                    new MessagePickup(e.getStack()));
         }
     }
 

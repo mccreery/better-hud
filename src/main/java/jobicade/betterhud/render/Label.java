@@ -1,5 +1,6 @@
 package jobicade.betterhud.render;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import com.mojang.blaze3d.systems.RenderSystem;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
@@ -7,15 +8,22 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.geom.Size;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
+import net.minecraft.util.text.ITextComponent;
 
 public class Label extends DefaultBoxed {
+    private final MatrixStack matrixStack;
     private String text;
     private Size size;
     private boolean shadow = true;
     private Color color = Color.WHITE;
 
-    public Label(String text) {
+    public Label(MatrixStack matrixStack, ITextComponent text) {
+        this(matrixStack, text.toString());
+    }
+
+    public Label(MatrixStack matrixStack, String text) {
         setText(text);
+        this.matrixStack = matrixStack;
     }
 
     public String getText() {

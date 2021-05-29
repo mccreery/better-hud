@@ -1,5 +1,6 @@
 package jobicade.betterhud.element;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingChoose;
@@ -11,6 +12,8 @@ import jobicade.betterhud.util.Textures;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.world.GameRules;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.Event;
 
 import java.util.List;
@@ -52,20 +55,21 @@ public class HealIndicator extends HudElement {
             }
 
             if(mode.getIndex() == 0) {
-                GlUtil.drawString(healIndicator, bounds.getPosition(), Direction.NORTH_WEST, Color.GREEN);
+                GlUtil.drawString(((RenderGameOverlayEvent)event).getMatrixStack(), healIndicator, bounds.getPosition(), Direction.NORTH_WEST, Color.GREEN);
             } else {
                 Minecraft.getInstance().getTextureManager().bind(Textures.HUD_ICONS);
-                Minecraft.getInstance().gui.func_73729_b(bounds.getX(), bounds.getY(), 0, 80, 9, 9);
+                MatrixStack matrixStack = ((RenderGameOverlayEvent)event).getMatrixStack();
+                Minecraft.getInstance().gui.blit(matrixStack, bounds.getX(), bounds.getY(), 0, 80, 9, 9);
             }
             return bounds;
     }
 
-    /** @see net.minecraft.util.FoodStats#onUpdate(PlayerEntity) */
+    /** @see net.minecraft.util.FoodStats#tick(PlayerEntity) */
     @Override
     public boolean shouldRender(Event event) {
         return super.shouldRender(event)
             && Minecraft.getInstance().gameMode.hasExperience()
-            && Minecraft.getInstance().level.getGameRules().func_82766_b("naturalRegeneration")
+            && Minecraft.getInstance().level.getGameRules().getBoolean(GameRules.RULE_NATURAL_REGENERATION)
             && Minecraft.getInstance().player.getFoodData().getFoodLevel() >= 18
             && Minecraft.getInstance().player.isHurt();
     }

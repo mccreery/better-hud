@@ -1,5 +1,6 @@
 package jobicade.betterhud.element.entityinfo;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import jobicade.betterhud.element.settings.Setting;
 import jobicade.betterhud.element.settings.SettingSlider;
 import jobicade.betterhud.events.RenderMobInfoEvent;
@@ -13,6 +14,7 @@ import jobicade.betterhud.util.GlUtil;
 import jobicade.betterhud.util.bars.StatBar;
 import jobicade.betterhud.util.bars.StatBarArmor;
 import net.minecraft.client.resources.I18n;
+import net.minecraft.client.util.ITooltipFlag;
 import net.minecraft.enchantment.Enchantment;
 import net.minecraft.enchantment.EnchantmentHelper;
 import net.minecraft.entity.player.PlayerEntity;
@@ -74,7 +76,8 @@ public class PlayerInfo extends EntityInfo {
             }
         }
 
-        List<Label> tooltipLabels = tooltip.stream().map(Label::new).collect(Collectors.toList());
+        MatrixStack matrixStack = ((RenderMobInfoEvent)event).getMatrixStack();
+        List<Label> tooltipLabels = tooltip.stream().map(s -> new Label(matrixStack, s)).collect(Collectors.toList());
         Grid<Label> grid = new Grid<Label>(new Point(1, tooltip.size()), tooltipLabels)
             .setCellAlignment(Direction.WEST).setGutter(new Point(2, 2));
 
@@ -85,12 +88,13 @@ public class PlayerInfo extends EntityInfo {
 
         Rect inner = bounds.grow(-5);
         grid.setBounds(new Rect(grid.getPreferredSize()).anchor(inner, Direction.NORTH_WEST)).render();
+        bar.setMatrixStack(matrixStack);
         if(bar.shouldRender()) bar.setBounds(new Rect(bar.getPreferredSize()).anchor(inner, Direction.SOUTH_WEST)).render();
 
         return null;
     }
 
-    /** @see ItemStack#getTooltip(PlayerEntity, net.minecraft.client.util.ITooltipFlag) */
+    /** @see ItemStack#getTooltipLines(PlayerEntity, ITooltipFlag) */
     private String getStackName(ItemStack stack) {
         StringBuilder builder = new StringBuilder();
 
@@ -102,7 +106,7 @@ public class PlayerInfo extends EntityInfo {
         } else {
             builder.append(TextFormatting.GRAY);
         }
-        builder.append(stack.func_82833_r());
+        builder.append(stack.getDisplayName());
         return builder.toString();
     }
 
@@ -112,7 +116,7 @@ public class PlayerInfo extends EntityInfo {
 
         for(Map.Entry<Enchantment, Integer> enchantment : enchantments.entrySet()) {
             if(enchantment.getKey() != null && enchantment.getValue() > 0) {
-                dest.add(TextFormatting.GRAY + enchantment.getKey().func_77316_c(enchantment.getValue()));
+                dest.add(TextFormatting.GRAY + enchantment.getKey().getFullname(enchantment.getValue()).toString());
             }
         }
     }

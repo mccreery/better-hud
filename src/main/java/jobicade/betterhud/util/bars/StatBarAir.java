@@ -1,7 +1,6 @@
 package jobicade.betterhud.util.bars;
 
 import jobicade.betterhud.geom.Rect;
-import net.minecraft.block.material.Material;
 import net.minecraft.entity.Entity;
 
 public class StatBarAir extends StatBarBasic<Entity> {
@@ -25,6 +24,6 @@ public class StatBarAir extends StatBarBasic<Entity> {
 
     @Override
     public boolean shouldRender() {
-        return host.func_70055_a(Material.WATER);
+        return host.isUnderWater();
     }
 }

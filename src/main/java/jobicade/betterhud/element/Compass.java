@@ -117,7 +117,7 @@ public class Compass extends HudElement {
 
             // Super low alphas can render opaque for some reason
             if(color.getAlpha() > 3) {
-                GlUtil.drawString(DIRECTIONS[i], Point.zero(), bottom ? Direction.SOUTH : Direction.NORTH, color);
+                GlUtil.drawString(matrixStack, DIRECTIONS[i], Point.zero(), bottom ? Direction.SOUTH : Direction.NORTH, color);
             }
 
             matrixStack.popPose();
@@ -156,24 +156,24 @@ public class Compass extends HudElement {
 
     @Override
     public Rect render(Event event) {
+        MatrixStack matrixStack = ((RenderGameOverlayEvent)event).getMatrixStack();
         Rect bounds;
 
         if(mode.getIndex() == 0) {
-            MatrixStack matrixStack = ((RenderGameOverlayEvent)event).getMatrixStack();
             bounds = position.applyTo(new Rect(180, 12));
 
-            Minecraft.getInstance().profiler.push("background");
+            Minecraft.getInstance().getProfiler().push("background");
             drawBackground(bounds);
-            Minecraft.getInstance().profiler.func_76318_c("text");
+            Minecraft.getInstance().getProfiler().popPush("text");
             drawDirections(matrixStack, bounds);
-            Minecraft.getInstance().profiler.pop();
+            Minecraft.getInstance().getProfiler().pop();
         } else {
             String text = getText();
             bounds = position.applyTo(new Rect(GlUtil.getStringSize(text)));
 
-            Minecraft.getInstance().profiler.push("text");
-            GlUtil.drawString(text, bounds.getPosition(), Direction.NORTH_WEST, Color.WHITE);
-            Minecraft.getInstance().profiler.pop();
+            Minecraft.getInstance().getProfiler().push("text");
+            GlUtil.drawString(matrixStack, text, bounds.getPosition(), Direction.NORTH_WEST, Color.WHITE);
+            Minecraft.getInstance().getProfiler().pop();
         }
 
         return bounds;

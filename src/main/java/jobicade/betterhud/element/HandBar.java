@@ -1,5 +1,6 @@
 package jobicade.betterhud.element;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import jobicade.betterhud.element.settings.DirectionOptions;
 import jobicade.betterhud.element.settings.Legend;
 import jobicade.betterhud.element.settings.Setting;
@@ -12,6 +13,7 @@ import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.item.ItemStack;
+import net.minecraftforge.client.event.RenderGameOverlayEvent;
 import net.minecraftforge.eventbus.api.Event;
 
 import java.util.List;
@@ -44,7 +46,7 @@ public class HandBar extends EquipmentDisplay {
         settings.add(showNonTools = new SettingBoolean("showNonTools").setValuePrefix("betterHud.value.nonTools"));
     }
 
-    public void renderBar(ItemStack stack, int x, int y) {
+    public void renderBar(MatrixStack matrixStack, ItemStack stack, int x, int y) {
         boolean isTool = stack.isDamageableItem();
         if(stack == null || !showNonTools.get() && !isTool) return;
 
@@ -58,31 +60,32 @@ public class HandBar extends EquipmentDisplay {
         }
 
         if(showItem.get()) {
-            Minecraft.getInstance().profiler.push("items");
+            Minecraft.getInstance().getProfiler().push("items");
             GlUtil.renderSingleItem(stack, x + 90 - width / 2, y);
-            Minecraft.getInstance().profiler.pop();
+            Minecraft.getInstance().getProfiler().pop();
         }
 
         if(text != null) {
-            Minecraft.getInstance().profiler.push("text");
-            GlUtil.drawString(text, new Point(x + 90 - width / 2 + (showItem.get() ? 21 : 0), y + 4), Direction.NORTH_WEST, Color.WHITE);
-            Minecraft.getInstance().profiler.pop();
+            Minecraft.getInstance().getProfiler().push("text");
+            GlUtil.drawString(matrixStack, text, new Point(x + 90 - width / 2 + (showItem.get() ? 21 : 0), y + 4), Direction.NORTH_WEST, Color.WHITE);
+            Minecraft.getInstance().getProfiler().pop();
         }
 
         if(isTool && showBars.get()) {
-            Minecraft.getInstance().profiler.push("bars");
+            Minecraft.getInstance().getProfiler().push("bars");
             GlUtil.drawDamageBar(new Rect(x, y + 16, 180, 2), stack, false);
-            Minecraft.getInstance().profiler.pop();
+            Minecraft.getInstance().getProfiler().pop();
         }
     }
 
     @Override
     public Rect render(Event event) {
+        MatrixStack matrixStack = ((RenderGameOverlayEvent)event).getMatrixStack();
         Rect bounds = position.applyTo(new Rect(180, offHand.get() ? 41 : 18));
-        renderBar(Minecraft.getInstance().player.getMainHandItem(), bounds.getX(), bounds.getBottom() - 18);
+        renderBar(matrixStack, Minecraft.getInstance().player.getMainHandItem(), bounds.getX(), bounds.getBottom() - 18);
 
         if(offHand.get()) {
-            renderBar(Minecraft.getInstance().player.getOffhandItem(), bounds.getX(), bounds.getY());
+            renderBar(matrixStack, Minecraft.getInstance().player.getOffhandItem(), bounds.getX(), bounds.getY());
         }
         return bounds;
     }

@@ -5,10 +5,15 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.render.Color;
 import jobicade.betterhud.util.GlUtil;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.util.text.StringTextComponent;
 
 import java.util.function.Predicate;
 
 public abstract class GuiElements extends Screen {
+    public GuiElements() {
+        super(StringTextComponent.EMPTY);
+    }
+
     protected static HudElement getHoveredElement(int mouseX, int mouseY, Predicate<HudElement> ignore) {
         HudElement result = null;
 

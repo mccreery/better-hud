@@ -1,6 +1,6 @@
 package jobicade.betterhud.geom;
 
-import net.minecraft.client.gui.ScaledResolution;
+import net.minecraft.client.MainWindow;
 
 import java.io.Serializable;
 
@@ -43,16 +43,15 @@ public class Point implements Serializable {
      * Conversion constructor from scaled resolutions. Uses the scaled width
      * and height to populate X and Y.
      *
-     * @param resolution The resolution to get width and height from.
+     * @param mainWindow The window to get width and height from.
      */
-    public Point(ScaledResolution resolution) {
-        this.x = resolution.func_78326_a();
-        this.y = resolution.func_78328_b();
+    public Point(MainWindow mainWindow) {
+        this.x = mainWindow.getGuiScaledWidth();
+        this.y = mainWindow.getGuiScaledHeight();
     }
 
     /**
      * Converts a point to a size if necessary.
-     * @param point The original point.
      * @return The original point if it is already a Size instance, or an
      * equivalent Size instance if not.
      */

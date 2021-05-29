@@ -1,5 +1,6 @@
 package jobicade.betterhud.gui;
 
+import com.mojang.blaze3d.matrix.MatrixStack;
 import jobicade.betterhud.geom.Point;
 import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.GlUtil;
@@ -34,7 +35,7 @@ public class GuiTexturedButton extends GuiActionButton {
     }
 
     protected Rect getTexture() {
-        switch(func_146114_a(this.field_146123_n)) {
+        switch(getYImage(this.isHovered)) {
             case 0:  return disabled;
             case 2:  return active;
             case 1:
@@ -46,7 +47,7 @@ public class GuiTexturedButton extends GuiActionButton {
      * OpenGL side-effects: set texture to Gui.ICONS
      */
     @Override
-    protected void drawButton(Rect bounds, Point mousePosition, float partialTicks) {
+    protected void drawButton(MatrixStack matrixStack, Rect bounds, Point mousePosition, float partialTicks) {
         Minecraft.getInstance().getTextureManager().bind(Textures.SETTINGS);
         GlUtil.drawRect(bounds, getTexture());
         Minecraft.getInstance().getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);

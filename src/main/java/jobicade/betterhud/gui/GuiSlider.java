@@ -4,6 +4,7 @@ import jobicade.betterhud.util.ISlider;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.AbstractGui;
 import net.minecraft.client.gui.widget.button.Button;
+import net.minecraft.util.text.StringTextComponent;
 
 public class GuiSlider extends Button {
     private final ISlider slider;
@@ -14,11 +15,11 @@ public class GuiSlider extends Button {
     }
 
     public void updateDisplayString() {
-        field_146126_j = slider.getDisplayString();
+        setMessage(new StringTextComponent(slider.getDisplayString()));
     }
 
     public GuiSlider(int id, int x, int y, int width, int height, ISlider slider) {
-        super(id, x, y, width, height, "");
+        super(x, y, width, height, StringTextComponent.EMPTY, null);
         this.slider = slider;
         updateDisplayString();
     }
@@ -29,35 +30,33 @@ public class GuiSlider extends Button {
     }
 
     @Override
-    protected int func_146114_a(boolean mouseOver) {
+    protected int getYImage(boolean mouseOver) {
         return 0;
     }
 
-    /**
-     * OpenGL side-effects: set texture to Gui.ICONS
-     * <p>{@inheritDoc}
-     */
     @Override
-    protected void func_146119_b(Minecraft mc, int mouseX, int mouseY) {
-        if(this.field_146125_m) {
+    public boolean mouseDragged(double mouseX, double mouseY, int button, double dragX, double dragY) {
+        if(this.visible) {
             if(this.dragging) {
-                int mouseOffset = mouseX - (field_146128_h + 4);
-                setNormalized((double)mouseOffset / (field_146120_f - 8));
+                int mouseOffset = (int)mouseX - (x + 4);
+                setNormalized((double)mouseOffset / (width - 8));
             }
-            int sliderOffset = (int)((slider.get() - slider.getMinimum()) / (slider.getMaximum() - slider.getMinimum()) * (field_146120_f - 8));
+            int sliderOffset = (int)((slider.get() - slider.getMinimum()) / (slider.getMaximum() - slider.getMinimum()) * (width - 8));
 
-            Minecraft.getInstance().getTextureManager().bind(field_146122_a);
-            this.func_73729_b(field_146128_h + sliderOffset,     field_146129_i,   0, 66, 4, 20);
-            this.func_73729_b(field_146128_h + sliderOffset + 4, field_146129_i, 196, 66, 4, 20);
+            Minecraft.getInstance().getTextureManager().bind(WIDGETS_LOCATION);
+//            this.blit(x + sliderOffset,     y,   0, 66, 4, 20);
+//            this.blit(x + sliderOffset + 4, y, 196, 66, 4, 20);
             Minecraft.getInstance().getTextureManager().bind(AbstractGui.GUI_ICONS_LOCATION);
+            return true;
         }
+        return false;
     }
 
     @Override
-    public boolean func_146116_c(Minecraft mc, int mouseX, int mouseY) {
-        if(super.func_146116_c(mc, mouseX, mouseY)) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if(super.mouseClicked(mouseX, mouseY, button)) {
             dragging = true;
-            func_146119_b(mc, mouseX, mouseY);
+            mouseDragged(mouseX, mouseY, button, mouseX, mouseY);
 
             return true;
         } else {
@@ -66,7 +65,8 @@ public class GuiSlider extends Button {
     }
 
     @Override
-    public void func_146118_a(int mouseX, int mouseY) {
+    public boolean mouseReleased(double p_231048_1_, double p_231048_3_, int p_231048_5_) {
         dragging = false;
+        return true;
     }
 }

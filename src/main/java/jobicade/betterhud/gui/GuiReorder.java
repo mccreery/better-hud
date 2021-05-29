@@ -1,6 +1,7 @@
 package jobicade.betterhud.gui;
 
 import com.google.common.base.Predicates;
+import com.mojang.blaze3d.matrix.MatrixStack;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.geom.Direction;
 import jobicade.betterhud.geom.Point;
@@ -8,11 +9,9 @@ import jobicade.betterhud.geom.Rect;
 import jobicade.betterhud.util.IGetSet;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screen.Screen;
-import net.minecraft.client.gui.widget.button.Button;
 import net.minecraft.client.resources.I18n;
 import net.minecraft.util.math.MathHelper;
 
-import java.io.IOException;
 import java.util.List;
 
 import static jobicade.betterhud.BetterHud.MANAGER;
@@ -94,40 +93,37 @@ public class GuiReorder extends GuiElements {
     }
 
     @Override
-    public void func_73866_w_() {
-        field_146292_n.clear();
+    public void init() {
+        buttons.clear();
 
-        field_146292_n.add(moveTop);
-        field_146292_n.add(moveUp);
-        field_146292_n.add(moveDown);
-        field_146292_n.add(moveBottom);
+        buttons.add(moveTop);
+        buttons.add(moveUp);
+        buttons.add(moveDown);
+        buttons.add(moveBottom);
         select(null);
     }
 
     @Override
-    protected void func_146284_a(Button button) throws IOException {
-        if(button instanceof GuiActionButton)
-            ((GuiActionButton)button).actionPerformed();
-    }
-
-    @Override
-    protected void func_73869_a(char typedChar, int keyCode) throws IOException {
+    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
         if(keyCode == 1) {
             Minecraft.getInstance().setScreen(parent);
+            return true;
         }
+        return false;
     }
 
     @Override
-    protected void func_73864_a(int mouseX, int mouseY, int mouseButton) throws IOException {
-        if(toolbox.contains(mouseX, mouseY)) {
-            super.func_73864_a(mouseX, mouseY, mouseButton);
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
+        if(toolbox.contains((int)mouseX, (int)mouseY)) {
+            super.mouseClicked(mouseX, mouseY, button);
         } else {
             select(hovered);
         }
+        return false;
     }
 
     @Override
-    public void func_73863_a(int mouseX, int mouseY, float partialTicks) {
+    public void render(MatrixStack matrixStack, int mouseX, int mouseY, float partialTicks) {
         hovered = getHoveredElement(mouseX, mouseY, Predicates.alwaysFalse());
 
         for(HudElement element : HudElement.ELEMENTS) {
@@ -137,6 +133,6 @@ public class GuiReorder extends GuiElements {
                 drawRect(bounds, element == hovered || element == selected);
             }
         }
-        super.func_73863_a(mouseX, mouseY, partialTicks);
+        super.render(matrixStack, mouseX, mouseY, partialTicks);
     }
 }

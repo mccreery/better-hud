@@ -30,7 +30,7 @@ import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.entity.player.PlayerEvent.PlayerChangedDimensionEvent;
 import net.minecraftforge.eventbus.api.Event;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
-import net.minecraftforge.fml.common.event.FMLInitializationEvent;
+import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import org.apache.maven.artifact.versioning.InvalidVersionSpecificationException;
 import org.apache.maven.artifact.versioning.VersionRange;
 
@@ -78,7 +78,7 @@ public class BlockViewer extends TextElement {
     }
 
     @Override
-    public void init(FMLInitializationEvent event) {
+    public void init(FMLClientSetupEvent event) {
         MinecraftForge.EVENT_BUS.register(this);
     }
 
@@ -96,10 +96,10 @@ public class BlockViewer extends TextElement {
     public boolean shouldRender(Event event) {
         if(!super.shouldRender(event)) return false;
 
-        trace = Minecraft.getInstance().getCameraEntity().func_174822_a(HudElement.GLOBAL.getBillboardDistance(), 1f);
+        trace = Minecraft.getInstance().getCameraEntity().pick(HudElement.GLOBAL.getBillboardDistance(), 1f, false);
 
-        if(trace != null && trace.field_72313_a == RayTraceResult.Type.BLOCK) {
-            state = Minecraft.getInstance().level.getBlockState(trace.func_178782_a());
+        if(trace != null && trace.getType() == RayTraceResult.Type.BLOCK) {
+            state = Minecraft.getInstance().level.getBlockState(new BlockPos(trace.getLocation()));
             stack = getDisplayStack(trace, state);
             return true;
         } else {
@@ -160,15 +160,15 @@ public class BlockViewer extends TextElement {
     }
 
     /** Creates the most representative item stack for the given result.<br>
-     * If the block has no {@link net.minecraft.item.ItemBlock}, it is impossible to create a stack.
+     * If the block has no {@link net.minecraft.item.BlockItem}, it is impossible to create a stack.
      *
      * @see net.minecraftforge.common.ForgeHooks#onPickBlock(RayTraceResult, PlayerEntity, net.minecraft.world.World) */
     private ItemStack getDisplayStack(RayTraceResult trace, BlockState state) {
-        ItemStack stack = state.getBlock().getPickBlock(state, trace, Minecraft.getInstance().level, trace.func_178782_a(), Minecraft.getInstance().player);
+        ItemStack stack = state.getBlock().getPickBlock(state, trace, Minecraft.getInstance().level, new BlockPos(trace.getLocation()), Minecraft.getInstance().player);
 
         if(isStackEmpty(stack)) {
             // Pick block is disabled, however we can grab the information directly
-            stack = new ItemStack(state.getBlock(), state.getBlock().func_176201_c(state));
+            stack = new ItemStack(state.getBlock());
 
             if(isStackEmpty(stack)) { // There's no registered ItemBlock, no stack exists
                 return null;
@@ -181,35 +181,34 @@ public class BlockViewer extends TextElement {
      * @param stack The direct result of {@link #getDisplayStack(RayTraceResult, BlockState)}. May be {@code null}
      *
      * @see ItemStack#getDisplayName()
-     * @see TileEntity#getDisplayName()
-     * @see net.minecraft.item.ItemBlock#getUnlocalizedName(ItemStack) */
+     * @see INameable#getDisplayName()
+     * @see net.minecraft.item.BlockItem#getName(ItemStack) */
     private String getBlockName(RayTraceResult trace, BlockState state, ItemStack stack) {
         if(state.getBlock() == Blocks.END_PORTAL) {
             return I18n.get("tile.endPortal.name");
         }
 
         if(invNames.get() && state.getBlock().hasTileEntity(state)) {
-            TileEntity tileEntity = Minecraft.getInstance().level.getBlockEntity(trace.func_178782_a());
+            TileEntity tileEntity = Minecraft.getInstance().level.getBlockEntity(new BlockPos(trace.getLocation()));
 
             if(tileEntity instanceof INameable) {
-                ITextComponent invName = ensureInvName(trace.func_178782_a());
+                ITextComponent invName = ensureInvName(new BlockPos(trace.getLocation()));
 
                 if(invName != null) {
-                    return invName.func_150254_d();
+                    return invName.getString();
                 }
             }
         }
 
-        return isStackEmpty(stack) ? state.getBlock().func_149732_F() : stack.func_82833_r();
+        return isStackEmpty(stack) ? state.getBlock().getName().toString() : stack.getDisplayName().toString();
     }
 
     /** @return Information about the block's related IDs */
     private String getIdString(BlockState state) {
-        String name = Block.field_149771_c.getKey(state.getBlock()).toString();
-        int id = Block.func_149682_b(state.getBlock());
-        int meta = state.getBlock().func_176201_c(state);
+        String name = state.getBlock().getRegistryName().toString();
+        int id = Block.getId(state);
 
-        return String.format("%s(%s:%d/#%04d)", TextFormatting.YELLOW, name, meta, id);
+        return String.format("%s(%s/#%04d)", TextFormatting.YELLOW, name, id);
     }
 
     @SubscribeEvent
@@ -242,7 +241,7 @@ public class BlockViewer extends TextElement {
         if(name != null) {
             return name;
         } else {
-            return Minecraft.getInstance().level.getBlockEntity(pos).getDisplayName();
+            return ((INameable)Minecraft.getInstance().level.getBlockEntity(pos)).getDisplayName();
         }
     }
 
