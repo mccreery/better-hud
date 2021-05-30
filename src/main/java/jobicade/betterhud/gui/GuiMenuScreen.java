@@ -19,8 +19,8 @@ public class GuiMenuScreen extends Screen {
 
     @Override
     public void init(Minecraft minecraft, int width, int height) {
-        super.init(minecraft, width, height);
         this.origin = new Point(width / 2, height / 16 + 20);
+        super.init(minecraft, width, height);
     }
 
     protected Point getOrigin() {

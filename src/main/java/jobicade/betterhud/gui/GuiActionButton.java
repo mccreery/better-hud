@@ -71,7 +71,7 @@ public class GuiActionButton extends Button {
     }
 
     protected void drawButton(MatrixStack matrixStack, Rect bounds, Point mousePosition, float partialTicks) {
-        super.render(matrixStack, mousePosition.getX(), mousePosition.getY(), partialTicks);
+        super.renderButton(matrixStack, mousePosition.getX(), mousePosition.getY(), partialTicks);
     }
 
     public void updateText(String name, String value) {

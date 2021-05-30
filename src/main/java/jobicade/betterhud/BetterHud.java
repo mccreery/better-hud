@@ -133,7 +133,7 @@ public class BetterHud {
     }
 
     @SubscribeEvent
-    public void onKey(KeyInputEvent event) {
+    public static void onKey(KeyInputEvent event) {
         if (Minecraft.getInstance().overlay == null && (Minecraft.getInstance().screen == null || Minecraft.getInstance().screen.passEvents) && menuKey.consumeClick()) {
             Minecraft.getInstance().setScreen(new GuiHudMenu(configManager));
         }
