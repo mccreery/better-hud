@@ -49,7 +49,9 @@ public class HudConfig {
      * Loads a setting and all its children.
      */
     private void loadSetting(Setting<?> setting, JsonObject json, String path) {
-        setting.load(json.get(path));
+        if (setting.hasValue()) {
+            setting.load(json.get(path));
+        }
         for (Setting<?> childSetting : setting.getChildren()) {
             loadSetting(childSetting, json, join(path, childSetting.name));
         }
@@ -79,7 +81,9 @@ public class HudConfig {
      * Saves a setting and all its children.
      */
     private void saveSetting(Setting<?> setting, JsonObject json, String path) {
-        json.add(path, setting.save());
+        if (setting.hasValue()) {
+            json.add(path, setting.save());
+        }
         for (Setting<?> childSetting : setting.getChildren()) {
             saveSetting(childSetting, json, join(path, childSetting.name));
         }

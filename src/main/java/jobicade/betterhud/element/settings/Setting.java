@@ -91,7 +91,7 @@ public abstract class Setting<T> implements IGetSet<T>, ISaveLoad {
     }
 
     /** @return {@code true} if this setting has a value to save */
-    protected boolean hasValue() {return name != null;}
+    public boolean hasValue() {return name != null;}
 
     /** @return {@code true} if this element and its ancestors are enabled */
     public boolean enabled() {

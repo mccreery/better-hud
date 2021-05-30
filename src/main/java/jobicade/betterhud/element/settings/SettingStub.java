@@ -21,5 +21,5 @@ public class SettingStub<T> extends Setting<T> {
     @Override public JsonElement save() {return null;}
     @Override public void load(JsonElement save) {}
     @Override public void actionPerformed(GuiElementSettings gui, Button button) {}
-    @Override protected boolean hasValue() {return false;}
+    @Override public boolean hasValue() {return false;}
 }

@@ -20,7 +20,7 @@ public class RootSetting extends SettingStub<Boolean> implements IBoolean {
         @Override public JsonElement save() {return new JsonPrimitive(priorityRank);}
         @Override public void load(JsonElement save) {priorityRank = save.getAsInt();}
 
-        @Override protected boolean hasValue() {return true;}
+        @Override public boolean hasValue() {return true;}
     }.setHidden();
 
     public RootSetting(HudElement element, List<Setting<?>> settings) {

@@ -15,7 +15,7 @@ public class Legend extends SettingStub<Object> {
     }
 
     @Override
-    protected boolean hasValue() {
+    public boolean hasValue() {
         return false;
     }
 
