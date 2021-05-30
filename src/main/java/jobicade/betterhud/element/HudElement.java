@@ -212,7 +212,7 @@ public abstract class HudElement implements IBoolean {
      * @see #isSupportedByServer() */
     public VersionRange getServerDependency() {
         try {
-            return VersionRange.createFromVersionSpec("[,]");
+            return VersionRange.createFromVersionSpec("1.0");
         } catch (InvalidVersionSpecificationException exception) {
             throw new RuntimeException(exception);
         }

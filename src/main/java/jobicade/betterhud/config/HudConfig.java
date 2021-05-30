@@ -5,6 +5,7 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import com.google.gson.stream.JsonReader;
 import com.google.gson.stream.JsonWriter;
+import jobicade.betterhud.BetterHud;
 import jobicade.betterhud.element.HudElement;
 import jobicade.betterhud.element.HudElement.SortType;
 import jobicade.betterhud.element.settings.Setting;
@@ -30,7 +31,8 @@ public class HudConfig {
         try (JsonReader reader = new JsonReader(Files.newBufferedReader(path))) {
             json = new JsonParser().parse(reader).getAsJsonObject();
         } catch (IOException exception) {
-            throw new RuntimeException(exception);
+            BetterHud.getLogger().error(exception);
+            return;
         }
 
         loadSetting(HudElement.GLOBAL.settings, json.get(HudElement.GLOBAL.name).getAsJsonObject(), null);
