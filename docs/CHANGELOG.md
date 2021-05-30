@@ -1,4 +1,9 @@
-# Changelog
+ # Changelog
+
+## [Unreleased]
+### Changed
+- Compatible with Minecraft 1.16.5 (previously 1.12.2)
+- Config files are in JSON format
 
 ## [1.4.4] - 2021-05-28
 ### Changed
