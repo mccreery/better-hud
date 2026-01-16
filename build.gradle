@@ -3,6 +3,7 @@ plugins {
     id 'idea'
     id 'maven-publish'
     id 'net.minecraftforge.gradle' version '[6.0,6.2)'
+    id 'org.parchmentmc.librarian.forgegradle' version '1.+'
 }
 
 version = mod_version
@@ -108,14 +109,14 @@ minecraft {
     }
 }
 
-// Temporarily include only files which are 1.20.1 ready for an incremental upgrade
-sourceSets.main {
-    java {
-        include 'com/example/examplemod/**'
+sourceSets {
+    // Keep example mod for reference only while porting
+    main.java {
+        exclude 'com/example/examplemod/'
     }
-    resources {
-        include 'META-INF/**'
-        include 'pack.mcmeta'
+    // Allow the IDE to compile the 1.12.2 source to see what can be reused
+    legacy {
+        compileClasspath += sourceSets.main.compileClasspath
     }
 }
 
@@ -168,6 +169,8 @@ tasks.named('processResources', ProcessResources).configure {
             loader_version_range: loader_version_range,
             mod_id: mod_id, mod_name: mod_name, mod_license: mod_license, mod_version: mod_version,
             mod_authors: mod_authors, mod_description: mod_description,
+            // Extra properties for optional fields in mods.toml
+            mod_logo: mod_logo, mod_credits: mod_credits, mod_url: mod_url, mod_update_json: mod_update_json,
     ]
     inputs.properties replaceProperties
 
