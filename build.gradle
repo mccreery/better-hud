@@ -6,6 +6,10 @@ plugins {
     id 'org.parchmentmc.librarian.forgegradle' version '1.+'
 }
 
+repositories {
+    maven { url = 'https://pkgs.dev.azure.com/djtheredstoner/DevAuth/_packaging/public/maven/v1' }
+}
+
 version = mod_version
 group = mod_group_id
 
@@ -85,9 +89,12 @@ minecraft {
         client {
             // Comma-separated list of namespaces to load gametests from. Empty = all namespaces.
             property 'forge.enabledGameTestNamespaces', mod_id
+            jvmArgs '-Ddevauth.enabled=true', '-Ddevauth.account=main'
         }
 
         server {
+            workingDirectory project.file('runServer')
+
             property 'forge.enabledGameTestNamespaces', mod_id
             args '--nogui'
         }
@@ -101,7 +108,7 @@ minecraft {
 
         data {
             // example of overriding the workingDirectory set in configureEach above
-            workingDirectory project.file('run-data')
+            workingDirectory project.file('runData')
 
             // Specify the modid for data generation, where to output the resulting resource, and where to look for existing resources.
             args '--mod', mod_id, '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
@@ -156,6 +163,8 @@ dependencies {
     // For more info:
     // http://www.gradle.org/docs/current/userguide/artifact_dependencies_tutorial.html
     // http://www.gradle.org/docs/current/userguide/dependency_management.html
+
+    runtimeOnly 'me.djtheredstoner:DevAuth-forge-latest:1.2.2'
 }
 
 // This block of code expands all declared replace properties in the specified resource targets.
